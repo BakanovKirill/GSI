@@ -1,10 +1,10 @@
 # INSTALLATION
 
 
-    - python bootstrap-buildout.py
+`python bootstrap-buildout.py`
 
-    - bin/buildout
+`bin/buildout`
 
-    - bin/django makemigrations
+`bin/django makemigrations`
 
-    - bin/django migrate
+`bin/django migrate`
