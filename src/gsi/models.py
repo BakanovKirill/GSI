@@ -1,10 +1,10 @@
+from datetime import datetime
+
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import \
     ugettext_lazy as _  # Always aware of translations to other languages in the future -> wrap all texts into _()
-
-
 from solo.models import SingletonModel
-
 from .utils import UnicodeNameMixin
 
 
@@ -55,3 +55,79 @@ class YearGroup(UnicodeNameMixin, models.Model):
 class Resolution(UnicodeNameMixin, models.Model):
     name = models.CharField(max_length=50, help_text=_('This will be a short display of the value, i.e. 1KM, 250M'))
     value = models.CharField(max_length=20, help_text=_('Value in meters, e.g 1000 for 1KM display name'))
+
+
+class TileType(models.Model):
+    name = models.CharField(max_length=50)
+
+
+class CardSequence(UnicodeNameMixin, models.Model):
+    name = models.CharField(max_length=100)
+    environment_base = models.ForeignKey(VariablesGroup, null=True, blank=True)
+    environment_override = models.TextField(null=True, blank=True)
+    order = models.IntegerField(default=0)
+
+    cards = models.ManyToManyField('cards.CardItem')
+
+
+class Log(UnicodeNameMixin, models.Model):
+    name = models.CharField(max_length=200, null=True, blank=True)
+    log_file_path = models.CharField(max_length=300, null=True, blank=True)
+    log_file = models.FileField(blank=True, null=True)
+
+
+class RunBase(UnicodeNameMixin, models.Model):
+    name = models.CharField(max_length=100)
+    author = models.ForeignKey(User)
+    description = models.TextField(blank=True, null=True)
+    purpose = models.TextField(blank=True, null=True)
+    directory_path = models.CharField(max_length=200)
+
+    resolution = models.ForeignKey(Resolution)
+    card_sequence = models.ForeignKey(CardSequence)
+
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_modified = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        self.date_modified = datetime.now()
+        return super(RunBase, self).save(*args, **kwargs)
+
+
+STATES = (
+    ('created', 'Created'),
+    ('pending', 'Pending'),
+    ('running', 'Running'),
+    ('success', 'Success'),
+    ('fail', 'Fail'),
+)
+
+
+class Run(UnicodeNameMixin, models.Model):
+    STATES = (
+        ('created', 'Created'),
+        ('pending', 'Pending'),
+        ('running', 'Running'),
+        ('success', 'Success'),
+        ('fail', 'Fail'),
+    )
+
+    user = models.ForeignKey(User, null=True, blank=True)
+    run_base = models.ForeignKey(RunBase)
+
+    state = models.CharField(max_length=100, choices=STATES, default='created')
+
+    log = models.ForeignKey(Log, null=True, blank=True)
+
+    run_date = models.DateTimeField(auto_now_add=True)
+
+
+class RunStep(UnicodeNameMixin, models.Model):
+    parent_run = models.ForeignKey(Run)
+    card_item = models.ForeignKey('cards.CardItem')
+
+    state = models.CharField(max_length=100, choices=STATES, default='pending')
+
+    start_date = models.DateTimeField(auto_now_add=True)
+
+

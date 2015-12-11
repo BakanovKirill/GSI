@@ -110,6 +110,8 @@ STATIC_URL = '/static/'
 DEBUG_TOOLBAR_PATCH_SETTINGS = True
 ENABLE_DEBUG_TOOLBAR = False
 
+MEDIA_URL = '/media/'
+
 # allow to override defaults
 try:
     from settings_local import *

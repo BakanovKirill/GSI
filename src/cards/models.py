@@ -1,3 +1,9 @@
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.utils.translation import \
+    ugettext_lazy as _  # Always aware of translations to other languages in the future -> wrap all texts into _()
+
+from django.contrib.contenttypes.models import ContentType
+
 from django.db import models
 from gsi.utils import UnicodeNameMixin
 
@@ -23,7 +29,7 @@ class QRF(NamedModel):
     directory = models.CharField(max_length=300)
 
     class Meta:
-        verbose_name_plural = 'QRF cards'
+        verbose_name_plural = _('QRF cards')
 
 
 class RFScore(NamedModel, ParallelModel):
@@ -36,7 +42,7 @@ class RFScore(NamedModel, ParallelModel):
     clean_name = models.CharField(max_length=100)
 
     class Meta:
-        verbose_name_plural = 'RFScore cards'
+        verbose_name_plural = _('RFScore cards')
 
 
 class Remap(NamedModel, ParallelModel):
@@ -51,7 +57,7 @@ class Remap(NamedModel, ParallelModel):
     refstats_scale = models.CharField(max_length=200)
 
     class Meta:
-        verbose_name_plural = 'Remap cards'
+        verbose_name_plural = _('Remap cards')
 
 
 class YearFilter(NamedModel, ParallelModel):
@@ -65,7 +71,7 @@ class YearFilter(NamedModel, ParallelModel):
     input_directory = models.CharField(max_length=200)
 
     class Meta:
-        verbose_name_plural = 'YearFilter cards'
+        verbose_name_plural = _('YearFilter cards')
 
 
 class Collate(NamedModel, ParallelModel):
@@ -76,6 +82,68 @@ class Collate(NamedModel, ParallelModel):
     input_scale_factor = models.CharField(max_length=200)
 
     class Meta:
-        verbose_name_plural = 'Collate cards'
+        verbose_name_plural = _('Collate cards')
 
 
+class PreProc(NamedModel, ParallelModel):
+    area = models.ForeignKey('gsi.Area')
+    mode = models.CharField(max_length=50)
+    year_group = models.ForeignKey('gsi.YearGroup')
+
+    class Meta:
+        verbose_name_plural = _('PreProc cards')
+
+
+class MergeCSV(NamedModel, models.Model):
+    csv1 = models.CharField(max_length=200)
+    csv2 = models.CharField(max_length=200)
+
+    class Meta:
+        verbose_name_plural = _('MergeCSV cards')
+
+
+class RFTrain(NamedModel, ParallelModel):
+    tile_type = models.ForeignKey('gsi.TileType')
+    number_of_trees = models.IntegerField(default=0)
+    value = models.CharField(max_length=300)
+    config_file = models.CharField(max_length=200)
+    output_tile_subdir = models.CharField(max_length=200)
+    input_scale_factor = models.CharField(max_length=200)
+
+    class Meta:
+        verbose_name_plural = _('RFTRain cards')
+
+
+class CardItem(NamedModel):
+    CONTENT_LIMIT = (
+        models.Q(app_label='cards', model='RFTrain') |
+        models.Q(app_label='cards', model='MergeCSV') |
+        models.Q(app_label='cards', model='PreProc') |
+        models.Q(app_label='cards', model='Collate') |
+        models.Q(app_label='cards', model='YearFilter') |
+        models.Q(app_label='cards', model='Remap') |
+        models.Q(app_label='cards', model='RFScore') |
+        models.Q(app_label='cards', model='QRF')
+    )
+
+    content_type = models.ForeignKey(ContentType, limit_choices_to=CONTENT_LIMIT)
+    object_id = models.PositiveIntegerField()
+
+    content_object = GenericForeignKey('content_type', 'object_id')
+
+    class Meta:
+        unique_together = ('content_type', 'object_id')
+
+
+def get_card_item(self):
+    card_item, created = CardItem.objects.get_or_create(
+        content_type=ContentType.objects.get_for_model(self.__class__),
+        object_id=self.pk,
+        name=self.name
+    )
+    return card_item
+
+def __unicode__(self):
+    return self.name
+
+ContentType.__unicode__=__unicode__
