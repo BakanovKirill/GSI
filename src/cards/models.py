@@ -128,7 +128,6 @@ class CardItem(NamedModel):
 
     content_type = models.ForeignKey(ContentType, limit_choices_to=CONTENT_LIMIT)
     object_id = models.PositiveIntegerField()
-
     content_object = GenericForeignKey('content_type', 'object_id')
 
     class Meta:
@@ -146,4 +145,4 @@ def get_card_item(self):
 def __unicode__(self):
     return self.name
 
-ContentType.__unicode__=__unicode__
+ContentType.__unicode__ = __unicode__
