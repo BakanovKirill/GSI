@@ -116,14 +116,14 @@ class RFTrain(NamedModel, ParallelModel):
 
 class CardItem(NamedModel):
     CONTENT_LIMIT = (
-        models.Q(app_label='cards', model='RFTrain') |
-        models.Q(app_label='cards', model='MergeCSV') |
-        models.Q(app_label='cards', model='PreProc') |
-        models.Q(app_label='cards', model='Collate') |
-        models.Q(app_label='cards', model='YearFilter') |
-        models.Q(app_label='cards', model='Remap') |
-        models.Q(app_label='cards', model='RFScore') |
-        models.Q(app_label='cards', model='QRF')
+        models.Q(app_label='cards', model='rftrain') |
+        models.Q(app_label='cards', model='mergecsv') |
+        models.Q(app_label='cards', model='preproc') |
+        models.Q(app_label='cards', model='collate') |
+        models.Q(app_label='cards', model='yearfilter') |
+        models.Q(app_label='cards', model='remap') |
+        models.Q(app_label='cards', model='rfscore') |
+        models.Q(app_label='cards', model='qrf')
     )
 
     content_type = models.ForeignKey(ContentType, limit_choices_to=CONTENT_LIMIT)
