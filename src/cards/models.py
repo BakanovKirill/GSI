@@ -1,10 +1,11 @@
 from django.contrib.contenttypes.fields import GenericForeignKey
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.translation import \
     ugettext_lazy as _  # Always aware of translations to other languages in the future -> wrap all texts into _()
-
 from django.contrib.contenttypes.models import ContentType
-
 from django.db import models
+
 from gsi.utils import UnicodeNameMixin
 
 
@@ -114,7 +115,7 @@ class RFTrain(NamedModel, ParallelModel):
         verbose_name_plural = _('RFTRain cards')
 
 
-class CardItem(NamedModel):
+class CardItem(models.Model):
     CONTENT_LIMIT = (
         models.Q(app_label='cards', model='rftrain') |
         models.Q(app_label='cards', model='mergecsv') |
@@ -130,19 +131,41 @@ class CardItem(NamedModel):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
+    order = models.PositiveIntegerField(default=0)
+
     class Meta:
         unique_together = ('content_type', 'object_id')
+
+    def __unicode__(self):
+        return u"{0}".format(self.content_object)
+
+
+class OrderedCardItem(models.Model):
+    card_item = models.ForeignKey(CardItem)
+    order = models.PositiveIntegerField(default=0)
+
+    def __unicode__(self):
+        return u"{0}".format(self.card_item)
 
 
 def get_card_item(self):
     card_item, created = CardItem.objects.get_or_create(
-        content_type=ContentType.objects.get_for_model(self.__class__),
-        object_id=self.pk,
-        name=self.name
+            content_type=ContentType.objects.get_for_model(self.__class__),
+            object_id=self.pk,
     )
     return card_item
+
 
 def __unicode__(self):
     return self.name
 
+
 ContentType.__unicode__ = __unicode__
+
+
+@receiver(post_save)
+def auto_add_card_item(sender, instance=None, created=False, **kwargs):
+    list_of_models = (RFScore, RFTrain, QRF, YearFilter, MergeCSV, Collate, PreProc, Remap)
+    if sender in list_of_models:
+        if created:
+            get_card_item(instance)
