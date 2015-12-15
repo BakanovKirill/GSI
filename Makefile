@@ -12,5 +12,8 @@ run:
 dbshell:
 	$(MANAGE) dbshell
 
+shell:
+	$(MANAGE) shell
+
 migrate:
 	$(MANAGE) migrate
