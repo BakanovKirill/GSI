@@ -61,13 +61,22 @@ class TileType(models.Model):
     name = models.CharField(max_length=50)
 
 
+class OrderedCardItem(models.Model):
+    card_item = models.ForeignKey('cards.CardItem', related_name='ordered_cards')
+    sequence = models.ForeignKey('CardSequence')
+
+    order = models.PositiveIntegerField(default=0)
+
+    def __unicode__(self):
+        return u"{0}".format(self.card_item)
+
+
 class CardSequence(UnicodeNameMixin, models.Model):
     name = models.CharField(max_length=100)
     environment_base = models.ForeignKey(VariablesGroup, null=True, blank=True)
     environment_override = models.TextField(null=True, blank=True)
-    order = models.IntegerField(default=0)
 
-    cards = models.ManyToManyField('cards.CardItem')
+    cards = models.ManyToManyField('cards.CardItem', through=OrderedCardItem, related_name='card_sequences')
 
 
 class Log(UnicodeNameMixin, models.Model):
@@ -103,7 +112,7 @@ STATES = (
 )
 
 
-class Run(UnicodeNameMixin, models.Model):
+class Run(models.Model):
     STATES = (
         ('created', 'Created'),
         ('pending', 'Pending'),
@@ -121,6 +130,9 @@ class Run(UnicodeNameMixin, models.Model):
 
     run_date = models.DateTimeField(auto_now_add=True)
 
+    def __unicode__(self):
+        return u"{0}".format(self.run_base)
+
 
 class RunStep(UnicodeNameMixin, models.Model):
     parent_run = models.ForeignKey(Run)
@@ -130,4 +142,5 @@ class RunStep(UnicodeNameMixin, models.Model):
 
     start_date = models.DateTimeField(auto_now_add=True)
 
-
+    def __unicode__(self):
+        return u"{0}_{1}".format(self.card_item.content_object.name, self.parent_run)
