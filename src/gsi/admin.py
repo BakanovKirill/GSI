@@ -38,6 +38,10 @@ class RunBaseAdmin(admin.ModelAdmin):
     list_display = ('name', 'author', 'date_created', 'date_modified')
     # exclude = ('author',)
 
+    def save_model(self, request, obj, form, change):
+        obj.author = request.user
+        obj.save()
+
 admin.site.register(RunBase, RunBaseAdmin)
 admin.site.register(Run, admin.ModelAdmin)
 admin.site.register(RunStep, admin.ModelAdmin)

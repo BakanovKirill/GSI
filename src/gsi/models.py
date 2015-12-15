@@ -87,7 +87,7 @@ class Log(UnicodeNameMixin, models.Model):
 
 class RunBase(UnicodeNameMixin, models.Model):
     name = models.CharField(max_length=100)
-    author = models.ForeignKey(User)
+    author = models.ForeignKey(User, blank=True, null=True, default=None)
     description = models.TextField(blank=True, null=True)
     purpose = models.TextField(blank=True, null=True)
     directory_path = models.CharField(max_length=200)
