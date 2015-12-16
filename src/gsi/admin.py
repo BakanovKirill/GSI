@@ -36,7 +36,7 @@ admin.site.register(Tile, admin.ModelAdmin)
 
 class RunBaseAdmin(admin.ModelAdmin):
     list_display = ('name', 'author', 'date_created', 'date_modified')
-    # exclude = ('author',)
+    readonly_fields = ('author',)
 
     def save_model(self, request, obj, form, change):
         obj.author = request.user
