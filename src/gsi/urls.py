@@ -1,3 +1,6 @@
+from django.conf.urls.static import static
+from django.conf import settings
+
 """GSI URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -17,7 +20,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
+                  url(r'^admin/', include(admin.site.urls)),
 
-    # url(r'^$', 'gsi.views.index', name='index'),
-]
+                  # url(r'^$', 'gsi.views.index', name='index'),
+              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
