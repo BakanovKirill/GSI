@@ -2,9 +2,9 @@ MANAGE=bin/django
 LOCALE=ru_RU.UTF-8
 
 # Targets
-.PHONY: run
+.PHONY: run dbshell shell migrate
 
-default: run dbshell migrate
+default: run
 
 run:
 	$(MANAGE) runserver
