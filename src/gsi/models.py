@@ -23,7 +23,7 @@ class HomeVariables(SingletonModel):
                                         help_text=_('SAT_DIF_DIR_ROOT'))
 
     def __unicode__(self):
-        return _(u"Home variables")
+        return unicode(_('Home variables'))
 
     class Meta:
         verbose_name = _(u"Home variables")
