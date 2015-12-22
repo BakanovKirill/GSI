@@ -35,11 +35,11 @@ class VariablesGroup(UnicodeNameMixin, models.Model):
 
 
 class Tile(UnicodeNameMixin, models.Model):
-    name = models.CharField(max_length=6)
+    name = models.CharField(max_length=6, unique=True)
 
 
 class Area(UnicodeNameMixin, models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     tiles = models.ManyToManyField(Tile, related_name='areas')
 
 
