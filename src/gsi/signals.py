@@ -19,9 +19,5 @@ def added_update_area_for_each_tile(sender, instance, **kwargs):
 
 @receiver(post_delete, sender=Tile)
 def remove_empty_area_by_removing_tile(sender, instance, **kwargs):
-    areas = Area.objects.all()
-
-    for area in areas:
-        if not area.tiles.through.objects.filter(area_id=area.id):
-            Area.objects.get(name=area.name).delete()
+    Area.objects.filter(tiles__isnull=True).delete()
 
