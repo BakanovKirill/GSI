@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from .models import Tile, Area
+from ..models import Tile, Area
 
 class GsiSignalsTests(TestCase):
     def test_added_update_area_for_each_tile(self):
