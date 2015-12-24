@@ -4,13 +4,14 @@ from ..models import Tile, Area
 
 class GsiSignalsTests(TestCase):
     def setUp(self):
-        tile_1 = Tile.objects.get_or_create(name='tile_1')
-        tile_2 = Tile.objects.get_or_create(name='tile_2')
-        tile_3 = Tile.objects.get_or_create(name='tile_3')
-        area_1 = Area.objects.get_or_create(name='area_1')
-        area_1[0].tiles = tile_1
-        area_1[0].tiles = tile_2
-        area_1[0].tiles = tile_3
+        tile_1 = Tile.objects.create(name='tile_1')
+        tile_2 = Tile.objects.create(name='tile_2')
+        tile_3 = Tile.objects.create(name='tile_3')
+        area_1 = Area(name='area_1')
+        area_1.save()
+        area_1.tiles.add(tile_1)
+        area_1.tiles.add(tile_2)
+        area_1.tiles.add(tile_3)
 
     def test_added_update_area_for_each_tile(self):
         '''test signal added_update_area_for_each_tile'''
