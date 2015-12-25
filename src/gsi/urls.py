@@ -21,6 +21,10 @@ from django.contrib import admin
 
 urlpatterns = [
                   url(r'^admin/', include(admin.site.urls)),
-
+                  # url home
                   url(r'^$', 'gsi.views.index', name='index'),
+
+                  # url api
+                  url(r'^run/(?P<run_id>\d+)/$', 'gsi.views.update_status_of_runs', name='update_status_runs'),
+                  url(r'^run/(?P<run_id>\d+)/card/(?P<card_id>\d+)/$', 'gsi.views.update_status_of_cards', name='update_status_cards'),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
