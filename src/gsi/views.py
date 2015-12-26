@@ -23,7 +23,7 @@ def update_status_of_runs(request, run_id):
 
     if data['status']:
         try:
-            current_run = Run.objects.get(id=run_id)
+            current_run = Run.objects.get(id=run_id).update(state=data['status'])
         except ObjectDoesNotExist as e:
             data['status'] = False
             data['message'] = str(e)
@@ -41,7 +41,7 @@ def update_status_of_cards(request, run_id, card_id):
 
     if data['status']:
         try:
-            update_card = Run.objects.get(
+            current_card = Run.objects.get(
                     id=run_id,
                     run_base__card_sequence__cards__id=card_id)
         except ObjectDoesNotExist as e:
