@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 
 from .utils import validate_status
-from .models import Run
+from .models import Run, RunStep
 
 
 @render_to('index.html')
@@ -16,14 +16,14 @@ def index(request):
 
 
 @api_view(['GET'])
-def update_status_of_runs(request, run_id):
+def update_run(request, run_id):
     """ update the status of the runs"""
 
     data = validate_status(request.query_params.get('status', False))
 
     if data['status']:
         try:
-            current_run = Run.objects.get(id=run_id).update(state=data['status'])
+            current_run = Run.objects.filter(id=run_id).update(state=data['status'])
         except ObjectDoesNotExist as e:
             data['status'] = False
             data['message'] = str(e)
@@ -34,16 +34,27 @@ def update_status_of_runs(request, run_id):
 
 
 @api_view(['GET'])
-def update_status_of_cards(request, run_id, card_id):
+def update_step(request, step_id):
     """ update the status of the cards"""
 
     data = validate_status(request.query_params.get('status', False))
-
     if data['status']:
+        state = data['status']
         try:
-            current_card = Run.objects.get(
-                    id=run_id,
-                    run_base__card_sequence__cards__id=card_id)
+            step = RunStep.objects.get(pk=step_id)
+            step.state = state
+            step.save()
+            # Go to the next step only on success state
+            if state == 'success':
+                next_step, is_last_step = step.get_next_step()
+                if next_step:
+                    data['next_step'] = next_step.id
+                if is_last_step:
+                    data['is_last_step'] = True
+                    # TODO: possibly finish the run (discuss)
+                    # run = step.parent_run
+                    # run.status = 'success'
+                    # run.save()
         except ObjectDoesNotExist as e:
             data['status'] = False
             data['message'] = str(e)
@@ -51,3 +62,4 @@ def update_status_of_cards(request, run_id, card_id):
         return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
     return Response(data, status=status.HTTP_200_OK)
+

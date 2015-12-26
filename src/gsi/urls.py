@@ -25,6 +25,6 @@ urlpatterns = [
                   url(r'^$', 'gsi.views.index', name='index'),
 
                   # url api
-                  url(r'^run/(?P<run_id>\d+)/$', 'gsi.views.update_status_of_runs', name='update_status_runs'),
-                  url(r'^run/(?P<run_id>\d+)/card/(?P<card_id>\d+)/$', 'gsi.views.update_status_of_cards', name='update_status_cards'),
+                  url(r'^step/(?P<step_id>\d+)/$', 'gsi.views.update_step', name='update_step'),
+                  url(r'^run/(?P<run_id>\d+)/$', 'gsi.views.update_run', name='update_run'),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

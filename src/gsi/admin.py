@@ -1,6 +1,7 @@
 from cards.models import CardItem, OrderedCardItem
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericStackedInline, GenericTabularInline
+from gsi.utils import make_run
 from .models import HomeVariables, VariablesGroup, Tile, Area, YearGroup, Year, CardSequence, RunBase, RunStep, Run, \
     Resolution, Log, TileType
 from solo.admin import SingletonModelAdmin
@@ -37,13 +38,27 @@ admin.site.register(Tile, admin.ModelAdmin)
 class RunBaseAdmin(admin.ModelAdmin):
     list_display = ('name', 'author', 'date_created', 'date_modified')
     readonly_fields = ('author',)
+    actions = ('launch',)
 
     def save_model(self, request, obj, form, change):
         obj.author = request.user
         obj.save()
 
+    def launch(self, request, queryset):
+        for run_base in queryset:
+            result = make_run(run_base, request.user)
+            print 'Run created: %s' % result['run'].id
+            print 'Step created: %s' % result['step'].id
+        self.message_user(request, "Selected runs are launched.")
+    launch.short_description = "Launch selected"
+
+
+class RunAdmin(admin.ModelAdmin):
+    list_display = ('__unicode__', 'user', 'state', 'run_date')
+
+
 admin.site.register(RunBase, RunBaseAdmin)
-admin.site.register(Run, admin.ModelAdmin)
+admin.site.register(Run, RunAdmin)
 admin.site.register(RunStep, admin.ModelAdmin)
 admin.site.register(Resolution, admin.ModelAdmin)
 admin.site.register(Log, admin.ModelAdmin)
