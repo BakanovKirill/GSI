@@ -70,6 +70,9 @@ class OrderedCardItem(models.Model):
     def __unicode__(self):
         return u"{0}".format(self.card_item)
 
+    class Meta:
+        ordering = ('order',)
+
 
 class CardSequence(UnicodeNameMixin, models.Model):
     name = models.CharField(max_length=100)
@@ -113,14 +116,6 @@ STATES = (
 
 
 class Run(models.Model):
-    STATES = (
-        ('created', 'Created'),
-        ('pending', 'Pending'),
-        ('running', 'Running'),
-        ('success', 'Success'),
-        ('fail', 'Fail'),
-    )
-
     user = models.ForeignKey(User, null=True, blank=True)
     run_base = models.ForeignKey(RunBase)
 
@@ -136,11 +131,23 @@ class Run(models.Model):
 
 class RunStep(UnicodeNameMixin, models.Model):
     parent_run = models.ForeignKey(Run)
-    card_item = models.ForeignKey('cards.CardItem')
+    card_item = models.ForeignKey(OrderedCardItem)
 
     state = models.CharField(max_length=100, choices=STATES, default='pending')
 
     start_date = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
-        return u"{0}_{1}".format(self.card_item.content_object.name, self.parent_run)
+        return u"{0}_{1}".format(self.card_item, self.parent_run)
+
+    def get_next_step(self):
+        next_card = OrderedCardItem.objects.filter(sequence__runbase=self.parent_run.run_base, order__gte=self.card_item.order).exclude(id=self.card_item.id)
+        is_last_step = False
+        if len(next_card) == 1:
+            is_last_step = True
+        if next_card:
+            next_card = next_card[0]
+            step, created = RunStep.objects.get_or_create(parent_run=self.parent_run, card_item=next_card)
+            return step, is_last_step
+        else:
+            return False, False

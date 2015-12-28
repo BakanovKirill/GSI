@@ -1,1 +1,1 @@
-default_app_config = 'gsi.apps.GsiAppConfig'
+import signals
