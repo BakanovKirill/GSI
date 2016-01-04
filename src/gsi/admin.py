@@ -57,9 +57,13 @@ class RunAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'user', 'state', 'run_date')
 
 
+class RunStepAdmin(admin.ModelAdmin):
+    list_display = ('card_item', 'parent_run', 'state', 'start_date')
+
+
 admin.site.register(RunBase, RunBaseAdmin)
 admin.site.register(Run, RunAdmin)
-admin.site.register(RunStep, admin.ModelAdmin)
+admin.site.register(RunStep, RunStepAdmin)
 admin.site.register(Resolution, admin.ModelAdmin)
 admin.site.register(Log, admin.ModelAdmin)
 admin.site.register(TileType, admin.ModelAdmin)
