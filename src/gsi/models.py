@@ -57,7 +57,7 @@ class Resolution(UnicodeNameMixin, models.Model):
     value = models.CharField(max_length=20, help_text=_('Value in meters, e.g 1000 for 1KM display name'))
 
 
-class TileType(models.Model):
+class TileType(UnicodeNameMixin, models.Model):
     name = models.CharField(max_length=50)
 
 

@@ -23,7 +23,9 @@ def update_run(request, run_id):
 
     if data['status']:
         try:
-            current_run = Run.objects.filter(id=run_id).update(state=data['status'])
+            current_run = Run.objects.get(id=run_id)
+            current_run.state = data['status']
+            current_run.save()
         except ObjectDoesNotExist as e:
             data['status'] = False
             data['message'] = str(e)
