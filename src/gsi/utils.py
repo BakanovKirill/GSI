@@ -30,10 +30,16 @@ def make_run(run_base, user):
     first_card = OrderedCardItem.objects.filter(sequence__runbase=run_base).first()
     step = RunStep.objects.create(parent_run=run, card_item=first_card)
 
+    #TODO: make scripts for each step
+    create_scripts(run)
+
+    return {'run': run, 'step': step}
+
+
+def create_scripts(run):
     print 'run_base ============ ', run_base
     print 'path ============ ', os.getcwd()
 
-    #TODO: make scripts for each step
     OUTPUT_DIR = os.getcwd() + '/src/gsi/scripts/'
     first_line = '#!/bin/bash'
     GSI_HOME = '/home/w23/mattgsi'
@@ -44,5 +50,3 @@ def make_run(run_base, user):
     f.writelines(first_line+'\n')
     f.writelines('source $'+RESOLUTION_ENV_SCRIPT+str(resolution)+'_config'+'\n')
     f.close()
-
-    return {'run': run, 'step': step}
