@@ -31,22 +31,66 @@ def make_run(run_base, user):
     step = RunStep.objects.create(parent_run=run, card_item=first_card)
 
     #TODO: make scripts for each step
-    create_scripts(run)
+    create_scripts(run, step)
 
     return {'run': run, 'step': step}
 
 
-def create_scripts(run):
-    print 'run_base ============ ', run_base
-    print 'path ============ ', os.getcwd()
+def create_scripts(run, step):
+    from gsi.models import CardSequence, HomeVariables as Home
 
-    OUTPUT_DIR = os.getcwd() + '/src/gsi/scripts/'
-    first_line = '#!/bin/bash'
-    GSI_HOME = '/home/w23/mattgsi'
-    RESOLUTION_ENV_SCRIPT = GSI_HOME + '/bin/'
+    home_var = Home.objects.all()
+    export_home_var = ''
+
+    # home dir scripts
+    SCRIPTS_HOME_DIR = '/home/w23/mattgsi/'
+
+    # <RESOLUTION_ENV_SCRIPT>
+    GSI_HOME = '/lustre/w23/mattgsi/'
     resolution = run.run_base.resolution
+    RESOLUTION_ENV_SCRIPT = GSI_HOME + 'bin/' + str(resolution)+'_config'
 
-    f = open(OUTPUT_DIR+str(run.run_base)+'.sh', 'w+')
-    f.writelines(first_line+'\n')
-    f.writelines('source $'+RESOLUTION_ENV_SCRIPT+str(resolution)+'_config'+'\n')
-    f.close()
+    # <HOME_ENV_OVERRIDES>
+    for hv in home_var:
+        export_home_var += 'export SAT_TIF_DIR=' + hv.SAT_DIF_DIR_ROOT + '\n'
+        export_home_var += 'export RF_DIR=' + hv.RF_DIR_ROOT + '\n'
+        export_home_var += 'export USER_DATA_DIR=' + hv.USER_DATA_DIR_ROOT + '\n'
+        export_home_var += 'export MODIS_DIR=' + hv.MODIS_DIR_ROOT + '\n'
+        export_home_var += 'export RF_AUXDATA_DIR=' + hv.RF_AUXDATA_DIR + '\n'
+        export_home_var += 'export SAT_DIF_DIR=' + hv.SAT_DIF_DIR_ROOT
+
+    # <LOCAL_ENV_OVERRIDES>
+    LOCAL_VAR_GROUPS = run.run_base.card_sequence.environment_base.environment_variables
+
+    # <EXECUTABLE>
+    sequence = CardSequence.objects.all()
+    cards = ''
+    list_cards = []
+
+    for n in sequence:
+        cards = CardSequence.cards.through.objects.filter(sequence=n)
+
+    if cards:
+        for card in cards:
+            list_cards.append(str(card))
+
+        line_card_item = ' '.join(list_cards)
+
+    EXECUTABLE = '$RF_EXEC_DIR/' + line_card_item
+
+    # path to scripts for runs
+    path_runs = SCRIPTS_HOME_DIR + 'scripts/runs/'
+    path_steps = SCRIPTS_HOME_DIR + 'scripts/steps/'
+
+    try:
+        os.mkdir(path_runs)
+    except OSError:
+        print '*** FOLDER EXIST ***'
+    finally:
+        f = open(path_runs+str('run_'+str(run.run_base)+str(run.id)+'.sh'), 'w+')
+        f.writelines('. '+RESOLUTION_ENV_SCRIPT+'\n\n')
+        f.writelines(export_home_var+'\n\n')
+        f.writelines(LOCAL_VAR_GROUPS+'\n\n')
+        f.writelines(EXECUTABLE)
+        f.close()
+
