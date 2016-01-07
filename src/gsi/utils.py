@@ -43,7 +43,7 @@ def create_scripts(run, step):
     export_home_var = ''
 
     # home dir scripts
-    SCRIPTS_HOME_DIR = '/home/w23/mattgsi/'
+    SCRIPTS_HOME_DIR = '/lustre/w23/mattgsi/'
 
     # <RESOLUTION_ENV_SCRIPT>
     GSI_HOME = '/lustre/w23/mattgsi/'
@@ -63,22 +63,10 @@ def create_scripts(run, step):
     LOCAL_VAR_GROUPS = run.run_base.card_sequence.environment_base.environment_variables
 
     # <EXECUTABLE>
-    sequence = CardSequence.objects.all()
-    cards = ''
-    list_cards = []
+    card_item = step.card_item.card_item
+    EXECUTABLE = '$RF_EXEC_DIR/' + str(card_item)
 
-    for n in sequence:
-        cards = CardSequence.cards.through.objects.filter(sequence=n)
-
-    if cards:
-        for card in cards:
-            list_cards.append(str(card))
-
-        line_card_item = ' '.join(list_cards)
-
-    EXECUTABLE = '$RF_EXEC_DIR/' + line_card_item
-
-    # path to scripts for runs
+    # path to scripts for runs and steps
     path_runs = SCRIPTS_HOME_DIR + 'scripts/runs/'
     path_steps = SCRIPTS_HOME_DIR + 'scripts/steps/'
 
