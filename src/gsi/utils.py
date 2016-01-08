@@ -65,7 +65,7 @@ def create_scripts(run, step):
 
     # <EXECUTABLE>
     card_item = step.card_item.card_item
-    EXECUTABLE = '$RF_EXEC_DIR/' + str(card_item)
+    EXECUTABLE = '$RF_EXEC_DIR/{0}  -r {1} -c {2}'.format(card_item, run.id, card_item.id)
 
     # path to scripts for runs and steps
     path_runs = GSI_HOME + 'scripts/runs/'
