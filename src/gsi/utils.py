@@ -75,7 +75,8 @@ def create_scripts(run, step):
     except OSError:
         print '*** FOLDER EXIST ***'
     finally:
-        f = open(path_runs+str('run_'+str(run.run_base)+str(run.id)+'.sh'), 'w+')
+        script_name = str(run)+'_'+str(run.id)+'_'+str(card_item)+'_'+str(card_item.id)+'.sh'
+        f = open((path_runs+script_name), 'w+')
         f.writelines('. '+RESOLUTION_ENV_SCRIPT+'\n\n')
         f.writelines(export_home_var+'\n\n')
         f.writelines(LOCAL_VAR_GROUPS+'\n\n')
