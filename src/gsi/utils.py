@@ -1,5 +1,7 @@
 import os
 
+from django.conf import settings
+
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -43,10 +45,9 @@ def create_scripts(run, step):
     export_home_var = ''
 
     # home dir scripts
-    SCRIPTS_HOME_DIR = '/lustre/w23/mattgsi/'
+    GSI_HOME = settings.SCRIPTS_HOME
 
     # <RESOLUTION_ENV_SCRIPT>
-    GSI_HOME = '/lustre/w23/mattgsi/'
     resolution = run.run_base.resolution
     RESOLUTION_ENV_SCRIPT = GSI_HOME + 'bin/' + str(resolution)+'_config'
 
@@ -67,19 +68,20 @@ def create_scripts(run, step):
     EXECUTABLE = '$RF_EXEC_DIR/' + str(card_item)
 
     # path to scripts for runs and steps
-    path_runs = SCRIPTS_HOME_DIR + 'scripts/runs/'
-    path_steps = SCRIPTS_HOME_DIR + 'scripts/steps/'
+    path_runs = GSI_HOME + 'scripts/runs/'
+    # path_steps = GSI_HOME + 'scripts/steps/'
 
     try:
-        os.mkdir(path_runs)
+        import pdb;pdb.set_trace()
+        os.makedirs(path_runs)
+
     except OSError:
         print '*** FOLDER EXIST ***'
     finally:
-        script_name = str(run)+'_'+str(run.id)+'_'+str(card_item)+'_'+str(card_item.id)+'.sh'
-        f = open((path_runs+script_name), 'w+')
-        f.writelines('. '+RESOLUTION_ENV_SCRIPT+'\n\n')
-        f.writelines(export_home_var+'\n\n')
-        f.writelines(LOCAL_VAR_GROUPS+'\n\n')
+        script_name = 'run_%s_card_%s.sh' % (run.id, card_item.id)
+        f = open((path_runs + script_name), 'w+')
+        f.writelines('. ' + RESOLUTION_ENV_SCRIPT + '\n\n')
+        f.writelines(export_home_var + '\n\n')
+        f.writelines(LOCAL_VAR_GROUPS + '\n\n')
         f.writelines(EXECUTABLE)
         f.close()
-

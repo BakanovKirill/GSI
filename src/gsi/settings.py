@@ -114,6 +114,8 @@ ENABLE_DEBUG_TOOLBAR = False
 
 MEDIA_URL = '/media/'
 
+
+SCRIPTS_HOME = '/lustre/w23/mattgsi/'
 # allow to override defaults
 try:
     from settings_local import *
