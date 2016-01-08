@@ -2,7 +2,7 @@ MANAGE=bin/django
 LOCALE=ru_RU.UTF-8
 
 # Targets
-.PHONY: run dbshell shell mkmigr_gsi migrate_gsi mkmigr_cards migrate_cards test_gsi test_cards
+.PHONY: run dbshell shell mkmigr_gsi migrate_gsi mkmigr_cards migrate_cards test_gsi test_cards deploy
 
 default: run
 
@@ -32,3 +32,6 @@ test_gsi:
 
 test_cards:
 	$(MANAGE) test cards
+
+deploy:
+	fab deploy
