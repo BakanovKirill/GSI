@@ -72,9 +72,7 @@ def create_scripts(run, step):
     # path_steps = GSI_HOME + 'scripts/steps/'
 
     try:
-        import pdb;pdb.set_trace()
         os.makedirs(path_runs)
-
     except OSError:
         print '*** FOLDER EXIST ***'
     finally:
