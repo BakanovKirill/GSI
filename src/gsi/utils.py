@@ -1,4 +1,4 @@
-import os
+import os, stat
 
 from django.conf import settings
 
@@ -65,10 +65,10 @@ def create_scripts(run, step):
 
     # <EXECUTABLE>
     card_item = step.card_item.card_item
-    EXECUTABLE = '$RF_EXEC_DIR/{0}  -r {1} -c {2}'.format(card_item, run.id, card_item.id)
+    EXECUTABLE = '$RF_EXEC_DIR/RFscore {0}  -r {1} -c {2}'.format(card_item, run.id, card_item.id)
 
     # path to scripts for runs and steps
-    path_runs = GSI_HOME + 'scripts/runs/'
+    path_runs = GSI_HOME + 'scripts/runs/R_{0}/'.format(run.id)
     # path_steps = GSI_HOME + 'scripts/steps/'
 
     try:
@@ -76,10 +76,13 @@ def create_scripts(run, step):
     except OSError:
         print '*** FOLDER EXIST ***'
     finally:
-        script_name = 'run_%s_card_%s.sh' % (run.id, card_item.id)
-        f = open((path_runs + script_name), 'w+')
-        f.writelines('. ' + RESOLUTION_ENV_SCRIPT + '\n\n')
-        f.writelines(export_home_var + '\n\n')
-        f.writelines(LOCAL_VAR_GROUPS + '\n\n')
-        f.writelines(EXECUTABLE)
-        f.close()
+        script_name = 'card_{0}.sh'.format(card_item.id)
+        script_path = path_runs + script_name
+        fd = open(script_path, 'w+')
+        fd.writelines('. ' + RESOLUTION_ENV_SCRIPT + '\n\n')
+        fd.writelines(export_home_var + '\n\n')
+        fd.writelines(LOCAL_VAR_GROUPS + '\n\n')
+        fd.writelines(EXECUTABLE)
+        os.chmod(script_path, 0755)
+        fd.close()
+
