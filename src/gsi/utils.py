@@ -1,7 +1,7 @@
+# -*- coding: utf-8 -*-
 import os, stat
 
 from django.conf import settings
-
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -39,7 +39,10 @@ def make_run(run_base, user):
 
 
 def create_scripts(run, step):
-    from gsi.models import CardSequence, HomeVariables as Home
+    """ Create a script at startup run_base """
+    from gsi.models import CardSequence, YearGroup, \
+        Year, Tile, Area, HomeVariables as Home
+    from cards.models import RFScore
 
     home_var = Home.objects.all()
     export_home_var = ''
@@ -65,7 +68,57 @@ def create_scripts(run, step):
 
     # <EXECUTABLE>
     card_item = step.card_item.card_item
-    EXECUTABLE = '$RF_EXEC_DIR/RFscore {0}  -r {1} -c {2}'.format(card_item, run.id, card_item.id)
+    card_model = card_item.content_type.model
+    data_card = ''
+    EXECUTABLE = ''
+
+    # AUZ_SOC3_RFSCORE
+
+    # CARD_MODEL = (
+    #     'qrf',
+    #     'rfscore',
+    #     'remap',
+    #     'yearfilter',
+    #     'preproc',
+    #     'mergecsv',
+    #     'rftrain',
+    # )
+
+    # choice card for create script
+    # if card_model == 'rfscore':
+    pid = 1
+    script_name = 'RFscore'
+    data_card = RFScore.objects.get(name='AUZ_SOC3_RFSCORE')
+    year_group = YearGroup.objects.get(name=data_card.year_group.name)
+    card_area = Area.objects.get(name=data_card.area)
+    years = year_group.years.through.objects.filter(yeargroup=year_group)
+    area_tiles = card_area.tiles.through.objects.filter(area=card_area)
+
+    for year in years:
+        year_card = Year.objects.get(id=year.year_id)
+        for tile in area_tiles:
+            tile_card = Tile.objects.get(id=tile.tile_id )
+            EXECUTABLE += '$RF_EXEC_DIR/{0} {1} {2}_{3} {4} {5} {6} {7} -r {8} -c {9} -s {10}\n'.format(
+                    script_name,
+                    tile_card,
+                    data_card.name,
+                    step.parent_run.run_base.directory_path,
+                    data_card.bias_corrn,
+                    year_card,
+                    data_card.number_of_threads,
+                    data_card.QRFopts,
+                    run.id,
+                    card_item.id,
+                    pid,
+            )
+            pid += 1
+
+    # u'$RF_EXEC_DIR/RFscore h28v11 AUZ_TEST_1_MYDIR 0 2001 1  1 –r <run_id>  -c 1 –s   1'
+    # u'$RF_EXEC_DIR/RFscore h28v12 AUZ_TEST_1_MYDIR 0 2001 1  1 –r <run_id>  -c 1 –s   2'
+    # u'$RF_EXEC_DIR/RFscore h29v10 AUZ_TEST_1_MYDIR 0 2001 1  1 –r <run_id>  -c 1 –s   3'
+
+
+    # EXECUTABLE = '$RF_EXEC_DIR/RFscore {0}  -r {1} -c {2}'.format(card_item, run.id, card_item.id)
 
     # path to scripts for runs and steps
     path_runs = GSI_HOME + 'scripts/runs/R_{0}/'.format(run.id)
