@@ -40,9 +40,7 @@ def make_run(run_base, user):
 
 def create_scripts(run, step):
     """ Create a script at startup run_base """
-    from gsi.models import CardSequence, YearGroup, \
-        Year, Tile, Area, HomeVariables as Home
-    from cards.models import RFScore
+    from gsi.models import HomeVariables as Home
 
     home_var = Home.objects.all()
     export_home_var = ''
@@ -68,56 +66,7 @@ def create_scripts(run, step):
 
     # <EXECUTABLE>
     card_item = step.card_item.card_item
-    card_model = card_item.content_type.model
-    data_card = ''
-    EXECUTABLE = ''
-
-    # AUZ_SOC3_RFSCORE
-
-    # CARD_MODEL = (
-    #     'qrf',
-    #     'rfscore',
-    #     'remap',
-    #     'yearfilter',
-    #     'preproc',
-    #     'mergecsv',
-    #     'rftrain',
-    # )
-
-    # choice card for create script
-    # if card_model == 'rfscore':
-    pid = 1
-    script_name = 'RFscore'
-    data_card = RFScore.objects.get(name='AUZ_SOC3_RFSCORE')
-    year_group = YearGroup.objects.get(name=data_card.year_group.name)
-    card_area = Area.objects.get(name=data_card.area)
-    years = year_group.years.through.objects.filter(yeargroup=year_group)
-    area_tiles = card_area.tiles.through.objects.filter(area=card_area)
-
-    for year in years:
-        year_card = Year.objects.get(id=year.year_id)
-        for tile in area_tiles:
-            tile_card = Tile.objects.get(id=tile.tile_id )
-            EXECUTABLE += '$RF_EXEC_DIR/{0} {1} {2}_{3} {4} {5} {6} {7} -r {8} -c {9} -s {10}\n'.format(
-                    script_name,
-                    tile_card,
-                    data_card.name,
-                    step.parent_run.run_base.directory_path,
-                    data_card.bias_corrn,
-                    year_card,
-                    data_card.number_of_threads,
-                    data_card.QRFopts,
-                    run.id,
-                    card_item.id,
-                    pid,
-            )
-            pid += 1
-
-    # u'$RF_EXEC_DIR/RFscore h28v11 AUZ_TEST_1_MYDIR 0 2001 1  1 –r <run_id>  -c 1 –s   1'
-    # u'$RF_EXEC_DIR/RFscore h28v12 AUZ_TEST_1_MYDIR 0 2001 1  1 –r <run_id>  -c 1 –s   2'
-    # u'$RF_EXEC_DIR/RFscore h29v10 AUZ_TEST_1_MYDIR 0 2001 1  1 –r <run_id>  -c 1 –s   3'
-
-
+    EXECUTABLE = get_exrcutable(run, step, card_item)
     # EXECUTABLE = '$RF_EXEC_DIR/RFscore {0}  -r {1} -c {2}'.format(card_item, run.id, card_item.id)
 
     # path to scripts for runs and steps
@@ -139,3 +88,122 @@ def create_scripts(run, step):
         os.chmod(script_path, 0755)
         fd.close()
 
+
+def get_exrcutable(run, step, card_item):
+    """ get the <EXECUTABLE> to script """
+    from cards.models import RFScore, RFTrain, QRF, \
+        Remap, YearFilter, PreProc
+    from gsi.models import YearGroup, Year, Tile, Area
+
+    # CARD_MODEL = (
+    #     'qrf',        +
+    #     'rfscore',    +
+    #     'remap',      -
+    #     'yearfilter', -
+    #     'preproc',    -
+    #     'mergecsv',   -
+    #     'rftrain',    +
+    # )
+
+    card_model = card_item.content_type.model
+    name_card = step.card_item.card_item.content_object
+    EXECUTABLE = ''
+    pid = 1
+
+
+    # print 'card_model ================= ', card_model
+
+    if card_model == 'rfscore':
+        #  u'RFscore <Tile> [[MyDir]] [<BiasCorrn>] [<QRFopts>] [<RefTarget>] [<CleanName>]'
+        data_card = RFScore.objects.get(name='AUZ_SOC3_RFSCORE')
+        year_group = YearGroup.objects.get(name=data_card.year_group.name)
+        card_area = Area.objects.get(name=data_card.area)
+        years = year_group.years.through.objects.filter(yeargroup=year_group)
+        area_tiles = card_area.tiles.through.objects.filter(area=card_area)
+
+        for year in years:
+            year_card = Year.objects.get(id=year.year_id)
+            for tile in area_tiles:
+                tile_card = Tile.objects.get(id=tile.tile_id)
+                EXECUTABLE += '$RF_EXEC_DIR/RFscore {0} {1}_{2} {3} {4} {5} {6} -r {7} -c {8} -s {9}\n'.format(
+                        tile_card,
+                        data_card.name,
+                        step.parent_run.run_base.directory_path,
+                        data_card.bias_corrn,
+                        year_card,
+                        data_card.number_of_threads,
+                        data_card.QRFopts,
+                        run.id,
+                        card_item.id,
+                        pid,
+                )
+                pid += 1
+
+    if card_model == 'rftrain':
+        # u'RFtrain <Tile> [<Ntrees>] [<training>] [<Nvar>] [<Nthread>]'
+        data_card = RFTrain.objects.get(name=name_card)
+        training = 10
+        n_thread = 1
+        EXECUTABLE += '$RF_EXEC_DIR/RFtrain {0} {1} {2} {3} {4} -r {5} -c {6} -s {7}\n'.format(
+            data_card.tile_type.name,
+            data_card.number_of_trees,
+            training,
+            data_card.value,
+            n_thread,
+            run.id,
+            card_item.id,
+            pid,
+        )
+        pid += 1
+
+    if card_model == 'qrf':
+        # u'QRF [<QRFinterval>] [<ntrees>] [<nthreads>] [<MyDir>]'
+        data_card = QRF.objects.get(name=name_card)
+        EXECUTABLE += '$RF_EXEC_DIR/QRF {0} {1} {2} {3} -r {4} -c {5} -s {6}\n'.format(
+            data_card.interval,
+            data_card.number_of_trees,
+            data_card.number_of_threads,
+            data_card.directory,
+            run.id,
+            card_item.id,
+            pid,
+        )
+        pid += 1
+
+    if card_model == 'remap':
+        # u'Remap <FileSpec> <RoI> <OutRoot>[,<OutSuffix>] [<ColourTable>] [<RefStatsFile>] [<RefStatsScale>]'
+        data_card = Remap.objects.get(name=name_card)
+        EXECUTABLE += '$RF_EXEC_DIR/Remap -r {4} -c {5} -s {6}\n'.format(
+            run.id,
+            card_item.id,
+            pid,
+        )
+
+    if card_model == 'yearfilter':
+        # u'YearFilter <Tile> <FileType> [<Filter>] [<FiltOut>] [<ExtendStart>] [<InpFourier>] [<OutDir>] [<InpDir>]'
+        data_card = YearFilter.objects.get(name=name_card)
+        EXECUTABLE += '$RF_EXEC_DIR/YearFilter -r {4} -c {5} -s {6}\n'.format(
+            run.id,
+            card_item.id,
+            pid,
+        )
+
+    if card_model == 'preproc':
+        # u'PreProc [<Tile>|<file.hdf>] [<Year>] [<Mode>]'
+        data_card = PreProc.objects.get(name=name_card)
+        EXECUTABLE += '$RF_EXEC_DIR/PreProc -r {4} -c {5} -s {6}\n'.format(
+            run.id,
+            card_item.id,
+            pid,
+        )
+
+    # if card_model == 'mergecsv':
+    #     # u'PreProc [<Tile>|<file.hdf>] [<Year>] [<Mode>]'
+    #     data_card = QRF.objects.get(name=name_card)
+    #     EXECUTABLE += '$RF_EXEC_DIR/PreProc -r {4} -c {5} -s {6}\n'.format(
+    #         run.id,
+    #         card_item.id,
+    #         pid,
+    #     )
+
+    return EXECUTABLE
