@@ -106,7 +106,7 @@ def _get_area_tiles(name):
 def get_exrcutable(run, step, card_item):
     """ get the <EXECUTABLE> to script """
     from cards.models import RFScore, RFTrain, QRF, \
-        Remap, YearFilter, PreProc
+        Remap, YearFilter, PreProc, Collate
     from gsi.models import Year, Tile
 
     # CARD_MODEL = (
@@ -127,8 +127,8 @@ def get_exrcutable(run, step, card_item):
 
     if card_model == 'rfscore':
         #  u'RFscore <Tile> [[MyDir]] [<BiasCorrn>] [<QRFopts>] [<RefTarget>] [<CleanName>]'
-        data_card = RFScore.objects.get(name='AUZ_SOC3_RFSCORE')
-        # data_card = RFScore.objects.get(name=name_card)
+        # data_card = RFScore.objects.get(name='AUZ_SOC3_RFSCORE')
+        data_card = RFScore.objects.get(name=name_card)
         years = _get_years(data_card.year_group.name)
         area_tiles = _get_area_tiles(data_card.area)
 
@@ -200,8 +200,8 @@ def get_exrcutable(run, step, card_item):
 
     if card_model == 'yearfilter':
         # u'YearFilter <Tile> <FileType> [<Filter>] [<FiltOut>] [<ExtendStart>] [<InpFourier>] [<OutDir>] [<InpDir>]'
-        data_card = YearFilter.objects.get(name=name_card)
         # data_card = YearFilter.objects.get(name='YearFilter_1')
+        data_card = YearFilter.objects.get(name=name_card)
         area_tiles = _get_area_tiles(data_card.area)
 
         for tile in area_tiles:
@@ -223,8 +223,8 @@ def get_exrcutable(run, step, card_item):
 
     if card_model == 'preproc':
         # u'PreProc [<Tile>|<file.hdf>] [<Year>] [<Mode>]'
-        data_card = PreProc.objects.get(name=name_card)
         # data_card = PreProc.objects.get(name='PreProc_1')
+        data_card = PreProc.objects.get(name=name_card)
         years = _get_years(data_card.year_group.name)
         area_tiles = _get_area_tiles(data_card.area)
 
@@ -241,5 +241,25 @@ def get_exrcutable(run, step, card_item):
                     pid,
                 )
                 pid += 1
+
+    if card_model == 'collate':
+        # u'Collate <Tile> [<Mode>] [<InpFile>] [<OutDirFile>] [<InpScale>]'
+        # data_card = Collate.objects.get(name='Collate_1')
+        data_card = PreProc.objects.get(name=name_card)
+        area_tiles = _get_area_tiles(data_card.area)
+
+        for tile in area_tiles:
+            tile_card = Tile.objects.get(id=tile.tile_id)
+            EXECUTABLE += '$RF_EXEC_DIR/Collate {0} {1} {2} {3} {4} -r {5} -c {6} -s {7}\n'.format(
+                tile_card,
+                data_card.mode,
+                data_card.input_file,
+                data_card.output_tile_subdir,
+                data_card.input_scale_factor,
+                run.id,
+                card_item.id,
+                pid,
+            )
+            pid += 1
 
     return EXECUTABLE
