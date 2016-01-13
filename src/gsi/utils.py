@@ -89,20 +89,35 @@ def create_scripts(run, step):
         fd.close()
 
 
+def _get_years(name):
+    from gsi.models import YearGroup
+
+    year_group = YearGroup.objects.get(name=name)
+    return year_group.years.through.objects.filter(yeargroup=year_group)
+
+
+def _get_area_tiles(name):
+    from gsi.models import Area
+
+    card_area = Area.objects.get(name=name)
+    return card_area.tiles.through.objects.filter(area=card_area)
+
+
 def get_exrcutable(run, step, card_item):
     """ get the <EXECUTABLE> to script """
     from cards.models import RFScore, RFTrain, QRF, \
         Remap, YearFilter, PreProc
-    from gsi.models import YearGroup, Year, Tile, Area
+    from gsi.models import Year, Tile
 
     # CARD_MODEL = (
     #     'qrf',        +
     #     'rfscore',    +
-    #     'remap',      -
-    #     'yearfilter', -
-    #     'preproc',    -
+    #     'remap',      +
+    #     'yearfilter', +
+    #     'preproc',    +
     #     'mergecsv',   -
-    #     'rftrain',    +
+    #     'collate',    -
+    #     'rftrain',    ?
     # )
 
     card_model = card_item.content_type.model
@@ -110,16 +125,12 @@ def get_exrcutable(run, step, card_item):
     EXECUTABLE = ''
     pid = 1
 
-
-    # print 'card_model ================= ', card_model
-
     if card_model == 'rfscore':
         #  u'RFscore <Tile> [[MyDir]] [<BiasCorrn>] [<QRFopts>] [<RefTarget>] [<CleanName>]'
         data_card = RFScore.objects.get(name='AUZ_SOC3_RFSCORE')
-        year_group = YearGroup.objects.get(name=data_card.year_group.name)
-        card_area = Area.objects.get(name=data_card.area)
-        years = year_group.years.through.objects.filter(yeargroup=year_group)
-        area_tiles = card_area.tiles.through.objects.filter(area=card_area)
+        # data_card = RFScore.objects.get(name=name_card)
+        years = _get_years(data_card.year_group.name)
+        area_tiles = _get_area_tiles(data_card.area)
 
         for year in years:
             year_card = Year.objects.get(id=year.year_id)
@@ -173,37 +184,62 @@ def get_exrcutable(run, step, card_item):
     if card_model == 'remap':
         # u'Remap <FileSpec> <RoI> <OutRoot>[,<OutSuffix>] [<ColourTable>] [<RefStatsFile>] [<RefStatsScale>]'
         data_card = Remap.objects.get(name=name_card)
-        EXECUTABLE += '$RF_EXEC_DIR/Remap -r {4} -c {5} -s {6}\n'.format(
+        EXECUTABLE += '$RF_EXEC_DIR/Remap {0} {1} {2} {3} {4} {5} {6} -r {7} -c {8} -s {9}\n'.format(
+            data_card.file_spec,
+            data_card.roi,
+            data_card.output_root,
+            data_card.output_suffix,
+            data_card.color_table,
+            data_card.refstats_file,
+            data_card.refstats_scale,
             run.id,
             card_item.id,
             pid,
         )
+        pid += 1
 
     if card_model == 'yearfilter':
         # u'YearFilter <Tile> <FileType> [<Filter>] [<FiltOut>] [<ExtendStart>] [<InpFourier>] [<OutDir>] [<InpDir>]'
         data_card = YearFilter.objects.get(name=name_card)
-        EXECUTABLE += '$RF_EXEC_DIR/YearFilter -r {4} -c {5} -s {6}\n'.format(
-            run.id,
-            card_item.id,
-            pid,
-        )
+        # data_card = YearFilter.objects.get(name='YearFilter_1')
+        area_tiles = _get_area_tiles(data_card.area)
+
+        for tile in area_tiles:
+            tile_card = Tile.objects.get(id=tile.tile_id)
+            EXECUTABLE += '$RF_EXEC_DIR/YearFilter {0} {1} {2} {3} {4} {5} {6} {7} -r {8} -c {9} -s {10}\n'.format(
+                tile_card,
+                data_card.filetype,
+                data_card.filter,
+                data_card.filter_output,
+                data_card.extend_start,
+                data_card.input_fourier,
+                data_card.output_directory,
+                data_card.input_directory,
+                run.id,
+                card_item.id,
+                pid,
+            )
+            pid += 1
 
     if card_model == 'preproc':
         # u'PreProc [<Tile>|<file.hdf>] [<Year>] [<Mode>]'
         data_card = PreProc.objects.get(name=name_card)
-        EXECUTABLE += '$RF_EXEC_DIR/PreProc -r {4} -c {5} -s {6}\n'.format(
-            run.id,
-            card_item.id,
-            pid,
-        )
+        # data_card = PreProc.objects.get(name='PreProc_1')
+        years = _get_years(data_card.year_group.name)
+        area_tiles = _get_area_tiles(data_card.area)
 
-    # if card_model == 'mergecsv':
-    #     # u'PreProc [<Tile>|<file.hdf>] [<Year>] [<Mode>]'
-    #     data_card = QRF.objects.get(name=name_card)
-    #     EXECUTABLE += '$RF_EXEC_DIR/PreProc -r {4} -c {5} -s {6}\n'.format(
-    #         run.id,
-    #         card_item.id,
-    #         pid,
-    #     )
+        for year in years:
+            year_card = Year.objects.get(id=year.year_id)
+            for tile in area_tiles:
+                tile_card = Tile.objects.get(id=tile.tile_id)
+                EXECUTABLE += '$RF_EXEC_DIR/PreProc {0} {1} {2} -r {3} -c {4} -s {5}\n'.format(
+                    tile_card,
+                    year_card,
+                    data_card.mode,
+                    run.id,
+                    card_item.id,
+                    pid,
+                )
+                pid += 1
 
     return EXECUTABLE
