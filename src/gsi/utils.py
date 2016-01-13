@@ -115,9 +115,9 @@ def get_exrcutable(run, step, card_item):
     #     'remap',      +
     #     'yearfilter', +
     #     'preproc',    +
-    #     'mergecsv',   -
-    #     'collate',    -
+    #     'collate',    +
     #     'rftrain',    ?
+    #     'mergecsv',   -
     # )
 
     card_model = card_item.content_type.model
@@ -245,7 +245,7 @@ def get_exrcutable(run, step, card_item):
     if card_model == 'collate':
         # u'Collate <Tile> [<Mode>] [<InpFile>] [<OutDirFile>] [<InpScale>]'
         # data_card = Collate.objects.get(name='Collate_1')
-        data_card = PreProc.objects.get(name=name_card)
+        data_card = Collate.objects.get(name=name_card)
         area_tiles = _get_area_tiles(data_card.area)
 
         for tile in area_tiles:
