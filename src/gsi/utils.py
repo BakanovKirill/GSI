@@ -67,7 +67,6 @@ def create_scripts(run, step):
     # <EXECUTABLE>
     card_item = step.card_item.card_item
     EXECUTABLE = get_exrcutable(run, step, card_item)
-    # EXECUTABLE = '$RF_EXEC_DIR/RFscore {0}  -r {1} -c {2}'.format(card_item, run.id, card_item.id)
 
     # path to scripts for runs and steps
     path_runs = GSI_HOME + 'scripts/runs/R_{0}/'.format(run.id)
@@ -89,14 +88,14 @@ def create_scripts(run, step):
         fd.close()
 
 
-def _get_years(name):
+def get_years(name):
     from gsi.models import YearGroup
 
     year_group = YearGroup.objects.get(name=name)
     return year_group.years.through.objects.filter(yeargroup=year_group)
 
 
-def _get_area_tiles(name):
+def get_area_tiles(name):
     from gsi.models import Area
 
     card_area = Area.objects.get(name=name)
@@ -106,7 +105,7 @@ def _get_area_tiles(name):
 def get_exrcutable(run, step, card_item):
     """ get the <EXECUTABLE> to script """
     from cards.models import RFScore, RFTrain, QRF, \
-        Remap, YearFilter, PreProc, Collate
+        Remap, YearFilter, PreProc, Collate, MergeCSV
     from gsi.models import Year, Tile
 
     # CARD_MODEL = (
@@ -129,8 +128,8 @@ def get_exrcutable(run, step, card_item):
         #  u'RFscore <Tile> [[MyDir]] [<BiasCorrn>] [<QRFopts>] [<RefTarget>] [<CleanName>]'
         # data_card = RFScore.objects.get(name='AUZ_SOC3_RFSCORE')
         data_card = RFScore.objects.get(name=name_card)
-        years = _get_years(data_card.year_group.name)
-        area_tiles = _get_area_tiles(data_card.area)
+        years = get_years(data_card.year_group.name)
+        area_tiles = get_area_tiles(data_card.area)
 
         for year in years:
             year_card = Year.objects.get(id=year.year_id)
@@ -202,7 +201,7 @@ def get_exrcutable(run, step, card_item):
         # u'YearFilter <Tile> <FileType> [<Filter>] [<FiltOut>] [<ExtendStart>] [<InpFourier>] [<OutDir>] [<InpDir>]'
         # data_card = YearFilter.objects.get(name='YearFilter_1')
         data_card = YearFilter.objects.get(name=name_card)
-        area_tiles = _get_area_tiles(data_card.area)
+        area_tiles = get_area_tiles(data_card.area)
 
         for tile in area_tiles:
             tile_card = Tile.objects.get(id=tile.tile_id)
@@ -225,8 +224,8 @@ def get_exrcutable(run, step, card_item):
         # u'PreProc [<Tile>|<file.hdf>] [<Year>] [<Mode>]'
         # data_card = PreProc.objects.get(name='PreProc_1')
         data_card = PreProc.objects.get(name=name_card)
-        years = _get_years(data_card.year_group.name)
-        area_tiles = _get_area_tiles(data_card.area)
+        years = get_years(data_card.year_group.name)
+        area_tiles = get_area_tiles(data_card.area)
 
         for year in years:
             year_card = Year.objects.get(id=year.year_id)
@@ -246,7 +245,7 @@ def get_exrcutable(run, step, card_item):
         # u'Collate <Tile> [<Mode>] [<InpFile>] [<OutDirFile>] [<InpScale>]'
         # data_card = Collate.objects.get(name='Collate_1')
         data_card = Collate.objects.get(name=name_card)
-        area_tiles = _get_area_tiles(data_card.area)
+        area_tiles = get_area_tiles(data_card.area)
 
         for tile in area_tiles:
             tile_card = Tile.objects.get(id=tile.tile_id)
@@ -261,5 +260,14 @@ def get_exrcutable(run, step, card_item):
                 pid,
             )
             pid += 1
+
+    # if card_model == 'mergecsv':
+    #     # MergeCSV <PathSpec>/<FileSpec> [<OutFile>] [<Scale>]
+    #     data_card = MergeCSV.objects.get(name=name_card)
+    #     EXECUTABLE += '$RF_EXEC_DIR/MergeCSV {0} {1} {2} -r {3} -c {4} -s {5}\n'.format(
+    #         run.id,
+    #         card_item.id,
+    #         pid,
+    #     )
 
     return EXECUTABLE
