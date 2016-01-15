@@ -1,6 +1,10 @@
 {% extends "base.html" %}
+{% load static from staticfiles %}
+
 {% block content %}
-    <div class="body">
-        This page is under construction. <a href="{% url 'admin:login' %}">Log into admin for now</a>.
+    <div class="row-fluid">
+        <div class="col-md-12">
+            <h4>This page is under construction. <a href="{% url 'admin:login' %}">Log into admin for now</a>.</h4>
+        </div>
     </div>
 {% endblock content %}
