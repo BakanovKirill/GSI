@@ -138,7 +138,7 @@ def get_exrcutable(run, step, card_item):
             year_card = Year.objects.get(id=year.year_id)
             for tile in area_tiles:
                 tile_card = Tile.objects.get(id=tile.tile_id)
-                EXECUTABLE += '$RF_EXEC_DIR/RFscore {0} {1}_{2} {3} {4} {5} {6} -r {7} -c {8} -s {9}\n'.format(
+                EXECUTABLE += '$RF_EXEC_DIR/RFscore {0} {1}_{2} {3} {4} {5} {6} -s {7}.{8}.{9}\n'.format(
                         tile_card,
                         data_card.name,
                         step.parent_run.run_base.directory_path,
@@ -157,7 +157,7 @@ def get_exrcutable(run, step, card_item):
         data_card = RFTrain.objects.get(name=name_card)
         training = 10
         n_thread = 1
-        EXECUTABLE += '$RF_EXEC_DIR/RFtrain {0} {1} {2} {3} {4} -r {5} -c {6} -s {7}\n'.format(
+        EXECUTABLE += '$RF_EXEC_DIR/RFtrain {0} {1} {2} {3} {4} -s {5}.{6}.{7}\n'.format(
             data_card.tile_type.name,
             data_card.number_of_trees,
             training,
@@ -172,7 +172,7 @@ def get_exrcutable(run, step, card_item):
     if card_model == 'qrf':
         # u'QRF [<QRFinterval>] [<ntrees>] [<nthreads>] [<MyDir>]'
         data_card = QRF.objects.get(name=name_card)
-        EXECUTABLE += '$RF_EXEC_DIR/QRF {0} {1} {2} {3} -r {4} -c {5} -s {6}\n'.format(
+        EXECUTABLE += '$RF_EXEC_DIR/QRF {0} {1} {2} {3} -s {4}.{5}.{6}\n'.format(
             data_card.interval,
             data_card.number_of_trees,
             data_card.number_of_threads,
@@ -186,7 +186,7 @@ def get_exrcutable(run, step, card_item):
     if card_model == 'remap':
         # u'Remap <FileSpec> <RoI> <OutRoot>[,<OutSuffix>] [<ColourTable>] [<RefStatsFile>] [<RefStatsScale>]'
         data_card = Remap.objects.get(name=name_card)
-        EXECUTABLE += '$RF_EXEC_DIR/Remap {0} {1} {2} {3} {4} {5} {6} -r {7} -c {8} -s {9}\n'.format(
+        EXECUTABLE += '$RF_EXEC_DIR/Remap {0} {1} {2} {3} {4} {5} {6} -s {7}.{8}.{9}\n'.format(
             data_card.file_spec,
             data_card.roi,
             data_card.output_root,
@@ -208,7 +208,7 @@ def get_exrcutable(run, step, card_item):
 
         for tile in area_tiles:
             tile_card = Tile.objects.get(id=tile.tile_id)
-            EXECUTABLE += '$RF_EXEC_DIR/YearFilter {0} {1} {2} {3} {4} {5} {6} {7} -r {8} -c {9} -s {10}\n'.format(
+            EXECUTABLE += '$RF_EXEC_DIR/YearFilter {0} {1} {2} {3} {4} {5} {6} {7} -s {8}.{9}.{10}\n'.format(
                 tile_card,
                 data_card.filetype,
                 data_card.filter,
@@ -234,7 +234,7 @@ def get_exrcutable(run, step, card_item):
             year_card = Year.objects.get(id=year.year_id)
             for tile in area_tiles:
                 tile_card = Tile.objects.get(id=tile.tile_id)
-                EXECUTABLE += '$RF_EXEC_DIR/PreProc {0} {1} {2} -r {3} -c {4} -s {5}\n'.format(
+                EXECUTABLE += '$RF_EXEC_DIR/PreProc {0} {1} {2} -s {3}.{4}.{5}\n'.format(
                     tile_card,
                     year_card,
                     data_card.mode,
@@ -252,7 +252,7 @@ def get_exrcutable(run, step, card_item):
 
         for tile in area_tiles:
             tile_card = Tile.objects.get(id=tile.tile_id)
-            EXECUTABLE += '$RF_EXEC_DIR/Collate {0} {1} {2} {3} {4} -r {5} -c {6} -s {7}\n'.format(
+            EXECUTABLE += '$RF_EXEC_DIR/Collate {0} {1} {2} {3} {4} -s {5}.{6}.{7}\n'.format(
                 tile_card,
                 data_card.mode,
                 data_card.input_file,
@@ -267,7 +267,7 @@ def get_exrcutable(run, step, card_item):
     # if card_model == 'mergecsv':
     #     # MergeCSV <PathSpec>/<FileSpec> [<OutFile>] [<Scale>]
     #     data_card = MergeCSV.objects.get(name=name_card)
-    #     EXECUTABLE += '$RF_EXEC_DIR/MergeCSV {0} {1} {2} -r {3} -c {4} -s {5}\n'.format(
+    #     EXECUTABLE += '$RF_EXEC_DIR/MergeCSV {0} {1} {2} -s {3}.{4}.{5}\n'.format(
     #         run.id,
     #         card_item.id,
     #         pid,
