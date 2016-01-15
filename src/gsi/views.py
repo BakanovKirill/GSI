@@ -9,7 +9,7 @@ from .utils import validate_status
 from .models import Run, RunStep
 
 
-@render_to('index.html')
+@render_to('gsi/index.html')
 def index(request):
     data = {}
     return data
@@ -17,7 +17,7 @@ def index(request):
 
 @api_view(['GET'])
 def update_run(request, run_id):
-    """ update the status of the runs"""
+    """ update the status of the runs """
 
     data = validate_status(request.query_params.get('status', False))
 
@@ -37,7 +37,7 @@ def update_run(request, run_id):
 
 @api_view(['GET'])
 def update_step(request, step_id):
-    """ update the status of the cards"""
+    """ update the status of the cards """
 
     data = validate_status(request.query_params.get('status', False))
     if data['status']:

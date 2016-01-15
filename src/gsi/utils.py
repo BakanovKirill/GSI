@@ -30,7 +30,7 @@ def make_run(run_base, user):
     run.log = log
     run.save()
     # first_card = OrderedCardItem.objects.filter(sequence__runbase=run_base).first()
-    all_card = OrderedCardItem.objects.filter(sequence__runbase=run_base)
+    all_card = OrderedCardItem.objects.filter(sequence__runbase=run_base).order_by('order')
     # step = RunStep.objects.create(parent_run=run, card_item=first_card)
 
     for card in all_card:
