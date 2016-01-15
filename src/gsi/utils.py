@@ -29,11 +29,14 @@ def make_run(run_base, user):
     log = Log.objects.create(name="run_%s" % run.id)
     run.log = log
     run.save()
-    first_card = OrderedCardItem.objects.filter(sequence__runbase=run_base).first()
-    step = RunStep.objects.create(parent_run=run, card_item=first_card)
+    # first_card = OrderedCardItem.objects.filter(sequence__runbase=run_base).first()
+    all_card = OrderedCardItem.objects.filter(sequence__runbase=run_base)
+    # step = RunStep.objects.create(parent_run=run, card_item=first_card)
 
-    #TODO: make scripts for each step
-    create_scripts(run, step)
+    for card in all_card:
+        step = RunStep.objects.create(parent_run=run, card_item=card)
+        #TODO: make scripts for each step
+        create_scripts(run, step)
 
     return {'run': run, 'step': step}
 
