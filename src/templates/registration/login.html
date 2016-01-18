@@ -3,36 +3,44 @@
 
 {% block status_message %}
     {% if form.errors %}
-        <div class="alert alert-warning" role="alert">{{ form.non_field_errors }}</div>
+        <div class="alert alert-warning" role="alert">
+            {% if form.non_field_errors %}
+                {{ form.non_field_errors.as_text }}.
+            {% else %}
+                Please, correct the following errors.
+            {% endif %}
+        </div>
     {% endif %}
 {% endblock %}
 
+{% block title %}Log in and get to GSI{% endblock title %}
+
 {% block content %}
-    <div class="row-fluid">
-        <div class="col-md-12 center">
-            <h2 class="top-50">Log in and get to GSI</h2>
+    <form action="{% url 'users:auth_login' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{% url 'index' %}" />
+
+        <div class="row">
+            <div class="col-md-3 col-md-offset-1 form-group right top-15">
+                <label for="login" placeholder="Username"><i class="fa fa-envelope-o fa-user"></i></label>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" id="login" value="" name="username" />
+                <span class="help-block red-color">{{ form.errors.username.as_data.0.0 }}</span>
+            </div>
         </div>
 
-        <form action="{% url 'users:auth_login' %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{% url 'home' %}" />
-
-            <div class="col-md-4 col-md-offset-4 form-group right top-15">
-                <div class="input-group margin-bottom-sm">
-                    <span class="input-group-addon"><i class="fa fa-envelope-o fa-user"></i></span>
-                    <input class="form-control" type="text" id="login" value="" placeholder="Username" autofocus="true">
-                    <span class="help-block">{{ form.errors.username.as_data.0.0 }}</span>
-                </div>
+        <div class="row">
+            <div class="col-md-3 col-md-offset-1 form-group right top-15">
+                <label for="password"><i class="fa fa-envelope-o fa-lock"></i></label>
             </div>
-
-            <div class="col-md-4 col-md-offset-4 form-group right top-15">
-                <div class="input-group margin-bottom-sm">
-                    <span class="input-group-addon"><i class="fa fa-envelope-o fa-lock"></i></span>
-                    <input class="form-control" type="text" id="password" value="" placeholder="Password" autofocus="true">
-                    <span class="help-block">{{ form.errors.password.as_data.0.0 }}</span>
-                </div>
+            <div class="col-md-4">
+                <input type="password" class="form-control" id="password" value="" name="password" />
+                <span class="help-block red-color">{{ form.errors.password.as_data.0.0 }}</span>
             </div>
+        </div>
 
+        <div class="row">
             <div class="col-md-4 col-md-offset-4">
                 <button type="submit" class="btn btn-primary btn-block">Login</button>
             </div>
@@ -42,8 +50,6 @@
             <div class="col-md-4 col-md-offset-4">
                 <a href="#" class="btn btn-default btn-lg top-15 btn-block" role="button">Sign up</a>
             </div>
-        </form>
-
-
-    </div>
+        </div>
+    </form>
 {% endblock content %}

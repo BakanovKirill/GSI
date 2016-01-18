@@ -16,12 +16,6 @@ def index(request):
     data = {}
     return data
 
-@login_required
-@render_to('gsi/home.html')
-def home(request):
-    data = {}
-    return data
-
 
 @login_required
 @render_to('gsi/setup_new_run.html')

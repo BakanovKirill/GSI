@@ -27,9 +27,6 @@ urlpatterns = [
     # index
     url(r'^$', 'gsi.views.index', name='index'),
 
-    # home
-    url(r'^home/$', 'gsi.views.home', name='home'),
-
     # setup new run
     url(r'^setup-new-run/$', 'gsi.views.setup_new_run', name='setup_new_run'),
 

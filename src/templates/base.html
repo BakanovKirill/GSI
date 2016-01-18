@@ -27,14 +27,19 @@
 </head>
 <body>
     {% block status_message %}{% endblock status_message %}
+
     <!-- Start Container -->
     <div class="container">
-        <div class="row-fluid">
+        <div class="row">
             <div class="col-md-12">
-                <h3 class="center">{% block title %}{% endblock title %}</h3>
+                <h2 class="center top-50">{% block title %}{% endblock title %}</h2>
             </div>
         </div>
-        {% block content %}{% endblock content %}
+        <div class="row">
+            <div class="col-md-12">
+                {% block content %}{% endblock content %}
+            </div>
+        </div>
     </div>
 
     <!-- jQuery -->
