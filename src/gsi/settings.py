@@ -48,6 +48,7 @@ INSTALLED_APPS = (
 
     'rest_framework',
     'solo',
+    'registration',
 
     'cards',
     'gsi',
@@ -114,8 +115,13 @@ ENABLE_DEBUG_TOOLBAR = False
 
 MEDIA_URL = '/media/'
 
-
+# home folder for new cripts
 SCRIPTS_HOME = '/lustre/w23/mattgsi/'
+
+# settings for django-registration-redux
+REGISTRATION_OPEN = True
+LOGIN_URL = 'users:auth_login'
+LOGOUT_URL = 'users:auth_logout'
 
 # allow to override defaults
 try:

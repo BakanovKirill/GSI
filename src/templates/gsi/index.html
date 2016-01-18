@@ -2,9 +2,10 @@
 {% load static from staticfiles %}
 
 {% block content %}
-    <div class="row-fluid">
+    <div class="row-fluid center">
         <div class="col-md-12">
-            <h4>This page is under construction. <a href="{% url 'admin:login' %}">Log into admin for now</a>.</h4>
+            <h2 class="home-page-logo">GSI site</h2>
+            <p class="home-page-user-toolbar"><a href="{% url 'users:auth_login' %}">Log into admin for now</a></p>
         </div>
     </div>
 {% endblock content %}

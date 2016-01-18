@@ -1,0 +1,21 @@
+.center {
+    text-align: center;
+}
+
+.right {
+    text-align: right;
+}
+
+.top-15 {
+    margin-top: 8px;
+}
+
+.top-50 {
+    margin-top: 50px;
+}
+
+.btn-block {
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+}
