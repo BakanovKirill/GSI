@@ -19,7 +19,8 @@ def blocking(request):
 @login_required
 @render_to('gsi/index.html')
 def index(request):
-    data = {}
+    from django.conf import settings
+    data = {'urls': settings.BASE_DIR+settings.STATIC_URL}
     return data
 
 
