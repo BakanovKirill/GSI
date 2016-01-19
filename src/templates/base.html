@@ -26,15 +26,20 @@
     <link rel="stylesheet" href="{% static "css/main.css" %}" type="text/css" />
 </head>
 <body>
-    {% block status_message %}{% endblock status_message %}
-
     <!-- Start Container -->
     <div class="container">
+        <div class="row"
+            <div class="col-md-12">
+                {% block status_message %}{% endblock status_message %}
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-md-12">
                 <h2 class="center top-50">{% block title %}{% endblock title %}</h2>
             </div>
         </div>
+
         <div class="row">
             <div class="col-md-12">
                 {% block content %}{% endblock content %}

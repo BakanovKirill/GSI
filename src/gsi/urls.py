@@ -35,7 +35,7 @@ urlpatterns = [
 
     # auth
     url(r'^logout/$', auth_views.logout, kwargs={'next_page': 'index'}, name='auth_logout'),
-    url(r'^register/complete/$', RedirectView.as_view(pattern_name='home'), name='registration_complete'),
+    url(r'^register/complete/$', RedirectView.as_view(pattern_name='index'), name='registration_complete'),
     url(r'^', include('registration.backends.simple.urls', namespace='users')),
 
     # api

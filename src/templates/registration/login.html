@@ -11,7 +11,7 @@
             {% endif %}
         </div>
     {% endif %}
-{% endblock %}
+{% endblock status_message %}
 
 {% block title %}Log in and get to GSI{% endblock title %}
 
@@ -22,33 +22,38 @@
 
         <div class="row">
             <div class="col-md-3 col-md-offset-1 form-group right top-15">
-                <label for="login" placeholder="Username"><i class="fa fa-envelope-o fa-user"></i></label>
+                <label for="login"><i class="fa fa-user"></i></label>
             </div>
             <div class="col-md-4">
-                <input type="text" class="form-control" id="login" value="" name="username" />
+                <input type="text" class="form-control" id="login"
+                       value="" name="username" placeholder="Username" />
                 <span class="help-block red-color">{{ form.errors.username.as_data.0.0 }}</span>
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-3 col-md-offset-1 form-group right top-15">
-                <label for="password"><i class="fa fa-envelope-o fa-lock"></i></label>
+                <label for="password"><i class="fa fa-lock"></i></label>
             </div>
             <div class="col-md-4">
-                <input type="password" class="form-control" id="password" value="" name="password" />
+                <input type="password" class="form-control" id="password"
+                       value="" name="password" placeholder="Password" />
                 <span class="help-block red-color">{{ form.errors.password.as_data.0.0 }}</span>
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
-                <button type="submit" class="btn btn-primary btn-block">Login</button>
+                <button type="submit" class="btn btn-primary btn-block-100">Login</button>
             </div>
+            <!--<div class="col-md-4 col-md-offset-4">-->
+                <!--<p class="top-15"><a href="#">Forgot your password?</a></p>-->
+            <!--</div>-->
             <div class="col-md-4 col-md-offset-4">
-                <p class="top-15"><a href="#">Forgot your password?</a></p>
-            </div>
-            <div class="col-md-4 col-md-offset-4">
-                <a href="#" class="btn btn-default btn-lg top-15 btn-block" role="button">Sign up</a>
+                <a href="{% url 'users:registration_register' %}"
+                   class="btn btn-default top-15 btn-block-100" role="button">
+                    Sign up
+                </a>
             </div>
         </div>
     </form>
