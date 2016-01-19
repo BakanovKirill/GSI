@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 
 from .utils import validate_status
 from .models import Run, RunStep
@@ -19,8 +20,7 @@ def blocking(request):
 @login_required
 @render_to('gsi/index.html')
 def index(request):
-    from django.conf import settings
-    data = {'urls': settings.BASE_DIR+settings.STATIC_URL}
+    data = {}
     return data
 
 
