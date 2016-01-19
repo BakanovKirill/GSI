@@ -24,8 +24,11 @@ from django.views.generic.base import RedirectView
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
 
+    # temporary blocking
+    url(r'^$', 'gsi.views.blocking', name='block'),
+
     # index
-    url(r'^$', 'gsi.views.index', name='index'),
+    url(r'^index/$', 'gsi.views.index', name='index'),
 
     # setup new run
     url(r'^setup-new-run/$', 'gsi.views.setup_new_run', name='setup_new_run'),

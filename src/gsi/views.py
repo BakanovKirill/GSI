@@ -10,6 +10,12 @@ from .utils import validate_status
 from .models import Run, RunStep
 
 
+@render_to('gsi/blocking.html')
+def blocking(request):
+    data = {}
+    return data
+
+
 @login_required
 @render_to('gsi/index.html')
 def index(request):
