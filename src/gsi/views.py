@@ -7,6 +7,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
+from gsi.models import RunBase
+
 from .utils import validate_status
 from .models import Run, RunStep
 
@@ -25,9 +27,35 @@ def index(request):
 
 
 @login_required
-@render_to('gsi/setup_new_run.html')
-def setup_new_run(request):
-    data = {}
+@render_to('gsi/setup_run.html')
+def setup_run(request):
+    title = 'GSI Run Setup'
+    breadcrumbs = {'Home': 'index'}
+    run_bases = RunBase.objects.all()
+    data = {
+        'title': title,
+        'run_bases': run_bases,
+        'breadcrumbs': breadcrumbs
+    }
+
+    return data
+
+
+@login_required
+@render_to('gsi/edit_run.html')
+def edit_run(request, run_id):
+    title = 'GSI Edit Run Setup'
+    breadcrumbs = {
+        'Home': 'index',
+        'GSI Run Setup': 'setup_run'
+    }
+    run_bases = RunBase.objects.all()
+    data = {
+        'title': title,
+        'run_bases': run_bases,
+        'breadcrumbs': breadcrumbs
+    }
+
     return data
 
 

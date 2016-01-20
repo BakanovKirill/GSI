@@ -30,8 +30,9 @@ urlpatterns = [
     # index
     url(r'^index/$', 'gsi.views.index', name='index'),
 
-    # setup new run
-    url(r'^setup-new-run/$', 'gsi.views.setup_new_run', name='setup_new_run'),
+    # run base
+    url(r'^setup-run/$', 'gsi.views.setup_run', name='setup_run'),
+    url(r'^setup-run/edit/(?P<run_id>\d+)$', 'gsi.views.edit_run', name='edit_run'),
 
     # auth
     url(r'^logout/$', auth_views.logout, kwargs={'next_page': 'index'}, name='auth_logout'),

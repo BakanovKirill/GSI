@@ -55,11 +55,19 @@
         </div>
         <!-- End Status Message -->
 
+        <!-- Start Breadcrumbs -->
+        {% if breadcrumbs %}
+            {% block breadcrumbs %}{% endblock breadcrumbs %}
+        {% endif %}
+        <!-- End Breadcrumbs -->
+
+        <!-- Start Content -->
         <div class="row">
             <div class="col-md-12 top-15">
                 {% block content %}{% endblock content %}
             </div>
         </div>
+        <!-- End Content -->
     </div>
 
     <!-- jQuery -->
