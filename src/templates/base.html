@@ -33,11 +33,14 @@
         <div class="row" id="header">
             <div class="col-md-12 center">
                 <h1><a href="{% url 'index' %}">GSI Web site</a></h1>
+
+                {% if user.is_authenticated %}
                 <div class="row">
                     <div class="col-md-2 col-md-offset-10 right bottom-40">
                         <i class="fa fa-user"></i> {{ request.user }}
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
         <!-- End Header -->
