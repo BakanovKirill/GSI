@@ -10,12 +10,24 @@
     text-align: right;
 }
 
-.top-15 {
+.top-8 {
     margin-top: 8px;
+}
+
+.top-15 {
+    margin-top: 15px;
+}
+
+.top-25 {
+    margin-top: 25px;
 }
 
 .top-50 {
     margin-top: 50px;
+}
+
+.bottom-40 {
+    margin-top: -40px;
 }
 
 .btn-block-100 {
@@ -32,4 +44,10 @@
 
 .red-color {
     color: red;
+}
+
+li.main-menu {
+	/*line-height: 80%;*/
+    margin-bottom: 15px;
+    padding: 0px;
 }
