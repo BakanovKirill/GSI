@@ -32,7 +32,9 @@
         <!-- Start Header -->
         <div class="row" id="header">
             <div class="col-md-12 center">
-                <h1><a href="{% url 'index' %}">GSI Web site</a></h1>
+                <h1>
+                    <a href="{% url 'index' %}">{% block title %}{% endblock title %}</a>
+                </h1>
 
                 {% if user.is_authenticated %}
                 <div class="row">
@@ -46,27 +48,15 @@
         <!-- End Header -->
 
         <!-- Start Status Message -->
-        {% if request.GET.status_message %}
-            <div class="row">
-                <div class="col-md-12 top-15">
-                    {% block status_message %}{% endblock status_message %}
-                </div>
-            </div>
-        {% endif %}
-        <!-- End Status Message -->
-
-        <!-- Start Title -->
-        {% if title %}
-            <div class="row">
-                <div class="col-md-12">
-                    <h3 class="center top-50">{% block title %}{% endblock title %}</h3>
-                </div>
-            </div>
-        {% endif %}
-        <!-- End Title -->
-
         <div class="row">
             <div class="col-md-12">
+                {% block status_message %}{% endblock status_message %}
+            </div>
+        </div>
+        <!-- End Status Message -->
+
+        <div class="row">
+            <div class="col-md-12 top-15">
                 {% block content %}{% endblock content %}
             </div>
         </div>
