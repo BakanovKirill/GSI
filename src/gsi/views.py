@@ -1,16 +1,66 @@
+# -*- coding: utf-8 -*-
 from annoying.decorators import render_to
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
+from django import forms
+from django.shortcuts import get_object_or_404
+from django.views.generic import UpdateView
+from django.http import HttpResponse, HttpResponseRedirect
+from django.utils.decorators import method_decorator
 from django.conf import settings
 
-from gsi.models import RunBase
+from gsi.models import RunBase, Resolution
 
-from .utils import validate_status
-from .models import Run, RunStep
+TITLES = {
+    'home': ['Home', 'index'],
+    'setup_run': ['GSI Run Setup', 'run_setup'],
+    'edit_run': ['GSI Edit Run', 'run_update']
+}
+
+
+class RunUpdateForm(forms.ModelForm):
+    """ form for editing RunBase """
+    def __init__(self, *args, **kwargs):
+        super(RunUpdateForm, self).__init__(*args, **kwargs)
+
+    # name = forms.CharField(label=u'Name', attrs={'class': 'form-control'})
+    name = forms.CharField(
+            label=u'Name',
+            widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    description = forms.CharField(
+            widget=forms.Textarea(attrs={'rows': '5', 'class': 'form-control'}),
+            required=False,
+            label=u'Description'
+    )
+    purpose = forms.CharField(
+            widget=forms.Textarea(attrs={'rows': '5', 'class': 'form-control'}),
+            required=False,
+            label=u'Purpose of Run'
+    )
+    directory_path = forms.CharField(
+            widget=forms.TextInput(attrs={'class': 'form-control'}),
+            required=False,
+            label=u'Directory path',
+            help_text=u'Directory path is the name of the directory \
+                that result will be stored'
+    )
+    resolution = forms.ModelChoiceField(
+            widget=forms.Select(attrs={"class": 'form-control'}),
+            queryset=Resolution.objects.all(),
+            label=u'Resolution',
+    )
+
+    class Meta:
+        model = RunBase
+        fields = [
+            'name',
+            'author',
+            'description',
+            'purpose',
+            'directory_path',
+            'resolution',
+            'card_sequence',
+        ]
 
 
 @render_to('gsi/blocking.html')
@@ -22,15 +72,16 @@ def blocking(request):
 @login_required
 @render_to('gsi/index.html')
 def index(request):
-    data = {}
+    title = 'GSI Main Menu'
+    data = {'title': title}
     return data
 
 
 @login_required
-@render_to('gsi/setup_run.html')
-def setup_run(request):
-    title = 'GSI Run Setup'
-    breadcrumbs = {'Home': 'index'}
+@render_to('gsi/run_setup.html')
+def run_setup(request):
+    title = TITLES['setup_run'][0]
+    breadcrumbs = {TITLES['home'][0]: TITLES['home'][1]}
     run_bases = RunBase.objects.all()
     data = {
         'title': title,
@@ -42,70 +93,26 @@ def setup_run(request):
 
 
 @login_required
-@render_to('gsi/edit_run.html')
-def edit_run(request, run_id):
-    title = 'GSI Edit Run Setup'
+@render_to('gsi/run_update.html')
+def run_update(request, run_id):
+    title = TITLES['edit_run'][0]
+    run_base = get_object_or_404(RunBase, pk=run_id)
+    form = None
     breadcrumbs = {
-        'Home': 'index',
-        'GSI Run Setup': 'setup_run'
+        TITLES['home'][0]: TITLES['home'][1],
+        TITLES['setup_run'][0]: TITLES['setup_run'][1]
     }
-    run_bases = RunBase.objects.all()
+
+    if "POST" == request.method:
+        form = RunUpdateForm(request.POST, instance=run_base)
+    else:
+        form = RunUpdateForm(instance=run_base)
+
     data = {
         'title': title,
-        'run_bases': run_bases,
-        'breadcrumbs': breadcrumbs
+        'run_base': run_base,
+        'breadcrumbs': breadcrumbs,
+        'form': form
     }
 
     return data
-
-
-@api_view(['GET'])
-def update_run(request, run_id):
-    """ update the status of the runs """
-
-    data = validate_status(request.query_params.get('status', False))
-
-    if data['status']:
-        try:
-            current_run = Run.objects.get(id=run_id)
-            current_run.state = data['status']
-            current_run.save()
-        except ObjectDoesNotExist as e:
-            data['status'] = False
-            data['message'] = str(e)
-    else:
-        return Response(data, status=status.HTTP_400_BAD_REQUEST)
-
-    return Response(data, status=status.HTTP_200_OK)
-
-
-@api_view(['GET'])
-def update_step(request, step_id):
-    """ update the status of the cards """
-
-    data = validate_status(request.query_params.get('status', False))
-    if data['status']:
-        state = data['status']
-        try:
-            step = RunStep.objects.get(pk=step_id)
-            step.state = state
-            step.save()
-            # Go to the next step only on success state
-            if state == 'success':
-                next_step, is_last_step = step.get_next_step()
-                if next_step:
-                    data['next_step'] = next_step.id
-                if is_last_step:
-                    data['is_last_step'] = True
-                    # TODO: possibly finish the run (discuss)
-                    # run = step.parent_run
-                    # run.status = 'success'
-                    # run.save()
-        except ObjectDoesNotExist as e:
-            data['status'] = False
-            data['message'] = str(e)
-    else:
-        return Response(data, status=status.HTTP_400_BAD_REQUEST)
-
-    return Response(data, status=status.HTTP_200_OK)
-

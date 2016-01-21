@@ -1,7 +1,7 @@
 from cards.models import CardItem, OrderedCardItem
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericStackedInline, GenericTabularInline
-from gsi.utils import make_run
+from core.utils import make_run
 from .models import HomeVariables, VariablesGroup, Tile, Area, YearGroup, Year, CardSequence, RunBase, RunStep, Run, \
     Resolution, Log, TileType
 from solo.admin import SingletonModelAdmin

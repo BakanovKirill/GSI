@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import gsi.utils
+import core.utils
 
 
 class Migration(migrations.Migration):
@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name_plural': 'Collate cards',
             },
-            bases=(gsi.utils.UnicodeNameMixin, models.Model),
+            bases=(core.utils.UnicodeNameMixin, models.Model),
         ),
         migrations.CreateModel(
             name='MergeCSV',
@@ -46,7 +46,7 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name_plural': 'MergeCSV cards',
             },
-            bases=(gsi.utils.UnicodeNameMixin, models.Model),
+            bases=(core.utils.UnicodeNameMixin, models.Model),
         ),
         migrations.CreateModel(
             name='OrderedCardItem',
@@ -66,7 +66,7 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name_plural': 'PreProc cards',
             },
-            bases=(gsi.utils.UnicodeNameMixin, models.Model),
+            bases=(core.utils.UnicodeNameMixin, models.Model),
         ),
         migrations.CreateModel(
             name='QRF',
@@ -81,7 +81,7 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name_plural': 'QRF cards',
             },
-            bases=(gsi.utils.UnicodeNameMixin, models.Model),
+            bases=(core.utils.UnicodeNameMixin, models.Model),
         ),
         migrations.CreateModel(
             name='Remap',
@@ -102,7 +102,7 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name_plural': 'Remap cards',
             },
-            bases=(gsi.utils.UnicodeNameMixin, models.Model),
+            bases=(core.utils.UnicodeNameMixin, models.Model),
         ),
         migrations.CreateModel(
             name='RFScore',
@@ -119,7 +119,7 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name_plural': 'RFScore cards',
             },
-            bases=(gsi.utils.UnicodeNameMixin, models.Model),
+            bases=(core.utils.UnicodeNameMixin, models.Model),
         ),
         migrations.CreateModel(
             name='RFTrain',
@@ -136,7 +136,7 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name_plural': 'RFTRain cards',
             },
-            bases=(gsi.utils.UnicodeNameMixin, models.Model),
+            bases=(core.utils.UnicodeNameMixin, models.Model),
         ),
         migrations.CreateModel(
             name='YearFilter',
@@ -155,6 +155,6 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name_plural': 'YearFilter cards',
             },
-            bases=(gsi.utils.UnicodeNameMixin, models.Model),
+            bases=(core.utils.UnicodeNameMixin, models.Model),
         ),
     ]

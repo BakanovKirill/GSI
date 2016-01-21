@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block title %}
+{{ title }}<h4>RUNID {{ form.instance.id }}</h4>
+{% endblock title %}
+
+{% block status_message %}
+{% endblock status_message %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <form action="." method="post" enctype="multipart/form-data"
+                role="form" class="form-horizontal">
+                <input type="hidden" name="editRun" />
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-md-2 right">
+                        <div class="form-group {% if form.name.errors %}has-error{% endif %}">
+                            <label class="control-label">{{ form.name.label }}*</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        {% if form.name.errors %}
+                            <b class="error-form">{{ form.name.errors }}</b>
+                        {% endif %}
+                        {{ form.name }}
+                    </div>
+				</div>
+
+                <div class="row margin-top-8">
+                    <div class="col-md-2 right">
+                        <div class="form-group {% if form.description.errors %}has-error{% endif %}">
+                            <label class="control-label">{{ form.description.label }}</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        {% if form.description.errors %}
+                            <b class="error-form">{{ form.description.errors }}</b>
+                        {% endif %}
+                        {{ form.description }}
+                    </div>
+				</div>
+
+                <div class="row margin-top-15">
+                    <div class="col-md-2 right">
+                        <div class="form-group {% if form.purpose.errors %}has-error{% endif %}">
+                            <label class="control-label">{{ form.purpose.label }}</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <b class="error-form">{{ form.purpose.errors }}</b>
+                        {% if form.purpose.errors %}
+                            <b class="error-form">{{ form.purpose.errors }}</b>
+                        {% endif %}
+                        {{ form.purpose }}
+                    </div>
+				</div>
+
+                <div class="row margin-top-15">
+                    <div class="col-md-2 right">
+                        <label class="control-label">Autor</label>
+                    </div>
+                    <div class="col-md-4 margin-top-8">
+                        {{ run_base.author }}
+                    </div>
+
+                    <div class="col-md-2 right">
+                        <div class="form-group {% if form.directory_path.errors %}has-error{% endif %}">
+                            <label class="control-label">{{ form.directory_path.label }}*</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <b class="error-form">{{ form.directory_path.errors }}</b>
+                        {% if form.directory_path.errors %}
+                            <b class="error-form">{{ form.directory_path.errors }}</b>
+                        {% endif %}
+                        {{ form.directory_path }}
+                        <span id="helpBlock" class="help-block">
+                            {{ form.directory_path.help_text }}
+                        </span>
+                    </div>
+				</div>
+
+                <div class="row margin-top-15">
+                    <div class="col-md-2 right">
+                        <label class="control-label">Date Created</label>
+                    </div>
+                    <div class="col-md-4 margin-top-8">
+                        {{ run_base.date_created|date:"d/m/Y" }}
+                    </div>
+
+                    <div class="col-md-2 right">
+                        <div class="form-group {% if form.directory_path.errors %}has-error{% endif %}">
+                            <label class="control-label">{{ form.resolution.label }}*</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <b class="error-form">{{ form.resolution.errors }}</b>
+                        {% if form.resolution.errors %}
+                            <b class="error-form">{{ form.resolution.errors }}</b>
+                        {% endif %}
+                        {{ form.resolution }}
+                    </div>
+				</div>
+
+                <div class="row margin-top-15">
+                    <div class="col-md-2 right">
+                        <label class="control-label">Last Modified</label>
+                    </div>
+                    <div class="col-md-4 margin-top-8">
+                        {{ run_base.date_modified|date:"d/m/Y" }}
+                    </div>
+				</div>
+
+                <div class="row margin-top-50">
+                    <div class="col-md-3">
+                        <a class="btn btn-default btn-block" href="{% url 'run_setup' %}" role="button">Cancel</a>
+                    </div>
+                    <div class="col-md-3">
+                        <a class="btn btn-default btn-block" href="#" role="button">View Audit History</a>
+                    </div>
+                    <div class="col-md-3">
+                        <a class="btn btn-default btn-block" href="#" role="button">Edit Run Details</a>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary btn-block">Save</button>
+                    </div>
+				</div>
+
+
+
+
+
+            </form>
+
+        </div>
+    </div>
+
+{% endblock content %}

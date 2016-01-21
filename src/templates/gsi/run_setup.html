@@ -6,19 +6,6 @@
 {% block status_message %}
 {% endblock status_message %}
 
-{% block breadcrumbs %}
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <ol class="breadcrumb">
-                {% for key, value in breadcrumbs.items %}
-                    <li><a href="{% url value %}">{{ key }}</a></li>
-                {% endfor %}
-                <li class="active">{{ title }}</li>
-            </ol>
-        </div>
-    </div>
-{% endblock breadcrumbs %}
-
 {% block content %}
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -34,7 +21,7 @@
                 <tbody>
                     {% for run_base in run_bases %}
                     <tr>
-                        <td><a href="{% url 'edit_run' run_base.id %}">{{ run_base.name }}</a></td>
+                        <td><a href="{% url 'run_update' run_base.id %}">{{ run_base.name }}</a></td>
                         <td>{{ run_base.author }}</td>
                         <td>{{ run_base.date_created }}</td>
                         <td>{{ run_base.date_modified }}</td>

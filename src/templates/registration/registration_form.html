@@ -3,7 +3,7 @@
 
 {% block title %}Sign Up{% endblock title %}
 
-{% block status_message %}
+{% block status_message_auth %}
     {% if form.errors %}
         <div class="alert alert-warning alert-dismissible" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -12,7 +12,7 @@
             Please, correct the following errors. {{ form.non_field_errors }}
         </div>
     {% endif %}
-{% endblock %}
+{% endblock status_message_auth %}
 
 {% block content %}
     <form action="{% url 'users:registration_register' %}" method="post">
@@ -20,7 +20,7 @@
         <input type="hidden" name="next" value="{% url 'index' %}" />
 
         <div class="row">
-            <div class="col-md-3 col-md-offset-1 form-group right top-8">
+            <div class="col-md-3 col-md-offset-1 form-group right margin-top-8">
                 <label for="login"><i class="fa fa-envelope-o fa-user"></i></label>
             </div>
             <div class="col-md-4">
@@ -31,7 +31,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md-3 col-md-offset-1 form-group right top-8">
+            <div class="col-md-3 col-md-offset-1 form-group right margin-top-8">
                 <label for="email"><i class="fa fa-envelope-o"></i></label>
             </div>
             <div class="col-md-4">
@@ -42,7 +42,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md-3 col-md-offset-1 form-group right top-8">
+            <div class="col-md-3 col-md-offset-1 form-group right margin-top-8">
                 <label for="password"><i class="fa fa-lock"></i></label>
             </div>
             <div class="col-md-4">
@@ -53,7 +53,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md-3 col-md-offset-1 form-group right top-8">
+            <div class="col-md-3 col-md-offset-1 form-group right margin-top-8">
                 <label for="password-confirm"><i class="fa fa-lock"></i></label>
             </div>
             <div class="col-md-4">
@@ -65,11 +65,11 @@
 
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
-                <button type="submit" class="btn btn-primary top-8 btn-block">Sign Up</button>
+                <button type="submit" class="btn btn-primary margin-top-8 btn-block">Sign Up</button>
             </div>
             <div class="col-md-4 col-md-offset-4">
                 <a href="{% url 'users:auth_login' %}"
-                   class="btn btn-default top-8 btn-block" role="button">
+                   class="btn btn-default margin-top-8 btn-block" role="button">
                     Cancel
                 </a>
             </div>

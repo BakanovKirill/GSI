@@ -6,7 +6,7 @@ from django.utils.translation import \
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
-from gsi.utils import UnicodeNameMixin
+from core.utils import UnicodeNameMixin
 
 
 class NamedModel(UnicodeNameMixin, models.Model):

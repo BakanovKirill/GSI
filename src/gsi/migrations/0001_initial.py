@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 from django.conf import settings
-import gsi.utils
+import core.utils
 
 
 class Migration(migrations.Migration):
@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=50)),
             ],
-            bases=(gsi.utils.UnicodeNameMixin, models.Model),
+            bases=(core.utils.UnicodeNameMixin, models.Model),
         ),
         migrations.CreateModel(
             name='CardSequence',
@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=100)),
                 ('environment_override', models.TextField(null=True, blank=True)),
             ],
-            bases=(gsi.utils.UnicodeNameMixin, models.Model),
+            bases=(core.utils.UnicodeNameMixin, models.Model),
         ),
         migrations.CreateModel(
             name='HomeVariables',
@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
                 ('log_file_path', models.CharField(max_length=300, null=True, blank=True)),
                 ('log_file', models.FileField(null=True, upload_to=b'', blank=True)),
             ],
-            bases=(gsi.utils.UnicodeNameMixin, models.Model),
+            bases=(core.utils.UnicodeNameMixin, models.Model),
         ),
         migrations.CreateModel(
             name='OrderedCardItem',
@@ -72,7 +72,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(help_text='This will be a short display of the value, i.e. 1KM, 250M', max_length=50)),
                 ('value', models.CharField(help_text='Value in meters, e.g 1000 for 1KM display name', max_length=20)),
             ],
-            bases=(gsi.utils.UnicodeNameMixin, models.Model),
+            bases=(core.utils.UnicodeNameMixin, models.Model),
         ),
         migrations.CreateModel(
             name='Run',
@@ -97,7 +97,7 @@ class Migration(migrations.Migration):
                 ('card_sequence', models.ForeignKey(to='gsi.CardSequence')),
                 ('resolution', models.ForeignKey(to='gsi.Resolution')),
             ],
-            bases=(gsi.utils.UnicodeNameMixin, models.Model),
+            bases=(core.utils.UnicodeNameMixin, models.Model),
         ),
         migrations.CreateModel(
             name='RunStep',
@@ -108,7 +108,7 @@ class Migration(migrations.Migration):
                 ('card_item', models.ForeignKey(to='cards.CardItem')),
                 ('parent_run', models.ForeignKey(to='gsi.Run')),
             ],
-            bases=(gsi.utils.UnicodeNameMixin, models.Model),
+            bases=(core.utils.UnicodeNameMixin, models.Model),
         ),
         migrations.CreateModel(
             name='Tile',
@@ -116,7 +116,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=6)),
             ],
-            bases=(gsi.utils.UnicodeNameMixin, models.Model),
+            bases=(core.utils.UnicodeNameMixin, models.Model),
         ),
         migrations.CreateModel(
             name='TileType',
@@ -132,7 +132,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=50)),
                 ('environment_variables', models.TextField()),
             ],
-            bases=(gsi.utils.UnicodeNameMixin, models.Model),
+            bases=(core.utils.UnicodeNameMixin, models.Model),
         ),
         migrations.CreateModel(
             name='Year',
@@ -140,7 +140,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=4)),
             ],
-            bases=(gsi.utils.UnicodeNameMixin, models.Model),
+            bases=(core.utils.UnicodeNameMixin, models.Model),
         ),
         migrations.CreateModel(
             name='YearGroup',
@@ -149,7 +149,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=50)),
                 ('years', models.ManyToManyField(related_name='year_groups', to='gsi.Year')),
             ],
-            bases=(gsi.utils.UnicodeNameMixin, models.Model),
+            bases=(core.utils.UnicodeNameMixin, models.Model),
         ),
         migrations.AddField(
             model_name='run',

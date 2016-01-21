@@ -5,7 +5,7 @@ from django.db import models
 from django.utils.translation import \
     ugettext_lazy as _  # Always aware of translations to other languages in the future -> wrap all texts into _()
 from solo.models import SingletonModel
-from .utils import UnicodeNameMixin
+from core.utils import UnicodeNameMixin
 
 
 class HomeVariables(SingletonModel):

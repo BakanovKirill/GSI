@@ -38,7 +38,7 @@
 
                 {% if user.is_authenticated %}
                 <div class="row">
-                    <div class="col-md-2 col-md-offset-10 right bottom-40">
+                    <div class="col-md-2 col-md-offset-10 right margin-top-040">
                         <i class="fa fa-user"></i> {{ request.user }}
                     </div>
                 </div>
@@ -47,27 +47,50 @@
         </div>
         <!-- End Header -->
 
-        <!-- Start Status Message -->
+        <!-- Start Status Message Authorization -->
         <div class="row">
             <div class="col-md-12">
-                {% block status_message %}{% endblock status_message %}
+                {% block status_message_auth %}{% endblock status_message_auth %}
             </div>
         </div>
-        <!-- End Status Message -->
+        <!-- End Status Message Authorization -->
+
+        <!-- Start Status Message Request -->
+        {% if request.GET.status_message %}
+            <div class="row">
+                <div class="col-md-12">
+                    {% block status_message_request %}{% endblock status_message_request %}
+                </div>
+            </div>
+        {% endif %}
+        <!-- End Status Message Request -->
 
         <!-- Start Breadcrumbs -->
         {% if breadcrumbs %}
-            {% block breadcrumbs %}{% endblock breadcrumbs %}
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <ol class="breadcrumb">
+                        {% for key, value in breadcrumbs.items %}
+                            <li><a href="{% url value %}">{{ key }}</a></li>
+                        {% endfor %}
+                        <li class="active">{{ title }}</li>
+                    </ol>
+                </div>
+            </div>
         {% endif %}
         <!-- End Breadcrumbs -->
 
         <!-- Start Content -->
-        <div class="row">
-            <div class="col-md-12 top-15">
-                {% block content %}{% endblock content %}
+        {% block content %}{% endblock content %}
+        <!-- End Content -->
+
+        <!-- Start Footer -->
+        <div class="row" id="footer">
+            <div class="col-md-12 center margin-top-50 margin-bottom-50">
+                &copy; 2015 GSI Web Site
             </div>
         </div>
-        <!-- End Content -->
+        <!-- End Footer -->
     </div>
 
     <!-- jQuery -->
