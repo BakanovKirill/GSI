@@ -56,18 +56,27 @@
         <!-- End Status Message Authorization -->
 
         <!-- Start Status Message Request -->
+        {% block status_message_request %}
         {% if request.GET.status_message %}
             <div class="row">
-                <div class="col-md-12">
-                    {% block status_message_request %}{% endblock status_message_request %}
+                <div class="col-md-8 col-md-offset-2">
+                    {% if request.GET.status_message %}
+                        <div class="alert alert-warning alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            {{ request.GET.status_message }}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         {% endif %}
+        {% endblock status_message_request %}
         <!-- End Status Message Request -->
 
         <!-- Start Breadcrumbs -->
         {% if breadcrumbs %}
-            <div class="row">
+            <div class="row margin-top-15">
                 <div class="col-md-8 col-md-offset-2">
                     <ol class="breadcrumb">
                         {% for key, value in breadcrumbs.items %}

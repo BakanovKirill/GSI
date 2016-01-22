@@ -6,14 +6,16 @@
 {% endblock title %}
 
 {% block status_message %}
+    {% if form.errors %}
+        Please, correct the following errors!
+    {% endif %}
 {% endblock status_message %}
 
 {% block content %}
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <form action="." method="post" enctype="multipart/form-data"
-                role="form" class="form-horizontal">
-                <input type="hidden" name="editRun" />
+            <form action="{% url 'run_update' run_base.id %}" method="post"
+                enctype="multipart/form-data" role="form" class="form-horizontal">
                 {% csrf_token %}
 
                 <div class="row">
@@ -22,7 +24,7 @@
                             <label class="control-label">{{ form.name.label }}*</label>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-10">
                         {% if form.name.errors %}
                             <b class="error-form">{{ form.name.errors }}</b>
                         {% endif %}
@@ -36,7 +38,7 @@
                             <label class="control-label">{{ form.description.label }}</label>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-10">
                         {% if form.description.errors %}
                             <b class="error-form">{{ form.description.errors }}</b>
                         {% endif %}
@@ -50,7 +52,7 @@
                             <label class="control-label">{{ form.purpose.label }}</label>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-10">
                         <b class="error-form">{{ form.purpose.errors }}</b>
                         {% if form.purpose.errors %}
                             <b class="error-form">{{ form.purpose.errors }}</b>
@@ -61,10 +63,16 @@
 
                 <div class="row margin-top-15">
                     <div class="col-md-2 right">
-                        <label class="control-label">Autor</label>
+                        <div class="form-group {% if form.directory_path.errors %}has-error{% endif %}">
+                            <label class="control-label">{{ form.resolution.label }}*</label>
+                        </div>
                     </div>
-                    <div class="col-md-4 margin-top-8">
-                        {{ run_base.author }}
+                    <div class="col-md-4">
+                        <b class="error-form">{{ form.resolution.errors }}</b>
+                        {% if form.resolution.errors %}
+                            <b class="error-form">{{ form.resolution.errors }}</b>
+                        {% endif %}
+                        {{ form.resolution }}
                     </div>
 
                     <div class="col-md-2 right">
@@ -86,34 +94,36 @@
 
                 <div class="row margin-top-15">
                     <div class="col-md-2 right">
-                        <label class="control-label">Date Created</label>
+                        <div class="form-group">
+                            <label class="control-label">Date Created</label>
+                        </div>
                     </div>
                     <div class="col-md-4 margin-top-8">
                         {{ run_base.date_created|date:"d/m/Y" }}
                     </div>
 
                     <div class="col-md-2 right">
-                        <div class="form-group {% if form.directory_path.errors %}has-error{% endif %}">
-                            <label class="control-label">{{ form.resolution.label }}*</label>
+                        <div class="form-group">
+                            <label class="control-label">Last Modified</label>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <b class="error-form">{{ form.resolution.errors }}</b>
-                        {% if form.resolution.errors %}
-                            <b class="error-form">{{ form.resolution.errors }}</b>
-                        {% endif %}
-                        {{ form.resolution }}
-                    </div>
-				</div>
-
-                <div class="row margin-top-15">
-                    <div class="col-md-2 right">
-                        <label class="control-label">Last Modified</label>
                     </div>
                     <div class="col-md-4 margin-top-8">
                         {{ run_base.date_modified|date:"d/m/Y" }}
                     </div>
 				</div>
+
+                <div class="row margin-top-15">
+                    <div class="col-md-2 right">
+                        <div class="form-group">
+                            <label class="control-label">Autor</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4 margin-top-8">
+                        {{ run_base.author }}
+                    </div>
+				</div>
+
+                <!--{{ form.card_sequence }}-->
 
                 <div class="row margin-top-50">
                     <div class="col-md-3">
@@ -126,14 +136,9 @@
                         <a class="btn btn-default btn-block" href="#" role="button">Edit Run Details</a>
                     </div>
                     <div class="col-md-3">
-                        <button type="submit" class="btn btn-primary btn-block">Save</button>
+                        <button type="submit" name="save_button" class="btn btn-primary btn-block">Save</button>
                     </div>
 				</div>
-
-
-
-
-
             </form>
 
         </div>

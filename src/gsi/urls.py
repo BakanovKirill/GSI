@@ -33,11 +33,14 @@ urlpatterns = [
 
     # run base
     url(r'^setup-run/$', 'gsi.views.run_setup', name='run_setup'),
-    url(r'^setup-run/edit/(?P<run_id>\d+)$', 'gsi.views.run_update', name='run_update'),
+    url(r'^setup-run/edit/(?P<run_id>\d+)/$', 'gsi.views.run_update',
+        name='run_update'),
 
     # auth
-    url(r'^logout/$', auth_views.logout, kwargs={'next_page': 'index'}, name='auth_logout'),
-    url(r'^register/complete/$', RedirectView.as_view(pattern_name='index'), name='registration_complete'),
+    url(r'^logout/$', auth_views.logout, kwargs={'next_page': 'index'},
+        name='auth_logout'),
+    url(r'^register/complete/$', RedirectView.as_view(pattern_name='index'),
+        name='registration_complete'),
     url(r'^', include('registration.backends.simple.urls', namespace='users')),
 
     # api

@@ -3,8 +3,9 @@ from annoying.decorators import render_to
 from django.contrib.auth.decorators import login_required
 from django import forms
 from django.shortcuts import get_object_or_404
-from django.views.generic import UpdateView
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
+from django.views.generic import UpdateView
 from django.utils.decorators import method_decorator
 from django.conf import settings
 
@@ -59,7 +60,6 @@ class RunUpdateForm(forms.ModelForm):
             'purpose',
             'directory_path',
             'resolution',
-            'card_sequence',
         ]
 
 
@@ -95,7 +95,7 @@ def run_setup(request):
 @login_required
 @render_to('gsi/run_update.html')
 def run_update(request, run_id):
-    title = TITLES['edit_run'][0]
+    title = '{0}ID {1}'.format(TITLES['edit_run'][0], run_id)
     run_base = get_object_or_404(RunBase, pk=run_id)
     form = None
     breadcrumbs = {
@@ -103,8 +103,23 @@ def run_update(request, run_id):
         TITLES['setup_run'][0]: TITLES['setup_run'][1]
     }
 
-    if "POST" == request.method:
-        form = RunUpdateForm(request.POST, instance=run_base)
+    if request.method == "POST":
+        form = RunUpdateForm(request.POST)
+
+        if form.is_valid():
+            run_base.name = form.cleaned_data["name"]
+            run_base.description = form.cleaned_data["description"]
+            run_base.purpose = form.cleaned_data["purpose"]
+            run_base.directory_path = form.cleaned_data["directory_path"]
+            run_base.resolution = form.cleaned_data["resolution"]
+            run_base.save()
+
+            return HttpResponseRedirect(
+                    u'%s?status_message=%s' % (reverse('run_setup'),
+                    (u"RunID {0} updated successfully!".format(run_id)))
+            )
+        else:
+            print 'NO VALID =================== ', form.errors
     else:
         form = RunUpdateForm(instance=run_base)
 

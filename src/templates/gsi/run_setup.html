@@ -4,6 +4,9 @@
 {% block title %}{{ title }}{% endblock title %}
 
 {% block status_message %}
+    {% if form.errors %}
+        Please, correct the following errors!
+    {% endif %}
 {% endblock status_message %}
 
 {% block content %}
