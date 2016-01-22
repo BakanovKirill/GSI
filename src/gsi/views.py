@@ -104,22 +104,27 @@ def run_update(request, run_id):
     }
 
     if request.method == "POST":
-        form = RunUpdateForm(request.POST)
+        if request.POST.get('save_button') is not None:
+            form = RunUpdateForm(request.POST)
 
-        if form.is_valid():
-            run_base.name = form.cleaned_data["name"]
-            run_base.description = form.cleaned_data["description"]
-            run_base.purpose = form.cleaned_data["purpose"]
-            run_base.directory_path = form.cleaned_data["directory_path"]
-            run_base.resolution = form.cleaned_data["resolution"]
-            run_base.save()
+            if form.is_valid():
+                run_base.name = form.cleaned_data["name"]
+                run_base.description = form.cleaned_data["description"]
+                run_base.purpose = form.cleaned_data["purpose"]
+                run_base.directory_path = form.cleaned_data["directory_path"]
+                run_base.resolution = form.cleaned_data["resolution"]
+                run_base.save()
 
+                return HttpResponseRedirect(
+                        u'%s?status_message=%s' % (reverse('run_setup'),
+                        (u"RunID {0} updated successfully".format(run_id)))
+                )
+        elif request.POST.get('cancel_button') is not None:
+            # print 'NO VALID =================== ', form.errors
             return HttpResponseRedirect(
                     u'%s?status_message=%s' % (reverse('run_setup'),
-                    (u"RunID {0} updated successfully!".format(run_id)))
+                    (u"RunID {0} addition canceled".format(run_id)))
             )
-        else:
-            print 'NO VALID =================== ', form.errors
     else:
         form = RunUpdateForm(instance=run_base)
 
