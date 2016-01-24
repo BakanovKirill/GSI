@@ -14,7 +14,8 @@ from gsi.models import RunBase, Resolution
 TITLES = {
     'home': ['Home', 'index'],
     'setup_run': ['GSI Run Setup', 'run_setup'],
-    'edit_run': ['GSI Edit Run', 'run_update']
+    'edit_run': ['GSI Edit Run', 'run_update'],
+    'new_run': ['GSI New Run', 'new_run'],
 }
 
 
@@ -93,6 +94,20 @@ def run_setup(request):
 
 
 @login_required
+@render_to('gsi/new_run.html')
+def new_run(request):
+    title = TITLES['new_run'][0]
+    breadcrumbs = {TITLES['new_run'][0]: TITLES['new_run'][1]}
+    run_bases = RunBase.objects.all()
+    data = {
+        'title': title,
+        'breadcrumbs': breadcrumbs
+    }
+
+    return data
+
+
+@login_required
 @render_to('gsi/run_update.html')
 def run_update(request, run_id):
     title = '{0}ID {1}'.format(TITLES['edit_run'][0], run_id)
@@ -120,7 +135,6 @@ def run_update(request, run_id):
                         (u"RunID {0} updated successfully".format(run_id)))
                 )
         elif request.POST.get('cancel_button') is not None:
-            # print 'NO VALID =================== ', form.errors
             return HttpResponseRedirect(
                     u'%s?status_message=%s' % (reverse('run_setup'),
                     (u"RunID {0} addition canceled".format(run_id)))

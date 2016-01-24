@@ -33,6 +33,7 @@ urlpatterns = [
 
     # run base
     url(r'^setup-run/$', 'gsi.views.run_setup', name='run_setup'),
+    url(r'^new-run/$', 'gsi.views.new_run', name='new_run'),
     url(r'^setup-run/edit/(?P<run_id>\d+)/$', 'gsi.views.run_update',
         name='run_update'),
 
