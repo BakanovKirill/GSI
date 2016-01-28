@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block title %}
+{{ title }}</h4>
+{% endblock title %}
+
+{% block status_message %}
+    {% if form.errors %}
+        Please, correct the following errors!
+    {% endif %}
+{% endblock status_message %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <form action="{% url 'card_sequence_update' run_id cs_id %}" method="post"
+                enctype="multipart/form-data" role="form" class="form-horizontal">
+                {% csrf_token %}
+
+                {% include "gsi/_card_sequence_form.html" %}
+
+            </form>
+        </div>
+    </div>
+{% endblock content %}

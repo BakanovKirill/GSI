@@ -1,0 +1,125 @@
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.name.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form.name.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form.name.errors %}
+            <b class="error-form">{{ form.name.errors }}</b>
+        {% endif %}
+        {{ form.name }}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.content_object.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form.environment_base.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form.environment_base.errors %}
+            <b class="error-form">{{ form.environment_base.errors }}</b>
+        {% endif %}
+        {{ form.environment_base }}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.environment_override.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form.environment_override.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-10">
+        {% if form.environment_override.errors %}
+            <b class="error-form">{{ form.environment_override.errors }}</b>
+        {% endif %}
+        {{ form.environment_override }}
+    </div>
+</div>
+
+<!--<div class="row margin-top-15" id="add_item_order">-->
+    <!--<div class="col-md-4 col-md-offset-8">-->
+        <!--<button type="submit" name="new_card_items_button" class="btn btn-primary btn-block">-->
+            <!--Ordered card items-->
+        <!--</button>-->
+    <!--</div>-->
+<!--</div>-->
+
+<div class="row margin-top-15" id="add_item_order">
+    <div class="col-md-2 right" >
+        <div class="form-group {% if form.cards.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form.card_item.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form.card_item.errors %}
+            <b class="error-form">{{ form.card_item.errors }}</b>
+        {% endif %}
+        {{ form.card_item }}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.order.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form.order.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-2">
+        {% if form.order.errors %}
+            <b class="error-form">{{ form.order.errors }}</b>
+        {% endif %}
+        {{ form.order }}
+    </div>
+    <div class="col-md-2">
+        <button type="submit" name="add_card_items_button" class="btn btn-primary btn-block">Added</button>
+    </div>
+</div>
+
+{% if card_sequence_cards %}
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.environment_override.errors %}has-error{% endif %}">
+            <label class="control-label">Ordered card items</label>
+        </div>
+    </div>
+    <div class="col-md-10">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Card item</th>
+                        <th>Order</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for card in card_sequence_cards %}
+                        <tr>
+                            <td><a href="{% url 'card_item_update' run_id cs_id card.id %}">{{ card.card_item }}</a></td>
+                            <td>{{ card.order }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row margin-top-50">
+    <div class="col-md-2">
+        <button type="submit" name="cancel_button" class="btn btn-default btn-block">Cancel</button>
+    </div>
+    <div class="col-md-4">
+        <a href="#" class="btn btn-default btn-block" role="button">
+            Create New Processing Card
+        </a>
+    </div>
+    <div class="col-md-4">
+        <button type="submit" name="save_and_continue_editing_button" class="btn btn-primary btn-block">
+            Save and continue editing
+        </button>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" name="save_button" class="btn btn-primary btn-block">Save</button>
+    </div>
+</div>

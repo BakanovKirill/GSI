@@ -64,7 +64,6 @@ class TileType(UnicodeNameMixin, models.Model):
 class OrderedCardItem(models.Model):
     card_item = models.ForeignKey('cards.CardItem', related_name='ordered_cards')
     sequence = models.ForeignKey('CardSequence')
-
     order = models.PositiveIntegerField(default=0)
 
     def __unicode__(self):
@@ -78,7 +77,6 @@ class CardSequence(UnicodeNameMixin, models.Model):
     name = models.CharField(max_length=100)
     environment_base = models.ForeignKey(VariablesGroup, null=True, blank=True)
     environment_override = models.TextField(null=True, blank=True)
-
     cards = models.ManyToManyField('cards.CardItem', through=OrderedCardItem, related_name='card_sequences')
 
 

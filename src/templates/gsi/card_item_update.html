@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block title %}
+{{ title }}<h4>CardItemID {{ form.instance.id }}</h4>
+{% endblock title %}
+
+{% block status_message %}
+    {% if form.errors %}
+        Please, correct the following errors!
+    {% endif %}
+{% endblock status_message %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <form action="{% url 'card_item_update' run_id cs_id card_sequence_card.id %}" method="post"
+                enctype="multipart/form-data" role="form" class="form-horizontal">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-md-2 right">
+                        <div class="form-group {% if form.card_item.errors %}has-error{% endif %}">
+                            <label class="control-label">{{ form.card_item.label }}*</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        {% if form.card_item.errors %}
+                            <b class="error-form">{{ form.card_item.errors }}</b>
+                        {% endif %}
+                        {{ form.card_item }}
+                    </div>
+
+                    <div class="col-md-2 right">
+                        <div class="form-group {% if form.order.errors %}has-error{% endif %}">
+                            <label class="control-label">{{ form.order.label }}</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        {% if form.order.errors %}
+                            <b class="error-form">{{ form.order.errors }}</b>
+                        {% endif %}
+                        {{ form.order }}
+                    </div>
+				</div>
+
+                <div class="row margin-top-50">
+                    <div class="col-md-3">
+                        <button type="submit" name="cancel_button" class="btn btn-default btn-block">Cancel</button>
+                    </div>
+                    <div class="col-md-3 col-md-offset-6">
+                        <button type="submit" name="save_button" class="btn btn-primary btn-block">Save</button>
+                    </div>
+				</div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

@@ -32,10 +32,23 @@ urlpatterns = [
     url(r'^index/$', 'gsi.views.index', name='index'),
 
     # run base
-    url(r'^setup-run/$', 'gsi.views.run_setup', name='run_setup'),
-    url(r'^new-run/$', 'gsi.views.new_run', name='new_run'),
-    url(r'^setup-run/edit/(?P<run_id>\d+)/$', 'gsi.views.run_update',
+    url(r'^run/setup/$', 'gsi.views.run_setup', name='run_setup'),
+    url(r'^run/new/$', 'gsi.views.new_run', name='new_run'),
+    url(r'^run/(?P<run_id>\d+)/$', 'gsi.views.run_update',
         name='run_update'),
+
+    # card sequence
+    url(r'^run/(?P<run_id>\d+)/card-sequence/setup/$', 'gsi.views.card_sequence',
+        name='card_sequence'),
+    # url(r'^card-sequence/new/$', 'gsi.views.new_card_sequence', name='new_card_sequence'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/$', 'gsi.views.card_sequence_update',
+        name='card_sequence_update'),
+    # url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/$', 'gsi.views.current_card_sequence',
+    #     name='current_card_sequence'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/add/$', 'gsi.views.add_card_sequence',
+        name='add_card_sequence'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/card-item/(?P<card_item_id>\d+)/$', 'gsi.views.card_item_update',
+        name='card_item_update'),
 
     # auth
     url(r'^logout/$', auth_views.logout, kwargs={'next_page': 'index'},

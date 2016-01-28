@@ -130,7 +130,6 @@ class CardItem(models.Model):
     content_type = models.ForeignKey(ContentType, limit_choices_to=CONTENT_LIMIT)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
-
     order = models.PositiveIntegerField(default=0)
 
     class Meta:

@@ -3,12 +3,6 @@
 
 {% block title %}{{ title }}{% endblock title %}
 
-{% block status_message %}
-    {% if form.errors %}
-        Please, correct the following errors!
-    {% endif %}
-{% endblock status_message %}
-
 {% block content %}
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -42,5 +36,4 @@
             </div>
         </div>
     </div>
-
 {% endblock content %}

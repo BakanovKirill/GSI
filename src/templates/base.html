@@ -39,7 +39,15 @@
                 {% if user.is_authenticated %}
                 <div class="row">
                     <div class="col-md-2 col-md-offset-10 right margin-top-040">
-                        <i class="fa fa-user"></i> {{ request.user }}
+                        <div class="dropdown">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="user_login" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <i class="fa fa-user"></i> {{ request.user }}
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                <li><a href="{% url 'auth_logout' %}">Log Out</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 {% endif %}
@@ -75,18 +83,18 @@
         <!-- End Status Message Request -->
 
         <!-- Start Breadcrumbs -->
-        {% if breadcrumbs %}
-            <div class="row margin-top-15">
-                <div class="col-md-8 col-md-offset-2">
-                    <ol class="breadcrumb">
-                        {% for key, value in breadcrumbs.items %}
-                            <li><a href="{% url value %}">{{ key }}</a></li>
-                        {% endfor %}
-                        <li class="active">{{ title }}</li>
-                    </ol>
-                </div>
-            </div>
-        {% endif %}
+        <!--{% if breadcrumbs %}-->
+            <!--<div class="row margin-top-15">-->
+                <!--<div class="col-md-8 col-md-offset-2">-->
+                    <!--<ol class="breadcrumb">-->
+                        <!--{% for key, value in breadcrumbs.items %}-->
+                            <!--<li><a href="{% url value %}">{{ key }}</a></li>-->
+                        <!--{% endfor %}-->
+                        <!--<li class="active">{{ title }}</li>-->
+                    <!--</ol>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--{% endif %}-->
         <!-- End Breadcrumbs -->
 
         <!-- Start Content -->

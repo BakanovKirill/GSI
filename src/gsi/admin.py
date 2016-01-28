@@ -17,7 +17,6 @@ class YearGroupAdmin(admin.ModelAdmin):
 
 class CardsInline(admin.TabularInline):
     model = CardSequence.cards.through
-
     fields = ('card_item', 'order')
 
 

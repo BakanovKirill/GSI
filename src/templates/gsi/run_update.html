@@ -53,11 +53,24 @@
                         </div>
                     </div>
                     <div class="col-md-10">
-                        <b class="error-form">{{ form.purpose.errors }}</b>
                         {% if form.purpose.errors %}
                             <b class="error-form">{{ form.purpose.errors }}</b>
                         {% endif %}
                         {{ form.purpose }}
+                    </div>
+				</div>
+
+                <div class="row margin-top-15">
+                    <div class="col-md-2 right">
+                        <div class="form-group {% if form.card_sequence.errors %}has-error{% endif %}">
+                            <label class="control-label">{{ form.card_sequence.label }}*</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        {% if form.resolution.errors %}
+                            <b class="error-form">{{ form.card_sequence.errors }}</b>
+                        {% endif %}
+                        {{ form.card_sequence }}
                     </div>
 				</div>
 
@@ -68,7 +81,6 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <b class="error-form">{{ form.resolution.errors }}</b>
                         {% if form.resolution.errors %}
                             <b class="error-form">{{ form.resolution.errors }}</b>
                         {% endif %}
@@ -81,7 +93,6 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <b class="error-form">{{ form.directory_path.errors }}</b>
                         {% if form.directory_path.errors %}
                             <b class="error-form">{{ form.directory_path.errors }}</b>
                         {% endif %}
@@ -131,15 +142,13 @@
                         <a class="btn btn-default btn-block" href="#" role="button">View Audit History</a>
                     </div>
                     <div class="col-md-3">
-                        <a class="btn btn-default btn-block" href="#" role="button">Edit Run Details</a>
+                        <a class="btn btn-default btn-block" href="{% url 'card_sequence' run_base.id %}" role="button">Edit Run Details</a>
                     </div>
                     <div class="col-md-3">
                         <button type="submit" name="save_button" class="btn btn-primary btn-block">Save</button>
                     </div>
 				</div>
             </form>
-
         </div>
     </div>
-
 {% endblock content %}
