@@ -47,8 +47,28 @@ urlpatterns = [
     #     name='current_card_sequence'),
     url(r'^run/(?P<run_id>\d+)/card-sequence/add/$', 'gsi.views.add_card_sequence',
         name='add_card_sequence'),
-    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/card-item/(?P<card_item_id>\d+)/$', 'gsi.views.card_item_update',
-        name='card_item_update'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/card-item/(?P<card_item_id>\d+)/$',
+        'gsi.views.card_item_update', name='card_item_update'),
+
+    # processing card
+    url(r'^run/new/processing-card/$', 'cards.views.proces_card_new_run', name='proces_card_new_run'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/$',
+        'cards.views.proces_card_sequence_card_edit', name='proces_card_sequence_card_edit'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/add/processing-card/$',
+        'cards.views.proces_card_sequence_card_new', name='proces_card_sequence_card_new'),
+
+    # new run cards add
+    url(r'^run/new/processing-card/qrf/add/$', 'cards.views.new_run_qrf', name='new_run_qrf'),
+    url(r'^run/new/processing-card/rfscore/add/$', 'cards.views.proces_card_new_run', name='new_run_rfscore'),
+    url(r'^run/new/processing-card/remap/add/$', 'cards.views.proces_card_new_run', name='new_run_remap'),
+    url(r'^run/new/processing-card/year-filter/add/$', 'cards.views.proces_card_new_run', name='new_run_year_filter'),
+    url(r'^run/new/processing-card/collate/add/$', 'cards.views.proces_card_new_run', name='new_run_collate'),
+    url(r'^run/new/processing-card/preproc/add/$', 'cards.views.proces_card_new_run', name='new_run_preproc'),
+    url(r'^run/new/processing-card/mergecsv/add/$', 'cards.views.proces_card_new_run', name='new_run_mergecsv'),
+    url(r'^run/new/processing-card/rftrain/add/$', 'cards.views.proces_card_new_run', name='new_run_rftrain'),
+
+    # new run cards edit
+    url(r'^run/new/processing-card/qrf/(?P<qrf_id>\d+)/$', 'cards.views.new_run_qrf_edit', name='new_run_qrf_edit'),
 
     # auth
     url(r'^logout/$', auth_views.logout, kwargs={'next_page': 'index'},

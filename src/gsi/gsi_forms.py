@@ -1,16 +1,10 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from django.core.exceptions import ValidationError
 
+from core.validator_gsi import *
 from cards.models import CardItem
 from gsi.models import (RunBase, Resolution,
                         CardSequence, VariablesGroup)
-
-
-def validate_order(value):
-    if value < 0:
-        raise ValidationError('{0} invalid value. Order must be a positive number'.format(value))
-    return value
 
 
 class RunForm(forms.ModelForm):
@@ -19,8 +13,8 @@ class RunForm(forms.ModelForm):
         super(RunForm, self).__init__(*args, **kwargs)
 
     name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
         label=u'Name',
-        widget=forms.TextInput(attrs={'class': 'form-control'})
     )
     description = forms.CharField(
         widget=forms.Textarea(attrs={'rows': '5', 'class': 'form-control'}),
@@ -34,7 +28,7 @@ class RunForm(forms.ModelForm):
     )
     directory_path = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
-        required=False,
+        # required=False,
         label=u'Directory path',
         help_text=u'Directory path is the name of the directory \
             that result will be stored'
@@ -71,17 +65,19 @@ class CardSequenceForm(forms.ModelForm):
         super(CardSequenceForm, self).__init__(*args, **kwargs)
 
     name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
         label=u'Name',
-        widget=forms.TextInput(attrs={'class': 'form-control'})
     )
     environment_override = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={'rows': '5', 'class': 'form-control'}),
         label=u'Environment override',
-        widget=forms.Textarea(attrs={'rows': '5', 'class': 'form-control'})
     )
     environment_base = forms.ModelChoiceField(
         widget=forms.Select(attrs={'class': 'form-control'}),
         queryset=VariablesGroup.objects.all(),
         # empty_label=None,
+        required=False,
         label=u'Environment base',
     )
 
@@ -152,11 +148,11 @@ class CardSequenceCreateForm(forms.ModelForm):
     )
     order = forms.IntegerField(
         widget=forms.NumberInput(attrs={'class': 'form-control'}),
-        required=False,
         initial=0,
         validators=[validate_order],
         error_messages={'required': 'Order must be a positive number'},
         # empty_label=None,
+        required=False,
         label=u'Ordered card items',
     )
 
