@@ -4,11 +4,11 @@
 {% block title %}{{ title }}{% endblock title %}
 
 {% block content %}
-    <form action="{% url 'proces_card_sequence_card_edit' run_id cs_id %}" method="post"
+    <form action="{% if cs_id %}{% url url_form run_id cs_id %}{% else %}{% url url_form run_id %}{% endif %}" method="post"
         enctype="multipart/form-data" role="form" class="form-horizontal">
         {% csrf_token %}
 
-        {% include "cards/_create_processing_card_form.html" %}
+        {% include template_name %}
 
     </form>
 {% endblock content %}
