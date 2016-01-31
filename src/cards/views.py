@@ -41,6 +41,20 @@ def proces_card_new_run(request):
     if request.method == "POST":
         if request.POST.get('qrf_button') is not None:
             return HttpResponseRedirect(reverse('new_run_qrf'))
+        elif request.POST.get('rfscore_button') is not None:
+            return HttpResponseRedirect(reverse('new_run_rfscore'))
+        elif request.POST.get('remap_button') is not None:
+            return HttpResponseRedirect(reverse('new_run_remap'))
+        elif request.POST.get('year_filter_button') is not None:
+            return HttpResponseRedirect(reverse('new_run_year_filter'))
+        elif request.POST.get('collate_button') is not None:
+            return HttpResponseRedirect(reverse('new_run_collate'))
+        elif request.POST.get('preproc_button') is not None:
+            return HttpResponseRedirect(reverse('new_run_preproc'))
+        elif request.POST.get('margecsv_button') is not None:
+            return HttpResponseRedirect(reverse('new_run_mergecsv'))
+        elif request.POST.get('rftrain_button') is not None:
+            return HttpResponseRedirect(reverse('new_run_rftrain'))
         elif request.POST.get('cancel_button') is not None:
             return HttpResponseRedirect(reverse('new_run'))
 

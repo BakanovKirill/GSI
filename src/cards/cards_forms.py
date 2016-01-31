@@ -28,14 +28,14 @@ class QRFForm(forms.ModelForm):
         widget=forms.NumberInput(attrs={'class': 'form-control'}),
         initial=0,
         validators=[validate_order],
-        required=False,
+        # required=False,
         label=u'Number of trees',
     )
     number_of_threads = forms.IntegerField(
         widget=forms.NumberInput(attrs={'class': 'form-control'}),
         initial=1,
         validators=[validate_order],
-        required=False,
+        # required=False,
         label=u'Number of threads',
     )
     directory = forms.CharField(

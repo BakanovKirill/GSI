@@ -33,9 +33,10 @@ REVERSE_URL = {
 
 
 def get_run_card_post(request, card_form, card, reverse_ulr, func, card_id=None):
-    responce = None
+    response = None
+
+    # import pdb;pdb.set_trace()
     if request.POST.get('save_button') is not None:
-        # import pdb;pdb.set_trace()
         form = card_form(request.POST)
 
         if form.is_valid():
@@ -44,10 +45,12 @@ def get_run_card_post(request, card_form, card, reverse_ulr, func, card_id=None)
             else:
                 card_item = func(form)
 
-            responce = HttpResponseRedirect(
+            response = HttpResponseRedirect(
                 u'%s?status_message=%s' % (reverse('proces_card_new_run'),
                 (u"The {0} {1} created successfully".format(card, card_item.name)))
             )
+        else:
+            return form
     elif request.POST.get('save_and_another_button') is not None:
         form = card_form(request.POST)
 
@@ -57,11 +60,13 @@ def get_run_card_post(request, card_form, card, reverse_ulr, func, card_id=None)
             else:
                 card_item = func(form)
 
-            responce = HttpResponseRedirect(
+            response = HttpResponseRedirect(
                     u'%s?status_message=%s' % (reverse(reverse_ulr['save_and_another']),
                     (u"The {0} {1} was added successfully. \
                     You may add another {2} below".format(card, card_item.name, card)))
             )
+        else:
+            return form
     elif request.POST.get('save_and_continue_editing_button') is not None:
         form = card_form(request.POST)
 
@@ -71,18 +76,20 @@ def get_run_card_post(request, card_form, card, reverse_ulr, func, card_id=None)
             else:
                 card_item = func(form)
 
-            responce = HttpResponseRedirect(
+            response = HttpResponseRedirect(
                     u'%s?status_message=%s' % (reverse(reverse_ulr['save_and_continue'], args=[card_item.id]),
                     (u"The {0} {1} was added successfully. \
                     You may add another {2} Card below".format(card, card_item.name, card)))
             )
+        else:
+            return form
     elif request.POST.get('cancel_button') is not None:
-        responce = HttpResponseRedirect(
+        response = HttpResponseRedirect(
                 u'%s?status_message=%s' % (reverse('proces_card_new_run'),
                 (u"The {0} Card created canceled".format(card)))
         )
 
-    return responce
+    return response
 
 
 @login_required
@@ -95,8 +102,14 @@ def new_run_qrf(request):
     form = None
 
     if request.method == "POST":
-        return get_run_card_post(request, QRFForm, 'QRF',
+        # import pdb;pdb.set_trace()
+        response = get_run_card_post(request, QRFForm, 'QRF',
                                  REVERSE_URL['qrf'], func)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
     else:
         form = QRFForm()
 
@@ -121,8 +134,14 @@ def new_run_qrf_edit(request, qrf_id):
     form = None
 
     if request.method == "POST":
-        return get_run_card_post(request, QRFForm, 'QRF',
-                                REVERSE_URL['qrf'], func, card_id=qrf_id)
+        response = get_run_card_post(request, QRFForm, 'QRF',
+                                     REVERSE_URL['qrf'], func,
+                                     card_id=qrf_id)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
     else:
         form = QRFForm(instance=qrf_card)
 
@@ -147,8 +166,13 @@ def new_run_rfscore(request):
     form = None
 
     if request.method == "POST":
-        return get_run_card_post(request, RFScoreForm, 'RFScore',
-                                 REVERSE_URL['rfscore'], func)
+        response = get_run_card_post(request, RFScoreForm, 'RFScore',
+                                     REVERSE_URL['rfscore'], func)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
     else:
         form = RFScoreForm()
 
@@ -173,8 +197,14 @@ def new_run_rfscore_edit(request, rfscore_id):
     form = None
 
     if request.method == "POST":
-        return get_run_card_post(request, RFScoreForm, 'RFScore',
-                                 REVERSE_URL['rfscore'], func, card_id=rfscore_id)
+        response = get_run_card_post(request, RFScoreForm, 'RFScore',
+                                     REVERSE_URL['rfscore'], func,
+                                     card_id=rfscore_id)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
     else:
         form = RFScoreForm(instance=rfscore_card)
 
@@ -199,8 +229,13 @@ def new_run_remap(request):
     form = None
 
     if request.method == "POST":
-        return get_run_card_post(request, RemapForm, 'Remap',
-                                 REVERSE_URL['remap'], func)
+        response = get_run_card_post(request, RemapForm, 'Remap',
+                                     REVERSE_URL['remap'], func)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
     else:
         form = RemapForm()
 
@@ -225,8 +260,14 @@ def new_run_remap_edit(request, remap_id):
     form = None
 
     if request.method == "POST":
-        return get_run_card_post(request, RemapForm, 'Remap',
-                                 REVERSE_URL['remap'], func, card_id=remap_id)
+        response = get_run_card_post(request, RemapForm, 'Remap',
+                                     REVERSE_URL['remap'], func,
+                                     card_id=remap_id)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
     else:
         form = RemapForm(instance=remap_card)
 
@@ -251,8 +292,13 @@ def new_run_year_filter(request):
     form = None
 
     if request.method == "POST":
-        return get_run_card_post(request, YearFilterForm, 'YearFilter',
-                                 REVERSE_URL['year_filter'], func)
+        response = get_run_card_post(request, YearFilterForm, 'YearFilter',
+                                     REVERSE_URL['year_filter'], func)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
     else:
         form = YearFilterForm()
 
@@ -277,8 +323,14 @@ def new_run_year_filter_edit(request, yf_id):
     form = None
 
     if request.method == "POST":
-        return get_run_card_post(request, YearFilterForm, 'YearFilter',
-                                 REVERSE_URL['year_filter'], func, card_id=yf_id)
+        response = get_run_card_post(request, YearFilterForm, 'YearFilter',
+                                     REVERSE_URL['year_filter'], func,
+                                     card_id=yf_id)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
     else:
         form = YearFilterForm(instance=year_filter_card)
 
@@ -303,8 +355,13 @@ def new_run_collate(request):
     form = None
 
     if request.method == "POST":
-        return get_run_card_post(request, CollateForm, 'Collate',
-                                 REVERSE_URL['collate'], func)
+        response = get_run_card_post(request, CollateForm, 'Collate',
+                                     REVERSE_URL['collate'], func)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
     else:
         form = CollateForm()
 
@@ -329,8 +386,14 @@ def new_run_collate_edit(request, collate_id):
     form = None
 
     if request.method == "POST":
-        return get_run_card_post(request, CollateForm, 'Collate',
-                                 REVERSE_URL['collate'], func, card_id=collate_id)
+        response = get_run_card_post(request, CollateForm, 'Collate',
+                                     REVERSE_URL['collate'], func,
+                                     card_id=collate_id)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
     else:
         form = CollateForm(instance=collate_card)
 
@@ -355,8 +418,13 @@ def new_run_preproc(request):
     form = None
 
     if request.method == "POST":
-        return get_run_card_post(request, PreProcForm, 'PreProc',
-                                 REVERSE_URL['preproc'], func)
+        response = get_run_card_post(request, PreProcForm, 'PreProc',
+                                     REVERSE_URL['preproc'], func)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
     else:
         form = PreProcForm()
 
@@ -381,8 +449,14 @@ def new_run_preproc_edit(request, preproc_id):
     form = None
 
     if request.method == "POST":
-        return get_run_card_post(request, PreProcForm, 'PreProc',
-                                 REVERSE_URL['preproc'], func, card_id=preproc_id)
+        response = get_run_card_post(request, PreProcForm, 'PreProc',
+                                     REVERSE_URL['preproc'], func,
+                                     card_id=preproc_id)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
     else:
         form = PreProcForm(instance=preproc_card)
 
@@ -407,8 +481,13 @@ def new_run_mergecsv(request):
     form = None
 
     if request.method == "POST":
-        return get_run_card_post(request, MergeCSVForm, 'MergeCSV',
-                                 REVERSE_URL['mergecsv'], func)
+        response = get_run_card_post(request, MergeCSVForm, 'MergeCSV',
+                                     REVERSE_URL['mergecsv'], func)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
     else:
         form = MergeCSVForm()
 
@@ -433,8 +512,14 @@ def new_run_mergecsv_edit(request, mcsv_id):
     form = None
 
     if request.method == "POST":
-        return get_run_card_post(request, MergeCSVForm, 'MergeCSV',
-                                 REVERSE_URL['mergecsv'], func, card_id=mcsv_id)
+        response = get_run_card_post(request, MergeCSVForm, 'MergeCSV',
+                                     REVERSE_URL['mergecsv'], func,
+                                     card_id=mcsv_id)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
     else:
         form = MergeCSVForm(instance=mergecsv_card)
 
@@ -459,8 +544,13 @@ def new_run_rftrain(request):
     form = None
 
     if request.method == "POST":
-        return get_run_card_post(request, RFTrainForm, 'RFTrain',
-                                 REVERSE_URL['rftrain'], func)
+        response = get_run_card_post(request, RFTrainForm, 'RFTrain',
+                                     REVERSE_URL['rftrain'], func)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
     else:
         form = RFTrainForm()
 
@@ -485,8 +575,14 @@ def new_run_rftrain_edit(request, rftrain_id):
     form = None
 
     if request.method == "POST":
-        return get_run_card_post(request, RFTrainForm, 'RFTrain',
-                                 REVERSE_URL['rftrain'], func, card_id=rftrain_id)
+        response = get_run_card_post(request, RFTrainForm, 'RFTrain',
+                                     REVERSE_URL['rftrain'], func,
+                                     card_id=rftrain_id)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
     else:
         form = RFTrainForm(instance=rftrain_card)
 

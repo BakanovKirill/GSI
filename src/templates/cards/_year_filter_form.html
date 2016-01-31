@@ -36,85 +36,95 @@
         {% endif %}
         {{ form.area }}
     </div>
-</div>
 
-<div class="row margin-top-15">
     <div class="col-md-2 right">
-        <div class="form-group {% if form.year_group.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.year_group.label }}*</label>
+        <div class="form-group {% if form.filetype.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form.filetype.label }}*</label>
         </div>
     </div>
     <div class="col-md-4">
-        {% if form.year_group.errors %}
-            <b class="error-form">{{ form.year_group.errors }}</b>
+        {% if form.filetype.errors %}
+            <b class="error-form">{{ form.filetype.errors }}</b>
         {% endif %}
-        {{ form.year_group }}
-    </div>
-</div>
-
-<div class="row margin-top-15">
-    <div class="col-md-2 right">
-        <div class="form-group {% if form.number_of_threads.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.number_of_threads.label }}*</label>
-        </div>
-    </div>
-    <div class="col-md-4">
-        {% if form.number_of_threads.errors %}
-            <b class="error-form">{{ form.number_of_threads.errors }}</b>
-        {% endif %}
-        {{ form.number_of_threads }}
+        {{ form.filetype }}
     </div>
 </div>
 
 <div class="row margin-top-15">
     <div class="col-md-2 right">
-        <div class="form-group {% if form.bias_corrn.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.bias_corrn.label }}*</label>
+        <div class="form-group {% if form.filter.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form.filter.label }}*</label>
         </div>
     </div>
     <div class="col-md-4">
-        {% if form.bias_corrn.errors %}
-            <b class="error-form">{{ form.bias_corrn.errors }}</b>
+        {% if form.filter.errors %}
+            <b class="error-form">{{ form.filter.errors }}</b>
         {% endif %}
-        {{ form.bias_corrn }}
+        {{ form.filter }}
     </div>
 
     <div class="col-md-2 right">
-        <div class="form-group {% if form.QRFopts.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.QRFopts.label }}*</label>
+        <div class="form-group {% if form.filter_output.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form.filter_output.label }}*</label>
         </div>
     </div>
     <div class="col-md-4">
-        {% if form.QRFopts.errors %}
-            <b class="error-form">{{ form.QRFopts.errors }}</b>
+        {% if form.filter_output.errors %}
+            <b class="error-form">{{ form.filter_output.errors }}</b>
         {% endif %}
-        {{ form.QRFopts }}
+        {{ form.filter_output }}
     </div>
 </div>
 
 <div class="row margin-top-15">
     <div class="col-md-2 right">
-        <div class="form-group {% if form.ref_target.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.ref_target.label }}*</label>
+        <div class="form-group {% if form.extend_start.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form.extend_start.label }}*</label>
         </div>
     </div>
     <div class="col-md-4">
-        {% if form.ref_target.errors %}
-            <b class="error-form">{{ form.ref_target.errors }}</b>
+        {% if form.extend_start.errors %}
+            <b class="error-form">{{ form.extend_start.errors }}</b>
         {% endif %}
-        {{ form.ref_target }}
+        {{ form.extend_start }}
     </div>
 
     <div class="col-md-2 right">
-        <div class="form-group {% if form.clean_name.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.clean_name.label }}*</label>
+        <div class="form-group {% if form.input_fourier.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form.input_fourier.label }}*</label>
         </div>
     </div>
     <div class="col-md-4">
-        {% if form.clean_name.errors %}
-            <b class="error-form">{{ form.clean_name.errors }}</b>
+        {% if form.input_fourier.errors %}
+            <b class="error-form">{{ form.input_fourier.errors }}</b>
         {% endif %}
-        {{ form.clean_name }}
+        {{ form.input_fourier }}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.input_directory.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form.input_directory.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form.input_directory.errors %}
+            <b class="error-form">{{ form.input_directory.errors }}</b>
+        {% endif %}
+        {{ form.input_directory }}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.output_directory.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form.output_directory.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form.output_directory.errors %}
+            <b class="error-form">{{ form.output_directory.errors }}</b>
+        {% endif %}
+        {{ form.output_directory }}
     </div>
 </div>
 
