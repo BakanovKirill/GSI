@@ -6,6 +6,8 @@
 {% block content %}
     <form action="{% if cs_id %}
                     {% url 'proces_card_new_run_new_sc' cs_id %}
+                  {% elif run_id %}
+                    {% url 'proces_card_runid' run_id %}
                   {% else %}
                     {% url 'proces_card_new_run' %}
                   {% endif %}" method="post"

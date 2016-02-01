@@ -19,7 +19,7 @@ def get_cards_post(request, card_form, card, reverse_ulr, func, args=False, card
             if args:
                 response = HttpResponseRedirect(
                     u'%s?status_message=%s' % (reverse(reverse_ulr['save_button'][0],
-                                                       args=[reverse_ulr['save_button'][1]]),
+                                                       args=reverse_ulr['save_button'][1]),
                     (u"The {0} {1} created successfully".format(card, card_item.name)))
                 )
             else:
@@ -41,7 +41,7 @@ def get_cards_post(request, card_form, card, reverse_ulr, func, args=False, card
             if args:
                 response = HttpResponseRedirect(
                         u'%s?status_message=%s' % (reverse(reverse_ulr['save_and_another'][0],
-                                                           args=[reverse_ulr['save_and_another'][1]]),
+                                                           args=reverse_ulr['save_and_another'][1]),
                         (u"The {0} {1} was added successfully. \
                         You may add another {2} below".format(card, card_item.name, card)))
                 )
@@ -65,13 +65,14 @@ def get_cards_post(request, card_form, card, reverse_ulr, func, args=False, card
             if args:
                 response = HttpResponseRedirect(
                         u'%s?status_message=%s' % (reverse(reverse_ulr['save_and_continue'][0],
-                                                           args=[card_item.id]+[reverse_ulr['save_and_continue'][1]]),
+                                                           args=reverse_ulr['save_and_continue'][1]+[card_item.id]),
                         (u"The {0} {1} was added successfully. \
                         You may add another {2} Card below".format(card, card_item.name, card)))
                 )
             else:
                 response = HttpResponseRedirect(
-                        u'%s?status_message=%s' % (reverse(reverse_ulr['save_and_continue'], args=[card_item.id]),
+                        u'%s?status_message=%s' % (reverse(reverse_ulr['save_and_continue'],
+                                                           args=[card_item.id]),
                         (u"The {0} {1} was added successfully. \
                         You may add another {2} Card below".format(card, card_item.name, card)))
                 )
@@ -81,7 +82,7 @@ def get_cards_post(request, card_form, card, reverse_ulr, func, args=False, card
         if args:
             response = HttpResponseRedirect(
                     u'%s?status_message=%s' % (reverse(reverse_ulr['cancel_button'][0],
-                                                       args=[reverse_ulr['cancel_button'][1]]),
+                                                       args=reverse_ulr['cancel_button'][1]),
                     (u"The {0} Card created canceled".format(card)))
             )
         else:

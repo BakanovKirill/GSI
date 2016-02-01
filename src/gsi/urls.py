@@ -28,8 +28,10 @@ urlpatterns = [
     # temporary blocking
     url(r'^$', 'gsi.views.blocking', name='block'),
 
+
     # index
     url(r'^index/$', 'gsi.views.index', name='index'),
+
 
     # run base
     url(r'^run/setup/$', 'gsi.views.run_setup', name='run_setup'),
@@ -37,31 +39,46 @@ urlpatterns = [
     url(r'^run/(?P<run_id>\d+)/$', 'gsi.views.run_update',
         name='run_update'),
 
+
     # card sequence for ne run base
     url(r'^run/card-sequence/add/$', 'gsi.views.run_new_card_sequence_add',
         name='run_new_card_sequence_add'),
-    url(r'^run/new/card-sequence/(?P<cs_id>\d+)/$', 'gsi.views.run_new_card_sequence_update',
+    url(r'^run/card-sequence/(?P<cs_id>\d+)/$', 'gsi.views.run_new_card_sequence_update',
         name='run_new_card_sequence_update'),
-
-
-
-
 
     url(r'^run/(?P<run_id>\d+)/card-sequence/add/$', 'gsi.views.add_card_sequence',
         name='add_card_sequence'),
-    url(r'^run/(?P<run_id>\d+)/card-sequence/setup/$', 'gsi.views.card_sequence',
-        name='card_sequence'),
     url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/$', 'gsi.views.card_sequence_update',
         name='card_sequence_update'),
+
+
+
+
+
+
+    url(r'^run/(?P<run_id>\d+)/card-sequence/setup/$', 'gsi.views.card_sequence',
+        name='card_sequence'),
+
 
     url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/card-item/(?P<card_item_id>\d+)/$',
         'gsi.views.card_item_update', name='card_item_update'),
 
+
     # processing card
     url(r'^run/card-sequence/processing-card/add$',
         'cards.views.proces_card_new_run', name='proces_card_new_run'),
+
+    url(r'^run/(?P<run_id>\d+)/card-sequence/processing-card/add$',
+        'cards.views.proces_card_runid', name='proces_card_runid'),
+
+
+
+
+
     url(r'^run/card-sequence/(?P<cs_id>\d+)/processing-card/add$',
         'cards.views.proces_card_new_run_new_sc', name='proces_card_new_run_new_sc'),
+
+
 
 
 
@@ -76,6 +93,7 @@ urlpatterns = [
         'cards.views.proces_card_sequence_card_edit', name='proces_card_sequence_card_edit'),
     url(r'^run/(?P<run_id>\d+)/card-sequence/add/processing-card/$',
         'cards.views.proces_card_sequence_card_new', name='proces_card_sequence_card_new'),
+
 
     # new run cards add
     url(r'^run/card-sequence/processing-card/qrf/add/$', 'cards.views_card_run.new_run_qrf',
@@ -112,6 +130,54 @@ urlpatterns = [
         'cards.views_card_run.new_run_mergecsv_edit', name='new_run_mergecsv_edit'),
     url(r'^run/new/processing-card/rftrain/(?P<rftrain_id>\d+)/$',
         'cards.views_card_run.new_run_rftrain_edit', name='new_run_rftrain_edit'),
+
+
+    # new runID cards add
+    url(r'^run/(?P<run_id>\d+)/card-sequence/processing-card/qrf/add/$',
+        'cards.views_card_runid.new_runid_qrf', name='new_runid_qrf'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/processing-card/rfscore/add/$',
+        'cards.views_card_runid.new_runid_rfscore', name='new_runid_rfscore'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/processing-card/remap/add/$',
+        'cards.views_card_runid.new_runid_remap', name='new_runid_remap'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/processing-card/year-filter/add/$',
+        'cards.views_card_runid.new_runid_year_filter', name='new_runid_year_filter'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/processing-card/collate/add/$',
+        'cards.views_card_runid.new_runid_collate', name='new_runid_collate'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/processing-card/preproc/add/$',
+        'cards.views_card_runid.new_runid_preproc', name='new_runid_preproc'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/processing-card/mergecsv/add/$',
+        'cards.views_card_runid.new_runid_mergecsv', name='new_runid_mergecsv'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/processing-card/rftrain/add/$',
+        'cards.views_card_runid.new_runid_rftrain', name='new_runid_rftrain'),
+
+
+    # new runID cards edit
+    url(r'^run/(?P<run_id>\d+)/processing-card/qrf/(?P<qrf_id>\d+)/$',
+        'cards.views_card_runid.new_runid_qrf_edit', name='new_runid_qrf_edit'),
+    url(r'^run/(?P<run_id>\d+)/processing-card/rfscore/(?P<rfscore_id>\d+)/$',
+        'cards.views_card_runid.new_runid_rfscore_edit', name='new_runid_rfscore_edit'),
+    url(r'^run/(?P<run_id>\d+)/processing-card/remap/(?P<remap_id>\d+)/$',
+        'cards.views_card_runid.new_runid_remap_edit', name='new_runid_remap_edit'),
+    url(r'^run/(?P<run_id>\d+)/processing-card/year-filter/(?P<yf_id>\d+)/$',
+        'cards.views_card_runid.new_runid_year_filter_edit', name='new_runid_year_filter_edit'),
+    url(r'^run/(?P<run_id>\d+)/processing-card/collate/(?P<collate_id>\d+)/$',
+        'cards.views_card_runid.new_runid_collate_edit', name='new_runid_collate_edit'),
+    url(r'^run/(?P<run_id>\d+)/processing-card/preproc/(?P<preproc_id>\d+)/$',
+        'cards.views_card_runid.new_runid_preproc_edit', name='new_runid_preproc_edit'),
+    url(r'^run/(?P<run_id>\d+)/processing-card/mergecsv/(?P<mcsv_id>\d+)/$',
+        'cards.views_card_runid.new_runid_mergecsv_edit', name='new_runid_mergecsv_edit'),
+    url(r'^run/(?P<run_id>\d+)/processing-card/rftrain/(?P<rftrain_id>\d+)/$',
+        'cards.views_card_runid.new_runid_rftrain_edit', name='new_runid_rftrain_edit'),
+
+
+
+
+
+
+
+
+
+
 
     # auth
     url(r'^logout/$', auth_views.logout, kwargs={'next_page': 'index'},

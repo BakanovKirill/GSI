@@ -112,6 +112,41 @@ def proces_card_new_run(request):
 
     return data
 
+@login_required
+@render_to('cards/processing_card_new_run.html')
+def proces_card_runid(request, run_id):
+    title = 'Create New Processing Cards'
+    rev_url = {
+        'qrf_button': ['new_runid_qrf', [run_id]],
+        'rfscore_button': ['new_runid_rfscore', [run_id]],
+        'remap_button': ['new_runid_remap', [run_id]],
+        'year_filter_button': ['new_runid_year_filter', [run_id]],
+        'collate_button': ['new_runid_collate', [run_id]],
+        'preproc_button': ['new_runid_preproc', [run_id]],
+        'margecsv_button': ['new_runid_mergecsv', [run_id]],
+        'rftrain_button': ['new_runid_rftrain', [run_id]],
+        'cancel_button': ['add_card_sequence', [run_id]]
+    }
+
+    if request.method == "POST":
+        return processing_card_menu(request, rev_url, args=True)
+
+    data = {
+        'title': title,
+        'run_id': run_id,
+    }
+
+    return data
+
+
+
+
+
+
+
+
+
+
 
 @login_required
 @render_to('cards/processing_card_new_run.html')
@@ -138,6 +173,12 @@ def proces_card_new_run_new_sc(request, cs_id):
     }
 
     return data
+
+
+
+
+
+
 
 
 
