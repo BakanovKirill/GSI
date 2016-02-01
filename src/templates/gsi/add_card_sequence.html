@@ -14,7 +14,11 @@
 {% block content %}
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <form action="{% url 'add_card_sequence' run_id %}" method="post"
+            <form action="{% if run_id %}
+                            {% url 'add_card_sequence' run_id %}
+                           {% else %}
+                            {% url 'run_new_card_sequence_add' %}
+                           {% endif %}" method="post"
                 enctype="multipart/form-data" role="form" class="form-horizontal">
                 {% csrf_token %}
 

@@ -2,7 +2,7 @@
 {% load static from staticfiles %}
 
 {% block title %}
-{{ title }}</h4>
+{{ title }}
 {% endblock title %}
 
 {% block status_message %}
@@ -14,7 +14,11 @@
 {% block content %}
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <form action="{% url 'card_sequence_update' run_id cs_id %}" method="post"
+            <form action="{% if run_id %}
+                            {% url 'card_sequence_update' run_id cs_id %}
+                           {% elif cs_id %}
+                            {% url 'run_new_card_sequence_update' cs_id %}
+                           {% endif %}" method="post"
                 enctype="multipart/form-data" role="form" class="form-horizontal">
                 {% csrf_token %}
 

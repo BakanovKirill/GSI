@@ -37,42 +37,62 @@ urlpatterns = [
     url(r'^run/(?P<run_id>\d+)/$', 'gsi.views.run_update',
         name='run_update'),
 
-    # card sequence
-    url(r'^run/(?P<run_id>\d+)/card-sequence/setup/$', 'gsi.views.card_sequence',
-        name='card_sequence'),
-    # url(r'^card-sequence/new/$', 'gsi.views.new_card_sequence', name='new_card_sequence'),
-    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/$', 'gsi.views.card_sequence_update',
-        name='card_sequence_update'),
-    # url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/$', 'gsi.views.current_card_sequence',
-    #     name='current_card_sequence'),
+    # card sequence for ne run base
+    url(r'^run/card-sequence/add/$', 'gsi.views.run_new_card_sequence_add',
+        name='run_new_card_sequence_add'),
+    url(r'^run/new/card-sequence/(?P<cs_id>\d+)/$', 'gsi.views.run_new_card_sequence_update',
+        name='run_new_card_sequence_update'),
+
+
+
+
+
     url(r'^run/(?P<run_id>\d+)/card-sequence/add/$', 'gsi.views.add_card_sequence',
         name='add_card_sequence'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/setup/$', 'gsi.views.card_sequence',
+        name='card_sequence'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/$', 'gsi.views.card_sequence_update',
+        name='card_sequence_update'),
+
     url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/card-item/(?P<card_item_id>\d+)/$',
         'gsi.views.card_item_update', name='card_item_update'),
 
     # processing card
-    url(r'^run/new/processing-card/$', 'cards.views.proces_card_new_run', name='proces_card_new_run'),
+    url(r'^run/card-sequence/processing-card/add$',
+        'cards.views.proces_card_new_run', name='proces_card_new_run'),
+    url(r'^run/card-sequence/(?P<cs_id>\d+)/processing-card/add$',
+        'cards.views.proces_card_new_run_new_sc', name='proces_card_new_run_new_sc'),
+
+
+
+    # url(r'^run/new/processing-card/$', 'cards.views.proces_card_new_run', name='proces_card_new_run'),
+
+
+
+
+
+
     url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/$',
         'cards.views.proces_card_sequence_card_edit', name='proces_card_sequence_card_edit'),
     url(r'^run/(?P<run_id>\d+)/card-sequence/add/processing-card/$',
         'cards.views.proces_card_sequence_card_new', name='proces_card_sequence_card_new'),
 
     # new run cards add
-    url(r'^run/new/processing-card/qrf/add/$', 'cards.views_card_run.new_run_qrf',
+    url(r'^run/card-sequence/processing-card/qrf/add/$', 'cards.views_card_run.new_run_qrf',
         name='new_run_qrf'),
-    url(r'^run/new/processing-card/rfscore/add/$', 'cards.views_card_run.new_run_rfscore',
+    url(r'^run/card-sequence/processing-card/rfscore/add/$', 'cards.views_card_run.new_run_rfscore',
         name='new_run_rfscore'),
-    url(r'^run/new/processing-card/remap/add/$', 'cards.views_card_run.new_run_remap',
+    url(r'^run/card-sequence/processing-card/remap/add/$', 'cards.views_card_run.new_run_remap',
         name='new_run_remap'),
-    url(r'^run/new/processing-card/year-filter/add/$', 'cards.views_card_run.new_run_year_filter',
+    url(r'^run/card-sequence/processing-card/year-filter/add/$', 'cards.views_card_run.new_run_year_filter',
         name='new_run_year_filter'),
-    url(r'^run/new/processing-card/collate/add/$', 'cards.views_card_run.new_run_collate',
+    url(r'^run/card-sequence/processing-card/collate/add/$', 'cards.views_card_run.new_run_collate',
         name='new_run_collate'),
-    url(r'^run/new/processing-card/preproc/add/$', 'cards.views_card_run.new_run_preproc',
+    url(r'^run/card-sequence/processing-card/preproc/add/$', 'cards.views_card_run.new_run_preproc',
         name='new_run_preproc'),
-    url(r'^run/new/processing-card/mergecsv/add/$', 'cards.views_card_run.new_run_mergecsv',
+    url(r'^run/card-sequence/processing-card/mergecsv/add/$', 'cards.views_card_run.new_run_mergecsv',
         name='new_run_mergecsv'),
-    url(r'^run/new/processing-card/rftrain/add/$', 'cards.views_card_run.new_run_rftrain',
+    url(r'^run/card-sequence/processing-card/rftrain/add/$', 'cards.views_card_run.new_run_rftrain',
         name='new_run_rftrain'),
 
     # new run cards edit

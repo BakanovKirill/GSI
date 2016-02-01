@@ -4,7 +4,11 @@
 {% block title %}{{ title }}{% endblock title %}
 
 {% block content %}
-    <form action="{% url 'proces_card_new_run' %}" method="post"
+    <form action="{% if cs_id %}
+                    {% url 'proces_card_new_run_new_sc' cs_id %}
+                  {% else %}
+                    {% url 'proces_card_new_run' %}
+                  {% endif %}" method="post"
         enctype="multipart/form-data" role="form" class="form-horizontal">
         {% csrf_token %}
 

@@ -166,6 +166,137 @@ def create_update_card_sequence(form, cs_id=None):
 
 @login_required
 @render_to('gsi/add_card_sequence.html')
+def run_new_card_sequence_add(request):
+    title = 'GSI New Card Sequence'
+    href = 'run_new_card_sequence_add'
+    form = None
+
+    if request.method == "POST":
+        if request.POST.get('create_processing_card') is not None:
+            return HttpResponseRedirect(reverse('proces_card_new_run'))
+        elif request.POST.get('add_card_items_button') is not None:
+            form = CardSequenceCreateForm(request.POST)
+
+            if form.is_valid():
+                card_sequence = create_update_card_sequence(form)
+
+                return HttpResponseRedirect(
+                    u'%s?status_message=%s' % (reverse('run_new_card_sequence_update', args=[card_sequence.id]),
+                    (u"The new card item '{0}' was changed successfully. You may edit it again below.".\
+                     format(card_sequence.name)))
+                )
+        elif request.POST.get('save_and_continue_editing_button') is not None:
+            form = CardSequenceCreateForm(request.POST)
+
+            if form.is_valid():
+                card_sequence = create_update_card_sequence(form)
+
+                return HttpResponseRedirect(
+                        u'%s?status_message=%s' % (reverse('run_new_card_sequence_update',
+                                                           args=[card_sequence.id]),
+                        (u"The card sequence '{0}' created successfully. You may edit it again below.".
+                         format(card_sequence.name)))
+                )
+        elif request.POST.get('save_button') is not None:
+            form = CardSequenceCreateForm(request.POST)
+
+            if form.is_valid():
+                card_sequence = create_update_card_sequence(form)
+
+                return HttpResponseRedirect(
+                        u'%s?status_message=%s' % (reverse('new_run'),
+                        (u"The card sequence '{0}' created successfully.".
+                         format(card_sequence.name)))
+                )
+        elif request.POST.get('cancel_button') is not None:
+            return HttpResponseRedirect(
+                    u'%s?status_message=%s' % (reverse('new_run'),
+                    (u"Card Sequence created canceled"))
+            )
+    else:
+        form = CardSequenceCreateForm()
+
+    data = {
+        'title': title,
+        'form': form,
+        'href': href,
+    }
+
+    return data
+
+
+@login_required
+@render_to('gsi/card_sequence_update.html')
+def run_new_card_sequence_update(request, cs_id):
+    card_sequence = get_object_or_404(CardSequence, pk=cs_id)
+    card_sequence_cards = CardSequence.cards.through.objects.filter(sequence_id=cs_id)
+    title = 'GSI Card Sequence {0}'.format(card_sequence.name)
+    url_process_card = 'proces_card_sequence_card_edit'
+    form = None
+
+    if request.method == "POST":
+        pass
+        if request.POST.get('create_processing_card') is not None:
+            return HttpResponseRedirect(
+                    reverse('proces_card_new_run_new_sc', args=[card_sequence.id])
+                )
+        elif request.POST.get('add_card_items_button') is not None:
+            form = CardSequenceCreateForm(request.POST)
+
+            if form.is_valid():
+                card_sequence = create_update_card_sequence(form, cs_id)
+
+                return HttpResponseRedirect(
+                    u'%s?status_message=%s' % (reverse('run_new_card_sequence_update',
+                                                       args=[card_sequence.id]),
+                    (u"The new card item '{0}' was changed successfully. You may edit it again below.".
+                     format(card_sequence.name)))
+                )
+        elif request.POST.get('save_and_continue_editing_button') is not None:
+            form = CardSequenceCreateForm(request.POST)
+
+            if form.is_valid():
+                card_sequence = create_update_card_sequence(form, cs_id)
+
+                return HttpResponseRedirect(
+                    u'%s?status_message=%s' % (reverse('run_new_card_sequence_update',
+                                                       args=[card_sequence.id]),
+                    (u"The new card item '{0}' was changed successfully. You may edit it again below.".
+                     format(card_sequence.name)))
+                )
+        elif request.POST.get('save_button') is not None:
+            form = CardSequenceCreateForm(request.POST)
+
+            if form.is_valid():
+                card_sequence = create_update_card_sequence(form, cs_id)
+
+                return HttpResponseRedirect(
+                        u'%s?status_message=%s' % (reverse('new_run'),
+                        (u"The card sequence '{0}' created successfully.".
+                         format(card_sequence.name)))
+                )
+        elif request.POST.get('cancel_button') is not None:
+            return HttpResponseRedirect(
+                    u'%s?status_message=%s' % (reverse('new_run'),
+                    (u"Card Sequence created canceled"))
+            )
+    else:
+        form = CardSequenceCreateForm(instance=card_sequence)
+
+    data = {
+        'title': title,
+        'form': form,
+        'cs_id': cs_id,
+        'card_sequence_cards': card_sequence_cards,
+        'card_sequence': card_sequence,
+        'url_process_card': url_process_card,
+    }
+
+    return data
+
+
+@login_required
+@render_to('gsi/add_card_sequence.html')
 def add_card_sequence(request, run_id):
     card_items = CardItem.objects.all()
     title = 'GSI New Card Sequence'
@@ -239,7 +370,7 @@ def card_sequence_update(request, run_id, cs_id):
     form = None
 
     if request.method == "POST":
-        if request.POST.get('create_new_processing_card') is not None:
+        if request.POST.get('create_processing_card') is not None:
             return HttpResponseRedirect(
                     reverse('proces_card_sequence_card_edit', args=[run_id, card_sequence.id])
                 )
