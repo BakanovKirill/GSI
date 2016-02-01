@@ -2,7 +2,7 @@ MANAGE=bin/django
 LOCALE=ru_RU.UTF-8
 
 # Targets
-.PHONY: run dbshell shell mkmigr_gsi migrate migrate_gsi mkmigr_cards migrate_cards test_gsi test_cards deploy static
+.PHONY: run dbshell shell mkmigr_gsi migrate migrate_gsi mkmigr_cards migrate_cards test_gsi test_cards deploy static restart
 
 default: run
 
@@ -42,3 +42,6 @@ deploy:
 static:
 	$(MANAGE) collectstatic
 	fab collectstatic
+
+restart:
+    fab restart
