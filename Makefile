@@ -44,4 +44,4 @@ static:
 	fab collectstatic
 
 restart:
-    fab restart
+	fab restart

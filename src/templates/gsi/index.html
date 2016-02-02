@@ -4,7 +4,7 @@
 {% block title %}{{ title }}{% endblock title %}
 
 {% block content %}
-    <div class="row-fluid">
+    <div class="row">
         <div class="col-md-4 col-md-offset-4">
             <div class="btn-group-vertical btn-block" role="group">
                 <ul class="nav nav-pills nav-stacked">
@@ -12,7 +12,7 @@
                         <a href="{% url 'run_setup' %}" class="center">Setup New Run</a>
                     </li>
                     <li role="button" class="btn btn-default main-menu">
-                        <a href="#" class="center">Submit a Run</a>
+                        <a href="{% url 'submit_run' %}" class="center">Submit a Run</a>
                     </li>
                     <li role="button" class="btn btn-default main-menu">
                         <a href="#" class="center">View Run Progress</a>

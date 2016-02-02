@@ -20,8 +20,8 @@
                     <tr>
                         <td><a href="{% url 'run_update' run_base.id %}">{{ run_base.name }}</a></td>
                         <td>{{ run_base.author }}</td>
-                        <td>{{ run_base.date_created }}</td>
-                        <td>{{ run_base.date_modified }}</td>
+                        <td>{{ run_base.date_created|date:"d/m/Y" }}</td>
+                        <td>{{ run_base.date_modified|date:"d/m/Y" }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
