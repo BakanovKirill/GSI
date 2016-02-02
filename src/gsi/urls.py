@@ -43,7 +43,7 @@ urlpatterns = [
     url(r'^run/submit/$', 'gsi.views.submit_run', name='submit_run'),
 
     # execute run
-    url(r'^run/execute/(?P<runs_id>\w+)/$', 'gsi.views.execute_runs', name='execute_runs'),
+    url(r'^run/execute/(?P<run_id>\w+)/$', 'gsi.views.execute_runs', name='execute_runs'),
 
 
     # card sequence for ne run base

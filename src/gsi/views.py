@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import datetime
+
 from annoying.decorators import render_to
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
@@ -11,6 +13,7 @@ from django.conf import settings
 from gsi.models import RunBase, Resolution, CardSequence, OrderedCardItem
 # from cards.models import CardItem
 from gsi.gsi_forms import *
+from core.utils import make_run
 
 TITLES = {
 	'home': ['Home', 'index'],
@@ -474,15 +477,31 @@ def card_item_update(request, run_id, cs_id, card_item_id):
 def submit_run(request):
 	run_bases = RunBase.objects.all()
 	title = 'GSI Submit a Run'
-	form = None
+	name_runs = ''
 
 	if request.method == "POST":
-		runs_id = str('/'.join(request.POST.getlist('execute_runs')))
-		print 'execute_runs ===================== ', type(runs_id)
-		return HttpResponseRedirect(
-			u'%s?status_message=%s' % (reverse('execute_runs', args=[runs_id]),
-									   (u"Card Item {0} updated successfully"))
-		)
+		if request.POST.getlist('execute_runs'):
+			for run_id in request.POST.getlist('execute_runs'):
+				rb = get_object_or_404(RunBase, pk=run_id)
+				name_runs += '"' + str(rb.name) + '", '
+				execute_run = make_run(rb, request.user)
+
+			runs_id = '_'.join(request.POST.getlist('execute_runs'))
+			format = "%d %b %a"
+			now_date = datetime.datetime.now()
+			now_date_formating = now_date.strftime("%d/%m/%Y")
+			now_time = now_date.strftime("%H:%M")
+
+			return HttpResponseRedirect(u'%s?status_message=%s' %
+						(reverse('execute_runs', args=[runs_id]),
+						 (u"Runs: {0} has been submitted to back end and {1} on {2}".
+						  format(name_runs, now_time, now_date_formating)))
+			)
+		else:
+			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('submit_run'),
+										 (u"Fof start choose Run."))
+			)
+
 
 
 
@@ -510,7 +529,6 @@ def submit_run(request):
 	data = {
 		'title': title,
 		'run_bases': run_bases,
-		# 'form': form,
 	}
 
 	return data
@@ -519,14 +537,27 @@ def submit_run(request):
 # execute run
 @login_required
 @render_to('gsi/execute_run.html')
-def execute_runs(request, runs_id):
+def execute_runs(request, run_id):
 	title = 'GSI Execute Run'
+	list_run_id = run_id.split('_')
+	name_runs = ''
+	messages = []
+
+	for run in list_run_id:
+		name_runs += '"' + str(get_object_or_404(RunBase, pk=int(run)).name) + '", '
+		messages.append('It has been assigned unique run ID:{0}. To view progress of this run use \
+						the view progress otion on the main menu.\n'.format(run))
+
+
+
+
 	# execute_runs = dict(request.POST)['execute_run']
 	# print 'execute_runs ===================== ', execute_runs
 
 	data = {
 		'title': title,
-		'runs_id': runs_id
+		'run_id': run_id,
+		'messages': messages,
 	}
 
 	return data

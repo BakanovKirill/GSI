@@ -1,7 +1,25 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block title %}{{ title }}{% endblock title %}
+
+{% block content %}
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
-        Run {} has been submitted to back end and {} 10:42 on 25 November 2016.
-
-It has been assigned unique run ID {}. To view progress of this run use the view progress otion on the main menu.
+        <table class="table table-striped table-hover">
+            <tbody>
+                {% for mess in messages %}
+                    <tr>
+                        <td><h5>{{ mess }}</h5></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="col-md-3 col-md-offset-9">
+            <a class="btn btn-default btn-block" href="{% url 'submit_run' %}" role="button">
+                Cancel
+            </a>
+        </div>
     </div>
 </div>
+{% endblock content %}
