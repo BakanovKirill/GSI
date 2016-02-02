@@ -372,7 +372,7 @@ def card_sequence_update(request, run_id, cs_id):
     if request.method == "POST":
         if request.POST.get('create_processing_card') is not None:
             return HttpResponseRedirect(
-                    reverse('proces_card_sequence_card_edit', args=[run_id, card_sequence.id])
+                    reverse('proces_card_runid_csid', args=[run_id, cs_id])
                 )
 
         elif request.POST.get('add_card_items_button') is not None:
@@ -411,7 +411,7 @@ def card_sequence_update(request, run_id, cs_id):
         elif request.POST.get('cancel_button') is not None:
             return HttpResponseRedirect(
                     u'%s?status_message=%s' % (reverse('card_sequence', args=[run_id]),
-                    (u"Card Sequence created canceled"))
+                    (u'Card Sequence "{0}" created canceled'.format(card_sequence.name)))
             )
     else:
         form = CardSequenceCreateForm(instance=card_sequence)

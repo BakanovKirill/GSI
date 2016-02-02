@@ -139,29 +139,20 @@ def proces_card_runid(request, run_id):
     return data
 
 
-
-
-
-
-
-
-
-
-
 @login_required
 @render_to('cards/processing_card_new_run.html')
-def proces_card_new_run_new_sc(request, cs_id):
-    title = 'Create New Processing Cards 22'
+def proces_card_runid_csid(request, run_id, cs_id):
+    title = 'Create New Processing Cards'
     rev_url = {
-        'qrf_button': ['new_run_qrf'],
-        'rfscore_button': ['new_run_rfscore'],
-        'remap_button': ['new_run_remap'],
-        'year_filter_button': ['new_run_year_filter'],
-        'collate_button': ['new_run_collate'],
-        'preproc_button': ['new_run_preproc'],
-        'margecsv_button': ['new_run_mergecsv'],
-        'rftrain_button': ['new_run_rftrain'],
-        'cancel_button': ['run_new_card_sequence_update', [cs_id]]
+        'qrf_button': ['new_runid_csid_qrf', [run_id, cs_id]],
+        'rfscore_button': ['new_runid_csid_rfscore', [run_id, cs_id]],
+        'remap_button': ['new_runid_csid_remap', [run_id, cs_id]],
+        'year_filter_button': ['new_runid_csid_year_filter', [run_id, cs_id]],
+        'collate_button': ['new_runid_csid_collate', [run_id, cs_id]],
+        'preproc_button': ['new_runid_csid_preproc', [run_id, cs_id]],
+        'margecsv_button': ['new_runid_csid_mergecsv', [run_id, cs_id]],
+        'rftrain_button': ['new_runid_csid_rftrain', [run_id, cs_id]],
+        'cancel_button': ['card_sequence_update', [run_id, cs_id]]
     }
 
     if request.method == "POST":
@@ -169,61 +160,98 @@ def proces_card_new_run_new_sc(request, cs_id):
 
     data = {
         'title': title,
-        'cs_id': cs_id,
-    }
-
-    return data
-
-
-
-
-
-
-
-
-
-@login_required
-@render_to('cards/proces_card_sequence_card_edit.html')
-def proces_card_sequence_card_edit(request, run_id, cs_id):
-    title = 'Create New Processing Cards'
-    url_form = 'proces_card_sequence_card_edit'
-    template_name = 'cards/_create_processing_card_form.html'
-
-    if request.method == "POST":
-        if request.POST.get('cancel_button') is not None:
-            return HttpResponseRedirect(
-                reverse('card_sequence_update', args=[run_id, cs_id])
-            )
-
-    data = {
-        'title': title,
         'run_id': run_id,
         'cs_id': cs_id,
-        'url_form': url_form,
-        'template_name': template_name,
     }
 
     return data
 
 
-@login_required
-@render_to('cards/proces_card_sequence_card_new.html')
-def proces_card_sequence_card_new(request, run_id):
-    title = 'Create New Processing Cards'
-    url_form = 'proces_card_sequence_card_new'
-    template_name = 'cards/_create_processing_card_form.html'
 
-    if request.method == "POST":
-        if request.POST.get('cancel_button') is not None:
-            return HttpResponseRedirect(
-                reverse('add_card_sequence', args=[run_id])
-            )
 
-    data = {
-        'title': title,
-        'run_id': run_id,
-        'url_form': url_form,
-        'template_name': template_name,
-    }
 
-    return data
+
+
+
+
+
+
+# @login_required
+# @render_to('cards/processing_card_new_run.html')
+# def proces_card_new_run_new_sc(request, cs_id):
+#     title = 'Create New Processing Cards 22'
+#     rev_url = {
+#         'qrf_button': ['new_run_qrf'],
+#         'rfscore_button': ['new_run_rfscore'],
+#         'remap_button': ['new_run_remap'],
+#         'year_filter_button': ['new_run_year_filter'],
+#         'collate_button': ['new_run_collate'],
+#         'preproc_button': ['new_run_preproc'],
+#         'margecsv_button': ['new_run_mergecsv'],
+#         'rftrain_button': ['new_run_rftrain'],
+#         'cancel_button': ['run_new_card_sequence_update', [cs_id]]
+#     }
+#
+#     if request.method == "POST":
+#         return processing_card_menu(request, rev_url, args=True)
+#
+#     data = {
+#         'title': title,
+#         'cs_id': cs_id,
+#     }
+#
+#     return data
+
+
+
+
+
+
+
+
+
+# @login_required
+# @render_to('cards/proces_card_sequence_card_edit.html')
+# def proces_card_sequence_card_edit(request, run_id, cs_id):
+#     title = 'Create New Processing Cards'
+#     url_form = 'proces_card_sequence_card_edit'
+#     template_name = 'cards/_create_processing_card_form.html'
+#
+#     if request.method == "POST":
+#         if request.POST.get('cancel_button') is not None:
+#             return HttpResponseRedirect(
+#                 reverse('card_sequence_update', args=[run_id, cs_id])
+#             )
+#
+#     data = {
+#         'title': title,
+#         'run_id': run_id,
+#         'cs_id': cs_id,
+#         'url_form': url_form,
+#         'template_name': template_name,
+#     }
+#
+#     return data
+
+
+# @login_required
+# @render_to('cards/proces_card_sequence_card_new.html')
+# def proces_card_sequence_card_new(request, run_id):
+#     title = 'Create New Processing Cards'
+#     url_form = 'proces_card_sequence_card_new'
+#     template_name = 'cards/_create_processing_card_form.html'
+#
+#     if request.method == "POST":
+#         if request.POST.get('cancel_button') is not None:
+#             return HttpResponseRedirect(
+#                 reverse('add_card_sequence', args=[run_id])
+#             )
+#
+#     data = {
+#         'title': title,
+#         'run_id': run_id,
+#         'url_form': url_form,
+#         'template_name': template_name,
+#     }
+#
+#     return data
