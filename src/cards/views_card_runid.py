@@ -13,55 +13,60 @@ from .get_card_post import *
 
 
 REVERSE_URL = {
-    'qrf': {'save_button': 'proces_card_new_run',
-            'save_and_another': 'new_run_qrf',
-            'save_and_continue': 'new_run_qrf_edit',
-            'cancel_button': 'proces_card_new_run'},
-    'rfscore': {'save_button': 'proces_card_new_run',
-                'save_and_another': 'new_run_rfscore',
-                'save_and_continue': 'new_run_rfscore_edit',
-                'cancel_button': 'proces_card_new_run'},
-    'remap': {'save_button': 'proces_card_new_run',
-              'save_and_another': 'new_run_remap',
-              'save_and_continue': 'new_run_remap_edit',
-              'cancel_button': 'proces_card_new_run'},
-    'year_filter': {'save_button': 'proces_card_new_run',
-                    'save_and_another': 'new_run_year_filter',
-                    'save_and_continue': 'new_run_year_filter_edit',
-                    'cancel_button': 'proces_card_new_run'},
-    'collate': {'save_button': 'proces_card_new_run',
-                'save_and_another': 'new_run_collate',
-                'save_and_continue': 'new_run_collate_edit',
-                'cancel_button': 'proces_card_new_run'},
-    'preproc': {'save_button': 'proces_card_new_run',
-                'save_and_another': 'new_run_preproc',
-                'save_and_continue': 'new_run_preproc_edit',
-                'cancel_button': 'proces_card_new_run'},
-    'mergecsv': {'save_button': 'proces_card_new_run',
-                 'save_and_another': 'new_run_mergecsv',
-                 'save_and_continue': 'new_run_mergecsv_edit',
-                 'cancel_button': 'proces_card_new_run'},
-    'rftrain': {'save_button': 'proces_card_new_run',
-                'save_and_another': 'new_run_rftrain',
-                'save_and_continue': 'new_run_rftrain_edit',
-                'cancel_button': 'proces_card_new_run'}
+    'qrf': {'save_button': ['proces_card_runid'],
+            'save_and_another': ['new_runid_qrf'],
+            'save_and_continue': ['new_runid_qrf_edit'],
+            'cancel_button': ['proces_card_runid']},
+    'rfscore': {'save_button': ['proces_card_runid'],
+                'save_and_another': ['new_runid_rfscore'],
+                'save_and_continue': ['new_runid_rfscore_edit'],
+                'cancel_button': ['proces_card_runid']},
+    'remap': {'save_button': ['proces_card_runid'],
+              'save_and_another': ['new_runid_remap'],
+              'save_and_continue': ['new_runid_remap_edit'],
+              'cancel_button': ['proces_card_runid']},
+    'year_filter': {'save_button': ['proces_card_runid'],
+                    'save_and_another': ['new_runid_year_filter'],
+                    'save_and_continue': ['new_runid_year_filter_edit'],
+                    'cancel_button': ['proces_card_runid']},
+    'collate': {'save_button': ['proces_card_runid'],
+                'save_and_another': ['new_runid_collate'],
+                'save_and_continue': ['new_runid_collate_edit'],
+                'cancel_button': ['proces_card_runid']},
+    'preproc': {'save_button': ['proces_card_runid'],
+                'save_and_another': ['new_runid_preproc'],
+                'save_and_continue': ['new_runid_preproc_edit'],
+                'cancel_button': ['proces_card_runid']},
+    'mergecsv': {'save_button': ['proces_card_runid'],
+                 'save_and_another': ['new_runid_mergecsv'],
+                 'save_and_continue': ['new_runid_mergecsv_edit'],
+                 'cancel_button': ['proces_card_runid']},
+    'rftrain': {'save_button': ['proces_card_runid'],
+                'save_and_another': ['new_runid_rftrain'],
+                'save_and_continue': ['new_runid_rftrain_edit'],
+                'cancel_button': ['proces_card_runid']}
 }
 
 
 # cards for run/card-sequence/processing-card
 @login_required
-@render_to('cards/new_run_card.html')
-def new_run_qrf(request):
+@render_to('cards/new_runid_card.html')
+def new_runid_qrf(request, run_id):
     title = 'New QRF Card'
-    url_form = 'new_run_qrf'
+    url_form = 'new_runid_qrf'
     template_name = 'cards/_qrf_form.html'
     func = qrf_update_create
     form = None
+    REVERSE_URL['qrf']['save_button'].append([run_id])
+    REVERSE_URL['qrf']['save_and_another'].append([run_id])
+    REVERSE_URL['qrf']['save_and_continue'].append([run_id])
+    REVERSE_URL['qrf']['cancel_button'].append([run_id])
 
     if request.method == "POST":
         # import pdb;pdb.set_trace()
         response = get_cards_post(request, QRFForm, 'QRF',
-                                 REVERSE_URL['qrf'], func)
+                                  REVERSE_URL['qrf'], func,
+                                  args=True)
 
         if isinstance(response, HttpResponseRedirect):
             return response
@@ -75,25 +80,30 @@ def new_run_qrf(request):
         'form': form,
         'url_form': url_form,
         'template_name': template_name,
+        'run_id': run_id,
     }
 
     return data
 
 
 @login_required
-@render_to('cards/new_run_card.html')
-def new_run_qrf_edit(request, qrf_id):
+@render_to('cards/new_runid_card.html')
+def new_runid_qrf_edit(request, run_id, qrf_id):
     title = 'New QRF Card'
     qrf_card = get_object_or_404(QRF, pk=qrf_id)
-    url_form = 'new_run_qrf_edit'
+    url_form = 'new_runid_qrf_edit'
     template_name = 'cards/_qrf_form.html'
     func = qrf_update_create
     form = None
+    REVERSE_URL['qrf']['save_button'].append([run_id])
+    REVERSE_URL['qrf']['save_and_another'].append([run_id])
+    REVERSE_URL['qrf']['save_and_continue'].append([run_id])
+    REVERSE_URL['qrf']['cancel_button'].append([run_id])
 
     if request.method == "POST":
         response = get_cards_post(request, QRFForm, 'QRF',
-                                     REVERSE_URL['qrf'], func,
-                                     card_id=qrf_id)
+                                  REVERSE_URL['qrf'], func, args=True,
+                                  card_id=qrf_id)
 
         if isinstance(response, HttpResponseRedirect):
             return response
@@ -108,23 +118,29 @@ def new_run_qrf_edit(request, qrf_id):
         'card_id': qrf_id,
         'url_form': url_form,
         'template_name': template_name,
+        'run_id': run_id,
     }
 
     return data
 
 
 @login_required
-@render_to('cards/new_run_card.html')
-def new_run_rfscore(request):
+@render_to('cards/new_runid_card.html')
+def new_runid_rfscore(request, run_id):
     title = 'New RFScore Card'
-    url_form = 'new_run_rfscore'
+    url_form = 'new_runid_rfscore'
     template_name = 'cards/_rfscore_form.html'
     func = rfscore_update_create
     form = None
+    REVERSE_URL['rfscore']['save_button'].append([run_id])
+    REVERSE_URL['rfscore']['save_and_another'].append([run_id])
+    REVERSE_URL['rfscore']['save_and_continue'].append([run_id])
+    REVERSE_URL['rfscore']['cancel_button'].append([run_id])
 
     if request.method == "POST":
         response = get_cards_post(request, RFScoreForm, 'RFScore',
-                                     REVERSE_URL['rfscore'], func)
+                                  REVERSE_URL['rfscore'], func,
+                                  args=True)
 
         if isinstance(response, HttpResponseRedirect):
             return response
@@ -138,25 +154,30 @@ def new_run_rfscore(request):
         'form': form,
         'url_form': url_form,
         'template_name': template_name,
+        'run_id': run_id,
     }
 
     return data
 
 
 @login_required
-@render_to('cards/new_run_card.html')
-def new_run_rfscore_edit(request, rfscore_id):
+@render_to('cards/new_runid_card.html')
+def new_runid_rfscore_edit(request, run_id, rfscore_id):
     title = 'New RFScore Card'
     rfscore_card = get_object_or_404(RFScore, pk=rfscore_id)
-    url_form = 'new_run_rfscore_edit'
+    url_form = 'new_runid_rfscore_edit'
     template_name = 'cards/_rfscore_form.html'
     func = rfscore_update_create
     form = None
+    REVERSE_URL['rfscore']['save_button'].append([run_id])
+    REVERSE_URL['rfscore']['save_and_another'].append([run_id])
+    REVERSE_URL['rfscore']['save_and_continue'].append([run_id])
+    REVERSE_URL['rfscore']['cancel_button'].append([run_id])
 
     if request.method == "POST":
         response = get_cards_post(request, RFScoreForm, 'RFScore',
-                                     REVERSE_URL['rfscore'], func,
-                                     card_id=rfscore_id)
+                                  REVERSE_URL['rfscore'], func, args=True,
+                                  card_id=rfscore_id)
 
         if isinstance(response, HttpResponseRedirect):
             return response
@@ -171,23 +192,29 @@ def new_run_rfscore_edit(request, rfscore_id):
         'card_id': rfscore_id,
         'url_form': url_form,
         'template_name': template_name,
+        'run_id': run_id,
     }
 
     return data
 
 
 @login_required
-@render_to('cards/new_run_card.html')
-def new_run_remap(request):
+@render_to('cards/new_runid_card.html')
+def new_runid_remap(request, run_id):
     title = 'New Remap Card'
-    url_form = 'new_run_remap'
+    url_form = 'new_runid_remap'
     template_name = 'cards/_remap_form.html'
     func = remap_update_create
     form = None
+    REVERSE_URL['remap']['save_button'].append([run_id])
+    REVERSE_URL['remap']['save_and_another'].append([run_id])
+    REVERSE_URL['remap']['save_and_continue'].append([run_id])
+    REVERSE_URL['remap']['cancel_button'].append([run_id])
 
     if request.method == "POST":
         response = get_cards_post(request, RemapForm, 'Remap',
-                                     REVERSE_URL['remap'], func)
+                                  REVERSE_URL['remap'], func,
+                                  args=True)
 
         if isinstance(response, HttpResponseRedirect):
             return response
@@ -201,25 +228,30 @@ def new_run_remap(request):
         'form': form,
         'url_form': url_form,
         'template_name': template_name,
+        'run_id': run_id,
     }
 
     return data
 
 
 @login_required
-@render_to('cards/new_run_card.html')
-def new_run_remap_edit(request, remap_id):
+@render_to('cards/new_runid_card.html')
+def new_runid_remap_edit(request, run_id, remap_id):
     title = 'New Remap Card'
     remap_card = get_object_or_404(Remap, pk=remap_id)
-    url_form = 'new_run_remap_edit'
+    url_form = 'new_runid_remap_edit'
     template_name = 'cards/_remap_form.html'
     func = remap_update_create
     form = None
+    REVERSE_URL['remap']['save_button'].append([run_id])
+    REVERSE_URL['remap']['save_and_another'].append([run_id])
+    REVERSE_URL['remap']['save_and_continue'].append([run_id])
+    REVERSE_URL['remap']['cancel_button'].append([run_id])
 
     if request.method == "POST":
         response = get_cards_post(request, RemapForm, 'Remap',
-                                     REVERSE_URL['remap'], func,
-                                     card_id=remap_id)
+                                  REVERSE_URL['remap'], func, args=True,
+                                  card_id=remap_id)
 
         if isinstance(response, HttpResponseRedirect):
             return response
@@ -234,23 +266,28 @@ def new_run_remap_edit(request, remap_id):
         'card_id': remap_id,
         'url_form': url_form,
         'template_name': template_name,
+        'run_id': run_id,
     }
 
     return data
 
 
 @login_required
-@render_to('cards/new_run_card.html')
-def new_run_year_filter(request):
+@render_to('cards/new_runid_card.html')
+def new_runid_year_filter(request, run_id):
     title = 'New YearFilter Card'
-    url_form = 'new_run_year_filter'
+    url_form = 'new_runid_year_filter'
     template_name = 'cards/_year_filter_form.html'
     func = year_filter_update_create
     form = None
+    REVERSE_URL['year_filter']['save_button'].append([run_id])
+    REVERSE_URL['year_filter']['save_and_another'].append([run_id])
+    REVERSE_URL['year_filter']['save_and_continue'].append([run_id])
+    REVERSE_URL['year_filter']['cancel_button'].append([run_id])
 
     if request.method == "POST":
         response = get_cards_post(request, YearFilterForm, 'YearFilter',
-                                     REVERSE_URL['year_filter'], func)
+                                  REVERSE_URL['year_filter'], func, args=True)
 
         if isinstance(response, HttpResponseRedirect):
             return response
@@ -264,25 +301,30 @@ def new_run_year_filter(request):
         'form': form,
         'url_form': url_form,
         'template_name': template_name,
+        'run_id': run_id,
     }
 
     return data
 
 
 @login_required
-@render_to('cards/new_run_card.html')
-def new_run_year_filter_edit(request, yf_id):
+@render_to('cards/new_runid_card.html')
+def new_runid_year_filter_edit(request, run_id, yf_id):
     title = 'New YearFilter Card'
     year_filter_card = get_object_or_404(YearFilter, pk=yf_id)
-    url_form = 'new_run_year_filter_edit'
+    url_form = 'new_runid_year_filter_edit'
     template_name = 'cards/_year_filter_form.html'
     func = year_filter_update_create
     form = None
+    REVERSE_URL['year_filter']['save_button'].append([run_id])
+    REVERSE_URL['year_filter']['save_and_another'].append([run_id])
+    REVERSE_URL['year_filter']['save_and_continue'].append([run_id])
+    REVERSE_URL['year_filter']['cancel_button'].append([run_id])
 
     if request.method == "POST":
         response = get_cards_post(request, YearFilterForm, 'YearFilter',
-                                     REVERSE_URL['year_filter'], func,
-                                     card_id=yf_id)
+                                  REVERSE_URL['year_filter'], func, args=True,
+                                  card_id=yf_id)
 
         if isinstance(response, HttpResponseRedirect):
             return response
@@ -297,23 +339,28 @@ def new_run_year_filter_edit(request, yf_id):
         'card_id': yf_id,
         'url_form': url_form,
         'template_name': template_name,
+        'run_id': run_id,
     }
 
     return data
 
 
 @login_required
-@render_to('cards/new_run_card.html')
-def new_run_collate(request):
+@render_to('cards/new_runid_card.html')
+def new_runid_collate(request, run_id):
     title = 'New Collate Card'
-    url_form = 'new_run_collate'
+    url_form = 'new_runid_collate'
     template_name = 'cards/_collate_form.html'
     func = collate_update_create
     form = None
+    REVERSE_URL['collate']['save_button'].append([run_id])
+    REVERSE_URL['collate']['save_and_another'].append([run_id])
+    REVERSE_URL['collate']['save_and_continue'].append([run_id])
+    REVERSE_URL['collate']['cancel_button'].append([run_id])
 
     if request.method == "POST":
         response = get_cards_post(request, CollateForm, 'Collate',
-                                     REVERSE_URL['collate'], func)
+                                  REVERSE_URL['collate'], func, args=True)
 
         if isinstance(response, HttpResponseRedirect):
             return response
@@ -327,25 +374,30 @@ def new_run_collate(request):
         'form': form,
         'url_form': url_form,
         'template_name': template_name,
+        'run_id': run_id,
     }
 
     return data
 
 
 @login_required
-@render_to('cards/new_run_card.html')
-def new_run_collate_edit(request, collate_id):
+@render_to('cards/new_runid_card.html')
+def new_runid_collate_edit(request, run_id, collate_id):
     title = 'New Collate Card'
     collate_card = get_object_or_404(Collate, pk=collate_id)
-    url_form = 'new_run_collate_edit'
+    url_form = 'new_runid_collate_edit'
     template_name = 'cards/_collate_form.html'
     func = collate_update_create
     form = None
+    REVERSE_URL['collate']['save_button'].append([run_id])
+    REVERSE_URL['collate']['save_and_another'].append([run_id])
+    REVERSE_URL['collate']['save_and_continue'].append([run_id])
+    REVERSE_URL['collate']['cancel_button'].append([run_id])
 
     if request.method == "POST":
         response = get_cards_post(request, CollateForm, 'Collate',
-                                     REVERSE_URL['collate'], func,
-                                     card_id=collate_id)
+                                  REVERSE_URL['collate'], func, args=True,
+                                  card_id=collate_id)
 
         if isinstance(response, HttpResponseRedirect):
             return response
@@ -360,23 +412,28 @@ def new_run_collate_edit(request, collate_id):
         'card_id': collate_id,
         'url_form': url_form,
         'template_name': template_name,
+        'run_id': run_id,
     }
 
     return data
 
 
 @login_required
-@render_to('cards/new_run_card.html')
-def new_run_preproc(request):
+@render_to('cards/new_runid_card.html')
+def new_runid_preproc(request, run_id):
     title = 'New PreProc Card'
-    url_form = 'new_run_preproc'
+    url_form = 'new_runid_preproc'
     template_name = 'cards/_preproc_form.html'
     func = preproc_update_create
     form = None
+    REVERSE_URL['preproc']['save_button'].append([run_id])
+    REVERSE_URL['preproc']['save_and_another'].append([run_id])
+    REVERSE_URL['preproc']['save_and_continue'].append([run_id])
+    REVERSE_URL['preproc']['cancel_button'].append([run_id])
 
     if request.method == "POST":
         response = get_cards_post(request, PreProcForm, 'PreProc',
-                                     REVERSE_URL['preproc'], func)
+                                  REVERSE_URL['preproc'], func, args=True)
 
         if isinstance(response, HttpResponseRedirect):
             return response
@@ -390,25 +447,30 @@ def new_run_preproc(request):
         'form': form,
         'url_form': url_form,
         'template_name': template_name,
+        'run_id': run_id,
     }
 
     return data
 
 
 @login_required
-@render_to('cards/new_run_card.html')
-def new_run_preproc_edit(request, preproc_id):
+@render_to('cards/new_runid_card.html')
+def new_runid_preproc_edit(request, run_id, preproc_id):
     title = 'New PreProc Card'
     preproc_card = get_object_or_404(PreProc, pk=preproc_id)
-    url_form = 'new_run_preproc_edit'
+    url_form = 'new_runid_preproc_edit'
     template_name = 'cards/_preproc_form.html'
     func = preproc_update_create
     form = None
+    REVERSE_URL['preproc']['save_button'].append([run_id])
+    REVERSE_URL['preproc']['save_and_another'].append([run_id])
+    REVERSE_URL['preproc']['save_and_continue'].append([run_id])
+    REVERSE_URL['preproc']['cancel_button'].append([run_id])
 
     if request.method == "POST":
         response = get_cards_post(request, PreProcForm, 'PreProc',
-                                     REVERSE_URL['preproc'], func,
-                                     card_id=preproc_id)
+                                  REVERSE_URL['preproc'], func, args=True,
+                                  card_id=preproc_id)
 
         if isinstance(response, HttpResponseRedirect):
             return response
@@ -423,23 +485,28 @@ def new_run_preproc_edit(request, preproc_id):
         'card_id': preproc_id,
         'url_form': url_form,
         'template_name': template_name,
+        'run_id': run_id,
     }
 
     return data
 
 
 @login_required
-@render_to('cards/new_run_card.html')
-def new_run_mergecsv(request):
+@render_to('cards/new_runid_card.html')
+def new_runid_mergecsv(request, run_id):
     title = 'New MergeCSV Card'
-    url_form = 'new_run_mergecsv'
+    url_form = 'new_runid_mergecsv'
     template_name = 'cards/_mergecsv_form.html'
     func = mergecsv_update_create
     form = None
+    REVERSE_URL['mergecsv']['save_button'].append([run_id])
+    REVERSE_URL['mergecsv']['save_and_another'].append([run_id])
+    REVERSE_URL['mergecsv']['save_and_continue'].append([run_id])
+    REVERSE_URL['mergecsv']['cancel_button'].append([run_id])
 
     if request.method == "POST":
         response = get_cards_post(request, MergeCSVForm, 'MergeCSV',
-                                     REVERSE_URL['mergecsv'], func)
+                                  REVERSE_URL['mergecsv'], func, args=True)
 
         if isinstance(response, HttpResponseRedirect):
             return response
@@ -453,25 +520,30 @@ def new_run_mergecsv(request):
         'form': form,
         'url_form': url_form,
         'template_name': template_name,
+        'run_id': run_id,
     }
 
     return data
 
 
 @login_required
-@render_to('cards/new_run_card.html')
-def new_run_mergecsv_edit(request, mcsv_id):
+@render_to('cards/new_runid_card.html')
+def new_runid_mergecsv_edit(request, run_id, mcsv_id):
     title = 'New MergeCSV Card'
     mergecsv_card = get_object_or_404(MergeCSV, pk=mcsv_id)
-    url_form = 'new_run_mergecsv_edit'
+    url_form = 'new_runid_mergecsv_edit'
     template_name = 'cards/_mergecsv_form.html'
     func = mergecsv_update_create
     form = None
+    REVERSE_URL['mergecsv']['save_button'].append([run_id])
+    REVERSE_URL['mergecsv']['save_and_another'].append([run_id])
+    REVERSE_URL['mergecsv']['save_and_continue'].append([run_id])
+    REVERSE_URL['mergecsv']['cancel_button'].append([run_id])
 
     if request.method == "POST":
         response = get_cards_post(request, MergeCSVForm, 'MergeCSV',
-                                     REVERSE_URL['mergecsv'], func,
-                                     card_id=mcsv_id)
+                                  REVERSE_URL['mergecsv'], func, args=True,
+                                  card_id=mcsv_id)
 
         if isinstance(response, HttpResponseRedirect):
             return response
@@ -486,23 +558,28 @@ def new_run_mergecsv_edit(request, mcsv_id):
         'card_id': mcsv_id,
         'url_form': url_form,
         'template_name': template_name,
+        'run_id': run_id,
     }
 
     return data
 
 
 @login_required
-@render_to('cards/new_run_card.html')
-def new_run_rftrain(request):
+@render_to('cards/new_runid_card.html')
+def new_runid_rftrain(request, run_id):
     title = 'New RFTrain Card'
-    url_form = 'new_run_rftrain'
+    url_form = 'new_runid_rftrain'
     template_name = 'cards/_rftrain_form.html'
     func = rftrain_update_create
     form = None
+    REVERSE_URL['rftrain']['save_button'].append([run_id])
+    REVERSE_URL['rftrain']['save_and_another'].append([run_id])
+    REVERSE_URL['rftrain']['save_and_continue'].append([run_id])
+    REVERSE_URL['rftrain']['cancel_button'].append([run_id])
 
     if request.method == "POST":
         response = get_cards_post(request, RFTrainForm, 'RFTrain',
-                                     REVERSE_URL['rftrain'], func)
+                                  REVERSE_URL['rftrain'], func, args=True)
 
         if isinstance(response, HttpResponseRedirect):
             return response
@@ -516,25 +593,30 @@ def new_run_rftrain(request):
         'form': form,
         'url_form': url_form,
         'template_name': template_name,
+        'run_id': run_id,
     }
 
     return data
 
 
 @login_required
-@render_to('cards/new_run_card.html')
-def new_run_rftrain_edit(request, rftrain_id):
+@render_to('cards/new_runid_card.html')
+def new_runid_rftrain_edit(request, run_id, rftrain_id):
     title = 'New RFTrain Card'
     rftrain_card = get_object_or_404(RFTrain, pk=rftrain_id)
-    url_form = 'new_run_rftrain_edit'
+    url_form = 'new_runid_rftrain_edit'
     template_name = 'cards/_rftrain_form.html'
     func = rftrain_update_create
     form = None
+    REVERSE_URL['rftrain']['save_button'].append([run_id])
+    REVERSE_URL['rftrain']['save_and_another'].append([run_id])
+    REVERSE_URL['rftrain']['save_and_continue'].append([run_id])
+    REVERSE_URL['rftrain']['cancel_button'].append([run_id])
 
     if request.method == "POST":
         response = get_cards_post(request, RFTrainForm, 'RFTrain',
-                                     REVERSE_URL['rftrain'], func,
-                                     card_id=rftrain_id)
+                                  REVERSE_URL['rftrain'], func, args=True,
+                                  card_id=rftrain_id)
 
         if isinstance(response, HttpResponseRedirect):
             return response
@@ -549,6 +631,7 @@ def new_run_rftrain_edit(request, rftrain_id):
         'card_id': rftrain_id,
         'url_form': url_form,
         'template_name': template_name,
+        'run_id': run_id,
     }
 
     return data

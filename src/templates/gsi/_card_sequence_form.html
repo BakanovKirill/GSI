@@ -38,14 +38,6 @@
     </div>
 </div>
 
-<!--<div class="row margin-top-15" id="add_item_order">-->
-    <!--<div class="col-md-4 col-md-offset-8">-->
-        <!--<button type="submit" name="new_card_items_button" class="btn btn-primary btn-block">-->
-            <!--Ordered card items-->
-        <!--</button>-->
-    <!--</div>-->
-<!--</div>-->
-
 <div class="row margin-top-15" id="add_item_order">
     <div class="col-md-2 right" >
         <div class="form-group {% if form.cards.errors %}has-error{% endif %}">
@@ -94,7 +86,15 @@
                 <tbody>
                     {% for card in card_sequence_cards %}
                         <tr>
-                            <td><a href="{% url 'card_item_update' run_id cs_id card.id %}">{{ card.card_item }}</a></td>
+                            <td>
+                                <a href="{% if run_id %}
+                                            {% url 'card_item_update' run_id cs_id card.id %}
+                                          {% elif cs_id %}
+                                            #
+                                          {% endif %}">
+                                    {{ card.card_item }}
+                                </a>
+                            </td>
                             <td>{{ card.order }}</td>
                         </tr>
                     {% endfor %}
@@ -107,10 +107,14 @@
 
 <div class="row margin-top-50">
     <div class="col-md-2">
-        <button type="submit" name="cancel_button" class="btn btn-default btn-block">Cancel</button>
+        <button type="submit" name="cancel_button" class="btn btn-default btn-block">
+            Cancel
+        </button>
     </div>
     <div class="col-md-4">
-        <button type="submit" name="create_new_processing_card" class="btn btn-default btn-block">Create New Processing Card</button>
+        <button type="submit" name="create_processing_card" class="btn btn-default btn-block">
+            Create New Processing Card
+        </button>
     </div>
     <div class="col-md-4">
         <button type="submit" name="save_and_continue_editing_button" class="btn btn-primary btn-block">
@@ -118,6 +122,8 @@
         </button>
     </div>
     <div class="col-md-2">
-        <button type="submit" name="save_button" class="btn btn-primary btn-block">Save</button>
+        <button type="submit" name="save_button" class="btn btn-primary btn-block">
+            Save
+        </button>
     </div>
 </div>

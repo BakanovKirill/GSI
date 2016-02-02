@@ -13,10 +13,10 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <form action="
-            {% if card_id %}
-                {% url url_form card_id %}
+            {% if card_id and run_id %}
+                {% url url_form run_id card_id %}
             {% else %}
-                {% url url_form %}
+                {% url url_form run_id %}
             {% endif %}" method="post"
                 enctype="multipart/form-data" role="form" class="form-horizontal">
                 {% csrf_token %}
