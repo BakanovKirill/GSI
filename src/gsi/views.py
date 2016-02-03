@@ -487,7 +487,6 @@ def submit_run(request):
 				execute_run = make_run(rb, request.user)
 
 			runs_id = '_'.join(request.POST.getlist('execute_runs'))
-			format = "%d %b %a"
 			now_date = datetime.datetime.now()
 			now_date_formating = now_date.strftime("%d/%m/%Y")
 			now_time = now_date.strftime("%H:%M")
