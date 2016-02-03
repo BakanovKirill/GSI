@@ -165,3 +165,51 @@ class CardSequenceCreateForm(forms.ModelForm):
             'card_item',
             'order',
         ]
+
+
+class HomeVariablesForm(forms.ModelForm):
+    """ form for editing Home Variables """
+    def __init__(self, *args, **kwargs):
+        super(HomeVariablesForm, self).__init__(*args, **kwargs)
+
+    SAT_TIF_DIR_ROOT = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        help_text='SAT_TIF_DIR_ROOT',
+        label=u'Satelite Data Top Level',
+    )
+    RF_DIR_ROOT = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        help_text='RF_DIR_ROOT',
+        label=u'Top directory for Random Forest Files',
+    )
+    USER_DATA_DIR_ROOT = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        help_text='USER_DATA_DIR_ROOT',
+        label=u'Top Level for user data dir',
+    )
+    MODIS_DIR_ROOT = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        help_text='MODIS_DIR_ROOT',
+        label=u'Top Level for raw Modis data',
+    )
+    RF_AUXDATA_DIR = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        help_text='RF_AUXDATA_DIR',
+        label=u'Top Level for Auxilliary data (SOIL, DEM etc.)',
+    )
+    SAT_DIF_DIR_ROOT = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        help_text='SAT_DIF_DIR_ROOT',
+        label=u'Top Level for Satelite TF files',
+    )
+
+    class Meta:
+        model = RunBase
+        fields = [
+            'SAT_TIF_DIR_ROOT',
+            'RF_DIR_ROOT',
+            'USER_DATA_DIR_ROOT',
+            'MODIS_DIR_ROOT',
+            'RF_AUXDATA_DIR',
+            'SAT_DIF_DIR_ROOT',
+        ]

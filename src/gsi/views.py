@@ -10,7 +10,7 @@ from django.views.generic import UpdateView
 from django.utils.decorators import method_decorator
 from django.conf import settings
 
-from gsi.models import Run, RunStep
+from gsi.models import Run, RunStep, HomeVariables
 # from cards.models import CardItem
 from gsi.gsi_forms import *
 from core.utils import make_run
@@ -595,4 +595,43 @@ def static_data_setup(request):
 	return data
 
 
+# setup home variable
+@login_required
+@render_to('gsi/home_variable_setup.html')
+def home_variable_setup(request):
+	title = 'GSI Home Variables'
+	variables = get_object_or_404(HomeVariables, pk=1)
+	form = None
 
+	if request.method == "POST":
+		form = HomeVariablesForm(request.POST)
+
+		if form.is_valid():
+				variables.SAT_TIF_DIR_ROOT = form.cleaned_data["SAT_TIF_DIR_ROOT"]
+				variables.RF_DIR_ROOT = form.cleaned_data["RF_DIR_ROOT"]
+				variables.USER_DATA_DIR_ROOT = form.cleaned_data["USER_DATA_DIR_ROOT"]
+				variables.MODIS_DIR_ROOT = form.cleaned_data["MODIS_DIR_ROOT"]
+				variables.RF_AUXDATA_DIR = form.cleaned_data["RF_AUXDATA_DIR"]
+				variables.SAT_DIF_DIR_ROOT = form.cleaned_data["SAT_DIF_DIR_ROOT"]
+				variables.save()
+
+		if request.POST.get('save_button') is not None:
+			return HttpResponseRedirect(u'%s?status_message=%s' %
+										(reverse('static_data_setup'),
+										 (u"Home variables successfully updated"))
+			)
+		if request.POST.get('save_and_continue_button') is not None:
+			return HttpResponseRedirect(u'%s?status_message=%s' %
+										(reverse('home_variable_setup'),
+										 (u"Home variables successfully updated"))
+			)
+	else:
+		form = HomeVariablesForm(instance=variables)
+
+	data = {
+		'title': title,
+		'variables': variables,
+		'form': form
+	}
+
+	return data

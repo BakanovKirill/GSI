@@ -54,6 +54,9 @@ urlpatterns = [
     # setup static data
     url(r'^run/static-data/setup/$', 'gsi.views.static_data_setup', name='static_data_setup'),
 
+    # setup home variable
+    url(r'^run/home-variable/setup/$', 'gsi.views.home_variable_setup', name='home_variable_setup'),
+
 
 
     # card sequence for ne run base
