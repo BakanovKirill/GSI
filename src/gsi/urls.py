@@ -49,7 +49,10 @@ urlpatterns = [
     url(r'^run/progress/$', 'gsi.views.run_progress', name='run_progress'),
 
     # run details
-    url(r'^run/details/(?P<run_id>\d+)$', 'gsi.views.run_details', name='run_details'),
+    url(r'^run/details/(?P<run_id>\d+)/$', 'gsi.views.run_details', name='run_details'),
+
+    # setup static data
+    url(r'^run/static-data/setup/$', 'gsi.views.static_data_setup', name='static_data_setup'),
 
 
 

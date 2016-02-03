@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block title %}{{ title }}{% endblock title %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4 margin-top-15">
+            <a class="btn btn-default btn-block" href="#" role="button">
+                Setup Home Variable
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4 margin-top-15">
+            <a class="btn btn-default btn-block" href="#" role="button">
+                Environment Groups
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4 margin-top-15">
+            <a class="btn btn-default btn-block" href="#" role="button">
+                Tile Groups
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4 margin-top-15">
+            <a class="btn btn-default btn-block" href="#" role="button">
+                Year Groups
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4 margin-top-15">
+            <a class="btn btn-primary btn-block main-menu" href="{% url 'index' %}" role="button">
+                Back
+            </a>
+        </div>
+    </div>
+{% endblock content %}

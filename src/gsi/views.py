@@ -581,3 +581,18 @@ def run_details(request, run_id):
 	}
 
 	return data
+
+
+# setup static data
+@login_required
+@render_to('gsi/static_data_setup.html')
+def static_data_setup(request):
+	title = 'GSI Setup Static Data'
+	data = {
+		'title': title,
+	}
+
+	return data
+
+
+
