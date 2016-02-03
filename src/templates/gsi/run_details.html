@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block title %}
+    {{ title }}
+    <h4>{{ sub_title }}</h4>
+{% endblock title %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <form action="{% url 'run_details' run_id %}" method="post" enctype="multipart/form-data"
+          role="form" class="form-horizontal">
+            {% csrf_token %}
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Run ID</th>
+                        <th>Card Run</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for run in runs_step %}
+                        <tr>
+                            <td><input type="radio" name="details_file" value="{{ run.id }}"></td>
+                            <td>{{ run.id }}</td>
+                            <td>{{ run.card_item }}</td>
+                            <td>{{ run.start_date|date:"d/m/Y" }}</td>
+                            <td>{{ run.state }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="col-md-3">
+                <a class="btn btn-default btn-block" href="{% url 'run_progress' %}" role="button">
+                    Cancel
+                </a>
+            </div>
+            <div class="col-md-3 col-md-offset-6">
+                <button type="submit" name="save_button" class="btn btn-primary btn-block">
+                    Details
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

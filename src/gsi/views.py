@@ -10,7 +10,7 @@ from django.views.generic import UpdateView
 from django.utils.decorators import method_decorator
 from django.conf import settings
 
-from gsi.models import RunBase, Resolution, CardSequence, OrderedCardItem
+from gsi.models import Run, RunStep
 # from cards.models import CardItem
 from gsi.gsi_forms import *
 from core.utils import make_run
@@ -501,31 +501,6 @@ def submit_run(request):
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('submit_run'),
 										 (u"Fof start choose Run."))
 			)
-
-
-
-
-	#     if request.POST.get('save_button') is not None:
-	#         form = CardSequenceCardForm(request.POST, instance=card_sequence_card)
-	#
-	#         if form.is_valid():
-	#             for card in CardItem.objects.filter(id=form.cleaned_data["card_item"].id):
-	#                 card_sequence_card.card_item = card
-	#             card_sequence_card.order = form.cleaned_data["order"]
-	#             card_sequence_card.save()
-	#
-	#             return HttpResponseRedirect(
-	#                     u'%s?status_message=%s' % (reverse('card_sequence_update', args=[run_id, cs_id]),
-	#                     (u"Card Item {0} updated successfully".format(card_sequence_card.card_item)))
-	#             )
-	#     elif request.POST.get('cancel_button') is not None:
-	#         return HttpResponseRedirect(
-	#                 u'%s?status_message=%s' % (reverse('card_sequence_update', args=[run_id, cs_id]),
-	#                 (u"Card Item {0} updated canceled".format(card_sequence_card.card_item)))
-	#         )
-	# else:
-	#     form = CardSequenceCardForm(instance=card_sequence_card)
-
 	data = {
 		'title': title,
 		'run_bases': run_bases,
@@ -548,16 +523,62 @@ def execute_runs(request, run_id):
 		messages.append('It has been assigned unique run ID:{0}. To view progress of this run use \
 						the view progress otion on the main menu.\n'.format(run))
 
-
-
-
-	# execute_runs = dict(request.POST)['execute_run']
-	# print 'execute_runs ===================== ', execute_runs
-
 	data = {
 		'title': title,
 		'run_id': run_id,
 		'messages': messages,
+	}
+
+	return data
+
+
+# run progress
+@login_required
+@render_to('gsi/run_progress.html')
+def run_progress(request):
+	runs = Run.objects.all()
+	title = 'GSI Run Progress'
+
+	if request.method == "POST":
+		if request.POST.get('run_progress'):
+			run_id = request.POST.get('run_progress')
+			run = get_object_or_404(Run, pk=run_id)
+
+			return HttpResponseRedirect(u'%s?status_message=%s' %
+										(reverse('run_details', args=[run_id]),
+										 (u'Run: "{0}" selected for viewing log file.'.
+										  format(run.run_base)))
+			)
+		else:
+			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_progress'),
+										 (u"To view the log, select Run."))
+			)
+	data = {
+		'title': title,
+		'runs': runs,
+	}
+
+	return data
+
+
+# execute run
+@login_required
+@render_to('gsi/run_details.html')
+def run_details(request, run_id):
+	title = 'GSI Run Details'
+	sub_title = 'The View Log file select and hit view'
+	runs_step = RunStep.objects.filter(parent_run=run_id)
+
+	# for run in list_run_id:
+	# 	name_runs += '"' + str(get_object_or_404(RunBase, pk=int(run)).name) + '", '
+	# 	messages.append('It has been assigned unique run ID:{0}. To view progress of this run use \
+	# 					the view progress otion on the main menu.\n'.format(run))
+
+	data = {
+		'title': title,
+		'sub_title': sub_title,
+		'run_id': run_id,
+		'runs_step': runs_step,
 	}
 
 	return data

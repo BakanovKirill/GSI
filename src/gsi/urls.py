@@ -45,6 +45,13 @@ urlpatterns = [
     # execute run
     url(r'^run/execute/(?P<run_id>\w+)/$', 'gsi.views.execute_runs', name='execute_runs'),
 
+    # run progress
+    url(r'^run/progress/$', 'gsi.views.run_progress', name='run_progress'),
+
+    # run details
+    url(r'^run/details/(?P<run_id>\d+)$', 'gsi.views.run_details', name='run_details'),
+
+
 
     # card sequence for ne run base
     url(r'^run/card-sequence/add/$', 'gsi.views.run_new_card_sequence_add',
