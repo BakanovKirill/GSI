@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block title %}{{ title }}{% endblock title %}
+
+{% block status_message %}
+    {% if form.errors %}
+        Please, correct the following errors!
+    {% endif %}
+{% endblock status_message %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <form action="
+            {% if item_id %}
+                {% url url_form item_id %}
+            {% else %}
+                {% url url_form %}
+            {% endif %}" method="post"
+                enctype="multipart/form-data" role="form" class="form-horizontal">
+                {% csrf_token %}
+
+                {% include template_name %}
+
+            </form>
+        </div>
+    </div>
+{% endblock content %}

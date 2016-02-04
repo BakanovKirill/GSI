@@ -61,7 +61,8 @@ urlpatterns = [
     url(r'^run/environment-groups/setup/$', 'gsi.views.environment_groups', name='environment_groups'),
 
     # environment groups edit
-    # url(r'^run/environment-groups/add/$', 'gsi.views.environment_groups_add', name='environment_groups_add'),
+    url(r'^run/environment-group/add/$', 'gsi.views.environment_group_add', name='environment_group_add'),
+    url(r'^run/environment-group/(?P<env_id>\d+)/$', 'gsi.views.environment_group_edit', name='environment_group_edit'),
 
 
     # card sequence for ne run base

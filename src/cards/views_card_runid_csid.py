@@ -9,7 +9,8 @@ from django.conf import settings
 
 from cards.cards_forms import *
 from .card_update_create import *
-from .get_card_post import *
+# from .get_card_post import *
+from core.get_post import *
 
 REVERSE_URL = {
 	'qrf': {'save_button': ['proces_card_runid_csid'],
@@ -62,13 +63,10 @@ def new_runid_csid_qrf(request, run_id, cs_id):
 	REVERSE_URL['qrf']['save_and_continue'].append([run_id, cs_id])
 	REVERSE_URL['qrf']['cancel_button'].append([run_id, cs_id])
 
-	print
-
 	if request.method == "POST":
 		# import pdb;pdb.set_trace()
-		response = get_cards_post(request, QRFForm, 'QRF',
-		                          REVERSE_URL['qrf'], func,
-		                          args=True)
+		response = get_post(request, QRFForm, 'QRF Card',
+							REVERSE_URL['qrf'], func, args=True)
 
 		if isinstance(response, HttpResponseRedirect):
 			return response
@@ -104,9 +102,8 @@ def new_runid_csid_qrf_edit(request, run_id, cs_id, qrf_id):
 	REVERSE_URL['qrf']['cancel_button'].append([run_id, cs_id])
 
 	if request.method == "POST":
-		response = get_cards_post(request, QRFForm, 'QRF',
-		                          REVERSE_URL['qrf'], func, args=True,
-		                          card_id=qrf_id)
+		response = get_post(request, QRFForm, 'QRF Card', REVERSE_URL['qrf'],
+							func, args=True, item_id=qrf_id)
 
 		if isinstance(response, HttpResponseRedirect):
 			return response
@@ -142,9 +139,8 @@ def new_runid_csid_rfscore(request, run_id, cs_id):
 	REVERSE_URL['rfscore']['cancel_button'].append([run_id, cs_id])
 
 	if request.method == "POST":
-		response = get_cards_post(request, RFScoreForm, 'RFScore',
-		                          REVERSE_URL['rfscore'], func,
-		                          args=True)
+		response = get_post(request, RFScoreForm, 'RFScore Card',
+							REVERSE_URL['rfscore'], func, args=True)
 
 		if isinstance(response, HttpResponseRedirect):
 			return response
@@ -180,9 +176,8 @@ def new_runid_csid_rfscore_edit(request, run_id, cs_id, rfscore_id):
 	REVERSE_URL['rfscore']['cancel_button'].append([run_id, cs_id])
 
 	if request.method == "POST":
-		response = get_cards_post(request, RFScoreForm, 'RFScore',
-		                          REVERSE_URL['rfscore'], func, args=True,
-		                          card_id=rfscore_id)
+		response = get_post(request, RFScoreForm, 'RFScore Card', REVERSE_URL['rfscore'],
+							func, args=True, item_id=rfscore_id)
 
 		if isinstance(response, HttpResponseRedirect):
 			return response
@@ -218,9 +213,8 @@ def new_runid_csid_remap(request, run_id, cs_id):
 	REVERSE_URL['remap']['cancel_button'].append([run_id, cs_id])
 
 	if request.method == "POST":
-		response = get_cards_post(request, RemapForm, 'Remap',
-		                          REVERSE_URL['remap'], func,
-		                          args=True)
+		response = get_post(request, RemapForm, 'Remap Card',
+							REVERSE_URL['remap'], func, args=True)
 
 		if isinstance(response, HttpResponseRedirect):
 			return response
@@ -256,9 +250,8 @@ def new_runid_csid_remap_edit(request, run_id, cs_id, remap_id):
 	REVERSE_URL['remap']['cancel_button'].append([run_id, cs_id])
 
 	if request.method == "POST":
-		response = get_cards_post(request, RemapForm, 'Remap',
-		                          REVERSE_URL['remap'], func, args=True,
-		                          card_id=remap_id)
+		response = get_post(request, RemapForm, 'Remap Card', REVERSE_URL['remap'],
+							func, args=True, item_id=remap_id)
 
 		if isinstance(response, HttpResponseRedirect):
 			return response
@@ -294,8 +287,8 @@ def new_runid_csid_year_filter(request, run_id, cs_id):
 	REVERSE_URL['year_filter']['cancel_button'].append([run_id, cs_id])
 
 	if request.method == "POST":
-		response = get_cards_post(request, YearFilterForm, 'YearFilter',
-		                          REVERSE_URL['year_filter'], func, args=True)
+		response = get_post(request, YearFilterForm, 'YearFilter Card',
+							REVERSE_URL['year_filter'], func, args=True)
 
 		if isinstance(response, HttpResponseRedirect):
 			return response
@@ -331,9 +324,8 @@ def new_runid_csid_year_filter_edit(request, run_id, cs_id, yf_id):
 	REVERSE_URL['year_filter']['cancel_button'].append([run_id, cs_id])
 
 	if request.method == "POST":
-		response = get_cards_post(request, YearFilterForm, 'YearFilter',
-		                          REVERSE_URL['year_filter'], func, args=True,
-		                          card_id=yf_id)
+		response = get_post(request, YearFilterForm, 'YearFilter Card',
+							REVERSE_URL['year_filter'], func, args=True, item_id=yf_id)
 
 		if isinstance(response, HttpResponseRedirect):
 			return response
@@ -369,8 +361,8 @@ def new_runid_csid_collate(request, run_id, cs_id):
 	REVERSE_URL['collate']['cancel_button'].append([run_id, cs_id])
 
 	if request.method == "POST":
-		response = get_cards_post(request, CollateForm, 'Collate',
-		                          REVERSE_URL['collate'], func, args=True)
+		response = get_post(request, CollateForm, 'Collate Card',
+							REVERSE_URL['collate'], func, args=True)
 
 		if isinstance(response, HttpResponseRedirect):
 			return response
@@ -406,9 +398,8 @@ def new_runid_csid_collate_edit(request, run_id, cs_id, collate_id):
 	REVERSE_URL['collate']['cancel_button'].append([run_id, cs_id])
 
 	if request.method == "POST":
-		response = get_cards_post(request, CollateForm, 'Collate',
-		                          REVERSE_URL['collate'], func, args=True,
-		                          card_id=collate_id)
+		response = get_post(request, CollateForm, 'Collate Card', REVERSE_URL['collate'],
+							func, args=True, item_id=collate_id)
 
 		if isinstance(response, HttpResponseRedirect):
 			return response
@@ -444,8 +435,8 @@ def new_runid_csid_preproc(request, run_id, cs_id):
 	REVERSE_URL['preproc']['cancel_button'].append([run_id, cs_id])
 
 	if request.method == "POST":
-		response = get_cards_post(request, PreProcForm, 'PreProc',
-		                          REVERSE_URL['preproc'], func, args=True)
+		response = get_post(request, PreProcForm, 'PreProc Card',
+							REVERSE_URL['preproc'], func, args=True)
 
 		if isinstance(response, HttpResponseRedirect):
 			return response
@@ -481,9 +472,9 @@ def new_runid_csid_preproc_edit(request, run_id, cs_id, preproc_id):
 	REVERSE_URL['preproc']['cancel_button'].append([run_id, cs_id])
 
 	if request.method == "POST":
-		response = get_cards_post(request, PreProcForm, 'PreProc',
-		                          REVERSE_URL['preproc'], func, args=True,
-		                          card_id=preproc_id)
+		response = get_post(request, PreProcForm, 'PreProc Card',
+							REVERSE_URL['preproc'],
+							func, args=True, item_id=preproc_id)
 
 		if isinstance(response, HttpResponseRedirect):
 			return response
@@ -519,8 +510,8 @@ def new_runid_csid_mergecsv(request, run_id, cs_id):
 	REVERSE_URL['mergecsv']['cancel_button'].append([run_id, cs_id])
 
 	if request.method == "POST":
-		response = get_cards_post(request, MergeCSVForm, 'MergeCSV',
-		                          REVERSE_URL['mergecsv'], func, args=True)
+		response = get_post(request, MergeCSVForm, 'MergeCSV Card',
+							REVERSE_URL['mergecsv'], func, args=True)
 
 		if isinstance(response, HttpResponseRedirect):
 			return response
@@ -556,9 +547,8 @@ def new_runid_csid_mergecsv_edit(request, run_id, cs_id, mcsv_id):
 	REVERSE_URL['mergecsv']['cancel_button'].append([run_id, cs_id])
 
 	if request.method == "POST":
-		response = get_cards_post(request, MergeCSVForm, 'MergeCSV',
-		                          REVERSE_URL['mergecsv'], func, args=True,
-		                          card_id=mcsv_id)
+		response = get_post(request, MergeCSVForm, 'MergeCSV Card', REVERSE_URL['mergecsv'],
+							func, args=True, item_id=mcsv_id)
 
 		if isinstance(response, HttpResponseRedirect):
 			return response
@@ -594,8 +584,8 @@ def new_runid_csid_rftrain(request, run_id, cs_id):
 	REVERSE_URL['rftrain']['cancel_button'].append([run_id, cs_id])
 
 	if request.method == "POST":
-		response = get_cards_post(request, RFTrainForm, 'RFTrain',
-		                          REVERSE_URL['rftrain'], func, args=True)
+		response = get_post(request, RFTrainForm, 'RFTrain Card',
+							REVERSE_URL['rftrain'], func, args=True)
 
 		if isinstance(response, HttpResponseRedirect):
 			return response
@@ -631,9 +621,8 @@ def new_runid_csid_rftrain_edit(request, run_id, cs_id, rftrain_id):
 	REVERSE_URL['rftrain']['cancel_button'].append([run_id, cs_id])
 
 	if request.method == "POST":
-		response = get_cards_post(request, RFTrainForm, 'RFTrain',
-		                          REVERSE_URL['rftrain'], func, args=True,
-		                          card_id=rftrain_id)
+		response = get_post(request, RFTrainForm, 'RFTrain Card', REVERSE_URL['rftrain'],
+							func, args=True, item_id=rftrain_id)
 
 		if isinstance(response, HttpResponseRedirect):
 			return response

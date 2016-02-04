@@ -23,7 +23,7 @@
                             <td><input type="checkbox" name="env_select" value="{{ env.id }}"></td>
                             <td>{{ env.name }}</td>
                             <td>
-                                <a class="btn btn-success btn-block" href="#" role="button">
+                                <a class="btn btn-success btn-block" href="{% url 'environment_group_edit' env.id %}" role="button">
                                     Edit
                                 </a>
                             </td>
@@ -33,10 +33,14 @@
                 </table>
                 <div class="row margin-top-50">
                     <div class="col-md-4">
-                        <a class="btn btn-default btn-block" href="{% url 'static_data_setup' %}" role="button">Cancel</a>
+                        <a class="btn btn-default btn-block" href="{% url 'static_data_setup' %}" role="button">
+                            Cancel
+                        </a>
                     </div>
                     <div class="col-md-4">
-                        <a class="btn btn-primary btn-block" href="{% url 'new_run' %}" role="button">New Group</a>
+                        <a class="btn btn-primary btn-block" href="{% url 'environment_group_add' %}" role="button">
+                            New Group
+                        </a>
                     </div>
                     <div class="col-md-4">
                         <button type="submit" name="delete_button" class="btn btn-danger btn-block">

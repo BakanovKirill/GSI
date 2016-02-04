@@ -12,9 +12,10 @@ from django.conf import settings
 
 from gsi.models import (Run, RunStep, HomeVariables,
 						VariablesGroup)
-# from cards.models import CardItem
+from gsi.gsi_items_update_create import *
 from gsi.gsi_forms import *
 from core.utils import make_run
+from core.get_post import get_post
 
 TITLES = {
 	'home': ['Home', 'index'],
@@ -640,7 +641,7 @@ def home_variable_setup(request):
 
 # environment group
 @login_required
-@render_to('gsi/environment_groups.html')
+@render_to('gsi/environment_groups_list.html')
 def environment_groups(request):
 	title = 'GSI Environment Groups'
 	environments = VariablesGroup.objects.all()
@@ -668,6 +669,83 @@ def environment_groups(request):
 	data = {
 		'title': title,
 		'environments': environments,
+	}
+
+	return data
+
+
+# environment group add
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def environment_group_add(request):
+	title = 'GSI Environment Group Add'
+	url_form = 'environment_group_add'
+	template_name = 'gsi/_env_group_form.html'
+	reverse_url = {
+		'save_button': 'environment_groups',
+		'save_and_another': 'environment_group_add',
+		'save_and_continue': 'environment_group_edit',
+		'cancel_button': 'environment_groups'
+	}
+	func = var_group_update_create
+	form = None
+
+	if request.method == "POST":
+		response = get_post(request, EnvironmentGroupsForm,
+							'Environment Group', reverse_url, func)
+
+		if isinstance(response, HttpResponseRedirect):
+			return response
+		else:
+			form = response
+	else:
+		form = EnvironmentGroupsForm()
+
+	data = {
+		'title': title,
+		'url_form': url_form,
+		'template_name': template_name,
+		'form': form,
+	}
+
+	return data
+
+
+# environment group add
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def environment_group_edit(request, env_id):
+	env_item = get_object_or_404(VariablesGroup, pk=env_id)
+	title = 'GSI Environment Group "{0}" Edit'.format(env_item.name)
+	url_form = 'environment_group_edit'
+	template_name = 'gsi/_env_group_form.html'
+	reverse_url = {
+		'save_button': 'environment_groups',
+		'save_and_another': 'environment_group_add',
+		'save_and_continue': 'environment_groups',
+		'cancel_button': 'environment_groups'
+	}
+	func = var_group_update_create
+	form = None
+
+	if request.method == "POST":
+		# import pdb;pdb.set_trace()
+		response = get_post(request, EnvironmentGroupsForm, 'Environment Group',
+							reverse_url, func, item_id=env_id)
+
+		if isinstance(response, HttpResponseRedirect):
+			return response
+		else:
+			form = response
+	else:
+		form = EnvironmentGroupsForm(instance=env_item)
+
+	data = {
+		'title': title,
+		'url_form': url_form,
+		'template_name': template_name,
+		'form': form,
+		'item_id': env_id,
 	}
 
 	return data
