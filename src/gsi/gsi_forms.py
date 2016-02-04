@@ -4,7 +4,8 @@ from django import forms
 from core.validator_gsi import *
 from cards.models import CardItem
 from gsi.models import (RunBase, Resolution,
-                        CardSequence, VariablesGroup)
+                        CardSequence, VariablesGroup,
+                        HomeVariables)
 
 
 class RunForm(forms.ModelForm):
@@ -204,7 +205,7 @@ class HomeVariablesForm(forms.ModelForm):
     )
 
     class Meta:
-        model = RunBase
+        model = HomeVariables
         fields = [
             'SAT_TIF_DIR_ROOT',
             'RF_DIR_ROOT',
@@ -213,3 +214,31 @@ class HomeVariablesForm(forms.ModelForm):
             'RF_AUXDATA_DIR',
             'SAT_DIF_DIR_ROOT',
         ]
+
+
+class EnvironmentGroupsForm(forms.ModelForm):
+    """ form for editing Environment Groups """
+    def __init__(self, *args, **kwargs):
+        super(EnvironmentGroupsForm, self).__init__(*args, **kwargs)
+
+    name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label=u'Name',
+    )
+    environment_variables = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': '5', 'class': 'form-control'}),
+        label=u'Environment variables'
+    )
+
+    class Meta:
+        model = VariablesGroup
+        fields = [
+            'name',
+            'environment_variables',
+        ]
+
+
+
+
+
+

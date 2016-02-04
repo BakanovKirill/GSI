@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block title %}{{ title }}{% endblock title %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <form action="{% url 'environment_groups' %}" method="post" enctype="multipart/form-data"
+                  role="form" class="form-horizontal">
+                {% csrf_token %}
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th>Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for env in environments %}
+                        <tr>
+                            <td><input type="checkbox" name="env_select" value="{{ env.id }}"></td>
+                            <td>{{ env.name }}</td>
+                            <td>
+                                <a class="btn btn-success btn-block" href="#" role="button">
+                                    Edit
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="row margin-top-50">
+                    <div class="col-md-4">
+                        <a class="btn btn-default btn-block" href="{% url 'static_data_setup' %}" role="button">Cancel</a>
+                    </div>
+                    <div class="col-md-4">
+                        <a class="btn btn-primary btn-block" href="{% url 'new_run' %}" role="button">New Group</a>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" name="delete_button" class="btn btn-danger btn-block">
+                            Delete Group(s)
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

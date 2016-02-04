@@ -10,7 +10,8 @@ from django.views.generic import UpdateView
 from django.utils.decorators import method_decorator
 from django.conf import settings
 
-from gsi.models import Run, RunStep, HomeVariables
+from gsi.models import (Run, RunStep, HomeVariables,
+						VariablesGroup)
 # from cards.models import CardItem
 from gsi.gsi_forms import *
 from core.utils import make_run
@@ -632,6 +633,41 @@ def home_variable_setup(request):
 		'title': title,
 		'variables': variables,
 		'form': form
+	}
+
+	return data
+
+
+# environment group
+@login_required
+@render_to('gsi/environment_groups.html')
+def environment_groups(request):
+	title = 'GSI Environment Groups'
+	environments = VariablesGroup.objects.all()
+	env_name = ''
+
+	if request.method == "POST":
+		if request.POST.get('env_select'):
+			for env_id in request.POST.getlist('env_select'):
+				cur_env = get_object_or_404(VariablesGroup, pk=env_id)
+				env_name += '"' + str(cur_env.name) + '", '
+				cur_env.delete()
+
+			envs_ids = '_'.join(request.POST.getlist('env_select'))
+
+			return HttpResponseRedirect(u'%s?status_message=%s' %
+										(reverse('environment_groups'),
+										 (u'Environment Groups: {0} ==> deleted.'.
+										  format(env_name)))
+			)
+		else:
+			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('environment_groups'),
+										 (u"To delete, select Group or more Groups."))
+			)
+
+	data = {
+		'title': title,
+		'environments': environments,
 	}
 
 	return data

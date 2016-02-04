@@ -57,6 +57,11 @@ urlpatterns = [
     # setup home variable
     url(r'^run/home-variable/setup/$', 'gsi.views.home_variable_setup', name='home_variable_setup'),
 
+    # environment groups
+    url(r'^run/environment-groups/setup/$', 'gsi.views.environment_groups', name='environment_groups'),
+
+    # environment groups edit
+    # url(r'^run/environment-groups/add/$', 'gsi.views.environment_groups_add', name='environment_groups_add'),
 
 
     # card sequence for ne run base
