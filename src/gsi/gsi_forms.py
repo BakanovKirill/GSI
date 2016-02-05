@@ -282,7 +282,8 @@ class YearGroupForm(forms.ModelForm):
                    'class': 'form-control'}
         ),
         queryset=Year.objects.all(),
-        label=u'Tiles',
+        required=False,
+        label=u'Years',
     )
 
     class Meta:

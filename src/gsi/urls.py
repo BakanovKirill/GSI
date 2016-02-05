@@ -73,9 +73,9 @@ urlpatterns = [
     url(r'^run/area/add/$', 'gsi.views.area_add', name='area_add'),
     url(r'^run/area/(?P<area_id>\d+)/$', 'gsi.views.area_edit', name='area_edit'),
 
-    # # years group
-    # url(r'^run/years-group/setup/$', 'gsi.views.years_group', name='years_group'),
-	#
+    # years group
+    url(r'^run/years-group/setup/$', 'gsi.views.years_group', name='years_group'),
+
     # # years group edit
     # url(r'^run/years-group/add/$', 'gsi.views.years_group_add', name='years_group_add'),
     # url(r'^run/years-group/(?P<area_id>\d+)/$', 'gsi.views.years_group_edit', name='years_group_edit'),

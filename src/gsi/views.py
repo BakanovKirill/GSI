@@ -897,7 +897,7 @@ def years_group(request):
 
 	data = {
 		'title': title,
-		'areas': areas,
+		'years_groups': years_groups,
 	}
 
 	return data
