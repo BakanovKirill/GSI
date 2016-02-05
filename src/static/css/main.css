@@ -10,6 +10,10 @@
     text-align: right;
 }
 
+.float-right {
+    float: right;
+}
+
 .margin-top-4 {
     margin-top: 4px;
 }
@@ -20,6 +24,10 @@
 
 .margin-top-15 {
     margin-top: 15px;
+}
+
+.margin-top-20 {
+    margin-top: 20px;
 }
 
 .margin-top-25 {
@@ -38,6 +46,10 @@
     margin-bottom: 50px;
 }
 
+.margin-left-12 {
+    margin-left: 20px;
+}
+
 /*.btn-block-50 {*/
     /*padding-left: 0;*/
     /*padding-right: 0;*/
@@ -52,3 +64,4 @@ li.main-menu {
     margin-bottom: 15px;
     padding: 0px;
 }
+

@@ -255,6 +255,7 @@ class AreasForm(forms.ModelForm):
         ),
         queryset=Tile.objects.all(),
         # empty_label=None,
+        required=False,
         label=u'Tiles',
     )
 

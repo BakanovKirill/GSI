@@ -18,29 +18,62 @@
             <label class="control-label">{{ form.tiles.label }}*</label>
         </div>
     </div>
-    <div class="col-md-4">
+
+    <div class="col-md-5">
+        <div class="form-group {% if form.tiles.errors %}has-error{% endif %}">
+            <p class="margin-top-8 margin-left-12">Available tiles</p>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="form-group {% if form.tiles.errors %}has-error{% endif %}">
+            <p class="margin-top-8 margin-left-12">Chosen tiles</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-5 col-md-offset-2">
+        <select multiple class="form-control" name="available_tiles" size="10">
+            {% for tile in available_tiles %}
+                <option value="{{ tile.id }}">{{ tile }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" name="add_button" class="btn btn-success margin-top-20 float-right">
+            Add
+        </button>
+    </div>
+
+    <div class="col-md-5">
         {% if form.tiles.errors %}
             <b class="error-form">{{ form.tiles.errors }}</b>
         {% endif %}
-        {{ form.tiles }}
+        <select multiple class="form-control" name="chosen_tiles" size="10">
+            {% for tile in chosen_tiles %}
+                <option value="{{ tile.id }}">{{ tile }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" name="delete_button" class="btn btn-danger margin-top-20 float-right">
+            Delete
+        </button>
     </div>
-
-    {% if tiles %}
-        <div class="col-md-2 right">
-            <div class="form-group {% if form.tiles.errors %}has-error{% endif %}">
-                <label class="control-label">Added Tiles</label>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <select multiple class="form-control">
-                {% for tile in tiles %}
-                    <option>{{ tile }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    {% endif %}
 </div>
+
+<!--{% if tiles %}-->
+    <!--<div class="col-md-2 right">-->
+        <!--<div class="form-group {% if form.tiles.errors %}has-error{% endif %}">-->
+            <!--<label class="control-label">Added Tiles</label>-->
+        <!--</div>-->
+    <!--</div>-->
+
+    <!--<div class="col-md-4">-->
+        <!--<select multiple class="form-control">-->
+            <!--{% for tile in tiles %}-->
+                <!--<option>{{ tile }}</option>-->
+            <!--{% endfor %}-->
+        <!--</select>-->
+    <!--</div>-->
+<!--{% endif %}-->
 
 <div class="row margin-top-50">
     <div class="col-md-2">

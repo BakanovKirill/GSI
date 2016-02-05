@@ -801,6 +801,7 @@ def area_add(request):
 	}
 	func = area_update_create
 	form = None
+	available_tiles = Tile.objects.all()
 
 	if request.method == "POST":
 		response = get_post(request, AreasForm, 'Area',
@@ -818,6 +819,7 @@ def area_add(request):
 		'url_form': url_form,
 		'template_name': template_name,
 		'form': form,
+		'available_tiles': available_tiles
 	}
 
 	return data
@@ -839,6 +841,8 @@ def area_edit(request, area_id):
 	}
 	func = area_update_create
 	form = None
+	chosen_tiles = area.tiles.all()
+	available_tiles = Tile.objects.exclude(id__in=area.tiles.values_list('id', flat=True))
 
 	if request.method == "POST":
 		response = get_post(request, AreasForm, 'Area',
@@ -851,17 +855,14 @@ def area_edit(request, area_id):
 	else:
 		form = AreasForm(instance=area)
 
-	tiles = area.tiles.all()
-
-	print 'tiles ================== ', tiles
-
 	data = {
 		'title': title,
 		'url_form': url_form,
 		'template_name': template_name,
 		'form': form,
 		'item_id': area_id,
-		'tiles': tiles,
+		'available_tiles': available_tiles,
+		'chosen_tiles': chosen_tiles,
 	}
 
 	return data

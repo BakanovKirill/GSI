@@ -19,9 +19,8 @@ def var_group_update_create(form, item_id=None):
     return result
 
 
-def area_update_create(form, multiple, item_id=None):
-    list_id = multiple.split('_')
-
+def area_update_create(form, multiple=None, item_id=None, delete=False):
+    # import pdb;pdb.set_trace()
     if item_id:
         Area.objects.filter(id=item_id).update(
             name=form.cleaned_data["name"],
@@ -31,12 +30,20 @@ def area_update_create(form, multiple, item_id=None):
         result = Area.objects.create(
             name=form.cleaned_data["name"],
         )
-    result.tiles.through.objects.filter(area_id=result.id).delete()
-    for tile_id in list_id:
-        Area.tiles.through.objects.create(
-            area_id=result.id,
-            tile_id=tile_id
-        )
+
+    if multiple:
+        list_id = multiple.split('_')
+        for tile_id in list_id:
+            if delete:
+                Area.tiles.through.objects.filter(
+                    area_id=result.id,
+                    tile_id=tile_id
+                ).delete()
+            else:
+                Area.tiles.through.objects.create(
+                    area_id=result.id,
+                    tile_id=tile_id
+                )
 
     return result
 
