@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+
+from gsi.models import Area
 
 
 def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=None):
@@ -12,9 +15,17 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
 
         if form.is_valid():
             if item_id:
-                obj = func(form, item_id)
+                if request.POST.getlist('tiles'):
+                    multiple = '_'.join(request.POST.getlist('tiles'))
+                    obj = func(form, multiple, item_id)
+                else:
+                    obj = func(form, item_id)
             else:
-                obj = func(form)
+                if request.POST.getlist('tiles'):
+                    multiple = '_'.join(request.POST.getlist('tiles'))
+                    obj = func(form, multiple)
+                else:
+                    obj = func(form)
 
             if args:
                 response = HttpResponseRedirect(
@@ -34,9 +45,17 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
 
         if form.is_valid():
             if item_id:
-                obj = func(form, item_id)
+                if request.POST.getlist('tiles'):
+                    multiple = '_'.join(request.POST.getlist('tiles'))
+                    obj = func(form, multiple, item_id)
+                else:
+                    obj = func(form, item_id)
             else:
-                obj = func(form)
+                if request.POST.getlist('tiles'):
+                    multiple = '_'.join(request.POST.getlist('tiles'))
+                    obj = func(form, multiple)
+                else:
+                    obj = func(form)
 
             if args:
                 response = HttpResponseRedirect(
@@ -58,9 +77,17 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
 
         if form.is_valid():
             if item_id:
-                obj = func(form, item_id)
+                if request.POST.getlist('tiles'):
+                    multiple = '_'.join(request.POST.getlist('tiles'))
+                    obj = func(form, multiple, item_id)
+                else:
+                    obj = func(form, item_id)
             else:
-                obj = func(form)
+                if request.POST.getlist('tiles'):
+                    multiple = '_'.join(request.POST.getlist('tiles'))
+                    obj = func(form, multiple)
+                else:
+                    obj = func(form)
 
             if args:
                 response = HttpResponseRedirect(

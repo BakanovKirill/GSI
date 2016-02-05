@@ -61,8 +61,24 @@ urlpatterns = [
     url(r'^run/environment-groups/setup/$', 'gsi.views.environment_groups', name='environment_groups'),
 
     # environment groups edit
-    url(r'^run/environment-group/add/$', 'gsi.views.environment_group_add', name='environment_group_add'),
-    url(r'^run/environment-group/(?P<env_id>\d+)/$', 'gsi.views.environment_group_edit', name='environment_group_edit'),
+    url(r'^run/environment-group/add/$', 'gsi.views.environment_group_add',
+        name='environment_group_add'),
+    url(r'^run/environment-group/(?P<env_id>\d+)/$', 'gsi.views.environment_group_edit',
+        name='environment_group_edit'),
+
+    # areas
+    url(r'^run/areas/setup/$', 'gsi.views.areas', name='areas'),
+
+    # areas edit
+    url(r'^run/area/add/$', 'gsi.views.area_add', name='area_add'),
+    url(r'^run/area/(?P<area_id>\d+)/$', 'gsi.views.area_edit', name='area_edit'),
+
+    # # years group
+    # url(r'^run/years-group/setup/$', 'gsi.views.years_group', name='years_group'),
+	#
+    # # years group edit
+    # url(r'^run/years-group/add/$', 'gsi.views.years_group_add', name='years_group_add'),
+    # url(r'^run/years-group/(?P<area_id>\d+)/$', 'gsi.views.years_group_edit', name='years_group_edit'),
 
 
     # card sequence for ne run base

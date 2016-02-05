@@ -5,7 +5,8 @@ from core.validator_gsi import *
 from cards.models import CardItem
 from gsi.models import (RunBase, Resolution,
                         CardSequence, VariablesGroup,
-                        HomeVariables)
+                        HomeVariables, Tile, YearGroup,
+                        Year)
 
 
 class RunForm(forms.ModelForm):
@@ -235,6 +236,59 @@ class EnvironmentGroupsForm(forms.ModelForm):
         fields = [
             'name',
             'environment_variables',
+        ]
+
+
+class AreasForm(forms.ModelForm):
+    """ form for editing Areas """
+    def __init__(self, *args, **kwargs):
+        super(AreasForm, self).__init__(*args, **kwargs)
+
+    name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label=u'Name',
+    )
+    tiles = forms.ModelMultipleChoiceField(
+        widget=forms.SelectMultiple(
+            attrs={'size': '10',
+                   'class': 'form-control'}
+        ),
+        queryset=Tile.objects.all(),
+        # empty_label=None,
+        label=u'Tiles',
+    )
+
+    class Meta:
+        model = VariablesGroup
+        fields = [
+            'name',
+            'tiles',
+        ]
+
+
+class YearGroupForm(forms.ModelForm):
+    """ form for editing YearGroup """
+    def __init__(self, *args, **kwargs):
+        super(YearGroupForm, self).__init__(*args, **kwargs)
+
+    name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label=u'Name',
+    )
+    years = forms.ModelMultipleChoiceField(
+        widget=forms.SelectMultiple(
+            attrs={'size': '10',
+                   'class': 'form-control'}
+        ),
+        queryset=Year.objects.all(),
+        label=u'Tiles',
+    )
+
+    class Meta:
+        model = YearGroup
+        fields = [
+            'name',
+            'years',
         ]
 
 

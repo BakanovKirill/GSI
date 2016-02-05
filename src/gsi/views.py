@@ -11,7 +11,7 @@ from django.utils.decorators import method_decorator
 from django.conf import settings
 
 from gsi.models import (Run, RunStep, HomeVariables,
-						VariablesGroup)
+						VariablesGroup, YearGroup)
 from gsi.gsi_items_update_create import *
 from gsi.gsi_forms import *
 from core.utils import make_run
@@ -746,6 +746,157 @@ def environment_group_edit(request, env_id):
 		'template_name': template_name,
 		'form': form,
 		'item_id': env_id,
+	}
+
+	return data
+
+
+# area
+@login_required
+@render_to('gsi/areas_list.html')
+def areas(request):
+	title = 'GSI Areas'
+	areas = Area.objects.all()
+	area_name = ''
+
+	if request.method == "POST":
+		if request.POST.get('area_select'):
+			for area_id in request.POST.getlist('area_select'):
+				cur_area = get_object_or_404(Area, pk=area_id)
+				area_name += '"' + cur_area.name + '", '
+				cur_area.delete()
+
+			area_ids = '_'.join(request.POST.getlist('env_select'))
+
+			return HttpResponseRedirect(u'%s?status_message=%s' %
+										(reverse('areas'),
+										 (u'Environment Groups: {0} ==> deleted.'.
+										  format(area_name)))
+			)
+		else:
+			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('areas'),
+										 (u"To delete, select Area or more Areas."))
+			)
+
+	data = {
+		'title': title,
+		'areas': areas,
+	}
+
+	return data
+
+
+# area add
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def area_add(request):
+	title = 'GSI Area Add'
+	url_form = 'area_add'
+	template_name = 'gsi/_area_form.html'
+	reverse_url = {
+		'save_button': 'areas',
+		'save_and_another': 'area_add',
+		'save_and_continue': 'area_edit',
+		'cancel_button': 'areas'
+	}
+	func = area_update_create
+	form = None
+
+	if request.method == "POST":
+		response = get_post(request, AreasForm, 'Area',
+							reverse_url, func)
+
+		if isinstance(response, HttpResponseRedirect):
+			return response
+		else:
+			form = response
+	else:
+		form = AreasForm()
+
+	data = {
+		'title': title,
+		'url_form': url_form,
+		'template_name': template_name,
+		'form': form,
+	}
+
+	return data
+
+
+# area edit
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def area_edit(request, area_id):
+	area = get_object_or_404(Area, pk=area_id)
+	title = 'GSI Area Edit "{0}"'.format(area.name)
+	url_form = 'area_edit'
+	template_name = 'gsi/_area_form.html'
+	reverse_url = {
+		'save_button': 'areas',
+		'save_and_another': 'area_add',
+		'save_and_continue': 'area_edit',
+		'cancel_button': 'areas'
+	}
+	func = area_update_create
+	form = None
+
+	if request.method == "POST":
+		response = get_post(request, AreasForm, 'Area',
+							reverse_url, func, item_id=area_id)
+
+		if isinstance(response, HttpResponseRedirect):
+			return response
+		else:
+			form = response
+	else:
+		form = AreasForm(instance=area)
+
+	tiles = area.tiles.all()
+
+	print 'tiles ================== ', tiles
+
+	data = {
+		'title': title,
+		'url_form': url_form,
+		'template_name': template_name,
+		'form': form,
+		'item_id': area_id,
+		'tiles': tiles,
+	}
+
+	return data
+
+
+# years group
+@login_required
+@render_to('gsi/years_group_list.html')
+def years_group(request):
+	title = 'GSI Years Groups'
+	years_groups = YearGroup.objects.all()
+	area_name = ''
+
+	if request.method == "POST":
+		if request.POST.get('area_select'):
+			for area_id in request.POST.getlist('area_select'):
+				cur_area = get_object_or_404(Area, pk=area_id)
+				area_name += '"' + cur_area.name + '", '
+				cur_area.delete()
+
+			area_ids = '_'.join(request.POST.getlist('env_select'))
+
+			return HttpResponseRedirect(u'%s?status_message=%s' %
+										(reverse('areas'),
+										 (u'Environment Groups: {0} ==> deleted.'.
+										  format(area_name)))
+			)
+		else:
+			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('areas'),
+										 (u"To delete, select Area or more Areas."))
+			)
+
+	data = {
+		'title': title,
+		'areas': areas,
 	}
 
 	return data
