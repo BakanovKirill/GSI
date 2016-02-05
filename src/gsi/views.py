@@ -830,7 +830,7 @@ def area_add(request):
 @render_to('gsi/static_data_item_edit.html')
 def area_edit(request, area_id):
 	area = get_object_or_404(Area, pk=area_id)
-	title = 'GSI Area Edit "{0}"'.format(area.name)
+	title = 'GSI Area Edit "%s"' % (area.name)
 	url_form = 'area_edit'
 	template_name = 'gsi/_area_form.html'
 	reverse_url = {
