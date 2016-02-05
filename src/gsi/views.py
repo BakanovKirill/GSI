@@ -874,24 +874,22 @@ def area_edit(request, area_id):
 def years_group(request):
 	title = 'GSI Years Groups'
 	years_groups = YearGroup.objects.all()
-	area_name = ''
+	yg_name = ''
 
 	if request.method == "POST":
-		if request.POST.get('area_select'):
-			for area_id in request.POST.getlist('area_select'):
-				cur_area = get_object_or_404(Area, pk=area_id)
-				area_name += '"' + cur_area.name + '", '
-				cur_area.delete()
-
-			area_ids = '_'.join(request.POST.getlist('env_select'))
+		if request.POST.get('yg_select'):
+			for yg_id in request.POST.getlist('yg_select'):
+				cur_yg = get_object_or_404(YearGroup, pk=yg_id)
+				yg_name += '"' + cur_yg.name + '", '
+				cur_yg.delete()
 
 			return HttpResponseRedirect(u'%s?status_message=%s' %
-										(reverse('areas'),
+										(reverse('years_group'),
 										 (u'Environment Groups: {0} ==> deleted.'.
-										  format(area_name)))
+										  format(yg_name)))
 			)
 		else:
-			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('areas'),
+			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('years_group'),
 										 (u"To delete, select Area or more Areas."))
 			)
 
