@@ -34,7 +34,7 @@
 
 <div class="row">
     <div class="col-md-5 col-md-offset-2">
-        <select multiple class="form-control" name="available_tiles" size="10">
+        <select multiple class="form-control" name="available" size="10">
             {% for tile in available_tiles %}
                 <option value="{{ tile.id }}">{{ tile }}</option>
             {% endfor %}
@@ -48,7 +48,7 @@
         {% if form.tiles.errors %}
             <b class="error-form">{{ form.tiles.errors }}</b>
         {% endif %}
-        <select multiple class="form-control" name="chosen_tiles" size="10">
+        <select multiple class="form-control" name="chosen" size="10">
             {% for tile in chosen_tiles %}
                 <option value="{{ tile.id }}">{{ tile }}</option>
             {% endfor %}
