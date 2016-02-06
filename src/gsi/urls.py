@@ -76,9 +76,9 @@ urlpatterns = [
     # years group
     url(r'^run/years-group/setup/$', 'gsi.views.years_group', name='years_group'),
 
-    # # years group edit
-    # url(r'^run/years-group/add/$', 'gsi.views.years_group_add', name='years_group_add'),
-    # url(r'^run/years-group/(?P<area_id>\d+)/$', 'gsi.views.years_group_edit', name='years_group_edit'),
+    # years group edit
+    url(r'^run/years-group/add/$', 'gsi.views.years_group_add', name='years_group_add'),
+    url(r'^run/years-group/(?P<yg_id>\d+)/$', 'gsi.views.years_group_edit', name='years_group_edit'),
 
 
     # card sequence for ne run base

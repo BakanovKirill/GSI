@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from gsi.models import (VariablesGroup, Area, Tile)
+from gsi.models import (VariablesGroup, Area, Tile, YearGroup)
 from django.shortcuts import get_object_or_404
 
 
@@ -43,6 +43,35 @@ def area_update_create(form, multiple=None, item_id=None, delete=False):
                 Area.tiles.through.objects.create(
                     area_id=result.id,
                     tile_id=tile_id
+                )
+
+    return result
+
+
+def yg_update_create(form, multiple=None, item_id=None, delete=False):
+    # import pdb;pdb.set_trace()
+    if item_id:
+        YearGroup.objects.filter(id=item_id).update(
+            name=form.cleaned_data["name"],
+        )
+        result = YearGroup.objects.get(id=item_id)
+    else:
+        result = YearGroup.objects.create(
+            name=form.cleaned_data["name"],
+        )
+
+    if multiple:
+        list_id = multiple.split('_')
+        for yg_id in list_id:
+            if delete:
+                YearGroup.years.through.objects.filter(
+                    yeargroup_id=result.id,
+                    year_id = yg_id
+                ).delete()
+            else:
+                YearGroup.years.through.objects.create(
+                    yeargroup_id=result.id,
+                    year_id =yg_id
                 )
 
     return result

@@ -15,14 +15,14 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
 
         if form.is_valid():
             if item_id:
-                if request.POST.getlist('available_tiles'):
-                    multiple = '_'.join(request.POST.getlist('available_tiles'))
+                if request.POST.getlist('available'):
+                    multiple = '_'.join(request.POST.getlist('available'))
                     obj = func(form, multiple=multiple, item_id=item_id)
                 else:
                     obj = func(form, item_id=item_id)
             else:
-                if request.POST.getlist('available_tiles'):
-                    multiple = '_'.join(request.POST.getlist('available_tiles'))
+                if request.POST.getlist('available'):
+                    multiple = '_'.join(request.POST.getlist('available'))
                     obj = func(form, multiple=multiple)
                 else:
                     obj = func(form)
@@ -45,14 +45,14 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
 
         if form.is_valid():
             if item_id:
-                if request.POST.getlist('available_tiles'):
-                    multiple = '_'.join(request.POST.getlist('available_tiles'))
+                if request.POST.getlist('available'):
+                    multiple = '_'.join(request.POST.getlist('available'))
                     obj = func(form, multiple=multiple, item_id=item_id)
                 else:
                     obj = func(form, item_id=item_id)
             else:
-                if request.POST.getlist('available_tiles'):
-                    multiple = '_'.join(request.POST.getlist('available_tiles'))
+                if request.POST.getlist('available'):
+                    multiple = '_'.join(request.POST.getlist('available'))
                     obj = func(form, multiple=multiple)
                 else:
                     obj = func(form)
@@ -77,18 +77,17 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
 
         if form.is_valid():
             if item_id:
-                if request.POST.getlist('available_tiles'):
-                    multiple = '_'.join(request.POST.getlist('available_tiles'))
+                if request.POST.getlist('available'):
+                    multiple = '_'.join(request.POST.getlist('available'))
                     obj = func(form, multiple=multiple, item_id=item_id)
                 else:
                     obj = func(form, item_id=item_id)
             else:
-                if request.POST.getlist('available_tiles'):
-                    multiple = '_'.join(request.POST.getlist('available_tiles'))
+                if request.POST.getlist('available'):
+                    multiple = '_'.join(request.POST.getlist('available'))
                     obj = func(form, multiple=multiple)
                 else:
                     obj = func(form)
-
             if args:
                 response = HttpResponseRedirect(
                         u'%s?status_message=%s' % (reverse(reverse_ulr['save_and_continue'][0],
@@ -110,8 +109,8 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
 
         if form.is_valid():
             if item_id:
-                if request.POST.getlist('chosen_tiles'):
-                    multiple = '_'.join(request.POST.getlist('chosen_tiles'))
+                if request.POST.getlist('chosen'):
+                    multiple = '_'.join(request.POST.getlist('chosen'))
                     obj = func(form, multiple=multiple, item_id=item_id, delete=True)
 
                 if args:

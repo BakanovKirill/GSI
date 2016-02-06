@@ -19,15 +19,15 @@
                     </thead>
                     <tbody>
                         {% for yg in years_groups %}
-                        <tr>
-                            <td><input type="checkbox" name="yg_select" value="{{ yg.id }}"></td>
-                            <td>{{ yg.name }}</td>
-                            <td>
-                                <a class="btn btn-success btn-block" href="#" role="button">
-                                    Edit
-                                </a>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td><input type="checkbox" name="yg_select" value="{{ yg.id }}"></td>
+                                <td>{{ yg.name }}</td>
+                                <td>
+                                    <a class="btn btn-success btn-block" href="{% url 'years_group_edit' yg.id %}" role="button">
+                                        Edit
+                                    </a>
+                                </td>
+                            </tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -38,7 +38,7 @@
                         </a>
                     </div>
                     <div class="col-md-4">
-                        <a class="btn btn-primary btn-block" href="#" role="button">
+                        <a class="btn btn-primary btn-block" href="{% url 'years_group_add' %}" role="button">
                             New Year Group
                         </a>
                     </div>

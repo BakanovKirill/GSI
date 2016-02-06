@@ -11,7 +11,7 @@ from django.utils.decorators import method_decorator
 from django.conf import settings
 
 from gsi.models import (Run, RunStep, HomeVariables,
-						VariablesGroup, YearGroup)
+						VariablesGroup, YearGroup, Year)
 from gsi.gsi_items_update_create import *
 from gsi.gsi_forms import *
 from core.utils import make_run
@@ -868,7 +868,7 @@ def area_edit(request, area_id):
 	return data
 
 
-# years group
+# year group group
 @login_required
 @render_to('gsi/years_group_list.html')
 def years_group(request):
@@ -896,6 +896,88 @@ def years_group(request):
 	data = {
 		'title': title,
 		'years_groups': years_groups,
+	}
+
+	return data
+
+
+# year group add
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def years_group_add(request):
+	title = 'GSI Years Groups Add'
+	url_form = 'years_group_add'
+	template_name = 'gsi/_years_group_form.html'
+	reverse_url = {
+		'save_button': 'years_group',
+		'save_and_another': 'years_group_add',
+		'save_and_continue': 'years_group_edit',
+		'cancel_button': 'years_group'
+	}
+	func = yg_update_create
+	form = None
+	available_years = Year.objects.all()
+
+	if request.method == "POST":
+		response = get_post(request, YearGroupForm, 'Year Group',
+							reverse_url, func)
+
+		if isinstance(response, HttpResponseRedirect):
+			return response
+		else:
+			form = response
+	else:
+		form = AreasForm()
+
+	data = {
+		'title': title,
+		'url_form': url_form,
+		'template_name': template_name,
+		'form': form,
+		'available_years': available_years
+	}
+
+	return data
+
+
+# year group edit
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def years_group_edit(request, yg_id):
+	years_group = get_object_or_404(YearGroup, pk=yg_id)
+	title = 'GSI YearGroup Edit "%s"' % (years_group.name)
+	url_form = 'years_group_edit'
+	template_name = 'gsi/_years_group_form.html'
+	reverse_url = {
+		'save_button': 'years_group',
+		'save_and_another': 'years_group_add',
+		'save_and_continue': 'years_group_edit',
+		'cancel_button': 'years_group'
+	}
+	func = yg_update_create
+	form = None
+	chosen_years = years_group.years.all()
+	available_years = Year.objects.exclude(id__in=years_group.years.values_list('id', flat=True))
+
+	if request.method == "POST":
+		response = get_post(request, YearGroupForm, 'Year Group',
+							reverse_url, func, item_id=yg_id)
+
+		if isinstance(response, HttpResponseRedirect):
+			return response
+		else:
+			form = response
+	else:
+		form = AreasForm(instance=years_group)
+
+	data = {
+		'title': title,
+		'url_form': url_form,
+		'template_name': template_name,
+		'form': form,
+		'item_id': yg_id,
+		'available_years': available_years,
+		'chosen_years': chosen_years,
 	}
 
 	return data

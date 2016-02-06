@@ -1,0 +1,77 @@
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.name.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form.name.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-10">
+        {% if form.name.errors %}
+            <b class="error-form">{{ form.name.errors }}</b>
+        {% endif %}
+        {{ form.name }}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.years.errors %}has-error{% endif %}">
+            <label class="control-label">Years*</label>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="form-group {% if form.years.errors %}has-error{% endif %}">
+            <p class="margin-top-8 margin-left-12">Available years</p>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="form-group {% if form.years.errors %}has-error{% endif %}">
+            <p class="margin-top-8 margin-left-12">Chosen years</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-5 col-md-offset-2">
+        <select multiple class="form-control" name="available" size="10">
+            {% for year in available_years %}
+                <option value="{{ year.id }}">{{ year }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" name="add_button" class="btn btn-success margin-top-20 float-right">
+            Add
+        </button>
+    </div>
+
+    <div class="col-md-5">
+        {% if form.years.errors %}
+            <b class="error-form">{{ form.years.errors }}</b>
+        {% endif %}
+        <select multiple class="form-control" name="chosen" size="10">
+            {% for year in chosen_years %}
+                <option value="{{ year.id }}">{{ year }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" name="delete_button" class="btn btn-danger margin-top-20 float-right">
+            Delete
+        </button>
+    </div>
+</div>
+
+<div class="row margin-top-50">
+    <div class="col-md-2">
+        <button type="submit" name="cancel_button" class="btn btn-default btn-block">Cancel</button>
+    </div>
+    <div class="col-md-4">
+        <button type="submit" name="save_and_another_button" class="btn btn-primary btn-block">Save and another</button>
+    </div>
+    <div class="col-md-4">
+        <button type="submit" name="save_and_continue_editing_button" class="btn btn-primary btn-block">
+            Save and continue editing
+        </button>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" name="save_button" class="btn btn-primary btn-block">Save</button>
+    </div>
+</div>
