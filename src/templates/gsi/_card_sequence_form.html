@@ -79,27 +79,34 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
+                        <th>Select</th>
                         <th>Card item</th>
                         <th>Order</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for card in card_sequence_cards %}
                         <tr>
+                            <td><input type="checkbox" name="cs_select" value="{{ card.id }}"></td>
+                            <td>{{ card.card_item }}</td>
+                            <td>{{ card.order }}</td>
                             <td>
-                                <a href="{% if run_id %}
-                                            {% url 'card_item_update' run_id cs_id card.id %}
-                                          {% elif cs_id %}
-                                            #
-                                          {% endif %}">
-                                    {{ card.card_item }}
+                                <a class="btn btn-success btn-block" href="{% url 'card_item_update' run_id cs_id card.id %}" role="button">
+                                    Edit
                                 </a>
                             </td>
-                            <td>{{ card.order }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="col-md-4 col-md-offset-8">
+            <button type="submit" name="delete_button" class="btn btn-danger btn-block">
+                Delete Card Sequence(s)
+            </button>
         </div>
     </div>
 </div>
