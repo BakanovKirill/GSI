@@ -80,6 +80,8 @@ def new_run(request):
 	title = 'GSI New Run'
 	form = None
 
+	print 'USER =================== ', request.user
+
 	if request.method == "POST":
 		form = RunForm(request.POST)
 
@@ -91,6 +93,7 @@ def new_run(request):
 				card_sequence=form.cleaned_data["card_sequence"],
 				directory_path=form.cleaned_data["directory_path"],
 				resolution=form.cleaned_data["resolution"],
+				author=request.user,
 			)
 
 			return HttpResponseRedirect(
@@ -126,6 +129,7 @@ def run_update(request, run_id):
 				run_base.card_sequence = form.cleaned_data["card_sequence"]
 				run_base.directory_path = form.cleaned_data["directory_path"]
 				run_base.resolution = form.cleaned_data["resolution"]
+				run_base.author = request.user
 				run_base.save()
 
 				return HttpResponseRedirect(
