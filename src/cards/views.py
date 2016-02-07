@@ -172,14 +172,14 @@ def proces_card_runid_csid(request, run_id, cs_id):
 def proces_card_run_new_csid(request, cs_id):
     title = 'Create New Processing Cards'
     rev_url = {
-        'qrf_button': ['new_run_qrf', [cs_id]],
-        'rfscore_button': ['new_run_rfscore', [cs_id]],
-        'remap_button': ['new_run_remap', [cs_id]],
-        'year_filter_button': ['new_run_year_filter', [cs_id]],
-        'collate_button': ['new_run_collate', [cs_id]],
-        'preproc_button': ['new_run_preproc', [cs_id]],
-        'margecsv_button': ['new_run_mergecsv', [cs_id]],
-        'rftrain_button': ['new_run_rftrain', [cs_id]],
+        'qrf_button': ['new_run_csid_qrf', [cs_id]],
+        'rfscore_button': ['new_run_csid_rfscore', [cs_id]],
+        'remap_button': ['new_run_csid_remap', [cs_id]],
+        'year_filter_button': ['new_run_csid_year_filter', [cs_id]],
+        'collate_button': ['new_run_csid_collate', [cs_id]],
+        'preproc_button': ['new_run_csid_preproc', [cs_id]],
+        'margecsv_button': ['new_run_csid_mergecsv', [cs_id]],
+        'rftrain_button': ['new_run_csid_rftrain', [cs_id]],
         'cancel_button': ['run_new_card_sequence_update', [cs_id]]
     }
 

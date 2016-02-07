@@ -14,53 +14,53 @@ from core.get_post import *
 
 REVERSE_URL = {
 	'qrf': {'save_button': ['proces_card_run_new_csid'],
-	        'save_and_another': ['new_runid_csid_qrf'],
-	        'save_and_continue': ['new_runid_csid_qrf_edit'],
+	        'save_and_another': ['new_run_csid_qrf'],
+	        'save_and_continue': ['new_run_csid_qrf_edit'],
 	        'cancel_button': ['proces_card_run_new_csid']},
-	'rfscore': {'save_button': ['proces_card_runid_csid'],
-	            'save_and_another': ['new_runid_csid_rfscore'],
-	            'save_and_continue': ['new_runid_csid_rfscore_edit'],
-	            'cancel_button': ['proces_card_runid_csid']},
-	'remap': {'save_button': ['proces_card_runid_csid'],
-	          'save_and_another': ['new_runid_csid_remap'],
-	          'save_and_continue': ['new_runid_csid_remap_edit'],
-	          'cancel_button': ['proces_card_runid_csid']},
-	'year_filter': {'save_button': ['proces_card_runid_csid'],
-	                'save_and_another': ['new_runid_csid_year_filter'],
-	                'save_and_continue': ['new_runid_csid_year_filter_edit'],
-	                'cancel_button': ['proces_card_runid_csid']},
-	'collate': {'save_button': ['proces_card_runid_csid'],
-	            'save_and_another': ['new_runid_csid_collate'],
-	            'save_and_continue': ['new_runid_csid_collate_edit'],
-	            'cancel_button': ['proces_card_runid_csid']},
-	'preproc': {'save_button': ['proces_card_runid_csid'],
-	            'save_and_another': ['new_runid_csid_preproc'],
-	            'save_and_continue': ['new_runid_csid_preproc_edit'],
-	            'cancel_button': ['proces_card_runid_csid']},
-	'mergecsv': {'save_button': ['proces_card_runid_csid'],
-	             'save_and_another': ['new_runid_csid_mergecsv'],
-	             'save_and_continue': ['new_runid_csid_mergecsv_edit'],
-	             'cancel_button': ['proces_card_runid_csid']},
-	'rftrain': {'save_button': ['proces_card_runid_csid'],
-	            'save_and_another': ['new_runid_csid_rftrain'],
-	            'save_and_continue': ['new_runid_csid_rftrain_edit'],
-	            'cancel_button': ['proces_card_runid_csid']}
+	'rfscore': {'save_button': ['proces_card_run_new_csid'],
+	            'save_and_another': ['new_run_csid_rfscore'],
+	            'save_and_continue': ['new_run_csid_rfscore_edit'],
+	            'cancel_button': ['proces_card_run_new_csid']},
+	'remap': {'save_button': ['proces_card_run_new_csid'],
+	          'save_and_another': ['new_run_csid_remap'],
+	          'save_and_continue': ['new_run_csid_remap_edit'],
+	          'cancel_button': ['proces_card_run_new_csid']},
+	'year_filter': {'save_button': ['proces_card_run_new_csid'],
+	                'save_and_another': ['new_run_csid_year_filter'],
+	                'save_and_continue': ['new_run_csid_year_filter_edit'],
+	                'cancel_button': ['proces_card_run_new_csid']},
+	'collate': {'save_button': ['proces_card_run_new_csid'],
+	            'save_and_another': ['new_run_csid_collate'],
+	            'save_and_continue': ['new_run_csid_collate_edit'],
+	            'cancel_button': ['proces_card_run_new_csid']},
+	'preproc': {'save_button': ['proces_card_run_new_csid'],
+	            'save_and_another': ['new_run_csid_preproc'],
+	            'save_and_continue': ['new_run_csid_preproc_edit'],
+	            'cancel_button': ['proces_card_run_new_csid']},
+	'mergecsv': {'save_button': ['proces_card_run_new_csid'],
+	             'save_and_another': ['new_run_csid_mergecsv'],
+	             'save_and_continue': ['new_run_csid_mergecsv_edit'],
+	             'cancel_button': ['proces_card_run_new_csid']},
+	'rftrain': {'save_button': ['proces_card_run_new_csid'],
+	            'save_and_another': ['new_run_csid_rftrain'],
+	            'save_and_continue': ['new_run_csid_rftrain_edit'],
+	            'cancel_button': ['proces_card_run_new_csid']}
 }
 
 
 # cards for run/card-sequence/processing-card
 @login_required
-@render_to('cards/new_runid_csid_card.html')
-def new_runid_csid_qrf(request, run_id, cs_id):
+@render_to('cards/new_run_csid_card.html')
+def new_run_csid_qrf(request, cs_id):
 	# import pdb;pdb.set_trace()
 	title = 'New QRF Card'
-	url_form = 'new_runid_csid_qrf'
+	url_form = 'new_run_csid_qrf'
 	template_name = 'cards/_qrf_form.html'
 	func = qrf_update_create
 	form = None
 	REVERSE_URL['qrf']['save_button'].append([cs_id])
-	REVERSE_URL['qrf']['save_and_another'].append([run_id, cs_id])
-	REVERSE_URL['qrf']['save_and_continue'].append([run_id, cs_id])
+	REVERSE_URL['qrf']['save_and_another'].append([cs_id])
+	REVERSE_URL['qrf']['save_and_continue'].append([cs_id])
 	REVERSE_URL['qrf']['cancel_button'].append([cs_id])
 
 	if request.method == "POST":
@@ -80,7 +80,6 @@ def new_runid_csid_qrf(request, run_id, cs_id):
 		'form': form,
 		'url_form': url_form,
 		'template_name': template_name,
-		'run_id': run_id,
 		'cs_id': cs_id,
 	}
 
@@ -88,18 +87,18 @@ def new_runid_csid_qrf(request, run_id, cs_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
-def new_runid_csid_qrf_edit(request, run_id, cs_id, qrf_id):
+@render_to('cards/new_run_csid_card.html')
+def new_run_csid_qrf_edit(request, cs_id, qrf_id):
 	title = 'New QRF Card'
 	qrf_card = get_object_or_404(QRF, pk=qrf_id)
-	url_form = 'new_runid_csid_qrf_edit'
+	url_form = 'new_run_csid_qrf_edit'
 	template_name = 'cards/_qrf_form.html'
 	func = qrf_update_create
 	form = None
-	REVERSE_URL['qrf']['save_button'].append([run_id, cs_id])
-	REVERSE_URL['qrf']['save_and_another'].append([run_id, cs_id])
-	REVERSE_URL['qrf']['save_and_continue'].append([run_id, cs_id])
-	REVERSE_URL['qrf']['cancel_button'].append([run_id, cs_id])
+	REVERSE_URL['qrf']['save_button'].append([cs_id])
+	REVERSE_URL['qrf']['save_and_another'].append([cs_id])
+	REVERSE_URL['qrf']['save_and_continue'].append([cs_id])
+	REVERSE_URL['qrf']['cancel_button'].append([cs_id])
 
 	if request.method == "POST":
 		response = get_post(request, QRFForm, 'QRF Card', REVERSE_URL['qrf'],
@@ -118,7 +117,6 @@ def new_runid_csid_qrf_edit(request, run_id, cs_id, qrf_id):
 		'card_id': qrf_id,
 		'url_form': url_form,
 		'template_name': template_name,
-		'run_id': run_id,
 		'cs_id': cs_id,
 	}
 
@@ -126,17 +124,17 @@ def new_runid_csid_qrf_edit(request, run_id, cs_id, qrf_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
-def new_runid_csid_rfscore(request, run_id, cs_id):
+@render_to('cards/new_run_csid_card.html')
+def new_run_csid_rfscore(request, cs_id):
 	title = 'New RFScore Card'
-	url_form = 'new_runid_csid_rfscore'
+	url_form = 'new_run_csid_rfscore'
 	template_name = 'cards/_rfscore_form.html'
 	func = rfscore_update_create
 	form = None
-	REVERSE_URL['rfscore']['save_button'].append([run_id, cs_id])
-	REVERSE_URL['rfscore']['save_and_another'].append([run_id, cs_id])
-	REVERSE_URL['rfscore']['save_and_continue'].append([run_id, cs_id])
-	REVERSE_URL['rfscore']['cancel_button'].append([run_id, cs_id])
+	REVERSE_URL['rfscore']['save_button'].append([cs_id])
+	REVERSE_URL['rfscore']['save_and_another'].append([cs_id])
+	REVERSE_URL['rfscore']['save_and_continue'].append([cs_id])
+	REVERSE_URL['rfscore']['cancel_button'].append([cs_id])
 
 	if request.method == "POST":
 		response = get_post(request, RFScoreForm, 'RFScore Card',
@@ -154,7 +152,6 @@ def new_runid_csid_rfscore(request, run_id, cs_id):
 		'form': form,
 		'url_form': url_form,
 		'template_name': template_name,
-		'run_id': run_id,
 		'cs_id': cs_id,
 	}
 
@@ -162,18 +159,18 @@ def new_runid_csid_rfscore(request, run_id, cs_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
-def new_runid_csid_rfscore_edit(request, run_id, cs_id, rfscore_id):
+@render_to('cards/new_run_csid_card.html')
+def new_run_csid_rfscore_edit(request, cs_id, rfscore_id):
 	title = 'New RFScore Card'
 	rfscore_card = get_object_or_404(RFScore, pk=rfscore_id)
-	url_form = 'new_runid_csid_rfscore_edit'
+	url_form = 'new_run_csid_rfscore_edit'
 	template_name = 'cards/_rfscore_form.html'
 	func = rfscore_update_create
 	form = None
-	REVERSE_URL['rfscore']['save_button'].append([run_id, cs_id])
-	REVERSE_URL['rfscore']['save_and_another'].append([run_id, cs_id])
-	REVERSE_URL['rfscore']['save_and_continue'].append([run_id, cs_id])
-	REVERSE_URL['rfscore']['cancel_button'].append([run_id, cs_id])
+	REVERSE_URL['rfscore']['save_button'].append([cs_id])
+	REVERSE_URL['rfscore']['save_and_another'].append([cs_id])
+	REVERSE_URL['rfscore']['save_and_continue'].append([cs_id])
+	REVERSE_URL['rfscore']['cancel_button'].append([cs_id])
 
 	if request.method == "POST":
 		response = get_post(request, RFScoreForm, 'RFScore Card', REVERSE_URL['rfscore'],
@@ -192,7 +189,6 @@ def new_runid_csid_rfscore_edit(request, run_id, cs_id, rfscore_id):
 		'card_id': rfscore_id,
 		'url_form': url_form,
 		'template_name': template_name,
-		'run_id': run_id,
 		'cs_id': cs_id,
 	}
 
@@ -200,17 +196,17 @@ def new_runid_csid_rfscore_edit(request, run_id, cs_id, rfscore_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
-def new_runid_csid_remap(request, run_id, cs_id):
+@render_to('cards/new_run_csid_card.html')
+def new_run_csid_remap(request, cs_id):
 	title = 'New Remap Card'
-	url_form = 'new_runid_csid_remap'
+	url_form = 'new_run_csid_remap'
 	template_name = 'cards/_remap_form.html'
 	func = remap_update_create
 	form = None
-	REVERSE_URL['remap']['save_button'].append([run_id, cs_id])
-	REVERSE_URL['remap']['save_and_another'].append([run_id, cs_id])
-	REVERSE_URL['remap']['save_and_continue'].append([run_id, cs_id])
-	REVERSE_URL['remap']['cancel_button'].append([run_id, cs_id])
+	REVERSE_URL['remap']['save_button'].append([cs_id])
+	REVERSE_URL['remap']['save_and_another'].append([cs_id])
+	REVERSE_URL['remap']['save_and_continue'].append([cs_id])
+	REVERSE_URL['remap']['cancel_button'].append([cs_id])
 
 	if request.method == "POST":
 		response = get_post(request, RemapForm, 'Remap Card',
@@ -228,7 +224,6 @@ def new_runid_csid_remap(request, run_id, cs_id):
 		'form': form,
 		'url_form': url_form,
 		'template_name': template_name,
-		'run_id': run_id,
 		'cs_id': cs_id,
 	}
 
@@ -236,18 +231,18 @@ def new_runid_csid_remap(request, run_id, cs_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
-def new_runid_csid_remap_edit(request, run_id, cs_id, remap_id):
+@render_to('cards/new_run_csid_card.html')
+def new_run_csid_remap_edit(request, cs_id, remap_id):
 	title = 'New Remap Card'
 	remap_card = get_object_or_404(Remap, pk=remap_id)
-	url_form = 'new_runid_csid_remap_edit'
+	url_form = 'new_run_csid_remap_edit'
 	template_name = 'cards/_remap_form.html'
 	func = remap_update_create
 	form = None
-	REVERSE_URL['remap']['save_button'].append([run_id, cs_id])
-	REVERSE_URL['remap']['save_and_another'].append([run_id, cs_id])
-	REVERSE_URL['remap']['save_and_continue'].append([run_id, cs_id])
-	REVERSE_URL['remap']['cancel_button'].append([run_id, cs_id])
+	REVERSE_URL['remap']['save_button'].append([cs_id])
+	REVERSE_URL['remap']['save_and_another'].append([cs_id])
+	REVERSE_URL['remap']['save_and_continue'].append([cs_id])
+	REVERSE_URL['remap']['cancel_button'].append([cs_id])
 
 	if request.method == "POST":
 		response = get_post(request, RemapForm, 'Remap Card', REVERSE_URL['remap'],
@@ -266,7 +261,6 @@ def new_runid_csid_remap_edit(request, run_id, cs_id, remap_id):
 		'card_id': remap_id,
 		'url_form': url_form,
 		'template_name': template_name,
-		'run_id': run_id,
 		'cs_id': cs_id,
 	}
 
@@ -274,17 +268,17 @@ def new_runid_csid_remap_edit(request, run_id, cs_id, remap_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
-def new_runid_csid_year_filter(request, run_id, cs_id):
+@render_to('cards/new_run_csid_card.html')
+def new_run_csid_year_filter(request, cs_id):
 	title = 'New YearFilter Card'
-	url_form = 'new_runid_csid_year_filter'
+	url_form = 'new_run_csid_year_filter'
 	template_name = 'cards/_year_filter_form.html'
 	func = year_filter_update_create
 	form = None
-	REVERSE_URL['year_filter']['save_button'].append([run_id, cs_id])
-	REVERSE_URL['year_filter']['save_and_another'].append([run_id, cs_id])
-	REVERSE_URL['year_filter']['save_and_continue'].append([run_id, cs_id])
-	REVERSE_URL['year_filter']['cancel_button'].append([run_id, cs_id])
+	REVERSE_URL['year_filter']['save_button'].append([cs_id])
+	REVERSE_URL['year_filter']['save_and_another'].append([cs_id])
+	REVERSE_URL['year_filter']['save_and_continue'].append([cs_id])
+	REVERSE_URL['year_filter']['cancel_button'].append([cs_id])
 
 	if request.method == "POST":
 		response = get_post(request, YearFilterForm, 'YearFilter Card',
@@ -302,7 +296,6 @@ def new_runid_csid_year_filter(request, run_id, cs_id):
 		'form': form,
 		'url_form': url_form,
 		'template_name': template_name,
-		'run_id': run_id,
 		'cs_id': cs_id,
 	}
 
@@ -310,18 +303,18 @@ def new_runid_csid_year_filter(request, run_id, cs_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
-def new_runid_csid_year_filter_edit(request, run_id, cs_id, yf_id):
+@render_to('cards/new_run_csid_card.html')
+def new_run_csid_year_filter_edit(request, cs_id, yf_id):
 	title = 'New YearFilter Card'
 	year_filter_card = get_object_or_404(YearFilter, pk=yf_id)
-	url_form = 'new_runid_csid_year_filter_edit'
+	url_form = 'new_run_csid_year_filter_edit'
 	template_name = 'cards/_year_filter_form.html'
 	func = year_filter_update_create
 	form = None
-	REVERSE_URL['year_filter']['save_button'].append([run_id, cs_id])
-	REVERSE_URL['year_filter']['save_and_another'].append([run_id, cs_id])
-	REVERSE_URL['year_filter']['save_and_continue'].append([run_id, cs_id])
-	REVERSE_URL['year_filter']['cancel_button'].append([run_id, cs_id])
+	REVERSE_URL['year_filter']['save_button'].append([cs_id])
+	REVERSE_URL['year_filter']['save_and_another'].append([cs_id])
+	REVERSE_URL['year_filter']['save_and_continue'].append([cs_id])
+	REVERSE_URL['year_filter']['cancel_button'].append([cs_id])
 
 	if request.method == "POST":
 		response = get_post(request, YearFilterForm, 'YearFilter Card',
@@ -340,7 +333,6 @@ def new_runid_csid_year_filter_edit(request, run_id, cs_id, yf_id):
 		'card_id': yf_id,
 		'url_form': url_form,
 		'template_name': template_name,
-		'run_id': run_id,
 		'cs_id': cs_id,
 	}
 
@@ -348,17 +340,17 @@ def new_runid_csid_year_filter_edit(request, run_id, cs_id, yf_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
-def new_runid_csid_collate(request, run_id, cs_id):
+@render_to('cards/new_run_csid_card.html')
+def new_run_csid_collate(request, cs_id):
 	title = 'New Collate Card'
-	url_form = 'new_runid_csid_collate'
+	url_form = 'new_run_csid_collate'
 	template_name = 'cards/_collate_form.html'
 	func = collate_update_create
 	form = None
-	REVERSE_URL['collate']['save_button'].append([run_id, cs_id])
-	REVERSE_URL['collate']['save_and_another'].append([run_id, cs_id])
-	REVERSE_URL['collate']['save_and_continue'].append([run_id, cs_id])
-	REVERSE_URL['collate']['cancel_button'].append([run_id, cs_id])
+	REVERSE_URL['collate']['save_button'].append([cs_id])
+	REVERSE_URL['collate']['save_and_another'].append([cs_id])
+	REVERSE_URL['collate']['save_and_continue'].append([cs_id])
+	REVERSE_URL['collate']['cancel_button'].append([cs_id])
 
 	if request.method == "POST":
 		response = get_post(request, CollateForm, 'Collate Card',
@@ -376,7 +368,6 @@ def new_runid_csid_collate(request, run_id, cs_id):
 		'form': form,
 		'url_form': url_form,
 		'template_name': template_name,
-		'run_id': run_id,
 		'cs_id': cs_id,
 	}
 
@@ -384,18 +375,18 @@ def new_runid_csid_collate(request, run_id, cs_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
-def new_runid_csid_collate_edit(request, run_id, cs_id, collate_id):
+@render_to('cards/new_run_csid_card.html')
+def new_run_csid_collate_edit(request, cs_id, collate_id):
 	title = 'New Collate Card'
 	collate_card = get_object_or_404(Collate, pk=collate_id)
-	url_form = 'new_runid_csid_collate_edit'
+	url_form = 'new_run_csid_collate_edit'
 	template_name = 'cards/_collate_form.html'
 	func = collate_update_create
 	form = None
-	REVERSE_URL['collate']['save_button'].append([run_id, cs_id])
-	REVERSE_URL['collate']['save_and_another'].append([run_id, cs_id])
-	REVERSE_URL['collate']['save_and_continue'].append([run_id, cs_id])
-	REVERSE_URL['collate']['cancel_button'].append([run_id, cs_id])
+	REVERSE_URL['collate']['save_button'].append([cs_id])
+	REVERSE_URL['collate']['save_and_another'].append([cs_id])
+	REVERSE_URL['collate']['save_and_continue'].append([cs_id])
+	REVERSE_URL['collate']['cancel_button'].append([cs_id])
 
 	if request.method == "POST":
 		response = get_post(request, CollateForm, 'Collate Card', REVERSE_URL['collate'],
@@ -414,7 +405,6 @@ def new_runid_csid_collate_edit(request, run_id, cs_id, collate_id):
 		'card_id': collate_id,
 		'url_form': url_form,
 		'template_name': template_name,
-		'run_id': run_id,
 		'cs_id': cs_id,
 	}
 
@@ -422,17 +412,17 @@ def new_runid_csid_collate_edit(request, run_id, cs_id, collate_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
-def new_runid_csid_preproc(request, run_id, cs_id):
+@render_to('cards/new_run_csid_card.html')
+def new_run_csid_preproc(request, cs_id):
 	title = 'New PreProc Card'
-	url_form = 'new_runid_csid_preproc'
+	url_form = 'new_run_csid_preproc'
 	template_name = 'cards/_preproc_form.html'
 	func = preproc_update_create
 	form = None
-	REVERSE_URL['preproc']['save_button'].append([run_id, cs_id])
-	REVERSE_URL['preproc']['save_and_another'].append([run_id, cs_id])
-	REVERSE_URL['preproc']['save_and_continue'].append([run_id, cs_id])
-	REVERSE_URL['preproc']['cancel_button'].append([run_id, cs_id])
+	REVERSE_URL['preproc']['save_button'].append([cs_id])
+	REVERSE_URL['preproc']['save_and_another'].append([cs_id])
+	REVERSE_URL['preproc']['save_and_continue'].append([cs_id])
+	REVERSE_URL['preproc']['cancel_button'].append([cs_id])
 
 	if request.method == "POST":
 		response = get_post(request, PreProcForm, 'PreProc Card',
@@ -450,7 +440,6 @@ def new_runid_csid_preproc(request, run_id, cs_id):
 		'form': form,
 		'url_form': url_form,
 		'template_name': template_name,
-		'run_id': run_id,
 		'cs_id': cs_id,
 	}
 
@@ -458,18 +447,18 @@ def new_runid_csid_preproc(request, run_id, cs_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
-def new_runid_csid_preproc_edit(request, run_id, cs_id, preproc_id):
+@render_to('cards/new_run_csid_card.html')
+def new_run_csid_preproc_edit(request, cs_id, preproc_id):
 	title = 'New PreProc Card'
 	preproc_card = get_object_or_404(PreProc, pk=preproc_id)
-	url_form = 'new_runid_csid_preproc_edit'
+	url_form = 'new_run_csid_preproc_edit'
 	template_name = 'cards/_preproc_form.html'
 	func = preproc_update_create
 	form = None
-	REVERSE_URL['preproc']['save_button'].append([run_id, cs_id])
-	REVERSE_URL['preproc']['save_and_another'].append([run_id, cs_id])
-	REVERSE_URL['preproc']['save_and_continue'].append([run_id, cs_id])
-	REVERSE_URL['preproc']['cancel_button'].append([run_id, cs_id])
+	REVERSE_URL['preproc']['save_button'].append([cs_id])
+	REVERSE_URL['preproc']['save_and_another'].append([cs_id])
+	REVERSE_URL['preproc']['save_and_continue'].append([cs_id])
+	REVERSE_URL['preproc']['cancel_button'].append([cs_id])
 
 	if request.method == "POST":
 		response = get_post(request, PreProcForm, 'PreProc Card',
@@ -489,7 +478,6 @@ def new_runid_csid_preproc_edit(request, run_id, cs_id, preproc_id):
 		'card_id': preproc_id,
 		'url_form': url_form,
 		'template_name': template_name,
-		'run_id': run_id,
 		'cs_id': cs_id,
 	}
 
@@ -497,17 +485,17 @@ def new_runid_csid_preproc_edit(request, run_id, cs_id, preproc_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
-def new_runid_csid_mergecsv(request, run_id, cs_id):
+@render_to('cards/new_run_csid_card.html')
+def new_run_csid_mergecsv(request, cs_id):
 	title = 'New MergeCSV Card'
-	url_form = 'new_runid_csid_mergecsv'
+	url_form = 'new_run_csid_mergecsv'
 	template_name = 'cards/_mergecsv_form.html'
 	func = mergecsv_update_create
 	form = None
-	REVERSE_URL['mergecsv']['save_button'].append([run_id, cs_id])
-	REVERSE_URL['mergecsv']['save_and_another'].append([run_id, cs_id])
-	REVERSE_URL['mergecsv']['save_and_continue'].append([run_id, cs_id])
-	REVERSE_URL['mergecsv']['cancel_button'].append([run_id, cs_id])
+	REVERSE_URL['mergecsv']['save_button'].append([cs_id])
+	REVERSE_URL['mergecsv']['save_and_another'].append([cs_id])
+	REVERSE_URL['mergecsv']['save_and_continue'].append([cs_id])
+	REVERSE_URL['mergecsv']['cancel_button'].append([cs_id])
 
 	if request.method == "POST":
 		response = get_post(request, MergeCSVForm, 'MergeCSV Card',
@@ -525,7 +513,6 @@ def new_runid_csid_mergecsv(request, run_id, cs_id):
 		'form': form,
 		'url_form': url_form,
 		'template_name': template_name,
-		'run_id': run_id,
 		'cs_id': cs_id,
 	}
 
@@ -533,18 +520,18 @@ def new_runid_csid_mergecsv(request, run_id, cs_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
-def new_runid_csid_mergecsv_edit(request, run_id, cs_id, mcsv_id):
+@render_to('cards/new_run_csid_card.html')
+def new_run_csid_mergecsv_edit(request, cs_id, mcsv_id):
 	title = 'New MergeCSV Card'
 	mergecsv_card = get_object_or_404(MergeCSV, pk=mcsv_id)
-	url_form = 'new_runid_csid_mergecsv_edit'
+	url_form = 'new_run_csid_mergecsv_edit'
 	template_name = 'cards/_mergecsv_form.html'
 	func = mergecsv_update_create
 	form = None
-	REVERSE_URL['mergecsv']['save_button'].append([run_id, cs_id])
-	REVERSE_URL['mergecsv']['save_and_another'].append([run_id, cs_id])
-	REVERSE_URL['mergecsv']['save_and_continue'].append([run_id, cs_id])
-	REVERSE_URL['mergecsv']['cancel_button'].append([run_id, cs_id])
+	REVERSE_URL['mergecsv']['save_button'].append([cs_id])
+	REVERSE_URL['mergecsv']['save_and_another'].append([cs_id])
+	REVERSE_URL['mergecsv']['save_and_continue'].append([cs_id])
+	REVERSE_URL['mergecsv']['cancel_button'].append([cs_id])
 
 	if request.method == "POST":
 		response = get_post(request, MergeCSVForm, 'MergeCSV Card', REVERSE_URL['mergecsv'],
@@ -563,7 +550,6 @@ def new_runid_csid_mergecsv_edit(request, run_id, cs_id, mcsv_id):
 		'card_id': mcsv_id,
 		'url_form': url_form,
 		'template_name': template_name,
-		'run_id': run_id,
 		'cs_id': cs_id,
 	}
 
@@ -571,17 +557,17 @@ def new_runid_csid_mergecsv_edit(request, run_id, cs_id, mcsv_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
-def new_runid_csid_rftrain(request, run_id, cs_id):
+@render_to('cards/new_run_csid_card.html')
+def new_run_csid_rftrain(request, cs_id):
 	title = 'New RFTrain Card'
-	url_form = 'new_runid_csid_rftrain'
+	url_form = 'new_run_csid_rftrain'
 	template_name = 'cards/_rftrain_form.html'
 	func = rftrain_update_create
 	form = None
-	REVERSE_URL['rftrain']['save_button'].append([run_id, cs_id])
-	REVERSE_URL['rftrain']['save_and_another'].append([run_id, cs_id])
-	REVERSE_URL['rftrain']['save_and_continue'].append([run_id, cs_id])
-	REVERSE_URL['rftrain']['cancel_button'].append([run_id, cs_id])
+	REVERSE_URL['rftrain']['save_button'].append([cs_id])
+	REVERSE_URL['rftrain']['save_and_another'].append([cs_id])
+	REVERSE_URL['rftrain']['save_and_continue'].append([cs_id])
+	REVERSE_URL['rftrain']['cancel_button'].append([cs_id])
 
 	if request.method == "POST":
 		response = get_post(request, RFTrainForm, 'RFTrain Card',
@@ -599,7 +585,6 @@ def new_runid_csid_rftrain(request, run_id, cs_id):
 		'form': form,
 		'url_form': url_form,
 		'template_name': template_name,
-		'run_id': run_id,
 		'cs_id': cs_id,
 	}
 
@@ -607,18 +592,18 @@ def new_runid_csid_rftrain(request, run_id, cs_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
-def new_runid_csid_rftrain_edit(request, run_id, cs_id, rftrain_id):
+@render_to('cards/new_run_csid_card.html')
+def new_run_csid_rftrain_edit(request, cs_id, rftrain_id):
 	title = 'New RFTrain Card'
 	rftrain_card = get_object_or_404(RFTrain, pk=rftrain_id)
-	url_form = 'new_runid_csid_rftrain_edit'
+	url_form = 'new_run_csid_rftrain_edit'
 	template_name = 'cards/_rftrain_form.html'
 	func = rftrain_update_create
 	form = None
-	REVERSE_URL['rftrain']['save_button'].append([run_id, cs_id])
-	REVERSE_URL['rftrain']['save_and_another'].append([run_id, cs_id])
-	REVERSE_URL['rftrain']['save_and_continue'].append([run_id, cs_id])
-	REVERSE_URL['rftrain']['cancel_button'].append([run_id, cs_id])
+	REVERSE_URL['rftrain']['save_button'].append([cs_id])
+	REVERSE_URL['rftrain']['save_and_another'].append([cs_id])
+	REVERSE_URL['rftrain']['save_and_continue'].append([cs_id])
+	REVERSE_URL['rftrain']['cancel_button'].append([cs_id])
 
 	if request.method == "POST":
 		response = get_post(request, RFTrainForm, 'RFTrain Card', REVERSE_URL['rftrain'],
@@ -637,7 +622,6 @@ def new_runid_csid_rftrain_edit(request, run_id, cs_id, rftrain_id):
 		'card_id': rftrain_id,
 		'url_form': url_form,
 		'template_name': template_name,
-		'run_id': run_id,
 		'cs_id': cs_id,
 	}
 
