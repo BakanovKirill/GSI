@@ -569,7 +569,7 @@ def submit_run(request):
 			)
 		else:
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('submit_run'),
-										 (u"Fof start choose Run."))
+										 (u"For start choose Run(s)"))
 			)
 	data = {
 		'title': title,
