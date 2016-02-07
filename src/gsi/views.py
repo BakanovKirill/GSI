@@ -250,13 +250,13 @@ def run_new_card_sequence_update(request, cs_id):
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
 	card_sequence_cards = CardSequence.cards.through.objects.filter(sequence_id=cs_id)
 	title = 'GSI Card Sequence {0}'.format(card_sequence.name)
-	url_process_card = 'proces_card_sequence_card_edit'
+	url_process_card = 'run_new_card_sequence_update'
 	form = None
 
 	if request.method == "POST":
 		if request.POST.get('create_processing_card') is not None:
 			return HttpResponseRedirect(
-					reverse('proces_card_new_run_new_sc', args=[card_sequence.id])
+					reverse('proces_card_new_run_new_sc', args=[cs_id])
 				)
 		elif request.POST.get('add_card_items_button') is not None:
 			form = CardSequenceCreateForm(request.POST)
@@ -297,13 +297,13 @@ def run_new_card_sequence_update(request, cs_id):
 			form = CardSequenceCreateForm(request.POST)
 
 			if form.is_valid():
-				card_sequence = create_update_card_sequence(form, cs_id)
+				# card_sequence = create_update_card_sequence(form, cs_id)
 
 				if request.POST.get('cs_select'):
 					cs_name = ''
-					for cs_id in request.POST.getlist('cs_select'):
-						cur_cs = get_object_or_404(CardSequence, pk=cs_id)
-						cs_name += '"' + cur_cs.name + '", '
+					for card_id in request.POST.getlist('cs_select'):
+						cur_cs = get_object_or_404(CardSequence.cards.through, pk=card_id)
+						cs_name += '"' + str(cur_cs.card_item) + '", '
 						cur_cs.delete()
 
 					return HttpResponseRedirect(u'%s?status_message=%s' %
@@ -493,6 +493,8 @@ def card_sequence_update(request, run_id, cs_id):
 		'card_sequence': card_sequence,
 		'url_process_card': url_process_card,
 	}
+
+	print 'RUN_ID ================= ', run_id
 
 	return data
 

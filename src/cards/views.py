@@ -176,31 +176,31 @@ def proces_card_runid_csid(request, run_id, cs_id):
 
 
 
-# @login_required
-# @render_to('cards/processing_card_new_run.html')
-# def proces_card_new_run_new_sc(request, cs_id):
-#     title = 'Create New Processing Cards 22'
-#     rev_url = {
-#         'qrf_button': ['new_run_qrf'],
-#         'rfscore_button': ['new_run_rfscore'],
-#         'remap_button': ['new_run_remap'],
-#         'year_filter_button': ['new_run_year_filter'],
-#         'collate_button': ['new_run_collate'],
-#         'preproc_button': ['new_run_preproc'],
-#         'margecsv_button': ['new_run_mergecsv'],
-#         'rftrain_button': ['new_run_rftrain'],
-#         'cancel_button': ['run_new_card_sequence_update', [cs_id]]
-#     }
-#
-#     if request.method == "POST":
-#         return processing_card_menu(request, rev_url, args=True)
-#
-#     data = {
-#         'title': title,
-#         'cs_id': cs_id,
-#     }
-#
-#     return data
+@login_required
+@render_to('cards/processing_card_new_run.html')
+def proces_card_new_run_new_sc(request, cs_id):
+    title = 'Create New Processing Cards 22'
+    rev_url = {
+        'qrf_button': ['new_run_qrf'],
+        'rfscore_button': ['new_run_rfscore'],
+        'remap_button': ['new_run_remap'],
+        'year_filter_button': ['new_run_year_filter'],
+        'collate_button': ['new_run_collate'],
+        'preproc_button': ['new_run_preproc'],
+        'margecsv_button': ['new_run_mergecsv'],
+        'rftrain_button': ['new_run_rftrain'],
+        'cancel_button': ['run_new_card_sequence_update', [cs_id]]
+    }
+
+    if request.method == "POST":
+        return processing_card_menu(request, rev_url, args=True)
+
+    data = {
+        'title': title,
+        'cs_id': cs_id,
+    }
+
+    return data
 
 
 

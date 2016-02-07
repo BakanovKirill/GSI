@@ -92,7 +92,12 @@
                             <td>{{ card.card_item }}</td>
                             <td>{{ card.order }}</td>
                             <td>
-                                <a class="btn btn-success btn-block" href="{% url 'card_item_update' run_id cs_id card.id %}" role="button">
+                                <a class="btn btn-success btn-block"
+                                   href="{% if run_id %}
+                                            {% url 'card_item_update' run_id cs_id card.id %}
+                                        {% else %}
+                                            {% url 'card_sequence_update' cs_id card.id %}
+                                        {% endif %}" role="button">
                                     Edit
                                 </a>
                             </td>

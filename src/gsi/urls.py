@@ -116,8 +116,8 @@ urlpatterns = [
 
     # --------------------------------------------------------------------
 
-    # url(r'^run/card-sequence/(?P<cs_id>\d+)/processing-card/add$',
-    #     'cards.views.proces_card_new_run_new_sc', name='proces_card_new_run_new_sc'),
+    url(r'^run/card-sequence/(?P<cs_id>\d+)/processing-card/add$',
+        'cards.views.proces_card_new_run_new_sc', name='proces_card_new_run_new_sc'),
 
     # url(r'^run/new/processing-card/$', 'cards.views.proces_card_new_run', name='proces_card_new_run'),
 

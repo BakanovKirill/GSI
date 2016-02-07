@@ -82,9 +82,9 @@ def yg_update_create(form, multiple=None, item_id=None, delete=False):
 def create_update_card_sequence(form, cs_id=None):
 	if cs_id:
 		card_sequence = CardSequence.objects.get(id=cs_id)
-		card_sequence.name=form.cleaned_data["name"]
-		card_sequence.environment_override=form.cleaned_data["environment_override"]
-		card_sequence.environment_base=form.cleaned_data["environment_base"]
+		card_sequence.name = form.cleaned_data["name"]
+		card_sequence.environment_override = form.cleaned_data["environment_override"]
+		card_sequence.environment_base = form.cleaned_data["environment_base"]
 		card_sequence.save()
 	else:
 		card_sequence = CardSequence.objects.create(
