@@ -9,6 +9,8 @@ from gsi.models import Area
 def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=None):
     response = None
 
+    # print 'item_id ==================== ', item_id
+
     # import pdb;pdb.set_trace()
     if request.POST.get('save_button') is not None:
         form = item_form(request.POST)

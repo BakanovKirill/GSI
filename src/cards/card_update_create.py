@@ -4,16 +4,18 @@ from cards.models import (QRF, RFScore, Remap,
                           MergeCSV, RFTrain)
 
 
-def qrf_update_create(form, card_id=None):
-    if card_id:
-        QRF.objects.filter(id=card_id).update(
+
+
+def qrf_update_create(form, item_id=None):
+    if item_id:
+        QRF.objects.filter(id=item_id).update(
             name=form.cleaned_data["name"],
             interval=form.cleaned_data["interval"],
             number_of_trees=form.cleaned_data["number_of_trees"],
             number_of_threads=form.cleaned_data["number_of_threads"],
             directory=form.cleaned_data["directory"],
         )
-        qrf_card = QRF.objects.get(id=card_id)
+        qrf_card = QRF.objects.get(id=item_id)
     else:
         qrf_card = QRF.objects.create(
             name=form.cleaned_data["name"],
@@ -26,9 +28,9 @@ def qrf_update_create(form, card_id=None):
     return qrf_card
 
 
-def rfscore_update_create(form, card_id=None):
-    if card_id:
-        RFScore.objects.filter(id=card_id).update(
+def rfscore_update_create(form, item_id=None):
+    if item_id:
+        RFScore.objects.filter(id=item_id).update(
             name=form.cleaned_data["name"],
             area=form.cleaned_data["area"],
             year_group=form.cleaned_data["year_group"],
@@ -39,7 +41,7 @@ def rfscore_update_create(form, card_id=None):
             clean_name=form.cleaned_data["clean_name"],
             run_parallel=form.cleaned_data["run_parallel"],
         )
-        rfscore_card = RFScore.objects.get(id=card_id)
+        rfscore_card = RFScore.objects.get(id=item_id)
     else:
         rfscore_card = RFScore.objects.create(
             name=form.cleaned_data["name"],
@@ -56,9 +58,9 @@ def rfscore_update_create(form, card_id=None):
     return rfscore_card
 
 
-def remap_update_create(form, card_id=None):
-    if card_id:
-        Remap.objects.filter(id=card_id).update(
+def remap_update_create(form, item_id=None):
+    if item_id:
+        Remap.objects.filter(id=item_id).update(
             name=form.cleaned_data["name"],
             file_spec=form.cleaned_data["file_spec"],
             roi=form.cleaned_data["roi"],
@@ -71,7 +73,7 @@ def remap_update_create(form, card_id=None):
             refstats_scale=form.cleaned_data["refstats_scale"],
             run_parallel=form.cleaned_data["run_parallel"],
         )
-        remap_card = Remap.objects.get(id=card_id)
+        remap_card = Remap.objects.get(id=item_id)
     else:
         remap_card = Remap.objects.create(
             name=form.cleaned_data["name"],
@@ -90,9 +92,9 @@ def remap_update_create(form, card_id=None):
     return remap_card
 
 
-def year_filter_update_create(form, card_id=None):
-    if card_id:
-        YearFilter.objects.filter(id=card_id).update(
+def year_filter_update_create(form, item_id=None):
+    if item_id:
+        YearFilter.objects.filter(id=item_id).update(
             name=form.cleaned_data["name"],
             area=form.cleaned_data["area"],
             filetype=form.cleaned_data["filetype"],
@@ -104,7 +106,7 @@ def year_filter_update_create(form, card_id=None):
             input_directory=form.cleaned_data["input_directory"],
             run_parallel=form.cleaned_data["run_parallel"],
         )
-        year_filter_card = YearFilter.objects.get(id=card_id)
+        year_filter_card = YearFilter.objects.get(id=item_id)
     else:
         year_filter_card = YearFilter.objects.create(
             name=form.cleaned_data["name"],
@@ -122,9 +124,9 @@ def year_filter_update_create(form, card_id=None):
     return year_filter_card
 
 
-def collate_update_create(form, card_id=None):
-    if card_id:
-        Collate.objects.filter(id=card_id).update(
+def collate_update_create(form, item_id=None):
+    if item_id:
+        Collate.objects.filter(id=item_id).update(
             name=form.cleaned_data["name"],
             area=form.cleaned_data["area"],
             mode=form.cleaned_data["mode"],
@@ -133,7 +135,7 @@ def collate_update_create(form, card_id=None):
             input_scale_factor=form.cleaned_data["input_scale_factor"],
             run_parallel=form.cleaned_data["run_parallel"],
         )
-        collate_card = Collate.objects.get(id=card_id)
+        collate_card = Collate.objects.get(id=item_id)
     else:
         collate_card = Collate.objects.create(
             name=form.cleaned_data["name"],
@@ -148,16 +150,16 @@ def collate_update_create(form, card_id=None):
     return collate_card
 
 
-def preproc_update_create(form, card_id=None):
-    if card_id:
-        PreProc.objects.filter(id=card_id).update(
+def preproc_update_create(form, item_id=None):
+    if item_id:
+        PreProc.objects.filter(id=item_id).update(
             name=form.cleaned_data["name"],
             area=form.cleaned_data["area"],
             mode=form.cleaned_data["mode"],
             year_group=form.cleaned_data["year_group"],
             run_parallel=form.cleaned_data["run_parallel"],
         )
-        preproc_card = PreProc.objects.get(id=card_id)
+        preproc_card = PreProc.objects.get(id=item_id)
     else:
         preproc_card = PreProc.objects.create(
             name=form.cleaned_data["name"],
@@ -170,14 +172,14 @@ def preproc_update_create(form, card_id=None):
     return preproc_card
 
 
-def mergecsv_update_create(form, card_id=None):
-    if card_id:
-        MergeCSV.objects.filter(id=card_id).update(
+def mergecsv_update_create(form, item_id=None):
+    if item_id:
+        MergeCSV.objects.filter(id=item_id).update(
             name=form.cleaned_data["name"],
             csv1=form.cleaned_data["csv1"],
             csv2=form.cleaned_data["csv2"],
         )
-        mergecsv_card = MergeCSV.objects.get(id=card_id)
+        mergecsv_card = MergeCSV.objects.get(id=item_id)
     else:
         mergecsv_card = MergeCSV.objects.create(
             name=form.cleaned_data["name"],
@@ -188,9 +190,9 @@ def mergecsv_update_create(form, card_id=None):
     return mergecsv_card
 
 
-def rftrain_update_create(form, card_id=None):
-    if card_id:
-        RFTrain.objects.filter(id=card_id).update(
+def rftrain_update_create(form, item_id=None):
+    if item_id:
+        RFTrain.objects.filter(id=item_id).update(
             name=form.cleaned_data["name"],
             tile_type=form.cleaned_data["tile_type"],
             number_of_trees=form.cleaned_data["number_of_trees"],
@@ -200,7 +202,7 @@ def rftrain_update_create(form, card_id=None):
             input_scale_factor=form.cleaned_data["input_scale_factor"],
             run_parallel=form.cleaned_data["run_parallel"],
         )
-        rftrain_card = RFTrain.objects.get(id=card_id)
+        rftrain_card = RFTrain.objects.get(id=item_id)
     else:
         rftrain_card = RFTrain.objects.create(
             name=form.cleaned_data["name"],
