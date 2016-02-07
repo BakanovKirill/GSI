@@ -7,7 +7,7 @@
     <form action="{% if run_id and cs_id %}
                     {% url 'proces_card_runid_csid' run_id cs_id %}
                   {% elif cs_id %}
-                    {% url 'proces_card_new_run_new_sc' cs_id %}
+                    {% url 'proces_card_run_new_csid' cs_id %}
                   {% elif run_id %}
                     {% url 'proces_card_runid' run_id %}
                   {% else %}

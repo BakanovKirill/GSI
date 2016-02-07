@@ -256,7 +256,7 @@ def run_new_card_sequence_update(request, cs_id):
 	if request.method == "POST":
 		if request.POST.get('create_processing_card') is not None:
 			return HttpResponseRedirect(
-					reverse('proces_card_new_run_new_sc', args=[cs_id])
+					reverse('proces_card_run_new_csid', args=[cs_id])
 				)
 		elif request.POST.get('add_card_items_button') is not None:
 			form = CardSequenceCreateForm(request.POST)

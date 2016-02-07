@@ -167,28 +167,19 @@ def proces_card_runid_csid(request, run_id, cs_id):
     return data
 
 
-
-
-
-
-
-
-
-
-
 @login_required
 @render_to('cards/processing_card_new_run.html')
-def proces_card_new_run_new_sc(request, cs_id):
-    title = 'Create New Processing Cards 22'
+def proces_card_run_new_csid(request, cs_id):
+    title = 'Create New Processing Cards'
     rev_url = {
-        'qrf_button': ['new_run_qrf'],
-        'rfscore_button': ['new_run_rfscore'],
-        'remap_button': ['new_run_remap'],
-        'year_filter_button': ['new_run_year_filter'],
-        'collate_button': ['new_run_collate'],
-        'preproc_button': ['new_run_preproc'],
-        'margecsv_button': ['new_run_mergecsv'],
-        'rftrain_button': ['new_run_rftrain'],
+        'qrf_button': ['new_run_qrf', [cs_id]],
+        'rfscore_button': ['new_run_rfscore', [cs_id]],
+        'remap_button': ['new_run_remap', [cs_id]],
+        'year_filter_button': ['new_run_year_filter', [cs_id]],
+        'collate_button': ['new_run_collate', [cs_id]],
+        'preproc_button': ['new_run_preproc', [cs_id]],
+        'margecsv_button': ['new_run_mergecsv', [cs_id]],
+        'rftrain_button': ['new_run_rftrain', [cs_id]],
         'cancel_button': ['run_new_card_sequence_update', [cs_id]]
     }
 
