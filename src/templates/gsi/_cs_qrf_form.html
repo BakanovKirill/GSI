@@ -1,0 +1,93 @@
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.name.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.name.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.name.errors %}
+            <b class="error-form">{{ form_2.name.errors }}</b>
+        {% endif %}
+        {{ form_2.name }}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_1.order.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_1.order.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_1.order.errors %}
+            <b class="error-form">{{ form_1.order.errors }}</b>
+        {% endif %}
+        {{ form_1.order }}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.interval.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.interval.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.interval.errors %}
+            <b class="error-form">{{ form_2.interval.errors }}</b>
+        {% endif %}
+        {{ form_2.interval }}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.number_of_trees.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.number_of_trees.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.number_of_trees.errors %}
+            <b class="error-form">{{ form_2.number_of_trees.errors }}</b>
+        {% endif %}
+        {{ form_2.number_of_trees }}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.number_of_threads.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.number_of_threads.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.number_of_threads.errors %}
+            <b class="error-form">{{ form_2.number_of_threads.errors }}</b>
+        {% endif %}
+        {{ form_2.number_of_threads }}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.directory.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.directory.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.directory.errors %}
+            <b class="error-form">{{ form_2.directory.errors }}</b>
+        {% endif %}
+        {{ form_2.directory }}
+    </div>
+</div>
+
+<div class="row margin-top-50">
+    <div class="col-md-2">
+        <button type="submit" name="cancel_button" class="btn btn-default btn-block">Cancel</button>
+    </div>
+    <div class="col-md-4 col-md-offset-4">
+        <button type="submit" name="save_and_continue_editing_button" class="btn btn-primary btn-block">
+            Save and continue editing
+        </button>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" name="save_button" class="btn btn-primary btn-block">Save</button>
+    </div>
+</div>
+
+<p><input type="hidden">{{ form_1.card_item }}</p>

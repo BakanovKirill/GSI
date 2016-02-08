@@ -81,7 +81,7 @@ urlpatterns = [
     url(r'^run/years-group/(?P<yg_id>\d+)/$', 'gsi.views.years_group_edit', name='years_group_edit'),
 
 
-    # card sequence for ne run base
+    # card sequence for new run base
     url(r'^run/card-sequence/add/$', 'gsi.views.run_new_card_sequence_add',
         name='run_new_card_sequence_add'),
     url(r'^run/card-sequence/(?P<cs_id>\d+)/$', 'gsi.views.run_new_card_sequence_update',
@@ -97,9 +97,25 @@ urlpatterns = [
 
     # -------------------------------------------------------------------- ???
 
-    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/card-item/(?P<card_item_id>\d+)/$',
-        'gsi.views.card_item_update', name='card_item_update'),
-
+    # card item edit for card sequence
+    # url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/card-item/(?P<card_item_id>\d+)/$',
+    #     'gsi.views.card_item_update', name='card_item_update'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/qrf/(?P<qrf_id>\d+)/$',
+        'gsi.views_cs_card_runid_csid.cs_runid_csid_qrf_edit', name='cs_runid_csid_qrf_edit'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/rfscore/(?P<rfscore_id>\d+)/$',
+        'gsi.views_cs_card_runid_csid.cs_runid_csid_rfscore_edit', name='cs_runid_csid_rfscore_edit'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/remap/(?P<remap_id>\d+)/$',
+        'gsi.views_cs_card_runid_csid.cs_runid_csid_remap_edit', name='cs_runid_csid_remap_edit'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/yearfilter/(?P<yf_id>\d+)/$',
+        'gsi.views_cs_card_runid_csid.cs_runid_csid_year_filter_edit', name='cs_runid_csid_year_filter_edit'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/collate/(?P<collate_id>\d+)/$',
+        'gsi.views_cs_card_runid_csid.cs_runid_csid_collate_edit', name='cs_runid_csid_collate_edit'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/preproc/(?P<preproc_id>\d+)/$',
+        'gsi.views_cs_card_runid_csid.cs_runid_csid_preproc_edit', name='cs_runid_csid_preproc_edit'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/mergecsv/(?P<mcsv_id>\d+)/$',
+        'gsi.views_cs_card_runid_csid.cs_runid_csid_mergecsv_edit', name='cs_runid_csid_mergecsv_edit'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/rftrain/(?P<rftrain_id>\d+)/$',
+        'gsi.views_cs_card_runid_csid.cs_runid_csid_rftrain_edit', name='cs_runid_csid_rftrain_edit'),
 
     # ------------------------------------------------------------------- ???
 

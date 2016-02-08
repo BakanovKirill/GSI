@@ -1,0 +1,173 @@
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.name.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.name.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.name.errors %}
+            <b class="error-form">{{ form_2.name.errors }}</b>
+        {% endif %}
+        {{ form_2.name }}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_1.order.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_1.order.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_1.order.errors %}
+            <b class="error-form">{{ form_1.order.errors }}</b>
+        {% endif %}
+        {{ form_1.order }}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.run_parallel.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.run_parallel.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-2 margin-top-4">
+        {% if form_2.run_parallel.errors %}
+            <b class="error-form">{{ form_2.run_parallel.errors }}</b>
+        {% endif %}
+        {{ form_2.run_parallel }}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.file_spec.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.file_spec.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.file_spec.errors %}
+            <b class="error-form">{{ form_2.file_spec.errors }}</b>
+        {% endif %}
+        {{ form_2.file_spec }}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.roi.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.roi.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.roi.errors %}
+            <b class="error-form">{{ form_2.roi.errors }}</b>
+        {% endif %}
+        {{ form_2.roi }}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.output_root.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.output_root.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.output_root.errors %}
+            <b class="error-form">{{ form_2.output_root.errors }}</b>
+        {% endif %}
+        {{ form_2.output_root }}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.output_suffix.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.output_suffix.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.output_suffix.errors %}
+            <b class="error-form">{{ form_2.output_suffix.errors }}</b>
+        {% endif %}
+        {{ form_2.output_suffix }}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.scale.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.scale.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.scale.errors %}
+            <b class="error-form">{{ form_2.scale.errors }}</b>
+        {% endif %}
+        {{ form_2.scale }}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.output.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.output.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.output.errors %}
+            <b class="error-form">{{ form_2.output.errors }}</b>
+        {% endif %}
+        {{ form_2.output }}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.color_table.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.color_table.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.color_table.errors %}
+            <b class="error-form">{{ form_2.color_table.errors }}</b>
+        {% endif %}
+        {{ form_2.color_table }}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.refstats_file.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.refstats_file.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.refstats_file.errors %}
+            <b class="error-form">{{ form_2.refstats_file.errors }}</b>
+        {% endif %}
+        {{ form_2.refstats_file }}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.refstats_scale.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.refstats_scale.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.refstats_scale.errors %}
+            <b class="error-form">{{ form_2.refstats_scale.errors }}</b>
+        {% endif %}
+        {{ form_2.refstats_scale }}
+    </div>
+</div>
+
+<div class="row margin-top-50">
+    <div class="col-md-2">
+        <button type="submit" name="cancel_button" class="btn btn-default btn-block">Cancel</button>
+    </div>
+    <div class="col-md-4 col-md-offset-4">
+        <button type="submit" name="save_and_continue_editing_button" class="btn btn-primary btn-block">
+            Save and continue editing
+        </button>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" name="save_button" class="btn btn-primary btn-block">Save</button>
+    </div>
+</div>
+
+<p><input type="hidden">{{ form_1.card_item }}</p>

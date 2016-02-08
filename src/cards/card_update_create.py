@@ -4,8 +4,6 @@ from cards.models import (QRF, RFScore, Remap,
                           MergeCSV, RFTrain)
 
 
-
-
 def qrf_update_create(form, item_id=None):
     if item_id:
         QRF.objects.filter(id=item_id).update(

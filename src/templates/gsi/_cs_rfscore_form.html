@@ -1,0 +1,147 @@
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.name.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.name.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.name.errors %}
+            <b class="error-form">{{ form_2.name.errors }}</b>
+        {% endif %}
+        {{ form_2.name }}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_1.order.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_1.order.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_1.order.errors %}
+            <b class="error-form">{{ form_1.order.errors }}</b>
+        {% endif %}
+        {{ form_1.order }}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.run_parallel.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.run_parallel.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-2 margin-top-4">
+        {% if form_2.run_parallel.errors %}
+            <b class="error-form">{{ form_2.run_parallel.errors }}</b>
+        {% endif %}
+        {{ form_2.run_parallel }}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.area.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.area.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.area.errors %}
+            <b class="error-form">{{ form_2.area.errors }}</b>
+        {% endif %}
+        {{ form_2.area }}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.year_group.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.year_group.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.year_group.errors %}
+            <b class="error-form">{{ form_2.year_group.errors }}</b>
+        {% endif %}
+        {{ form_2.year_group }}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.number_of_threads.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.number_of_threads.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.number_of_threads.errors %}
+            <b class="error-form">{{ form_2.number_of_threads.errors }}</b>
+        {% endif %}
+        {{ form_2.number_of_threads }}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.bias_corrn.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.bias_corrn.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.bias_corrn.errors %}
+            <b class="error-form">{{ form_2.bias_corrn.errors }}</b>
+        {% endif %}
+        {{ form_2.bias_corrn }}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.QRFopts.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.QRFopts.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.QRFopts.errors %}
+            <b class="error-form">{{ form_2.QRFopts.errors }}</b>
+        {% endif %}
+        {{ form_2.QRFopts }}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.ref_target.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.ref_target.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.ref_target.errors %}
+            <b class="error-form">{{ form_2.ref_target.errors }}</b>
+        {% endif %}
+        {{ form_2.ref_target }}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.clean_name.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.clean_name.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.clean_name.errors %}
+            <b class="error-form">{{ form_2.clean_name.errors }}</b>
+        {% endif %}
+        {{ form_2.clean_name }}
+    </div>
+</div>
+
+<div class="row margin-top-50">
+    <div class="col-md-2">
+        <button type="submit" name="cancel_button" class="btn btn-default btn-block">Cancel</button>
+    </div>
+    <div class="col-md-4 col-md-offset-4">
+        <button type="submit" name="save_and_continue_editing_button" class="btn btn-primary btn-block">
+            Save and continue editing
+        </button>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" name="save_button" class="btn btn-primary btn-block">Save</button>
+    </div>
+</div>
+
+<p><input type="hidden">{{ form_1.card_item }}</p>

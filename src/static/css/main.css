@@ -65,3 +65,12 @@ li.main-menu {
     padding: 0px;
 }
 
+.input-width-35 {
+    width: 35%;
+}
+
+.disabled {
+    display: none;
+}
+
+
