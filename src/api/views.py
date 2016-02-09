@@ -26,17 +26,39 @@ def update_run(request, run_id):
     value_list = run_id.split('.')
 
     if data['status']:
+        state = data['status']
         try:
-            current_run = Run.objects.get(id=value_list[0])
-            current_sequence = CardSequence.objects.get(id=value_list[1])
-            current_card = CardItem.objects.get(id=value_list[2])
-            run_step_card = RunStep.objects.get(
-                parent_run=current_run,
-                card_item__card_item=current_card)
-            run_step_card.state = data['status']
-            current_run.state = data['status']
-            run_step_card.save()
-            current_run.save()
+            run = Run.objects.get(id=value_list[0])
+            sequence = CardSequence.objects.get(id=value_list[1])
+            card = CardItem.objects.get(id=value_list[2])
+            step = RunStep.objects.get(
+                parent_run=run,
+                card_item__card_item=card)
+            # step.state = state
+            # run.state = state
+            # step.save()
+            # run.save()
+
+            # Go to the next step only on success state
+            if state == 'success':
+                next_step, is_last_step = step.get_next_step()
+
+                if next_step:
+                    data['next_step'] = next_step.id
+                if is_last_step:
+                    data['is_last_step'] = True
+                    step.state = 'success'
+                    # run = step.parent_run
+                    run.state = 'success'
+                    step.save()
+                    run.save()
+            else:
+                step.state = state
+                # run = step.parent_run
+                run.state = state
+                step.save()
+                run.save()
+
         except ObjectDoesNotExist as e:
             data['status'] = False
             data['message'] = str(e)
