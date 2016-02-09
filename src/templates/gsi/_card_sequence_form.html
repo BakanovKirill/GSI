@@ -114,6 +114,20 @@
                                         {% else %}
                                             {% if card.card_item.content_type.model == 'qrf' %}
                                                 {% url 'cs_run_csid_qrf_edit' cs_id card.card_item.object_id %}
+                                            {% elif card.card_item.content_type.model == 'rfscore' %}
+                                                {% url 'cs_run_csid_rfscore_edit' cs_id card.card_item.object_id %}
+                                            {% elif card.card_item.content_type.model == 'remap' %}
+                                                {% url 'cs_run_csid_remap_edit' cs_id card.card_item.object_id %}
+                                            {% elif card.card_item.content_type.model == 'yearfilter' %}
+                                                {% url 'cs_run_csid_year_filter_edit' cs_id card.card_item.object_id %}
+                                            {% elif card.card_item.content_type.model == 'collate' %}
+                                                {% url 'cs_run_csid_collate_edit' cs_id card.card_item.object_id %}
+                                            {% elif card.card_item.content_type.model == 'preproc' %}
+                                                {% url 'cs_run_csid_preproc_edit' cs_id card.card_item.object_id %}
+                                            {% elif card.card_item.content_type.model == 'mergecsv' %}
+                                                {% url 'cs_run_csid_mergecsv_edit' cs_id card.card_item.object_id %}
+                                            {% elif card.card_item.content_type.model == 'rftrain' %}
+                                                {% url 'cs_run_csid_rftrain_edit' cs_id card.card_item.object_id %}
                                             {% endif %}
                                         {% endif %}" role="button">
                                     Edit
