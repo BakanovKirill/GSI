@@ -97,7 +97,7 @@ urlpatterns = [
 
     # -------------------------------------------------------------------- ???
 
-    # card item edit for card sequence
+    # card item edit for card sequence // curdID->csID->card_item
     # url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/card-item/(?P<card_item_id>\d+)/$',
     #     'gsi.views.card_item_update', name='card_item_update'),
     url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/qrf/(?P<qrf_id>\d+)/$',
@@ -117,7 +117,9 @@ urlpatterns = [
     url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/rftrain/(?P<rftrain_id>\d+)/$',
         'gsi.views_cs_card_runid_csid.cs_runid_csid_rftrain_edit', name='cs_runid_csid_rftrain_edit'),
 
-    # ------------------------------------------------------------------- ???
+    # card item edit for card sequence // curd->csID->card_item
+    url(r'^run/card-sequence/(?P<cs_id>\d+)/qrf/(?P<qrf_id>\d+)/$',
+        'gsi.views_cs_card_run_csid.cs_run_csid_qrf_edit', name='cs_run_csid_qrf_edit'),
 
 
     # processing card
