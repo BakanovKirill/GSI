@@ -54,6 +54,8 @@ REVERSE_URL = {
 @login_required
 @render_to('cards/new_runid_csid_card.html')
 def cs_runid_csid_qrf_edit(request, run_id, cs_id, qrf_id):
+	# print 'RUN ====================== ', run_id
+	# print 'CS ====================== ', cs_id
 	title = 'QRF Card Edit'
 	qrf_card = get_object_or_404(QRF, pk=qrf_id)
 	content_type = get_object_or_404(ContentType, app_label='cards', model='qrf')

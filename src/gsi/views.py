@@ -353,7 +353,7 @@ def add_card_sequence(request, run_id):
 					reverse('proces_card_runid', args=[run_id])
 				)
 		elif request.POST.get('add_card_items_button') is not None:
-			form = CardSequenceCreateForm(request.POST, instance=card_items)
+			form = CardSequenceCreateForm(request.POST)
 
 			if form.is_valid():
 				card_sequence = create_update_card_sequence(form)
@@ -364,7 +364,7 @@ def add_card_sequence(request, run_id):
 					 format(card_sequence.name)))
 				)
 		elif request.POST.get('save_and_continue_editing_button') is not None:
-			form = CardSequenceCreateForm(request.POST, instance=card_items)
+			form = CardSequenceCreateForm(request.POST)
 
 			if form.is_valid():
 				card_sequence = create_update_card_sequence(form)
@@ -375,7 +375,7 @@ def add_card_sequence(request, run_id):
 						 format(card_sequence.name)))
 				)
 		elif request.POST.get('save_button') is not None:
-			form = CardSequenceCreateForm(request.POST, instance=card_items)
+			form = CardSequenceCreateForm(request.POST)
 
 			if form.is_valid():
 				card_sequence = create_update_card_sequence(form)
@@ -407,6 +407,8 @@ def add_card_sequence(request, run_id):
 @login_required
 @render_to('gsi/card_sequence_update.html')
 def card_sequence_update(request, run_id, cs_id):
+	# print 'RUN ====================== ', run_id
+	# print 'CS ====================== ', cs_id
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
 	card_sequence_cards = CardSequence.cards.through.objects.filter(sequence_id=cs_id)
 	title = 'GSI Card Sequence {0}'.format(card_sequence.name)
