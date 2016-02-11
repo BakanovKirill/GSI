@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 
 from core.utils import validate_status
-from gsi.models import Run, RunStep, CardSequence
+from gsi.models import Run, RunStep, CardSequence, OrderedCardItem
 from cards.models import CardItem
 
 # update the status of the runs
@@ -17,10 +17,7 @@ from cards.models import CardItem
 
 @api_view(['GET'])
 def update_run(request, run_id):
-    """
-    update the status cards of the runs
-
-    """
+    """ update the status cards of the runs """
 
     data = validate_status(request.query_params.get('status', False))
     value_list = run_id.split('.')
@@ -30,10 +27,10 @@ def update_run(request, run_id):
         try:
             run = Run.objects.get(id=value_list[0])
             sequence = CardSequence.objects.get(id=value_list[1])
-            card = CardItem.objects.get(id=value_list[2])
+            card = OrderedCardItem.objects.get(id=value_list[2])
             step = RunStep.objects.get(
                 parent_run=run,
-                card_item__card_item=card)
+                card_item=card)
             # step.state = state
             # run.state = state
             # step.save()

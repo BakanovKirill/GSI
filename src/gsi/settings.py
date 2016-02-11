@@ -123,6 +123,9 @@ REGISTRATION_OPEN = True
 LOGIN_URL = 'users:auth_login'
 LOGOUT_URL = 'users:auth_logout'
 
+# Logging settings for django projects
+LOGGING = ''
+
 # allow to override defaults
 try:
     from settings_local import *
