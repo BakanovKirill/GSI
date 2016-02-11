@@ -554,8 +554,8 @@ def submit_run(request):
 		if request.POST.getlist('execute_runs'):
 			for run_id in request.POST.getlist('execute_runs'):
 				rb = get_object_or_404(RunBase, pk=run_id)
-				name_runs += '"' + str(rb.name) + '", '
 				execute_run = make_run(rb, request.user)
+				name_runs += '"' + str(execute_run['run'].run_base.name) + '", '
 
 			runs_id = '_'.join(request.POST.getlist('execute_runs'))
 			now_date = datetime.datetime.now()
@@ -563,7 +563,7 @@ def submit_run(request):
 			now_time = now_date.strftime("%H:%M")
 
 			return HttpResponseRedirect(u'%s?status_message=%s' %
-						(reverse('execute_runs', args=[runs_id]),
+						(reverse('execute_runs', args=[execute_run['run'].id]),
 						 (u"Runs: {0} has been submitted to back end and {1} on {2}".
 						  format(name_runs, now_time, now_date_formating)))
 			)
@@ -589,8 +589,8 @@ def execute_runs(request, run_id):
 	messages = []
 
 	for run in list_run_id:
-		name_runs += '"' + str(get_object_or_404(RunBase, pk=int(run)).name) + '", '
-		messages.append('It has been assigned unique run ID:{0}. To view progress of this run use \
+		name_runs += '"' + str(get_object_or_404(Run, pk=int(run)).run_base.name) + '", '
+		messages.append('It has been assigned unique run ID: {0}. To view progress of this run use \
 						the view progress otion on the main menu.\n'.format(run))
 
 	data = {
