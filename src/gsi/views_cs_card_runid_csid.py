@@ -62,11 +62,11 @@ def cs_runid_csid_qrf_edit(request, run_id, cs_id, qrf_id):
 	card_item = get_object_or_404(CardItem, object_id=qrf_id, content_type=content_type)
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
 
-	card_sequence_card = get_object_or_404(
-		CardSequence.cards.through,
-		card_item=card_item,
-		sequence=card_sequence
-	)
+	card_sequence_card_all = CardSequence.cards.through.objects.filter(
+							card_item=card_item,
+							sequence=card_sequence
+						)
+	card_sequence_card = card_sequence_card_all[0]
 
 	url_form = 'cs_runid_csid_qrf_edit'
 	template_name = 'gsi/_cs_qrf_form.html'
