@@ -30,7 +30,7 @@ urlpatterns = [
 
 
     # index
-    url(r'^index1/$', 'gsi.views.index', name='index'),
+    url(r'^index/$', 'gsi.views.index', name='index'),
 
 
     # run base
