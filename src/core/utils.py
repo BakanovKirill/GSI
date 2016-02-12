@@ -126,11 +126,11 @@ def get_executable(run, sequence, card, card_item):
     card_model = card_item.content_type.model
     # name_card = step.card_item.card_item.content_object
     EXECUTABLE = ''
-    # pid = 1
+    pid = 1
 
     if card_model == 'rfscore':
         #  u'RFscore <Tile> [[MyDir]] [<BiasCorrn>] [<QRFopts>] [<RefTarget>] [<CleanName>]'
-        # data_card = RFScore.objects.get(name='AUZ_SOC3_RFSCORE')
+        # data_card = RFScore.objects.sget(name='AUZ_SOC3_RFSCORE')
         data_card = RFScore.objects.get(name=card.card_item.content_object)
         years = get_years(data_card.year_group.name)
         area_tiles = get_area_tiles(data_card.area)
@@ -139,7 +139,7 @@ def get_executable(run, sequence, card, card_item):
             year_card = Year.objects.get(id=year.year_id)
             for tile in area_tiles:
                 tile_card = Tile.objects.get(id=tile.tile_id)
-                EXECUTABLE += '$RF_EXEC_DIR/RFscore {0} {1}_{2} {3} {4} {5} {6} -s {7}.{8}.{9}\n'.format(
+                EXECUTABLE += '$RF_EXEC_DIR/RFscore {0} {1}_{2} {3} {4} {5} {6} -s {7}.{8}.{9}.{10}\n'.format(
                         tile_card,
                         data_card.name,
                         run.run_base.directory_path,
@@ -150,15 +150,16 @@ def get_executable(run, sequence, card, card_item):
                         run.id,
                         sequence.id,
                         card.id,
+                        pid,
                 )
-                # pid += 1
+                pid += 1
 
     if card_model == 'rftrain':
         # u'RFtrain <Tile> [<Ntrees>] [<training>] [<Nvar>] [<Nthread>]'
         data_card = RFTrain.objects.get(name=card.card_item.content_object)
         training = 10
         n_thread = 1
-        EXECUTABLE += '$RF_EXEC_DIR/RFtrain {0} {1} {2} {3} {4} -s {5}.{6}.{7}\n'.format(
+        EXECUTABLE += '$RF_EXEC_DIR/RFtrain {0} {1} {2} {3} {4} -s {5}.{6}.{7}.{8}\n'.format(
             data_card.tile_type.name,
             data_card.number_of_trees,
             training,
@@ -167,13 +168,14 @@ def get_executable(run, sequence, card, card_item):
             run.id,
             sequence.id,
             card.id,
+            pid,
         )
-        # pid += 1
+        pid += 1
 
     if card_model == 'qrf':
         # u'QRF [<QRFinterval>] [<ntrees>] [<nthreads>] [<MyDir>]'
         data_card = QRF.objects.get(name=card.card_item.content_object)
-        EXECUTABLE += '$RF_EXEC_DIR/QRF {0} {1} {2} {3} -s {4}.{5}.{6}\n'.format(
+        EXECUTABLE += '$RF_EXEC_DIR/QRF {0} {1} {2} {3} -s {4}.{5}.{6}.{7}\n'.format(
             data_card.interval,
             data_card.number_of_trees,
             data_card.number_of_threads,
@@ -181,13 +183,14 @@ def get_executable(run, sequence, card, card_item):
             run.id,
             sequence.id,
             card.id,
+            pid,
         )
-        # pid += 1
+        pid += 1
 
     if card_model == 'remap':
         # u'Remap <FileSpec> <RoI> <OutRoot>[,<OutSuffix>] [<ColourTable>] [<RefStatsFile>] [<RefStatsScale>]'
         data_card = Remap.objects.get(name=card.card_item.content_object)
-        EXECUTABLE += '$RF_EXEC_DIR/Remap {0} {1} {2} {3} {4} {5} {6} -s {7}.{8}.{9}\n'.format(
+        EXECUTABLE += '$RF_EXEC_DIR/Remap {0} {1} {2} {3} {4} {5} {6} -s {7}.{8}.{9}.{10}\n'.format(
             data_card.file_spec,
             data_card.roi,
             data_card.output_root,
@@ -198,8 +201,9 @@ def get_executable(run, sequence, card, card_item):
             run.id,
             sequence.id,
             card.id,
+            pid,
         )
-        # pid += 1
+        pid += 1
 
     if card_model == 'yearfilter':
         # u'YearFilter <Tile> <FileType> [<Filter>] [<FiltOut>] [<ExtendStart>] [<InpFourier>] [<OutDir>] [<InpDir>]'
@@ -209,7 +213,7 @@ def get_executable(run, sequence, card, card_item):
 
         for tile in area_tiles:
             tile_card = Tile.objects.get(id=tile.tile_id)
-            EXECUTABLE += '$RF_EXEC_DIR/YearFilter {0} {1} {2} {3} {4} {5} {6} {7} -s {8}.{9}.{10}\n'.format(
+            EXECUTABLE += '$RF_EXEC_DIR/YearFilter {0} {1} {2} {3} {4} {5} {6} {7} -s {8}.{9}.{10}.{11}\n'.format(
                 tile_card,
                 data_card.filetype,
                 data_card.filter,
@@ -221,8 +225,9 @@ def get_executable(run, sequence, card, card_item):
                 run.id,
                 sequence.id,
                 card.id,
+                pid,
             )
-            # pid += 1
+            pid += 1
 
     if card_model == 'preproc':
         # u'PreProc [<Tile>|<file.hdf>] [<Year>] [<Mode>]'
@@ -235,15 +240,16 @@ def get_executable(run, sequence, card, card_item):
             year_card = Year.objects.get(id=year.year_id)
             for tile in area_tiles:
                 tile_card = Tile.objects.get(id=tile.tile_id)
-                EXECUTABLE += '$RF_EXEC_DIR/PreProc {0} {1} {2} -s {3}.{4}.{5}\n'.format(
+                EXECUTABLE += '$RF_EXEC_DIR/PreProc {0} {1} {2} -s {3}.{4}.{5}.{6}\n'.format(
                     tile_card,
                     year_card,
                     data_card.mode,
                     run.id,
                     sequence.id,
                     card.id,
+                    pid,
                 )
-                # pid += 1
+                pid += 1
 
     if card_model == 'collate':
         # u'Collate <Tile> [<Mode>] [<InpFile>] [<OutDirFile>] [<InpScale>]'
@@ -253,7 +259,7 @@ def get_executable(run, sequence, card, card_item):
 
         for tile in area_tiles:
             tile_card = Tile.objects.get(id=tile.tile_id)
-            EXECUTABLE += '$RF_EXEC_DIR/Collate {0} {1} {2} {3} {4} -s {5}.{6}.{7}\n'.format(
+            EXECUTABLE += '$RF_EXEC_DIR/Collate {0} {1} {2} {3} {4} -s {5}.{6}.{7}.{8}\n'.format(
                 tile_card,
                 data_card.mode,
                 data_card.input_file,
@@ -262,8 +268,9 @@ def get_executable(run, sequence, card, card_item):
                 run.id,
                 sequence.id,
                 card.id,
+                pid,
             )
-            # pid += 1
+            pid += 1
 
     # if card_model == 'mergecsv':
     #     # MergeCSV <PathSpec>/<FileSpec> [<OutFile>] [<Scale>]
