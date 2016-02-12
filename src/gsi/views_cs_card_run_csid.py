@@ -60,11 +60,11 @@ def cs_run_csid_qrf_edit(request, cs_id, qrf_id):
 	card_item = get_object_or_404(CardItem, object_id=qrf_id, content_type=content_type)
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
 
-	card_sequence_card = get_object_or_404(
-		CardSequence.cards.through,
-		card_item=card_item,
-		sequence=card_sequence
-	)
+	card_sequence_card_all = CardSequence.cards.through.objects.filter(
+							card_item=card_item,
+							sequence=card_sequence
+						)
+	card_sequence_card = card_sequence_card_all[0]
 
 	url_form = 'cs_run_csid_qrf_edit'
 	template_name = 'gsi/_cs_qrf_form.html'
@@ -110,11 +110,11 @@ def cs_run_csid_rfscore_edit(request, cs_id, rfscore_id):
 	card_item = get_object_or_404(CardItem, object_id=rfscore_id, content_type=content_type)
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
 
-	card_sequence_card = get_object_or_404(
-		CardSequence.cards.through,
-		card_item=card_item,
-		sequence=card_sequence
-	)
+	card_sequence_card_all = CardSequence.cards.through.objects.filter(
+							card_item=card_item,
+							sequence=card_sequence
+						)
+	card_sequence_card = card_sequence_card_all[0]
 	url_form = 'cs_run_csid_rfscore_edit'
 	template_name = 'gsi/_cs_rfscore_form.html'
 	func = rfscore_update_create
@@ -159,11 +159,11 @@ def cs_run_csid_remap_edit(request, cs_id, remap_id):
 	card_item = get_object_or_404(CardItem, object_id=remap_id, content_type=content_type)
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
 
-	card_sequence_card = get_object_or_404(
-		CardSequence.cards.through,
-		card_item=card_item,
-		sequence=card_sequence
-	)
+	card_sequence_card_all = CardSequence.cards.through.objects.filter(
+							card_item=card_item,
+							sequence=card_sequence
+						)
+	card_sequence_card = card_sequence_card_all[0]
 	url_form = 'cs_run_csid_remap_edit'
 	template_name = 'gsi/_cs_remap_form.html'
 	func = remap_update_create
@@ -208,11 +208,11 @@ def cs_run_csid_year_filter_edit(request, cs_id, yf_id):
 	card_item = get_object_or_404(CardItem, object_id=yf_id, content_type=content_type)
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
 
-	card_sequence_card = get_object_or_404(
-		CardSequence.cards.through,
-		card_item=card_item,
-		sequence=card_sequence
-	)
+	card_sequence_card_all = CardSequence.cards.through.objects.filter(
+							card_item=card_item,
+							sequence=card_sequence
+						)
+	card_sequence_card = card_sequence_card_all[0]
 	url_form = 'cs_run_csid_year_filter_edit'
 	template_name = 'gsi/_cs_year_filter_form.html'
 	func = year_filter_update_create
@@ -257,11 +257,11 @@ def cs_run_csid_collate_edit(request, cs_id, collate_id):
 	card_item = get_object_or_404(CardItem, object_id=collate_id, content_type=content_type)
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
 
-	card_sequence_card = get_object_or_404(
-		CardSequence.cards.through,
-		card_item=card_item,
-		sequence=card_sequence
-	)
+	card_sequence_card_all = CardSequence.cards.through.objects.filter(
+							card_item=card_item,
+							sequence=card_sequence
+						)
+	card_sequence_card = card_sequence_card_all[0]
 	url_form = 'cs_run_csid_collate_edit'
 	template_name = 'gsi/_cs_collate_form.html'
 	func = collate_update_create
@@ -306,11 +306,11 @@ def cs_run_csid_preproc_edit(request, cs_id, preproc_id):
 	card_item = get_object_or_404(CardItem, object_id=preproc_id, content_type=content_type)
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
 
-	card_sequence_card = get_object_or_404(
-		CardSequence.cards.through,
-		card_item=card_item,
-		sequence=card_sequence
-	)
+	card_sequence_card_all = CardSequence.cards.through.objects.filter(
+							card_item=card_item,
+							sequence=card_sequence
+						)
+	card_sequence_card = card_sequence_card_all[0]
 	url_form = 'cs_run_csid_preproc_edit'
 	template_name = 'gsi/_cs_preproc_form.html'
 	func = preproc_update_create
@@ -356,11 +356,11 @@ def cs_run_csid_mergecsv_edit(request, cs_id, mcsv_id):
 	card_item = get_object_or_404(CardItem, object_id=mcsv_id, content_type=content_type)
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
 
-	card_sequence_card = get_object_or_404(
-		CardSequence.cards.through,
-		card_item=card_item,
-		sequence=card_sequence
-	)
+	card_sequence_card_all = CardSequence.cards.through.objects.filter(
+							card_item=card_item,
+							sequence=card_sequence
+						)
+	card_sequence_card = card_sequence_card_all[0]
 	url_form = 'cs_run_csid_mergecsv_edit'
 	template_name = 'gsi/_cs_mergecsv_form.html'
 	func = mergecsv_update_create
@@ -405,11 +405,11 @@ def cs_run_csid_rftrain_edit(request, cs_id, rftrain_id):
 	card_item = get_object_or_404(CardItem, object_id=rftrain_id, content_type=content_type)
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
 
-	card_sequence_card = get_object_or_404(
-		CardSequence.cards.through,
-		card_item=card_item,
-		sequence=card_sequence
-	)
+	card_sequence_card_all = CardSequence.cards.through.objects.filter(
+							card_item=card_item,
+							sequence=card_sequence
+						)
+	card_sequence_card = card_sequence_card_all[0]
 	url_form = 'cs_run_csid_rftrain_edit'
 	template_name = 'gsi/_cs_rftrain_form.html'
 	func = rftrain_update_create
