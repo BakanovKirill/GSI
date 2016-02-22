@@ -84,6 +84,8 @@ def create_scripts(run, sequence, card, step):
         script_name = 'card_{0}.sh'.format(card_item.id)
         script_path = path_runs + script_name
         fd = open(script_path, 'w+')
+        fd.write('# Sequence: {0}, card: {1} - Generated {2} \n\n'.\
+                 format(sequence.name, card.card_item, step.start_date))
         fd.writelines('. ' + RESOLUTION_ENV_SCRIPT + '\n\n')
         fd.writelines(export_home_var + '\n\n')
         fd.writelines(LOCAL_VAR_GROUPS + '\n\n')
