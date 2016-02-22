@@ -112,8 +112,8 @@ def new_run(request):
 @login_required
 @render_to('gsi/run_update.html')
 def run_update(request, run_id):
-	title = 'GSI Edit RunID {0}'.format(run_id)
 	run_base = get_object_or_404(RunBase, pk=run_id)
+	title = 'GSI Edit "{0}"'.format(run_base.name)
 	form = None
 
 	if request.method == "POST":
