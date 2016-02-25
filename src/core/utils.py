@@ -68,6 +68,9 @@ def create_scripts(run, sequence, card, step):
     # <LOCAL_ENV_OVERRIDES>
     LOCAL_VAR_GROUPS = run.run_base.card_sequence.environment_base.environment_variables
 
+    # <ENVIROMENT OVERRIDE>
+    ENVIROMENT_OVERRIDE = u'export {0}'.format(run.run_base.card_sequence.environment_override)
+
     # <EXECUTABLE>
     card_item = step.card_item.card_item
     EXECUTABLE = get_executable(run, sequence, card, card_item)
@@ -89,6 +92,7 @@ def create_scripts(run, sequence, card, step):
         fd.writelines('. ' + RESOLUTION_ENV_SCRIPT + '\n\n')
         fd.writelines(export_home_var + '\n\n')
         fd.writelines(LOCAL_VAR_GROUPS + '\n\n')
+        fd.writelines(ENVIROMENT_OVERRIDE + '\n\n')
         fd.writelines(EXECUTABLE)
         os.chmod(script_path, 0755)
         fd.close()
