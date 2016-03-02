@@ -76,11 +76,11 @@ class YearFilter(NamedModel, ParallelModel):
 
 
 class Collate(NamedModel, ParallelModel):
-    area = models.ForeignKey('gsi.Area')
-    mode = models.CharField(max_length=50)
-    input_file = models.CharField(max_length=200)
-    output_tile_subdir = models.CharField(max_length=200)
-    input_scale_factor = models.CharField(max_length=200)
+    area = models.ForeignKey('gsi.Area', blank=True)
+    mode = models.CharField(max_length=50, blank=True)
+    input_file = models.CharField(max_length=200, blank=True)
+    output_tile_subdir = models.CharField(max_length=200, blank=True)
+    input_scale_factor = models.CharField(max_length=200, blank=True)
 
     class Meta:
         verbose_name_plural = _('Collate cards')
