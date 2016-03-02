@@ -99,7 +99,7 @@ def create_scripts(run, sequence, card, step):
         fd = open(script_path, 'w+')
         fd.write('# Sequence: {0}, card: {1} - Generated {2} \n\n'.\
                  format(sequence.name, card.card_item, step.start_date))
-        fd.writelines('. ' + RESOLUTION_ENV_SCRIPT + '\n\n')
+        fd.writelines('.' + RESOLUTION_ENV_SCRIPT + '\n\n')
         fd.writelines(export_home_var + '\n\n')
         fd.writelines(LOCAL_VAR_GROUPS + '\n\n')
         fd.writelines(ENVIROMENT_OVERRIDE + '\n\n')
@@ -107,9 +107,6 @@ def create_scripts(run, sequence, card, step):
         os.chmod(script_path, 0777)
         os.chmod(path_runs_logs, 0777)
         fd.close()
-
-    print 'script_path ================ ', script_path
-    print 'path_runs_logs ================ ', path_runs_logs
 
     return {
         'script_path': script_path,
