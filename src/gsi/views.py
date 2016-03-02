@@ -641,9 +641,6 @@ def run_details(request, run_id):
 	if request.method == "POST":
 		if request.POST.get('details_file'):
 			step = get_object_or_404(RunStep, pk=request.POST.get('details_file'))
-			print 'run_id =================== ', run_id
-			print 'step.id =================== ', step.id
-
 			return HttpResponseRedirect(u'%s?status_message=' %
 										(reverse('view_log_file', args=[run_id, step.id])))
 		else:
@@ -672,8 +669,9 @@ def view_log_file(request, run_id, card_id):
 
 	try:
 		fd = open(log_path, 'r')
+		# log_info = fd.readlines()
 		for line in fd.readlines():
-			log_info += line + '\n'
+			log_info += line + '<br />'
 	except Exception, e:
 		print 'ERROR view_log_file: ', e
 		return HttpResponseRedirect(u'%s?status_message=%s' %

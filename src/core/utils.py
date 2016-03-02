@@ -105,14 +105,28 @@ def create_scripts(run, sequence, card, step):
         fd.writelines(ENVIROMENT_OVERRIDE + '\n\n')
         fd.writelines(EXECUTABLE)
         os.chmod(script_path, 0777)
+        os.chmod(path_runs_logs, 0777)
         fd.close()
 
+    print 'script_path ================ ', script_path
+    print 'path_runs_logs ================ ', path_runs_logs
+
     return {
-        'path_runs': path_runs,
+        'script_path': script_path,
         'path_runs_logs': path_runs_logs,
         'script_name': script_name,
         'card': card_item.id
     }
+
+
+def write_log(log_name, run, path_log):
+    from gsi.models import Log
+
+    log = Log.objects.create(name=log_name)
+    log.log_file_path = path_log
+    log.save()
+    run.log = log
+    run.save()
 
 
 def execute_script(run, scripts):
@@ -127,16 +141,21 @@ def execute_script(run, scripts):
         run.state = 'running'
         run.save()
 
-        log_name = str(run.id) + '_' + str(script['card']) + '.log'
-        path_log = script['path_runs_logs'] + '/' + log_name
-        rs = subprocess.call('./{0}'.format(script['path_runs']), shell=True)
-        log = Log.objects.create(name=log_name)
-        log.log_file_path = path_log
-        log.save()
-        run.log = log
-        run.save()
+        log_name_error = str(run.id) + '_' + str(script['card']) + '.err'
+        log_name_out = str(run.id) + '_' + str(script['card']) + '.out'
+        # log_name = str(run.id) + '_' + str(script['card']) + '.log'
+        path_log_err = script['path_runs_logs'] + '/' + log_name_error
+        path_log_out = script['path_runs_logs'] + '/' + log_name_out
+        rs = subprocess.call('./{0}'.format(script['script_path']), shell=True)
+
+        # log = Log.objects.create(name=log_name)
+        # log.log_file_path = path_log
+        # log.save()
+        # run.log = log
+        # run.save()
+
         proc = Popen(
-            './{0}'.format(script['path_runs']),
+            script['script_path'],
             shell=True,
             stdout=PIPE,
             stderr=PIPE
@@ -144,29 +163,34 @@ def execute_script(run, scripts):
         proc.wait()    # дождаться выполнения
         res = proc.communicate()  # получить tuple('stdout', 'stderr')
 
+        if proc.returncode and rs != 0:
+            try:
+                os.makedirs(script['path_runs_logs'])
+            except OSError:
+                print '*** FOLDER FOR ERROR LOGS EXIST ***'
+            finally:
+                fd_err = open(path_log_err, 'w+')
+                fd_err.writelines('ERROR: ' + res[1] + '\n')
+                fd_err.writelines('Status error: ' + str(rs) + '\n')
+                fd_err.close()
+                script['step'].state = 'fail'
+                script['step'].save()
+                run.state = 'fail'
+                run.save()
+                write_log(log_name_error, run, path_log_err)
+                return False
         try:
             os.makedirs(script['path_runs_logs'])
         except OSError:
-            print '*** FOLDER LOGS EXIST ***'
+            print '*** FOLDER FOR OUT LOGS EXIST ***'
         finally:
-            fd = open(path_log, 'w+')
-
-        if proc.returncode and rs != 0:
-            # fd = open(path_log, 'w+')
-            if fd is not None:
-                fd.writelines('ERROR: ' + res[1] + '\n')
-                fd.writelines('Status error: ' + str(rs) + '\n')
-                fd.close()
-            script['step'].state = 'fail'
+            fd_out = open(path_log_out, 'w+')
+            fd_out.writelines(res[0] + '\n')
+            fd_out.writelines('Status: ' + str(rs) + '\n')
+            fd_out.close()
+            script['step'].state = 'success'
             script['step'].save()
-            run.state = 'fail'
-            run.save()
-            return False
-        fd.writelines(res[0] + '\n\n')
-        fd.writelines('Status: ' + str(rs) + '\n\n')
-        fd.close()
-        script['step'].state = 'success'
-        script['step'].save()
+            write_log(log_name_out, run, path_log_out)
 
     return status
 
