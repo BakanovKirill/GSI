@@ -66,7 +66,9 @@ def create_scripts(run, sequence, card, step):
         export_home_var += 'export SAT_DIF_DIR=' + hv.SAT_DIF_DIR_ROOT
 
     # <LOCAL_ENV_OVERRIDES>
-    LOCAL_VAR_GROUPS = run.run_base.card_sequence.environment_base.environment_variables
+    LOCAL_VAR_GROUPS = u'export {0}'.format(
+        run.run_base.card_sequence.environment_base.environment_variables
+    )
 
     # <ENVIROMENT OVERRIDE>
     ENVIROMENT_OVERRIDE = u'export {0}'.format(run.run_base.card_sequence.environment_override)
