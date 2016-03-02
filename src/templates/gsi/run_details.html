@@ -16,7 +16,7 @@
                 <thead>
                     <tr>
                         <th>Select</th>
-                        <th>Run ID</th>
+                        <th>Card ID</th>
                         <th>Card Run</th>
                         <th>Date</th>
                         <th>Status</th>
@@ -26,7 +26,7 @@
                     {% for run in runs_step %}
                         <tr>
                             <td><input type="radio" name="details_file" value="{{ run.id }}"></td>
-                            <td>{{ run.id }}</td>
+                            <td>{{ run.card_item.id }}</td>
                             <td>{{ run.card_item }}</td>
                             <td>{{ run.start_date|date:"d/m/Y" }}</td>
                             <td>{{ run.state }}</td>

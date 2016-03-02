@@ -10,8 +10,9 @@ from django.views.generic import UpdateView
 from django.utils.decorators import method_decorator
 from django.conf import settings
 
-from gsi.models import (Run, RunStep, HomeVariables,
-						VariablesGroup, YearGroup, Year)
+from gsi.models import (Run, RunStep, Log, OrderedCardItem,
+						HomeVariables, VariablesGroup, YearGroup,
+						Year)
 from gsi.gsi_items_update_create import *
 from gsi.gsi_forms import *
 from core.utils import make_run
@@ -407,8 +408,6 @@ def add_card_sequence(request, run_id):
 @login_required
 @render_to('gsi/card_sequence_update.html')
 def card_sequence_update(request, run_id, cs_id):
-	# print 'RUN ====================== ', run_id
-	# print 'CS ====================== ', cs_id
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
 	card_sequence_cards = CardSequence.cards.through.objects.filter(sequence_id=cs_id)
 	title = 'GSI Card Sequence {0}'.format(card_sequence.name)
@@ -639,16 +638,53 @@ def run_details(request, run_id):
 	sub_title = 'The View Log file select and hit view'
 	runs_step = RunStep.objects.filter(parent_run=run_id)
 
-	# for run in list_run_id:
-	# 	name_runs += '"' + str(get_object_or_404(RunBase, pk=int(run)).name) + '", '
-	# 	messages.append('It has been assigned unique run ID:{0}. To view progress of this run use \
-	# 					the view progress otion on the main menu.\n'.format(run))
+	if request.method == "POST":
+		if request.POST.get('details_file'):
+			step = get_object_or_404(RunStep, pk=request.POST.get('details_file'))
+			print 'run_id =================== ', run_id
+			print 'step.id =================== ', step.id
+
+			return HttpResponseRedirect(u'%s?status_message=' %
+										(reverse('view_log_file', args=[run_id, step.id])))
+		else:
+			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_details', args=[run_id]),
+																   (u"To view the Log, select Card.")))
 
 	data = {
 		'title': title,
 		'sub_title': sub_title,
 		'run_id': run_id,
 		'runs_step': runs_step,
+	}
+
+	return data
+
+
+@login_required
+@render_to('gsi/view_log_file.html')
+def view_log_file(request, run_id, card_id):
+	title = 'GSI View Log Details for Cards'
+	run_step = get_object_or_404(RunStep, pk=card_id)
+	run = get_object_or_404(Run, pk=run_id)
+	log = get_object_or_404(Log, pk=run.log.id)
+	log_path = log.log_file_path
+	log_info = ''
+
+	try:
+		fd = open(log_path, 'r')
+		for line in fd.readlines():
+			log_info += line + '\n'
+	except Exception, e:
+		print 'ERROR view_log_file: ', e
+		return HttpResponseRedirect(u'%s?status_message=%s' %
+									(reverse('run_details', args=[run_id]),
+									 (u'Log File for card "{0}" not found!').
+									 format(run_step.card_item)))
+
+	data = {
+		'title': title,
+		'run_id': run_id,
+		'log_info': log_info,
 	}
 
 	return data

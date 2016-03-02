@@ -104,7 +104,7 @@ def create_scripts(run, sequence, card, step):
         fd.writelines(LOCAL_VAR_GROUPS + '\n\n')
         fd.writelines(ENVIROMENT_OVERRIDE + '\n\n')
         fd.writelines(EXECUTABLE)
-        os.chmod(script_path, 0755)
+        os.chmod(script_path, 0777)
         fd.close()
 
     return {
