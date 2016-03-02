@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import os, stat
+import subprocess
+from subprocess import Popen, PIPE
 
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
@@ -25,10 +27,11 @@ def validate_status(status):
 def make_run(run_base, user):
     from gsi.models import Run, Log, RunStep, OrderedCardItem
 
+    scripts = []
     run = Run.objects.create(run_base=run_base, user=user)
-    log = Log.objects.create(name="run_%s" % run.id)
-    run.log = log
-    run.save()
+    # log = Log.objects.create(name="run_%s" % run.id)
+    # run.log = log
+    # run.save()
     # first_card = OrderedCardItem.objects.filter(sequence__runbase=run_base).first()
     all_card = OrderedCardItem.objects.filter(sequence__runbase=run_base).order_by('order')
     # step = RunStep.objects.create(parent_run=run, card_item=first_card)
@@ -37,7 +40,10 @@ def make_run(run_base, user):
         step = RunStep.objects.create(parent_run=run, card_item=card)
         #TODO: make scripts for each step
         sequence = step.parent_run.run_base.card_sequence
-        create_scripts(run, sequence, card, step)
+        script = create_scripts(run, sequence, card, step)
+        script['step'] = step
+        scripts.append(script)
+    execute = execute_script(run, scripts)
 
     return {'run': run, 'step': step}
 
@@ -79,10 +85,12 @@ def create_scripts(run, sequence, card, step):
 
     # path to scripts for runs and steps
     path_runs = GSI_HOME + 'scripts/runs/R_{0}/'.format(run.id)
+    path_runs_logs = GSI_HOME + 'scripts/runs/R_{0}/LOGS'.format(run.id)
     # path_steps = GSI_HOME + 'scripts/steps/'
 
     try:
         os.makedirs(path_runs)
+        os.makedirs(path_runs_logs)
     except OSError:
         print '*** FOLDER EXIST ***'
     finally:
@@ -98,6 +106,69 @@ def create_scripts(run, sequence, card, step):
         fd.writelines(EXECUTABLE)
         os.chmod(script_path, 0755)
         fd.close()
+
+    return {
+        'path_runs': path_runs,
+        'path_runs_logs': path_runs_logs,
+        'script_name': script_name,
+        'card': card_item.id
+    }
+
+
+def execute_script(run, scripts):
+    from gsi.models import Log
+
+    status = True
+    fd = None
+
+    for script in scripts:
+        script['step'].state = 'running'
+        script['step'].save()
+        run.state = 'running'
+        run.save()
+
+        log_name = str(run.id) + '_' + str(script['card']) + '.log'
+        path_log = script['path_runs_logs'] + '/' + log_name
+        rs = subprocess.call('./{0}'.format(script['path_runs']), shell=True)
+        log = Log.objects.create(name=log_name)
+        log.log_file_path = path_log
+        log.save()
+        run.log = log
+        run.save()
+        proc = Popen(
+            './{0}'.format(script['path_runs']),
+            shell=True,
+            stdout=PIPE,
+            stderr=PIPE
+        )
+        proc.wait()    # дождаться выполнения
+        res = proc.communicate()  # получить tuple('stdout', 'stderr')
+
+        try:
+            os.makedirs(script['path_runs_logs'])
+        except OSError:
+            print '*** FOLDER LOGS EXIST ***'
+        finally:
+            fd = open(path_log, 'w+')
+
+        if proc.returncode and rs != 0:
+            # fd = open(path_log, 'w+')
+            if fd is not None:
+                fd.writelines('ERROR: ' + res[1] + '\n')
+                fd.writelines('Status error: ' + str(rs) + '\n')
+                fd.close()
+            script['step'].state = 'fail'
+            script['step'].save()
+            run.state = 'fail'
+            run.save()
+            return False
+        fd.writelines(res[0] + '\n\n')
+        fd.writelines('Status: ' + str(rs) + '\n\n')
+        fd.close()
+        script['step'].state = 'success'
+        script['step'].save()
+
+    return status
 
 
 def get_years(name):
