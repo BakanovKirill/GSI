@@ -112,7 +112,9 @@ def create_scripts(run, sequence, card, step):
         'script_path': script_path,
         'path_runs_logs': path_runs_logs,
         'script_name': script_name,
-        'card': card_item.id
+        'card': card_item.id,
+        'run': run,
+        'card': card
     }
 
 
@@ -131,6 +133,7 @@ def execute_script(run, scripts):
 
     status = True
     fd = None
+    execute_fe_command = '/home/w23/mattgsi/bin/execute_FE_command'
 
     for script in scripts:
         script['step'].state = 'running'
@@ -143,7 +146,9 @@ def execute_script(run, scripts):
         # log_name = str(run.id) + '_' + str(script['card']) + '.log'
         path_log_err = script['path_runs_logs'] + '/' + log_name_error
         path_log_out = script['path_runs_logs'] + '/' + log_name_out
-        rs = subprocess.call('./{0}'.format(script['script_path']), shell=True)
+        rs = subprocess.call('.{0}'.format(script['script_path']), shell=True)
+
+        print 'script_path ==================== ', '.{0}'.format(script['script_path'])
 
         # log = Log.objects.create(name=log_name)
         # log.log_file_path = path_log
@@ -152,7 +157,7 @@ def execute_script(run, scripts):
         # run.save()
 
         proc = Popen(
-            script['script_path'],
+            '.'.format(script['script_path']),
             shell=True,
             stdout=PIPE,
             stderr=PIPE
@@ -188,6 +193,10 @@ def execute_script(run, scripts):
             script['step'].state = 'success'
             script['step'].save()
             write_log(log_name_out, run, path_log_out)
+
+        ex_fe_com = subprocess.call('.{0} {1} {2}'.format(
+            execute_fe_command, script['run'].id, script['card'].id
+        ), shell=True)
 
     return status
 
