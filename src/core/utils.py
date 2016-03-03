@@ -45,6 +45,10 @@ def make_run(run_base, user):
         scripts.append(script)
     execute = execute_script(run, scripts)
 
+    if execute:
+        run.state = 'success'
+        run.save()
+
     return {'run': run, 'step': step}
 
 
@@ -172,6 +176,7 @@ def execute_script(run, scripts):
                 print '*** FOLDER FOR ERROR LOGS EXIST ***'
             finally:
                 fd_err = open(path_log_err, 'w+')
+                fd_err.writelines('Fail' + '\n')
                 fd_err.writelines('ERROR: ' + res[1] + '\n')
                 fd_err.writelines('Status error: ' + str(rs) + '\n')
                 fd_err.close()
@@ -181,22 +186,23 @@ def execute_script(run, scripts):
                 run.save()
                 write_log(log_name_error, run, path_log_err)
                 return False
-        try:
-            os.makedirs(script['path_runs_logs'])
-        except OSError:
-            print '*** FOLDER FOR OUT LOGS EXIST ***'
-        finally:
-            fd_out = open(path_log_out, 'w+')
-            fd_out.writelines(res[0] + '\n')
-            fd_out.writelines('Status: ' + str(rs) + '\n')
-            fd_out.close()
-            script['step'].state = 'success'
-            script['step'].save()
-            write_log(log_name_out, run, path_log_out)
+        else:
+            try:
+                os.makedirs(script['path_runs_logs'])
+            except OSError:
+                print '*** FOLDER FOR OUT LOGS EXIST ***'
+            finally:
+                fd_out = open(path_log_out, 'w+')
+                fd_out.writelines('Success' + '\n')
+                fd_out.writelines(res[0] + '\n')
+                fd_out.close()
+                script['step'].state = 'success'
+                script['step'].save()
+                write_log(log_name_out, run, path_log_out)
 
-        ex_fe_com = subprocess.call('.{0} {1} {2}'.format(
-            execute_fe_command, script['run'].id, script['card'].id
-        ), shell=True)
+            ex_fe_com = subprocess.call('.{0} {1} {2}'.format(
+                execute_fe_command, script['run'].id, script['card'].id
+            ), shell=True)
 
     return status
 

@@ -605,7 +605,7 @@ def execute_runs(request, run_id):
 @login_required
 @render_to('gsi/run_progress.html')
 def run_progress(request):
-	runs = Run.objects.all()
+	runs = Run.objects.all().order_by('id')
 	title = 'GSI Run Progress'
 
 	if request.method == "POST":
@@ -637,6 +637,7 @@ def run_details(request, run_id):
 	title = 'GSI Run Details'
 	sub_title = 'The View Log file select and hit view'
 	runs_step = RunStep.objects.filter(parent_run=run_id)
+	runs_step.order_by('card_item.card_item.order')
 
 	if request.method == "POST":
 		if request.POST.get('details_file'):
