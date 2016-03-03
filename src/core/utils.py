@@ -57,7 +57,7 @@ def make_run(run_base, user):
         # rs = subprocess.call('{0} {1} {2}'.format(execute_fe_command, data['run'].id, data['card'].id), shell=True)
         # rs = subprocess.call('.{0} {1} {2}'.format(execute_fe_command, data['run'].id, data['card'].id), shell=True)
         ex_fe_com = Popen(
-            'sudo {0} {1} {2}'.format(
+            '{0} {1} {2}'.format(
                 execute_fe_command,
                 data['run'].id,
                 data['card'].id
@@ -76,7 +76,7 @@ def make_run(run_base, user):
 
             print 'ERRROR ================= ', res_execute[1]
             now = datetime.now()
-            err = open(err_file, 'w+')
+            err = open(err_file, 'a')
             err.writelines('Fail' + '\n')
             err.writelines(str(now) + '\n')
             err.writelines('ERROR: ' + res_execute[1] + '\n')
