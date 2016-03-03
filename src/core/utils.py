@@ -27,6 +27,7 @@ def validate_status(status):
 def make_run(run_base, user):
     from gsi.models import Run, Log, RunStep, OrderedCardItem
 
+    execute_fe_command = '/home/w23/mattgsi/bin/execute_FE_command'
     scripts = []
     run = Run.objects.create(run_base=run_base, user=user)
     # log = Log.objects.create(name="run_%s" % run.id)
@@ -48,6 +49,20 @@ def make_run(run_base, user):
     if execute:
         run.state = 'success'
         run.save()
+
+    for data in scripts:
+        ex_fe_com = Popen(
+            '.{0} {1} {2}'.format(
+                execute_fe_command,
+                data['run'].id,
+                data['card'].id
+            ),
+            shell=True,
+            stdout=PIPE,
+            stderr=PIPE
+        )
+        ex_fe_com.wait()    # дождаться выполнения
+        # res_execute = ex_fe_com.communicate()  # получить tuple('stdout', 'stderr')
 
     return {'run': run, 'step': step}
 
@@ -137,7 +152,6 @@ def execute_script(run, scripts):
 
     status = True
     fd = None
-    execute_fe_command = '/home/w23/mattgsi/bin/execute_FE_command'
 
     for script in scripts:
         script['step'].state = 'running'
@@ -200,18 +214,7 @@ def execute_script(run, scripts):
                 script['step'].save()
                 write_log(log_name_out, run, path_log_out)
 
-        ex_fe_com = Popen(
-            '.{0} {1} {2}'.format(
-                execute_fe_command,
-                script['run'].id,
-                script['card'].id
-            ),
-            shell=True,
-            stdout=PIPE,
-            stderr=PIPE
-        )
-        ex_fe_com.wait()    # дождаться выполнения
-        res_execute = ex_fe_com.communicate()  # получить tuple('stdout', 'stderr')
+
 
             # ex_fe_com = subprocess.call('.{0} {1} {2}'.format(
             #     execute_fe_command, script['run'].id, script['card'].id
