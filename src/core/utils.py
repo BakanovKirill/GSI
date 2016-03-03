@@ -73,10 +73,10 @@ def make_run(run_base, user):
 
         if ex_fe_com.returncode:
             print 'ERRROR ================= ', res_execute[1]
-            err = open(err_file, 'w+')
-            err.writelines('Fail' + '\n')
-            err.writelines('ERROR: ' + res_execute[1] + '\n')
-            err.close()
+            # err = open(err_file, 'w+')
+            # err.writelines('Fail' + '\n')
+            # err.writelines('ERROR: ' + res_execute[1] + '\n')
+            # err.close()
         print 'SUC ================= ', res_execute[0]
 
     return {'run': run, 'step': step}
