@@ -57,7 +57,7 @@ def make_run(run_base, user):
         # rs = subprocess.call('{0} {1} {2}'.format(execute_fe_command, data['run'].id, data['card'].id), shell=True)
         # rs = subprocess.call('.{0} {1} {2}'.format(execute_fe_command, data['run'].id, data['card'].id), shell=True)
         ex_fe_com = Popen(
-            '{0} {1} {2}'.format(
+            'sudo {0} {1} {2}'.format(
                 execute_fe_command,
                 data['run'].id,
                 data['card'].id
@@ -72,9 +72,13 @@ def make_run(run_base, user):
         err_file = '/lustre/w23/mattgsi/scripts/runs/test_log.err'
 
         if ex_fe_com.returncode:
+            from datetime import datetime
+
             print 'ERRROR ================= ', res_execute[1]
+            now = datetime.now()
             err = open(err_file, 'w+')
             err.writelines('Fail' + '\n')
+            err.writelines(str(now) + '\n')
             err.writelines('ERROR: ' + res_execute[1] + '\n')
             err.close()
         print 'SUC ================= ', res_execute[0]
