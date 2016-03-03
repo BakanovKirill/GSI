@@ -52,7 +52,7 @@ def make_run(run_base, user):
 
     for data in scripts:
         ex_fe_com = Popen(
-            '.{0} {1} {2}'.format(
+            '{0} {1} {2}'.format(
                 execute_fe_command,
                 data['run'].id,
                 data['card'].id
