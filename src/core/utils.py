@@ -200,9 +200,22 @@ def execute_script(run, scripts):
                 script['step'].save()
                 write_log(log_name_out, run, path_log_out)
 
-            ex_fe_com = subprocess.call('.{0} {1} {2}'.format(
-                execute_fe_command, script['run'].id, script['card'].id
-            ), shell=True)
+        ex_fe_com = Popen(
+            '.{0} {1} {2}'.format(
+                execute_fe_command,
+                script['run'].id,
+                script['card'].id
+            ),
+            shell=True,
+            stdout=PIPE,
+            stderr=PIPE
+        )
+        ex_fe_com.wait()    # дождаться выполнения
+        res_execute = ex_fe_com.communicate()  # получить tuple('stdout', 'stderr')
+
+            # ex_fe_com = subprocess.call('.{0} {1} {2}'.format(
+            #     execute_fe_command, script['run'].id, script['card'].id
+            # ), shell=True)
 
     return status
 
