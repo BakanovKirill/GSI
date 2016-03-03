@@ -5,62 +5,62 @@
         </div>
     </div>
     <div class="col-md-4">
+        {{ form.name }}
         {% if form.name.errors %}
             <b class="error-form">{{ form.name.errors }}</b>
         {% endif %}
-        {{ form.name }}
     </div>
 </div>
 
 <div class="row margin-top-15">
     <div class="col-md-2 right">
         <div class="form-group {% if form.interval.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.interval.label }}*</label>
+            <label class="control-label">{{ form.interval.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
+        {{ form.interval }}
         {% if form.interval.errors %}
             <b class="error-form">{{ form.interval.errors }}</b>
         {% endif %}
-        {{ form.interval }}
     </div>
 
     <div class="col-md-2 right">
         <div class="form-group {% if form.number_of_trees.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.number_of_trees.label }}*</label>
+            <label class="control-label">{{ form.number_of_trees.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
+        {{ form.number_of_trees }}
         {% if form.number_of_trees.errors %}
             <b class="error-form">{{ form.number_of_trees.errors }}</b>
         {% endif %}
-        {{ form.number_of_trees }}
     </div>
 </div>
 
 <div class="row margin-top-15">
     <div class="col-md-2 right">
         <div class="form-group {% if form.number_of_threads.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.number_of_threads.label }}*</label>
+            <label class="control-label">{{ form.number_of_threads.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
+        {{ form.number_of_threads }}
         {% if form.number_of_threads.errors %}
             <b class="error-form">{{ form.number_of_threads.errors }}</b>
         {% endif %}
-        {{ form.number_of_threads }}
     </div>
 
     <div class="col-md-2 right">
         <div class="form-group {% if form.directory.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.directory.label }}*</label>
+            <label class="control-label">{{ form.directory.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
+        {{ form.directory }}
         {% if form.directory.errors %}
             <b class="error-form">{{ form.directory.errors }}</b>
         {% endif %}
-        {{ form.directory }}
     </div>
 </div>
 

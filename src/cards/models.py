@@ -24,10 +24,10 @@ class ParallelModel(models.Model):
 
 
 class QRF(NamedModel):
-    interval = models.CharField(max_length=100)
-    number_of_trees = models.IntegerField(default=0)
-    number_of_threads = models.IntegerField(default=1)
-    directory = models.CharField(max_length=300)
+    interval = models.CharField(max_length=100, blank=True)
+    number_of_trees = models.IntegerField(default=0, blank=True)
+    number_of_threads = models.IntegerField(default=1, blank=True)
+    directory = models.CharField(max_length=300, blank=True)
 
     class Meta:
         verbose_name_plural = _('QRF cards')
@@ -36,11 +36,11 @@ class QRF(NamedModel):
 class RFScore(NamedModel, ParallelModel):
     area = models.ForeignKey('gsi.Area')
     year_group = models.ForeignKey('gsi.YearGroup')
-    bias_corrn = models.CharField(max_length=200)
-    number_of_threads = models.IntegerField(default=1)
-    QRFopts = models.CharField(max_length=300)
-    ref_target = models.CharField(max_length=100)
-    clean_name = models.CharField(max_length=100)
+    bias_corrn = models.CharField(max_length=200, blank=True)
+    number_of_threads = models.IntegerField(default=1, blank=True)
+    QRFopts = models.CharField(max_length=300, blank=True)
+    ref_target = models.CharField(max_length=100, blank=True)
+    clean_name = models.CharField(max_length=100, blank=True)
 
     class Meta:
         verbose_name_plural = _('RFScore cards')
@@ -50,12 +50,12 @@ class Remap(NamedModel, ParallelModel):
     file_spec = models.CharField(max_length=200)
     roi = models.CharField(max_length=200)
     output_root = models.CharField(max_length=200)
-    output_suffix = models.CharField(max_length=200)
-    scale = models.CharField(max_length=200)
-    output = models.CharField(max_length=200)
-    color_table = models.CharField(max_length=200)
-    refstats_file = models.CharField(max_length=200)
-    refstats_scale = models.CharField(max_length=200)
+    output_suffix = models.CharField(max_length=200, blank=True)
+    scale = models.CharField(max_length=200, blank=True)
+    output = models.CharField(max_length=200, blank=True)
+    color_table = models.CharField(max_length=200, blank=True)
+    refstats_file = models.CharField(max_length=200, blank=True)
+    refstats_scale = models.CharField(max_length=200, blank=True)
 
     class Meta:
         verbose_name_plural = _('Remap cards')
@@ -64,19 +64,19 @@ class Remap(NamedModel, ParallelModel):
 class YearFilter(NamedModel, ParallelModel):
     area = models.ForeignKey('gsi.Area')
     filetype = models.CharField(max_length=50)
-    filter = models.CharField(max_length=200)
-    filter_output = models.CharField(max_length=300)
-    extend_start = models.CharField(max_length=200)
-    input_fourier = models.CharField(max_length=200)
-    output_directory = models.CharField(max_length=300)
-    input_directory = models.CharField(max_length=200)
+    filter = models.CharField(max_length=200, blank=True)
+    filter_output = models.CharField(max_length=300, blank=True)
+    extend_start = models.CharField(max_length=200, blank=True)
+    input_fourier = models.CharField(max_length=200, blank=True)
+    output_directory = models.CharField(max_length=300, blank=True)
+    input_directory = models.CharField(max_length=200, blank=True)
 
     class Meta:
         verbose_name_plural = _('YearFilter cards')
 
 
 class Collate(NamedModel, ParallelModel):
-    area = models.ForeignKey('gsi.Area', blank=True)
+    area = models.ForeignKey('gsi.Area')
     mode = models.CharField(max_length=50, blank=True)
     input_file = models.CharField(max_length=200, blank=True)
     output_tile_subdir = models.CharField(max_length=200, blank=True)
@@ -87,17 +87,17 @@ class Collate(NamedModel, ParallelModel):
 
 
 class PreProc(NamedModel, ParallelModel):
-    area = models.ForeignKey('gsi.Area')
-    mode = models.CharField(max_length=50)
-    year_group = models.ForeignKey('gsi.YearGroup')
+    area = models.ForeignKey('gsi.Area', blank=True)
+    mode = models.CharField(max_length=50, blank=True)
+    year_group = models.ForeignKey('gsi.YearGroup', blank=True)
 
     class Meta:
         verbose_name_plural = _('PreProc cards')
 
 
 class MergeCSV(NamedModel, models.Model):
-    csv1 = models.CharField(max_length=200)
-    csv2 = models.CharField(max_length=200)
+    csv1 = models.CharField(max_length=200, blank=True)
+    csv2 = models.CharField(max_length=200, blank=True)
 
     class Meta:
         verbose_name_plural = _('MergeCSV cards')
@@ -105,11 +105,11 @@ class MergeCSV(NamedModel, models.Model):
 
 class RFTrain(NamedModel, ParallelModel):
     tile_type = models.ForeignKey('gsi.TileType')
-    number_of_trees = models.IntegerField(default=0)
-    value = models.CharField(max_length=300)
-    config_file = models.CharField(max_length=200)
-    output_tile_subdir = models.CharField(max_length=200)
-    input_scale_factor = models.CharField(max_length=200)
+    number_of_trees = models.IntegerField(default=0, blank=True)
+    value = models.CharField(max_length=300, blank=True)
+    config_file = models.CharField(max_length=200, blank=True)
+    output_tile_subdir = models.CharField(max_length=200, blank=True)
+    input_scale_factor = models.CharField(max_length=200, blank=True)
 
     class Meta:
         verbose_name_plural = _('RFTRain cards')

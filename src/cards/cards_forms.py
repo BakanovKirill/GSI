@@ -28,14 +28,14 @@ class QRFForm(forms.ModelForm):
         widget=forms.NumberInput(attrs={'class': 'form-control'}),
         initial=0,
         validators=[validate_order],
-        # required=False,
+        required=False,
         label=u'Number of trees',
     )
     number_of_threads = forms.IntegerField(
         widget=forms.NumberInput(attrs={'class': 'form-control'}),
         initial=1,
         validators=[validate_order],
-        # required=False,
+        required=False,
         label=u'Number of threads',
     )
     directory = forms.CharField(
@@ -69,45 +69,48 @@ class RFScoreForm(forms.ModelForm):
     name = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=100,
+        required=False,
         label=u'Name',
     )
     area = forms.ModelChoiceField(
         widget=forms.Select(attrs={"class": 'form-control'}),
         queryset=Area.objects.all(),
-        # empty_label=None,
         label=u'Area',
     )
     year_group = forms.ModelChoiceField(
         widget=forms.Select(attrs={"class": 'form-control'}),
         queryset=YearGroup.objects.all(),
-        # empty_label=None,
         label=u'Year group',
     )
     bias_corrn = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=200,
+        required=False,
         label=u'Bias corrn',
     )
     number_of_threads = forms.IntegerField(
         widget=forms.NumberInput(attrs={'class': 'form-control'}),
         initial=1,
         validators=[validate_order],
+        required=False,
         label=u'Number of threads',
-        # required=False,
     )
     QRFopts = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=300,
+        required=False,
         label=u'QRFopts',
     )
     ref_target = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=100,
+        required=False,
         label=u'Ref target',
     )
     clean_name = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=100,
+        required=False,
         label=u'Clean name',
     )
 
@@ -159,31 +162,37 @@ class RemapForm(forms.ModelForm):
     output_suffix = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=200,
+        required=False,
         label=u'Output suffix',
     )
     scale = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=200,
+        required=False,
         label=u'Scale',
     )
     output = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=200,
+        required=False,
         label=u'Output',
     )
     color_table = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=200,
+        required=False,
         label=u'Color table',
     )
     refstats_file = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=200,
+        required=False,
         label=u'Refstats file',
     )
     refstats_scale = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=200,
+        required=False,
         label=u'Refstats scale',
     )
 
