@@ -51,9 +51,9 @@ def make_run(run_base, user):
         run.save()
 
     for data in scripts:
-        print 'COM ===================== ', execute_fe_command
-        print 'RUN ===================== ', data['run'].id
-        print 'CARD ===================== ', data['card'].id
+        # print 'COM ===================== ', execute_fe_command
+        # print 'RUN ===================== ', data['run'].id
+        # print 'CARD ===================== ', data['card'].id
         # rs = subprocess.call('{0} {1} {2}'.format(execute_fe_command, data['run'].id, data['card'].id), shell=True)
         # rs = subprocess.call('.{0} {1} {2}'.format(execute_fe_command, data['run'].id, data['card'].id), shell=True)
         ex_fe_com = Popen(
@@ -69,7 +69,7 @@ def make_run(run_base, user):
         ex_fe_com.wait()    # дождаться выполнения
         res_execute = ex_fe_com.communicate()  # получить tuple('stdout', 'stderr')
 
-        err_file = '/home/w23/mattgsi/LOGS/test_log.err'
+        err_file = '/lustre/w23/mattgsi/scripts/runs/test_log.err'
 
         if ex_fe_com.returncode:
             print 'ERRROR ================= ', res_execute[1]
@@ -181,7 +181,7 @@ def execute_script(run, scripts):
         path_log_out = script['path_runs_logs'] + '/' + log_name_out
         rs = subprocess.call('.{0}'.format(script['script_path']), shell=True)
 
-        print 'script_path ==================== ', '.{0}'.format(script['script_path'])
+        # print 'script_path ==================== ', '.{0}'.format(script['script_path'])
 
         # log = Log.objects.create(name=log_name)
         # log.log_file_path = path_log
