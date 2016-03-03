@@ -51,17 +51,22 @@ def make_run(run_base, user):
         run.save()
 
     for data in scripts:
-        ex_fe_com = Popen(
-            '{0} {1} {2}'.format(
-                execute_fe_command,
-                data['run'].id,
-                data['card'].id
-            ),
-            shell=True,
-            stdout=PIPE,
-            stderr=PIPE
-        )
-        ex_fe_com.wait()    # дождаться выполнения
+        print 'COM ===================== ', execute_fe_command
+        print 'RUN ===================== ', data['run'].id
+        print 'CARD ===================== ', data['card'].id
+        rs = subprocess.call('{0} {1} {2}'.format(execute_fe_command, data['run'].id, data['card'].id), shell=True)
+        rs = subprocess.call('.{0} {1} {2}'.format(execute_fe_command, data['run'].id, data['card'].id), shell=True)
+        # ex_fe_com = Popen(
+        #     '{0} {1} {2}'.format(
+        #         execute_fe_command,
+        #         data['run'].id,
+        #         data['card'].id
+        #     ),
+        #     shell=True,
+        #     stdout=PIPE,
+        #     stderr=PIPE
+        # )
+        # ex_fe_com.wait()    # дождаться выполнения
         # res_execute = ex_fe_com.communicate()  # получить tuple('stdout', 'stderr')
 
     return {'run': run, 'step': step}
