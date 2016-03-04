@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 import datetime
+import os
 
 from annoying.decorators import render_to
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from django.template.defaultfilters import filesizeformat
 from django.views.generic import UpdateView
 from django.utils.decorators import method_decorator
 from django.conf import settings
@@ -29,6 +31,12 @@ TITLES = {
 }
 
 
+def handle_uploaded_file(f, path):
+    with open(path, 'a') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
+
 @render_to('gsi/blocking.html')
 def blocking(request):
 	data = {}
@@ -39,7 +47,35 @@ def blocking(request):
 @render_to('gsi/index.html')
 def index(request):
 	title = 'GSI Main Menu'
-	data = {'title': title}
+	home_var = HomeVariables.objects.all()[0]
+
+	if request.POST:
+		form = UploadFileForm(request.POST, request.FILES)
+
+		if form.is_valid():
+			file_name = str(request.FILES['test_data'])
+			path_test_data = str(os.path.join(home_var.RF_AUXDATA_DIR, '..', file_name))
+			type_file = str(request.FILES['test_data'].content_type).split('/')
+
+			if type_file != 'image':
+				handle_uploaded_file(request.FILES['test_data'], path_test_data)
+			# print 'PATH ========================= ', path_test_data
+			# print 'FILE ========================= ', type(request.FILES['test_data'].content_type)
+			# print 'path_test_data ============== ', path_test_data
+			# print 'file type ============== ', filesizeformat(request.FILES['test_data'])
+
+			# def handle_uploaded_file(path_test_data):
+			# with open(path_test_data, 'a') as dest:
+			# 	for chunk in request.FILES['test_data'].chunks():
+			# 		# print 'file type chunk ============== ', filesizeformat(chunk)
+			# 		dest.write(chunk)
+			return HttpResponseRedirect(
+					u'%s?status_message=%s' % (reverse('index'),
+					(u'Test data "{0}" is loaded'.format(file_name)))
+			)
+	else:
+		form = UploadFileForm()
+	data = {'title': title, 'form': form}
 	return data
 
 

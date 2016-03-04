@@ -24,4 +24,30 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <form action="{% url 'index' %}" enctype="multipart/form-data" role="form"
+                  class="form-horizontal" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <div class="form-group {% if form.test_data.errors %}has-error{% endif %}">
+                            <label class="control-label font-normal">{{ form.test_data.label }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        {{ form.test_data }}
+                        <p class="help-block font-size-12">Here you can load the test data</p>
+                        {% if form.test_data.errors %}
+                            <b class="error-form">{{ form.test_data.errors }}</b>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <input type="submit" name="load_button" class="btn-block" value="Load"></p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock content %}

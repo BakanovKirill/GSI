@@ -299,6 +299,10 @@ class YearGroupForm(forms.ModelForm):
         ]
 
 
+class UploadFileForm(forms.Form):
+    test_data = forms.FileField(label='Load Test Data')
+
+
 
 
 
