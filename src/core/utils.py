@@ -28,6 +28,8 @@ def validate_status(status):
 def make_run(run_base, user):
     from gsi.models import Run, Log, RunStep, OrderedCardItem
 
+    print 'USER =================== ', os.getlogin()
+
     execute_fe_command = '/home/gsi/gsi_files/bin/execute_FE_command'
     scripts = []
     run = Run.objects.create(run_base=run_base, user=user)
