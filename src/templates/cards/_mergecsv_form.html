@@ -5,36 +5,36 @@
         </div>
     </div>
     <div class="col-md-4">
+        {{ form.name }}
         {% if form.name.errors %}
             <b class="error-form">{{ form.name.errors }}</b>
         {% endif %}
-        {{ form.name }}
     </div>
 </div>
 
 <div class="row margin-top-15">
     <div class="col-md-2 right">
         <div class="form-group {% if form.csv1.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.csv1.label }}*</label>
+            <label class="control-label font-normal">{{ form.csv1.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
+        {{ form.csv1 }}
         {% if form.csv1.errors %}
             <b class="error-form">{{ form.csv1.errors }}</b>
         {% endif %}
-        {{ form.csv1 }}
     </div>
 
     <div class="col-md-2 right">
         <div class="form-group {% if form.csv2.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.csv2.label }}*</label>
+            <label class="control-label font-normal">{{ form.csv2.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
+        {{ form.csv2 }}
         {% if form.csv2.errors %}
             <b class="error-form">{{ form.csv2.errors }}</b>
         {% endif %}
-        {{ form.csv2 }}
     </div>
 </div>
 

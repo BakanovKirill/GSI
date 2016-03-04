@@ -5,62 +5,62 @@
         </div>
     </div>
     <div class="col-md-4">
+        {{ form.name }}
         {% if form.name.errors %}
             <b class="error-form">{{ form.name.errors }}</b>
         {% endif %}
-        {{ form.name }}
     </div>
 
     <div class="col-md-2 right">
         <div class="form-group {% if form.run_parallel.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.run_parallel.label }}</label>
+            <label class="control-label font-normal">{{ form.run_parallel.label }}</label>
         </div>
     </div>
     <div class="col-md-2 margin-top-4">
+        {{ form.run_parallel }}
         {% if form.run_parallel.errors %}
             <b class="error-form">{{ form.run_parallel.errors }}</b>
         {% endif %}
-        {{ form.run_parallel }}
     </div>
 </div>
 
 <div class="row margin-top-15">
     <div class="col-md-2 right">
         <div class="form-group {% if form.area.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.area.label }}*</label>
+            <label class="control-label font-normal">{{ form.area.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
+        {{ form.area }}
         {% if form.area.errors %}
             <b class="error-form">{{ form.area.errors }}</b>
         {% endif %}
-        {{ form.area }}
     </div>
 
     <div class="col-md-2 right">
         <div class="form-group {% if form.year_group.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.year_group.label }}*</label>
+            <label class="control-label font-normal">{{ form.year_group.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
+        {{ form.year_group }}
         {% if form.year_group.errors %}
             <b class="error-form">{{ form.year_group.errors }}</b>
         {% endif %}
-        {{ form.year_group }}
     </div>
 </div>
 
 <div class="row margin-top-15">
     <div class="col-md-2 right">
         <div class="form-group {% if form.mode.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.mode.label }}*</label>
+            <label class="control-label font-normal">{{ form.mode.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
+        {{ form.mode }}
         {% if form.mode.errors %}
             <b class="error-form">{{ form.mode.errors }}</b>
         {% endif %}
-        {{ form.mode }}
     </div>
 </div>
 

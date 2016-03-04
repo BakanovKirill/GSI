@@ -28,17 +28,12 @@ def validate_status(status):
 def make_run(run_base, user):
     from gsi.models import Run, Log, RunStep, OrderedCardItem
 
-    print 'USER =================== ', os.getlogin()
+    # print 'USER =================== ', os.getlogin()
 
     execute_fe_command = '/home/gsi/gsi_files/bin/execute_FE_command'
     scripts = []
     run = Run.objects.create(run_base=run_base, user=user)
-    # log = Log.objects.create(name="run_%s" % run.id)
-    # run.log = log
-    # run.save()
-    # first_card = OrderedCardItem.objects.filter(sequence__runbase=run_base).first()
     all_card = OrderedCardItem.objects.filter(sequence__runbase=run_base).order_by('order')
-    # step = RunStep.objects.create(parent_run=run, card_item=first_card)
 
     for card in all_card:
         step = RunStep.objects.create(parent_run=run, card_item=card)

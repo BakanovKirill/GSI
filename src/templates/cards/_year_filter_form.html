@@ -5,22 +5,22 @@
         </div>
     </div>
     <div class="col-md-4">
+        {{ form.name }}
         {% if form.name.errors %}
             <b class="error-form">{{ form.name.errors }}</b>
         {% endif %}
-        {{ form.name }}
     </div>
 
     <div class="col-md-2 right">
         <div class="form-group {% if form.run_parallel.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.run_parallel.label }}</label>
+            <label class="control-label font-normal">{{ form.run_parallel.label }}</label>
         </div>
     </div>
     <div class="col-md-2 margin-top-4">
+        {{ form.run_parallel }}
         {% if form.run_parallel.errors %}
             <b class="error-form">{{ form.run_parallel.errors }}</b>
         {% endif %}
-        {{ form.run_parallel }}
     </div>
 </div>
 
@@ -31,10 +31,10 @@
         </div>
     </div>
     <div class="col-md-4">
+        {{ form.area }}
         {% if form.area.errors %}
             <b class="error-form">{{ form.area.errors }}</b>
         {% endif %}
-        {{ form.area }}
     </div>
 
     <div class="col-md-2 right">
@@ -43,88 +43,88 @@
         </div>
     </div>
     <div class="col-md-4">
+        {{ form.filetype }}
         {% if form.filetype.errors %}
             <b class="error-form">{{ form.filetype.errors }}</b>
         {% endif %}
-        {{ form.filetype }}
     </div>
 </div>
 
 <div class="row margin-top-15">
     <div class="col-md-2 right">
         <div class="form-group {% if form.filter.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.filter.label }}*</label>
+            <label class="control-label font-normal">{{ form.filter.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
+        {{ form.filter }}
         {% if form.filter.errors %}
             <b class="error-form">{{ form.filter.errors }}</b>
         {% endif %}
-        {{ form.filter }}
     </div>
 
     <div class="col-md-2 right">
         <div class="form-group {% if form.filter_output.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.filter_output.label }}*</label>
+            <label class="control-label font-normal">{{ form.filter_output.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
+        {{ form.filter_output }}
         {% if form.filter_output.errors %}
             <b class="error-form">{{ form.filter_output.errors }}</b>
         {% endif %}
-        {{ form.filter_output }}
     </div>
 </div>
 
 <div class="row margin-top-15">
     <div class="col-md-2 right">
         <div class="form-group {% if form.extend_start.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.extend_start.label }}*</label>
+            <label class="control-label font-normal">{{ form.extend_start.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
+        {{ form.extend_start }}
         {% if form.extend_start.errors %}
             <b class="error-form">{{ form.extend_start.errors }}</b>
         {% endif %}
-        {{ form.extend_start }}
     </div>
 
     <div class="col-md-2 right">
         <div class="form-group {% if form.input_fourier.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.input_fourier.label }}*</label>
+            <label class="control-label font-normal">{{ form.input_fourier.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
+        {{ form.input_fourier }}
         {% if form.input_fourier.errors %}
             <b class="error-form">{{ form.input_fourier.errors }}</b>
         {% endif %}
-        {{ form.input_fourier }}
     </div>
 </div>
 
 <div class="row margin-top-15">
     <div class="col-md-2 right">
         <div class="form-group {% if form.input_directory.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.input_directory.label }}*</label>
+            <label class="control-label font-normal">{{ form.input_directory.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
+        {{ form.input_directory }}
         {% if form.input_directory.errors %}
             <b class="error-form">{{ form.input_directory.errors }}</b>
         {% endif %}
-        {{ form.input_directory }}
     </div>
 
     <div class="col-md-2 right">
         <div class="form-group {% if form.output_directory.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.output_directory.label }}*</label>
+            <label class="control-label font-normal">{{ form.output_directory.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
+        {{ form.output_directory }}
         {% if form.output_directory.errors %}
             <b class="error-form">{{ form.output_directory.errors }}</b>
         {% endif %}
-        {{ form.output_directory }}
     </div>
 </div>
 

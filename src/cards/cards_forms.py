@@ -69,7 +69,6 @@ class RFScoreForm(forms.ModelForm):
     name = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=100,
-        required=False,
         label=u'Name',
     )
     area = forms.ModelChoiceField(
@@ -231,7 +230,6 @@ class YearFilterForm(forms.ModelForm):
     area = forms.ModelChoiceField(
         widget=forms.Select(attrs={"class": 'form-control'}),
         queryset=Area.objects.all(),
-        # empty_label=None,
         label=u'Area',
     )
     filetype = forms.CharField(
@@ -242,31 +240,37 @@ class YearFilterForm(forms.ModelForm):
     filter = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=100,
+        required=False,
         label=u'Filter',
     )
     filter_output = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=100,
+        required=False,
         label=u'Filter output',
     )
     extend_start = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=100,
+        required=False,
         label=u'Extend start',
     )
     input_fourier = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=100,
+        required=False,
         label=u'Input fourier',
     )
     output_directory = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=100,
+        required=False,
         label=u'Output directory',
     )
     input_directory = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=100,
+        required=False,
         label=u'Input directory',
     )
 
@@ -304,27 +308,30 @@ class CollateForm(forms.ModelForm):
     area = forms.ModelChoiceField(
         widget=forms.Select(attrs={"class": 'form-control'}),
         queryset=Area.objects.all(),
-        # empty_label=None,
         label=u'Area',
     )
     mode = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=50,
+        required=False,
         label=u'Mode',
     )
     input_file = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=200,
+        required=False,
         label=u'Input file',
     )
     output_tile_subdir = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=200,
+        required=False,
         label=u'Output tile subdir',
     )
     input_scale_factor = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=200,
+        required=False,
         label=u'Input scale factor',
     )
 
@@ -359,18 +366,19 @@ class PreProcForm(forms.ModelForm):
     area = forms.ModelChoiceField(
         widget=forms.Select(attrs={"class": 'form-control'}),
         queryset=Area.objects.all(),
-        # empty_label=None,
+        required=False,
         label=u'Area',
     )
     mode = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=50,
+        required=False,
         label=u'Mode',
     )
     year_group = forms.ModelChoiceField(
         widget=forms.Select(attrs={"class": 'form-control'}),
         queryset=YearGroup.objects.all(),
-        # empty_label=None,
+        required=False,
         label=u'Year group',
     )
 
@@ -398,11 +406,13 @@ class MergeCSVForm(forms.ModelForm):
     csv1 = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=200,
+        required=False,
         label=u'Csv1',
     )
     csv2 = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=200,
+        required=False,
         label=u'Csv2',
     )
 
@@ -433,7 +443,6 @@ class RFTrainForm(forms.ModelForm):
     tile_type = forms.ModelChoiceField(
         widget=forms.Select(attrs={"class": 'form-control'}),
         queryset=TileType.objects.all(),
-        # empty_label=None,
         label=u'Tile type',
     )
     number_of_trees = forms.IntegerField(
@@ -446,21 +455,25 @@ class RFTrainForm(forms.ModelForm):
     value = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=300,
+        required=False,
         label=u'Value',
     )
     config_file = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=200,
+        required=False,
         label=u'Config file',
     )
     output_tile_subdir = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=200,
+        required=False,
         label=u'Output tile subdir',
     )
     input_scale_factor = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=200,
+        required=False,
         label=u'Input scale factor',
     )
 

@@ -87,9 +87,9 @@ class Collate(NamedModel, ParallelModel):
 
 
 class PreProc(NamedModel, ParallelModel):
-    area = models.ForeignKey('gsi.Area', blank=True)
+    area = models.ForeignKey('gsi.Area', null=True, blank=True)
     mode = models.CharField(max_length=50, blank=True)
-    year_group = models.ForeignKey('gsi.YearGroup', blank=True)
+    year_group = models.ForeignKey('gsi.YearGroup', null=True, blank=True)
 
     class Meta:
         verbose_name_plural = _('PreProc cards')
