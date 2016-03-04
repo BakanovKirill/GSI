@@ -56,7 +56,7 @@ def make_run(run_base, user):
         # print 'RUN ===================== ', data['run'].id
         # print 'CARD ===================== ', data['card'].id
         # rs = subprocess.call('{0} {1} {2}'.format(execute_fe_command, data['run'].id, data['card'].id), shell=True)
-        rs = subprocess.call('.{0} {1} {2}'.format(execute_fe_command, data['run'].id, data['card'].id), shell=True)
+        # rs = subprocess.call('{0} {1} {2}'.format(execute_fe_command, data['run'].id, data['card'].id), shell=True)
         ex_fe_com = Popen(
             '{0} {1} {2}'.format(
                 execute_fe_command,
