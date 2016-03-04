@@ -45,3 +45,6 @@ static:
 
 restart:
 	fab restart
+
+migrate:
+	fab migrate

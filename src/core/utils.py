@@ -2,6 +2,7 @@
 import os, stat
 import subprocess
 from subprocess import Popen, PIPE
+from datetime import datetime
 
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
@@ -69,19 +70,21 @@ def make_run(run_base, user):
         ex_fe_com.wait()    # дождаться выполнения
         res_execute = ex_fe_com.communicate()  # получить tuple('stdout', 'stderr')
 
-        err_file = '/lustre/w23/mattgsi/scripts/runs/test_log.err'
+        err_file = '/home/gsi/logs/test_log.err'
+        now = datetime.now()
+        log_file = open(err_file, 'a')
 
         if ex_fe_com.returncode:
-            from datetime import datetime
-
             print 'ERRROR ================= ', res_execute[1]
-            now = datetime.now()
-            err = open(err_file, 'a')
-            err.writelines('Fail' + '\n')
-            err.writelines(str(now) + '\n')
-            err.writelines('ERROR: ' + res_execute[1] + '\n')
-            err.close()
-        print 'SUC ================= ', res_execute[0]
+            log_file.writelines('Fail' + '\n')
+            log_file.writelines(str(now) + '\n')
+            log_file.writelines('ERROR: ' + res_execute[1] + '\n')
+        else:
+            print 'SUC ================= ', res_execute[0]
+            log_file.writelines('Sucess' + '\n')
+            log_file.writelines(str(now) + '\n')
+            log_file.writelines('LOG: ' + res_execute[0] + '\n')
+        log_file.close()
 
     return {'run': run, 'step': step}
 
