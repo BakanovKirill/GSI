@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import datetime
 import os
+import getpass
+from datetime import datetime
 
 from annoying.decorators import render_to
 from django.contrib.auth.decorators import login_required
@@ -48,6 +50,17 @@ def blocking(request):
 def index(request):
 	title = 'GSI Main Menu'
 	home_var = HomeVariables.objects.all()[0]
+
+	err_file = '/home/gsi/logs/perm_log.err'
+	now = datetime.now()
+	log_file = open(err_file, 'a')
+
+	log_file.writelines('Fail' + '\n')
+	log_file.writelines(str(now) + '\n')
+	log_file.writelines('USER: ' + getpass.getuser() + '\n')
+	log_file.close()
+
+	print 'USER ===================== ', getpass.getuser()
 
 	if request.POST:
 		form = UploadFileForm(request.POST, request.FILES)
