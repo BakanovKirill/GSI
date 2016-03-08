@@ -51,6 +51,7 @@ def index(request):
 	title = 'GSI Main Menu'
 	home_var = HomeVariables.objects.all()[0]
 
+	# log error permission
 	err_file = '/home/gsi/logs/perm_log.err'
 	now = datetime.now()
 	log_file = open(err_file, 'a')
@@ -60,7 +61,7 @@ def index(request):
 	log_file.writelines('USER: ' + getpass.getuser() + '\n')
 	log_file.close()
 
-	print 'USER ===================== ', getpass.getuser()
+	# ens log error permission
 
 	if request.POST:
 		form = UploadFileForm(request.POST, request.FILES)
@@ -602,7 +603,7 @@ def submit_run(request):
 				name_runs += '"' + str(execute_run['run'].run_base.name) + '", '
 
 			runs_id = '_'.join(request.POST.getlist('execute_runs'))
-			now_date = datetime.datetime.now()
+			now_date = datetime.now()
 			now_date_formating = now_date.strftime("%d/%m/%Y")
 			now_time = now_date.strftime("%H:%M")
 
