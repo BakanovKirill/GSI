@@ -67,8 +67,8 @@ def index(request):
 		form = UploadFileForm(request.POST, request.FILES)
 
 		if form.is_valid():
-			file_name = str(request.FILES['test_data'])
-			path_test_data = str(os.path.join(home_var.RF_AUXDATA_DIR, file_name))
+			file_name = str(request.FILES['test_data']).decode('utf-8')
+			path_test_data = os.path.join(home_var.RF_AUXDATA_DIR, file_name)
 			type_file = str(request.FILES['test_data'].content_type).split('/')[0]
 
 			if type_file != 'image':
@@ -80,8 +80,14 @@ def index(request):
 			else:
 				return HttpResponseRedirect(
 						u'%s?status_message=%s' % (reverse('index'),
-						(u'To download the test data needs text format'))
+						(u'The file "{0}" can not be loaded. \
+						To download using a text file format'.format(file_name)))
 				)
+		else:
+			return HttpResponseRedirect(
+					u'%s?status_message=%s' % (reverse('index'),
+					(u'Sorry. Upload error: {0}'.format(form['test_data'].errors.as_text())))
+			)
 	else:
 		form = UploadFileForm()
 	data = {'title': title, 'form': form}

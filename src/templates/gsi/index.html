@@ -20,34 +20,46 @@
                     <li role="button" class="btn btn-default main-menu">
                         <a href="{% url 'static_data_setup' %}" class="center">Setup Static Data</a>
                     </li>
+                    <li role="button" class="btn btn-default main-menu" data-toggle="modal" data-target="#modalUpload">
+                        <a href="#" class="center">Upload Test Data</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-4 col-md-offset-4">
-            <form action="{% url 'index' %}" enctype="multipart/form-data" role="form"
-                  class="form-horizontal" method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    <div class="col-md-12">
-                        <div class="form-group {% if form.test_data.errors %}has-error{% endif %}">
-                            <label class="control-label font-normal">{{ form.test_data.label }}</label>
-                        </div>
-                    </div>
 
-                    <div class="col-md-8">
-                        {{ form.test_data }}
-                        <p class="help-block font-size-12">Here you can load the test data</p>
-                        {% if form.test_data.errors %}
-                            <b class="error-form">{{ form.test_data.errors }}</b>
-                        {% endif %}
-                    </div>
-                    <div class="col-md-4">
-                        <input type="submit" name="load_button" class="btn-block" value="Load"></p>
+    <!-- Modal Upload Test Data -->
+    <div class="modal fade" id="modalUpload" tabindex="-1" role="dialog" aria-labelledby="modalUploadLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <div class="form-group {% if form.test_data.errors %}has-error{% endif %}">
+                        <h4 class="modal-title" id="modalUploadLabel">Upload Test Data</h4>
                     </div>
                 </div>
-            </form>
+                <form action="{% url 'index' %}" enctype="multipart/form-data" role="form"
+                      class="form-horizontal" method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                {{ form.test_data }}
+                                <p class="help-block font-size-12">
+                                    For test data upload please use text files
+                                </p>
+                                {% if form.test_data.errors %}
+                                    <b class="error-form">{{ form.test_data.errors }}</b>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" name="load_button" class="btn btn-primary">Load</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 {% endblock content %}
