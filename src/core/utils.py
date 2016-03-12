@@ -7,6 +7,8 @@ from datetime import datetime
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
+from gsi.settings import EXECUTE_FE_COMMAND
+
 
 class UnicodeNameMixin(object):
     def __unicode__(self):
@@ -30,7 +32,6 @@ def make_run(run_base, user):
 
     # print 'USER =================== ', os.getlogin()
 
-    execute_fe_command = '/home/gsi/gsi_files/bin/execute_FE_command'
     scripts = []
     run = Run.objects.create(run_base=run_base, user=user)
     all_card = OrderedCardItem.objects.filter(sequence__runbase=run_base).order_by('order')
@@ -49,14 +50,14 @@ def make_run(run_base, user):
         run.save()
 
     for data in scripts:
-        # print 'COM ===================== ', execute_fe_command
+        # print 'COM ===================== ', EXECUTE_FE_COMMAND
         # print 'RUN ===================== ', data['run'].id
         # print 'CARD ===================== ', data['card'].id
-        # rs = subprocess.call('{0} {1} {2}'.format(execute_fe_command, data['run'].id, data['card'].id), shell=True)
-        # rs = subprocess.call('{0} {1} {2}'.format(execute_fe_command, data['run'].id, data['card'].id), shell=True)
+        # rs = subprocess.call('{0} {1} {2}'.format(EXECUTE_FE_COMMAND, data['run'].id, data['card'].id), shell=True)
+        # rs = subprocess.call('{0} {1} {2}'.format(EXECUTE_FE_COMMAND, data['run'].id, data['card'].id), shell=True)
         ex_fe_com = Popen(
             '{0} {1} {2}'.format(
-                execute_fe_command,
+                EXECUTE_FE_COMMAND,
                 data['run'].id,
                 data['card'].id
             ),
@@ -232,8 +233,6 @@ def execute_script(run, scripts):
                 script['step'].state = 'success'
                 script['step'].save()
                 write_log(log_name_out, run, path_log_out)
-
-
 
             # ex_fe_com = subprocess.call('.{0} {1} {2}'.format(
             #     execute_fe_command, script['run'].id, script['card'].id

@@ -21,6 +21,7 @@ from gsi.gsi_items_update_create import *
 from gsi.gsi_forms import *
 from core.utils import make_run
 from core.get_post import get_post
+from log.logger import get_logs
 
 TITLES = {
 	'home': ['Home', 'index'],
@@ -1137,3 +1138,26 @@ def years_group_edit(request, yg_id):
 	}
 
 	return data
+
+
+# audit history
+@login_required
+@render_to('gsi/audit_history.html')
+def audit_history(request, run_id):
+	# Audit record for  MATT_COLLATE_TESTR_29th_Feb
+	# get_logs(element, element_id, limit=None, user=None)
+	run_base = get_object_or_404(RunBase, pk=run_id)
+	title = 'GSI Audit record for "{0}"'.format(run_base.name)
+	logs = []
+
+	logs.extend(list(get_logs('RunBase', run_base.id)))
+	logs.extend(list(get_logs('Run', run_base.id)))
+
+	data = {
+		'title': title,
+		'run_id': run_id,
+		'logs': logs,
+	}
+
+	return data
+

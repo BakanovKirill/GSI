@@ -60,6 +60,9 @@ urlpatterns = [
     # setup home variable
     url(r'^run/home-variable/setup/$', 'gsi.views.home_variable_setup', name='home_variable_setup'),
 
+    # audit history
+    url(r'^run/(?P<run_id>\d+)/audit-history/$', 'gsi.views.audit_history', name='audit_history'),
+
     # environment groups
     url(r'^run/environment-groups/setup/$', 'gsi.views.environment_groups', name='environment_groups'),
 
