@@ -49,7 +49,7 @@ def blocking(request):
 @login_required
 @render_to('gsi/index.html')
 def index(request):
-	title = 'GSI Main Menu'
+	title = 'Main Menu'
 	home_var = HomeVariables.objects.all()[0]
 
 	# log error permission
@@ -99,7 +99,7 @@ def index(request):
 @login_required
 @render_to('gsi/run_setup.html')
 def run_setup(request):
-	title = 'GSI Run Setup'
+	title = 'Run Setup'
 	run_bases = RunBase.objects.all()
 	run_name = ''
 
@@ -131,7 +131,7 @@ def run_setup(request):
 @login_required
 @render_to('gsi/new_run.html')
 def new_run(request):
-	title = 'GSI New Run'
+	title = 'New Run'
 	form = None
 
 	if request.method == "POST":
@@ -167,7 +167,7 @@ def new_run(request):
 @render_to('gsi/run_update.html')
 def run_update(request, run_id):
 	run_base = get_object_or_404(RunBase, pk=run_id)
-	title = 'GSI Edit "{0}"'.format(run_base.name)
+	title = 'Edit "{0}"'.format(run_base.name)
 	form = None
 
 	if request.method == "POST":
@@ -209,7 +209,7 @@ def run_update(request, run_id):
 @render_to('gsi/card_sequence.html')
 def card_sequence(request, run_id):
 	card_sequences = CardSequence.objects.all()
-	title = 'GSI Card Sequence'
+	title = 'Card Sequence'
 	cs_name = ''
 
 	if request.method == "POST":
@@ -241,7 +241,7 @@ def card_sequence(request, run_id):
 @login_required
 @render_to('gsi/add_card_sequence.html')
 def run_new_card_sequence_add(request):
-	title = 'GSI New Card Sequence'
+	title = 'New Card Sequence'
 	href = 'run_new_card_sequence_add'
 	form = None
 
@@ -305,7 +305,7 @@ def run_new_card_sequence_add(request):
 def run_new_card_sequence_update(request, cs_id):
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
 	card_sequence_cards = CardSequence.cards.through.objects.filter(sequence_id=cs_id)
-	title = 'GSI Card Sequence {0}'.format(card_sequence.name)
+	title = 'Card Sequence {0}'.format(card_sequence.name)
 	url_process_card = 'run_new_card_sequence_update'
 	form = None
 
@@ -397,7 +397,7 @@ def run_new_card_sequence_update(request, cs_id):
 @render_to('gsi/add_card_sequence.html')
 def add_card_sequence(request, run_id):
 	card_items = CardItem.objects.all()
-	title = 'GSI New Card Sequence'
+	title = 'New Card Sequence'
 	href = 'add_card_sequence {0}'.format(run_id)
 	form = None
 
@@ -463,7 +463,7 @@ def add_card_sequence(request, run_id):
 def card_sequence_update(request, run_id, cs_id):
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
 	card_sequence_cards = CardSequence.cards.through.objects.filter(sequence_id=cs_id)
-	title = 'GSI Card Sequence {0}'.format(card_sequence.name)
+	title = 'Card Sequence {0}'.format(card_sequence.name)
 	url_process_card = 'proces_card_sequence_card_edit'
 	form = None
 
@@ -558,7 +558,7 @@ def card_sequence_update(request, run_id, cs_id):
 @render_to('gsi/card_item_update.html')
 def card_item_update(request, run_id, cs_id, card_item_id):
 	card_sequence_card = get_object_or_404(CardSequence.cards.through, pk=card_item_id)
-	title = 'GSI Card ItemID {0}'.format(card_item_id)
+	title = 'Card ItemID {0}'.format(card_item_id)
 	form = None
 
 	if request.method == "POST":
@@ -599,7 +599,7 @@ def card_item_update(request, run_id, cs_id, card_item_id):
 @render_to('gsi/submit_run.html')
 def submit_run(request):
 	run_bases = RunBase.objects.all()
-	title = 'GSI Submit a Run'
+	title = 'Submit a Run'
 	name_runs = ''
 
 	if request.method == "POST":
@@ -635,7 +635,7 @@ def submit_run(request):
 @login_required
 @render_to('gsi/execute_run.html')
 def execute_runs(request, run_id):
-	title = 'GSI Execute Run'
+	title = 'Execute Run'
 	list_run_id = run_id.split('_')
 	name_runs = ''
 	messages = []
@@ -659,7 +659,7 @@ def execute_runs(request, run_id):
 @render_to('gsi/run_progress.html')
 def run_progress(request):
 	runs = Run.objects.all().order_by('id')
-	title = 'GSI Run Progress'
+	title = 'Run Progress'
 
 	if request.method == "POST":
 		if request.POST.get('run_progress'):
@@ -687,7 +687,7 @@ def run_progress(request):
 @login_required
 @render_to('gsi/run_details.html')
 def run_details(request, run_id):
-	title = 'GSI Run Details'
+	title = 'Run Details'
 	sub_title = 'The View Log file select and hit view'
 	runs_step = RunStep.objects.filter(parent_run=run_id)
 	runs_step.order_by('card_item.card_item.order')
@@ -714,7 +714,7 @@ def run_details(request, run_id):
 @login_required
 @render_to('gsi/view_log_file.html')
 def view_log_file(request, run_id, card_id):
-	title = 'GSI View Log Details for Cards'
+	title = 'View Log Details for Cards'
 	run_step = get_object_or_404(RunStep, pk=card_id)
 	run = get_object_or_404(Run, pk=run_id)
 	log = get_object_or_404(Log, pk=run.log.id)
@@ -746,7 +746,7 @@ def view_log_file(request, run_id, card_id):
 @login_required
 @render_to('gsi/static_data_setup.html')
 def static_data_setup(request):
-	title = 'GSI Setup Static Data'
+	title = 'Setup Static Data'
 	data = {
 		'title': title,
 	}
@@ -758,7 +758,7 @@ def static_data_setup(request):
 @login_required
 @render_to('gsi/home_variable_setup.html')
 def home_variable_setup(request):
-	title = 'GSI Home Variables'
+	title = 'Home Variables'
 	variables = get_object_or_404(HomeVariables, pk=1)
 	form = None
 
@@ -800,7 +800,7 @@ def home_variable_setup(request):
 @login_required
 @render_to('gsi/environment_groups_list.html')
 def environment_groups(request):
-	title = 'GSI Environment Groups'
+	title = 'Environment Groups'
 	environments = VariablesGroup.objects.all()
 	env_name = ''
 
@@ -835,7 +835,7 @@ def environment_groups(request):
 @login_required
 @render_to('gsi/static_data_item_edit.html')
 def environment_group_add(request):
-	title = 'GSI Environment Group Add'
+	title = 'Environment Group Add'
 	url_form = 'environment_group_add'
 	template_name = 'gsi/_env_group_form.html'
 	reverse_url = {
@@ -873,7 +873,7 @@ def environment_group_add(request):
 @render_to('gsi/static_data_item_edit.html')
 def environment_group_edit(request, env_id):
 	env_item = get_object_or_404(VariablesGroup, pk=env_id)
-	title = 'GSI Environment Group "{0}" Edit'.format(env_item.name)
+	title = 'Environment Group "{0}" Edit'.format(env_item.name)
 	url_form = 'environment_group_edit'
 	template_name = 'gsi/_env_group_form.html'
 	reverse_url = {
@@ -912,7 +912,7 @@ def environment_group_edit(request, env_id):
 @login_required
 @render_to('gsi/areas_list.html')
 def areas(request):
-	title = 'GSI Areas'
+	title = 'Areas'
 	areas = Area.objects.all()
 	area_name = ''
 
@@ -947,7 +947,7 @@ def areas(request):
 @login_required
 @render_to('gsi/static_data_item_edit.html')
 def area_add(request):
-	title = 'GSI Area Add'
+	title = 'Area Add'
 	url_form = 'area_add'
 	template_name = 'gsi/_area_form.html'
 	reverse_url = {
@@ -987,7 +987,7 @@ def area_add(request):
 @render_to('gsi/static_data_item_edit.html')
 def area_edit(request, area_id):
 	area = get_object_or_404(Area, pk=area_id)
-	title = 'GSI Area Edit "%s"' % (area.name)
+	title = 'Area Edit "%s"' % (area.name)
 	url_form = 'area_edit'
 	template_name = 'gsi/_area_form.html'
 	reverse_url = {
@@ -1029,7 +1029,7 @@ def area_edit(request, area_id):
 @login_required
 @render_to('gsi/years_group_list.html')
 def years_group(request):
-	title = 'GSI Years Groups'
+	title = 'Years Groups'
 	years_groups = YearGroup.objects.all()
 	yg_name = ''
 
@@ -1062,7 +1062,7 @@ def years_group(request):
 @login_required
 @render_to('gsi/static_data_item_edit.html')
 def years_group_add(request):
-	title = 'GSI Years Groups Add'
+	title = 'Years Groups Add'
 	url_form = 'years_group_add'
 	template_name = 'gsi/_years_group_form.html'
 	reverse_url = {
@@ -1102,7 +1102,7 @@ def years_group_add(request):
 @render_to('gsi/static_data_item_edit.html')
 def years_group_edit(request, yg_id):
 	years_group = get_object_or_404(YearGroup, pk=yg_id)
-	title = 'GSI YearGroup Edit "%s"' % (years_group.name)
+	title = 'YearGroup Edit "%s"' % (years_group.name)
 	url_form = 'years_group_edit'
 	template_name = 'gsi/_years_group_form.html'
 	reverse_url = {
@@ -1147,7 +1147,7 @@ def audit_history(request, run_id):
 	# Audit record for  MATT_COLLATE_TESTR_29th_Feb
 	# get_logs(element, element_id, limit=None, user=None)
 	run_base = get_object_or_404(RunBase, pk=run_id)
-	title = 'GSI Audit record for "{0}"'.format(run_base.name)
+	title = 'Audit record for "{0}"'.format(run_base.name)
 	logs = []
 
 	logs.extend(list(get_logs('RunBase', run_base.id)))
