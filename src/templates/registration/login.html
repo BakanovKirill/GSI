@@ -28,7 +28,7 @@
                 <span class="img-top-input font-9 blue-color-bootstrap username"><b>Username</b></span>
                 <i class="fa fa-user img-top-input right top-25 disabled username"></i>
                 <input type="text" class="border-bottom form-control padding-0" id="login"
-                       value="" name="username" placeholder="Username" onkeyup="visibleUsernameTopInput()" />
+                       value="" name="username" placeholder="Username" oninput="visibleLoginIcons()" onkeyup="visibleUsernameTopInput()" />
                 <span class="help-block red-color padding-0">{{ form.errors.username.as_data.0.0 }}</span>
             </div>
         </div>

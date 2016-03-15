@@ -24,7 +24,7 @@
                 <span class="img-top-input font-9 blue-color-bootstrap username"><b>Username</b></span>
                 <i class="fa fa-user img-top-input right top-25 disabled username"></i>
                 <input type="text" class="border-bottom form-control padding-0 input-form" id="login"
-                       value="" name="username" placeholder="Username" onkeyup="visibleUsernameTopInput()" />
+                       value="" name="username" placeholder="Username" oninput="visibleRegistrationIcons()" onkeyup="visibleUsernameTopInput()" />
                 <span class="help-block">{{ form.errors.username.as_text }}</span>
             </div>
         </div>
@@ -34,7 +34,7 @@
                 <span class="img-top-input font-9 blue-color-bootstrap email"><b>Email</b></span>
                 <i class="fa fa-envelope-o img-top-input right top-25 disabled email"></i>
                 <input type="text" class="border-bottom form-control padding-0" id="email"
-                       value="" name="email" placeholder="Email" onkeyup="visibleEmailTopInput()" />
+                       value="" name="email" placeholder="Email" oninput="visibleRegistrationIcons()" onkeyup="visibleEmailTopInput()" />
                 <span class="help-block">{{ form.errors.email.as_text }}</span>
             </div>
         </div>

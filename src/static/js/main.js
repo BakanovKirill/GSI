@@ -14,7 +14,6 @@ function visiblePasswordTopInput() {
 
 function visibleRePasswordTopInput() {
   $('.re-pass').css('display', 'block');
-
   var x = document.getElementById("re-password");
 
   if (x.value == '') {
@@ -24,7 +23,6 @@ function visibleRePasswordTopInput() {
 
 function visibleUsernameTopInput() {
   $('.username').css('display', 'block');
-
   var x = document.getElementById("login");
 
   if (x.value == '') {
@@ -34,7 +32,6 @@ function visibleUsernameTopInput() {
 
 function visibleEmailTopInput() {
   $('.email').css('display', 'block');
-
   var x = document.getElementById("email");
 
   if (x.value == '') {
@@ -42,8 +39,43 @@ function visibleEmailTopInput() {
   }
 }
 
+function visibleLoginIcons() {
+  var password = document.getElementById("password");
+  var login = document.getElementById("login");
+
+  //if (email.value !== null) {
+  //  alert("EMAIL: "+email);
+  //  $('.email').css('display', 'block');
+  //}
+
+  if (password.value !== ' ') {
+    alert("PAS: "+password);
+    $('.pass').css('display', 'block');
+  }
+
+  if (login.value !== ' ') {
+    alert("LOGIN: "+login);
+    $('.username').css('display', 'block');
+  }
+}
+
+
+function visibleRegistrationIcons() {
+  var email = document.getElementById("email");
+  var login = document.getElementById("login");
+
+  if (email.value !== null) {
+    alert("EMAIL: "+email);
+    $('.email').css('display', 'block');
+  }
+
+  if (login.value !== ' ') {
+    alert("LOGIN: "+login);
+    $('.username').css('display', 'block');
+  }
+}
+
 
 $(document).ready(function(){
   setFocus();
-  //visiblePasswordTopInput()
 });
