@@ -35,6 +35,9 @@
                 <h1>
                     <a href="{% url 'index' %}">{% block title %}{% endblock title %}</a>
                 </h1>
+                <h2>
+                    {% block title_registrations %}{% endblock title_registrations %}
+                </h2>
 
                 {% if user.is_authenticated %}
                 <div class="row">
@@ -104,7 +107,7 @@
 
         <!-- Start Footer -->
         <div class="row" id="footer">
-            <div class="col-md-12 center margin-top-50 margin-bottom-50">
+            <div class="col-md-12 center margin-top-50 margin-bottom-50 font-11">
                 &copy; 2015 GSI Web Site
             </div>
         </div>
@@ -121,5 +124,8 @@
             integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
             crossorigin="anonymous">
     </script>
+
+    <!-- custom scripts -->
+    <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
 </body>
 </html>
