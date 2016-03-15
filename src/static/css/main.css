@@ -162,3 +162,9 @@ li.main-menu {
 .img-top-input:focus {
     display: block;
 }
+
+/* no yelow autofill for google chrome */
+input {outline: none;}
+input:-webkit-autofill {
+    -webkit-box-shadow: inset 0 0 0 50px #fff !important; /* background color */
+}
