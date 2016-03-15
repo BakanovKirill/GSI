@@ -43,18 +43,11 @@ function visibleLoginIcons() {
   var password = document.getElementById("password");
   var login = document.getElementById("login");
 
-  //if (email.value !== null) {
-  //  alert("EMAIL: "+email);
-  //  $('.email').css('display', 'block');
-  //}
-
   if (password.value !== ' ') {
-    alert("PAS: "+password);
     $('.pass').css('display', 'block');
   }
 
   if (login.value !== ' ') {
-    alert("LOGIN: "+login);
     $('.username').css('display', 'block');
   }
 }
@@ -65,12 +58,10 @@ function visibleRegistrationIcons() {
   var login = document.getElementById("login");
 
   if (email.value !== null) {
-    alert("EMAIL: "+email);
     $('.email').css('display', 'block');
   }
 
   if (login.value !== ' ') {
-    alert("LOGIN: "+login);
     $('.username').css('display', 'block');
   }
 }
