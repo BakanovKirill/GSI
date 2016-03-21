@@ -178,9 +178,10 @@ input:-webkit-autofill {
 }
 
 .dropdown-left-0 {
-    left: -15px;
+    left: -16px;
     border-radius: 0px;
     border-color: #fff;
+    top: 50px;
 }
 
 .brand-logo {
@@ -219,5 +220,61 @@ input:-webkit-autofill {
 
 .li-menu > li > a > i:hover {
     background-color: transparent !important;
-    color: transparent;
+    color: transparent !important;
+}
+
+.navbar-main-menu {
+    min-height: 50px;
+    max-height: 50px;
+}
+
+/**/
+
+.dropbtn {
+    background-color: transparent;
+    color: white;
+    /*padding: 15px;*/
+    /*margin-top: 15px;*/
+    font-size: 24px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 15px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: transparent;
+    text-decoration: none !important;
+    color: #428bca;
+    background-image: none;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: transparent;
+}
+
+.display-no-table {
+    display: table-cell;
 }

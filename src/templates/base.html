@@ -35,51 +35,71 @@
             <!-- Main Menu -->
             <div class="row">
                 <div class="col-md-8 col-md-offset-2 center">
-                    <nav class="navbar navbar-inverse navbar-static-top main-menu">
-                        <div class="container-fluid">
+                    <nav class="navbar navbar-inverse navbar-static-top main-menu navbar-main-menu">
+                        <div class="container-fluid display-no-table">
                             <!-- Brand and toggle get grouped for better mobile display -->
-                            <div id="MainMenu" class="navbar-header dropdown">
-                                <div class="list-group panel menu-panel">
-                                    <a href="#" class="dropdown-toggle navbar-brand brand-logo" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">GSi Main Menu</a>
-                                    <ul class="dropdown-menu dropdown-left-0 li-menu">
-                                        <li class="li-menu">
-                                            <a href="{% url 'index' %}"><img class="right-indent-10" src="{% static 'img/overview.png' %}">
-                                                OVERVIEW
-                                            </a>
-                                        </li>
-                                        <li class="li-menu">
-                                            <a href="{% url 'run_setup' %}"><img class="right-indent-10" src="{% static 'img/setup_new_run.png' %}">
-                                                SETUP NEW RUN
-                                            </a>
-                                        </li>
-                                        <li class="li-menu">
-                                            <a href="{% url 'submit_run' %}"><img class="right-indent-10" src="{% static 'img/submit_a_run.png' %}">
-                                                SUBMIT A RUN
-                                            </a>
-                                        </li>
-                                        <li class="li-menu">
-                                            <a href="{% url 'run_progress' %}"><img class="right-indent-10" src="{% static 'img/view_run_progress.png' %}">
-                                                VIEW RUN PROGRESS
-                                            </a>
-                                        </li>
-                                        <li class="li-menu">
-                                            <a href="{% url 'static_data_setup' %}"><img class="right-indent-10" src="{% static 'img/setup_static_data.png' %}">
-                                                SETUP STATIC DATA
-                                            </a>
-                                        </li>
-                                        <li class="li-menu">
-                                            <div class="acordion">
-                                                <a href="{% url 'static_data_setup' %}"><img class="right-indent-10" src="{% static 'img/setup_static_data.png' %}">
-                                                    SETUP STATIC DATA
-                                                </a>
-                                            </div>
-                                        </li>
-                                        <li data-toggle="modal" data-target="#modalUpload" class="color-transparent">
-                                            <a href="#"><i class="fa fa-upload right-indent-10"></i>UPLOAD TEST DATA</a>
-                                        </li>
-                                    </ul>
+                            <div class="dropdown">
+                                <button class="dropbtn brand-logo navbar-brand">Dropdown</button>
+                                <div class="dropdown-content li-menu dropdown-left-0">
+                                    <a href="{% url 'index' %}">
+                                        <img class="right-indent-10" src="{% static 'img/overview.png' %}">
+                                        OVERVIEW
+                                    </a>
+                                    <a href="#">Link 2</a>
+                                    <a href="#">Link 3</a>
                                 </div>
                             </div>
+                            <!--<div id="MainMenu" class="dropdown">-->
+                                <!--<div class="dropdown">-->
+                                    <!--<a href="#" class="dropdown-toggle navbar-brand brand-logo dropbtn" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">GSi Main Menu</a>-->
+                                    <!--<ul class="dropdown-menu dropdown-left-0 li-menu dropdown-content">-->
+                                        <!--<li class="li-menu">-->
+                                            <!--<a href="{% url 'index' %}">-->
+                                                <!--<img class="right-indent-10" src="{% static 'img/overview.png' %}">-->
+                                                <!--OVERVIEW-->
+                                            <!--</a>-->
+                                        <!--</li>-->
+                                        <!--<li class="li-menu">-->
+                                            <!--<a href="{% url 'run_setup' %}">-->
+                                                <!--<img class="right-indent-10" src="{% static 'img/setup_new_run.png' %}">-->
+                                                <!--SETUP NEW RUN-->
+                                            <!--</a>-->
+                                        <!--</li>-->
+                                        <!--<li class="li-menu">-->
+                                            <!--<a href="{% url 'submit_run' %}">-->
+                                                <!--<img class="right-indent-10" src="{% static 'img/submit_a_run.png' %}">-->
+                                                <!--SUBMIT A RUN-->
+                                            <!--</a>-->
+                                        <!--</li>-->
+                                        <!--<li class="li-menu">-->
+                                            <!--<a href="{% url 'run_progress' %}">-->
+                                                <!--<img class="right-indent-10" src="{% static 'img/view_run_progress.png' %}">-->
+                                                <!--VIEW RUN PROGRESS-->
+                                            <!--</a>-->
+                                        <!--</li>-->
+                                        <!--<li class="li-menu">-->
+                                            <!--<a href="{% url 'static_data_setup' %}">-->
+                                                <!--<img class="right-indent-10" src="{% static 'img/setup_static_data.png' %}">-->
+                                                <!--SETUP STATIC DATA-->
+                                            <!--</a>-->
+                                        <!--</li>-->
+                                        <!--<li class="li-menu">-->
+                                            <!--<div class="acordion">-->
+                                                <!--<a href="{% url 'static_data_setup' %}">-->
+                                                    <!--<img class="right-indent-10" src="{% static 'img/setup_static_data.png' %}">-->
+                                                    <!--SETUP STATIC DATA-->
+                                                <!--</a>-->
+                                            <!--</div>-->
+                                        <!--</li>-->
+                                        <!--<li data-toggle="modal" data-target="#modalUpload">-->
+                                            <!--<a href="#">-->
+                                                <!--<i class="fa fa-upload right-indent-10"></i>-->
+                                                <!--UPLOAD TEST DATA-->
+                                            <!--</a>-->
+                                        <!--</li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
                         </div>
                     </nav>
                 </div>
