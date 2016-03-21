@@ -70,20 +70,26 @@ def index(request):
 		if form.is_valid():
 			file_name = str(request.FILES['test_data']).decode('utf-8')
 			path_test_data = os.path.join(home_var.RF_AUXDATA_DIR, file_name)
-			type_file = str(request.FILES['test_data'].content_type).split('/')[0]
+			# type_file = str(request.FILES['test_data'].content_type).split('/')[0]
+			handle_uploaded_file(request.FILES['test_data'], path_test_data)
 
-			if type_file != 'image':
-				handle_uploaded_file(request.FILES['test_data'], path_test_data)
-				return HttpResponseRedirect(
-						u'%s?status_message=%s' % (reverse('index'),
-						(u'Test data "{0}" is loaded'.format(file_name)))
-				)
-			else:
-				return HttpResponseRedirect(
-						u'%s?status_message=%s' % (reverse('index'),
-						(u'The file "{0}" can not be loaded. \
-						To download using a text file format'.format(file_name)))
-				)
+			return HttpResponseRedirect(
+					u'%s?status_message=%s' % (reverse('index'),
+					(u'Test data "{0}" is loaded'.format(file_name)))
+			)
+
+			# if type_file != 'image':
+			# 	handle_uploaded_file(request.FILES['test_data'], path_test_data)
+			# 	return HttpResponseRedirect(
+			# 			u'%s?status_message=%s' % (reverse('index'),
+			# 			(u'Test data "{0}" is loaded'.format(file_name)))
+			# 	)
+			# else:
+			# 	return HttpResponseRedirect(
+			# 			u'%s?status_message=%s' % (reverse('index'),
+			# 			(u'The file "{0}" can not be loaded. \
+			# 			To download using a text file format'.format(file_name)))
+			# 	)
 		else:
 			return HttpResponseRedirect(
 					u'%s?status_message=%s' % (reverse('index'),
