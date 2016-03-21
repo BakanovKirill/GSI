@@ -12,6 +12,10 @@
     text-align: right;
 }
 
+.left {
+    text-align: left;
+}
+
 /* alignment */
 .float-right {
     float: right;
@@ -98,11 +102,11 @@ li.main-menu {
 
 /* display */
 .disabled {
-    display: none;
+    display: none !important;
 }
 
 .visible {
-    display: block;
+    display: block !important;
 }
 
 /* fonts style*/
@@ -211,6 +215,10 @@ input:-webkit-autofill {
     white-space: nowrap;
 }
 
+.li-menu {
+    font-size: 14px;
+}
+
 .acordion > a:hover, .li-menu > li > a:hover {
     text-decoration: none !important;
     color: #428bca;
@@ -243,14 +251,16 @@ input:-webkit-autofill {
 .dropdown {
     position: relative;
     display: inline-block;
+    min-width: 150px;
 }
 
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    /*background-color: #f9f9f9;*/
+    min-width: 200px;
+    width: 250px;
+    /*box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);*/
 }
 
 .dropdown-content a {
@@ -277,4 +287,26 @@ input:-webkit-autofill {
 
 .display-no-table {
     display: table-cell;
+}
+
+/* on/off sub menu */
+.menu ul {
+  margin: 0;
+  list-style: none;
+  padding-left: 20px;
+  display: none;
+}
+
+.menu .title::before {
+  content: '▶ ';
+  font-size: 80%;
+  color: green;
+}
+
+.menu.open .title::before {
+  content: '▼ ';
+}
+
+.menu.open ul {
+  display: block;
 }
