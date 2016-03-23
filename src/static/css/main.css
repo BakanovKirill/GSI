@@ -144,6 +144,24 @@ li.main-menu {
     border-bottom: 1px solid #66afe9;
 }
 
+/* search */
+.dropdown-search {
+    position: relative;
+    display: inline-block;
+    min-width: 150px;
+    left: -100px;
+    top: 10px;
+}
+
+.search-form {
+    border: 0;
+    /*border-bottom: 1px solid #ccc;*/
+    border-radius: 0px;
+    box-shadow: 0 0px 0px rgba(0, 0, 0, 0) inset;
+    background-color: transparent;
+    color: #c1d9ee !important;
+}
+
 /* forms log and signup */
 .form-password:focus {
     border-color: white;
@@ -217,6 +235,7 @@ input:-webkit-autofill {
 
 .li-menu {
     font-size: 14px;
+    background-color: white;
 }
 
 .acordion > a:hover, .li-menu > li > a:hover {
@@ -277,9 +296,9 @@ input:-webkit-autofill {
     background-image: none;
 }
 
-.dropdown:hover .dropdown-content {
-    display: block;
-}
+/*.dropdown:hover .dropdown-content {*/
+    /*!*display: block;*!*/
+/*}*/
 
 .dropdown:hover .dropbtn {
     background-color: transparent;
@@ -290,23 +309,46 @@ input:-webkit-autofill {
 }
 
 /* on/off sub menu */
-.menu ul {
+.sub-menu ul {
   margin: 0;
   list-style: none;
   padding-left: 20px;
   display: none;
 }
 
-.menu .title::before {
-  content: '▶ ';
-  font-size: 80%;
-  color: green;
+/*.sub-menu .title::before {*/
+  /*font-size: 80%;*/
+  /*color: green;*/
+/*}*/
+
+.icon-visible {
+    color: black;
 }
 
-.menu.open .title::before {
-  content: '▼ ';
+.title {
+    color: #428bca;
 }
 
-.menu.open ul {
+.sub-menu.open ul {
   display: block;
+}
+
+.li-sub-menu-left-30 {
+    padding-left: 30px !important;
+}
+
+/* user profile */
+.user-profile {
+    left: 120px;
+    top: 7px;
+}
+
+.dropbtn-user {
+    background-color: transparent;
+    color: white;
+    /*padding: 15px;*/
+    /*margin-top: 15px;*/
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
 }

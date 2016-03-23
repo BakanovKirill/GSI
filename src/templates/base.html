@@ -36,11 +36,11 @@
             <div class="row">
                 <div class="col-md-8 col-md-offset-2 center">
                     <nav class="navbar navbar-inverse navbar-static-top main-menu navbar-main-menu">
-                        <div class="container-fluid display-no-table">
+                        <div class="container-fluid">
                             <!-- Brand and toggle get grouped for better mobile display -->
-                            <div class="dropdown">
-                                <button class="dropbtn brand-logo navbar-brand">Dropdown</button>
-                                <div class="dropdown-content li-menu dropdown-left-0 left">
+                            <div class="dropdown navbar-header">
+                                <button class="dropbtn brand-logo navbar-brand" onclick="showSubMenu()">GSi Main Menu</button>
+                                <div class="dropdown-content li-menu dropdown-left-0 left" id="dropdownMenu">
                                     <a href="{% url 'index' %}" class="li-menu">
                                         <img class="right-indent-10" src="{% static 'img/overview.png' %}">
                                         OVERVIEW
@@ -57,91 +57,64 @@
                                         <img class="right-indent-10" src="{% static 'img/view_run_progress.png' %}">
                                         VIEW RUN PROGRESS
                                     </a>
-                                    <a href="#" class="li-menu">
-                                        <img class="right-indent-10" src="{% static 'img/setup_static_data.png' %}">
-                                        SETUP STATIC DATA
-                                    </a>
+                                    <!--<a href="#" class="li-menu">-->
+                                        <!--<img class="right-indent-10" src="{% static 'img/setup_static_data.png' %}">-->
+                                        <!--SETUP STATIC DATA-->
+                                    <!--</a>-->
 
                                     <!-- sub setup static data menu -->
-                                    <div id="sweeties" class="menu">
-                                        <span class="title">Сладости (нажми меня)!</span>
-                                        <ul>
-                                            <li>Торт</li>
-                                            <li>Пончик</li>
-                                            <li>Пирожное</li>
-                                        </ul>
+                                    <div id="sweeties" class="sub-menu">
+                                        <a href="#" class="li-menu title" id="title">
+                                            <img class="right-indent-10" src="{% static 'img/setup_static_data.png' %}">
+                                            SETUP STATIC DATA
+                                            <i class="fa fa-chevron-right icon-visible"></i>
+                                            <i class="fa fa-chevron-down icon-visible" style="display: none"></i>
+                                        </a>
+                                        <div id="subMenu">
+                                            <ul class="li-sub-menu li-sub-menu-left-30">
+                                                <li><a href="{% url 'home_variable_setup' %}" class="li-menu">Setup home variables</a></li>
+                                                <li><a href="{% url 'environment_groups' %}" class="li-menu">Environment Groups</a></li>
+                                                <li><a href="{% url 'areas' %}" class="li-menu">Areas</a></li>
+                                                <li><a href="{% url 'years_group' %}" class="li-menu">Year groups</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
 
-                                    <a href="#" class="li-menu disabled">
-                                        Setup home variables
-                                    </a>
-                                    <a href="#" class="li-menu disabled">
-                                        Environment Groups
-                                    </a>
-                                    <a href="#" class="li-menu disabled">
-                                        Areas
-                                    </a>
-                                    <a href="#" class="li-menu disabled">
-                                        Year groups
-                                    </a>
-
                                     <a href="#" class="li-menu" data-toggle="modal" data-target="#modalUpload">
-                                        <i class="fa fa-upload right-indent-10"></i>
+                                        <i class="fa fa-upload right-indent-10 icon-visible"></i>
                                         UPLOAD TEST DATA
                                     </a>
                                 </div>
                             </div>
-                            <!--<div id="MainMenu" class="dropdown">-->
-                                <!--<div class="dropdown">-->
-                                    <!--<a href="#" class="dropdown-toggle navbar-brand brand-logo dropbtn" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">GSi Main Menu</a>-->
-                                    <!--<ul class="dropdown-menu dropdown-left-0 li-menu dropdown-content">-->
-                                        <!--<li class="li-menu">-->
-                                            <!--<a href="{% url 'index' %}">-->
-                                                <!--<img class="right-indent-10" src="{% static 'img/overview.png' %}">-->
-                                                <!--OVERVIEW-->
-                                            <!--</a>-->
-                                        <!--</li>-->
-                                        <!--<li class="li-menu">-->
-                                            <!--<a href="{% url 'run_setup' %}">-->
-                                                <!--<img class="right-indent-10" src="{% static 'img/setup_new_run.png' %}">-->
-                                                <!--SETUP NEW RUN-->
-                                            <!--</a>-->
-                                        <!--</li>-->
-                                        <!--<li class="li-menu">-->
-                                            <!--<a href="{% url 'submit_run' %}">-->
-                                                <!--<img class="right-indent-10" src="{% static 'img/submit_a_run.png' %}">-->
-                                                <!--SUBMIT A RUN-->
-                                            <!--</a>-->
-                                        <!--</li>-->
-                                        <!--<li class="li-menu">-->
-                                            <!--<a href="{% url 'run_progress' %}">-->
-                                                <!--<img class="right-indent-10" src="{% static 'img/view_run_progress.png' %}">-->
-                                                <!--VIEW RUN PROGRESS-->
-                                            <!--</a>-->
-                                        <!--</li>-->
-                                        <!--<li class="li-menu">-->
-                                            <!--<a href="{% url 'static_data_setup' %}">-->
-                                                <!--<img class="right-indent-10" src="{% static 'img/setup_static_data.png' %}">-->
-                                                <!--SETUP STATIC DATA-->
-                                            <!--</a>-->
-                                        <!--</li>-->
-                                        <!--<li class="li-menu">-->
-                                            <!--<div class="acordion">-->
-                                                <!--<a href="{% url 'static_data_setup' %}">-->
-                                                    <!--<img class="right-indent-10" src="{% static 'img/setup_static_data.png' %}">-->
-                                                    <!--SETUP STATIC DATA-->
-                                                <!--</a>-->
-                                            <!--</div>-->
-                                        <!--</li>-->
-                                        <!--<li data-toggle="modal" data-target="#modalUpload">-->
-                                            <!--<a href="#">-->
-                                                <!--<i class="fa fa-upload right-indent-10"></i>-->
-                                                <!--UPLOAD TEST DATA-->
-                                            <!--</a>-->
-                                        <!--</li>-->
+
+                            <div class="collapse navbar-collapse">
+                                <div class="dropdown-search">
+                                    <input type="text" class="search-form no-yelow-autofill" id="username"
+                                           value="" name="username" placeholder="type here for search..." oninput="" onkeyup="" />
+                                </div>
+
+                                <div class="dropdown user-profile">
+                                    <img src="{% static 'img/anonim_user.png' %}" alt="user profile" class="img-circle">
+                                    <button class="dropbtn-user dropdown-toggle" onclick="">{{ request.user }}</button>
+                                    <div class="dropdown-content li-menu dropdown-left-0 left" id="dropdownUser">
+                                        <a href="{% url 'index' %}" class="li-menu">
+                                            <img class="right-indent-10" src="{% static 'img/overview.png' %}">
+                                            OVERVIEW
+                                        </a>
+                                        <li><a href="{% url 'auth_logout' %}">Log Out</a></li>
+                                    </div>
+
+
+                                    <!--<button class="btn btn-default dropdown-toggle" type="button" id="user_login"-->
+                                            <!--data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">-->
+                                        <!--<i class="fa fa-user"></i> {{ request.user }}-->
+                                        <!--<span class="caret"></span>-->
+                                    <!--</button>-->
+                                    <!--<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">-->
+                                        <!--<li><a href="{% url 'auth_logout' %}">Log Out</a></li>-->
                                     <!--</ul>-->
-                                <!--</div>-->
-                            <!--</div>-->
+                                </div>
+                            </div>
                         </div>
                     </nav>
                 </div>
@@ -151,11 +124,8 @@
 
             <div class="col-md-12 center">
                 <!-- Title -->
-                <h1>
-                    <a href="{% url 'index' %}">GSi {% block title %}{% endblock title %}</a>
-                </h1>
                 <h2>
-                    {% block title_registrations %}{% endblock title_registrations %}
+                    {% block title %}{% endblock title %}</a>
                 </h2>
                 <!-- End Title -->
 
@@ -232,6 +202,41 @@
             </div>
         </div>
         <!-- End Footer -->
+    </div>
+
+    <!-- Modal Upload Test Data -->
+    <div class="modal fade" id="modalUpload" tabindex="-1" role="dialog" aria-labelledby="modalUploadLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <div class="form-group {% if form.test_data.errors %}has-error{% endif %}">
+                        <h4 class="modal-title" id="modalUploadLabel">Upload Test Data</h4>
+                    </div>
+                </div>
+                <form action="{% url 'index' %}" enctype="multipart/form-data" role="form"
+                      class="form-horizontal" method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                {{ form.test_data }}
+                                <p class="help-block font-size-12">
+                                    For test data upload please use text files
+                                </p>
+                                {% if form.test_data.errors %}
+                                    <b class="error-form">{{ form.test_data.errors }}</b>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" name="load_button" class="btn btn-primary">Load</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     <!-- jQuery -->
