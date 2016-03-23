@@ -133,7 +133,7 @@ def create_scripts(run, sequence, card, step):
     except OSError:
         print '*** FOLDER EXIST ***'
     finally:
-        script_name = 'card_{0}.sh'.format(card_item.id)
+        script_name = 'card_{0}.sh'.format(step.card_item.id)
         script_path = path_runs + script_name
         fd = open(script_path, 'w+')
         fd.write('# Sequence: {0}, card: {1} - Generated {2} \n\n'.\
