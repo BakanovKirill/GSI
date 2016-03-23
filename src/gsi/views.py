@@ -697,16 +697,26 @@ def run_details(request, run_id):
 	sub_title = 'The View Log file select and hit view'
 	runs_step = RunStep.objects.filter(parent_run=run_id)
 	runs_step.order_by('card_item.card_item.order')
+	run = get_object_or_404(Run, pk=run_id)
 
 	if request.method == "POST":
-		if request.POST.get('details_file'):
-			step = get_object_or_404(RunStep, pk=request.POST.get('details_file'))
+		if request.POST.get('log_out_button', ''):
 			return HttpResponseRedirect(u'%s?status_message=%s' %
-										(reverse('view_log_file', args=[run_id, step.card_item.id]),
-										 (u'Log file for the Card "{0}".'.format(step.card_item))))
-		else:
-			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_details', args=[run_id]),
-																   (u"To view the Log, select Card.")))
+										(reverse('view_log_out_err', args=[run_id]),
+										 (u'Log Out file for the Run "{0}".'.format(run.run_base))))
+		elif request.POST.get('log_err_button', ''):
+			return HttpResponseRedirect(u'%s?status_message=%s' %
+										(reverse('view_log_out_err', args=[run_id]),
+										 (u'Log Error file for the Run "{0}".'.format(run.run_base))))
+		elif request.POST.get('log_card_button', ''):
+			if request.POST.get('details_file'):
+				step = get_object_or_404(RunStep, pk=request.POST.get('details_file'))
+				return HttpResponseRedirect(u'%s?status_message=%s' %
+											(reverse('view_log_file', args=[run_id, step.card_item.id]),
+											 (u'Log file for the Card "{0}".'.format(step.card_item))))
+			else:
+				return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_details', args=[run_id]),
+																   (u"To view the Card Log, select Card.")))
 
 	data = {
 		'title': title,
@@ -720,17 +730,59 @@ def run_details(request, run_id):
 
 @login_required
 @render_to('gsi/view_log_file.html')
-def view_log_file(request, run_id, card_id):
-	title = 'View Log Details for Cards'
-	# run_step = get_object_or_404(RunStep, card_item__id=card_id)
-	run_step = RunStep.objects.filter(card_item__id=card_id).first
+def view_log_out_err(request, run_id):
+	status = ''
+	log_info = ''
 	run = get_object_or_404(Run, pk=run_id)
 	log = get_object_or_404(Log, pk=run.log.id)
 	log_path = log.log_file_path
+
+	if request.method == "GET":
+		status = request.GET.get('status_message', '')
+
+	out_ext = 'Out' in status and 'out' or ''
+	err_ext = 'Error' in status and 'err' or ''
+	out = 'Out' in status and 'Out' or ''
+	err = 'Error' in status and 'Error' or ''
+	log_file  = 'runcard_{0}.{1}'.format(run_id, out_ext or err_ext)
+	log_file_path = '{0}/{1}'.format(log_path, log_file)
+
+	try:
+		fd = open(log_file_path, 'r')
+		for line in fd.readlines():
+			log_info += line + '<br />'
+	except Exception, e:
+		print 'ERROR view_log_file: ', e
+		mess = out or err
+		return HttpResponseRedirect(u'%s?status_message=%s' %
+									(reverse('run_details', args=[run_id]),
+									 (u'Log {0} for Run "{1}" not found!').
+									 format(mess, run_id)))
+
+	data = {
+		'title': status,
+		'run_id': run_id,
+		'log_info': log_info
+	}
+
+	return data
+
+
+@login_required
+@render_to('gsi/view_log_file.html')
+def view_log_file(request, run_id, card_id):
+	title = 'View Log Details for Cards'
+	# run_step = get_object_or_404(RunStep, card_item__id=card_id)
+	run_step_card = RunStep.objects.filter(card_item__id=card_id).first()
+	run = get_object_or_404(Run, pk=run_id)
+	log = get_object_or_404(Log, pk=run.log.id)
+	log_path = log.log_file_path
+	log_file  = log.log_file
+	log_file_path = '{0}/{1}'.format(log_path, log_file)
 	log_info = ''
 
 	try:
-		fd = open(log_path, 'r')
+		fd = open(log_file_path, 'r')
 		# log_info = fd.readlines()
 		for line in fd.readlines():
 			log_info += line + '<br />'
@@ -739,7 +791,7 @@ def view_log_file(request, run_id, card_id):
 		return HttpResponseRedirect(u'%s?status_message=%s' %
 									(reverse('run_details', args=[run_id]),
 									 (u'Log File for card "{0}" not found!').
-									 format(run_step.card_item)))
+									 format(run_step_card.card_item)))
 
 	data = {
 		'title': title,

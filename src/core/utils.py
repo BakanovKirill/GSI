@@ -162,6 +162,7 @@ def write_log(log_name, run, path_log):
 
     log = Log.objects.create(name=log_name)
     log.log_file_path = path_log
+    log.log_file  = log_name
     log.save()
     run.log = log
     run.save()
@@ -218,7 +219,7 @@ def execute_script(run, scripts):
                 script['step'].save()
                 run.state = 'fail'
                 run.save()
-                write_log(log_name_error, run, path_log_err)
+                write_log(log_name_error, run, script['path_runs_logs'])
                 return False
         else:
             try:
@@ -232,7 +233,7 @@ def execute_script(run, scripts):
                 fd_out.close()
                 script['step'].state = 'success'
                 script['step'].save()
-                write_log(log_name_out, run, path_log_out)
+                write_log(log_name_out, run, script['path_runs_logs'])
 
             # ex_fe_com = subprocess.call('.{0} {1} {2}'.format(
             #     execute_fe_command, script['run'].id, script['card'].id

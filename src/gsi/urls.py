@@ -54,6 +54,9 @@ urlpatterns = [
     # log view cards
     url(r'^run/(?P<run_id>\d+)/card/log/(?P<card_id>\d+)/$', 'gsi.views.view_log_file', name='view_log_file'),
 
+    # log view out/err
+    url(r'^run/(?P<run_id>\d+)/log/$', 'gsi.views.view_log_out_err', name='view_log_out_err'),
+
     # setup static data
     url(r'^run/static-data/setup/$', 'gsi.views.static_data_setup', name='static_data_setup'),
 
