@@ -701,8 +701,9 @@ def run_details(request, run_id):
 	if request.method == "POST":
 		if request.POST.get('details_file'):
 			step = get_object_or_404(RunStep, pk=request.POST.get('details_file'))
-			return HttpResponseRedirect(u'%s?status_message=' %
-										(reverse('view_log_file', args=[run_id, step.id])))
+			return HttpResponseRedirect(u'%s?status_message=%s' %
+										(reverse('view_log_file', args=[run_id, step.card_item.id]),
+										 (u'Log file for the Card "{0}".'.format(step.card_item))))
 		else:
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_details', args=[run_id]),
 																   (u"To view the Log, select Card.")))
@@ -721,7 +722,8 @@ def run_details(request, run_id):
 @render_to('gsi/view_log_file.html')
 def view_log_file(request, run_id, card_id):
 	title = 'View Log Details for Cards'
-	run_step = get_object_or_404(RunStep, pk=card_id)
+	# run_step = get_object_or_404(RunStep, card_item__id=card_id)
+	run_step = RunStep.objects.filter(card_item__id=card_id).first
 	run = get_object_or_404(Run, pk=run_id)
 	log = get_object_or_404(Log, pk=run.log.id)
 	log_path = log.log_file_path
