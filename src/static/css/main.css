@@ -207,7 +207,14 @@ input:-webkit-autofill {
 }
 
 .dropdown-left-0 {
-    left: -16px;
+    left: -14px;
+    border-radius: 0px;
+    border-color: #fff;
+    top: 50px;
+}
+
+.dropdown-user {
+    left: 24px;
     border-radius: 0px;
     border-color: #fff;
     top: 50px;
@@ -351,6 +358,7 @@ input:-webkit-autofill {
 }
 
 .dropbtn-user {
+    left: -15px;
     background-color: transparent;
     color: white;
     /*padding: 15px;*/
@@ -358,4 +366,9 @@ input:-webkit-autofill {
     font-size: 18px;
     border: none;
     cursor: pointer;
+}
+
+.dropdown-content-user {
+    min-width: 100px;
+    width: 136px;
 }
