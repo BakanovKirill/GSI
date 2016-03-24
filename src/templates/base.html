@@ -93,26 +93,27 @@
                                            value="" name="username" placeholder="type here for search..." oninput="" onkeyup="" />
                                 </div>
 
-                                <div class="dropdown user-profile">
-                                    <img src="{% static 'img/anonim_user.png' %}" alt="user profile" class="img-circle">
-                                    <button class="dropbtn-user dropdown-toggle" onclick="">{{ request.user }}</button>
-                                    <div class="dropdown-content li-menu dropdown-left-0 left" id="dropdownUser">
-                                        <a href="{% url 'index' %}" class="li-menu">
-                                            <img class="right-indent-10" src="{% static 'img/overview.png' %}">
-                                            OVERVIEW
+                                <div class="dropdown user-profile" id="dropUser">
+                                    <button class="dropbtn-user dropdown-toggle" id="titleUser" onclick="showSubMenuUser()">
+                                        <img src="{% static 'img/anonim_user.png' %}" alt="user profile" class="img-circle">
+                                        {{ request.user }}
+                                        <i class="fa fa-caret-right icon-visible-user"></i>
+                                        <i class="fa fa-caret-down icon-visible-user" style="display: none"></i>
+                                    </button>
+                                    <div class="dropdown-content dropdown-content-user dropdown-user left" id="dropdownUser">
+                                        <a href="{% url 'index' %}" >
+                                            <img class="right-indent-10" src="{% static 'img/profile.png' %}">
+                                            Profile
                                         </a>
-                                        <li><a href="{% url 'auth_logout' %}">Log Out</a></li>
+                                        <a href="{% url 'index' %}" class="li-menu">
+                                            <img class="right-indent-10" src="{% static 'img/settings.png' %}">
+                                            Settings
+                                        </a>
+                                        <a href="{% url 'auth_logout' %}" class="li-menu">
+                                            <img class="right-indent-10" src="{% static 'img/logout.png' %}">
+                                            Log Out
+                                        </a>
                                     </div>
-
-
-                                    <!--<button class="btn btn-default dropdown-toggle" type="button" id="user_login"-->
-                                            <!--data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">-->
-                                        <!--<i class="fa fa-user"></i> {{ request.user }}-->
-                                        <!--<span class="caret"></span>-->
-                                    <!--</button>-->
-                                    <!--<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">-->
-                                        <!--<li><a href="{% url 'auth_logout' %}">Log Out</a></li>-->
-                                    <!--</ul>-->
                                 </div>
                             </div>
                         </div>
