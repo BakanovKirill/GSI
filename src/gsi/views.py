@@ -697,16 +697,23 @@ def run_details(request, run_id):
 	sub_title = 'The View Log file select and hit view'
 	runs_step = RunStep.objects.filter(parent_run=run_id)
 	runs_step.order_by('card_item.card_item.order')
+	run = get_object_or_404(Run, pk=run_id)
 
 	if request.method == "POST":
 		if request.POST.get('details_file'):
 			step = get_object_or_404(RunStep, pk=request.POST.get('details_file'))
-			return HttpResponseRedirect(u'%s?status_message=%s' %
+
+			if request.POST.get('log_out_button', ''):
+				return HttpResponseRedirect(u'%s?status_message=%s' %
 										(reverse('view_log_file', args=[run_id, step.card_item.id]),
-										 (u'Log file for the Card "{0}".'.format(step.card_item))))
+										 (u'Log Out file for the Card "{0}".'.format(step.card_item))))
+			elif request.POST.get('log_err_button', ''):
+				return HttpResponseRedirect(u'%s?status_message=%s' %
+										(reverse('view_log_file', args=[run_id, step.card_item.id]),
+										 (u'Log Error file for the Card "{0}".'.format(step.card_item))))
 		else:
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_details', args=[run_id]),
-																   (u"To view the Log, select Card.")))
+																   (u"To view the Card Log, select Card.")))
 
 	data = {
 		'title': title,
@@ -717,34 +724,43 @@ def run_details(request, run_id):
 
 	return data
 
-
+# view out/error log files for cards
 @login_required
 @render_to('gsi/view_log_file.html')
 def view_log_file(request, run_id, card_id):
-	title = 'View Log Details for Cards'
-	# run_step = get_object_or_404(RunStep, card_item__id=card_id)
-	run_step = RunStep.objects.filter(card_item__id=card_id).first
+	status = ''
+	log_info = ''
+	run_step_card = RunStep.objects.filter(card_item__id=card_id).first()
 	run = get_object_or_404(Run, pk=run_id)
 	log = get_object_or_404(Log, pk=run.log.id)
 	log_path = log.log_file_path
-	log_info = ''
+
+	if request.method == "GET":
+		status = request.GET.get('status_message', '')
+
+	out_ext = 'Out' in status and 'out' or ''
+	err_ext = 'Error' in status and 'err' or ''
+	out = 'Out' in status and 'Out' or ''
+	err = 'Error' in status and 'Error' or ''
+	log_file  = 'runcard_{0}.{1}'.format(card_id, out_ext or err_ext)
+	log_file_path = '{0}/{1}'.format(log_path, log_file)
 
 	try:
-		fd = open(log_path, 'r')
-		# log_info = fd.readlines()
+		fd = open(log_file_path, 'r')
 		for line in fd.readlines():
 			log_info += line + '<br />'
 	except Exception, e:
 		print 'ERROR view_log_file: ', e
+		mess = out or err
 		return HttpResponseRedirect(u'%s?status_message=%s' %
 									(reverse('run_details', args=[run_id]),
-									 (u'Log File for card "{0}" not found!').
-									 format(run_step.card_item)))
+									 (u'Log {0} for Card "{1}" not found!').
+									 format(mess, run_step_card)))
 
 	data = {
-		'title': title,
+		'title': status,
 		'run_id': run_id,
-		'log_info': log_info,
+		'log_info': log_info
 	}
 
 	return data
@@ -1152,7 +1168,7 @@ def years_group_edit(request, yg_id):
 @login_required
 @render_to('gsi/audit_history.html')
 def audit_history(request, run_id):
-	# Audit record for  MATT_COLLATE_TESTR_29th_Feb
+	# Audit record for  MATT_COLLATE_TESTR_29th_Feb
 	# get_logs(element, element_id, limit=None, user=None)
 	run_base = get_object_or_404(RunBase, pk=run_id)
 	title = 'Audit record for "{0}"'.format(run_base.name)
@@ -1168,4 +1184,3 @@ def audit_history(request, run_id):
 	}
 
 	return data
-
