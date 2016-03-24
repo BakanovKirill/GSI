@@ -1,9 +1,11 @@
 /* body */
-/*body {*/
-    /*background-image: url(img/background_log.jpg);*/
-    /*background-color: #c7b39b;*/
-/*}*/
-
+body {
+    background: url(../img/background_log.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover; /* Safari 3.1+ и Chrome 4.0+ */
+    -moz-background-size: cover; /* Firefox 3.6+ */
+    -o-background-size: cover; /* Opera 9.6+ */
+    background-size: cover;
+}
 
 /* alert */
 .alert {
