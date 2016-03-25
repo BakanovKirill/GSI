@@ -371,4 +371,20 @@ input:-webkit-autofill {
 .dropdown-content-user {
     min-width: 100px;
     width: 136px;
+    display: none;
+    position: absolute;
+}
+
+.dropdown-content-user a {
+    color: black;
+    padding: 12px 15px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content-user a:hover {
+    background-color: transparent;
+    text-decoration: none !important;
+    color: #428bca;
+    background-image: none;
 }
