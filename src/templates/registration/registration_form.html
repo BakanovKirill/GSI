@@ -27,7 +27,8 @@
                 <div class="row">
                     <!--<div class="col-md-4  col-md-offset-4">-->
                         <span class="img-top-input font-9 blue-color-bootstrap username"><b>Username</b></span>
-                        <i class="fa fa-user img-top-input right top-25 username"></i>
+                        <!--<i class="fa fa-user img-top-input right top-25 username"></i>-->
+                        <img class="img-top-input float-right top-25 username" src="{% static 'img/profile_18.png' %}"/>
                         <input type="text" class="border-bottom form-control padding-0 input-form" id="username"
                                value="" name="username" placeholder="Username" oninput="visibleUsernameTopInput()" onkeyup="visibleUsernameTopInput()" />
                         <span class="help-block">{{ form.errors.username.as_text }}</span>
@@ -37,7 +38,7 @@
                 <div class="row">
                     <!--<div class="col-md-4 col-md-offset-4">-->
                         <span class="img-top-input font-9 blue-color-bootstrap email"><b>Email</b></span>
-                        <i class="fa fa-envelope-o img-top-input right top-25 email"></i>
+                        <img class="img-top-input float-right top-25 email" src="{% static 'img/email_18.png' %}"/>
                         <input type="text" class="border-bottom form-control padding-0" id="email"
                                value="" name="email" placeholder="Email" oninput="visibleEmailTopInput()" onkeyup="visibleEmailTopInput()" />
                         <span class="help-block">{{ form.errors.email.as_text }}</span>
@@ -47,7 +48,7 @@
                 <div class="row">
                     <!--<div class="col-md-4 col-md-offset-4">-->
                         <span class="img-top-input font-9 blue-color-bootstrap pass"><b>Password</b></span>
-                        <img class="img-top-input float-right top-25 pass" src="{% static 'img/eye.png' %}"/>
+                        <img class="img-top-input float-right top-25 pass" src="{% static 'img/eye_18.png' %}"/>
                         <input type="password" class="border-bottom form-control padding-0 form-password" id="password"
                                value="" name="password1" placeholder="Password" onkeyup="visiblePasswordTopInput()" />
                         <span class="help-block">{{ form.errors.password1.as_text }}</span>
@@ -57,7 +58,7 @@
                 <div class="row">
                     <!--<div class="col-md-4 col-md-offset-4">-->
                         <span class="img-top-input font-9 blue-color-bootstrap re-pass"><b>Retype password</b></span>
-                        <img class="img-top-input float-right top-25 re-pass" src="{% static 'img/eye.png' %}"/>
+                        <img class="img-top-input float-right top-25 re-pass" src="{% static 'img/eye_18.png' %}"/>
                         <input type="password" class="border-bottom form-control padding-0 input-form" id="re-password"
                                value="" name="password2" placeholder="Retype password" onkeyup="visibleRePasswordTopInput()" />
                         <span class="help-block">{{ form.errors.password2.as_text }}</span>
@@ -69,7 +70,7 @@
                         <div class="col-md-6 padding-left-0">
                             <a href="{% url 'users:auth_login' %}"
                                class="btn btn-default margin-top-8 btn-block" role="button">
-                                Cancel
+                                Login
                             </a>
                         </div>
                         <div class="col-md-6 padding-rigth-0">
