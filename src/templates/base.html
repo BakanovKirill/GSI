@@ -29,17 +29,66 @@
 <body>
     <!-- Start Container -->
     <div class="container">
-        <!-- Start Header -->
-        <div class="row" id="header">
-            {% if user.is_authenticated %}
-            <!-- Main Menu -->
+        {% if user.is_authenticated %}
+            <!-- Start Body -->
             <div class="row">
-                <div class="col-md-8 col-md-offset-2 center">
-                    <nav class="navbar navbar-inverse navbar-static-top main-menu navbar-main-menu">
-                        <div class="container-fluid">
-                            <!-- Brand and toggle get grouped for better mobile display -->
-                            <div class="dropdown navbar-header">
-                                <button class="dropbtn brand-logo navbar-brand" onclick="showSubMenu()">GSi Main Menu</button>
+                <div class="col-md-10 col-md-offset-1 center">
+                    <!-- Start Top Menu -->
+                    <div class="row">
+                        <div class="col-md-12 center">
+                            <nav class="navbar navbar-inverse navbar-static-top main-menu navbar-main-menu">
+                                <div class="container-fluid">
+                                    <!-- Brand and toggle get grouped for better mobile display -->
+                                    <a class="dropbtn brand-logo navbar-brand" href="{% url 'index' %}">GSi Main Menu</a>
+                                    <!-- End Brand and toggle get grouped for better mobile display -->
+
+                                    <div class="collapse navbar-collapse">
+                                        <div class="dropdown-search">
+                                            <input type="text" class="search-form no-yelow-autofill" id="username"
+                                                   value="" name="username" placeholder="type here for search..." oninput="" onkeyup="" />
+                                        </div>
+
+                                        <div class="dropdown user-profile" id="dropUser">
+                                            <button class="dropbtn-user dropdown-toggle" id="titleUser" onclick="showSubMenuUser()">
+                                                <img src="{% static 'img/anonim.png' %}" class="img-circle circle">
+                                                {{ request.user }}
+                                                <i class="fa fa-caret-right icon-visible-user"></i>
+                                                <i class="fa fa-caret-down icon-visible-user" style="display: none"></i>
+                                            </button>
+                                            <div class="dropdown-content-user dropdown-user left" id="dropdownUser">
+                                                <a href="{% url 'index' %}" >
+                                                    <img class="right-indent-10" src="{% static 'img/profile.png' %}">
+                                                    Profile
+                                                </a>
+                                                <a href="{% url 'index' %}" class="li-menu">
+                                                    <img class="right-indent-10" src="{% static 'img/settings.png' %}">
+                                                    Settings
+                                                </a>
+                                                <a href="{% url 'auth_logout' %}" class="li-menu">
+                                                    <img class="right-indent-10" src="{% static 'img/logout.png' %}">
+                                                    Log Out
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- End Top Menu -->
+
+                    <div class="row">
+                        <!-- Start Main Menu Left Sidebar -->
+                        <div class="col-md-3 li-menu dropdown-left-0 left">
+                            <ul class="nav nav-pills nav-stacked">
+                                <li class="active"><a href="#">Vaccinations</a></li>
+                                <li><a href="#">Checkups</a></li>
+                                <li><a href="#">Senior Pets</a></li>
+                                <li><a href="#">Diet Plans</a></li>
+                            </ul>
+
+                            <div class="">
+                                <!--<button class="dropbtn brand-logo navbar-brand" onclick="showSubMenu()">GSi Main Menu</button>-->
                                 <div class="dropdown-content li-menu dropdown-left-0 left" id="dropdownMenu">
                                     <a href="{% url 'index' %}" class="li-menu">
                                         <img class="right-indent-10" src="{% static 'img/overview.png' %}">
@@ -57,10 +106,6 @@
                                         <img class="right-indent-10" src="{% static 'img/view_run_progress.png' %}">
                                         VIEW RUN PROGRESS
                                     </a>
-                                    <!--<a href="#" class="li-menu">-->
-                                        <!--<img class="right-indent-10" src="{% static 'img/setup_static_data.png' %}">-->
-                                        <!--SETUP STATIC DATA-->
-                                    <!--</a>-->
 
                                     <!-- sub setup static data menu -->
                                     <div id="sweeties" class="sub-menu">
@@ -87,106 +132,53 @@
                                     </a>
                                 </div>
                             </div>
+                        </div>
+                        <!-- End Main Menu Left Sidebar -->
+                        
+                        <!-- Start Status Messages -->
+                        <div class="col-md-9">
+                            <!-- Start Authorization -->
+                            {% block status_message_auth %}{% endblock status_message_auth %}
+                            <!-- End Authorization -->
 
-                            <div class="collapse navbar-collapse">
-                                <div class="dropdown-search">
-                                    <input type="text" class="search-form no-yelow-autofill" id="username"
-                                           value="" name="username" placeholder="type here for search..." oninput="" onkeyup="" />
-                                </div>
-
-                                <div class="dropdown user-profile" id="dropUser">
-                                    <button class="dropbtn-user dropdown-toggle" id="titleUser" onclick="showSubMenuUser()">
-                                        <img src="{% static 'img/anonim_user.png' %}" alt="user profile" class="img-circle">
-                                        {{ request.user }}
-                                        <i class="fa fa-caret-right icon-visible-user"></i>
-                                        <i class="fa fa-caret-down icon-visible-user" style="display: none"></i>
-                                    </button>
-                                    <div class="dropdown-content-user dropdown-user left" id="dropdownUser">
-                                        <a href="{% url 'index' %}" >
-                                            <img class="right-indent-10" src="{% static 'img/profile.png' %}">
-                                            Profile
-                                        </a>
-                                        <a href="{% url 'index' %}" class="li-menu">
-                                            <img class="right-indent-10" src="{% static 'img/settings.png' %}">
-                                            Settings
-                                        </a>
-                                        <a href="{% url 'auth_logout' %}" class="li-menu">
-                                            <img class="right-indent-10" src="{% static 'img/logout.png' %}">
-                                            Log Out
-                                        </a>
+                            <!-- Start Request -->
+                            {% block status_message_request %}
+                            {% if request.GET.status_message %}
+                                {% if request.GET.status_message %}
+                                    <div class="alert alert-warning alert-dismissible" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        {{ request.GET.status_message }}
                                     </div>
-                                </div>
-                            </div>
+                                {% endif %}
+                            {% endif %}
+                            {% endblock status_message_request %}
+                            <!-- End Request -->
                         </div>
-                    </nav>
+                        <!-- End Status Messages -->
+
+                        <!-- Start Content -->
+                        <div class="col-md-9">
+                            <!-- Title -->
+                            <h2>{% block title %}{% endblock title %}</h2>
+                            <!-- End Title -->
+                            {% block content %}{% endblock content %}
+                        </div>
+                        <!-- End Content -->
+                    </div>
+
+                    <!-- Start Footer -->
+                    <div class="row">
+                        <div class="col-md-12 center margin-top-50 margin-bottom-50 font-11">
+                            &copy; 2015 GSI Web Site
+                        </div>
+                    </div>
+                    <!-- End Footer -->
                 </div>
             </div>
-            <!-- End Main Menu -->
-            {% endif %}
-
-            <div class="col-md-12 center">
-                <!-- Title -->
-                <h2>
-                    {% block title %}{% endblock title %}</a>
-                </h2>
-                <!-- End Title -->
-            </div>
-        </div>
-        <!-- End Header -->
-
-        <!-- Start Status Message Authorization -->
-        <div class="row">
-            <div class="col-md-12">
-                {% block status_message_auth %}{% endblock status_message_auth %}
-            </div>
-        </div>
-        <!-- End Status Message Authorization -->
-
-        <!-- Start Status Message Request -->
-        {% block status_message_request %}
-        {% if request.GET.status_message %}
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                    {% if request.GET.status_message %}
-                        <div class="alert alert-warning alert-dismissible" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            {{ request.GET.status_message }}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
+            <!-- End Body -->
         {% endif %}
-        {% endblock status_message_request %}
-        <!-- End Status Message Request -->
-
-        <!-- Start Breadcrumbs -->
-        <!--{% if breadcrumbs %}-->
-            <!--<div class="row margin-top-15">-->
-                <!--<div class="col-md-8 col-md-offset-2">-->
-                    <!--<ol class="breadcrumb">-->
-                        <!--{% for key, value in breadcrumbs.items %}-->
-                            <!--<li><a href="{% url value %}">{{ key }}</a></li>-->
-                        <!--{% endfor %}-->
-                        <!--<li class="active">{{ title }}</li>-->
-                    <!--</ol>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--{% endif %}-->
-        <!-- End Breadcrumbs -->
-
-        <!-- Start Content -->
-        {% block content %}{% endblock content %}
-        <!-- End Content -->
-
-        <!-- Start Footer -->
-        <div class="row" id="footer">
-            <div class="col-md-12 center margin-top-50 margin-bottom-50 font-11">
-                &copy; 2015 GSI Web Site
-            </div>
-        </div>
-        <!-- End Footer -->
     </div>
 
     <!-- Modal Upload Test Data -->

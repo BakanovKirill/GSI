@@ -207,10 +207,10 @@ input:-webkit-autofill {
 }
 
 .dropdown-left-0 {
-    left: -14px;
+    /*left: -14px;*/
     border-radius: 0px;
     border-color: #fff;
-    top: 50px;
+    top: 10px;
 }
 
 .dropdown-user {
@@ -353,7 +353,7 @@ input:-webkit-autofill {
 
 /* user profile */
 .user-profile {
-    left: 120px;
+    left: 23%;
     top: 7px;
 }
 
@@ -387,4 +387,13 @@ input:-webkit-autofill {
     text-decoration: none !important;
     color: #428bca;
     background-image: none;
+}
+
+.circle {
+    border: 3px;
+    border-color: white;
+    border-style: solid;
+    width: 34px;
+    height: 34px;
+    background-color: #D3D3D3;
 }
