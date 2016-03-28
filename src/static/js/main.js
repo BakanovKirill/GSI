@@ -19,9 +19,9 @@ function onOffSubMenuUser() {
   };
 }
 
-function showSubMenu() {
-  document.getElementById("dropdownMenu").classList.toggle("show");
-}
+//function showSubMenu() {
+//  document.getElementById("dropdownMenu").classList.toggle("show");
+//}
 
 function showSubMenuUser() {
   document.getElementById("dropdownUser").classList.toggle("show");
@@ -33,23 +33,23 @@ function showSubMenuStaticData() {
 
 function invisibleDropMenu() {
   window.onclick = function(event) {
-    if (!event.target.matches('.dropbtn')) {
-      var dropdowns = document.getElementsByClassName("dropdown-content");
-      var i;
-      event = event || window.event;
-      var target = event.target || event.srcElement;
-
-      for (i = 0; i < dropdowns.length; i++) {
-        var openDropdown = dropdowns[i];
-
-        if (openDropdown.classList.contains('show') && target.id !== "title") {
-          openDropdown.classList.remove('show');
-          //$(".icon-visible").toggle();
-          var menuElem = document.getElementById('subMenu');
-          //menuElem.classList.toggle('hide');
-        }
-      }
-    }
+    //if (!event.target.matches('.dropbtn')) {
+    //  var dropdowns = document.getElementsByClassName("dropdown-content");
+    //  var i;
+    //  event = event || window.event;
+    //  var target = event.target || event.srcElement;
+    //
+    //  for (i = 0; i < dropdowns.length; i++) {
+    //    var openDropdown = dropdowns[i];
+    //
+    //    if (openDropdown.classList.contains('show') && target.id !== "title") {
+    //      openDropdown.classList.remove('show');
+    //      //$(".icon-visible").toggle();
+    //      var menuElem = document.getElementById('subMenu');
+    //      //menuElem.classList.toggle('hide');
+    //    }
+    //  }
+    //}
     if (!event.target.matches('.dropbtn-user')) {
       var dropdowns = document.getElementsByClassName("dropdown-content-user");
       var i;
@@ -67,26 +67,6 @@ function invisibleDropMenu() {
     }
   }
 }
-
-//function invisibleDropMenuUser() {
-//  window.onclick = function(event) {
-//    if (!event.target.matches('.dropbtn-user')) {
-//      var dropdowns = document.getElementsByClassName("dropdown-content-user");
-//      var i;
-//      event = event || window.event;
-//      var target = event.target || event.srcElement;
-//
-//      for (i = 0; i < dropdowns.length; i++) {
-//        var openDropdown = dropdowns[i];
-//
-//        if (openDropdown.classList.contains('show') || target.id !== "title") {
-//          openDropdown.classList.remove('show');
-//          $(".icon-visible-user").toggle();
-//        }
-//      }
-//    }
-//  }
-//}
 
 $(document).ready(function(){
   onOffSubMenu();

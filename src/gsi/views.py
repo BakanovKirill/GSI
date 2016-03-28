@@ -51,6 +51,7 @@ def blocking(request):
 def index(request):
 	title = 'Main Menu'
 	home_var = HomeVariables.objects.all()[0]
+	url_name = 'home'
 
 	# log error permission
 	err_file = '/home/gsi/logs/perm_log.err'
@@ -97,7 +98,11 @@ def index(request):
 			)
 	else:
 		form = UploadFileForm()
-	data = {'title': title, 'form': form}
+	data = {
+		'title': title,
+		'form': form,
+		'url_name': url_name
+	}
 
 	return data
 
@@ -108,6 +113,7 @@ def run_setup(request):
 	title = 'Run Setup'
 	run_bases = RunBase.objects.all()
 	run_name = ''
+	url_name = 'run_setup'
 
 	if request.method == "POST":
 		if request.POST.get('run_select'):
@@ -129,6 +135,7 @@ def run_setup(request):
 	data = {
 		'title': title,
 		'run_bases': run_bases,
+		'url_name': url_name,
 	}
 
 	return data
@@ -607,6 +614,7 @@ def submit_run(request):
 	run_bases = RunBase.objects.all()
 	title = 'Submit a Run'
 	name_runs = ''
+	url_name = 'submit_run'
 
 	if request.method == "POST":
 		if request.POST.getlist('execute_runs'):
@@ -632,6 +640,7 @@ def submit_run(request):
 	data = {
 		'title': title,
 		'run_bases': run_bases,
+		'url_name': url_name,
 	}
 
 	return data
@@ -666,6 +675,7 @@ def execute_runs(request, run_id):
 def run_progress(request):
 	runs = Run.objects.all().order_by('id')
 	title = 'Run Progress'
+	url_name = 'run_progress'
 
 	if request.method == "POST":
 		if request.POST.get('run_progress'):
@@ -684,6 +694,7 @@ def run_progress(request):
 	data = {
 		'title': title,
 		'runs': runs,
+		'url_name': url_name,
 	}
 
 	return data
@@ -785,6 +796,7 @@ def home_variable_setup(request):
 	title = 'Home Variables'
 	variables = get_object_or_404(HomeVariables, pk=1)
 	form = None
+	url_name = 'home_variable'
 
 	if request.method == "POST":
 		form = HomeVariablesForm(request.POST)
@@ -814,7 +826,8 @@ def home_variable_setup(request):
 	data = {
 		'title': title,
 		'variables': variables,
-		'form': form
+		'form': form,
+		'url_name': url_name,
 	}
 
 	return data
@@ -827,6 +840,7 @@ def environment_groups(request):
 	title = 'Environment Groups'
 	environments = VariablesGroup.objects.all()
 	env_name = ''
+	url_name = 'environment_groups'
 
 	if request.method == "POST":
 		if request.POST.get('env_select'):
@@ -850,6 +864,7 @@ def environment_groups(request):
 	data = {
 		'title': title,
 		'environments': environments,
+		'url_name': url_name,
 	}
 
 	return data
@@ -939,6 +954,7 @@ def areas(request):
 	title = 'Areas'
 	areas = Area.objects.all()
 	area_name = ''
+	url_name = 'areas'
 
 	if request.method == "POST":
 		if request.POST.get('area_select'):
@@ -962,6 +978,7 @@ def areas(request):
 	data = {
 		'title': title,
 		'areas': areas,
+		'url_name': url_name,
 	}
 
 	return data
@@ -1056,6 +1073,7 @@ def years_group(request):
 	title = 'Years Groups'
 	years_groups = YearGroup.objects.all()
 	yg_name = ''
+	url_name = 'years_group'
 
 	if request.method == "POST":
 		if request.POST.get('yg_select'):
@@ -1077,6 +1095,7 @@ def years_group(request):
 	data = {
 		'title': title,
 		'years_groups': years_groups,
+		'url_name': url_name,
 	}
 
 	return data

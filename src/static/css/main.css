@@ -156,7 +156,8 @@ li.main-menu {
     position: relative;
     display: inline-block;
     min-width: 150px;
-    left: -100px;
+    /*left: -100px;*/
+    left: -17%;
     top: 10px;
 }
 
@@ -222,6 +223,8 @@ input:-webkit-autofill {
 
 .brand-logo {
     color: white !important;
+    width: 21%;
+    text-align: left;
 }
 
 .brand-logo:hover {
@@ -237,6 +240,10 @@ input:-webkit-autofill {
     padding-right: 10px;
 }
 
+.left-indent-10 {
+    padding-left: 10px;
+}
+
 .acordion > a {
     clear: both;
     color: #333;
@@ -247,9 +254,25 @@ input:-webkit-autofill {
     white-space: nowrap;
 }
 
-.li-menu {
+li.li-menu > a, li.active-main-menu > a {
     font-size: 14px;
     background-color: white;
+
+}
+
+li.li-menu > a, .title {
+    color: black;
+    padding-right: 0px;  !important;
+}
+
+li.active-main-menu > a {
+    color: #337ab7 !important;
+}
+
+li.active-main-menu, li.active-main-menu a:hover, li.li-menu > a:hover, .title:hover, .li-sub-menu > a:hover {
+    background-color: transparent;
+    color: #337ab7 !important;
+    text-decoration: none;
 }
 
 .acordion > a:hover, .li-menu > li > a:hover {
@@ -296,9 +319,9 @@ input:-webkit-autofill {
     /*box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);*/
 }
 
-.dropdown-content a {
+.dropdown-content a, .li-sub-menu > a {
     color: black;
-    padding: 12px 15px;
+    padding: 8px 15px;
     text-decoration: none;
     display: block;
 }
@@ -337,18 +360,35 @@ input:-webkit-autofill {
 
 .icon-visible {
     color: black;
+    padding-left: 15px;
+    padding-right: 0px;
 }
 
 .title {
-    color: #428bca;
+    display: block;
+    padding: 10px 15px;
+    position: relative;
+
+    background-color: transparent;
+    /*padding: 15px;*/
+    /*margin-top: 15px;*/
+    border: none;
+    cursor: pointer;
 }
 
 .sub-menu.open ul {
   display: block;
 }
 
-.li-sub-menu-left-30 {
-    padding-left: 30px !important;
+/*.li-sub-menu-left-30 {*/
+    /*padding-left: 55px !important;*/
+/*}*/
+
+.li-sub-menu {
+    padding-left: 18px !important;
+    /*display: block;*/
+    /*padding: 8px 15px;*/
+    /*position: relative;*/
 }
 
 /* user profile */
