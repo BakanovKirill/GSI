@@ -4,6 +4,10 @@
     /*background-color: #c7b39b;*/
 /*}*/
 
+th {
+    text-align: center;
+}
+
 
 /* alert */
 .alert {

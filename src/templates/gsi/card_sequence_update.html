@@ -13,7 +13,7 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-12">
             <form action="{% if run_id %}
                             {% url 'card_sequence_update' run_id cs_id %}
                            {% elif cs_id %}

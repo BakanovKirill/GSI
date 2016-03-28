@@ -12,9 +12,8 @@
 {% endblock status_message %}
 
 {% block content %}
-1111-----
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-12">
             <form action="{% url 'card_item_update' run_id cs_id card_sequence_card.id %}" method="post"
                 enctype="multipart/form-data" role="form" class="form-horizontal">
                 {% csrf_token %}
