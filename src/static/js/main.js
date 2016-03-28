@@ -3,8 +3,22 @@ function onOffSubMenu() {
   var titleElem = document.getElementById('title');
 
   titleElem.onclick = function() {
-    menuElem.classList.toggle('open');
-    $(".icon-visible").toggle();
+    //menuElem.classList.toggle('open');
+    //$(".icon-visible").toggle();
+    //if ( $("#sweeties").hasClass("sub-menu-visible") ) {
+    //  alert("У элемента задан класс sub-menu-visible!");
+    //}
+
+    $('#icon_static').toggleClass("fa-chevron-right", "fa-chevron-down");
+    $('#icon_static').toggleClass("fa-chevron-down", "fa-chevron-right");
+    $('#sweeties').toggleClass("sub-menu-visible", "sub-menu-no-visible");
+    $('#sweeties').toggleClass("sub-menu-no-visible", "sub-menu-visible");
+    //$("div.sub-menu-no-visible").toggleClass("sub-menu-visible");
+    //$("div.sub-menu-visible").toggleClass("sub-menu-no-visible");
+
+    //$("#sweeties").toggleClass("sub-menu");
+    //$("#title").addClass("active-static-data");
+    //$("#title").removeClass("li-menu");
   };
 }
 
@@ -28,7 +42,8 @@ function showSubMenuUser() {
 }
 
 function showSubMenuStaticData() {
-  document.getElementById("subMenu").classList.toggle("show");
+  //document.getElementById("subMenu").classList.toggle("show");
+  //$("div.sub-menu-no-visible").toggleClass("sub-menu-visible");
 }
 
 function invisibleDropMenu() {

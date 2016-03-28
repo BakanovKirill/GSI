@@ -260,6 +260,10 @@ li.li-menu > a, li.active-main-menu > a {
 
 }
 
+.active-static-data {
+    color: #337ab7 !important;
+}
+
 li.li-menu > a, .title {
     color: black;
     padding-right: 0px;  !important;
@@ -346,11 +350,18 @@ li.active-main-menu, li.active-main-menu a:hover, li.li-menu > a:hover, .title:h
 }
 
 /* on/off sub menu */
-.sub-menu ul {
+.sub-menu-no-visible ul {
   margin: 0;
   list-style: none;
   padding-left: 20px;
   display: none;
+}
+
+.sub-menu-visible ul {
+  margin: 0;
+  list-style: none;
+  padding-left: 20px;
+  display: block;
 }
 
 /*.sub-menu .title::before {*/
@@ -362,6 +373,10 @@ li.active-main-menu, li.active-main-menu a:hover, li.li-menu > a:hover, .title:h
     color: black;
     padding-left: 15px;
     padding-right: 0px;
+}
+
+.icon-no-visible {
+    display: none
 }
 
 .title {

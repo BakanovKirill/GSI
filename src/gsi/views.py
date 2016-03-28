@@ -797,6 +797,7 @@ def home_variable_setup(request):
 	variables = get_object_or_404(HomeVariables, pk=1)
 	form = None
 	url_name = 'home_variable'
+	but_name = 'static_data'
 
 	if request.method == "POST":
 		form = HomeVariablesForm(request.POST)
@@ -828,6 +829,7 @@ def home_variable_setup(request):
 		'variables': variables,
 		'form': form,
 		'url_name': url_name,
+		'but_name': but_name,
 	}
 
 	return data
@@ -841,6 +843,7 @@ def environment_groups(request):
 	environments = VariablesGroup.objects.all()
 	env_name = ''
 	url_name = 'environment_groups'
+	but_name = 'static_data'
 
 	if request.method == "POST":
 		if request.POST.get('env_select'):
@@ -865,6 +868,7 @@ def environment_groups(request):
 		'title': title,
 		'environments': environments,
 		'url_name': url_name,
+		'but_name': but_name,
 	}
 
 	return data
@@ -955,6 +959,7 @@ def areas(request):
 	areas = Area.objects.all()
 	area_name = ''
 	url_name = 'areas'
+	but_name = 'static_data'
 
 	if request.method == "POST":
 		if request.POST.get('area_select'):
@@ -979,6 +984,7 @@ def areas(request):
 		'title': title,
 		'areas': areas,
 		'url_name': url_name,
+		'but_name': but_name,
 	}
 
 	return data
@@ -1074,6 +1080,7 @@ def years_group(request):
 	years_groups = YearGroup.objects.all()
 	yg_name = ''
 	url_name = 'years_group'
+	but_name = 'static_data'
 
 	if request.method == "POST":
 		if request.POST.get('yg_select'):
@@ -1096,6 +1103,7 @@ def years_group(request):
 		'title': title,
 		'years_groups': years_groups,
 		'url_name': url_name,
+		'but_name': but_name,
 	}
 
 	return data

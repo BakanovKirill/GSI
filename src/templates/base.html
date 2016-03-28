@@ -107,12 +107,13 @@
                                 </li>
 
                                 <!-- sub setup static data menu -->
-                                <div id="sweeties" class="sub-menu">
-                                    <button class="{% if url_name == 'run_progress' %}active-main-menu{% else %}li-menu{% endif %} title" id="title" onclick="showSubMenuStaticData()">
+                                <div id="sweeties" class="{% if but_name == 'static_data' %}sub-menu-visible{% else %}sub-menu-no-visible{% endif %}">
+                                    <button class="title {% if but_name == 'static_data' %}active-static-data{% endif %}" id="title" onclick="showSubMenuStaticData()">
                                         <img class="right-indent-10" src="{% static 'img/setup_static_data.png' %}">
                                         SETUP STATIC DATA
-                                        <i class="fa fa-chevron-right icon-visible"></i>
-                                        <i class="fa fa-chevron-down icon-visible" style="display: none"></i>
+                                        <i id="icon_static" class="fa {% if but_name == 'static_data' %}fa-chevron-down{% else %}fa-chevron-right{% endif %} icon-visible"></i>
+                                        <!--<i class="fa fa-chevron-right icon-visible"></i>-->
+                                        <!--<i class="fa fa-chevron-down icon-visible" style="display: none"></i>-->
                                     </button>
                                     <div id="subMenu">
                                         <ul>
