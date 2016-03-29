@@ -312,10 +312,42 @@ def run_update(request, run_id):
 
 
 @login_required
+@render_to('gsi/run_new_card_sequence_list.html')
+def run_new_card_sequence_list(request):
+	title = 'Card Sequences'
+	card_sequences = CardSequence.objects.all()
+	cs_name = ''
+
+	if request.method == "POST":
+		if request.POST.get('cs_select'):
+			for cs_id in request.POST.getlist('cs_select'):
+				cur_cs = get_object_or_404(CardSequence, pk=cs_id)
+				cs_name += '"' + cur_cs.name + '", '
+				cur_cs.delete()
+
+			return HttpResponseRedirect(u'%s?status_message=%s' %
+										(reverse('run_new_card_sequence_list'),
+										 (u'Card Sequence: {0} ==> deleted.'.
+										  format(cs_name)))
+			)
+		else:
+			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_new_card_sequence_list'),
+										 (u"To delete, select Card Sequence or more Card Sequences."))
+			)
+
+	data = {
+		'title': title,
+		'card_sequences': card_sequences,
+	}
+
+	return data
+
+
+@login_required
 @render_to('gsi/card_sequence.html')
 def card_sequence(request, run_id):
 	card_sequences = CardSequence.objects.all()
-	title = 'Card Sequence'
+	title = 'Card Sequences'
 	cs_name = ''
 
 	if request.method == "POST":
@@ -391,7 +423,7 @@ def run_new_card_sequence_add(request):
 				)
 		elif request.POST.get('cancel_button') is not None:
 			return HttpResponseRedirect(
-					u'%s?status_message=%s' % (reverse('new_run'),
+					u'%s?status_message=%s' % (reverse('run_new_card_sequence_list'),
 					(u"Card Sequence created canceled"))
 			)
 	else:
@@ -411,7 +443,7 @@ def run_new_card_sequence_add(request):
 def run_new_card_sequence_update(request, cs_id):
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
 	card_sequence_cards = CardSequence.cards.through.objects.filter(sequence_id=cs_id)
-	title = 'Card Sequence {0}'.format(card_sequence.name)
+	title = 'Card Sequence %s' % (card_sequence.name)
 	url_process_card = 'run_new_card_sequence_update'
 	form = None
 
@@ -481,7 +513,7 @@ def run_new_card_sequence_update(request, cs_id):
 					)
 		elif request.POST.get('cancel_button') is not None:
 			return HttpResponseRedirect(
-					u'%s?status_message=%s' % (reverse('new_run'),
+					u'%s?status_message=%s' % (reverse('run_new_card_sequence_list'),
 					(u"Card Sequence created canceled"))
 			)
 	else:

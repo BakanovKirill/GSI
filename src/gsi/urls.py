@@ -100,6 +100,8 @@ urlpatterns = [
         name='run_new_card_sequence_add'),
     url(r'^run/card-sequence/(?P<cs_id>\d+)/$', 'gsi.views.run_new_card_sequence_update',
         name='run_new_card_sequence_update'),
+    url(r'^run/card-sequence/list/$', 'gsi.views.run_new_card_sequence_list',
+        name='run_new_card_sequence_list'),
 
     url(r'^run/(?P<run_id>\d+)/card-sequence/add/$', 'gsi.views.add_card_sequence',
         name='add_card_sequence'),

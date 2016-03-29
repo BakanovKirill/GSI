@@ -72,12 +72,6 @@
                         {% endif %}
                         {{ form.card_sequence }}
                     </div>
-
-                    <div class="col-md-4">
-                        <a class="btn btn-default btn-block" href="{% url 'run_new_card_sequence_add' %}" role="button">
-                            New Card Sequence
-                        </a>
-                    </div>
 				</div>
 
                 <div class="row margin-top-15">
@@ -118,9 +112,9 @@
                         </a>
                     </div>
                     <div class="col-md-4">
-                        <button type="submit" name="edit_cs_button" class="btn btn-primary btn-block">
+                        <a class="btn btn-primary btn-block" href="{% url 'run_new_card_sequence_list' %}" role="button">
                             Edit Card Sequence
-                        </button>
+                        </a>
                     </div>
                     <div class="col-md-4">
                         <button type="submit" name="save_button" class="btn btn-primary btn-block">
