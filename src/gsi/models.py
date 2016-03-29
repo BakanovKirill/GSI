@@ -94,7 +94,7 @@ class RunBase(UnicodeNameMixin, models.Model):
     directory_path = models.CharField(max_length=200)
 
     resolution = models.ForeignKey(Resolution)
-    card_sequence = models.ForeignKey(CardSequence)
+    card_sequence = models.ForeignKey(CardSequence, blank=True, null=True)
 
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now_add=True)
@@ -139,7 +139,8 @@ class RunStep(UnicodeNameMixin, models.Model):
         return u"{0}_{1}".format(self.card_item, self.parent_run)
 
     def get_next_step(self):
-        next_card = OrderedCardItem.objects.filter(sequence__runbase=self.parent_run.run_base, order__gte=self.card_item.order).exclude(id=self.card_item.id)
+        next_card = OrderedCardItem.objects.filter(
+            sequence__runbase=self.parent_run.run_base, order__gte=self.card_item.order).exclude(id=self.card_item.id)
         is_last_step = False
         if len(next_card) == 1:
             is_last_step = True

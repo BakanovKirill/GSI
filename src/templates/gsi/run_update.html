@@ -136,16 +136,29 @@
 
                 <div class="row margin-top-50">
                     <div class="col-md-3">
-                        <button type="submit" name="cancel_button" class="btn btn-default btn-block">Cancel</button>
+                        <button type="submit" name="cancel_button" class="btn btn-default btn-block">
+                            Cancel
+                        </button>
                     </div>
                     <div class="col-md-3">
-                        <a class="btn btn-default btn-block" href="{% url 'audit_history' run_base.id %}" role="button">View Audit History</a>
+                        <a class="btn btn-default btn-block" href="{% url 'audit_history' run_base.id %}" role="button">
+                            View Audit History
+                        </a>
+                    </div>
+                    <!--<div class="col-md-3">-->
+                        <!--<a class="btn btn-default btn-block" href="{% url 'card_sequence' run_base.id %}" role="button">-->
+                            <!--Edit Run Details-->
+                        <!--</a>-->
+                    <!--</div>-->
+                    <div class="col-md-3">
+                        <button type="submit" name="edit_run_details_button" class="btn btn-primary btn-block">
+                            Edit Run Details
+                        </button>
                     </div>
                     <div class="col-md-3">
-                        <a class="btn btn-default btn-block" href="{% url 'card_sequence' run_base.id %}" role="button">Edit Run Details</a>
-                    </div>
-                    <div class="col-md-3">
-                        <button type="submit" name="save_button" class="btn btn-primary btn-block">Save</button>
+                        <button type="submit" name="save_button" class="btn btn-primary btn-block">
+                            Save
+                        </button>
                     </div>
 				</div>
             </form>

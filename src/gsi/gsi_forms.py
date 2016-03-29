@@ -13,6 +13,8 @@ class RunForm(forms.ModelForm):
     """ form for editing RunBase """
     def __init__(self, *args, **kwargs):
         super(RunForm, self).__init__(*args, **kwargs)
+        self.fields['card_sequence'].widget.attrs['disabled'] = 'disabled'
+        self.fields['card_sequence'].initial = self.instance.card_sequence
 
     name = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
@@ -41,12 +43,17 @@ class RunForm(forms.ModelForm):
         # empty_label=None,
         label=u'Resolution',
     )
-    card_sequence = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": "form-control"}),
-        queryset=CardSequence.objects.all(),
-        # empty_label=None,
+    card_sequence = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=False,
         label=u'Card sequence',
     )
+    # card_sequence = forms.ModelChoiceField(
+    #     widget=forms.Select(attrs={"class": "form-control"}),
+    #     queryset=CardSequence.objects.all(),
+    #     # empty_label=None,
+    #     label=u'Card sequence',
+    # )
 
     class Meta:
         model = RunBase
@@ -57,7 +64,7 @@ class RunForm(forms.ModelForm):
             'purpose',
             'directory_path',
             'resolution',
-            'card_sequence',
+            # 'card_sequence',
         ]
 
 

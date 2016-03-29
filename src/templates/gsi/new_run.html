@@ -62,7 +62,7 @@
                 <div class="row margin-top-15">
                     <div class="col-md-2 right">
                         <div class="form-group {% if form.card_sequence.errors %}has-error{% endif %}">
-                            <label class="control-label">{{ form.card_sequence.label }}*</label>
+                            <label class="control-label">{{ form.card_sequence.label }}</label>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -111,10 +111,15 @@
                             Cancel
                         </a>
                     </div>
+                    <!--<div class="col-md-4">-->
+                        <!--<a class="btn btn-primary btn-block" href="{% url 'run_new_card_sequence_list' %}" role="button">-->
+                            <!--Save and continue editing-->
+                        <!--</a>-->
+                    <!--</div>-->
                     <div class="col-md-4">
-                        <a class="btn btn-primary btn-block" href="{% url 'run_new_card_sequence_list' %}" role="button">
-                            Edit Card Sequence
-                        </a>
+                        <button type="submit" name="save_update_button" class="btn btn-primary btn-block">
+                            Save and continue editing
+                        </button>
                     </div>
                     <div class="col-md-4">
                         <button type="submit" name="save_button" class="btn btn-primary btn-block">

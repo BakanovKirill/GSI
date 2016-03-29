@@ -248,16 +248,22 @@ def new_run(request):
 				name=form.cleaned_data["name"],
 				description=form.cleaned_data["description"],
 				purpose=form.cleaned_data["purpose"],
-				card_sequence=form.cleaned_data["card_sequence"],
+				# card_sequence=form.cleaned_data["card_sequence"],
 				directory_path=form.cleaned_data["directory_path"],
 				resolution=form.cleaned_data["resolution"],
 				author=request.user,
 			)
 
-			return HttpResponseRedirect(
-					u'%s?status_message=%s' % (reverse('run_setup'),
-					(u"RunID {0} created successfully".format(new_run_base.id)))
-			)
+			if request.POST.get('save_button') is not None:
+				return HttpResponseRedirect(
+						u'%s?status_message=%s' % (reverse('run_setup'),
+						(u"RunID {0} created successfully".format(new_run_base.id)))
+				)
+			if request.POST.get('save_update_button') is not None:
+				return HttpResponseRedirect(
+						u'%s?status_message=%s' % (reverse('run_update', args=[new_run_base.id]),
+						(u"RunID {0} created successfully".format(new_run_base.id)))
+				)
 	else:
 		form = RunForm()
 
@@ -277,28 +283,34 @@ def run_update(request, run_id):
 	form = None
 
 	if request.method == "POST":
-		if request.POST.get('save_button') is not None:
-			form = RunForm(request.POST)
+		form = RunForm(request.POST)
 
+		if request.POST.get('cancel_button') is not None:
+			return HttpResponseRedirect(
+					u'%s?status_message=%s' % (reverse('run_setup'),
+					(u"Run {0} updated canceled".format(run_base.name)))
+			)
+		else:
 			if form.is_valid():
 				run_base.name = form.cleaned_data["name"]
 				run_base.description = form.cleaned_data["description"]
 				run_base.purpose = form.cleaned_data["purpose"]
-				run_base.card_sequence = form.cleaned_data["card_sequence"]
+				# run_base.card_sequence = form.cleaned_data["card_sequence"]
 				run_base.directory_path = form.cleaned_data["directory_path"]
 				run_base.resolution = form.cleaned_data["resolution"]
 				run_base.author = request.user
 				run_base.save()
 
-				return HttpResponseRedirect(
-						u'%s?status_message=%s' % (reverse('run_setup'),
-						(u"Run {0} updated successfully".format(run_base.name)))
-				)
-		elif request.POST.get('cancel_button') is not None:
-			return HttpResponseRedirect(
-					u'%s?status_message=%s' % (reverse('run_setup'),
-					(u"Run {0} updated canceled".format(run_base.name)))
-			)
+				if request.POST.get('save_button') is not None:
+					return HttpResponseRedirect(
+							u'%s?status_message=%s' % (reverse('run_setup'),
+							(u"Run {0} updated successfully".format(run_base.name)))
+					)
+				if request.POST.get('edit_run_details_button') is not None:
+					return HttpResponseRedirect(
+							u'%s?status_message=%s' % (reverse('card_sequence_update', args=[run_id, run_base.card_sequence.id]),
+							(u"Run {0} updated successfully".format(run_base.name)))
+					)
 	else:
 		form = RunForm(instance=run_base)
 
@@ -610,7 +622,6 @@ def card_sequence_update(request, run_id, cs_id):
 			return HttpResponseRedirect(
 					reverse('proces_card_runid_csid', args=[run_id, cs_id])
 				)
-
 		elif request.POST.get('add_card_items_button') is not None:
 			form = CardSequenceCreateForm(request.POST, instance=card_sequence)
 
@@ -640,7 +651,7 @@ def card_sequence_update(request, run_id, cs_id):
 				card_sequence = create_update_card_sequence(form, cs_id)
 
 			return HttpResponseRedirect(
-					u'%s?status_message=%s' % (reverse('card_sequence', args=[run_id]),
+					u'%s?status_message=%s' % (reverse('run_update', args=[run_id]),
 					(u"The card sequence '{0}' created successfully.".
 					 format(card_sequence.name)))
 			)
@@ -672,7 +683,7 @@ def card_sequence_update(request, run_id, cs_id):
 					)
 		elif request.POST.get('cancel_button') is not None:
 			return HttpResponseRedirect(
-					u'%s?status_message=%s' % (reverse('card_sequence', args=[run_id]),
+					u'%s?status_message=%s' % (reverse('run_update', args=[run_id]),
 					(u'Card Sequence "{0}" created canceled'.format(card_sequence.name)))
 			)
 	else:
@@ -782,8 +793,8 @@ def execute_runs(request, run_id):
 
 	for run in list_run_id:
 		name_runs += '"' + str(get_object_or_404(Run, pk=int(run)).run_base.name) + '", '
-		messages.append('It has been assigned unique run ID: {0}. To view progress of this run use \
-						the view progress otion on the main menu.\n'.format(run))
+		messages.append('It has been assigned unique run ID: {0}.\nTo view progress of this run use \
+						the view progress option on the main menu.\n'.format(run))
 
 	data = {
 		'title': title,

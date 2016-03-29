@@ -6,7 +6,7 @@ from django.dispatch import receiver
 from django.core.exceptions import ObjectDoesNotExist
 
 
-from gsi.models import Tile, Area, RunBase, Run
+from gsi.models import Tile, Area, RunBase, Run, CardSequence
 from log.logger import log_it
 
 
@@ -36,6 +36,17 @@ def log_it_runbase(sender, instance, created, **kwargs):
     else:
         massage = 'Edited Run: ID - {0}'.format(instance.id)
         log_it(instance.author, 'RunBase', instance.id, massage)
+
+
+@receiver(post_save, sender=RunBase)
+def create_cs(sender, instance, created, **kwargs):
+    cs_name = 'CS{0}'.format(instance.id)
+
+    if not CardSequence.objects.filter(name=cs_name).exists():
+        cs_new = CardSequence.objects.create(name=cs_name)
+        instance.card_sequence = cs_new
+        instance.save()
+        cs_new.save()
 
 
 @receiver(post_save, sender=Run)

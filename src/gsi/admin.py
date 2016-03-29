@@ -36,7 +36,7 @@ admin.site.register(Tile, admin.ModelAdmin)
 
 class RunBaseAdmin(admin.ModelAdmin):
     list_display = ('name', 'author', 'date_created', 'date_modified')
-    readonly_fields = ('author',)
+    readonly_fields = ('author', 'card_sequence',)
     actions = ('launch',)
 
     def save_model(self, request, obj, form, change):
