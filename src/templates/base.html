@@ -55,16 +55,16 @@
                                                 <i class="fa fa-caret-right icon-visible-user"></i>
                                                 <i class="fa fa-caret-down icon-visible-user" style="display: none"></i>
                                             </button>
-                                            <div class="dropdown-content-user dropdown-user left" id="dropdownUser">
+                                            <div class="dropdown-content-user dropdown-user left li-menu" id="dropdownUser">
                                                 <a href="{% url 'index' %}" >
                                                     <img class="right-indent-10" src="{% static 'img/profile.png' %}">
                                                     Profile
                                                 </a>
-                                                <a href="{% url 'index' %}" class="li-menu">
+                                                <a href="{% url 'index' %}">
                                                     <img class="right-indent-10" src="{% static 'img/settings.png' %}">
                                                     Settings
                                                 </a>
-                                                <a href="{% url 'auth_logout' %}" class="li-menu">
+                                                <a href="{% url 'auth_logout' %}">
                                                     <img class="right-indent-10" src="{% static 'img/logout.png' %}">
                                                     Log Out
                                                 </a>
