@@ -8,6 +8,10 @@ th {
     text-align: center;
 }
 
+input[type="file"] {
+    display: inline;
+}
+
 
 /* alert */
 .alert {

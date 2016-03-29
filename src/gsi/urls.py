@@ -20,6 +20,9 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.views.generic.base import RedirectView
+from django.contrib.auth.decorators import login_required
+
+from gsi.views import UploadStaticDataView
 
 
 urlpatterns = [
@@ -31,6 +34,11 @@ urlpatterns = [
 
     # index
     url(r'^index/$', 'gsi.views.index', name='index'),
+
+
+    # upload file
+    # url(r'^upload-file/$', UploadStaticDataView.as_view(), name='upload_file'),
+    url(r'^upload-file/$', 'gsi.views.upload_file', name='upload_file'),
 
 
     # run base

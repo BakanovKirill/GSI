@@ -133,8 +133,8 @@
                                     </div>
                                 </div>
                                 <!-- end sub setup static data menu -->
-                                <li class="{% if url_name == 'run_setup' %}active-main-menu{% else %}li-menu{% endif %}">
-                                    <a href="#" data-toggle="modal" data-target="#modalUpload">
+                                <li class="{% if url_name == 'upload_file' %}active-main-menu{% else %}li-menu{% endif %}">
+                                    <a href="{% url 'upload_file' %}" id="upload_file">
                                         <img class="right-indent-10" src="{% static 'img/upload.png' %}">
                                         UPLOAD TEST DATA
                                     </a>
@@ -176,6 +176,17 @@
                         <!-- End Content -->
                     </div>
 
+                    <!-- Start Contact Form -->
+                    <!--<div class="container">-->
+                        <!--<div class="row" id="header">-->
+                            <!--<div class="col-xs-12">-->
+                                <!--<h2>{% block title-form %}{% endblock title-form %}</h2>-->
+                                <!--{% block contact_form %}{% endblock contact_form %}-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!-- End Contact Form -->
+
                     <!-- Start Footer -->
                     <div class="row">
                         <div class="col-md-12 center margin-top-50 margin-bottom-50 font-11">
@@ -196,30 +207,11 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <div class="form-group {% if form.test_data.errors %}has-error{% endif %}">
-                        <h4 class="modal-title" id="modalUploadLabel">Upload Test Data</h4>
+                        <h4 class="modal-title" id="modalUploadLabel"><!-- --></h4>
                     </div>
                 </div>
-                <form action="{% url 'index' %}" enctype="multipart/form-data" role="form"
-                      class="form-horizontal" method="post">
-                    {% csrf_token %}
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                {{ form.test_data }}
-                                <p class="help-block font-size-12">
-                                    For test data upload please use text files
-                                </p>
-                                {% if form.test_data.errors %}
-                                    <b class="error-form">{{ form.test_data.errors }}</b>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" name="load_button" class="btn btn-primary">Load</button>
-                    </div>
-                </form>
+                <div class="modal-body"><!-- --></div>
+                <div class="modal-footer"><!-- --></div>
             </div>
         </div>
     </div>
@@ -237,5 +229,6 @@
 
     <!-- custom scripts -->
     <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+    <!--<script type="text/javascript" src="{% static 'js/upload_file.js' %}"></script>-->
 </body>
 </html>

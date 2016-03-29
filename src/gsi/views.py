@@ -5,10 +5,11 @@ import getpass
 from datetime import datetime
 
 from annoying.decorators import render_to
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from django.views.generic.edit import FormView
 from django.template.defaultfilters import filesizeformat
 from django.views.generic import UpdateView
 from django.utils.decorators import method_decorator
@@ -43,6 +44,98 @@ def handle_uploaded_file(f, path):
 @render_to('gsi/blocking.html')
 def blocking(request):
 	data = {}
+	return data
+
+
+class UploadStaticDataView(FormView):
+	success_url = 'index.html'
+	form_class = UploadFileForm
+	template_name = 'gsi/upload_file.html'
+
+	def get_context_data(self, **kwargs):
+		context = super(UploadStaticDataView, self).get_context_data(**kwargs)
+		title = 'Upload Test Data'
+		url_name = 'upload_file'
+		context.update({
+            'title': title,
+			'url_name': url_name,
+        })
+
+		return context
+
+	def form_valid(self, form):
+		home_var = HomeVariables.objects.all()[0]
+		file_name = str(self.request.FILES['test_data']).decode('utf-8')
+		path_test_data = os.path.join(home_var.RF_AUXDATA_DIR, file_name)
+		# type_file = str(request.FILES['test_data'].content_type).split('/')[0]
+		handle_uploaded_file(self.request.FILES['test_data'], path_test_data)
+		message = u'Test data "{0}" is loaded'.format(file_name)
+
+		return HttpResponseRedirect(
+                '%s?status_message=%s' % (reverse('index'), message))
+
+
+# upload_static_data_view = user_passes_test(login_url='/', redirect_field_name='')(UploadStaticDataView.as_view())
+
+
+@login_required
+@render_to('gsi/upload_file.html')
+def upload_file(request):
+	title = 'Upload Test Data'
+	home_var = HomeVariables.objects.all()[0]
+	url_name = 'upload_file'
+
+	# log error permission
+	err_file = '/home/gsi/logs/perm_log.err'
+	now = datetime.now()
+	log_file = open(err_file, 'a')
+
+	log_file.writelines('Fail' + '\n')
+	log_file.writelines(str(now) + '\n')
+	log_file.writelines('USER: ' + getpass.getuser() + '\n')
+	log_file.close()
+
+	# ens log error permission
+
+	if request.POST:
+		form = UploadFileForm(request.POST, request.FILES)
+
+		if form.is_valid():
+			file_name = str(request.FILES['test_data']).decode('utf-8')
+			path_test_data = os.path.join(home_var.RF_AUXDATA_DIR, file_name)
+			# type_file = str(request.FILES['test_data'].content_type).split('/')[0]
+			handle_uploaded_file(request.FILES['test_data'], path_test_data)
+
+			return HttpResponseRedirect(
+					u'%s?status_message=%s' % (reverse('upload_file'),
+					(u'Test data "{0}" is loaded'.format(file_name)))
+			)
+
+			# if type_file != 'image':
+			# 	handle_uploaded_file(request.FILES['test_data'], path_test_data)
+			# 	return HttpResponseRedirect(
+			# 			u'%s?status_message=%s' % (reverse('index'),
+			# 			(u'Test data "{0}" is loaded'.format(file_name)))
+			# 	)
+			# else:
+			# 	return HttpResponseRedirect(
+			# 			u'%s?status_message=%s' % (reverse('index'),
+			# 			(u'The file "{0}" can not be loaded. \
+			# 			To download using a text file format'.format(file_name)))
+			# 	)
+		else:
+			return HttpResponseRedirect(
+					u'%s?status_message=%s' % (reverse('upload_file'),
+					(u'Sorry. Upload error: {0}'.format(form['test_data'].errors.as_text())))
+			)
+	else:
+		form = UploadFileForm()
+	data = {
+		'title': title,
+		'form': form,
+		'url_name': url_name
+	}
+
 	return data
 
 
