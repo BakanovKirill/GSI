@@ -133,9 +133,9 @@ class CardSequenceCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CardSequenceCreateForm, self).__init__(*args, **kwargs)
 
-        if 'instance' in kwargs:
-            self.fields['card_item'].queryset = CardItem.objects.exclude(
-                id__in=kwargs['instance'].cards.values_list('id', flat=True))
+        # if 'instance' in kwargs:
+        #     self.fields['card_item'].queryset = CardItem.objects.exclude(
+        #         id__in=kwargs['instance'].cards.values_list('id', flat=True))
 
     name = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
