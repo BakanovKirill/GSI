@@ -101,6 +101,10 @@ input[type="file"] {
     color: red;
 }
 
+.grey-color{
+    color: grey;
+}
+
 .blue-color-bootstrap {
     color: #265a88;
 }

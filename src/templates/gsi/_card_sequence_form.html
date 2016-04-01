@@ -1,14 +1,23 @@
 <div class="row margin-top-15">
+    <!--<div class="col-md-2 right">-->
+        <!--<div class="form-group {% if form.name.errors %}has-error{% endif %}">-->
+            <!--<label class="control-label">{{ form.name.label }}*</label>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="col-md-4">-->
+        <!--{% if form.name.errors %}-->
+            <!--<b class="error-form">{{ form.name.errors }}</b>-->
+        <!--{% endif %}-->
+        <!--{{ form.name }}-->
+    <!--</div>-->
+
     <div class="col-md-2 right">
         <div class="form-group {% if form.name.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.name.label }}*</label>
+            <label class="control-label">Name</label>
         </div>
     </div>
-    <div class="col-md-4">
-        {% if form.name.errors %}
-            <b class="error-form">{{ form.name.errors }}</b>
-        {% endif %}
-        {{ form.name }}
+    <div class="col-md-4 left margin-top-8 grey-color">
+        {{ card_sequence.name }}
     </div>
 
     <div class="col-md-2 right">

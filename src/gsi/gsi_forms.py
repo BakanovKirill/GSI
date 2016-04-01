@@ -137,10 +137,10 @@ class CardSequenceCreateForm(forms.ModelForm):
         #     self.fields['card_item'].queryset = CardItem.objects.exclude(
         #         id__in=kwargs['instance'].cards.values_list('id', flat=True))
 
-    name = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
-        label=u'Name',
-    )
+    # name = forms.CharField(
+    #     widget=forms.TextInput(attrs={'class': 'form-control'}),
+    #     label=u'Name',
+    # )
     environment_override = forms.CharField(
         widget=forms.Textarea(attrs={'rows': '5', 'class': 'form-control'}),
         required=False,
@@ -173,7 +173,7 @@ class CardSequenceCreateForm(forms.ModelForm):
     class Meta:
         model = CardSequence.cards.through
         fields = [
-            'name',
+            # 'name',
             'environment_base',
             'environment_override',
             'card_item',
