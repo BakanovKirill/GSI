@@ -29,8 +29,8 @@
                             <td>{{ run_base.date_created|date:"d/m/Y" }}</td>
                             <td>{{ run_base.date_modified|date:"d/m/Y" }}</td>
                             <td>
-                                <a class="btn btn-success btn-block" href="{% url 'run_update' run_base.id %}" role="button">
-                                    Edit
+                                <a href="{% url 'run_update' run_base.id %}">
+                                    <img class="" src="{% static 'img/edit.png' %}"/>
                                 </a>
                             </td>
                         </tr>
