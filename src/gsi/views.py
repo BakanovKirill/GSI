@@ -209,21 +209,32 @@ def run_setup(request):
 	url_name = 'run_setup'
 
 	if request.method == "POST":
-		if request.POST.get('run_select'):
-			for run_id in request.POST.getlist('run_select'):
-				cur_run = get_object_or_404(RunBase, pk=run_id)
-				run_name += '"' + cur_run.name + '", '
-				cur_run.delete()
+		if request.POST.get('delete_button'):
+			if request.POST.get('run_select'):
+				for run_id in request.POST.getlist('run_select'):
+					cur_run = get_object_or_404(RunBase, pk=run_id)
+					run_name += '"' + cur_run.name + '", '
+					cur_run.delete()
+
+				return HttpResponseRedirect(u'%s?status_message=%s' %
+											(reverse('run_setup'),
+											 (u'Run(s): {0} ==> deleted.'.
+											  format(run_name)))
+				)
+			else:
+				return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_setup'),
+											 (u"To delete, select Run or more Runs."))
+				)
+		elif request.POST.get('del_current_run_btn'):
+			run_bases_current = get_object_or_404(RunBase, pk=request.POST.get('del_current_run_btn'))
+			run_name += '"' + run_bases_current.name + '", '
+			run_bases_current.delete()
 
 			return HttpResponseRedirect(u'%s?status_message=%s' %
 										(reverse('run_setup'),
-										 (u'Run(s): {0} ==> deleted.'.
+										 (u'Run: {0} ==> deleted.'.
 										  format(run_name)))
-			)
-		else:
-			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_setup'),
-										 (u"To delete, select Run or more Runs."))
-			)
+										)
 
 	data = {
 		'title': title,

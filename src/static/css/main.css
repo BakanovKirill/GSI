@@ -468,3 +468,7 @@ li.active-main-menu, li.active-main-menu a:hover, li.li-menu > a:hover, .title:h
     height: 34px;
     background-color: #D3D3D3;
 }
+
+.del-btn, .del-btn:hover {
+    background-color: transparent;
+}
