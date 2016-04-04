@@ -23,9 +23,12 @@
                                 <td><input type="checkbox" name="yg_select" value="{{ yg.id }}"></td>
                                 <td>{{ yg.name }}</td>
                                 <td>
-                                    <a class="btn btn-success btn-block" href="{% url 'years_group_edit' yg.id %}" role="button">
-                                        Edit
+                                    <a href="{% url 'years_group_edit' yg.id %}" role="button">
+                                        <img class="" src="{% static 'img/edit-18.png' %}"/>
                                     </a>
+                                    <button class="btn del-btn" type="submit" name="del_current_btn" value="{{ yg.id }}">
+                                        <img src="{% static 'img/delete-18.png' %}"/>
+                                    </button>
                                 </td>
                             </tr>
                         {% endfor %}
