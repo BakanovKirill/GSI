@@ -472,3 +472,27 @@ li.active-main-menu, li.active-main-menu a:hover, li.li-menu > a:hover, .title:h
 .del-btn, .del-btn:hover {
     background-color: transparent;
 }
+
+/* paginations */
+.pagination-black > li > a {
+    background-color: #fff;
+    border: 0px solid #ddd;
+    color: black;
+    float: left;
+    line-height: 1.42857;
+    margin-left: -1px;
+    padding: 6px 12px;
+    position: relative;
+    text-decoration: none;
+}
+
+.pagination-black > li > a:hover {
+
+}
+
+.no-border {
+    border: 0px;
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+    margin-left: 0;
+}

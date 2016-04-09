@@ -34,6 +34,23 @@
                         {% endfor %}
                     </tbody>
                 </table>
+
+                <!-- pagination -->
+                {% if areas.has_other_pages %}
+                <nav class="right">
+                    <ul class="pagination pagination-black">
+                        <li><a href="{% url "areas" %}?page=1" class="no-border">Previous</a></li>
+                        {% for p in areas.paginator.page_range %}
+                            <li {% if areas.number == p %}class="active"{% endif %}>
+                                <a href="{% url "areas" %}?page={{ p }}">{{ p }}</a>
+                            </li>
+                        {% endfor %}
+                        <li><a href="{% url "areas" %}?page={{ areas.paginator.num_pages}}" class="no-border">Next</a></li>
+                    </ul>
+                </nav>
+                {% endif %}
+                <!-- end pagination -->
+
                 <div class="row margin-top-50">
                     <div class="col-md-4">
                         <a class="btn btn-default btn-block" href="{% url 'static_data_setup' %}" role="button">

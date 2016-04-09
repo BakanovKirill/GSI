@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.views.generic.edit import FormView
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.defaultfilters import filesizeformat
 from django.views.generic import UpdateView
 from django.utils.decorators import method_decorator
@@ -1147,6 +1148,19 @@ def areas(request):
 										 (u'Areas: {0} ==> deleted.'.
 										  format(area_name)))
 				)
+
+	# paginate areas
+	paginator = Paginator(areas, 7)
+	page = request.GET.get('page')
+	try:
+		areas = paginator.page(page)
+	except PageNotAnInteger:
+		# If page is not an integer, deliver first page.
+		areas = paginator.page(1)
+	except EmptyPage:
+		# If page is out of range (e.g. 9999), deliver
+		# last page of results.
+		areas = paginator.page(paginator.num_pages)
 
 	data = {
 		'title': title,
