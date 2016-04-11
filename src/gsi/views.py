@@ -873,6 +873,7 @@ def run_details(request, run_id):
 	runs_step = RunStep.objects.filter(parent_run=run_id)
 	runs_step.order_by('card_item.card_item.order')
 	run = get_object_or_404(Run, pk=run_id)
+	url_name = 'run_details'
 
 	if request.method == "POST":
 		if request.POST.get('details_file'):
@@ -899,6 +900,8 @@ def run_details(request, run_id):
 		'run_id': run_id,
 		'runs_step': model_name,
 		'model_name': model_name,
+		'url_name': url_name,
+		'obj_id': run_id,
 	}
 
 	return data
