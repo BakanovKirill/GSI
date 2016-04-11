@@ -3,7 +3,7 @@
     <nav class="right">
         <ul class="pagination pagination-black">
             {% if model_name.has_previous %}
-                <li><a href="{% if obj_id %}{% url url_name obj_id %}{% else %}{% url url_name %}{% endif %}?page={{ model_name.previous_page_number }}" class="no-border">Previous</a></li>
+                <li><a href="{% if run_id %}{% url url_name run_id %}{% else %}{% url url_name %}{% endif %}?page={{ model_name.previous_page_number }}" class="no-border">Previous</a></li>
             {% endif %}
 
             {% for p in model_name.paginator.page_range %}
