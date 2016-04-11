@@ -34,6 +34,11 @@
                         {% endfor %}
                     </tbody>
                 </table>
+
+                <!-- pagination -->
+                {% include 'paginations.html' %}
+                <!-- end pagination -->
+
                 <div class="row margin-top-50">
                     <div class="col-md-4">
                         <a class="btn btn-default btn-block" href="{% url 'static_data_setup' %}" role="button">

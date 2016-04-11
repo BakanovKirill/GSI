@@ -239,9 +239,13 @@ def run_setup(request):
 										  format(run_name)))
 										)
 
+	# paginations
+	model_name = paginations(request, run_bases)
+
 	data = {
 		'title': title,
-		'run_bases': run_bases,
+		'run_bases': model_name,
+		'model_name': model_name,
 		'url_name': url_name,
 	}
 
@@ -787,9 +791,14 @@ def submit_run(request):
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('submit_run'),
 										 (u"For start choose Run(s)"))
 			)
+
+	# paginations
+	model_name = paginations(request, run_bases)
+
 	data = {
 		'title': title,
-		'run_bases': run_bases,
+		'run_bases': model_name,
+		'model_name': model_name,
 		'url_name': url_name,
 	}
 
@@ -841,10 +850,15 @@ def run_progress(request):
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_progress'),
 										 (u"To view the log, select Run."))
 			)
+
+	# paginations
+	model_name = paginations(request, runs)
+
 	data = {
 		'title': title,
-		'runs': runs,
+		'runs': model_name,
 		'url_name': url_name,
+		'model_name': model_name,
 	}
 
 	return data
@@ -1024,9 +1038,13 @@ def environment_groups(request):
 										 (u'Environment Groups: {0} ==> deleted.'.
 										  format(env_name))))
 
+	# paginations
+	model_name = paginations(request, environments)
+
 	data = {
 		'title': title,
-		'environments': environments,
+		'environments': model_name,
+		'model_name': model_name,
 		'url_name': url_name,
 		'but_name': but_name,
 	}
@@ -1120,8 +1138,6 @@ def areas(request):
 	area_name = ''
 	url_name = 'areas'
 	but_name = 'static_data'
-	# model_name = ''
-	paginator_url = 'areas'
 
 	if request.method == "POST":
 		if request.POST.get('delete_button'):
@@ -1155,18 +1171,6 @@ def areas(request):
 
 	# paginations
 	model_name = paginations(request, areas)
-	# paginator = Paginator(areas, NUM_PAGINATIONS)
-	# page = request.GET.get('page')
-	#
-	# try:
-	# 	areas = paginator.page(page)
-	# except PageNotAnInteger:
-	# 	# If page is not an integer, deliver first page.
-	# 	areas = paginator.page(1)
-	# except EmptyPage:
-	# 	# If page is out of range (e.g. 9999), deliver
-	# 	# last page of results.
-	# 	areas = paginator.page(paginator.num_pages)
 
 	data = {
 		'title': title,
@@ -1174,7 +1178,6 @@ def areas(request):
 		'model_name': model_name,
 		'url_name': url_name,
 		'but_name': but_name,
-		'paginator_url': paginator_url,
 	}
 
 	return data
@@ -1300,9 +1303,13 @@ def years_group(request):
 										  format(yg_name)))
 				)
 
+	# paginations
+	model_name = paginations(request, years_groups)
+
 	data = {
 		'title': title,
-		'years_groups': years_groups,
+		'years_groups': model_name,
+		'model_name': model_name,
 		'url_name': url_name,
 		'but_name': but_name,
 	}

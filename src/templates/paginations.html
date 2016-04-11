@@ -3,17 +3,17 @@
     <nav class="right">
         <ul class="pagination pagination-black">
             {% if model_name.has_previous %}
-                <li><a href="{% url paginator_url %}?page={{ model_name.previous_page_number }}" class="no-border">Previous</a></li>
+                <li><a href="{% url url_name %}?page={{ model_name.previous_page_number }}" class="no-border">Previous</a></li>
             {% endif %}
 
             {% for p in model_name.paginator.page_range %}
                 <li {% if model_name.number == p %}class="active"{% endif %}>
-                    <a href="{% url paginator_url %}?page={{ p }}">{{ p }}</a>
+                    <a href="{% url url_name %}?page={{ p }}">{{ p }}</a>
                 </li>
             {% endfor %}
 
             {% if model_name.has_next %}
-                <li><a href="{% url paginator_url %}?page={{ model_name.next_page_number }}" class="no-border">Next</a></li>
+                <li><a href="{% url url_name %}?page={{ model_name.next_page_number }}" class="no-border">Next</a></li>
             {% endif %}
         </ul>
     </nav>
