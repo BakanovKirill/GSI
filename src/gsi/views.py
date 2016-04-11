@@ -901,7 +901,7 @@ def run_details(request, run_id):
 		'runs_step': model_name,
 		'model_name': model_name,
 		'url_name': url_name,
-		'run_id': run_id,
+		'obj_id': run_id,
 	}
 
 	return data
