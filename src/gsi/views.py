@@ -890,11 +890,15 @@ def run_details(request, run_id):
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_details', args=[run_id]),
 																   (u"To view the Card Log, select Card.")))
 
+	# paginations
+	model_name = paginations(request, runs_step)
+
 	data = {
 		'title': title,
 		'sub_title': sub_title,
 		'run_id': run_id,
-		'runs_step': runs_step,
+		'runs_step': model_name,
+		'model_name': model_name,
 	}
 
 	return data

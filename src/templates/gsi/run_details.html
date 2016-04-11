@@ -34,6 +34,11 @@
                     {% endfor %}
                 </tbody>
             </table>
+
+            <!-- pagination -->
+            {% include 'paginations.html' %}
+            <!-- end pagination -->
+
             <div class="col-md-4">
                 <a class="btn btn-default btn-block" href="{% url 'run_progress' %}" role="button">
                     Cancel
