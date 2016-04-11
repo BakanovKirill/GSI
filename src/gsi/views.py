@@ -24,6 +24,8 @@ from gsi.gsi_forms import *
 from core.utils import make_run
 from core.get_post import get_post
 from log.logger import get_logs
+from gsi.settings import NUM_PAGINATIONS
+from core.paginations import paginations
 
 TITLES = {
 	'home': ['Home', 'index'],
@@ -1118,6 +1120,8 @@ def areas(request):
 	area_name = ''
 	url_name = 'areas'
 	but_name = 'static_data'
+	# model_name = ''
+	paginator_url = 'areas'
 
 	if request.method == "POST":
 		if request.POST.get('delete_button'):
@@ -1149,24 +1153,28 @@ def areas(request):
 										  format(area_name)))
 				)
 
-	# paginate areas
-	paginator = Paginator(areas, 7)
-	page = request.GET.get('page')
-	try:
-		areas = paginator.page(page)
-	except PageNotAnInteger:
-		# If page is not an integer, deliver first page.
-		areas = paginator.page(1)
-	except EmptyPage:
-		# If page is out of range (e.g. 9999), deliver
-		# last page of results.
-		areas = paginator.page(paginator.num_pages)
+	# paginations
+	model_name = paginations(request, areas)
+	# paginator = Paginator(areas, NUM_PAGINATIONS)
+	# page = request.GET.get('page')
+	#
+	# try:
+	# 	areas = paginator.page(page)
+	# except PageNotAnInteger:
+	# 	# If page is not an integer, deliver first page.
+	# 	areas = paginator.page(1)
+	# except EmptyPage:
+	# 	# If page is out of range (e.g. 9999), deliver
+	# 	# last page of results.
+	# 	areas = paginator.page(paginator.num_pages)
 
 	data = {
 		'title': title,
-		'areas': areas,
+		'areas': model_name,
+		'model_name': model_name,
 		'url_name': url_name,
 		'but_name': but_name,
+		'paginator_url': paginator_url,
 	}
 
 	return data

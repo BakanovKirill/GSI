@@ -201,6 +201,9 @@ LOGGING = {
 
 EXECUTE_FE_COMMAND = '/home/gsi/gsi_files/bin/execute_FE_command'
 
+# number paginations
+NUM_PAGINATIONS = 1
+
 try:
     from settings_local import *
 except ImportError:
