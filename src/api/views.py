@@ -61,7 +61,13 @@ def update_run(request, run_id):
 
             for step in steps:
                 # Go to the next step only on success state
-                if state == 'success':
+                if state == 'fail':
+                    step.state = 'fail'
+                    run.state = 'fail'
+                    step.save()
+                    run.save()
+                    break
+                elif state == 'success':
                     next_step, is_last_step = step.get_next_step()
 
                     if next_step:
@@ -86,12 +92,6 @@ def update_run(request, run_id):
                         run.state = 'success'
                         step.save()
                         run.save()
-                elif state == 'fail':
-                    step.state = 'fail'
-                    run.state = 'fail'
-                    step.save()
-                    run.save()
-                    break
                 else:
                     step.state = state
                     step.save()
