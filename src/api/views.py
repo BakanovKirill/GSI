@@ -30,13 +30,13 @@ def update_run(request, run_id):
         state = data['status']
 
         # logs for api
-        path_file = '/home/gsi/logs/status.log'
-        now = datetime.now()
-        log_file = open(path_file, 'a')
-        log_file.writelines('STATUS:' + '\n')
-        log_file.writelines(str(now) + '\n')
-        log_file.writelines(str(state) + '\n\n\n')
-        log_file.close()
+        # path_file = '/home/gsi/logs/status.log'
+        # now = datetime.now()
+        # log_file = open(path_file, 'a')
+        # log_file.writelines('STATUS:' + '\n')
+        # log_file.writelines(str(now) + '\n')
+        # log_file.writelines(str(state) + '\n\n\n')
+        # log_file.close()
 
         try:
             run = Run.objects.get(id=value_list[0])
@@ -46,8 +46,8 @@ def update_run(request, run_id):
                 parent_run=run,
                 card_item=card)
             # steps.state = state
-            # run.state = state
             # steps.save()
+            # run.state = state
             # run.save()
 
             # logs for api
@@ -56,18 +56,20 @@ def update_run(request, run_id):
             log_file = open(path_file, 'a')
             log_file.writelines('STATUS runcards_{0}:'.format(card.id) + '\n')
             log_file.writelines(str(now) + '\n')
-            log_file.writelines(str(state) + '\n\n\n')
-            log_file.close()
+            log_file.writelines(str(state) + '\n')
+            # log_file.close()
 
             for step in steps:
                 # Go to the next step only on success state
                 if state == 'fail':
+                    log_file.writelines('FAIL: ' + str(state) + '\n')
                     step.state = 'fail'
                     run.state = 'fail'
                     step.save()
                     run.save()
                     break
                 elif state == 'success':
+                    log_file.writelines('SUCCES: ' + str(state) + '\n')
                     next_step, is_last_step = step.get_next_step()
 
                     if next_step:
@@ -93,11 +95,14 @@ def update_run(request, run_id):
                         step.save()
                         run.save()
                 else:
+                    log_file.writelines('ELSE: ' + str(state) + '\n')
                     step.state = state
                     step.save()
                     # run = step.parent_run
                     # run.state = state
                     # run.save()
+
+            log_file.close()
 
         except ObjectDoesNotExist as e:
             # error for api
