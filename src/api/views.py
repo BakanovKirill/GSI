@@ -70,11 +70,9 @@ def update_run(request, run_id):
                                 value_list[2]
                             ),
                             shell=True,
-                            stdout=PIPE,
-                            stderr=PIPE
+                            # stdout=PIPE,
+                            # stderr=PIPE
                         )
-                        # ex_fe_com.wait()    # дождаться выполнения
-                        # res_execute = ex_fe_com.communicate()  # получить tuple('stdout', 'stderr')
 
                     if is_last_step:
                         data['is_last_step'] = True
