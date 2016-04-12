@@ -42,12 +42,12 @@ def update_run(request, run_id):
             run = Run.objects.get(id=value_list[0])
             sequence = CardSequence.objects.get(id=value_list[1])
             card = OrderedCardItem.objects.get(id=value_list[2])
-            step = RunStep.objects.get(
+            steps = RunStep.objects.filter(
                 parent_run=run,
                 card_item=card)
-            # step.state = state
+            # steps.state = state
             # run.state = state
-            # step.save()
+            # steps.save()
             # run.save()
 
             # logs for api
@@ -59,56 +59,57 @@ def update_run(request, run_id):
             log_file.writelines(str(state) + '\n\n\n')
             log_file.close()
 
-            # Go to the next step only on success state
-            if state == 'success':
-                next_step, is_last_step = step.get_next_step()
+            for step in steps:
+                # Go to the next step only on success state
+                if state == 'success':
+                    next_step, is_last_step = step.get_next_step()
 
-                if next_step:
-                    data['next_step'] = next_step.id
-                    ex_fe_com = Popen(
-                        '{0} {1} {2}'.format(
-                            EXECUTE_FE_COMMAND,
-                            value_list[0],
-                            value_list[2]
-                        ),
-                        shell=True,
-                        stdout=PIPE,
-                        stderr=PIPE
-                    )
-                    ex_fe_com.wait()    # дождаться выполнения
-                    res_execute = ex_fe_com.communicate()  # получить tuple('stdout', 'stderr')
+                    if next_step:
+                        data['next_step'] = next_step.id
+                        ex_fe_com = Popen(
+                            '{0} {1} {2}'.format(
+                                EXECUTE_FE_COMMAND,
+                                value_list[0],
+                                value_list[2]
+                            ),
+                            shell=True,
+                            stdout=PIPE,
+                            stderr=PIPE
+                        )
+                        ex_fe_com.wait()    # дождаться выполнения
+                        res_execute = ex_fe_com.communicate()  # получить tuple('stdout', 'stderr')
 
-                if is_last_step:
-                    data['is_last_step'] = True
-                    step.state = 'success'
-                    # run = step.parent_run
-                    run.state = 'success'
+                    if is_last_step:
+                        data['is_last_step'] = True
+                        step.state = 'success'
+                        # run = step.parent_run
+                        run.state = 'success'
+                        step.save()
+                        run.save()
+                elif state == 'fail':
+                    step.state = state
+                    run.state = state
                     step.save()
                     run.save()
-            elif state == 'fail':
-                step.state = state
-                run.state = state
-                step.save()
-                run.save()
-            else:
-                step.state = state
-                step.save()
-                # run = step.parent_run
-                # run.state = state
-                # run.save()
+                else:
+                    step.state = state
+                    step.save()
+                    # run = step.parent_run
+                    # run.state = state
+                    # run.save()
 
         except ObjectDoesNotExist as e:
-            data['status'] = False
-            data['message'] = str(e)
-
             # error for api
             path_file = '/home/gsi/logs/runcards_status.err'
             now = datetime.now()
             log_file = open(path_file, 'a')
-            log_file.writelines('STATUS runcards_{0}:'.format(card.id) + '\n')
+            log_file.writelines('ERRROR runcards_{0}:'.format(card.id) + '\n')
             log_file.writelines(str(now) + '\n')
             log_file.writelines(str(e) + '\n\n\n')
             log_file.close()
+
+            data['status'] = False
+            data['message'] = str(e)
     else:
         return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
