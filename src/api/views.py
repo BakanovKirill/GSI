@@ -91,6 +91,7 @@ def update_run(request, run_id):
                     run.state = state
                     step.save()
                     run.save()
+                    break
                 else:
                     step.state = state
                     step.save()
