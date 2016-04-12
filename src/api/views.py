@@ -100,6 +100,15 @@ def update_run(request, run_id):
         except ObjectDoesNotExist as e:
             data['status'] = False
             data['message'] = str(e)
+
+            # error for api
+            path_file = '/home/gsi/logs/runcards_status.err'
+            now = datetime.now()
+            log_file = open(path_file, 'a')
+            log_file.writelines('STATUS runcards_{0}:'.format(card.id) + '\n')
+            log_file.writelines(str(now) + '\n')
+            log_file.writelines(str(e) + '\n\n\n')
+            log_file.close()
     else:
         return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
