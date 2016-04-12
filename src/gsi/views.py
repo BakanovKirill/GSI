@@ -927,6 +927,9 @@ def view_log_file(request, run_id, card_id):
 	log_file  = 'runcard_{0}.{1}'.format(card_id, out_ext or err_ext)
 	log_file_path = '{0}/{1}'.format(log_path, log_file)
 
+	print 'log_path ================== ', log_path
+	print 'log_file ================== ', log_file
+
 	try:
 		fd = open(log_file_path, 'r')
 		for line in fd.readlines():

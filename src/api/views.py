@@ -87,8 +87,8 @@ def update_run(request, run_id):
                         step.save()
                         run.save()
                 elif state == 'fail':
-                    step.state = state
-                    run.state = state
+                    step.state = 'fail'
+                    run.state = 'fail'
                     step.save()
                     run.save()
                     break
