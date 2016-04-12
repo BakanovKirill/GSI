@@ -45,10 +45,6 @@ def update_run(request, run_id):
             steps = RunStep.objects.filter(
                 parent_run=run,
                 card_item=card)
-            # steps.state = state
-            # steps.save()
-            # run.state = state
-            # run.save()
 
             # logs for api
             path_file = '/home/gsi/logs/runcards_status.log'
@@ -86,8 +82,8 @@ def update_run(request, run_id):
                             stdout=PIPE,
                             stderr=PIPE
                         )
-                        ex_fe_com.wait()    # дождаться выполнения
-                        res_execute = ex_fe_com.communicate()  # получить tuple('stdout', 'stderr')
+                        # ex_fe_com.wait()    # дождаться выполнения
+                        # res_execute = ex_fe_com.communicate()  # получить tuple('stdout', 'stderr')
 
                     if is_last_step:
                         data['is_last_step'] = True
@@ -107,6 +103,9 @@ def update_run(request, run_id):
             log_file.close()
 
         except ObjectDoesNotExist as e:
+            data['status'] = False
+            data['message'] = str(e)
+
             # error for api
             path_file = '/home/gsi/logs/runcards_status.err'
             now = datetime.now()
@@ -115,9 +114,6 @@ def update_run(request, run_id):
             log_file.writelines(str(now) + '\n')
             log_file.writelines(str(e) + '\n\n\n')
             log_file.close()
-
-            data['status'] = False
-            data['message'] = str(e)
     else:
         return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
