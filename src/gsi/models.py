@@ -140,8 +140,10 @@ class RunStep(UnicodeNameMixin, models.Model):
 
     def get_next_step(self):
         next_card = OrderedCardItem.objects.filter(
-            sequence__runbase=self.parent_run.run_base, order__gte=self.card_item.order).exclude(id=self.card_item.id)
+            sequence__runbase=self.parent_run.run_base,
+            order__gte=self.card_item.order).exclude(id=self.card_item.id)
         is_last_step = False
+
         if len(next_card) == 1:
             is_last_step = True
         if next_card:

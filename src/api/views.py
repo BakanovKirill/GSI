@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
+from subprocess import Popen, PIPE
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -10,6 +11,7 @@ from django.shortcuts import get_object_or_404
 
 from core.utils import validate_status
 from gsi.models import Run, RunStep, CardSequence, OrderedCardItem
+from gsi.settings import EXECUTE_FE_COMMAND
 from cards.models import CardItem
 
 # update the status of the runs
@@ -40,10 +42,10 @@ def update_run(request, run_id):
             # run.save()
 
             # logs for api
-            path_file = '/home/gsi/logs/runcards_{0}_status.error'.format(card.id)
+            path_file = '/home/gsi/logs/runcards_status.log'
             now = datetime.now()
             log_file = open(path_file, 'a')
-            log_file.writelines('STATUS:' + '\n')
+            log_file.writelines('STATUS runcards_{0}:'.format(card.id) + '\n')
             log_file.writelines(str(now) + '\n')
             log_file.writelines(str(state) + '\n\n\n')
             log_file.close()
@@ -54,6 +56,19 @@ def update_run(request, run_id):
 
                 if next_step:
                     data['next_step'] = next_step.id
+                    ex_fe_com = Popen(
+                        '{0} {1} {2}'.format(
+                            EXECUTE_FE_COMMAND,
+                            value_list[0],
+                            value_list[2]
+                        ),
+                        shell=True,
+                        stdout=PIPE,
+                        stderr=PIPE
+                    )
+                    ex_fe_com.wait()    # дождаться выполнения
+                    res_execute = ex_fe_com.communicate()  # получить tuple('stdout', 'stderr')
+
                 if is_last_step:
                     data['is_last_step'] = True
                     step.state = 'success'
@@ -61,12 +76,17 @@ def update_run(request, run_id):
                     run.state = 'success'
                     step.save()
                     run.save()
-            else:
+            elif state == 'fail':
                 step.state = state
-                # run = step.parent_run
                 run.state = state
                 step.save()
                 run.save()
+            else:
+                step.state = state
+                step.save()
+                # run = step.parent_run
+                # run.state = state
+                # run.save()
 
         except ObjectDoesNotExist as e:
             data['status'] = False
