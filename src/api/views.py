@@ -29,15 +29,6 @@ def update_run(request, run_id):
     if data['status']:
         state = data['status']
 
-        # logs for api
-        # path_file = '/home/gsi/logs/status.log'
-        # now = datetime.now()
-        # log_file = open(path_file, 'a')
-        # log_file.writelines('STATUS:' + '\n')
-        # log_file.writelines(str(now) + '\n')
-        # log_file.writelines(str(state) + '\n\n\n')
-        # log_file.close()
-
         try:
             run = Run.objects.get(id=value_list[0])
             sequence = CardSequence.objects.get(id=value_list[1])
