@@ -832,7 +832,7 @@ def execute_runs(request, run_id):
 @login_required
 @render_to('gsi/run_progress.html')
 def run_progress(request):
-	runs = Run.objects.all().order_by('id')
+	runs = Run.objects.all().order_by('-id')
 	title = 'Run Progress'
 	url_name = 'run_progress'
 
