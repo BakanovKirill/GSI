@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -24,6 +26,7 @@ def update_run(request, run_id):
 
     if data['status']:
         state = data['status']
+
         try:
             run = Run.objects.get(id=value_list[0])
             sequence = CardSequence.objects.get(id=value_list[1])
@@ -35,6 +38,15 @@ def update_run(request, run_id):
             # run.state = state
             # step.save()
             # run.save()
+
+            # logs for api
+            path_file = '/home/gsi/logs/runcards_{0}_status.error'.format(card.id)
+            now = datetime.now()
+            log_file = open(path_file, 'a')
+            log_file.writelines('STATUS:' + '\n')
+            log_file.writelines(str(now) + '\n')
+            log_file.writelines(str(state) + '\n\n\n')
+            log_file.close()
 
             # Go to the next step only on success state
             if state == 'success':
