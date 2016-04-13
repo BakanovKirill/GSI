@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 
-from core.utils import validate_status
+from core.utils import validate_status, write_log, create_scripts
 from gsi.models import Run, RunStep, CardSequence, OrderedCardItem
 from gsi.settings import EXECUTE_FE_COMMAND
 from cards.models import CardItem
@@ -63,8 +63,9 @@ def update_run(request, run_id):
 
                     if next_step:
                         data['next_step'] = next_step.id
+                        script = create_scripts(run, sequence, card, step)
                         ex_fe_com = Popen(
-                            '{0} {1} {2}'.format(
+                            'nohup {0} {1} {2} &'.format(
                                 EXECUTE_FE_COMMAND,
                                 value_list[0],
                                 value_list[2]
@@ -73,6 +74,10 @@ def update_run(request, run_id):
                             # stdout=PIPE,
                             # stderr=PIPE
                         )
+
+                        log_name = '{0}_{1}.log'.format(value_list[0], value_list[2])
+                        path_log = script['path_runs_logs']
+                        write_log(log_name, run, path_log)
 
                     if is_last_step:
                         data['is_last_step'] = True
