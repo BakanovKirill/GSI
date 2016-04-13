@@ -147,6 +147,28 @@ class OrderedCardItem(models.Model):
         return u"{0}".format(self.card_item)
 
 
+# class Satellite(NamedModel):
+#     class Meta:
+#         verbose_name_plural = _('Satellite cards')
+#
+#     def __unicode__(self):
+#         return u"{0}".format(self.name)
+#
+#
+# class RandomForest(NamedModel):
+#     satellite = models.ForeignKey(Satellite)
+#     param_set = models.TextField()
+#     run_set = models.CharField(max_length=200)
+#     model = models.CharField(max_length=200)
+#     mvrf = models.CharField(max_length=200)
+#
+#     class Meta:
+#         verbose_name_plural = _('Random Forest cards')
+#
+#     def __unicode__(self):
+#         return u"{0}".format(self.name)
+
+
 def get_card_item(self):
     card_item, created = CardItem.objects.get_or_create(
             content_type=ContentType.objects.get_for_model(self.__class__),
