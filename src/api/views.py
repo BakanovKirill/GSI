@@ -33,9 +33,9 @@ def update_run(request, run_id):
             run = Run.objects.get(id=value_list[0])
             sequence = CardSequence.objects.get(id=value_list[1])
             card = OrderedCardItem.objects.get(id=value_list[2])
-            steps = RunStep.objects.filter(
+            step = RunStep.objects.get(
                 parent_run=run,
-                card_item=card)
+                card_item__id=value_list[2])
 
             # logs for api
             path_file = '/home/gsi/logs/runcards_status.log'
@@ -46,53 +46,53 @@ def update_run(request, run_id):
             log_file.writelines(str(state) + '\n')
             # log_file.close()
 
-            for step in steps:
-                # Go to the next step only on success state
-                if state == 'running':
-                    pass
-                elif state == 'fail':
-                    log_file.writelines('FAIL: ' + str(state) + '\n')
-                    step.state = 'fail'
-                    run.state = 'fail'
+            # for step in steps:
+            # Go to the next step only on success state
+            if state == 'running':
+                pass
+            elif state == 'fail':
+                log_file.writelines('FAIL: ' + str(state) + '\n')
+                step.state = 'fail'
+                run.state = 'fail'
+                step.save()
+                run.save()
+                # break
+            elif state == 'success':
+                log_file.writelines('SUCCES: ' + str(state) + '\n')
+                next_step, is_last_step = step.get_next_step()
+
+                if next_step:
+                    data['next_step'] = next_step.id
+                    script = create_scripts(run, sequence, card, step)
+                    ex_fe_com = Popen(
+                        'nohup {0} {1} {2} &'.format(
+                            EXECUTE_FE_COMMAND,
+                            value_list[0],
+                            value_list[2]
+                        ),
+                        shell=True,
+                        # stdout=PIPE,
+                        # stderr=PIPE
+                    )
+
+                    log_name = '{0}_{1}.log'.format(value_list[0], value_list[2])
+                    path_log = script['path_runs_logs']
+                    write_log(log_name, run, path_log)
+
+                if is_last_step:
+                    data['is_last_step'] = True
+                    step.state = 'success'
+                    # run = step.parent_run
+                    run.state = 'success'
                     step.save()
                     run.save()
-                    break
-                elif state == 'success':
-                    log_file.writelines('SUCCES: ' + str(state) + '\n')
-                    next_step, is_last_step = step.get_next_step()
-
-                    if next_step:
-                        data['next_step'] = next_step.id
-                        script = create_scripts(run, sequence, card, step)
-                        ex_fe_com = Popen(
-                            'nohup {0} {1} {2} &'.format(
-                                EXECUTE_FE_COMMAND,
-                                value_list[0],
-                                value_list[2]
-                            ),
-                            shell=True,
-                            # stdout=PIPE,
-                            # stderr=PIPE
-                        )
-
-                        log_name = '{0}_{1}.log'.format(value_list[0], value_list[2])
-                        path_log = script['path_runs_logs']
-                        write_log(log_name, run, path_log)
-
-                    if is_last_step:
-                        data['is_last_step'] = True
-                        step.state = 'success'
-                        # run = step.parent_run
-                        run.state = 'success'
-                        step.save()
-                        run.save()
-                else:
-                    log_file.writelines('ELSE: ' + str(state) + '\n')
-                    step.state = state
-                    step.save()
-                    # run = step.parent_run
-                    # run.state = state
-                    # run.save()
+            else:
+                log_file.writelines('ELSE: ' + str(state) + '\n')
+                step.state = state
+                step.save()
+                # run = step.parent_run
+                # run.state = state
+                # run.save()
 
             log_file.close()
 

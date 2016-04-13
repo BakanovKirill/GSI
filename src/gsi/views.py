@@ -902,6 +902,7 @@ def run_details(request, run_id):
 
 	return data
 
+
 # view out/error log files for cards
 @login_required
 @render_to('gsi/view_log_file.html')
