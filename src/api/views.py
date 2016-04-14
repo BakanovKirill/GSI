@@ -79,8 +79,8 @@ def update_run(request, run_id):
                     ex_fe_com = Popen(
                         'nohup {0} {1} {2} &'.format(
                             EXECUTE_FE_COMMAND,
-                            value_list[0],
-                            value_list[2]
+                            next_step.parent_run.id,
+                            next_step.card_item.id
                         ),
                         shell=True,
                         # stdout=PIPE,
