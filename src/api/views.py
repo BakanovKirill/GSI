@@ -53,9 +53,9 @@ def update_run(request, run_id):
             log_file.writelines('====== Run:\n')
             log_file.writelines('name => {0} :: id => {1}\n'.format(str(run), str(run.id)))
             log_file.writelines('====== OrderedCardItem:\n')
-            log_file.writelines('name => {0} :: id => {1}\n\n\n'.format(str(card), str(card.id)))
+            log_file.writelines('name => {0} :: id => {1}\n'.format(str(card), str(card.id)))
             log_file.writelines('====== RunStep:\n')
-            log_file.writelines('name => {0} :: id => {1}\n'.format(str(step), str(step.id)))
+            log_file.writelines('name => {0} :: id => {1}\n\n\n'.format(str(step), str(step.id)))
             # log_file.close()
 
             # for step in steps:
