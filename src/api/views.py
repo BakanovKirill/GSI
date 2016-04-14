@@ -25,17 +25,20 @@ def update_run(request, run_id):
 
     data = validate_status(request.query_params.get('status', False))
     value_list = run_id.split('.')
+    run_id = value_list[0]
+    card_sequence_id = value_list[1]
+    order_card_item_id = value_list[2]
 
     if data['status']:
         state = data['status']
 
         try:
-            run = Run.objects.get(id=value_list[0])
-            sequence = CardSequence.objects.get(id=value_list[1])
-            card = OrderedCardItem.objects.get(id=value_list[2])
+            run = Run.objects.get(id=run_id)
+            sequence = CardSequence.objects.get(id=card_sequence_id)
+            card = OrderedCardItem.objects.get(id=order_card_item_id)
             step = RunStep.objects.get(
                 parent_run=run,
-                card_item__id=value_list[2])
+                card_item=card)
 
             # logs for api
             path_file = '/home/gsi/logs/runcards_status.log'
@@ -61,14 +64,14 @@ def update_run(request, run_id):
                 run.save()
                 # break
             elif state == 'success':
-                log_file.writelines('SUCCES: ' + str(state) + '\n')
+                log_file.writelines('SUCCESS: ' + str(state) + '\n')
                 next_step, is_last_step = step.get_next_step()
 
                 if next_step:
                     data['next_step'] = next_step.id
                     script = create_scripts(run, sequence, card, step)
                     ex_fe_com = Popen(
-                        '{0} {1} {2}'.format(
+                        'nohup {0} {1} {2} &'.format(
                             EXECUTE_FE_COMMAND,
                             value_list[0],
                             value_list[2]
