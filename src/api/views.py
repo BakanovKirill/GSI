@@ -25,7 +25,7 @@ def update_run(request, run_id):
 
     data = validate_status(request.query_params.get('status', False))
     value_list = run_id.split('.')
-    run_id = value_list[0]
+    run_card_id = value_list[0]
     card_sequence_id = value_list[1]
     order_card_item_id = value_list[2]
 
@@ -33,7 +33,7 @@ def update_run(request, run_id):
         state = data['status']
 
         try:
-            run = Run.objects.get(id=run_id)
+            run = Run.objects.get(id=run_card_id)
             sequence = CardSequence.objects.get(id=card_sequence_id)
             card = OrderedCardItem.objects.get(id=order_card_item_id)
             step = RunStep.objects.get(
@@ -48,12 +48,14 @@ def update_run(request, run_id):
             log_file.writelines('STATUS:\n')
             log_file.writelines(str(now) + '\n')
             log_file.writelines(str(state) + '\n')
-            log_file.writelines('====== RunStep:\n')
-            log_file.writelines('name => {0} :: id => {1}\n'.format(str(step), str(step.id)))
+            log_file.writelines('====== RUN_ID:\n')
+            log_file.writelines('run_id => {0}\n'.format(str(run_id)))
             log_file.writelines('====== Run:\n')
-            log_file.writelines('name => {0} :: id => {1}\n'.format(str(run), str(run.id)))
+            log_file.writelines('name => {0} :: id => {1}\n'.format(str(run_card_id), str(run_card_id.id)))
             log_file.writelines('====== OrderedCardItem:\n')
             log_file.writelines('name => {0} :: id => {1}\n\n\n'.format(str(card), str(card.id)))
+            log_file.writelines('====== RunStep:\n')
+            log_file.writelines('name => {0} :: id => {1}\n'.format(str(step), str(step.id)))
             # log_file.close()
 
             # for step in steps:
