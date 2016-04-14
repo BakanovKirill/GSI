@@ -47,9 +47,9 @@ def update_run(request, run_id):
             log_file.writelines('RUNCARDS_{0}:\n'.format(card.id))
             log_file.writelines('STATUS:\n')
             log_file.writelines(str(now) + '\n')
-            log_file.writelines(str(state) + '\n')
-            log_file.writelines('REQUEST:\n')
-            log_file.writelines(str(request) + '\n')
+            log_file.writelines(str(state) + '\n\n')
+            log_file.writelines('RunStep:\n')
+            log_file.writelines('step => {0} :: id => {1}\n'.format(str(step), str(step.id)))
             # log_file.close()
 
             # for step in steps:
@@ -93,7 +93,7 @@ def update_run(request, run_id):
                     step.save()
                     run.save()
             else:
-                log_file.writelines('ELSE: ' + str(state) + '\n\n\n')
+                log_file.writelines('ELSE: ' + str(state) + '\n')
                 step.state = state
                 step.save()
                 # run = step.parent_run
@@ -112,8 +112,9 @@ def update_run(request, run_id):
             log_file = open(path_file, 'a')
             log_file.writelines('ERRROR runcards_{0}:'.format(card.id) + '\n')
             log_file.writelines(str(now) + '\n')
-            log_file.writelines(str(e) + '\n\n\n')
-            log_file.close()
+            log_file.writelines(str(e) + '\n')
+        log_file.writelines('\n\n\n')
+        log_file.close()
     else:
         return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
