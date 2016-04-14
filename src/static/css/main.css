@@ -496,3 +496,9 @@ li.active-main-menu, li.active-main-menu a:hover, li.li-menu > a:hover, .title:h
     border-top-left-radius: 0px;
     margin-left: 0;
 }
+
+/* text for log files */
+.text-align-left {
+    text-align: left;
+    font-size: 12px !important;
+}
