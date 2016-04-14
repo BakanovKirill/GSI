@@ -46,5 +46,5 @@ static:
 restart:
 	fab restart
 
-migrate:
+dep_migrate:
 	fab migrate
