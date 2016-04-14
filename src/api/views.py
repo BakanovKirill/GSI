@@ -51,7 +51,7 @@ def update_run(request, run_id):
             log_file.writelines('====== RUN_ID:\n')
             log_file.writelines('run_id => {0}\n'.format(str(run_id)))
             log_file.writelines('====== Run:\n')
-            log_file.writelines('name => {0} :: id => {1}\n'.format(str(run_card_id), str(run_card_id.id)))
+            log_file.writelines('name => {0} :: id => {1}\n'.format(str(run), str(run.id)))
             log_file.writelines('====== OrderedCardItem:\n')
             log_file.writelines('name => {0} :: id => {1}\n\n\n'.format(str(card), str(card.id)))
             log_file.writelines('====== RunStep:\n')
