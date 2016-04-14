@@ -68,7 +68,7 @@ def update_run(request, run_id):
                     data['next_step'] = next_step.id
                     script = create_scripts(run, sequence, card, step)
                     ex_fe_com = Popen(
-                        'nohup {0} {1} {2} &'.format(
+                        '{0} {1} {2}'.format(
                             EXECUTE_FE_COMMAND,
                             value_list[0],
                             value_list[2]
