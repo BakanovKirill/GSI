@@ -64,14 +64,16 @@ def update_run(request, run_id):
                 pass
             elif state == 'fail':
                 log_file.writelines('FAIL: ' + str(state) + '\n')
-                step.state = 'fail'
-                run.state = 'fail'
+                step.state = state
+                run.state = state
                 step.save()
                 run.save()
                 # break
             elif state == 'success':
                 log_file.writelines('SUCCESS: ' + str(state) + '\n')
                 next_step, is_last_step = step.get_next_step()
+                step.state = state
+                step.save()
 
                 if next_step:
                     data['next_step'] = next_step.id
