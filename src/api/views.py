@@ -108,6 +108,7 @@ def update_run(request, run_id):
                 # run.state = state
                 # run.save()
 
+            log_file.writelines('\n\n\n')
             log_file.close()
 
         except ObjectDoesNotExist as e:
@@ -121,8 +122,9 @@ def update_run(request, run_id):
             log_file.writelines('ERRROR runcards_{0}:'.format(card.id) + '\n')
             log_file.writelines(str(now) + '\n')
             log_file.writelines(str(e) + '\n')
-        log_file.writelines('\n\n\n')
-        log_file.close()
+
+            log_file.writelines('\n\n\n')
+            log_file.close()
     else:
         return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
