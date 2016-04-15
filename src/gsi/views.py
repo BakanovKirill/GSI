@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 import os
+import shutil
 import getpass
 from datetime import datetime
 
@@ -24,7 +25,7 @@ from gsi.gsi_forms import *
 from core.utils import make_run
 from core.get_post import get_post
 from log.logger import get_logs
-from gsi.settings import NUM_PAGINATIONS
+from gsi.settings import NUM_PAGINATIONS, PATH_RUNS_SCRIPTS
 from core.paginations import paginations
 
 TITLES = {
@@ -831,20 +832,27 @@ def run_progress(request):
 	runs = Run.objects.all().order_by('-id')
 	title = 'Run Progress'
 	url_name = 'run_progress'
+	run_name = ''
 
 	if request.method == "POST":
 		if request.POST.get('run_progress'):
-			run_id = request.POST.get('run_progress')
-			run = get_object_or_404(Run, pk=run_id)
+			for run_id in request.POST.getlist('run_progress'):
+				cur_run = get_object_or_404(Run, pk=run_id)
+				run_name += '"' + str(cur_run) + '", '
+				cur_run.delete()
+				# delete folder Run(s) from server
+				run_folder = 'R_{0}'.format(run_id)
+				path = os.path.join(PATH_RUNS_SCRIPTS, run_folder)
+				shutil.rmtree(path)
+			# run_id = request.POST.get('run_progress')
+			# run = get_object_or_404(Run, pk=run_id)
 
-			return HttpResponseRedirect(u'%s?status_message=%s' %
-										(reverse('run_details', args=[run_id]),
-										 (u'Run: "{0}" selected for viewing log file.'.
-										  format(run.run_base)))
+			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_progress'),
+										 (u'Run(s): {0} ==> deleted.'.format(run_name)))
 			)
 		else:
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_progress'),
-										 (u"To view the log, select Run."))
+										 (u"To delete, select Run or more Runs."))
 			)
 
 	# paginations
