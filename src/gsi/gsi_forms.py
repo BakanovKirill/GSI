@@ -17,34 +17,53 @@ class RunForm(forms.ModelForm):
         self.fields['card_sequence'].initial = self.instance.card_sequence
 
     name = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        widget=forms.TextInput(attrs={
+            'class': 'form-control border-bottom',
+            'placeholder': 'Name'
+        }),
         label=u'Name',
     )
     description = forms.CharField(
-        widget=forms.Textarea(attrs={'rows': '5', 'class': 'form-control'}),
+        widget=forms.Textarea(attrs={
+            'rows': '5',
+            'class': 'form-control border-bottom',
+            'placeholder': 'Description'
+        }),
         required=False,
         label=u'Description'
     )
     purpose = forms.CharField(
-        widget=forms.Textarea(attrs={'rows': '5', 'class': 'form-control'}),
+        widget=forms.Textarea(attrs={
+            'rows': '5',
+            'class': 'form-control border-bottom',
+            'placeholder': 'Purpose of Run'
+        }),
         required=False,
         label=u'Purpose of Run'
     )
     directory_path = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        widget=forms.TextInput(attrs={
+            'class': 'form-control border-bottom form-control padding-0 input-form',
+            'placeholder': 'Directory path'
+        }),
         # required=False,
         label=u'Directory path',
         help_text=u'Directory path is the name of the directory \
             that result will be stored'
     )
     resolution = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": 'form-control'}),
+        widget=forms.Select(attrs={
+            "class": 'form-control border-bottom'
+        }),
         queryset=Resolution.objects.all(),
         # empty_label=None,
         label=u'Resolution',
     )
     card_sequence = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Card sequence'
+        }),
         required=False,
         label=u'Card sequence',
     )
