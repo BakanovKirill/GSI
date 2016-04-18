@@ -129,7 +129,7 @@ def upload_file(request):
 			# 	)
 		else:
 			return HttpResponseRedirect(
-					u'%s?status_message=%s' % (reverse('upload_file'),
+					u'%s?danger_message=%s' % (reverse('upload_file'),
 					(u'Sorry. Upload error: {0}'.format(form['test_data'].errors.as_text())))
 			)
 	else:
@@ -190,8 +190,8 @@ def index(request):
 			# 	)
 		else:
 			return HttpResponseRedirect(
-					u'%s?status_message=%s' % (reverse('index'),
-					(u'Sorry. Upload error: {0}'.format(form['test_data'].errors.as_text())))
+					u'%s?danger_message=%s' % (reverse('index'),
+					(u'Upload error: {0}'.format(form['test_data'].errors.as_text())))
 			)
 	else:
 		form = UploadFileForm()
@@ -232,7 +232,7 @@ def run_setup(request):
 										(reverse('run_setup'), (u'Run: {0} ==> deleted.'.format(run_name)))
 										)
 		else:
-			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_setup'),
+			return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('run_setup'),
 										 (u"To delete, select Run or more Runs."))
 			)
 
@@ -302,7 +302,7 @@ def run_update(request, run_id):
 
 		if request.POST.get('cancel_button') is not None:
 			return HttpResponseRedirect(
-					u'%s?status_message=%s' % (reverse('run_setup'),
+					u'%s?info_message=%s' % (reverse('run_setup'),
 					(u"Run {0} updated canceled".format(run_base.name)))
 			)
 		else:
@@ -358,7 +358,7 @@ def run_new_card_sequence_list(request):
 										  format(cs_name)))
 			)
 		else:
-			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_new_card_sequence_list'),
+			return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('run_new_card_sequence_list'),
 										 (u"To delete, select Card Sequence or more Card Sequences."))
 			)
 
@@ -390,7 +390,7 @@ def card_sequence(request, run_id):
 										  format(cs_name)))
 			)
 		else:
-			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('card_sequence', args=[run_id]),
+			return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('card_sequence', args=[run_id]),
 										 (u"To delete, select Card Sequence or more Card Sequences."))
 			)
 
@@ -450,7 +450,7 @@ def run_new_card_sequence_add(request):
 				)
 		elif request.POST.get('cancel_button') is not None:
 			return HttpResponseRedirect(
-					u'%s?status_message=%s' % (reverse('run_new_card_sequence_list'),
+					u'%s?info_message=%s' % (reverse('run_new_card_sequence_list'),
 					(u"Card Sequence created canceled"))
 			)
 	else:
@@ -533,14 +533,13 @@ def run_new_card_sequence_update(request, cs_id):
 												  format(cs_name)))
 					)
 				else:
-					return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_new_card_sequence_update',
-																				   args=[cs_id]),
-																		   (u"To delete, select Card Sequence \
-																		   or more Card Sequences."))
+					return HttpResponseRedirect(u'%s?warning_message=%s' %
+												(reverse('run_new_card_sequence_update', args=[cs_id]),
+												 (u"To delete, select Card Sequence or more Card Sequences."))
 					)
 		elif request.POST.get('cancel_button') is not None:
 			return HttpResponseRedirect(
-					u'%s?status_message=%s' % (reverse('run_new_card_sequence_list'),
+					u'%s?info_message=%s' % (reverse('run_new_card_sequence_list'),
 					(u"Card Sequence created canceled"))
 			)
 	else:
@@ -606,7 +605,7 @@ def add_card_sequence(request, run_id):
 			)
 		elif request.POST.get('cancel_button') is not None:
 			return HttpResponseRedirect(
-					u'%s?status_message=%s' % (reverse('card_sequence', args=[run_id]),
+					u'%s?info_message=%s' % (reverse('card_sequence', args=[run_id]),
 					(u"Card Sequence created canceled"))
 			)
 	else:
@@ -686,19 +685,16 @@ def card_sequence_update(request, run_id, cs_id):
 
 					return HttpResponseRedirect(u'%s?status_message=%s' %
 												(reverse('card_sequence_update', args=[run_id, cs_id]),
-												 (u'Card Item: {0} ==> deleted.'.
-												  format(cs_name)))
+												 (u'Card Item: {0} ==> deleted.'.format(cs_name)))
 					)
 				else:
-					return HttpResponseRedirect(u'%s?status_message=%s' %
-												(reverse('card_sequence_update',
-														 args=[run_id, cs_id]),
-												 (u"To delete, select Card Item \
-												 or more Card Items."))
+					return HttpResponseRedirect(u'%s?warning_message=%s' %
+												(reverse('card_sequence_update', args=[run_id, cs_id]),
+												 (u"To delete, select Card Item or more Card Items."))
 					)
 		elif request.POST.get('cancel_button') is not None:
 			return HttpResponseRedirect(
-					u'%s?status_message=%s' % (reverse('run_update', args=[run_id]),
+					u'%s?info_message=%s' % (reverse('run_update', args=[run_id]),
 					(u'Card Sequence "{0}" created canceled'.format(card_sequence.name)))
 			)
 	else:
@@ -741,7 +737,7 @@ def card_item_update(request, run_id, cs_id, card_item_id):
 				)
 		elif request.POST.get('cancel_button') is not None:
 			return HttpResponseRedirect(
-					u'%s?status_message=%s' % (reverse('card_sequence_update', args=[run_id, cs_id]),
+					u'%s?info_message=%s' % (reverse('card_sequence_update', args=[run_id, cs_id]),
 					(u"Card Item {0} updated canceled".format(card_sequence_card.card_item)))
 			)
 	else:
@@ -785,7 +781,7 @@ def submit_run(request):
 						  format(name_runs, now_time, now_date_formating)))
 			)
 		else:
-			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('submit_run'),
+			return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('submit_run'),
 										 (u"For start choose Run(s)"))
 			)
 
@@ -851,7 +847,7 @@ def run_progress(request):
 										 (u'Run(s): {0} ==> deleted.'.format(run_name)))
 			)
 		else:
-			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_progress'),
+			return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('run_progress'),
 										 (u"To delete, select Run or more Runs."))
 			)
 
@@ -892,7 +888,7 @@ def run_details(request, run_id):
 										(reverse('view_log_file', args=[run_id, step.card_item.id]),
 										 (u'Log Error file for the Card "{0}".'.format(step.card_item))))
 		else:
-			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_details', args=[run_id]),
+			return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('run_details', args=[run_id]),
 																   (u"To view the Card Log, select Card.")))
 
 	# paginations
@@ -939,7 +935,7 @@ def view_log_file(request, run_id, card_id):
 	except Exception, e:
 		print 'ERROR view_log_file: ', e
 		mess = out or err
-		return HttpResponseRedirect(u'%s?status_message=%s' %
+		return HttpResponseRedirect(u'%s?danger_message=%s' %
 									(reverse('run_details', args=[run_id]),
 									 (u'Log {0} for Card "{1}" not found!').
 									 format(mess, run_step_card)))
@@ -1037,7 +1033,7 @@ def environment_groups(request):
 											  format(env_name)))
 				)
 			else:
-				return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('environment_groups'),
+				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('environment_groups'),
 											 (u"To delete, select Group or more Groups."))
 				)
 		elif request.POST.get('del_current_btn'):
@@ -1047,7 +1043,7 @@ def environment_groups(request):
 
 			return HttpResponseRedirect(u'%s?status_message=%s' %
 										(reverse('environment_groups'),
-										 (u'Environment Groups: {0} ==> deleted.'.
+										 (u'Environment Group: {0} ==> deleted.'.
 										  format(env_name))))
 
 	# paginations
@@ -1161,13 +1157,11 @@ def areas(request):
 
 				area_ids = '_'.join(request.POST.getlist('env_select'))
 
-				return HttpResponseRedirect(u'%s?status_message=%s' %
-											(reverse('areas'),
-											 (u'Areas: {0} ==> deleted.'.
-											  format(area_name)))
+				return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('areas'),
+											 (u'Areas: {0} ==> deleted.'.format(area_name)))
 				)
 			else:
-				return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('areas'),
+				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('areas'),
 											 (u"To delete, select Area or more Areas."))
 				)
 		elif request.POST.get('del_current_btn'):
@@ -1175,10 +1169,8 @@ def areas(request):
 			area_name += '"' + cur_area.name + '", '
 			cur_area.delete()
 
-			return HttpResponseRedirect(u'%s?status_message=%s' %
-										(reverse('areas'),
-										 (u'Areas: {0} ==> deleted.'.
-										  format(area_name)))
+			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('areas'),
+										 (u'Areas: {0} ==> deleted.'.format(area_name)))
 				)
 
 	# paginations
@@ -1295,13 +1287,11 @@ def years_group(request):
 					yg_name += '"' + cur_yg.name + '", '
 					cur_yg.delete()
 
-				return HttpResponseRedirect(u'%s?status_message=%s' %
-											(reverse('years_group'),
-											 (u'Years Group(s): {0} ==> deleted.'.
-											  format(yg_name)))
+				return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('years_group'),
+											 (u'Years Groups: {0} ==> deleted.'.format(yg_name)))
 				)
 			else:
-				return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('years_group'),
+				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('years_group'),
 											 (u"To delete, select Years Group or more Years Groups."))
 				)
 		elif request.POST.get('del_current_btn'):
@@ -1309,10 +1299,8 @@ def years_group(request):
 			yg_name += '"' + cur_yg.name + '", '
 			cur_yg.delete()
 
-			return HttpResponseRedirect(u'%s?status_message=%s' %
-										(reverse('years_group'),
-										 (u'Years Group: {0} ==> deleted.'.
-										  format(yg_name)))
+			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('years_group'),
+										 (u'Years Group: {0} ==> deleted.'.format(yg_name)))
 				)
 
 	# paginations
