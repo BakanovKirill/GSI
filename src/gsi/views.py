@@ -685,13 +685,23 @@ def card_sequence_update(request, run_id, cs_id):
 
 					return HttpResponseRedirect(u'%s?status_message=%s' %
 												(reverse('card_sequence_update', args=[run_id, cs_id]),
-												 (u'Card Item: {0} ==> deleted.'.format(cs_name)))
+												 (u'Card Items: {0} ==> deleted.'.format(cs_name)))
 					)
 				else:
 					return HttpResponseRedirect(u'%s?warning_message=%s' %
 												(reverse('card_sequence_update', args=[run_id, cs_id]),
 												 (u"To delete, select Card Item or more Card Items."))
 					)
+		elif request.POST.get('del_current_btn'):
+			card_id = request.POST.get('del_current_btn')
+			cur_cs = get_object_or_404(CardSequence.cards.through, pk=card_id)
+			cs_name = '"' + str(cur_cs.card_item) + '", '
+			cur_cs.delete()
+
+			return HttpResponseRedirect(u'%s?status_message=%s' %
+										(reverse('card_sequence_update', args=[run_id, cs_id]),
+										 (u'Card Item: {0} ==> deleted.'.format(cs_name)))
+										)
 		elif request.POST.get('cancel_button') is not None:
 			return HttpResponseRedirect(
 					u'%s?info_message=%s' % (reverse('run_update', args=[run_id]),
