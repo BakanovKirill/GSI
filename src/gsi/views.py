@@ -323,8 +323,8 @@ def run_update(request, run_id):
 					)
 				if request.POST.get('edit_run_details_button') is not None:
 					return HttpResponseRedirect(
-							u'%s?status_message=%s' % (reverse('card_sequence_update', args=[run_id, run_base.card_sequence.id]),
-							(u"Run {0} updated successfully".format(run_base.name)))
+							u'%s?info_message=%s' % (reverse('card_sequence_update', args=[run_id, run_base.card_sequence.id]),
+							(u"Update Card Sequence {0}".format(run_base.card_sequence)))
 					)
 	else:
 		form = RunForm(instance=run_base)
