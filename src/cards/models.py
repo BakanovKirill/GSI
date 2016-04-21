@@ -115,17 +115,17 @@ class RFTrain(NamedModel, ParallelModel):
         verbose_name_plural = _('RFTRain cards')
 
 
-class Satellite(NamedModel):
-    class Meta:
-        verbose_name_plural = _('Satellite cards')
-
-    def __unicode__(self):
-        return u"{0}".format(self.name)
+# class Satellite(NamedModel):
+#     class Meta:
+#         verbose_name_plural = _('Satellite cards')
+#
+#     def __unicode__(self):
+#         return u"{0}".format(self.name)
 
 
 class RandomForest(NamedModel):
     aoi_name = models.CharField(max_length=200)
-    satellite = models.ForeignKey(Satellite)
+    satellite = models.ForeignKey('gsi.Satellite')
     param_set = models.TextField()
     run_set = models.CharField(max_length=200)
     model = models.CharField(max_length=200)
@@ -148,7 +148,6 @@ class CardItem(models.Model):
         models.Q(app_label='cards', model='remap') |
         models.Q(app_label='cards', model='rfscore') |
         models.Q(app_label='cards', model='qrf') |
-        models.Q(app_label='cards', model='satellite') |
         models.Q(app_label='cards', model='randomforest')
     )
 
@@ -191,7 +190,7 @@ ContentType.__unicode__ = __unicode__
 def auto_add_card_item(sender, instance=None, created=False, **kwargs):
     list_of_models = (
         RFScore, RFTrain, QRF, YearFilter, MergeCSV,
-        Collate, PreProc, Remap, Satellite, RandomForest
+        Collate, PreProc, Remap, RandomForest
     )
     if sender in list_of_models:
         if created:

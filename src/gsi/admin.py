@@ -2,8 +2,9 @@ from cards.models import CardItem, OrderedCardItem
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericStackedInline, GenericTabularInline
 from core.utils import make_run
-from .models import HomeVariables, VariablesGroup, Tile, Area, YearGroup, Year, CardSequence, RunBase, RunStep, Run, \
-    Resolution, Log, TileType
+from .models import (HomeVariables, VariablesGroup, Tile, Area, YearGroup,
+                     Year, CardSequence, RunBase, RunStep, Run,
+                     Resolution, Log, TileType, Satellite)
 from solo.admin import SingletonModelAdmin
 
 
@@ -66,3 +67,4 @@ admin.site.register(RunStep, RunStepAdmin)
 admin.site.register(Resolution, admin.ModelAdmin)
 admin.site.register(Log, admin.ModelAdmin)
 admin.site.register(TileType, admin.ModelAdmin)
+admin.site.register(Satellite, admin.ModelAdmin)

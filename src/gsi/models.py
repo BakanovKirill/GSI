@@ -52,6 +52,10 @@ class YearGroup(UnicodeNameMixin, models.Model):
     years = models.ManyToManyField(Year, related_name='year_groups')
 
 
+class Satellite(UnicodeNameMixin, models.Model):
+    name = models.CharField(max_length=50)
+
+
 class Resolution(UnicodeNameMixin, models.Model):
     name = models.CharField(max_length=50, help_text=_('This will be a short display of the value, i.e. 1KM, 250M'))
     value = models.CharField(max_length=20, help_text=_('Value in meters, e.g 1000 for 1KM display name'))

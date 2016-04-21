@@ -3,7 +3,9 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib import admin
 from django.utils.translation import \
     ugettext_lazy as _  # Always aware of translations to other languages in the future -> wrap all texts into _()
-from .models import RFScore, QRF, Collate, YearFilter, Remap, PreProc, MergeCSV, RFTrain, CardItem, OrderedCardItem
+from .models import (RFScore, QRF, Collate, YearFilter,
+                     Remap, PreProc, MergeCSV, RFTrain,
+                     CardItem, OrderedCardItem, RandomForest)
 
 admin.site.register(QRF, admin.ModelAdmin)
 admin.site.register(RFScore, admin.ModelAdmin)
@@ -13,6 +15,7 @@ admin.site.register(YearFilter, admin.ModelAdmin)
 admin.site.register(PreProc, admin.ModelAdmin)
 admin.site.register(MergeCSV, admin.ModelAdmin)
 admin.site.register(RFTrain, admin.ModelAdmin)
+admin.site.register(RandomForest, admin.ModelAdmin)
 admin.site.register(OrderedCardItem, admin.ModelAdmin)
 
 admin.site.register(ContentType)
