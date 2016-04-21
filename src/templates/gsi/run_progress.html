@@ -17,16 +17,23 @@
                         <th>Run</th>
                         <th>Date</th>
                         <th>Status</th>
+                        <th>Details</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for run in runs %}
                         <tr>
-                            <td><input type="radio" name="run_progress" value="{{ run.id }}"></td>
+                            <!--<td><input type="radio" name="run_progress" value="{{ run.id }}"></td>-->
+                            <td><input type="checkbox" name="run_progress" value="{{ run.id }}"></td>
                             <td>{{ run.id }}</td>
                             <td>{{ run.run_base }}</td>
                             <td>{{ run.run_date|date:"d/m/Y" }}</td>
                             <td>{{ run.state }}</td>
+                            <td>
+                                <a href="{% url 'run_details' run.id %}">
+                                    <img class="" src="{% static 'img/details_18.png' %}"/>
+                                </a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -37,8 +44,8 @@
             <!-- end pagination -->
 
             <div class="col-md-4 col-md-offset-8">
-                <button type="submit" name="save_button" class="btn btn-primary btn-block">
-                    Details
+                <button type="submit" name="delete_button" class="btn btn-danger btn-block">
+                    Delete
                 </button>
             </div>
         </form>

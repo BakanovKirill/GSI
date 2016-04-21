@@ -117,7 +117,7 @@ class Run(models.Model):
     user = models.ForeignKey(User, null=True, blank=True)
     run_base = models.ForeignKey(RunBase)
 
-    state = models.CharField(max_length=100, choices=STATES, default='created')
+    state = models.CharField(max_length=100, choices=STATES, default='running')
 
     log = models.ForeignKey(Log, null=True, blank=True)
 

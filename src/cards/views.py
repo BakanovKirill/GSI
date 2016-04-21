@@ -112,6 +112,7 @@ def proces_card_new_run(request):
 
     return data
 
+
 @login_required
 @render_to('cards/processing_card_new_run.html')
 def proces_card_runid(request, run_id):

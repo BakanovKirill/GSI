@@ -25,25 +25,37 @@ def update_run(request, run_id):
 
     data = validate_status(request.query_params.get('status', False))
     value_list = run_id.split('.')
+    run_card_id = value_list[0]
+    card_sequence_id = value_list[1]
+    order_card_item_id = value_list[2]
 
     if data['status']:
         state = data['status']
 
         try:
-            run = Run.objects.get(id=value_list[0])
-            sequence = CardSequence.objects.get(id=value_list[1])
-            card = OrderedCardItem.objects.get(id=value_list[2])
+            run = Run.objects.get(id=run_card_id)
+            sequence = CardSequence.objects.get(id=card_sequence_id)
+            card = OrderedCardItem.objects.get(id=order_card_item_id)
             step = RunStep.objects.get(
                 parent_run=run,
-                card_item__id=value_list[2])
+                card_item=card)
 
             # logs for api
             path_file = '/home/gsi/logs/runcards_status.log'
             now = datetime.now()
             log_file = open(path_file, 'a')
-            log_file.writelines('STATUS runcards_{0}:'.format(card.id) + '\n')
+            log_file.writelines('RUNCARDS_{0}:\n'.format(card.id))
+            log_file.writelines('STATUS:\n')
             log_file.writelines(str(now) + '\n')
             log_file.writelines(str(state) + '\n')
+            log_file.writelines('====== RUN_ID:\n')
+            log_file.writelines('run_id => {0}\n'.format(str(run_id)))
+            log_file.writelines('====== Run:\n')
+            log_file.writelines('name => {0} :: id => {1}\n'.format(str(run), str(run.id)))
+            log_file.writelines('====== OrderedCardItem:\n')
+            log_file.writelines('name => {0} :: id => {1}\n'.format(str(card), str(card.id)))
+            log_file.writelines('====== RunStep:\n')
+            log_file.writelines('name => {0} :: id => {1}\n\n\n'.format(str(step), str(step.id)))
             # log_file.close()
 
             # for step in steps:
@@ -52,14 +64,16 @@ def update_run(request, run_id):
                 pass
             elif state == 'fail':
                 log_file.writelines('FAIL: ' + str(state) + '\n')
-                step.state = 'fail'
-                run.state = 'fail'
+                step.state = state
+                run.state = state
                 step.save()
                 run.save()
                 # break
             elif state == 'success':
-                log_file.writelines('SUCCES: ' + str(state) + '\n')
+                log_file.writelines('SUCCESS: ' + str(state) + '\n')
                 next_step, is_last_step = step.get_next_step()
+                step.state = state
+                step.save()
 
                 if next_step:
                     data['next_step'] = next_step.id
@@ -67,8 +81,8 @@ def update_run(request, run_id):
                     ex_fe_com = Popen(
                         'nohup {0} {1} {2} &'.format(
                             EXECUTE_FE_COMMAND,
-                            value_list[0],
-                            value_list[2]
+                            next_step.parent_run.id,
+                            next_step.card_item.id
                         ),
                         shell=True,
                         # stdout=PIPE,
@@ -94,6 +108,7 @@ def update_run(request, run_id):
                 # run.state = state
                 # run.save()
 
+            log_file.writelines('\n\n\n')
             log_file.close()
 
         except ObjectDoesNotExist as e:
@@ -106,7 +121,9 @@ def update_run(request, run_id):
             log_file = open(path_file, 'a')
             log_file.writelines('ERRROR runcards_{0}:'.format(card.id) + '\n')
             log_file.writelines(str(now) + '\n')
-            log_file.writelines(str(e) + '\n\n\n')
+            log_file.writelines(str(e) + '\n')
+
+            log_file.writelines('\n\n\n')
             log_file.close()
     else:
         return Response(data, status=status.HTTP_400_BAD_REQUEST)

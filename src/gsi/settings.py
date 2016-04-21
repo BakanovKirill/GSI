@@ -200,6 +200,7 @@ LOGGING = {
 }
 
 EXECUTE_FE_COMMAND = '/home/gsi/gsi_files/bin/execute_FE_command'
+PATH_RUNS_SCRIPTS = '/lustre/w23/mattgsi/scripts/runs'
 
 # number paginations
 NUM_PAGINATIONS = 7

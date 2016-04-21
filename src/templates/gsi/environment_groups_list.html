@@ -23,9 +23,7 @@
                             <td><input type="checkbox" name="env_select" value="{{ env.id }}"></td>
                             <td>{{ env.name }}</td>
                             <td>
-                                <a href="{% url 'environment_group_edit' env.id %}" role="button">
-                                    <img class="" src="{% static 'img/edit-18.png' %}"/>
-                                </a>
+                                <a href="{% url 'environment_group_edit' env.id %}" role="button"><img class="" src="{% static 'img/edit-18.png' %}"/></a>
                                 <button class="btn del-btn" type="submit" name="del_current_btn" value="{{ env.id }}">
                                     <img src="{% static 'img/delete-18.png' %}"/>
                                 </button>
