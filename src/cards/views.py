@@ -153,6 +153,7 @@ def proces_card_runid_csid(request, run_id, cs_id):
         'preproc_button': ['new_runid_csid_preproc', [run_id, cs_id]],
         'margecsv_button': ['new_runid_csid_mergecsv', [run_id, cs_id]],
         'rftrain_button': ['new_runid_csid_rftrain', [run_id, cs_id]],
+        'random_forest_button': ['new_runid_csid_rftrain', [run_id, cs_id]],
         'cancel_button': ['card_sequence_update', [run_id, cs_id]]
     }
 
