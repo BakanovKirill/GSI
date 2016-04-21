@@ -115,6 +115,29 @@ class RFTrain(NamedModel, ParallelModel):
         verbose_name_plural = _('RFTRain cards')
 
 
+class Satellite(NamedModel):
+    class Meta:
+        verbose_name_plural = _('Satellite cards')
+
+    def __unicode__(self):
+        return u"{0}".format(self.name)
+
+
+class RandomForest(NamedModel):
+    aoi_name = models.CharField(max_length=200)
+    satellite = models.ForeignKey(Satellite)
+    param_set = models.TextField()
+    run_set = models.CharField(max_length=200)
+    model = models.CharField(max_length=200)
+    mvrf = models.CharField(max_length=200)
+
+    class Meta:
+        verbose_name_plural = _('Random Forest cards')
+
+    def __unicode__(self):
+        return u"{0}".format(self.name)
+
+
 class CardItem(models.Model):
     CONTENT_LIMIT = (
         models.Q(app_label='cards', model='rftrain') |
@@ -124,7 +147,9 @@ class CardItem(models.Model):
         models.Q(app_label='cards', model='yearfilter') |
         models.Q(app_label='cards', model='remap') |
         models.Q(app_label='cards', model='rfscore') |
-        models.Q(app_label='cards', model='qrf')
+        models.Q(app_label='cards', model='qrf') |
+        models.Q(app_label='cards', model='satellite') |
+        models.Q(app_label='cards', model='randomforest')
     )
 
     content_type = models.ForeignKey(ContentType, limit_choices_to=CONTENT_LIMIT)
@@ -147,28 +172,6 @@ class OrderedCardItem(models.Model):
         return u"{0}".format(self.card_item)
 
 
-# class Satellite(NamedModel):
-#     class Meta:
-#         verbose_name_plural = _('Satellite cards')
-#
-#     def __unicode__(self):
-#         return u"{0}".format(self.name)
-#
-#
-# class RandomForest(NamedModel):
-#     satellite = models.ForeignKey(Satellite)
-#     param_set = models.TextField()
-#     run_set = models.CharField(max_length=200)
-#     model = models.CharField(max_length=200)
-#     mvrf = models.CharField(max_length=200)
-#
-#     class Meta:
-#         verbose_name_plural = _('Random Forest cards')
-#
-#     def __unicode__(self):
-#         return u"{0}".format(self.name)
-
-
 def get_card_item(self):
     card_item, created = CardItem.objects.get_or_create(
             content_type=ContentType.objects.get_for_model(self.__class__),
@@ -186,7 +189,10 @@ ContentType.__unicode__ = __unicode__
 
 @receiver(post_save)
 def auto_add_card_item(sender, instance=None, created=False, **kwargs):
-    list_of_models = (RFScore, RFTrain, QRF, YearFilter, MergeCSV, Collate, PreProc, Remap)
+    list_of_models = (
+        RFScore, RFTrain, QRF, YearFilter, MergeCSV,
+        Collate, PreProc, Remap, Satellite, RandomForest
+    )
     if sender in list_of_models:
         if created:
             get_card_item(instance)
