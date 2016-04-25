@@ -44,7 +44,11 @@ REVERSE_URL = {
 	'rftrain': {'save_button': ['proces_card_runid_csid'],
 	            'save_and_another': ['new_runid_csid_rftrain'],
 	            'save_and_continue': ['new_runid_csid_rftrain_edit'],
-	            'cancel_button': ['proces_card_runid_csid']}
+	            'cancel_button': ['proces_card_runid_csid']},
+	'randomforest': {'save_button': ['proces_card_runid_csid'],
+	            'save_and_another': ['new_runid_csid_randomforest'],
+	            'save_and_continue': ['new_runid_csid_randomforest_edit'],
+	            'cancel_button': ['proces_card_runid_csid']},
 }
 
 
@@ -639,6 +643,79 @@ def new_runid_csid_rftrain_edit(request, run_id, cs_id, rftrain_id):
 		'template_name': template_name,
 		'run_id': run_id,
 		'cs_id': cs_id,
+	}
+
+	return data
+
+
+@login_required
+@render_to('cards/new_runid_csid_card.html')
+def new_runid_csid_randomforest(request, run_id, cs_id):
+	title = 'New RandomForest Card'
+	url_form = 'new_runid_csid_randomforest'
+	template_name = 'cards/_randomforest_form.html'
+	func = randomforest_update_create
+	form = None
+	REVERSE_URL['randomforest']['save_button'].append([run_id, cs_id])
+	REVERSE_URL['randomforest']['save_and_another'].append([run_id, cs_id])
+	REVERSE_URL['randomforest']['save_and_continue'].append([run_id, cs_id])
+	REVERSE_URL['randomforest']['cancel_button'].append([run_id, cs_id])
+
+	if request.method == "POST":
+		response = get_post(request, RandomForestForm, 'RandomForest Card',
+							REVERSE_URL['randomforest'], func, args=True)
+
+		if isinstance(response, HttpResponseRedirect):
+			return response
+		else:
+			form = response
+	else:
+		form = RandomForestForm()
+
+	data = {
+		'title': title,
+		'form': form,
+		'url_form': url_form,
+		'template_name': template_name,
+		'run_id': run_id,
+		'cs_id': cs_id,
+	}
+
+	return data
+
+
+@login_required
+@render_to('cards/new_runid_csid_card.html')
+def new_runid_csid_randomforest_edit(request, run_id, cs_id, rf_id):
+	title = 'New RandomForest Card'
+	randomforest_card = get_object_or_404(RandomForest, pk=rf_id)
+	url_form = 'new_runid_csid_randomforest'
+	template_name = 'cards/_randomforest_form.html'
+	func = randomforest_update_create
+	form = None
+	REVERSE_URL['randomforest']['save_button'].append([run_id, cs_id])
+	REVERSE_URL['randomforest']['save_and_another'].append([run_id, cs_id])
+	REVERSE_URL['randomforest']['save_and_continue'].append([run_id, cs_id])
+	REVERSE_URL['randomforest']['cancel_button'].append([run_id, cs_id])
+
+	if request.method == "POST":
+		response = get_post(request, RandomForestForm, 'RandomForest Card',
+							REVERSE_URL['randomforest'], func, args=True, item_id=rf_id)
+
+		if isinstance(response, HttpResponseRedirect):
+			return response
+		else:
+			form = response
+	else:
+		form = RandomForestForm(instance=randomforest_card)
+
+	data = {
+		'title': title,
+		'form': form,
+		'url_form': url_form,
+		'template_name': template_name,
+		'run_id': run_id,
+		'rf_id': rf_id,
 	}
 
 	return data

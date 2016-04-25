@@ -305,6 +305,8 @@ urlpatterns = [
         'cards.views_card_runid_csid.new_runid_csid_mergecsv', name='new_runid_csid_mergecsv'),
     url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/rftrain/add/$',
         'cards.views_card_runid_csid.new_runid_csid_rftrain', name='new_runid_csid_rftrain'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/randomforest/add/$',
+        'cards.views_card_runid_csid.new_runid_csid_randomforest', name='new_runid_csid_randomforest'),
 
 
     # new runID card-sequenceID cards edit
@@ -324,6 +326,8 @@ urlpatterns = [
         'cards.views_card_runid_csid.new_runid_csid_mergecsv_edit', name='new_runid_csid_mergecsv_edit'),
     url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/rftrain/(?P<rftrain_id>\d+)/$',
         'cards.views_card_runid_csid.new_runid_csid_rftrain_edit', name='new_runid_csid_rftrain_edit'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/randomforest/(?P<rf_id>\d+)/$',
+        'cards.views_card_runid_csid.new_runid_csid_randomforest_edit', name='new_runid_csid_randomforest_edit'),
 
 
     # auth
