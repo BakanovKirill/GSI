@@ -105,14 +105,14 @@ class MergeCSV(NamedModel, models.Model):
 
 class RFTrain(NamedModel, ParallelModel):
     tile_type = models.ForeignKey('gsi.TileType')
-    number_of_trees = models.IntegerField(default=50, blank=True)
+    number_of_trees = models.IntegerField(default=0, blank=True)
     value = models.CharField(max_length=300, blank=True)
     config_file = models.CharField(max_length=200, blank=True)
     output_tile_subdir = models.CharField(max_length=200, blank=True)
     input_scale_factor = models.CharField(max_length=200, blank=True)
-    training = models.PositiveIntegerField(default=0, blank=True)
-    number_of_variable = models.PositiveIntegerField(default=0, blank=True)
-    number_of_thread = models.PositiveIntegerField(default=1, blank=True)
+    # training = models.PositiveIntegerField(default=0, blank=True)
+    # number_of_variable = models.PositiveIntegerField(default=0, blank=True)
+    # number_of_thread = models.PositiveIntegerField(default=1, blank=True)
 
     class Meta:
         verbose_name_plural = _('RFTRain cards')
