@@ -19,7 +19,7 @@ from django.conf import settings
 
 from gsi.models import (Run, RunStep, Log, OrderedCardItem,
 						HomeVariables, VariablesGroup, YearGroup,
-						Year)
+						Year, Satellite)
 from gsi.gsi_items_update_create import *
 from gsi.gsi_forms import *
 from core.utils import make_run
@@ -1333,6 +1333,8 @@ def years_group(request):
 def years_group_add(request):
 	title = 'Years Groups Add'
 	url_form = 'years_group_add'
+	url_name = 'years_group'
+	but_name = 'static_data'
 	template_name = 'gsi/_years_group_form.html'
 	reverse_url = {
 		'save_button': 'years_group',
@@ -1360,7 +1362,9 @@ def years_group_add(request):
 		'url_form': url_form,
 		'template_name': template_name,
 		'form': form,
-		'available_years': available_years
+		'available_years': available_years,
+		'url_name': url_name,
+		'but_name': but_name,
 	}
 
 	return data
@@ -1372,6 +1376,8 @@ def years_group_add(request):
 def years_group_edit(request, yg_id):
 	years_group = get_object_or_404(YearGroup, pk=yg_id)
 	title = 'YearGroup Edit "%s"' % (years_group.name)
+	url_name = 'years_group'
+	but_name = 'static_data'
 	url_form = 'years_group_edit'
 	template_name = 'gsi/_years_group_form.html'
 	reverse_url = {
@@ -1399,11 +1405,147 @@ def years_group_edit(request, yg_id):
 	data = {
 		'title': title,
 		'url_form': url_form,
+		'url_name': url_name,
+		'but_name': but_name,
 		'template_name': template_name,
 		'form': form,
 		'item_id': yg_id,
 		'available_years': available_years,
 		'chosen_years': chosen_years,
+	}
+
+	return data
+
+
+# satellite list
+@login_required
+@render_to('gsi/satellite_list.html')
+def satellite(request):
+	title = 'Satellites'
+	satellites = Satellite.objects.all()
+	satellite_name = ''
+	url_name = 'satellite'
+	but_name = 'static_data'
+
+	if request.method == "POST":
+		if request.POST.get('delete_button'):
+			if request.POST.get('satellite_select'):
+				for satellite_id in request.POST.getlist('satellite_select'):
+					cur_satellite = get_object_or_404(Satellite, pk=satellite_id)
+					satellite_name += '"' + cur_satellite.name + '", '
+					cur_satellite.delete()
+
+				return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('satellite'),
+											 (u'Satellites: {0} ==> deleted.'.format(satellite_name)))
+				)
+			else:
+				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('satellite'),
+											 (u"To delete, select Satellite or more Satellites."))
+				)
+		elif request.POST.get('del_current_btn'):
+			cur_satellite = get_object_or_404(Satellite, pk=request.POST.get('del_current_btn'))
+			satellite_name += '"' + cur_satellite.name + '", '
+			cur_satellite.delete()
+
+			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('satellite'),
+										 (u'Satellite: {0} ==> deleted.'.format(satellite_name)))
+				)
+
+	# paginations
+	model_name = paginations(request, satellites)
+
+	data = {
+		'title': title,
+		'satellites': model_name,
+		'model_name': model_name,
+		'url_name': url_name,
+		'but_name': but_name,
+	}
+
+	return data
+
+
+# satellite add
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def satellite_add(request):
+	title = 'Satellites Add'
+	url_form = 'satellite_add'
+	url_name = 'satellite'
+	but_name = 'static_data'
+	template_name = 'gsi/_satellite_form.html'
+	reverse_url = {
+		'save_button': 'satellite',
+		'save_and_another': 'satellite_add',
+		'save_and_continue': 'satellite_edit',
+		'cancel_button': 'satellite'
+	}
+	func = satellite_update_create
+	form = None
+	available_satellite = Satellite.objects.all()
+
+	if request.method == "POST":
+		response = get_post(request, SatelliteForm, 'Satellite',
+							reverse_url, func)
+
+		if isinstance(response, HttpResponseRedirect):
+			return response
+		else:
+			form = response
+	else:
+		form = SatelliteForm()
+
+	data = {
+		'title': title,
+		'url_form': url_form,
+		'template_name': template_name,
+		'form': form,
+		'available_satellite': available_satellite,
+		'url_name': url_name,
+		'but_name': but_name,
+	}
+
+	return data
+
+
+# satellite edit
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def satellite_edit(request, satellite_id):
+	satellite = get_object_or_404(Satellite, pk=satellite_id)
+	title = 'Satellite Edit "%s"' % (satellite.name)
+	url_name = 'satellite'
+	but_name = 'static_data'
+	url_form = 'satellite_edit'
+	template_name = 'gsi/_satellite_form.html'
+	reverse_url = {
+		'save_button': 'satellite',
+		'save_and_another': 'satellite_add',
+		'save_and_continue': 'satellite_edit',
+		'cancel_button': 'satellite'
+	}
+	func = satellite_update_create
+	form = None
+
+	if request.method == "POST":
+		response = get_post(request, SatelliteForm, 'Satellite',
+							reverse_url, func, item_id=satellite_id)
+
+		if isinstance(response, HttpResponseRedirect):
+			return response
+		else:
+			form = response
+	else:
+		form = SatelliteForm(instance=satellite)
+
+	data = {
+		'title': title,
+		'url_form': url_form,
+		'url_name': url_name,
+		'but_name': but_name,
+		'template_name': template_name,
+		'form': form,
+		'item_id': satellite_id,
 	}
 
 	return data

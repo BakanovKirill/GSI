@@ -72,7 +72,7 @@ urlpatterns = [
     url(r'^run/(?P<run_id>\d+)/audit-history/$', 'gsi.views.audit_history', name='audit_history'),
 
     # environment groups
-    url(r'^run/environment-groups/setup/$', 'gsi.views.environment_groups', name='environment_groups'),
+    url(r'^run/environment-groups/$', 'gsi.views.environment_groups', name='environment_groups'),
 
     # environment groups edit
     url(r'^run/environment-group/add/$', 'gsi.views.environment_group_add',
@@ -81,18 +81,25 @@ urlpatterns = [
         name='environment_group_edit'),
 
     # areas
-    url(r'^run/areas/setup/$', 'gsi.views.areas', name='areas'),
+    url(r'^run/areas/list/$', 'gsi.views.areas', name='areas'),
 
     # areas edit
     url(r'^run/area/add/$', 'gsi.views.area_add', name='area_add'),
     url(r'^run/area/(?P<area_id>\d+)/$', 'gsi.views.area_edit', name='area_edit'),
 
     # years group
-    url(r'^run/years-group/setup/$', 'gsi.views.years_group', name='years_group'),
+    url(r'^run/years-group/list/$', 'gsi.views.years_group', name='years_group'),
 
     # years group edit
     url(r'^run/years-group/add/$', 'gsi.views.years_group_add', name='years_group_add'),
     url(r'^run/years-group/(?P<yg_id>\d+)/$', 'gsi.views.years_group_edit', name='years_group_edit'),
+
+    # satellite
+    url(r'^run/satellite/list/$', 'gsi.views.satellite', name='satellite'),
+
+    # satellite edit
+    url(r'^run/satellite/add/$', 'gsi.views.satellite_add', name='satellite_add'),
+    url(r'^run/satellite/(?P<satellite_id>\d+)/$', 'gsi.views.satellite_edit', name='satellite_edit'),
 
 
     # card sequence for new run base

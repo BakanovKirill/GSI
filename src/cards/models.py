@@ -115,14 +115,6 @@ class RFTrain(NamedModel, ParallelModel):
         verbose_name_plural = _('RFTRain cards')
 
 
-# class Satellite(NamedModel):
-#     class Meta:
-#         verbose_name_plural = _('Satellite cards')
-#
-#     def __unicode__(self):
-#         return u"{0}".format(self.name)
-
-
 class RandomForest(NamedModel):
     aoi_name = models.CharField(max_length=200)
     satellite = models.ForeignKey('gsi.Satellite')

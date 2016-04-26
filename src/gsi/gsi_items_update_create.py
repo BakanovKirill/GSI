@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import get_object_or_404
 
-from gsi.models import (VariablesGroup, Area,
-                        Tile, YearGroup, CardSequence)
+from gsi.models import (VariablesGroup, Area, Tile,
+						YearGroup, CardSequence, Satellite)
 
 
 def var_group_update_create(form, item_id=None):
@@ -101,6 +101,32 @@ def create_update_card_sequence(form, cs_id=None):
 		)
 
 	return card_sequence
+
+
+def satellite_update_create(form, multiple=None, item_id=None, delete=False):
+	if item_id:
+		Satellite.objects.filter(id=item_id).update(
+            name=form.cleaned_data["name"],
+        )
+		result = Satellite.objects.get(id=item_id)
+	else:
+		result = Satellite.objects.create(
+            name=form.cleaned_data["name"],
+        )
+
+	if multiple:
+		list_id = multiple.split('_')
+		for satellite_id in list_id:
+			if delete:
+				Satellite.objects.filter(
+                    pk=satellite_id
+                ).delete()
+			else:
+				Satellite.objects.create(
+                    pk=satellite_id
+                )
+
+	return result
 
 
 

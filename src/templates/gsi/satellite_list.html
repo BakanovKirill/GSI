@@ -6,7 +6,7 @@
 {% block content %}
     <div class="row">
         <div class="col-md-12">
-            <form action="{% url 'years_group' %}" method="post" enctype="multipart/form-data"
+            <form action="{% url 'satellite' %}" method="post" enctype="multipart/form-data"
                   role="form" class="form-horizontal">
                 {% csrf_token %}
                 <table class="table table-striped table-hover">
@@ -18,15 +18,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for yg in years_groups %}
+                        {% for satellite in satellites %}
                             <tr>
-                                <td><input type="checkbox" name="yg_select" value="{{ yg.id }}"></td>
-                                <td>{{ yg.name }}</td>
+                                <td><input type="checkbox" name="satellite_select" value="{{ satellite.id }}"></td>
+                                <td>{{ satellite.name }}</td>
                                 <td>
-                                    <a href="{% url 'years_group_edit' yg.id %}" role="button">
+                                    <a href="{% url 'satellite_edit' satellite.id %}" role="button">
                                         <img class="" src="{% static 'img/edit-18.png' %}"/>
                                     </a>
-                                    <button class="btn del-btn" type="submit" name="del_current_btn" value="{{ yg.id }}">
+                                    <button class="btn del-btn" type="submit" name="del_current_btn" value="{{ satellite.id }}">
                                         <img src="{% static 'img/delete-18.png' %}"/>
                                     </button>
                                 </td>
@@ -40,19 +40,14 @@
                 <!-- end pagination -->
 
                 <div class="row margin-top-50">
-                    <!--<div class="col-md-4">-->
-                        <!--<a class="btn btn-default btn-block" href="{% url 'static_data_setup' %}" role="button">-->
-                            <!--Cancel-->
-                        <!--</a>-->
-                    <!--</div>-->
                     <div class="col-md-4 col-md-offset-4">
-                        <a class="btn btn-primary btn-block" href="{% url 'years_group_add' %}" role="button">
-                            New Year Group
+                        <a class="btn btn-primary btn-block" href="{% url 'satellite_add' %}" role="button">
+                            New Satellite
                         </a>
                     </div>
                     <div class="col-md-4">
-                        <button type="submit" name="delete_button" class="btn btn-danger btn-block">
-                            Delete Year Group(s)
+                        <button type="submit" name="delete_button" class="btn btn-danger btn-block" value="delete">
+                            Delete Satellites
                         </button>
                     </div>
                 </div>
