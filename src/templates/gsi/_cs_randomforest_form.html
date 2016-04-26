@@ -1,0 +1,133 @@
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.name.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.name.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.name.errors %}
+            <b class="error-form">{{ form_2.name.errors }}</b>
+        {% endif %}
+        {{ form_2.name }}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_1.order.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_1.order.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_1.order.errors %}
+            <b class="error-form">{{ form_1.order.errors }}</b>
+        {% endif %}
+        {{ form_1.order }}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.run_parallel.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.run_parallel.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-2 margin-top-4">
+        {% if form_2.run_parallel.errors %}
+            <b class="error-form">{{ form_2.run_parallel.errors }}</b>
+        {% endif %}
+        {{ form_2.run_parallel }}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.aoi_name.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.aoi_name.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.aoi_name.errors %}
+            <b class="error-form">{{ form_2.aoi_name.errors }}</b>
+        {% endif %}
+        {{ form_2.aoi_name }}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.satellite.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.satellite.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.satellite.errors %}
+            <b class="error-form">{{ form_2.satellite.errors }}</b>
+        {% endif %}
+        {{ form_2.satellite }}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.param_set.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.param_set.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.param_set.errors %}
+            <b class="error-form">{{ form_2.param_set.errors }}</b>
+        {% endif %}
+        {{ form_2.param_set }}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.run_set.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.run_set.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.run_set.errors %}
+            <b class="error-form">{{ form_2.run_set.errors }}</b>
+        {% endif %}
+        {{ form_2.run_set }}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.model.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.model.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.model.errors %}
+            <b class="error-form">{{ form_2.model.errors }}</b>
+        {% endif %}
+        {{ form_2.model }}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.mvrf.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.mvrf.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.mvrf.errors %}
+            <b class="error-form">{{ form_2.mvrf.errors }}</b>
+        {% endif %}
+        {{ form_2.mvrf }}
+    </div>
+</div>
+
+<div class="row margin-top-50">
+    <div class="col-md-2">
+        <button type="submit" name="cancel_button" class="btn btn-default btn-block">Cancel</button>
+    </div>
+    <div class="col-md-4 col-md-offset-4">
+        <button type="submit" name="save_and_continue_editing_button" class="btn btn-primary btn-block">
+            Save and continue editing
+        </button>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" name="save_button" class="btn btn-primary btn-block">Save</button>
+    </div>
+</div>
+
+<p><input type="hidden">{{ form_1.card_item }}</p>

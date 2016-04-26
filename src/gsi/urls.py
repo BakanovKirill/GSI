@@ -139,6 +139,9 @@ urlpatterns = [
         'gsi.views_cs_card_runid_csid.cs_runid_csid_mergecsv_edit', name='cs_runid_csid_mergecsv_edit'),
     url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/rftrain/(?P<rftrain_id>\d+)/$',
         'gsi.views_cs_card_runid_csid.cs_runid_csid_rftrain_edit', name='cs_runid_csid_rftrain_edit'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/randomforest/(?P<rf_id>\d+)/$',
+        'gsi.views_cs_card_runid_csid.cs_runid_csid_randomforest_edit', name='cs_runid_csid_randomforest_edit'),
+
 
     # card item edit for card sequence // run->csID->card_item
     url(r'^run/card-sequence/(?P<cs_id>\d+)/qrf/(?P<qrf_id>\d+)/$',
