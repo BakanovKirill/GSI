@@ -208,7 +208,7 @@ def index(request):
 @render_to('gsi/run_setup.html')
 def run_setup(request):
 	title = 'Run Setup'
-	run_bases = RunBase.objects.all()
+	run_bases = RunBase.objects.all().order_by('-date_modified')
 	run_name = ''
 	url_name = 'run_setup'
 
