@@ -110,12 +110,27 @@ class RFTrain(NamedModel, ParallelModel):
     config_file = models.CharField(max_length=200, blank=True)
     output_tile_subdir = models.CharField(max_length=200, blank=True)
     input_scale_factor = models.CharField(max_length=200, blank=True)
-    # training = models.PositiveIntegerField(default=0, blank=True)
-    # number_of_variable = models.PositiveIntegerField(default=0, blank=True)
-    # number_of_thread = models.PositiveIntegerField(default=1, blank=True)
+    training = models.PositiveIntegerField(default=0, blank=True, null=True)
+    number_of_variable = models.PositiveIntegerField(default=0, blank=True, null=True)
+    number_of_thread = models.PositiveIntegerField(default=1, blank=True, null=True)
 
     class Meta:
         verbose_name_plural = _('RFTRain cards')
+
+
+class RandomForest(NamedModel):
+    aoi_name = models.CharField(max_length=200)
+    satellite = models.ForeignKey('gsi.Satellite')
+    param_set = models.TextField()
+    run_set = models.CharField(max_length=200)
+    model = models.CharField(max_length=200)
+    mvrf = models.CharField(max_length=200)
+
+    class Meta:
+        verbose_name_plural = _('Random Forest cards')
+
+    def __unicode__(self):
+        return u"{0}".format(self.name)
 
 
 class CardItem(models.Model):
@@ -127,7 +142,8 @@ class CardItem(models.Model):
         models.Q(app_label='cards', model='yearfilter') |
         models.Q(app_label='cards', model='remap') |
         models.Q(app_label='cards', model='rfscore') |
-        models.Q(app_label='cards', model='qrf')
+        models.Q(app_label='cards', model='qrf') |
+        models.Q(app_label='cards', model='randomforest')
     )
 
     content_type = models.ForeignKey(ContentType, limit_choices_to=CONTENT_LIMIT)
@@ -167,7 +183,10 @@ ContentType.__unicode__ = __unicode__
 
 @receiver(post_save)
 def auto_add_card_item(sender, instance=None, created=False, **kwargs):
-    list_of_models = (RFScore, RFTrain, QRF, YearFilter, MergeCSV, Collate, PreProc, Remap)
+    list_of_models = (
+        RFScore, RFTrain, QRF, YearFilter, MergeCSV,
+        Collate, PreProc, Remap, RandomForest
+    )
     if sender in list_of_models:
         if created:
             get_card_item(instance)

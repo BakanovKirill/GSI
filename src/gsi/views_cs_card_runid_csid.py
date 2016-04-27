@@ -47,6 +47,10 @@ REVERSE_URL = {
 
 	'rftrain': {'save_button': ['card_sequence_update'],
 	            'save_and_continue': ['cs_runid_csid_rftrain_edit'],
+	            'cancel_button': ['card_sequence_update']},
+
+	'randomforest': {'save_button': ['card_sequence_update'],
+	            'save_and_continue': ['cs_runid_csid_randomforest_edit'],
 	            'cancel_button': ['card_sequence_update']}
 }
 
@@ -446,6 +450,55 @@ def cs_runid_csid_rftrain_edit(request, run_id, cs_id, rftrain_id):
 		'form_1': form_1,
 		'form_2': form_2,
 		'card_id': rftrain_id,
+		'url_form': url_form,
+		'template_name': template_name,
+		'run_id': run_id,
+		'cs_id': cs_id,
+	}
+
+	return data
+
+
+@login_required
+@render_to('cards/new_runid_csid_card.html')
+def cs_runid_csid_randomforest_edit(request, run_id, cs_id, rf_id):
+	title = 'RandomForest Card Edit'
+	randomforest_card = get_object_or_404(RandomForest, pk=rf_id)
+	content_type = get_object_or_404(ContentType, app_label='cards', model='randomforest')
+	card_item = get_object_or_404(CardItem, object_id=rf_id, content_type=content_type)
+	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
+	card_sequence_card_all = CardSequence.cards.through.objects.filter(
+							card_item=card_item,
+							sequence=card_sequence
+						)
+	card_sequence_card = card_sequence_card_all[0]
+	url_form = 'cs_runid_csid_randomforest_edit'
+	template_name = 'gsi/_cs_randomforest_form.html'
+	func = randomforest_update_create
+	form_1 = None
+	form_2 = None
+	REVERSE_URL['randomforest']['save_button'].append([run_id, cs_id])
+	REVERSE_URL['randomforest']['save_and_continue'].append([run_id, cs_id])
+	REVERSE_URL['randomforest']['cancel_button'].append([run_id, cs_id])
+
+	if request.method == "POST":
+		cs_form = [CardSequenceCardForm, card_sequence_card, card_item]
+		response = get_post(request, RandomForestForm, 'RandomForest Card', REVERSE_URL['randomforest'],
+							func, args=True, item_id=rf_id, cs_form=cs_form)
+
+		if isinstance(response, HttpResponseRedirect):
+			return response
+		else:
+			form_2 = response
+	else:
+		form_1 = CardSequenceCardForm(instance=card_sequence_card)
+		form_2 = RandomForestForm(instance=randomforest_card)
+
+	data = {
+		'title': title,
+		'form_1': form_1,
+		'form_2': form_2,
+		'card_id': rf_id,
 		'url_form': url_form,
 		'template_name': template_name,
 		'run_id': run_id,
