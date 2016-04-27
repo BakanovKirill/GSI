@@ -689,7 +689,7 @@ def new_runid_csid_randomforest(request, run_id, cs_id):
 def new_runid_csid_randomforest_edit(request, run_id, cs_id, rf_id):
 	title = 'New RandomForest Card'
 	randomforest_card = get_object_or_404(RandomForest, pk=rf_id)
-	url_form = 'new_runid_csid_randomforest'
+	url_form = 'new_runid_csid_randomforest_edit'
 	template_name = 'cards/_randomforest_form.html'
 	func = randomforest_update_create
 	form = None
@@ -715,7 +715,8 @@ def new_runid_csid_randomforest_edit(request, run_id, cs_id, rf_id):
 		'url_form': url_form,
 		'template_name': template_name,
 		'run_id': run_id,
-		'rf_id': rf_id,
+		'card_id': rf_id,
+		'cs_id': cs_id,
 	}
 
 	return data
