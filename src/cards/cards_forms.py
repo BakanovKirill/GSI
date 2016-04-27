@@ -447,7 +447,7 @@ class RFTrainForm(forms.ModelForm):
     )
     number_of_trees = forms.IntegerField(
         widget=forms.NumberInput(attrs={'class': 'form-control'}),
-        initial=0,
+        initial=50,
         validators=[validate_order],
         required=False,
         label=u'Number of trees',
@@ -476,6 +476,27 @@ class RFTrainForm(forms.ModelForm):
         required=False,
         label=u'Input scale factor',
     )
+    training = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        initial=0,
+        validators=[validate_order],
+        required=False,
+        label=u'Training',
+    )
+    number_of_variable = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        initial=0,
+        validators=[validate_order],
+        required=False,
+        label=u'Number of Variable',
+    )
+    number_of_thread = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        initial=1,
+        validators=[validate_order],
+        required=False,
+        label=u'Number of Thread',
+    )
 
     class Meta:
         model = RFTrain
@@ -488,6 +509,9 @@ class RFTrainForm(forms.ModelForm):
             'output_tile_subdir',
             'input_scale_factor',
             'run_parallel',
+            'training',
+            'number_of_variable',
+            'number_of_thread',
         ]
 
 
