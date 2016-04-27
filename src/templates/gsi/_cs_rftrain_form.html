@@ -13,7 +13,7 @@
 
     <div class="col-md-2 right">
         <div class="form-group {% if form_1.order.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form_1.order.label }}</label>
+            <label class="control-label font-normal">{{ form_1.order.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
@@ -27,7 +27,7 @@
 <div class="row margin-top-15">
     <div class="col-md-2 right">
         <div class="form-group {% if form_2.run_parallel.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form_2.run_parallel.label }}</label>
+            <label class="control-label font-normal">{{ form_2.run_parallel.label }}</label>
         </div>
     </div>
     <div class="col-md-2 margin-top-4">
@@ -52,20 +52,6 @@
     </div>
 
     <div class="col-md-2 right">
-        <div class="form-group {% if form_2.number_of_trees.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form_2.number_of_trees.label }}*</label>
-        </div>
-    </div>
-    <div class="col-md-4">
-        {% if form_2.number_of_trees.errors %}
-            <b class="error-form">{{ form_2.number_of_trees.errors }}</b>
-        {% endif %}
-        {{ form_2.number_of_trees }}
-    </div>
-</div>
-
-<div class="row margin-top-15">
-    <div class="col-md-2 right">
         <div class="form-group {% if form_2.value.errors %}has-error{% endif %}">
             <label class="control-label">{{ form_2.value.label }}*</label>
         </div>
@@ -76,10 +62,76 @@
         {% endif %}
         {{ form_2.value }}
     </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.number_of_trees.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form_2.number_of_trees.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.number_of_trees.errors %}
+            <b class="error-form">{{ form_2.number_of_trees.errors }}</b>
+        {% endif %}
+        {{ form_2.number_of_trees }}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.number_of_thread.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form_2.number_of_thread.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.number_of_thread.errors %}
+            <b class="error-form">{{ form_2.number_of_thread.errors }}</b>
+        {% endif %}
+        {{ form_2.number_of_thread }}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.training.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form_2.training.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {{ form_2.training }}
+        {% if form_2.training.errors %}
+            <b class="error-form">{{ form_2.training.errors }}</b>
+        {% endif %}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.number_of_variable.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form_2.number_of_variable.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {{ form_2.number_of_variable }}
+        {% if form_2.number_of_variable.errors %}
+            <b class="error-form">{{ form_2.number_of_variable.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.output_tile_subdir.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form_2.output_tile_subdir.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if form_2.output_tile_subdir.errors %}
+            <b class="error-form">{{ form_2.output_tile_subdir.errors }}</b>
+        {% endif %}
+        {{ form_2.output_tile_subdir }}
+    </div>
 
     <div class="col-md-2 right">
         <div class="form-group {% if form_2.config_file.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form_2.config_file.label }}*</label>
+            <label class="control-label font-normal">{{ form_2.config_file.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
@@ -92,20 +144,8 @@
 
 <div class="row margin-top-15">
     <div class="col-md-2 right">
-        <div class="form-group {% if form_2.output_tile_subdir.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form_2.output_tile_subdir.label }}*</label>
-        </div>
-    </div>
-    <div class="col-md-4">
-        {% if form_2.output_tile_subdir.errors %}
-            <b class="error-form">{{ form_2.output_tile_subdir.errors }}</b>
-        {% endif %}
-        {{ form_2.output_tile_subdir }}
-    </div>
-
-    <div class="col-md-2 right">
         <div class="form-group {% if form_2.input_scale_factor.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form_2.input_scale_factor.label }}*</label>
+            <label class="control-label font-normal">{{ form_2.input_scale_factor.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
