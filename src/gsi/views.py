@@ -768,7 +768,7 @@ def card_item_update(request, run_id, cs_id, card_item_id):
 @login_required
 @render_to('gsi/submit_run.html')
 def submit_run(request):
-	run_bases = RunBase.objects.all()
+	run_bases = RunBase.objects.all().order_by('-date_modified')
 	title = 'Submit a Run'
 	name_runs = ''
 	url_name = 'submit_run'
