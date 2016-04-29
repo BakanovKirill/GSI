@@ -25,8 +25,7 @@ from gsi.gsi_forms import *
 from core.utils import make_run
 from core.get_post import get_post
 from log.logger import get_logs
-from gsi.settings import (NUM_PAGINATIONS, STATIC_ROOT_2,
-						  PATH_RUNS_SCRIPTS, BASE_DIR, STATIC_URL_2)
+from gsi.settings import (NUM_PAGINATIONS, PATH_RUNS_SCRIPTS, BASE_DIR)
 from core.paginations import paginations
 
 TITLES = {

@@ -47,6 +47,9 @@ urlpatterns = [
     url(r'^run/(?P<run_id>\d+)/$', 'gsi.views.run_update',
         name='run_update'),
 
+    # run base view results
+    url(r'^run/(?P<run_id>\d+)/view-results/$', 'gsi.views.view_results', name='view_results'),
+
     # submit a run
     url(r'^run/submit/$', 'gsi.views.submit_run', name='submit_run'),
 
