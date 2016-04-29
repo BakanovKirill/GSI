@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block title %}{{ title }}{% endblock title %}
+
+{% block status_message %}
+    {{ status_message }}
+{% endblock status_message %}
+
+{% block content %}
+    <div class="col-md-12">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            {% for file, path in dict_files.items %}
+                <tbody>
+                    <td>{{ file }}</td>
+                    <td>
+                        <a href="{% static 'resolution/file' %}"><img src="{% static 'img/download-18.png' %}"/></a>
+                        <button class="btn del-btn" type="submit" name="del_current_btn" value="{{ run_base.id }}">
+                            <img src="{% static 'img/delete-18.png' %}"/>
+                        </button>
+                    </td>
+
+                </tbody>
+            {% endfor %}
+        </table>
+        <div class="row margin-top-15">
+            <div class="col-md-4 col-md-offset-8">
+                <a class="btn btn-default btn-block" href="{% url 'run_update' run_id %}" role="button">
+                    Back
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

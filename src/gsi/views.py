@@ -25,7 +25,8 @@ from gsi.gsi_forms import *
 from core.utils import make_run
 from core.get_post import get_post
 from log.logger import get_logs
-from gsi.settings import NUM_PAGINATIONS, PATH_RUNS_SCRIPTS
+from gsi.settings import (NUM_PAGINATIONS, STATIC_ROOT_2,
+						  PATH_RUNS_SCRIPTS, BASE_DIR, STATIC_URL_2)
 from core.paginations import paginations
 
 TITLES = {
@@ -1568,6 +1569,51 @@ def audit_history(request, run_id):
 		'title': title,
 		'run_id': run_id,
 		'logs': logs,
+	}
+
+	return data
+
+
+# view results
+@login_required
+@render_to('gsi/view_results.html')
+def view_results(request, run_id):
+	run_base = get_object_or_404(RunBase, pk=run_id)
+	title = 'View results "{0}"'.format(run_base.name)
+	home_var = HomeVariables.objects.all()
+	dir_root = home_var[0].USER_DATA_DIR_ROOT
+	resolution = run_base.resolution
+	folder = run_base.directory_path
+	result_path = str(dir_root) + '/' + str(resolution) + '/' + str(folder)
+	result_path = result_path.replace('//', '/')
+	dict_files = {}
+	# list_path_files = []
+	info_message = ''
+
+	try:
+		list = os.listdir(result_path)
+		print 'BASE_DIR ============== ', BASE_DIR
+		print 'BASE_DIR ============== ', os.path.join(BASE_DIR, 'db.sqlite3')
+
+		for l in list:
+			file_path = os.path.join(BASE_DIR, l)
+			dict_files[l] = file_path
+
+	except OSError:
+		info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
+
+	if not dict_files:
+		info_message = u'For run "{0}" there are no results to show.'.format(run_base.name)
+
+	print 'DICT FILES ================= ', dict_files
+
+	data = {
+		'run_id': run_id,
+		'title': title,
+		'info_message': info_message,
+		'dict_files': dict_files,
+		'files': result_path,
+		'resolution': resolution,
 	}
 
 	return data
