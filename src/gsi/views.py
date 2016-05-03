@@ -22,10 +22,11 @@ from gsi.models import (Run, RunStep, Log, OrderedCardItem,
 						Year, Satellite)
 from gsi.gsi_items_update_create import *
 from gsi.gsi_forms import *
-from core.utils import make_run
+from core.utils import (make_run, get_dir_root_static_path, slash_remove_from_path)
 from core.get_post import get_post
 from log.logger import get_logs
-from gsi.settings import (NUM_PAGINATIONS, PATH_RUNS_SCRIPTS, BASE_DIR)
+from gsi.settings import (NUM_PAGINATIONS, PATH_RUNS_SCRIPTS, BASE_DIR,
+						  STATIC_ROOT, STATIC_DIR)
 from core.paginations import paginations
 
 TITLES = {
@@ -1579,38 +1580,33 @@ def audit_history(request, run_id):
 def view_results(request, run_id):
 	run_base = get_object_or_404(RunBase, pk=run_id)
 	title = 'View results "{0}"'.format(run_base.name)
-	home_var = HomeVariables.objects.all()
-	dir_root = home_var[0].USER_DATA_DIR_ROOT
+	dict_files = {}
+	info_message = ''
+	dir_root = get_dir_root_static_path()
 	resolution = run_base.resolution
 	folder = run_base.directory_path
-	result_path = str(dir_root) + '/' + str(resolution) + '/' + str(folder)
-	result_path = result_path.replace('//', '/')
-	dict_files = {}
-	# list_path_files = []
-	info_message = ''
+	static_dir_root_path = str(dir_root['static_dir_root_path']) + '/' + str(resolution) + '/' + str(folder)
+	static_dir_root_path = slash_remove_from_path(static_dir_root_path)
+	static_dir_root = str(dir_root['static_dir_root']) + '/' + str(resolution) + '/' + str(folder)
+	static_dir_root = slash_remove_from_path(static_dir_root)
 
 	try:
-		list = os.listdir(result_path)
+		list_f = os.listdir(static_dir_root_path)
 
-		for l in list:
-			file_path = os.path.join(BASE_DIR, l)
-			dict_files[l] = file_path
-
+		for f in list_f:
+			file_path = os.path.join(static_dir_root, f)
+			dict_files[f] = file_path
 	except OSError:
 		info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
 
 	if not dict_files:
 		info_message = u'For run "{0}" there are no results to show.'.format(run_base.name)
 
-	print 'DICT FILES ================= ', dict_files
-
 	data = {
 		'run_id': run_id,
 		'title': title,
 		'info_message': info_message,
-		'dict_files': dict_files,
-		'files': result_path,
-		'resolution': resolution,
+		'files': dict_files,
 	}
 
 	return data

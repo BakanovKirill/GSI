@@ -8,8 +8,9 @@ from django.utils.translation import \
     ugettext_lazy as _  # Always aware of translations to other languages in the future -> wrap all texts into _()
 from solo.models import SingletonModel
 
-from core.utils import UnicodeNameMixin
-from gsi.settings import STATICFILES_DIRS, STATIC_ROOT, STATIC_DIR
+from core.utils import (UnicodeNameMixin,
+                        slash_remove_from_path, create_symlink)
+from gsi.settings import STATIC_ROOT, STATIC_DIR
 
 
 class HomeVariables(SingletonModel):
@@ -35,27 +36,10 @@ class HomeVariables(SingletonModel):
 
         path_static = STATIC_DIR + '/' + static_dir_root[0]
         path_collected_static = STATIC_ROOT + '/' + static_dir_root[0]
-
-        if '//' in path_static:
-            path_static = path_static.replace('//', '/')
-        elif '///' in path_static:
-            path_static = path_static.replace('///', '/')
-
-        if '//' in path_collected_static:
-            path_collected_static = path_collected_static.replace('//', '/')
-        elif '///' in path_collected_static:
-            path_collected_static = path_collected_static.replace('///', '/')
-
-        if not os.path.exists(path_static):
-            simlink = call("ln -s {0} {1}".format(path_dir_root, STATIC_DIR), shell=True)
-        else:
-            pass
-
-        if not os.path.exists(path_collected_static):
-            simlink = call("ln -s {0} {1}".format(path_dir_root, STATIC_ROOT), shell=True)
-        else:
-            pass
-
+        path_static = slash_remove_from_path(path_static)
+        path_collected_static = slash_remove_from_path(path_collected_static)
+        create_symlink(STATIC_DIR, path_dir_root, path_static)
+        create_symlink(STATIC_ROOT, path_dir_root, path_collected_static)
 
         return super(HomeVariables, self).save(*args, **kwargs)
 

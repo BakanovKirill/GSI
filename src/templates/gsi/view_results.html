@@ -13,14 +13,14 @@
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Action</th>
+                    <th>Download</th>
                 </tr>
             </thead>
-            {% for file, path in dict_files.items %}
+            {% for file, path in files.items %}
                 <tbody>
                     <td>{{ file }}</td>
                     <td>
-                        <a href="{% static 'resolution/file' %}"><img src="{% static 'img/download-18.png' %}"/></a>
+                        <a href="{% static path %}" download><img src="{% static 'img/download-18.png' %}"/></a>
                     </td>
 
                 </tbody>
