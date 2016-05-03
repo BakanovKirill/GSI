@@ -1583,7 +1583,6 @@ def view_results(request, run_id):
 	dict_files = {}
 	info_message = ''
 	dirs = []
-	files = []
 	dir_root = get_dir_root_static_path()
 	resolution = run_base.resolution
 	folder = run_base.directory_path
@@ -1593,7 +1592,7 @@ def view_results(request, run_id):
 	static_dir_root = slash_remove_from_path(static_dir_root)
 
 	try:
-		list_f = os.listdir(static_dir_root_path)
+		# list_f = os.listdir(static_dir_root_path)
 		root, dirs, files = os.walk(static_dir_root_path).next()
 
 		for f in files:
@@ -1611,6 +1610,84 @@ def view_results(request, run_id):
 		'info_message': info_message,
 		'dirs': dirs,
 		'files': dict_files,
+		'prev_dir': 'd',
+	}
+
+	return data
+
+
+# view results
+@login_required
+@render_to('gsi/view_results_folder.html')
+def view_results_folder(request, run_id, prev_dir, dir):
+	run_base = get_object_or_404(RunBase, pk=run_id)
+	title = 'View results "{0}"'.format(run_base.name)
+	dict_files = {}
+	info_message = ''
+	dirs = []
+	back_prev = ''
+	back_cur = ''
+	dir_root = get_dir_root_static_path()
+	resolution = run_base.resolution
+	folder = run_base.directory_path
+	static_dir_root_path = str(dir_root['static_dir_root_path']) + '/' + str(resolution) + '/' + str(folder)
+	static_dir_root_path = slash_remove_from_path(static_dir_root_path)
+	static_dir_root = str(dir_root['static_dir_root']) + '/' + str(resolution) + '/' + str(folder)
+	static_dir_root = slash_remove_from_path(static_dir_root)
+	static_dir_root_path_folder = static_dir_root_path
+	static_dir_root_folder = static_dir_root
+
+	if prev_dir != 'd':
+		list_dir = prev_dir.split('___')
+		back_prev = '___'.join(list_dir[:-1])
+		back_cur = list_dir[-1]
+		if len(list_dir) == 1:
+			back_prev = 'd'
+			back_cur = list_dir[0]
+		prev_dir += '___' + dir
+
+		for d in list_dir:
+			static_dir_root_path_folder += '/' + d
+			static_dir_root_folder += '/' + d
+
+		# for new folder
+		static_dir_root_path_folder += '/' + str(dir)
+		static_dir_root_path_folder = slash_remove_from_path(static_dir_root_path_folder)
+		static_dir_root_folder += '/' + str(dir)
+		static_dir_root_folder = slash_remove_from_path(static_dir_root_folder)
+	else:
+		# for new folder
+		prev_dir = dir
+		static_dir_root_path_folder = static_dir_root_path + '/' + str(dir)
+		static_dir_root_path_folder = slash_remove_from_path(static_dir_root_path_folder)
+		static_dir_root_folder = static_dir_root + '/' + str(dir)
+		static_dir_root_folder = slash_remove_from_path(static_dir_root_folder)
+
+	try:
+		try:
+			root, dirs, files = os.walk(static_dir_root_path_folder).next()
+
+			for f in files:
+				file_path = os.path.join(static_dir_root_folder, f)
+				dict_files[f] = file_path
+		except StopIteration:
+			info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
+	except OSError:
+		info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
+
+	if not dict_files:
+		info_message = u'For run "{0}" there are no results to show.'.format(run_base.name)
+
+	data = {
+		'run_id': run_id,
+		'prev_dir': prev_dir,
+		'title': title,
+		'info_message': info_message,
+		'dirs': dirs,
+		'files': dict_files,
+		# 'root': root,
+		'back_prev': back_prev,
+		'back_cur': back_cur
 	}
 
 	return data

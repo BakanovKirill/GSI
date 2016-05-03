@@ -50,6 +50,9 @@ urlpatterns = [
     # run base view results
     url(r'^run/(?P<run_id>\d+)/view-results/$', 'gsi.views.view_results', name='view_results'),
 
+    # run base view folder results
+    url(r'^run/(?P<run_id>\d+)/view-results/(?P<prev_dir>\w+)/(?P<dir>\w+)/$', 'gsi.views.view_results_folder', name='view_results_folder'),
+
     # submit a run
     url(r'^run/submit/$', 'gsi.views.submit_run', name='submit_run'),
 
