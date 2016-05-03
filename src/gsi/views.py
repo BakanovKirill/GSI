@@ -1582,6 +1582,8 @@ def view_results(request, run_id):
 	title = 'View results "{0}"'.format(run_base.name)
 	dict_files = {}
 	info_message = ''
+	dirs = []
+	files = []
 	dir_root = get_dir_root_static_path()
 	resolution = run_base.resolution
 	folder = run_base.directory_path
@@ -1592,8 +1594,9 @@ def view_results(request, run_id):
 
 	try:
 		list_f = os.listdir(static_dir_root_path)
+		root, dirs, files = os.walk(static_dir_root_path).next()
 
-		for f in list_f:
+		for f in files:
 			file_path = os.path.join(static_dir_root, f)
 			dict_files[f] = file_path
 	except OSError:
@@ -1606,6 +1609,7 @@ def view_results(request, run_id):
 		'run_id': run_id,
 		'title': title,
 		'info_message': info_message,
+		'dirs': dirs,
 		'files': dict_files,
 	}
 
