@@ -1591,8 +1591,6 @@ def view_results(request, run_id):
 
 	try:
 		list = os.listdir(result_path)
-		print 'BASE_DIR ============== ', BASE_DIR
-		print 'BASE_DIR ============== ', os.path.join(BASE_DIR, 'db.sqlite3')
 
 		for l in list:
 			file_path = os.path.join(BASE_DIR, l)

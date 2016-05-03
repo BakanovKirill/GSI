@@ -109,6 +109,7 @@ STATICFILES_DIRS = (
 )
 
 STATIC_ROOT = os.path.join(BASE_DIR, "collected_static/")
+STATIC_DIR = STATICFILES_DIRS[0]
 STATIC_URL = '/static/'
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = True

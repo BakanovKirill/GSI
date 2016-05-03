@@ -1,11 +1,15 @@
 from datetime import datetime
+import os
+from subprocess import call
 
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import \
     ugettext_lazy as _  # Always aware of translations to other languages in the future -> wrap all texts into _()
 from solo.models import SingletonModel
+
 from core.utils import UnicodeNameMixin
+from gsi.settings import STATICFILES_DIRS, STATIC_ROOT, STATIC_DIR
 
 
 class HomeVariables(SingletonModel):
@@ -21,6 +25,39 @@ class HomeVariables(SingletonModel):
                                       help_text=_('RF_AUXDATA_DIR'))
     SAT_DIF_DIR_ROOT = models.CharField(max_length=300, verbose_name=_('Top Level for Satelite TF files'),
                                         help_text=_('SAT_DIF_DIR_ROOT'))
+
+    def save(self, *args, **kwargs):
+        path_dir_root = self.USER_DATA_DIR_ROOT
+        static_dir_root = path_dir_root.split('/')[-1]
+
+        if not static_dir_root:
+            static_dir_root = path_dir_root.split('/')[-2:-1]
+
+        path_static = STATIC_DIR + '/' + static_dir_root[0]
+        path_collected_static = STATIC_ROOT + '/' + static_dir_root[0]
+
+        if '//' in path_static:
+            path_static = path_static.replace('//', '/')
+        elif '///' in path_static:
+            path_static = path_static.replace('///', '/')
+
+        if '//' in path_collected_static:
+            path_collected_static = path_collected_static.replace('//', '/')
+        elif '///' in path_collected_static:
+            path_collected_static = path_collected_static.replace('///', '/')
+
+        if not os.path.exists(path_static):
+            simlink = call("ln -s {0} {1}".format(path_dir_root, STATIC_DIR), shell=True)
+        else:
+            pass
+
+        if not os.path.exists(path_collected_static):
+            simlink = call("ln -s {0} {1}".format(path_dir_root, STATIC_ROOT), shell=True)
+        else:
+            pass
+
+
+        return super(HomeVariables, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return unicode(_('Home variables'))
