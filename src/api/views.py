@@ -98,6 +98,7 @@ def update_run(request, run_id):
                     log_file.writelines('name ==> {0}\n'.format(script['script_name']))
                     log_file.writelines('run ==> {0}\n'.format(next_step.parent_run.id))
                     log_file.writelines('card ==> {0}\n'.format(next_step.card_item.id))
+                    log_file.writelines('state ==> {0}\n\n\n'.format(step.state))
                     log_file.close()
 
                     log_name = '{0}_{1}.log'.format(value_list[0], value_list[2])
