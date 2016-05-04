@@ -1592,12 +1592,14 @@ def view_results(request, run_id):
 	static_dir_root = slash_remove_from_path(static_dir_root)
 
 	try:
-		# list_f = os.listdir(static_dir_root_path)
-		root, dirs, files = os.walk(static_dir_root_path).next()
+		try:
+			root, dirs, files = os.walk(static_dir_root_path).next()
 
-		for f in files:
-			file_path = os.path.join(static_dir_root, f)
-			dict_files[f] = file_path
+			for f in files:
+				file_path = os.path.join(static_dir_root, f)
+				dict_files[f] = file_path
+		except StopIteration:
+			info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
 	except OSError:
 		info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
 
@@ -1638,13 +1640,13 @@ def view_results_folder(request, run_id, prev_dir, dir):
 	static_dir_root_folder = static_dir_root
 
 	if prev_dir != 'd':
-		list_dir = prev_dir.split('___')
-		back_prev = '___'.join(list_dir[:-1])
+		list_dir = prev_dir.split('%')
+		back_prev = '%'.join(list_dir[:-1])
 		back_cur = list_dir[-1]
 		if len(list_dir) == 1:
 			back_prev = 'd'
 			back_cur = list_dir[0]
-		prev_dir += '___' + dir
+		prev_dir += '%' + dir
 
 		for d in list_dir:
 			static_dir_root_path_folder += '/' + d
@@ -1685,7 +1687,6 @@ def view_results_folder(request, run_id, prev_dir, dir):
 		'info_message': info_message,
 		'dirs': dirs,
 		'files': dict_files,
-		# 'root': root,
 		'back_prev': back_prev,
 		'back_cur': back_cur
 	}
