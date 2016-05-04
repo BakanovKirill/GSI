@@ -89,6 +89,17 @@ def update_run(request, run_id):
                         # stderr=PIPE
                     )
 
+                    # write log file
+                    path_file = '/home/gsi/logs/api_make_run.log'
+                    now = datetime.now()
+                    log_file = open(path_file, 'a')
+                    log_file.writelines('{0}\n'.format(now))
+                    log_file.writelines('SCRIPTS: \n')
+                    log_file.writelines('name ==> {0}\n'.format(script['script_name']))
+                    log_file.writelines('run ==> {0}\n'.format(next_step.parent_run.id))
+                    log_file.writelines('card ==> {0}\n'.format(next_step.card_item.id))
+                    log_file.close()
+
                     log_name = '{0}_{1}.log'.format(value_list[0], value_list[2])
                     path_log = script['path_runs_logs']
                     write_log(log_name, run, path_log)
