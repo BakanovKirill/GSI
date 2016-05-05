@@ -17,6 +17,7 @@
                         <th>Run</th>
                         <th>Date</th>
                         <th>Status</th>
+                        <th>Autor Execute</th>
                         <th>Details</th>
                     </tr>
                 </thead>
@@ -29,6 +30,7 @@
                             <td>{{ run.run_base }}</td>
                             <td>{{ run.run_date|date:"d/m/Y" }}</td>
                             <td>{{ run.state }}</td>
+                            <td>{{ run.user }}</td>
                             <td>
                                 <a href="{% url 'run_details' run.id %}">
                                     <img class="" src="{% static 'img/details_18.png' %}"/>
