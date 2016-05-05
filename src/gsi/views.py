@@ -847,10 +847,14 @@ def run_progress(request):
 				cur_run = get_object_or_404(Run, pk=run_id)
 				run_name += '"' + str(cur_run) + '", '
 				cur_run.delete()
+
 				# delete folder Run(s) from server
-				run_folder = 'R_{0}'.format(run_id)
-				path = os.path.join(PATH_RUNS_SCRIPTS, run_folder)
-				shutil.rmtree(path)
+				try:
+					run_folder = 'R_{0}'.format(run_id)
+					path = os.path.join(PATH_RUNS_SCRIPTS, run_folder)
+					shutil.rmtree(path)
+				except OSError:
+					pass
 			# run_id = request.POST.get('run_progress')
 			# run = get_object_or_404(Run, pk=run_id)
 
