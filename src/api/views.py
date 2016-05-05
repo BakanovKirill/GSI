@@ -96,8 +96,8 @@ def update_run(request, run_id):
                     log_api_file.writelines('{0}\n'.format(now))
                     log_api_file.writelines('SCRIPTS: \n')
                     log_api_file.writelines('name ==> {0}\n'.format(script['script_name']))
-                    log_api_file.writelines('run ==> {0}\n'.format(next_step.parent_run.id))
-                    log_api_file.writelines('card ==> {0}\n'.format(next_step.card_item.id))
+                    log_api_file.writelines('next run ==> {0}\n'.format(next_step.parent_run.id))
+                    log_api_file.writelines('next card ==> {0}\n'.format(next_step.card_item.id))
                     log_api_file.writelines('state ==> {0}\n\n\n'.format(step.state))
                     log_api_file.close()
 
