@@ -179,7 +179,7 @@ class RunStep(UnicodeNameMixin, models.Model):
         log_file.writelines('LAST ==> {0}\n'.format(is_last_step))
         log_file.close()
 
-        if len(next_card) == 1:
+        if len(next_card) == 0:
             is_last_step = True
         if next_card:
             next_card = next_card[0]
