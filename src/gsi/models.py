@@ -169,6 +169,16 @@ class RunStep(UnicodeNameMixin, models.Model):
             order__gte=self.card_item.order).exclude(id=self.card_item.id)
         is_last_step = False
 
+        # write log file
+        path_file = '/home/gsi/LOGS/next_step.log'
+        now = datetime.now()
+        log_file = open(path_file, 'a')
+        log_file.writelines('{0}\n'.format(now))
+        log_file.writelines('STEPS: \n')
+        log_file.writelines('NEXT ==> {0}\n'.format(len(next_card)))
+        log_file.writelines('LAST ==> {0}\n'.format(is_last_step))
+        log_file.close()
+
         if len(next_card) == 1:
             is_last_step = True
         if next_card:
