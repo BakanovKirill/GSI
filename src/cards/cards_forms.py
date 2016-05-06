@@ -478,14 +478,14 @@ class RFTrainForm(forms.ModelForm):
     )
     training = forms.IntegerField(
         widget=forms.NumberInput(attrs={'class': 'form-control'}),
-        initial=0,
+        # initial=0,
         validators=[validate_order],
         required=False,
         label=u'Training',
     )
     number_of_variable = forms.IntegerField(
         widget=forms.NumberInput(attrs={'class': 'form-control'}),
-        initial=0,
+        # initial=0,
         validators=[validate_order],
         required=False,
         label=u'Number of Variable',
