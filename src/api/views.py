@@ -41,7 +41,7 @@ def update_run(request, run_id):
                 card_item=card)
 
             # logs for api
-            path_file = '/home/gsi/logs/runcards_status.log'
+            path_file = '/home/gsi/LOGS/api_status.log'
             now = datetime.now()
             log_file = open(path_file, 'a')
             log_file.writelines('RUNCARDS_{0}:\n'.format(card.id))
@@ -51,17 +51,18 @@ def update_run(request, run_id):
             log_file.writelines('====== RUN_ID:\n')
             log_file.writelines('run_id => {0}\n'.format(str(run_id)))
             log_file.writelines('====== Run:\n')
-            log_file.writelines('name => {0} :: id => {1}\n'.format(str(run), str(run.id)))
+            log_file.writelines('name RUN => {0} :: id => {1}\n'.format(str(run), str(run.id)))
             log_file.writelines('====== OrderedCardItem:\n')
-            log_file.writelines('name => {0} :: id => {1}\n'.format(str(card), str(card.id)))
+            log_file.writelines('name CARD => {0} :: id => {1}\n'.format(str(card), str(card.id)))
             log_file.writelines('====== RunStep:\n')
-            log_file.writelines('name => {0} :: id => {1}\n\n\n'.format(str(step), str(step.id)))
+            log_file.writelines('name STEP => {0} :: id => {1}\n\n\n'.format(str(step), str(step.id)))
             # log_file.close()
 
             # for step in steps:
             # Go to the next step only on success state
             if state == 'running':
-                pass
+                step.state = state
+                step.save()
             elif state == 'fail':
                 log_file.writelines('FAIL: ' + str(state) + '\n')
                 step.state = state
@@ -70,10 +71,13 @@ def update_run(request, run_id):
                 run.save()
                 # break
             elif state == 'success':
-                log_file.writelines('SUCCESS: ' + str(state) + '\n')
+                log_file.writelines('SUCCESS: ' + str(state) + '\n\n')
                 next_step, is_last_step = step.get_next_step()
                 step.state = state
                 step.save()
+
+                log_file.writelines('NEXT STEP => {0}\n'.format(next_step))
+                log_file.writelines('LAST STEP => {0}\n'.format(is_last_step))
 
                 if next_step:
                     data['next_step'] = next_step.id
@@ -85,9 +89,19 @@ def update_run(request, run_id):
                             next_step.card_item.id
                         ),
                         shell=True,
-                        # stdout=PIPE,
-                        # stderr=PIPE
                     )
+
+                    # write log file
+                    path_file = '/home/gsi/LOGS/api_success.log'
+                    now = datetime.now()
+                    log_api_file = open(path_file, 'a')
+                    log_api_file.writelines('{0}\n'.format(now))
+                    log_api_file.writelines('SCRIPTS: \n')
+                    log_api_file.writelines('name ==> {0}\n'.format(script['script_name']))
+                    log_api_file.writelines('next run ==> {0}\n'.format(next_step.parent_run.id))
+                    log_api_file.writelines('next card ==> {0}\n'.format(next_step.card_item.id))
+                    log_api_file.writelines('state ==> {0}\n\n\n'.format(step.state))
+                    log_api_file.close()
 
                     log_name = '{0}_{1}.log'.format(value_list[0], value_list[2])
                     path_log = script['path_runs_logs']
@@ -96,7 +110,6 @@ def update_run(request, run_id):
                 if is_last_step:
                     data['is_last_step'] = True
                     step.state = 'success'
-                    # run = step.parent_run
                     run.state = 'success'
                     step.save()
                     run.save()
@@ -116,7 +129,7 @@ def update_run(request, run_id):
             data['message'] = str(e)
 
             # error for api
-            path_file = '/home/gsi/logs/runcards_status.err'
+            path_file = '/home/gsi/LOGS/runcards_status.err'
             now = datetime.now()
             log_file = open(path_file, 'a')
             log_file.writelines('ERRROR runcards_{0}:'.format(card.id) + '\n')

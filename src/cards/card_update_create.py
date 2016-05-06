@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from cards.models import (QRF, RFScore, Remap,
                           YearFilter, Collate, PreProc,
-                          MergeCSV, RFTrain)
+                          MergeCSV, RFTrain, RandomForest)
 
 
 def qrf_update_create(form, item_id=None):
@@ -214,3 +214,29 @@ def rftrain_update_create(form, item_id=None):
         )
 
     return rftrain_card
+
+
+def randomforest_update_create(form, item_id=None):
+    if item_id:
+        RandomForest.objects.filter(id=item_id).update(
+            name=form.cleaned_data["name"],
+            aoi_name=form.cleaned_data["aoi_name"],
+            satellite=form.cleaned_data["satellite"],
+            param_set=form.cleaned_data["param_set"],
+            run_set=form.cleaned_data["run_set"],
+            model=form.cleaned_data["model"],
+            mvrf=form.cleaned_data["mvrf"],
+        )
+        randomforest_card = RandomForest.objects.get(id=item_id)
+    else:
+        randomforest_card = RandomForest.objects.create(
+            name=form.cleaned_data["name"],
+            aoi_name=form.cleaned_data["aoi_name"],
+            satellite=form.cleaned_data["satellite"],
+            param_set=form.cleaned_data["param_set"],
+            run_set=form.cleaned_data["run_set"],
+            model=form.cleaned_data["model"],
+            mvrf=form.cleaned_data["mvrf"],
+        )
+
+    return randomforest_card

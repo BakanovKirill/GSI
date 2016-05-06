@@ -1,11 +1,16 @@
 from datetime import datetime
+import os
+from subprocess import call
 
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import \
     ugettext_lazy as _  # Always aware of translations to other languages in the future -> wrap all texts into _()
 from solo.models import SingletonModel
-from core.utils import UnicodeNameMixin
+
+from core.utils import (UnicodeNameMixin,
+                        slash_remove_from_path, create_symlink)
+from gsi.settings import STATIC_ROOT, STATIC_DIR
 
 
 class HomeVariables(SingletonModel):
@@ -21,6 +26,22 @@ class HomeVariables(SingletonModel):
                                       help_text=_('RF_AUXDATA_DIR'))
     SAT_DIF_DIR_ROOT = models.CharField(max_length=300, verbose_name=_('Top Level for Satelite TF files'),
                                         help_text=_('SAT_DIF_DIR_ROOT'))
+
+    def save(self, *args, **kwargs):
+        path_dir_root = self.USER_DATA_DIR_ROOT
+        static_dir_root = path_dir_root.split('/')[-1]
+
+        if not static_dir_root:
+            static_dir_root = path_dir_root.split('/')[-2:-1]
+
+        path_static = STATIC_DIR + '/' + static_dir_root[0]
+        path_collected_static = STATIC_ROOT + '/' + static_dir_root[0]
+        path_static = slash_remove_from_path(path_static)
+        path_collected_static = slash_remove_from_path(path_collected_static)
+        create_symlink(STATIC_DIR, path_dir_root, path_static)
+        create_symlink(STATIC_ROOT, path_dir_root, path_collected_static)
+
+        return super(HomeVariables, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return unicode(_('Home variables'))
@@ -50,6 +71,10 @@ class Year(UnicodeNameMixin, models.Model):
 class YearGroup(UnicodeNameMixin, models.Model):
     name = models.CharField(max_length=50)
     years = models.ManyToManyField(Year, related_name='year_groups')
+
+
+class Satellite(UnicodeNameMixin, models.Model):
+    name = models.CharField(max_length=50)
 
 
 class Resolution(UnicodeNameMixin, models.Model):
@@ -144,8 +169,18 @@ class RunStep(UnicodeNameMixin, models.Model):
             order__gte=self.card_item.order).exclude(id=self.card_item.id)
         is_last_step = False
 
-        if len(next_card) == 1:
-            is_last_step = True
+        # write log file
+        path_file = '/home/gsi/LOGS/next_step.log'
+        now = datetime.now()
+        log_file = open(path_file, 'a')
+        log_file.writelines('{0}\n'.format(now))
+        log_file.writelines('STEPS: \n')
+        log_file.writelines('NEXT ==> {0}\n'.format(len(next_card)))
+        log_file.writelines('LAST ==> {0}\n'.format(is_last_step))
+        log_file.close()
+
+        if len(next_card) == 0:
+            return False, True
         if next_card:
             next_card = next_card[0]
             step, created = RunStep.objects.get_or_create(parent_run=self.parent_run, card_item=next_card)

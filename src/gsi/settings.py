@@ -34,7 +34,7 @@ SECRET_KEY = '+ht!6=9x07@-1v9p8&f9x2v19d57cja_4g!k%nrjnwo34j8cj+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -109,6 +109,7 @@ STATICFILES_DIRS = (
 )
 
 STATIC_ROOT = os.path.join(BASE_DIR, "collected_static/")
+STATIC_DIR = STATICFILES_DIRS[0]
 STATIC_URL = '/static/'
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = True

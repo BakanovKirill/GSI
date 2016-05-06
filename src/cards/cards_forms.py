@@ -4,8 +4,8 @@ from django import forms
 from core.validator_gsi import *
 from cards.models import (QRF, RFScore, Remap,
                           YearFilter, Collate, PreProc,
-                          MergeCSV, RFTrain)
-from gsi.models import Area, YearGroup, TileType
+                          MergeCSV, RFTrain, RandomForest)
+from gsi.models import Area, YearGroup, TileType, Satellite
 
 
 class QRFForm(forms.ModelForm):
@@ -447,7 +447,7 @@ class RFTrainForm(forms.ModelForm):
     )
     number_of_trees = forms.IntegerField(
         widget=forms.NumberInput(attrs={'class': 'form-control'}),
-        initial=0,
+        initial=50,
         validators=[validate_order],
         required=False,
         label=u'Number of trees',
@@ -476,6 +476,27 @@ class RFTrainForm(forms.ModelForm):
         required=False,
         label=u'Input scale factor',
     )
+    training = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        initial=0,
+        validators=[validate_order],
+        required=False,
+        label=u'Training',
+    )
+    number_of_variable = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        initial=0,
+        validators=[validate_order],
+        required=False,
+        label=u'Number of Variable',
+    )
+    number_of_thread = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        initial=1,
+        validators=[validate_order],
+        required=False,
+        label=u'Number of Thread',
+    )
 
     class Meta:
         model = RFTrain
@@ -488,4 +509,60 @@ class RFTrainForm(forms.ModelForm):
             'output_tile_subdir',
             'input_scale_factor',
             'run_parallel',
+            'training',
+            'number_of_variable',
+            'number_of_thread',
+        ]
+
+
+class RandomForestForm(forms.ModelForm):
+    """ form for editing RandomForest Card """
+    def __init__(self, *args, **kwargs):
+        super(RandomForestForm, self).__init__(*args, **kwargs)
+
+    name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=100,
+        label=u'Name',
+    )
+    aoi_name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=200,
+        label=u'AoI Name',
+    )
+    satellite = forms.ModelChoiceField(
+        widget=forms.Select(attrs={"class": 'form-control'}),
+        queryset=Satellite.objects.all(),
+        label=u'Satellite',
+    )
+    param_set = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': '5', 'class': 'form-control'}),
+        label=u'Parameter Set'
+    )
+    run_set = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=200,
+        label=u'Run Set',
+    )
+    model = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=200,
+        label=u'Model',
+    )
+    mvrf = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=200,
+        label=u'MVRF',
+    )
+
+    class Meta:
+        model = RandomForest
+        fields = [
+            'name',
+            'aoi_name',
+            'satellite',
+            'param_set',
+            'run_set',
+            'model',
+            'mvrf',
         ]

@@ -19,13 +19,14 @@ from django.conf import settings
 
 from gsi.models import (Run, RunStep, Log, OrderedCardItem,
 						HomeVariables, VariablesGroup, YearGroup,
-						Year)
+						Year, Satellite)
 from gsi.gsi_items_update_create import *
 from gsi.gsi_forms import *
-from core.utils import make_run
+from core.utils import (make_run, get_dir_root_static_path, slash_remove_from_path)
 from core.get_post import get_post
 from log.logger import get_logs
-from gsi.settings import NUM_PAGINATIONS, PATH_RUNS_SCRIPTS
+from gsi.settings import (NUM_PAGINATIONS, PATH_RUNS_SCRIPTS, BASE_DIR,
+						  STATIC_ROOT, STATIC_DIR)
 from core.paginations import paginations
 
 TITLES = {
@@ -89,18 +90,6 @@ def upload_file(request):
 	home_var = HomeVariables.objects.all()[0]
 	url_name = 'upload_file'
 
-	# log error permission
-	err_file = '/home/gsi/logs/perm_log.err'
-	now = datetime.now()
-	log_file = open(err_file, 'a')
-
-	log_file.writelines('Fail' + '\n')
-	log_file.writelines(str(now) + '\n')
-	log_file.writelines('USER: ' + getpass.getuser() + '\n')
-	log_file.close()
-
-	# ens log error permission
-
 	if request.POST:
 		form = UploadFileForm(request.POST, request.FILES)
 
@@ -150,18 +139,6 @@ def index(request):
 	home_var = HomeVariables.objects.all()[0]
 	url_name = 'home'
 
-	# log error permission
-	err_file = '/home/gsi/logs/perm_log.err'
-	now = datetime.now()
-	log_file = open(err_file, 'a')
-
-	log_file.writelines('Fail' + '\n')
-	log_file.writelines(str(now) + '\n')
-	log_file.writelines('USER: ' + getpass.getuser() + '\n')
-	log_file.close()
-
-	# ens log error permission
-
 	if request.POST:
 		form = UploadFileForm(request.POST, request.FILES)
 
@@ -208,7 +185,7 @@ def index(request):
 @render_to('gsi/run_setup.html')
 def run_setup(request):
 	title = 'Run Setup'
-	run_bases = RunBase.objects.all()
+	run_bases = RunBase.objects.all().order_by('-date_modified')
 	run_name = ''
 	url_name = 'run_setup'
 
@@ -768,7 +745,7 @@ def card_item_update(request, run_id, cs_id, card_item_id):
 @login_required
 @render_to('gsi/submit_run.html')
 def submit_run(request):
-	run_bases = RunBase.objects.all()
+	run_bases = RunBase.objects.all().order_by('-date_modified')
 	title = 'Submit a Run'
 	name_runs = ''
 	url_name = 'submit_run'
@@ -846,10 +823,14 @@ def run_progress(request):
 				cur_run = get_object_or_404(Run, pk=run_id)
 				run_name += '"' + str(cur_run) + '", '
 				cur_run.delete()
+
 				# delete folder Run(s) from server
-				run_folder = 'R_{0}'.format(run_id)
-				path = os.path.join(PATH_RUNS_SCRIPTS, run_folder)
-				shutil.rmtree(path)
+				try:
+					run_folder = 'R_{0}'.format(run_id)
+					path = os.path.join(PATH_RUNS_SCRIPTS, run_folder)
+					shutil.rmtree(path)
+				except OSError:
+					pass
 			# run_id = request.POST.get('run_progress')
 			# run = get_object_or_404(Run, pk=run_id)
 
@@ -1333,6 +1314,8 @@ def years_group(request):
 def years_group_add(request):
 	title = 'Years Groups Add'
 	url_form = 'years_group_add'
+	url_name = 'years_group'
+	but_name = 'static_data'
 	template_name = 'gsi/_years_group_form.html'
 	reverse_url = {
 		'save_button': 'years_group',
@@ -1360,7 +1343,9 @@ def years_group_add(request):
 		'url_form': url_form,
 		'template_name': template_name,
 		'form': form,
-		'available_years': available_years
+		'available_years': available_years,
+		'url_name': url_name,
+		'but_name': but_name,
 	}
 
 	return data
@@ -1372,6 +1357,8 @@ def years_group_add(request):
 def years_group_edit(request, yg_id):
 	years_group = get_object_or_404(YearGroup, pk=yg_id)
 	title = 'YearGroup Edit "%s"' % (years_group.name)
+	url_name = 'years_group'
+	but_name = 'static_data'
 	url_form = 'years_group_edit'
 	template_name = 'gsi/_years_group_form.html'
 	reverse_url = {
@@ -1399,11 +1386,147 @@ def years_group_edit(request, yg_id):
 	data = {
 		'title': title,
 		'url_form': url_form,
+		'url_name': url_name,
+		'but_name': but_name,
 		'template_name': template_name,
 		'form': form,
 		'item_id': yg_id,
 		'available_years': available_years,
 		'chosen_years': chosen_years,
+	}
+
+	return data
+
+
+# satellite list
+@login_required
+@render_to('gsi/satellite_list.html')
+def satellite(request):
+	title = 'Satellites'
+	satellites = Satellite.objects.all()
+	satellite_name = ''
+	url_name = 'satellite'
+	but_name = 'static_data'
+
+	if request.method == "POST":
+		if request.POST.get('delete_button'):
+			if request.POST.get('satellite_select'):
+				for satellite_id in request.POST.getlist('satellite_select'):
+					cur_satellite = get_object_or_404(Satellite, pk=satellite_id)
+					satellite_name += '"' + cur_satellite.name + '", '
+					cur_satellite.delete()
+
+				return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('satellite'),
+											 (u'Satellites: {0} ==> deleted.'.format(satellite_name)))
+				)
+			else:
+				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('satellite'),
+											 (u"To delete, select Satellite or more Satellites."))
+				)
+		elif request.POST.get('del_current_btn'):
+			cur_satellite = get_object_or_404(Satellite, pk=request.POST.get('del_current_btn'))
+			satellite_name += '"' + cur_satellite.name + '", '
+			cur_satellite.delete()
+
+			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('satellite'),
+										 (u'Satellite: {0} ==> deleted.'.format(satellite_name)))
+				)
+
+	# paginations
+	model_name = paginations(request, satellites)
+
+	data = {
+		'title': title,
+		'satellites': model_name,
+		'model_name': model_name,
+		'url_name': url_name,
+		'but_name': but_name,
+	}
+
+	return data
+
+
+# satellite add
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def satellite_add(request):
+	title = 'Satellites Add'
+	url_form = 'satellite_add'
+	url_name = 'satellite'
+	but_name = 'static_data'
+	template_name = 'gsi/_satellite_form.html'
+	reverse_url = {
+		'save_button': 'satellite',
+		'save_and_another': 'satellite_add',
+		'save_and_continue': 'satellite_edit',
+		'cancel_button': 'satellite'
+	}
+	func = satellite_update_create
+	form = None
+	available_satellite = Satellite.objects.all()
+
+	if request.method == "POST":
+		response = get_post(request, SatelliteForm, 'Satellite',
+							reverse_url, func)
+
+		if isinstance(response, HttpResponseRedirect):
+			return response
+		else:
+			form = response
+	else:
+		form = SatelliteForm()
+
+	data = {
+		'title': title,
+		'url_form': url_form,
+		'template_name': template_name,
+		'form': form,
+		'available_satellite': available_satellite,
+		'url_name': url_name,
+		'but_name': but_name,
+	}
+
+	return data
+
+
+# satellite edit
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def satellite_edit(request, satellite_id):
+	satellite = get_object_or_404(Satellite, pk=satellite_id)
+	title = 'Satellite Edit "%s"' % (satellite.name)
+	url_name = 'satellite'
+	but_name = 'static_data'
+	url_form = 'satellite_edit'
+	template_name = 'gsi/_satellite_form.html'
+	reverse_url = {
+		'save_button': 'satellite',
+		'save_and_another': 'satellite_add',
+		'save_and_continue': 'satellite_edit',
+		'cancel_button': 'satellite'
+	}
+	func = satellite_update_create
+	form = None
+
+	if request.method == "POST":
+		response = get_post(request, SatelliteForm, 'Satellite',
+							reverse_url, func, item_id=satellite_id)
+
+		if isinstance(response, HttpResponseRedirect):
+			return response
+		else:
+			form = response
+	else:
+		form = SatelliteForm(instance=satellite)
+
+	data = {
+		'title': title,
+		'url_form': url_form,
+		'url_name': url_name,
+		'but_name': but_name,
+		'template_name': template_name,
+		'form': form,
+		'item_id': satellite_id,
 	}
 
 	return data
@@ -1426,6 +1549,126 @@ def audit_history(request, run_id):
 		'title': title,
 		'run_id': run_id,
 		'logs': logs,
+	}
+
+	return data
+
+
+# view results
+@login_required
+@render_to('gsi/view_results.html')
+def view_results(request, run_id):
+	run_base = get_object_or_404(RunBase, pk=run_id)
+	title = 'View results "{0}"'.format(run_base.name)
+	dict_files = {}
+	info_message = ''
+	dirs = []
+	dir_root = get_dir_root_static_path()
+	resolution = run_base.resolution
+	folder = run_base.directory_path
+	static_dir_root_path = str(dir_root['static_dir_root_path']) + '/' + str(resolution) + '/' + str(folder)
+	static_dir_root_path = slash_remove_from_path(static_dir_root_path)
+	static_dir_root = str(dir_root['static_dir_root']) + '/' + str(resolution) + '/' + str(folder)
+	static_dir_root = slash_remove_from_path(static_dir_root)
+
+	try:
+		try:
+			root, dirs, files = os.walk(static_dir_root_path).next()
+
+			for f in files:
+				file_path = os.path.join(static_dir_root, f)
+				dict_files[f] = file_path
+		except StopIteration:
+			info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
+	except OSError:
+		info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
+
+	if not dict_files:
+		info_message = u'For run "{0}" there are no results to show.'.format(run_base.name)
+
+	data = {
+		'run_id': run_id,
+		'title': title,
+		'info_message': info_message,
+		'dirs': dirs,
+		'files': dict_files,
+		'prev_dir': 'd',
+	}
+
+	return data
+
+
+# view results
+@login_required
+@render_to('gsi/view_results_folder.html')
+def view_results_folder(request, run_id, prev_dir, dir):
+	run_base = get_object_or_404(RunBase, pk=run_id)
+	title = 'View results "{0}"'.format(run_base.name)
+	dict_files = {}
+	info_message = ''
+	dirs = []
+	back_prev = ''
+	back_cur = ''
+	dir_root = get_dir_root_static_path()
+	resolution = run_base.resolution
+	folder = run_base.directory_path
+	static_dir_root_path = str(dir_root['static_dir_root_path']) + '/' + str(resolution) + '/' + str(folder)
+	static_dir_root_path = slash_remove_from_path(static_dir_root_path)
+	static_dir_root = str(dir_root['static_dir_root']) + '/' + str(resolution) + '/' + str(folder)
+	static_dir_root = slash_remove_from_path(static_dir_root)
+	static_dir_root_path_folder = static_dir_root_path
+	static_dir_root_folder = static_dir_root
+
+	if prev_dir != 'd':
+		list_dir = prev_dir.split('%')
+		back_prev = '%'.join(list_dir[:-1])
+		back_cur = list_dir[-1]
+		if len(list_dir) == 1:
+			back_prev = 'd'
+			back_cur = list_dir[0]
+		prev_dir += '%' + dir
+
+		for d in list_dir:
+			static_dir_root_path_folder += '/' + d
+			static_dir_root_folder += '/' + d
+
+		# for new folder
+		static_dir_root_path_folder += '/' + str(dir)
+		static_dir_root_path_folder = slash_remove_from_path(static_dir_root_path_folder)
+		static_dir_root_folder += '/' + str(dir)
+		static_dir_root_folder = slash_remove_from_path(static_dir_root_folder)
+	else:
+		# for new folder
+		prev_dir = dir
+		static_dir_root_path_folder = static_dir_root_path + '/' + str(dir)
+		static_dir_root_path_folder = slash_remove_from_path(static_dir_root_path_folder)
+		static_dir_root_folder = static_dir_root + '/' + str(dir)
+		static_dir_root_folder = slash_remove_from_path(static_dir_root_folder)
+
+	try:
+		try:
+			root, dirs, files = os.walk(static_dir_root_path_folder).next()
+
+			for f in files:
+				file_path = os.path.join(static_dir_root_folder, f)
+				dict_files[f] = file_path
+		except StopIteration:
+			info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
+	except OSError:
+		info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
+
+	if not dict_files:
+		info_message = u'For run "{0}" there are no results to show.'.format(run_base.name)
+
+	data = {
+		'run_id': run_id,
+		'prev_dir': prev_dir,
+		'title': title,
+		'info_message': info_message,
+		'dirs': dirs,
+		'files': dict_files,
+		'back_prev': back_prev,
+		'back_cur': back_cur
 	}
 
 	return data

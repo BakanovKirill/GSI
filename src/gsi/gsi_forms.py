@@ -6,7 +6,7 @@ from cards.models import CardItem
 from gsi.models import (RunBase, Resolution,
                         CardSequence, VariablesGroup,
                         HomeVariables, Tile, YearGroup,
-                        Year)
+                        Year, Satellite)
 
 
 class RunForm(forms.ModelForm):
@@ -322,6 +322,24 @@ class YearGroupForm(forms.ModelForm):
         fields = [
             'name',
             'years',
+        ]
+
+
+class SatelliteForm(forms.ModelForm):
+    """ form for editing Satellite """
+
+    def __init__(self, *args, **kwargs):
+        super(SatelliteForm, self).__init__(*args, **kwargs)
+
+    name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label=u'Name',
+    )
+
+    class Meta:
+        model = Satellite
+        fields = [
+            'name',
         ]
 
 

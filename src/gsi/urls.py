@@ -47,6 +47,12 @@ urlpatterns = [
     url(r'^run/(?P<run_id>\d+)/$', 'gsi.views.run_update',
         name='run_update'),
 
+    # run base view results
+    url(r'^run/(?P<run_id>\d+)/view-results/$', 'gsi.views.view_results', name='view_results'),
+
+    # run base view folder results
+    url(r'^run/(?P<run_id>\d+)/view-results/(?P<prev_dir>[%\w]+)/(?P<dir>\w+)/$', 'gsi.views.view_results_folder', name='view_results_folder'),
+
     # submit a run
     url(r'^run/submit/$', 'gsi.views.submit_run', name='submit_run'),
 
@@ -72,7 +78,7 @@ urlpatterns = [
     url(r'^run/(?P<run_id>\d+)/audit-history/$', 'gsi.views.audit_history', name='audit_history'),
 
     # environment groups
-    url(r'^run/environment-groups/setup/$', 'gsi.views.environment_groups', name='environment_groups'),
+    url(r'^run/environment-groups/$', 'gsi.views.environment_groups', name='environment_groups'),
 
     # environment groups edit
     url(r'^run/environment-group/add/$', 'gsi.views.environment_group_add',
@@ -81,18 +87,25 @@ urlpatterns = [
         name='environment_group_edit'),
 
     # areas
-    url(r'^run/areas/setup/$', 'gsi.views.areas', name='areas'),
+    url(r'^run/areas/list/$', 'gsi.views.areas', name='areas'),
 
     # areas edit
     url(r'^run/area/add/$', 'gsi.views.area_add', name='area_add'),
     url(r'^run/area/(?P<area_id>\d+)/$', 'gsi.views.area_edit', name='area_edit'),
 
     # years group
-    url(r'^run/years-group/setup/$', 'gsi.views.years_group', name='years_group'),
+    url(r'^run/years-group/list/$', 'gsi.views.years_group', name='years_group'),
 
     # years group edit
     url(r'^run/years-group/add/$', 'gsi.views.years_group_add', name='years_group_add'),
     url(r'^run/years-group/(?P<yg_id>\d+)/$', 'gsi.views.years_group_edit', name='years_group_edit'),
+
+    # satellite
+    url(r'^run/satellite/list/$', 'gsi.views.satellite', name='satellite'),
+
+    # satellite edit
+    url(r'^run/satellite/add/$', 'gsi.views.satellite_add', name='satellite_add'),
+    url(r'^run/satellite/(?P<satellite_id>\d+)/$', 'gsi.views.satellite_edit', name='satellite_edit'),
 
 
     # card sequence for new run base
@@ -132,6 +145,9 @@ urlpatterns = [
         'gsi.views_cs_card_runid_csid.cs_runid_csid_mergecsv_edit', name='cs_runid_csid_mergecsv_edit'),
     url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/rftrain/(?P<rftrain_id>\d+)/$',
         'gsi.views_cs_card_runid_csid.cs_runid_csid_rftrain_edit', name='cs_runid_csid_rftrain_edit'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/randomforest/(?P<rf_id>\d+)/$',
+        'gsi.views_cs_card_runid_csid.cs_runid_csid_randomforest_edit', name='cs_runid_csid_randomforest_edit'),
+
 
     # card item edit for card sequence // run->csID->card_item
     url(r'^run/card-sequence/(?P<cs_id>\d+)/qrf/(?P<qrf_id>\d+)/$',
@@ -305,6 +321,8 @@ urlpatterns = [
         'cards.views_card_runid_csid.new_runid_csid_mergecsv', name='new_runid_csid_mergecsv'),
     url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/rftrain/add/$',
         'cards.views_card_runid_csid.new_runid_csid_rftrain', name='new_runid_csid_rftrain'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/randomforest/add/$',
+        'cards.views_card_runid_csid.new_runid_csid_randomforest', name='new_runid_csid_randomforest'),
 
 
     # new runID card-sequenceID cards edit
@@ -324,6 +342,8 @@ urlpatterns = [
         'cards.views_card_runid_csid.new_runid_csid_mergecsv_edit', name='new_runid_csid_mergecsv_edit'),
     url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/rftrain/(?P<rftrain_id>\d+)/$',
         'cards.views_card_runid_csid.new_runid_csid_rftrain_edit', name='new_runid_csid_rftrain_edit'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/randomforest/(?P<rf_id>\d+)/$',
+        'cards.views_card_runid_csid.new_runid_csid_randomforest_edit', name='new_runid_csid_randomforest_edit'),
 
 
     # auth

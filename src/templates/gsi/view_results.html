@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block title %}{{ title }}{% endblock title %}
+
+{% block status_message %}
+    {{ status_message }}
+{% endblock status_message %}
+
+{% block content %}
+    <div class="col-md-12">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            {% for dir in dirs %}
+                <tbody>
+                    <td><b>{{ dir }} /</b></td>
+                    <td>
+                        <a href="{% url 'view_results_folder' run_id prev_dir dir %}"><img src="{% static 'img/go-folder-18.png' %}"/></a>
+                    </td>
+                </tbody>
+            {% endfor %}
+            {% for file, path in files.items %}
+                <tbody>
+                    <td>{{ file }}</td>
+                    <td>
+                        <a href="{% static path %}" download><img src="{% static 'img/download-18.png' %}"/></a>
+                    </td>
+                </tbody>
+            {% endfor %}
+        </table>
+        <div class="row margin-top-15">
+            <div class="col-md-4 col-md-offset-8">
+                <a class="btn btn-default btn-block" href="{% url 'run_update' run_id %}" role="button">
+                    Back
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
