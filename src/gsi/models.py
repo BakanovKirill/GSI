@@ -180,7 +180,7 @@ class RunStep(UnicodeNameMixin, models.Model):
         log_file.close()
 
         if len(next_card) == 0:
-            is_last_step = True
+            return False, True
         if next_card:
             next_card = next_card[0]
             step, created = RunStep.objects.get_or_create(parent_run=self.parent_run, card_item=next_card)
