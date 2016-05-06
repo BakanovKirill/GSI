@@ -126,7 +126,7 @@ def update_run(request, run_id):
             data['message'] = str(e)
 
             # error for api
-            path_file = '/home/gsi/logs/runcards_status.err'
+            path_file = '/home/gsi/LOGS/runcards_status.err'
             now = datetime.now()
             log_file = open(path_file, 'a')
             log_file.writelines('ERRROR runcards_{0}:'.format(card.id) + '\n')
