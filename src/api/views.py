@@ -41,7 +41,7 @@ def update_run(request, run_id):
                 card_item=card)
 
             # logs for api
-            path_file = '/home/gsi/logs/runcards_status.log'
+            path_file = '/home/gsi/LOGS/api_status.log'
             now = datetime.now()
             log_file = open(path_file, 'a')
             log_file.writelines('RUNCARDS_{0}:\n'.format(card.id))
@@ -70,7 +70,7 @@ def update_run(request, run_id):
                 run.save()
                 # break
             elif state == 'success':
-                log_file.writelines('SUCCESS: ' + str(state) + '\n')
+                log_file.writelines('SUCCESS: ' + str(state) + '\n\n')
                 next_step, is_last_step = step.get_next_step()
                 step.state = state
                 step.save()
@@ -85,12 +85,10 @@ def update_run(request, run_id):
                             next_step.card_item.id
                         ),
                         shell=True,
-                        # stdout=PIPE,
-                        # stderr=PIPE
                     )
 
                     # write log file
-                    path_file = '/home/gsi/logs/api_make_run.log'
+                    path_file = '/home/gsi/LOGS/api_success.log'
                     now = datetime.now()
                     log_api_file = open(path_file, 'a')
                     log_api_file.writelines('{0}\n'.format(now))

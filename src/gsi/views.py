@@ -91,15 +91,14 @@ def upload_file(request):
 	url_name = 'upload_file'
 
 	# log error permission
-	err_file = '/home/gsi/logs/perm_log.err'
-	now = datetime.now()
-	log_file = open(err_file, 'a')
-
-	log_file.writelines('Fail' + '\n')
-	log_file.writelines(str(now) + '\n')
-	log_file.writelines('USER: ' + getpass.getuser() + '\n')
-	log_file.close()
-
+	# err_file = '/home/gsi/logs/perm_log.err'
+	# now = datetime.now()
+	# log_file = open(err_file, 'a')
+	#
+	# log_file.writelines('Fail' + '\n')
+	# log_file.writelines(str(now) + '\n')
+	# log_file.writelines('USER: ' + getpass.getuser() + '\n')
+	# log_file.close()
 	# ens log error permission
 
 	if request.POST:
@@ -152,15 +151,14 @@ def index(request):
 	url_name = 'home'
 
 	# log error permission
-	err_file = '/home/gsi/logs/perm_log.err'
-	now = datetime.now()
-	log_file = open(err_file, 'a')
-
-	log_file.writelines('Fail' + '\n')
-	log_file.writelines(str(now) + '\n')
-	log_file.writelines('USER: ' + getpass.getuser() + '\n')
-	log_file.close()
-
+	# err_file = '/home/gsi/logs/perm_log.err'
+	# now = datetime.now()
+	# log_file = open(err_file, 'a')
+	#
+	# log_file.writelines('Fail' + '\n')
+	# log_file.writelines(str(now) + '\n')
+	# log_file.writelines('USER: ' + getpass.getuser() + '\n')
+	# log_file.close()
 	# ens log error permission
 
 	if request.POST:
