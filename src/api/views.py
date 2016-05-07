@@ -109,7 +109,7 @@ def update_run(request, run_id):
                     path_log = script['path_runs_logs']
                     write_log(log_name, run, path_log)
 
-                if last_but_one == last:
+                if last_but_one[0] == last:
                     ex_fe_com = Popen(
                         'nohup {0} {1} {2} &'.format(
                             EXECUTE_FE_COMMAND,
