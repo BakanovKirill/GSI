@@ -75,13 +75,11 @@ def update_run(request, run_id):
             elif state == 'success':
                 log_file.writelines('SUCCESS: ' + str(state) + '\n\n')
                 next_step, is_last_step = step.get_next_step()
-                cur_state = step.state
                 step.state = state
                 step.save()
 
-                log_file.writelines('STATE STEP => {0}\n'.format(step.state))
-                log_file.writelines('NEXT STEP => {0}\n'.format(next_step))
-                log_file.writelines('LAST STEP => {0}\n'.format(is_last_step))
+                log_file.writelines('last_but_one => {0}\n'.format(last_but_one))
+                log_file.writelines('last => {0}\n'.format(last))
 
                 if next_step:
                     data['next_step'] = next_step.id
