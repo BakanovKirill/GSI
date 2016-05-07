@@ -41,6 +41,7 @@ def update_run(request, run_id):
             step = RunStep.objects.get(
                 parent_run=run,
                 card_item=card)
+            cur_state = step.state
 
             # logs for api
             path_file = '/home/gsi/LOGS/api_status.log'
@@ -65,7 +66,7 @@ def update_run(request, run_id):
             if state == 'running':
                 step.state = state
                 step.save()
-            elif state == 'fail':
+            elif state == 'fail' or cur_state == 'fail':
                 log_file.writelines('FAIL: ' + str(state) + '\n')
                 step.state = state
                 run.state = state
