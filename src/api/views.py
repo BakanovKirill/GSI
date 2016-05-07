@@ -76,10 +76,11 @@ def update_run(request, run_id):
                 step.state = state
                 step.save()
 
+                log_file.writelines('STATE STEP => {0}\n'.format(step.state))
                 log_file.writelines('NEXT STEP => {0}\n'.format(next_step))
                 log_file.writelines('LAST STEP => {0}\n'.format(is_last_step))
 
-                if next_step and next_step.state == 'success':
+                if next_step and step.state == 'success':
                     data['next_step'] = next_step.id
                     script = create_scripts(run, sequence, card, step)
                     ex_fe_com = Popen(
