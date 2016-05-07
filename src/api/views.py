@@ -110,6 +110,8 @@ def update_run(request, run_id):
                     write_log(log_name, run, path_log)
 
                 if last_but_one[0] == last:
+                    log_file.writelines('next_step => {0}\n'.format(next_step))
+                    log_file.writelines('next_step.card_item.id => {0}\n'.format(next_step.card_item.id))
                     ex_fe_com = Popen(
                         'nohup {0} {1} {2} &'.format(
                             EXECUTE_FE_COMMAND,
