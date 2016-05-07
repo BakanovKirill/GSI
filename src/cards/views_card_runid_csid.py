@@ -72,6 +72,12 @@ def new_runid_csid_qrf(request, run_id, cs_id):
 		response = get_post(request, QRFForm, 'QRF Card',
 							REVERSE_URL['qrf'], func, args=True)
 
+		if response == None:
+			return HttpResponseRedirect(
+				u'%s?danger_message=%s' % (reverse('new_runid_csid_qrf', args=[run_id, cs_id]),
+										   (u"QRF Card with the same name already exists"))
+			)
+
 		if isinstance(response, HttpResponseRedirect):
 			return response
 		else:
@@ -145,6 +151,12 @@ def new_runid_csid_rfscore(request, run_id, cs_id):
 	if request.method == "POST":
 		response = get_post(request, RFScoreForm, 'RFScore Card',
 							REVERSE_URL['rfscore'], func, args=True)
+
+		if response == None:
+			return HttpResponseRedirect(
+				u'%s?danger_message=%s' % (reverse('new_runid_csid_rfscore', args=[run_id, cs_id]),
+										   (u"RFScore Card with the same name already exists"))
+			)
 
 		if isinstance(response, HttpResponseRedirect):
 			return response
@@ -220,6 +232,12 @@ def new_runid_csid_remap(request, run_id, cs_id):
 		response = get_post(request, RemapForm, 'Remap Card',
 							REVERSE_URL['remap'], func, args=True)
 
+		if response == None:
+			return HttpResponseRedirect(
+				u'%s?danger_message=%s' % (reverse('new_runid_csid_remap', args=[run_id, cs_id]),
+										   (u"Remap Card with the same name already exists"))
+			)
+
 		if isinstance(response, HttpResponseRedirect):
 			return response
 		else:
@@ -293,6 +311,12 @@ def new_runid_csid_year_filter(request, run_id, cs_id):
 	if request.method == "POST":
 		response = get_post(request, YearFilterForm, 'YearFilter Card',
 							REVERSE_URL['year_filter'], func, args=True)
+
+		if response == None:
+			return HttpResponseRedirect(
+				u'%s?danger_message=%s' % (reverse('new_runid_csid_year_filter', args=[run_id, cs_id]),
+										   (u"YearFilter Card with the same name already exists"))
+			)
 
 		if isinstance(response, HttpResponseRedirect):
 			return response
@@ -368,6 +392,12 @@ def new_runid_csid_collate(request, run_id, cs_id):
 		response = get_post(request, CollateForm, 'Collate Card',
 							REVERSE_URL['collate'], func, args=True)
 
+		if response == None:
+			return HttpResponseRedirect(
+				u'%s?danger_message=%s' % (reverse('new_runid_csid_collate', args=[run_id, cs_id]),
+										   (u"Collate Card with the same name already exists"))
+			)
+
 		if isinstance(response, HttpResponseRedirect):
 			return response
 		else:
@@ -441,6 +471,12 @@ def new_runid_csid_preproc(request, run_id, cs_id):
 	if request.method == "POST":
 		response = get_post(request, PreProcForm, 'PreProc Card',
 							REVERSE_URL['preproc'], func, args=True)
+
+		if response == None:
+			return HttpResponseRedirect(
+				u'%s?danger_message=%s' % (reverse('new_runid_csid_preproc', args=[run_id, cs_id]),
+										   (u"PreProc Card with the same name already exists"))
+			)
 
 		if isinstance(response, HttpResponseRedirect):
 			return response
@@ -517,6 +553,12 @@ def new_runid_csid_mergecsv(request, run_id, cs_id):
 		response = get_post(request, MergeCSVForm, 'MergeCSV Card',
 							REVERSE_URL['mergecsv'], func, args=True)
 
+		if response == None:
+			return HttpResponseRedirect(
+				u'%s?danger_message=%s' % (reverse('new_runid_csid_mergecsv', args=[run_id, cs_id]),
+										   (u"MergeCSV Card with the same name already exists"))
+			)
+
 		if isinstance(response, HttpResponseRedirect):
 			return response
 		else:
@@ -591,6 +633,12 @@ def new_runid_csid_rftrain(request, run_id, cs_id):
 		response = get_post(request, RFTrainForm, 'RFTrain Card',
 							REVERSE_URL['rftrain'], func, args=True)
 
+		if response == None:
+			return HttpResponseRedirect(
+				u'%s?danger_message=%s' % (reverse('new_runid_csid_rftrain', args=[run_id, cs_id]),
+										   (u"RFTrain Card with the same name already exists"))
+			)
+
 		if isinstance(response, HttpResponseRedirect):
 			return response
 		else:
@@ -664,6 +712,12 @@ def new_runid_csid_randomforest(request, run_id, cs_id):
 	if request.method == "POST":
 		response = get_post(request, RandomForestForm, 'RandomForest Card',
 							REVERSE_URL['randomforest'], func, args=True)
+
+		if response == None:
+			return HttpResponseRedirect(
+				u'%s?danger_message=%s' % (reverse('new_runid_csid_randomforest', args=[run_id, cs_id]),
+										   (u"RandomForest Card with the same name already exists"))
+			)
 
 		if isinstance(response, HttpResponseRedirect):
 			return response

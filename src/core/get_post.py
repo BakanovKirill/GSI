@@ -24,12 +24,18 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                     obj = func(form_1, multiple=multiple, item_id=item_id)
                 else:
                     obj = func(form_1, item_id=item_id)
+
+                if obj == None:
+                    return None
             else:
                 if request.POST.getlist('available'):
                     multiple = '_'.join(request.POST.getlist('available'))
                     obj = func(form_1, multiple=multiple)
                 else:
                     obj = func(form_1)
+
+                if obj == None:
+                    return None
 
             if cs_form:
                 if form_2.is_valid():
@@ -58,12 +64,18 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                     obj = func(form_1, multiple=multiple, item_id=item_id)
                 else:
                     obj = func(form_1, item_id=item_id)
+
+                if obj == None:
+                    return None
             else:
                 if request.POST.getlist('available'):
                     multiple = '_'.join(request.POST.getlist('available'))
                     obj = func(form_1, multiple=multiple)
                 else:
                     obj = func(form_1)
+
+                if obj == None:
+                    return None
 
             if args:
                 response = HttpResponseRedirect(
@@ -93,12 +105,18 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                     obj = func(form_1, multiple=multiple, item_id=item_id)
                 else:
                     obj = func(form_1, item_id=item_id)
+
+                if obj == None:
+                    return None
             else:
                 if request.POST.getlist('available'):
                     multiple = '_'.join(request.POST.getlist('available'))
                     obj = func(form_1, multiple=multiple)
                 else:
                     obj = func(form_1)
+
+                if obj == None:
+                    return None
 
             if cs_form:
                 if form_2.is_valid():
@@ -128,6 +146,9 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                 if request.POST.getlist('chosen'):
                     multiple = '_'.join(request.POST.getlist('chosen'))
                     obj = func(form_1, multiple=multiple, item_id=item_id, delete=True)
+
+                    if obj == None:
+                        return None
 
                 if args:
                     response = HttpResponseRedirect(

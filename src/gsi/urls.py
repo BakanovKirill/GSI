@@ -149,6 +149,27 @@ urlpatterns = [
         'gsi.views_cs_card_runid_csid.cs_runid_csid_randomforest_edit', name='cs_runid_csid_randomforest_edit'),
 
 
+    # new runID card-sequenceID cards add
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/qrf/add/$',
+        'cards.views_card_runid_csid.new_runid_csid_qrf', name='new_runid_csid_qrf'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/rfscore/add/$',
+        'cards.views_card_runid_csid.new_runid_csid_rfscore', name='new_runid_csid_rfscore'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/remap/add/$',
+        'cards.views_card_runid_csid.new_runid_csid_remap', name='new_runid_csid_remap'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/year_filter/add/$',
+        'cards.views_card_runid_csid.new_runid_csid_year_filter', name='new_runid_csid_year_filter'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/collate/add/$',
+        'cards.views_card_runid_csid.new_runid_csid_collate', name='new_runid_csid_collate'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/preproc/add/$',
+        'cards.views_card_runid_csid.new_runid_csid_preproc', name='new_runid_csid_preproc'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/mergecsv/add/$',
+        'cards.views_card_runid_csid.new_runid_csid_mergecsv', name='new_runid_csid_mergecsv'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/rftrain/add/$',
+        'cards.views_card_runid_csid.new_runid_csid_rftrain', name='new_runid_csid_rftrain'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/randomforest/add/$',
+        'cards.views_card_runid_csid.new_runid_csid_randomforest', name='new_runid_csid_randomforest'),
+
+
     # card item edit for card sequence // run->csID->card_item
     url(r'^run/card-sequence/(?P<cs_id>\d+)/qrf/(?P<qrf_id>\d+)/$',
         'gsi.views_cs_card_run_csid.cs_run_csid_qrf_edit', name='cs_run_csid_qrf_edit'),
@@ -302,27 +323,6 @@ urlpatterns = [
         'cards.views_card_runid.new_runid_mergecsv_edit', name='new_runid_mergecsv_edit'),
     url(r'^run/(?P<run_id>\d+)/card-sequence/processing-card/rftrain/(?P<rftrain_id>\d+)/$',
         'cards.views_card_runid.new_runid_rftrain_edit', name='new_runid_rftrain_edit'),
-
-
-    # new runID card-sequenceID cards add
-    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/qrf/add/$',
-        'cards.views_card_runid_csid.new_runid_csid_qrf', name='new_runid_csid_qrf'),
-    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/rfscore/add/$',
-        'cards.views_card_runid_csid.new_runid_csid_rfscore', name='new_runid_csid_rfscore'),
-    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/remap/add/$',
-        'cards.views_card_runid_csid.new_runid_csid_remap', name='new_runid_csid_remap'),
-    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/year_filter/add/$',
-        'cards.views_card_runid_csid.new_runid_csid_year_filter', name='new_runid_csid_year_filter'),
-    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/collate/add/$',
-        'cards.views_card_runid_csid.new_runid_csid_collate', name='new_runid_csid_collate'),
-    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/preproc/add/$',
-        'cards.views_card_runid_csid.new_runid_csid_preproc', name='new_runid_csid_preproc'),
-    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/mergecsv/add/$',
-        'cards.views_card_runid_csid.new_runid_csid_mergecsv', name='new_runid_csid_mergecsv'),
-    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/rftrain/add/$',
-        'cards.views_card_runid_csid.new_runid_csid_rftrain', name='new_runid_csid_rftrain'),
-    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/randomforest/add/$',
-        'cards.views_card_runid_csid.new_runid_csid_randomforest', name='new_runid_csid_randomforest'),
 
 
     # new runID card-sequenceID cards edit
