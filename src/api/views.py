@@ -84,6 +84,18 @@ def update_run(request, run_id):
                 if next_step:
                     data['next_step'] = next_step.id
                     script = create_scripts(run, sequence, card, step)
+
+                    if last_but_one[0] == last:
+                        log_file.writelines('next RUN => {0}\n'.format(next_step.parent_run.id))
+                        log_file.writelines('card_item.id => {0}\n'.format(next_step.card_item.id))
+                        ex_fe_com = Popen(
+                            'nohup {0} {1} {2} &'.format(
+                                EXECUTE_FE_COMMAND,
+                                next_step.parent_run.id,
+                                next_step.card_item.id
+                            ),
+                            shell=True,
+                        )
                     # ex_fe_com = Popen(
                     #     'nohup {0} {1} {2} &'.format(
                     #         EXECUTE_FE_COMMAND,
@@ -94,32 +106,20 @@ def update_run(request, run_id):
                     # )
 
                     # write log file
-                    path_file = '/home/gsi/LOGS/api_success.log'
-                    now = datetime.now()
-                    log_api_file = open(path_file, 'a')
-                    log_api_file.writelines('{0}\n'.format(now))
-                    log_api_file.writelines('SCRIPTS: \n')
-                    log_api_file.writelines('name ==> {0}\n'.format(script['script_name']))
-                    log_api_file.writelines('next run ==> {0}\n'.format(next_step.parent_run.id))
-                    log_api_file.writelines('next card ==> {0}\n'.format(next_step.card_item.id))
-                    log_api_file.writelines('state ==> {0}\n\n\n'.format(step.state))
-                    log_api_file.close()
+                    # path_file = '/home/gsi/LOGS/api_success.log'
+                    # now = datetime.now()
+                    # log_api_file = open(path_file, 'a')
+                    # log_api_file.writelines('{0}\n'.format(now))
+                    # log_api_file.writelines('SCRIPTS: \n')
+                    # log_api_file.writelines('name ==> {0}\n'.format(script['script_name']))
+                    # log_api_file.writelines('next run ==> {0}\n'.format(next_step.parent_run.id))
+                    # log_api_file.writelines('next card ==> {0}\n'.format(next_step.card_item.id))
+                    # log_api_file.writelines('state ==> {0}\n\n\n'.format(step.state))
+                    # log_api_file.close()
 
                     log_name = '{0}_{1}.log'.format(value_list[0], value_list[2])
                     path_log = script['path_runs_logs']
                     write_log(log_name, run, path_log)
-
-                if last_but_one[0] == last:
-                    log_file.writelines('next_step => {0}\n'.format(next_step))
-                    log_file.writelines('next_step.card_item.id => {0}\n'.format(next_step.card_item.id))
-                    ex_fe_com = Popen(
-                        'nohup {0} {1} {2} &'.format(
-                            EXECUTE_FE_COMMAND,
-                            next_step.parent_run.id,
-                            next_step.card_item.id
-                        ),
-                        shell=True,
-                    )
 
                 if is_last_step:
                     data['is_last_step'] = True
