@@ -297,43 +297,49 @@ def cs_runid_csid_collate_edit(request, run_id, cs_id, collate_id):
 						)
 
 	# write log file
-	path_file = '/home/gsi/LOGS/out_of_range.log'
-	now = datetime.now()
-	log_api_file = open(path_file, 'a')
-	log_api_file.writelines('{0}\n'.format(now))
-	log_api_file.writelines('OUT of RANGE: \n')
-	log_api_file.writelines('card_item ==> {0}\n'.format(card_item))
-	log_api_file.writelines('card_sequence ==> {0}\n\n\n'.format(card_sequence))
-	log_api_file.close()
+	# path_file = '/home/gsi/LOGS/out_of_range.log'
+	# now = datetime.now()
+	# log_api_file = open(path_file, 'a')
+	# log_api_file.writelines('{0}\n'.format(now))
+	# log_api_file.writelines('OUT of RANGE: \n')
+	# log_api_file.writelines('card_item ==> {0}\n'.format(card_item))
+	# log_api_file.writelines('card_sequence ==> {0}\n\n\n'.format(card_sequence))
+	# log_api_file.close()
 
-	card_sequence_card = card_sequence_card_all[0]
-	url_form = 'cs_runid_csid_collate_edit'
-	template_name = 'gsi/_cs_collate_form.html'
-	func = collate_update_create
-	form_1 = None
-	form_2 = None
-	REVERSE_URL['collate']['save_button'].append([run_id, cs_id])
-	REVERSE_URL['collate']['save_and_continue'].append([run_id, cs_id])
-	REVERSE_URL['collate']['cancel_button'].append([run_id, cs_id])
+	try:
+		card_sequence_card = card_sequence_card_all[0]
+		url_form = 'cs_runid_csid_collate_edit'
+		template_name = 'gsi/_cs_collate_form.html'
+		func = collate_update_create
+		form_1 = None
+		form_2 = None
+		REVERSE_URL['collate']['save_button'].append([run_id, cs_id])
+		REVERSE_URL['collate']['save_and_continue'].append([run_id, cs_id])
+		REVERSE_URL['collate']['cancel_button'].append([run_id, cs_id])
 
-	if request.method == "POST":
-		cs_form = [CardSequenceCardForm, card_sequence_card, card_item]
-		response = get_post(request, CollateForm, 'Collate Card', REVERSE_URL['collate'],
-							func, args=True, item_id=collate_id, cs_form=cs_form)
+		if request.method == "POST":
+			cs_form = [CardSequenceCardForm, card_sequence_card, card_item]
+			response = get_post(request, CollateForm, 'Collate Card', REVERSE_URL['collate'],
+								func, args=True, item_id=collate_id, cs_form=cs_form)
 
-		if response == None:
-			return HttpResponseRedirect(
-				u'%s?danger_message=%s' % (reverse('cs_runid_csid_collate_edit', args=[run_id, cs_id, collate_id]),
-										   (u"Collate Card with the same name already exists"))
-			)
+			if response == None:
+				return HttpResponseRedirect(
+					u'%s?danger_message=%s' % (reverse('cs_runid_csid_collate_edit', args=[run_id, cs_id, collate_id]),
+											   (u"Collate Card with the same name already exists"))
+				)
 
-		if isinstance(response, HttpResponseRedirect):
-			return response
+			if isinstance(response, HttpResponseRedirect):
+				return response
+			else:
+				form_2 = response
 		else:
-			form_2 = response
-	else:
-		form_1 = CardSequenceCardForm(instance=card_sequence_card)
-		form_2 = CollateForm(instance=collate_card)
+			form_1 = CardSequenceCardForm(instance=card_sequence_card)
+			form_2 = CollateForm(instance=collate_card)
+	except IndexError as e:
+		return HttpResponseRedirect(
+			u'%s?warning_message=%s' % (reverse('cs_runid_csid_collate_edit', args=[run_id, cs_id, collate_id]),
+									   (u'This card was deleted from CardSequence "{0}"'.format(card_sequence.name)))
+		)
 
 	data = {
 		'title': title,
