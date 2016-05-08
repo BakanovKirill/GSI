@@ -301,11 +301,9 @@ def cs_runid_csid_collate_edit(request, run_id, cs_id, collate_id):
 	now = datetime.now()
 	log_api_file = open(path_file, 'a')
 	log_api_file.writelines('{0}\n'.format(now))
-	log_api_file.writelines('SCRIPTS: \n')
-	log_api_file.writelines('name ==> {0}\n'.format(script['script_name']))
-	log_api_file.writelines('next run ==> {0}\n'.format(next_step.parent_run.id))
-	log_api_file.writelines('next card ==> {0}\n'.format(next_step.card_item.id))
-	log_api_file.writelines('state ==> {0}\n\n\n'.format(step.state))
+	log_api_file.writelines('OUT of RANGE: \n')
+	log_api_file.writelines('card_item ==> {0}\n'.format(card_item))
+	log_api_file.writelines('card_sequence ==> {0}\n\n\n'.format(card_sequence))
 	log_api_file.close()
 
 	card_sequence_card = card_sequence_card_all[0]
