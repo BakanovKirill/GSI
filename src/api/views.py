@@ -97,14 +97,6 @@ def update_run(request, run_id):
                             ),
                             shell=True,
                         )
-                    # ex_fe_com = Popen(
-                    #     'nohup {0} {1} {2} &'.format(
-                    #         EXECUTE_FE_COMMAND,
-                    #         next_step.parent_run.id,
-                    #         next_step.card_item.id
-                    #     ),
-                    #     shell=True,
-                    # )
 
                     # write log file
                     # path_file = '/home/gsi/LOGS/api_success.log'
@@ -132,9 +124,6 @@ def update_run(request, run_id):
                 log_file.writelines('ELSE: ' + str(state) + '\n')
                 step.state = state
                 step.save()
-                # run = step.parent_run
-                # run.state = state
-                # run.save()
 
             log_file.writelines('\n\n\n')
             log_file.close()

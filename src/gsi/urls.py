@@ -169,6 +169,8 @@ urlpatterns = [
     url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/randomforest/add/$',
         'cards.views_card_runid_csid.new_runid_csid_randomforest', name='new_runid_csid_randomforest'),
 
+    # *****************************************************************************************************
+
 
     # card item edit for card sequence // run->csID->card_item
     url(r'^run/card-sequence/(?P<cs_id>\d+)/qrf/(?P<qrf_id>\d+)/$',

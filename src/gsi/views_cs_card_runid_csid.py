@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+
 from annoying.decorators import render_to
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
@@ -293,6 +295,19 @@ def cs_runid_csid_collate_edit(request, run_id, cs_id, collate_id):
 							card_item=card_item,
 							sequence=card_sequence
 						)
+
+	# write log file
+	path_file = '/home/gsi/LOGS/out_of_range.log'
+	now = datetime.now()
+	log_api_file = open(path_file, 'a')
+	log_api_file.writelines('{0}\n'.format(now))
+	log_api_file.writelines('SCRIPTS: \n')
+	log_api_file.writelines('name ==> {0}\n'.format(script['script_name']))
+	log_api_file.writelines('next run ==> {0}\n'.format(next_step.parent_run.id))
+	log_api_file.writelines('next card ==> {0}\n'.format(next_step.card_item.id))
+	log_api_file.writelines('state ==> {0}\n\n\n'.format(step.state))
+	log_api_file.close()
+
 	card_sequence_card = card_sequence_card_all[0]
 	url_form = 'cs_runid_csid_collate_edit'
 	template_name = 'gsi/_cs_collate_form.html'
