@@ -45,7 +45,7 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                 response = HttpResponseRedirect(
                     u'%s?status_message=%s' % (reverse(reverse_ulr['save_button'][0],
                                                        args=reverse_ulr['save_button'][1]),
-                    (u'The {0} "{1}" created successfully'.format(item, obj.name)))
+                    (u'The {0} "{1}" was edidet'.format(item, obj.name)))
                 )
             else:
                 response = HttpResponseRedirect(
