@@ -4,6 +4,7 @@ import os
 import shutil
 import getpass
 from datetime import datetime
+import magic
 
 from annoying.decorators import render_to
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -1554,6 +1555,30 @@ def audit_history(request, run_id):
 	return data
 
 
+def get_files_dirs(run_id):
+	dict_files = {}
+	dict_dirs = {}
+	run_base = get_object_or_404(RunBase, pk=run_id)
+	resolution = run_base.resolution
+	folder = run_base.directory_path
+	dir_root = get_dir_root_static_path()
+
+	static_dir_root_path = str(dir_root['static_dir_root_path']) + '/' + str(resolution) + '/' + str(folder)
+	static_dir_root_path = slash_remove_from_path(static_dir_root_path)
+	static_dir_root = str(dir_root['static_dir_root']) + '/' + str(resolution) + '/' + str(folder)
+	static_dir_root = slash_remove_from_path(static_dir_root)
+
+	try:
+		root, dirs, files = os.walk(static_dir_root_path).next()
+
+		for f in files:
+			file_path = os.path.join(static_dir_root, f)
+			dict_files[f] = file_path
+	except StopIteration:
+		info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
+
+
+
 # view results
 @login_required
 @render_to('gsi/view_results.html')
@@ -1605,13 +1630,16 @@ def view_results_folder(request, run_id, prev_dir, dir):
 	run_base = get_object_or_404(RunBase, pk=run_id)
 	title = 'View results "{0}"'.format(run_base.name)
 	dict_files = {}
+	dict_dirs = {}
 	info_message = ''
 	dirs = []
 	back_prev = ''
 	back_cur = ''
+
 	dir_root = get_dir_root_static_path()
 	resolution = run_base.resolution
 	folder = run_base.directory_path
+
 	static_dir_root_path = str(dir_root['static_dir_root_path']) + '/' + str(resolution) + '/' + str(folder)
 	static_dir_root_path = slash_remove_from_path(static_dir_root_path)
 	static_dir_root = str(dir_root['static_dir_root']) + '/' + str(resolution) + '/' + str(folder)
@@ -1649,12 +1677,38 @@ def view_results_folder(request, run_id, prev_dir, dir):
 		try:
 			root, dirs, files = os.walk(static_dir_root_path_folder).next()
 
+			for d in dirs:
+				date_modification = datetime.fromtimestamp(os.path.getmtime(static_dir_root_path_folder))  # дата последней модификации в секундах с начала эпохи
+				format_date_modification = datetime.strftime(date_modification, "%Y/%m/%d %H:%M:%S")
+
+				print 'DIR mtime ===================== ', format_date_modification
+
 			for f in files:
 				file_path = os.path.join(static_dir_root_folder, f)
+				full_file_path = os.path.join(static_dir_root_path_folder, f)
 				dict_files[f] = file_path
-		except StopIteration:
+
+				size = os.path.getsize(full_file_path)*1.0//1024     # размер файла в байтах
+				ksize = size//1024              # размер в килобайтах
+				# atime = datetime.fromtimestamp(os.path.getatime(full_file_path))  # дата последнего доступа в секундах с начала эпохи
+				date_modification = datetime.fromtimestamp(os.path.getmtime(full_file_path))  # дата последней модификации в секундах с начала эпохи
+				format_date_modification = datetime.strftime(date_modification, "%Y/%m/%d %H:%M:%S")  # дата последней модификации в секундах с начала эпохи
+				type_file = magic.from_file(full_file_path, mime=True)
+
+				print 'INFO ====================='
+				print 'files ===================== ', f
+
+				print 'size ===================== ', size
+				print 'ksize ===================== ', ksize
+				print 'mtime ===================== ', format_date_modification
+
+				print 'type_file ===================== ', type_file
+				print '\n\n'
+		except StopIteration, e:
+			print 'StopIteration ===================== ', e
 			info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
-	except OSError:
+	except OSError, e:
+		print 'OSError ===================== ', e
 		info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
 
 	if not dict_files:

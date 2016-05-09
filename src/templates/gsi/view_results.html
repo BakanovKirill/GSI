@@ -12,15 +12,23 @@
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Action</th>
+                    <th class="left">File</th>
+                    <th class="right">Size</th>
+                    <th class="right">Last Modified</th>
                 </tr>
             </thead>
             {% for dir in dirs %}
                 <tbody>
-                    <td><b>{{ dir }} /</b></td>
-                    <td>
-                        <a href="{% url 'view_results_folder' run_id prev_dir dir %}"><img src="{% static 'img/go-folder-18.png' %}"/></a>
+                    <td class="left"><a class="left" href="{% url 'view_results_folder' run_id prev_dir dir %}"><img src="{% static 'img/folder-18.png' %}"/><b class="margin-left-10">{{ dir }}</b></a></td>
+                    <td class="right">
+                        <a class="left" href="{% url 'view_results_folder' run_id prev_dir dir %}">
+                            &mdash;
+                        </a>
+                    </td>
+                    <td class="right">
+                        <a href="{% url 'view_results_folder' run_id prev_dir dir %}">
+                            {{ dir }}
+                        </a>
                     </td>
                 </tbody>
             {% endfor %}
