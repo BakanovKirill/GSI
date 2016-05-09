@@ -106,23 +106,23 @@
                                 <a
                                    href="{% if run_id %}
                                             {% if card.card_item.content_type.model == 'qrf' %}
-                                                {% url 'cs_runid_csid_qrf_edit' run_id cs_id card.card_item.object_id %}
+                                                {% url 'cs_runid_csid_qrf_edit' run_id cs_id card.id card.card_item.object_id %}
                                             {% elif card.card_item.content_type.model == 'rfscore' %}
-                                                {% url 'cs_runid_csid_rfscore_edit' run_id cs_id card.card_item.object_id %}
+                                                {% url 'cs_runid_csid_rfscore_edit' run_id cs_id card.id card.card_item.object_id %}
                                             {% elif card.card_item.content_type.model == 'remap' %}
-                                                {% url 'cs_runid_csid_remap_edit' run_id cs_id card.card_item.object_id %}
+                                                {% url 'cs_runid_csid_remap_edit' run_id cs_id card.id card.card_item.object_id %}
                                             {% elif card.card_item.content_type.model == 'yearfilter' %}
-                                                {% url 'cs_runid_csid_year_filter_edit' run_id cs_id card.card_item.object_id %}
+                                                {% url 'cs_runid_csid_year_filter_edit' run_id cs_id card.id card.card_item.object_id %}
                                             {% elif card.card_item.content_type.model == 'collate' %}
-                                                {% url 'cs_runid_csid_collate_edit' run_id cs_id card.card_item.object_id %}
+                                                {% url 'cs_runid_csid_collate_edit' run_id cs_id card.id card.card_item.object_id %}
                                             {% elif card.card_item.content_type.model == 'preproc' %}
-                                                {% url 'cs_runid_csid_preproc_edit' run_id cs_id card.card_item.object_id %}
+                                                {% url 'cs_runid_csid_preproc_edit' run_id cs_id card.id card.card_item.object_id %}
                                             {% elif card.card_item.content_type.model == 'mergecsv' %}
-                                                {% url 'cs_runid_csid_mergecsv_edit' run_id cs_id card.card_item.object_id %}
+                                                {% url 'cs_runid_csid_mergecsv_edit' run_id cs_id card.id card.card_item.object_id %}
                                             {% elif card.card_item.content_type.model == 'rftrain' %}
-                                                {% url 'cs_runid_csid_rftrain_edit' run_id cs_id card.card_item.object_id %}
+                                                {% url 'cs_runid_csid_rftrain_edit' run_id cs_id card.id card.card_item.object_id %}
                                             {% elif card.card_item.content_type.model == 'randomforest' %}
-                                                {% url 'cs_runid_csid_randomforest_edit' run_id cs_id card.card_item.object_id %}
+                                                {% url 'cs_runid_csid_randomforest_edit' run_id cs_id card.id card.card_item.object_id %}
                                             {% endif %}
                                         {% else %}
                                             {% if card.card_item.content_type.model == 'qrf' %}
