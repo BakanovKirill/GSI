@@ -934,7 +934,7 @@ def view_log_file(request, run_id, card_id):
 		log_file.writelines('ERROR => {0}\n\n\n'.format(e))
 		log_file.close()
 
-		
+
 		mess = out or err
 		return HttpResponseRedirect(u'%s?danger_message=%s' %
 									(reverse('run_details', args=[run_id]),
