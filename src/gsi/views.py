@@ -755,6 +755,13 @@ def submit_run(request):
 			for run_id in request.POST.getlist('execute_runs'):
 				rb = get_object_or_404(RunBase, pk=run_id)
 				execute_run = make_run(rb, request.user)
+
+				if not execute_run:
+					return HttpResponseRedirect(u'%s?danger_message=%s' %
+												(reverse('submit_run'),
+												 (u'Unable to execute the Run. \
+												 Please contact the administrator!'))
+												)
 				name_runs += '"' + str(execute_run['run'].run_base.name) + '", '
 
 			runs_id = '_'.join(request.POST.getlist('execute_runs'))
