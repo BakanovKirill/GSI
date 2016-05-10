@@ -32,7 +32,7 @@
             {% for key, file in files.items %}
                 <tbody>
                     <td class="left">
-                        <a class="result" href="{% static file.path %}" {% if file.type == 'bin' or file.type == 'archive' %}download{% endif %}>
+                        <a class="result" href="{% static file.path %}" {% if file.type == 'bin' or file.type == 'archive' %}download{% endif %} target="_blank">
                             <img {% if file.type == 'image' %}src="{% static 'img/image-18.png' %}"
                                 {% elif file.type == 'text' %}src="{% static 'img/file-document-18.png' %}"
                                 {% elif file.type == 'pdf' %}src="{% static 'img/file-pdf-18.png' %}"
