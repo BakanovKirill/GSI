@@ -756,6 +756,13 @@ def submit_run(request):
 			for run_id in request.POST.getlist('execute_runs'):
 				rb = get_object_or_404(RunBase, pk=run_id)
 				execute_run = make_run(rb, request.user)
+
+				if not execute_run:
+					return HttpResponseRedirect(u'%s?danger_message=%s' %
+												(reverse('submit_run'),
+												 (u'Unable to execute the Run. \
+												 Please contact the administrator!'))
+												)
 				name_runs += '"' + str(execute_run['run'].run_base.name) + '", '
 
 			runs_id = '_'.join(request.POST.getlist('execute_runs'))
@@ -926,6 +933,16 @@ def view_log_file(request, run_id, card_id):
 			log_info += line + '<br />'
 	except Exception, e:
 		print 'ERROR view_log_file: ', e
+
+		# logs for api
+		path_file = '/home/gsi/LOGS/log_file.log'
+		now = datetime.now()
+		log_file = open(path_file, 'a')
+		log_file.writelines(str(now) + '\n')
+		log_file.writelines('ERROR => {0}\n\n\n'.format(e))
+		log_file.close()
+
+
 		mess = out or err
 		return HttpResponseRedirect(u'%s?danger_message=%s' %
 									(reverse('run_details', args=[run_id]),
