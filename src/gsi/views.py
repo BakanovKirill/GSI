@@ -1572,28 +1572,91 @@ def audit_history(request, run_id):
 	return data
 
 
-def get_files_dirs(run_id):
-	dict_files = {}
+def get_files_dirs(url_path, full_path):
 	dict_dirs = {}
-	run_base = get_object_or_404(RunBase, pk=run_id)
-	resolution = run_base.resolution
-	folder = run_base.directory_path
-	dir_root = get_dir_root_static_path()
-
-	static_dir_root_path = str(dir_root['static_dir_root_path']) + '/' + str(resolution) + '/' + str(folder)
-	static_dir_root_path = slash_remove_from_path(static_dir_root_path)
-	static_dir_root = str(dir_root['static_dir_root']) + '/' + str(resolution) + '/' + str(folder)
-	static_dir_root = slash_remove_from_path(static_dir_root)
+	all_dirs = {}
+	dict_files = {}
+	all_files = {}
+	info_message = False
 
 	try:
-		root, dirs, files = os.walk(static_dir_root_path).next()
+		root, dirs, files = os.walk(full_path).next()
+
+		for d in dirs:
+			date_modification = datetime.fromtimestamp(os.path.getmtime(full_path))
+			format_date_modification = datetime.strftime(date_modification, "%Y/%m/%d %H:%M:%S")
+
+			dict_dirs['name'] = d
+			dict_dirs['date'] = format_date_modification
+			all_dirs[d] = dict_dirs
+			dict_dirs = {}
 
 		for f in files:
-			file_path = os.path.join(static_dir_root, f)
-			dict_files[f] = file_path
-	except StopIteration:
-		info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
+			kb = 1024.0
+			mb = 1024.0 * 1024.0
+			type_file = ''
+			size_file = ''
+			file_path = os.path.join(url_path, f)
+			full_file_path = os.path.join(full_path, f)
+			size = os.path.getsize(full_file_path)
+			date_modification = datetime.fromtimestamp(os.path.getmtime(full_file_path))
+			format_date_modification = datetime.strftime(date_modification, "%Y/%m/%d %H:%M:%S")
+			mime_type = magic.from_file(full_file_path, mime=True)
+			type_list = mime_type.split('/')
 
+			# print 'type ===================== ', mime_type
+			# print 'type_list ===================== ', type_list
+			# print 'name ===================== ', f
+
+			if size < kb:
+				size_file = "%.2f B" % (size)
+
+			if size > mb:
+				size = size / mb
+				size_file = "%.2f MB" % (size)
+
+			if size > kb:
+				size = float(size) / kb
+				size_file = "%.2f KB" % (size)
+
+			if type_list[0] == 'image':
+				type_file = type_list[0]
+			elif type_list[0] == 'text':
+				type_file = type_list[0]
+			elif type_list[0] == 'application':
+				if type_list[1] == 'pdf':
+					type_file = type_list[1]
+				elif type_list[1] == 'msword':
+					type_file = 'doc'
+				elif type_list[1] == 'octet-stream':
+					type_file = 'bin'
+				else:
+					type_file = 'archive'
+
+			dict_files['name'] = f
+			dict_files['path'] = file_path
+			dict_files['size'] = size_file
+			dict_files['date'] = format_date_modification
+			dict_files['type'] = type_file
+
+			# print 'NAME ===================== ', dict_files['name']
+			# print 'path ===================== ', dict_files['path']
+			# print 'size ===================== ', dict_files['size']
+			# print 'date ===================== ', dict_files['date']
+			# print 'type ===================== ', type_file
+
+			all_files[f] = dict_files
+			dict_files = {}
+			# print 'all_dirs ===================== ', all_files
+			print '\n\n\n'
+	except StopIteration, e:
+		print 'StopIteration ===================== ', e
+		info_message = True
+	except OSError, e:
+		print 'OSError ===================== ', e
+		info_message = True
+
+	return all_dirs, all_files, info_message
 
 
 # view results
@@ -1613,19 +1676,25 @@ def view_results(request, run_id):
 	static_dir_root = str(dir_root['static_dir_root']) + '/' + str(resolution) + '/' + str(folder)
 	static_dir_root = slash_remove_from_path(static_dir_root)
 
-	try:
-		try:
-			root, dirs, files = os.walk(static_dir_root_path).next()
+	# try:
+	# 	try:
+	# 		root, dirs, files = os.walk(static_dir_root_path).next()
+	#
+	# 		for f in files:
+	# 			file_path = os.path.join(static_dir_root, f)
+	# 			dict_files[f] = file_path
+	# 	except StopIteration:
+	# 		info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
+	# except OSError:
+	# 	info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
 
-			for f in files:
-				file_path = os.path.join(static_dir_root, f)
-				dict_files[f] = file_path
-		except StopIteration:
-			info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
-	except OSError:
-		info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
+	dirs, files, info_message = get_files_dirs(static_dir_root, static_dir_root_path)
 
-	if not dict_files:
+	# print 'static_dir_root ======================= ', static_dir_root
+	# print 'static_dir_root_path ======================= ', static_dir_root_path
+	# print 'files ======================= ', files
+
+	if info_message:
 		info_message = u'For run "{0}" there are no results to show.'.format(run_base.name)
 
 	data = {
@@ -1633,7 +1702,7 @@ def view_results(request, run_id):
 		'title': title,
 		'info_message': info_message,
 		'dirs': dirs,
-		'files': dict_files,
+		'files': files,
 		'prev_dir': 'd',
 	}
 
@@ -1647,9 +1716,9 @@ def view_results_folder(request, run_id, prev_dir, dir):
 	run_base = get_object_or_404(RunBase, pk=run_id)
 	title = 'View results "{0}"'.format(run_base.name)
 	dict_files = {}
-	dict_dirs = {}
-	info_message = ''
-	dirs = []
+	# dict_dirs = {}
+	# info_message = ''
+	# dirs = []
 	back_prev = ''
 	back_cur = ''
 
@@ -1690,45 +1759,49 @@ def view_results_folder(request, run_id, prev_dir, dir):
 		static_dir_root_folder = static_dir_root + '/' + str(dir)
 		static_dir_root_folder = slash_remove_from_path(static_dir_root_folder)
 
-	try:
-		try:
-			root, dirs, files = os.walk(static_dir_root_path_folder).next()
+	# try:
+	# 	try:
+	# 		root, dirs, files = os.walk(static_dir_root_path_folder).next()
+	#
+	# 		for d in dirs:
+	# 			date_modification = datetime.fromtimestamp(os.path.getmtime(static_dir_root_path_folder))  # дата последней модификации в секундах с начала эпохи
+	# 			format_date_modification = datetime.strftime(date_modification, "%Y/%m/%d %H:%M:%S")
+	#
+	# 			print 'DIR mtime ===================== ', format_date_modification
+	#
+	# 		for f in files:
+	# 			file_path = os.path.join(static_dir_root_folder, f)
+	# 			full_file_path = os.path.join(static_dir_root_path_folder, f)
+	# 			dict_files[f] = file_path
+	#
+	# 			size = os.path.getsize(full_file_path)    # размер файла в байтах
+	# 			ksize = round(size/1024.0, 2)              # размер в килобайтах
+	# 			# atime = datetime.fromtimestamp(os.path.getatime(full_file_path))  # дата последнего доступа в секундах с начала эпохи
+	# 			date_modification = datetime.fromtimestamp(os.path.getmtime(full_file_path))  # дата последней модификации в секундах с начала эпохи
+	# 			format_date_modification = datetime.strftime(date_modification, "%Y/%m/%d %H:%M:%S")  # дата последней модификации в секундах с начала эпохи
+	# 			type_file = magic.from_file(full_file_path, mime=True)
+	#
+	# 			print 'INFO ===================== ', type(size)
+	# 			print 'files ===================== ', f
+	#
+	# 			print 'size ===================== ', size
+	# 			print 'ksize ===================== ', ksize
+	# 			print 'mtime ===================== ', format_date_modification
+	#
+	# 			print 'type_file ===================== ', type_file
+	# 			print '\n\n'
+	# 	except StopIteration, e:
+	# 		print 'StopIteration ===================== ', e
+	# 		info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
+	# except OSError, e:
+	# 	print 'OSError ===================== ', e
+	# 	info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
 
-			for d in dirs:
-				date_modification = datetime.fromtimestamp(os.path.getmtime(static_dir_root_path_folder))  # дата последней модификации в секундах с начала эпохи
-				format_date_modification = datetime.strftime(date_modification, "%Y/%m/%d %H:%M:%S")
+	dirs, files, info_message = get_files_dirs(static_dir_root_folder, static_dir_root_path_folder)
 
-				print 'DIR mtime ===================== ', format_date_modification
+	# print 'files ======================= ', files
 
-			for f in files:
-				file_path = os.path.join(static_dir_root_folder, f)
-				full_file_path = os.path.join(static_dir_root_path_folder, f)
-				dict_files[f] = file_path
-
-				size = os.path.getsize(full_file_path)*1.0//1024     # размер файла в байтах
-				ksize = size//1024              # размер в килобайтах
-				# atime = datetime.fromtimestamp(os.path.getatime(full_file_path))  # дата последнего доступа в секундах с начала эпохи
-				date_modification = datetime.fromtimestamp(os.path.getmtime(full_file_path))  # дата последней модификации в секундах с начала эпохи
-				format_date_modification = datetime.strftime(date_modification, "%Y/%m/%d %H:%M:%S")  # дата последней модификации в секундах с начала эпохи
-				type_file = magic.from_file(full_file_path, mime=True)
-
-				print 'INFO ====================='
-				print 'files ===================== ', f
-
-				print 'size ===================== ', size
-				print 'ksize ===================== ', ksize
-				print 'mtime ===================== ', format_date_modification
-
-				print 'type_file ===================== ', type_file
-				print '\n\n'
-		except StopIteration, e:
-			print 'StopIteration ===================== ', e
-			info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
-	except OSError, e:
-		print 'OSError ===================== ', e
-		info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
-
-	if not dict_files:
+	if info_message:
 		info_message = u'For run "{0}" there are no results to show.'.format(run_base.name)
 
 	data = {
@@ -1737,7 +1810,7 @@ def view_results_folder(request, run_id, prev_dir, dir):
 		'title': title,
 		'info_message': info_message,
 		'dirs': dirs,
-		'files': dict_files,
+		'files': files,
 		'back_prev': back_prev,
 		'back_cur': back_cur
 	}

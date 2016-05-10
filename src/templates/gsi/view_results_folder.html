@@ -17,34 +17,45 @@
                     <th class="right">Last Modified</th>
                 </tr>
             </thead>
-            {% for dir in dirs %}
+            <tbody>
+                <td class="left">
+                    <a class="result" href="{% if back_prev %}{% url 'view_results_folder' run_id back_prev back_cur %}{% else %}{% url 'view_results' run_id %}{% endif %}">
+                        <img class="margin-bottom-4" src="{% static 'img/back-to-up-18.png' %}"/><span class="margin-left-10">. .</span>
+                    </a>
+                </td>
+                <td></td>
+                <td></td>
+            </tbody>
+            {% for key, dir in dirs.items %}
                 <tbody>
                     <td class="left">
-                        <a class="result" href="{% url 'view_results_folder' run_id prev_dir dir %}">
-                            <img src="{% static 'img/folder-18.png' %}"/><b class="margin-left-10">{{ dir }}</b>
+                        <a class="result" href="{% url 'view_results_folder' run_id prev_dir dir.name %}">
+                            <img class="margin-bottom-4" src="{% static 'img/folder-18.png' %}"/><b class="margin-left-10">{{ dir.name }}</b>
                         </a>
                     </td>
                     <td class="right">&mdash;</td>
-                    <td class="right">{{ dir }}</td>
+                    <td class="right">{{ dir.date }}</td>
                 </tbody>
             {% endfor %}
-            {% for file, path in files.items %}
-                <tbody class="left">
-                    <td>{{ file }}</td>
-                    <td>
-                        <a href="{% static path %}" download>
-                            <img src="{% static 'img/download-18.png' %}"/>
+            {% for key, file in files.items %}
+                <tbody>
+                    <td class="left">
+                        <a class="result" href="{% static file.path %}" {% if file.type == 'bin' or file.type == 'archive' %}download{% endif %}>
+                            <img {% if file.type == 'image' %}src="{% static 'img/image-18.png' %}"
+                                {% elif file.type == 'text' %}src="{% static 'img/file-document-18.png' %}"
+                                {% elif file.type == 'pdf' %}src="{% static 'img/file-pdf-18.png' %}"
+                                {% elif file.type == 'doc' %}src="{% static 'img/file-word-18.png' %}"
+                                {% elif file.type == 'bin' %}src="{% static 'img/file-bin-18.png' %}"
+                                {% elif file.type == 'archive' %}src="{% static 'img/file-archive-18.png' %}"
+                                {% else %}src="{% static 'img/file-18.png' %}"
+                                {% endif %}/>
+                            <span class="margin-left-10">{{ file.name }}</span>
                         </a>
                     </td>
+                    <td class="right">{{ file.size }}</td>
+                    <td class="right">{{ file.date }}</td>
                 </tbody>
             {% endfor %}
         </table>
-        <div class="row margin-top-15">
-            <div class="col-md-4 col-md-offset-8">
-                <a class="btn btn-default btn-block" href="{% if back_prev %}{% url 'view_results_folder' run_id back_prev back_cur %}{% else %}{% url 'view_results' run_id %}{% endif %}" role="button">
-                    Back
-                </a>
-            </div>
-        </div>
     </div>
 {% endblock content %}
