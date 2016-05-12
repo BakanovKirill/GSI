@@ -67,6 +67,10 @@ function initCheckCurDeleteItems() {
 
             },
             'success': function(data, status, xhr){
+                modal.find('.cancel-but').html("No. I don't want delete this item.");
+                modal.find('div.div-cancel').removeClass("col-sm-4 col-sm-offset-4");
+                modal.find('div.div-cancel').addClass("col-sm-6");
+                modal.find('.del-but').show();
                 modal.find('.modal-body').html(data);
                 modal.find('.del-but').val(cur_delete);
                 modal.modal('show');
