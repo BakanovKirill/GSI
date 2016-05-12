@@ -854,6 +854,27 @@ def run_progress(request):
 	url_name = 'run_progress'
 	run_name = ''
 
+	if request.method == "POST" and request.is_ajax():
+		data_post = request.POST
+
+		if 'run_id[]' in data_post:
+			data = ''
+			message = u'Are you sure you want to remove these objects:'
+			run_id = data_post.getlist('run_id[]')
+
+			for r in run_id:
+				cur_run = get_object_or_404(Run, pk=int(r))
+				data += '"' + str(cur_run) + '", '
+
+			data = data[:-2]
+			data = '<b>' + data + '</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		else:
+			data = ''
+			return HttpResponse(data)
+
 	if request.method == "POST":
 		if request.POST.get('run_progress'):
 			for run_id in request.POST.getlist('run_progress'):
@@ -868,8 +889,8 @@ def run_progress(request):
 					shutil.rmtree(path)
 				except OSError:
 					pass
-			# run_id = request.POST.get('run_progress')
-			# run = get_object_or_404(Run, pk=run_id)
+
+			run_name = run_name[:-2]
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_progress'),
 										 (u'Run(s): {0} ==> deleted.'.format(run_name)))
