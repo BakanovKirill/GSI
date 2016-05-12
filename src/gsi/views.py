@@ -226,6 +226,7 @@ def run_setup(request):
 				cur_run = get_object_or_404(RunBase, pk=run_id)
 				run_name += '"' + cur_run.name + '", '
 				cur_run.delete()
+			run_name = run_name[:-2]
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_setup'),
 										 (u'Run(s): {0} ==> deleted.'.format(run_name)))
@@ -1076,27 +1077,53 @@ def environment_groups(request):
 	url_name = 'environment_groups'
 	but_name = 'static_data'
 
+	if request.method == "POST" and request.is_ajax():
+		data_post = request.POST
+
+		if 'run_id[]' in data_post:
+			data = ''
+			message = u'Are you sure you want to remove these objects:'
+			run_id = data_post.getlist('run_id[]')
+
+			for r in run_id:
+				cur_run = get_object_or_404(VariablesGroup, pk=int(r))
+				data += '"' + cur_run.name + '", '
+
+			data = data[:-2]
+			data = '<b>' + data + '</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		if 'cur_run_id' in data_post:
+			message = u'Are you sure you want to remove this objects:'
+			run_id = data_post['cur_run_id']
+			cur_run = get_object_or_404(VariablesGroup, pk=int(run_id))
+			data = '<b>"' + cur_run.name + '"</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		else:
+			data = ''
+			return HttpResponse(data)
+
 	if request.method == "POST":
-		if request.POST.get('delete_button'):
-			if request.POST.get('env_select'):
-				for env_id in request.POST.getlist('env_select'):
-					cur_env = get_object_or_404(VariablesGroup, pk=env_id)
-					env_name += '"' + str(cur_env.name) + '", '
-					cur_env.delete()
+		# if request.POST.get('delete_button'):
+		if request.POST.get('env_select'):
+			for env_id in request.POST.getlist('env_select'):
+				cur_env = get_object_or_404(VariablesGroup, pk=env_id)
+				env_name += '"' + str(cur_env.name) + '", '
+				cur_env.delete()
 
-				envs_ids = '_'.join(request.POST.getlist('env_select'))
+			envs_ids = '_'.join(request.POST.getlist('env_select'))
+			env_name = env_name[:-2]
 
-				return HttpResponseRedirect(u'%s?status_message=%s' %
-											(reverse('environment_groups'),
-											 (u'Environment Groups: {0} ==> deleted.'.
-											  format(env_name)))
-				)
-			else:
-				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('environment_groups'),
-											 (u"To delete, select Group or more Groups."))
-				)
-		elif request.POST.get('del_current_btn'):
-			cur_env = get_object_or_404(VariablesGroup, pk=request.POST.get('del_current_btn'))
+			return HttpResponseRedirect(u'%s?status_message=%s' %
+										(reverse('environment_groups'),
+										 (u'Environment Groups: {0} ==> deleted.'.
+										  format(env_name)))
+			)
+		elif request.POST.get('delete_button'):
+			cur_env = get_object_or_404(VariablesGroup, pk=request.POST.get('delete_button'))
 			env_name += '"' + str(cur_env.name) + '", '
 			cur_env.delete()
 
@@ -1104,6 +1131,10 @@ def environment_groups(request):
 										(reverse('environment_groups'),
 										 (u'Environment Group: {0} ==> deleted.'.
 										  format(env_name))))
+		else:
+			return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('environment_groups'),
+										 (u"To delete, select Group or more Groups."))
+			)
 
 	# paginations
 	model_name = paginations(request, environments)
@@ -1206,30 +1237,59 @@ def areas(request):
 	url_name = 'areas'
 	but_name = 'static_data'
 
+	if request.method == "POST" and request.is_ajax():
+		data_post = request.POST
+
+		if 'run_id[]' in data_post:
+			data = ''
+			message = u'Are you sure you want to remove these objects:'
+			run_id = data_post.getlist('run_id[]')
+
+			for r in run_id:
+				cur_run = get_object_or_404(Area, pk=int(r))
+				data += '"' + cur_run.name + '", '
+
+			data = data[:-2]
+			data = '<b>' + data + '</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		if 'cur_run_id' in data_post:
+			message = u'Are you sure you want to remove this objects:'
+			run_id = data_post['cur_run_id']
+			cur_run = get_object_or_404(Area, pk=int(run_id))
+			data = '<b>"' + cur_run.name + '"</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		else:
+			data = ''
+			return HttpResponse(data)
+
 	if request.method == "POST":
-		if request.POST.get('delete_button'):
-			if request.POST.get('area_select'):
-				for area_id in request.POST.getlist('area_select'):
-					cur_area = get_object_or_404(Area, pk=area_id)
-					area_name += '"' + cur_area.name + '", '
-					cur_area.delete()
+		# if request.POST.get('delete_button'):
+		if request.POST.get('area_select'):
+			for area_id in request.POST.getlist('area_select'):
+				cur_area = get_object_or_404(Area, pk=area_id)
+				area_name += '"' + cur_area.name + '", '
+				cur_area.delete()
 
-				area_ids = '_'.join(request.POST.getlist('env_select'))
+			area_ids = '_'.join(request.POST.getlist('env_select'))
 
-				return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('areas'),
-											 (u'Areas: {0} ==> deleted.'.format(area_name)))
-				)
-			else:
-				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('areas'),
-											 (u"To delete, select Area or more Areas."))
-				)
-		elif request.POST.get('del_current_btn'):
-			cur_area = get_object_or_404(Area, pk=request.POST.get('del_current_btn'))
+			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('areas'),
+										 (u'Areas: {0} ==> deleted.'.format(area_name)))
+			)
+		elif request.POST.get('delete_button'):
+			cur_area = get_object_or_404(Area, pk=request.POST.get('delete_button'))
 			area_name += '"' + cur_area.name + '", '
 			cur_area.delete()
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('areas'),
 										 (u'Areas: {0} ==> deleted.'.format(area_name)))
+				)
+		else:
+				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('areas'),
+											 (u"To delete, select Area or more Areas."))
 				)
 
 	# paginations
@@ -1338,29 +1398,59 @@ def years_group(request):
 	url_name = 'years_group'
 	but_name = 'static_data'
 
-	if request.method == "POST":
-		if request.POST.get('delete_button'):
-			if request.POST.get('yg_select'):
-				for yg_id in request.POST.getlist('yg_select'):
-					cur_yg = get_object_or_404(YearGroup, pk=yg_id)
-					yg_name += '"' + cur_yg.name + '", '
-					cur_yg.delete()
+	if request.method == "POST" and request.is_ajax():
+		data_post = request.POST
 
-				return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('years_group'),
-											 (u'Years Groups: {0} ==> deleted.'.format(yg_name)))
-				)
-			else:
-				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('years_group'),
-											 (u"To delete, select Years Group or more Years Groups."))
-				)
-		elif request.POST.get('del_current_btn'):
-			cur_yg = get_object_or_404(YearGroup, pk=request.POST.get('del_current_btn'))
-			yg_name += '"' + cur_yg.name + '", '
+		if 'run_id[]' in data_post:
+			data = ''
+			message = u'Are you sure you want to remove these objects:'
+			run_id = data_post.getlist('run_id[]')
+
+			for r in run_id:
+				cur_run = get_object_or_404(YearGroup, pk=int(r))
+				data += '"' + cur_run.name + '", '
+
+			data = data[:-2]
+			data = '<b>' + data + '</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		if 'cur_run_id' in data_post:
+			message = u'Are you sure you want to remove this objects:'
+			run_id = data_post['cur_run_id']
+			cur_run = get_object_or_404(YearGroup, pk=int(run_id))
+			data = '<b>"' + cur_run.name + '"</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		else:
+			data = ''
+			return HttpResponse(data)
+
+	if request.method == "POST":
+		# if request.POST.get('delete_button'):
+		if request.POST.get('yg_select'):
+			for yg_id in request.POST.getlist('yg_select'):
+				cur_yg = get_object_or_404(YearGroup, pk=yg_id)
+				yg_name += '"' + cur_yg.name + '", '
+				cur_yg.delete()
+			yg_name = yg_name[:-2]
+
+			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('years_group'),
+										 (u'Years Groups: {0} ==> deleted.'.format(yg_name)))
+			)
+		elif request.POST.get('delete_button'):
+			cur_yg = get_object_or_404(YearGroup, pk=request.POST.get('delete_button'))
+			yg_name += '"' + cur_yg.name + '"'
 			cur_yg.delete()
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('years_group'),
 										 (u'Years Group: {0} ==> deleted.'.format(yg_name)))
 				)
+		else:
+			return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('years_group'),
+										 (u"To delete, select Years Group or more Years Groups."))
+			)
 
 	# paginations
 	model_name = paginations(request, years_groups)
@@ -1476,28 +1566,59 @@ def satellite(request):
 	url_name = 'satellite'
 	but_name = 'static_data'
 
-	if request.method == "POST":
-		if request.POST.get('delete_button'):
-			if request.POST.get('satellite_select'):
-				for satellite_id in request.POST.getlist('satellite_select'):
-					cur_satellite = get_object_or_404(Satellite, pk=satellite_id)
-					satellite_name += '"' + cur_satellite.name + '", '
-					cur_satellite.delete()
+	if request.method == "POST" and request.is_ajax():
+		data_post = request.POST
 
-				return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('satellite'),
-											 (u'Satellites: {0} ==> deleted.'.format(satellite_name)))
-				)
-			else:
-				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('satellite'),
-											 (u"To delete, select Satellite or more Satellites."))
-				)
-		elif request.POST.get('del_current_btn'):
-			cur_satellite = get_object_or_404(Satellite, pk=request.POST.get('del_current_btn'))
-			satellite_name += '"' + cur_satellite.name + '", '
+		if 'run_id[]' in data_post:
+			data = ''
+			message = u'Are you sure you want to remove these objects:'
+			run_id = data_post.getlist('run_id[]')
+
+			for r in run_id:
+				cur_run = get_object_or_404(Satellite, pk=int(r))
+				data += '"' + cur_run.name + '", '
+
+			data = data[:-2]
+			data = '<b>' + data + '</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		if 'cur_run_id' in data_post:
+			message = u'Are you sure you want to remove this objects:'
+			run_id = data_post['cur_run_id']
+			cur_run = get_object_or_404(Satellite, pk=int(run_id))
+			data = '<b>"' + cur_run.name + '"</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		else:
+			data = ''
+			return HttpResponse(data)
+
+	if request.method == "POST":
+		# if request.POST.get('delete_button'):
+		if request.POST.get('satellite_select'):
+			for satellite_id in request.POST.getlist('satellite_select'):
+				cur_satellite = get_object_or_404(Satellite, pk=satellite_id)
+				satellite_name += '"' + cur_satellite.name + '", '
+				cur_satellite.delete()
+
+			satellite_name = satellite_name[:-2]
+
+			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('satellite'),
+										 (u'Satellites: {0} ==> deleted.'.format(satellite_name)))
+			)
+		elif request.POST.get('delete_button'):
+			cur_satellite = get_object_or_404(Satellite, pk=request.POST.get('delete_button'))
+			satellite_name += '"' + cur_satellite.name + '"'
 			cur_satellite.delete()
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('satellite'),
 										 (u'Satellite: {0} ==> deleted.'.format(satellite_name)))
+				)
+		else:
+				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('satellite'),
+											 (u"To delete, select Satellite or more Satellites."))
 				)
 
 	# paginations
