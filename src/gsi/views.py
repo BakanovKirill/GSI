@@ -10,8 +10,9 @@ from annoying.decorators import render_to
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic.edit import FormView
+from django.http import JsonResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.defaultfilters import filesizeformat
 from django.views.generic import UpdateView
@@ -190,8 +191,36 @@ def run_setup(request):
 	run_name = ''
 	url_name = 'run_setup'
 
+	if request.method == "POST" and request.is_ajax():
+		data_post = request.POST
+
+		if 'run_id[]' in data_post:
+			data = ''
+			message = u'Are you sure you want to remove these objects:'
+			run_id = data_post.getlist('run_id[]')
+
+			for r in run_id:
+				cur_run = get_object_or_404(RunBase, pk=int(r))
+				data += '"' + cur_run.name + '", '
+
+			data = data[:-2]
+			data = '<b>' + data + '</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		if 'cur_run_id' in data_post:
+			message = u'Are you sure you want to remove this objects:'
+			run_id = data_post['cur_run_id']
+			cur_run = get_object_or_404(RunBase, pk=int(run_id))
+			data = '<b>"' + cur_run.name + '"</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		else:
+			data = ''
+			return HttpResponse(data)
+
 	if request.method == "POST":
-		# if request.POST.get('delete_button', ''):
 		if request.POST.get('run_select'):
 			for run_id in request.POST.getlist('run_select'):
 				cur_run = get_object_or_404(RunBase, pk=run_id)
@@ -201,9 +230,9 @@ def run_setup(request):
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_setup'),
 										 (u'Run(s): {0} ==> deleted.'.format(run_name)))
 			)
-		elif request.POST.get('del_current_btn'):
-			run_bases_current = get_object_or_404(RunBase, pk=request.POST.get('del_current_btn'))
-			run_name += '"' + run_bases_current.name + '", '
+		elif request.POST.get('delete_button'):
+			run_bases_current = get_object_or_404(RunBase, pk=request.POST.get('delete_button'))
+			run_name += '"' + run_bases_current.name + '"'
 			run_bases_current.delete()
 
 			return HttpResponseRedirect(u'%s?status_message=%s' %
@@ -1605,8 +1634,6 @@ def get_files_dirs(url_path, full_path):
 			type_list = mime_type.split('/')
 
 			# print 'type ===================== ', mime_type
-			# print 'type_list ===================== ', type_list
-			# print 'name ===================== ', f
 
 			if size < kb:
 				size_file = "%.2f B" % (size)
@@ -1639,12 +1666,6 @@ def get_files_dirs(url_path, full_path):
 			dict_files['date'] = format_date_modification
 			dict_files['type'] = type_file
 
-			# print 'NAME ===================== ', dict_files['name']
-			# print 'path ===================== ', dict_files['path']
-			# print 'size ===================== ', dict_files['size']
-			# print 'date ===================== ', dict_files['date']
-			# print 'type ===================== ', type_file
-
 			all_files[f] = dict_files
 			dict_files = {}
 			# print 'all_dirs ===================== ', all_files
@@ -1665,9 +1686,6 @@ def get_files_dirs(url_path, full_path):
 def view_results(request, run_id):
 	run_base = get_object_or_404(RunBase, pk=run_id)
 	title = 'View results "{0}"'.format(run_base.name)
-	dict_files = {}
-	info_message = ''
-	dirs = []
 	dir_root = get_dir_root_static_path()
 	resolution = run_base.resolution
 	folder = run_base.directory_path
@@ -1676,23 +1694,7 @@ def view_results(request, run_id):
 	static_dir_root = str(dir_root['static_dir_root']) + '/' + str(resolution) + '/' + str(folder)
 	static_dir_root = slash_remove_from_path(static_dir_root)
 
-	# try:
-	# 	try:
-	# 		root, dirs, files = os.walk(static_dir_root_path).next()
-	#
-	# 		for f in files:
-	# 			file_path = os.path.join(static_dir_root, f)
-	# 			dict_files[f] = file_path
-	# 	except StopIteration:
-	# 		info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
-	# except OSError:
-	# 	info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
-
 	dirs, files, info_message = get_files_dirs(static_dir_root, static_dir_root_path)
-
-	# print 'static_dir_root ======================= ', static_dir_root
-	# print 'static_dir_root_path ======================= ', static_dir_root_path
-	# print 'files ======================= ', files
 
 	if info_message:
 		info_message = u'For run "{0}" there are no results to show.'.format(run_base.name)
@@ -1715,10 +1717,6 @@ def view_results(request, run_id):
 def view_results_folder(request, run_id, prev_dir, dir):
 	run_base = get_object_or_404(RunBase, pk=run_id)
 	title = 'View results "{0}"'.format(run_base.name)
-	dict_files = {}
-	# dict_dirs = {}
-	# info_message = ''
-	# dirs = []
 	back_prev = ''
 	back_cur = ''
 
@@ -1759,47 +1757,7 @@ def view_results_folder(request, run_id, prev_dir, dir):
 		static_dir_root_folder = static_dir_root + '/' + str(dir)
 		static_dir_root_folder = slash_remove_from_path(static_dir_root_folder)
 
-	# try:
-	# 	try:
-	# 		root, dirs, files = os.walk(static_dir_root_path_folder).next()
-	#
-	# 		for d in dirs:
-	# 			date_modification = datetime.fromtimestamp(os.path.getmtime(static_dir_root_path_folder))  # дата последней модификации в секундах с начала эпохи
-	# 			format_date_modification = datetime.strftime(date_modification, "%Y/%m/%d %H:%M:%S")
-	#
-	# 			print 'DIR mtime ===================== ', format_date_modification
-	#
-	# 		for f in files:
-	# 			file_path = os.path.join(static_dir_root_folder, f)
-	# 			full_file_path = os.path.join(static_dir_root_path_folder, f)
-	# 			dict_files[f] = file_path
-	#
-	# 			size = os.path.getsize(full_file_path)    # размер файла в байтах
-	# 			ksize = round(size/1024.0, 2)              # размер в килобайтах
-	# 			# atime = datetime.fromtimestamp(os.path.getatime(full_file_path))  # дата последнего доступа в секундах с начала эпохи
-	# 			date_modification = datetime.fromtimestamp(os.path.getmtime(full_file_path))  # дата последней модификации в секундах с начала эпохи
-	# 			format_date_modification = datetime.strftime(date_modification, "%Y/%m/%d %H:%M:%S")  # дата последней модификации в секундах с начала эпохи
-	# 			type_file = magic.from_file(full_file_path, mime=True)
-	#
-	# 			print 'INFO ===================== ', type(size)
-	# 			print 'files ===================== ', f
-	#
-	# 			print 'size ===================== ', size
-	# 			print 'ksize ===================== ', ksize
-	# 			print 'mtime ===================== ', format_date_modification
-	#
-	# 			print 'type_file ===================== ', type_file
-	# 			print '\n\n'
-	# 	except StopIteration, e:
-	# 		print 'StopIteration ===================== ', e
-	# 		info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
-	# except OSError, e:
-	# 	print 'OSError ===================== ', e
-	# 	info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
-
 	dirs, files, info_message = get_files_dirs(static_dir_root_folder, static_dir_root_path_folder)
-
-	# print 'files ======================= ', files
 
 	if info_message:
 		info_message = u'For run "{0}" there are no results to show.'.format(run_base.name)

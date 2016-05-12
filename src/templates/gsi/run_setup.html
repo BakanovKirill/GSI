@@ -6,7 +6,7 @@
 {% block content %}
     <div class="row">
         <div class="col-md-12">
-            <form action="{% url 'run_setup' %}" method="post" enctype="multipart/form-data"
+            <form class="form-modal" action="{% url 'run_setup' %}" method="post" enctype="multipart/form-data"
                   role="form" class="form-horizontal">
                 {% csrf_token %}
                 <table class="table table-striped table-hover">
@@ -23,14 +23,14 @@
                     <tbody>
                         {% for run_base in run_bases %}
                         <tr>
-                            <td><input type="checkbox" name="run_select" value="{{ run_base.id }}"></td>
-                            <td>{{ run_base.name }}</td>
+                            <td><input type="checkbox" name="run_select" value="{{ run_base.id }}" class="select_item"></td>
+                            <td class="run-base-name" value="{{ run_base.name }}">{{ run_base.name }}</td>
                             <td>{{ run_base.author }}</td>
                             <td>{{ run_base.date_created|date:"d/m/Y" }}</td>
                             <td>{{ run_base.date_modified|date:"d/m/Y" }}</td>
                             <td>
                                 <a href="{% url 'run_update' run_base.id %}"><img src="{% static 'img/edit-18.png' %}"/></a>
-                                <button class="btn del-btn" type="submit" name="del_current_btn" value="{{ run_base.id }}">
+                                <button class="btn del-btn check-cur-delete" type="button" name="del_current_btn" value="{{ run_base.id }}">
                                     <img src="{% static 'img/delete-18.png' %}"/>
                                 </button>
                             </td>
@@ -50,11 +50,15 @@
                         </a>
                     </div>
                     <div class="col-md-4">
-                        <button type="submit" name="delete_button" class="btn btn-danger btn-block">
+                        <button type="button" class="btn btn-danger btn-block check-delete">
                             Delete
                         </button>
                     </div>
                 </div>
+
+                <!-- Modal Check Delete Items -->
+                {% include '_modal_check_delete_items.html' %}
+                <!-- End Modal Check Delete Items -->
             </form>
         </div>
     </div>
