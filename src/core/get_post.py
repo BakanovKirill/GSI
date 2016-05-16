@@ -24,12 +24,18 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                     obj = func(form_1, multiple=multiple, item_id=item_id)
                 else:
                     obj = func(form_1, item_id=item_id)
+
+                if obj == None:
+                    return None
             else:
                 if request.POST.getlist('available'):
                     multiple = '_'.join(request.POST.getlist('available'))
                     obj = func(form_1, multiple=multiple)
                 else:
                     obj = func(form_1)
+
+                if obj == None:
+                    return None
 
             if cs_form:
                 if form_2.is_valid():
@@ -39,12 +45,12 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                 response = HttpResponseRedirect(
                     u'%s?status_message=%s' % (reverse(reverse_ulr['save_button'][0],
                                                        args=reverse_ulr['save_button'][1]),
-                    (u'The {0} "{1}" created successfully'.format(item, obj.name)))
+                    (u'The {0} "{1}" was edited.'.format(item, obj.name)))
                 )
             else:
                 response = HttpResponseRedirect(
                     u'%s?status_message=%s' % (reverse(reverse_ulr['save_button']),
-                    (u'The {0} "{1}" created successfully'.format(item, obj.name)))
+                    (u'The {0} "{1}" created successfully.'.format(item, obj.name)))
                 )
         else:
             return form_1
@@ -58,12 +64,18 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                     obj = func(form_1, multiple=multiple, item_id=item_id)
                 else:
                     obj = func(form_1, item_id=item_id)
+
+                if obj == None:
+                    return None
             else:
                 if request.POST.getlist('available'):
                     multiple = '_'.join(request.POST.getlist('available'))
                     obj = func(form_1, multiple=multiple)
                 else:
                     obj = func(form_1)
+
+                if obj == None:
+                    return None
 
             if args:
                 response = HttpResponseRedirect(
@@ -93,12 +105,18 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                     obj = func(form_1, multiple=multiple, item_id=item_id)
                 else:
                     obj = func(form_1, item_id=item_id)
+
+                if obj == None:
+                    return None
             else:
                 if request.POST.getlist('available'):
                     multiple = '_'.join(request.POST.getlist('available'))
                     obj = func(form_1, multiple=multiple)
                 else:
                     obj = func(form_1)
+
+                if obj == None:
+                    return None
 
             if cs_form:
                 if form_2.is_valid():
@@ -108,15 +126,15 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                 response = HttpResponseRedirect(
                         u'%s?status_message=%s' % (reverse(reverse_ulr['save_and_continue'][0],
                                                            args=reverse_ulr['save_and_continue'][1]+[obj.id]),
-                        (u'The {0} "{1}" was added successfully. \
-                        You may add another {2} below'.format(item, obj.name, item)))
+                        (u'The {0} "{1}" will be saved. \
+                        You can continue editing.'.format(item, obj.name)))
                 )
             else:
                 response = HttpResponseRedirect(
                         u'%s?status_message=%s' % (reverse(reverse_ulr['save_and_continue'],
                                                            args=[obj.id]),
-                        (u'The {0} "{1}" was added successfully. \
-                        You may add another {2} below'.format(item, obj.name, item)))
+                        (u'The {0} "{1}" will be saved. \
+                        You can continue editing.'.format(item, obj.name)))
                 )
         else:
             return form_1
@@ -129,19 +147,20 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                     multiple = '_'.join(request.POST.getlist('chosen'))
                     obj = func(form_1, multiple=multiple, item_id=item_id, delete=True)
 
+                    if obj == None:
+                        return None
+
                 if args:
                     response = HttpResponseRedirect(
                             u'%s?status_message=%s' % (reverse(reverse_ulr['save_and_another'][0],
                                                                args=reverse_ulr['save_and_continue'][1]+[obj.id]),
-                            (u'The {0} "{1}" was deleted successfully. \
-                            You may add another {2} below'.format(item, obj.name, item)))
+                            (u'The {0} "{1}" was deleted successfully.'.format(item, obj.name)))
                     )
                 else:
                     response = HttpResponseRedirect(
                             u'%s?status_message=%s' % (reverse(reverse_ulr['save_and_continue'],
                                                                args=[obj.id]),
-                            (u'The {0} "{1}" was deleted successfully. \
-                            You may add another {2} below'.format(item, obj.name, item)))
+                            (u'The {0} "{1}" was deleted successfully.'.format(item, obj.name)))
                     )
         else:
             return form_1

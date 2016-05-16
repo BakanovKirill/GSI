@@ -4,13 +4,15 @@ import os
 import shutil
 import getpass
 from datetime import datetime
+import magic
 
 from annoying.decorators import render_to
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic.edit import FormView
+from django.http import JsonResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.defaultfilters import filesizeformat
 from django.views.generic import UpdateView
@@ -189,20 +191,49 @@ def run_setup(request):
 	run_name = ''
 	url_name = 'run_setup'
 
+	if request.method == "POST" and request.is_ajax():
+		data_post = request.POST
+
+		if 'run_id[]' in data_post:
+			data = ''
+			message = u'Are you sure you want to remove these objects:'
+			run_id = data_post.getlist('run_id[]')
+
+			for r in run_id:
+				cur_run = get_object_or_404(RunBase, pk=int(r))
+				data += '"' + cur_run.name + '", '
+
+			data = data[:-2]
+			data = '<b>' + data + '</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		if 'cur_run_id' in data_post:
+			message = u'Are you sure you want to remove this objects:'
+			run_id = data_post['cur_run_id']
+			cur_run = get_object_or_404(RunBase, pk=int(run_id))
+			data = '<b>"' + cur_run.name + '"</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		else:
+			data = ''
+			return HttpResponse(data)
+
 	if request.method == "POST":
-		# if request.POST.get('delete_button', ''):
 		if request.POST.get('run_select'):
 			for run_id in request.POST.getlist('run_select'):
 				cur_run = get_object_or_404(RunBase, pk=run_id)
 				run_name += '"' + cur_run.name + '", '
 				cur_run.delete()
+			run_name = run_name[:-2]
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_setup'),
 										 (u'Run(s): {0} ==> deleted.'.format(run_name)))
 			)
-		elif request.POST.get('del_current_btn'):
-			run_bases_current = get_object_or_404(RunBase, pk=request.POST.get('del_current_btn'))
-			run_name += '"' + run_bases_current.name + '", '
+		elif request.POST.get('delete_button'):
+			run_bases_current = get_object_or_404(RunBase, pk=request.POST.get('delete_button'))
+			run_name += '"' + run_bases_current.name + '"'
 			run_bases_current.delete()
 
 			return HttpResponseRedirect(u'%s?status_message=%s' %
@@ -755,6 +786,13 @@ def submit_run(request):
 			for run_id in request.POST.getlist('execute_runs'):
 				rb = get_object_or_404(RunBase, pk=run_id)
 				execute_run = make_run(rb, request.user)
+
+				if not execute_run:
+					return HttpResponseRedirect(u'%s?danger_message=%s' %
+												(reverse('submit_run'),
+												 (u'Unable to execute the Run. \
+												 Please contact the administrator!'))
+												)
 				name_runs += '"' + str(execute_run['run'].run_base.name) + '", '
 
 			runs_id = '_'.join(request.POST.getlist('execute_runs'))
@@ -817,6 +855,27 @@ def run_progress(request):
 	url_name = 'run_progress'
 	run_name = ''
 
+	if request.method == "POST" and request.is_ajax():
+		data_post = request.POST
+
+		if 'run_id[]' in data_post:
+			data = ''
+			message = u'Are you sure you want to remove these objects:'
+			run_id = data_post.getlist('run_id[]')
+
+			for r in run_id:
+				cur_run = get_object_or_404(Run, pk=int(r))
+				data += '"' + str(cur_run) + '", '
+
+			data = data[:-2]
+			data = '<b>' + data + '</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		else:
+			data = ''
+			return HttpResponse(data)
+
 	if request.method == "POST":
 		if request.POST.get('run_progress'):
 			for run_id in request.POST.getlist('run_progress'):
@@ -831,8 +890,8 @@ def run_progress(request):
 					shutil.rmtree(path)
 				except OSError:
 					pass
-			# run_id = request.POST.get('run_progress')
-			# run = get_object_or_404(Run, pk=run_id)
+
+			run_name = run_name[:-2]
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_progress'),
 										 (u'Run(s): {0} ==> deleted.'.format(run_name)))
@@ -925,6 +984,16 @@ def view_log_file(request, run_id, card_id):
 			log_info += line + '<br />'
 	except Exception, e:
 		print 'ERROR view_log_file: ', e
+
+		# logs for api
+		path_file = '/home/gsi/LOGS/log_file.log'
+		now = datetime.now()
+		log_file = open(path_file, 'a')
+		log_file.writelines(str(now) + '\n')
+		log_file.writelines('ERROR => {0}\n\n\n'.format(e))
+		log_file.close()
+
+
 		mess = out or err
 		return HttpResponseRedirect(u'%s?danger_message=%s' %
 									(reverse('run_details', args=[run_id]),
@@ -1008,27 +1077,53 @@ def environment_groups(request):
 	url_name = 'environment_groups'
 	but_name = 'static_data'
 
+	if request.method == "POST" and request.is_ajax():
+		data_post = request.POST
+
+		if 'run_id[]' in data_post:
+			data = ''
+			message = u'Are you sure you want to remove these objects:'
+			run_id = data_post.getlist('run_id[]')
+
+			for r in run_id:
+				cur_run = get_object_or_404(VariablesGroup, pk=int(r))
+				data += '"' + cur_run.name + '", '
+
+			data = data[:-2]
+			data = '<b>' + data + '</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		if 'cur_run_id' in data_post:
+			message = u'Are you sure you want to remove this objects:'
+			run_id = data_post['cur_run_id']
+			cur_run = get_object_or_404(VariablesGroup, pk=int(run_id))
+			data = '<b>"' + cur_run.name + '"</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		else:
+			data = ''
+			return HttpResponse(data)
+
 	if request.method == "POST":
-		if request.POST.get('delete_button'):
-			if request.POST.get('env_select'):
-				for env_id in request.POST.getlist('env_select'):
-					cur_env = get_object_or_404(VariablesGroup, pk=env_id)
-					env_name += '"' + str(cur_env.name) + '", '
-					cur_env.delete()
+		# if request.POST.get('delete_button'):
+		if request.POST.get('env_select'):
+			for env_id in request.POST.getlist('env_select'):
+				cur_env = get_object_or_404(VariablesGroup, pk=env_id)
+				env_name += '"' + str(cur_env.name) + '", '
+				cur_env.delete()
 
-				envs_ids = '_'.join(request.POST.getlist('env_select'))
+			envs_ids = '_'.join(request.POST.getlist('env_select'))
+			env_name = env_name[:-2]
 
-				return HttpResponseRedirect(u'%s?status_message=%s' %
-											(reverse('environment_groups'),
-											 (u'Environment Groups: {0} ==> deleted.'.
-											  format(env_name)))
-				)
-			else:
-				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('environment_groups'),
-											 (u"To delete, select Group or more Groups."))
-				)
-		elif request.POST.get('del_current_btn'):
-			cur_env = get_object_or_404(VariablesGroup, pk=request.POST.get('del_current_btn'))
+			return HttpResponseRedirect(u'%s?status_message=%s' %
+										(reverse('environment_groups'),
+										 (u'Environment Groups: {0} ==> deleted.'.
+										  format(env_name)))
+			)
+		elif request.POST.get('delete_button'):
+			cur_env = get_object_or_404(VariablesGroup, pk=request.POST.get('delete_button'))
 			env_name += '"' + str(cur_env.name) + '", '
 			cur_env.delete()
 
@@ -1036,6 +1131,10 @@ def environment_groups(request):
 										(reverse('environment_groups'),
 										 (u'Environment Group: {0} ==> deleted.'.
 										  format(env_name))))
+		else:
+			return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('environment_groups'),
+										 (u"To delete, select Group or more Groups."))
+			)
 
 	# paginations
 	model_name = paginations(request, environments)
@@ -1138,30 +1237,59 @@ def areas(request):
 	url_name = 'areas'
 	but_name = 'static_data'
 
+	if request.method == "POST" and request.is_ajax():
+		data_post = request.POST
+
+		if 'run_id[]' in data_post:
+			data = ''
+			message = u'Are you sure you want to remove these objects:'
+			run_id = data_post.getlist('run_id[]')
+
+			for r in run_id:
+				cur_run = get_object_or_404(Area, pk=int(r))
+				data += '"' + cur_run.name + '", '
+
+			data = data[:-2]
+			data = '<b>' + data + '</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		if 'cur_run_id' in data_post:
+			message = u'Are you sure you want to remove this objects:'
+			run_id = data_post['cur_run_id']
+			cur_run = get_object_or_404(Area, pk=int(run_id))
+			data = '<b>"' + cur_run.name + '"</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		else:
+			data = ''
+			return HttpResponse(data)
+
 	if request.method == "POST":
-		if request.POST.get('delete_button'):
-			if request.POST.get('area_select'):
-				for area_id in request.POST.getlist('area_select'):
-					cur_area = get_object_or_404(Area, pk=area_id)
-					area_name += '"' + cur_area.name + '", '
-					cur_area.delete()
+		# if request.POST.get('delete_button'):
+		if request.POST.get('area_select'):
+			for area_id in request.POST.getlist('area_select'):
+				cur_area = get_object_or_404(Area, pk=area_id)
+				area_name += '"' + cur_area.name + '", '
+				cur_area.delete()
 
-				area_ids = '_'.join(request.POST.getlist('env_select'))
+			area_ids = '_'.join(request.POST.getlist('env_select'))
 
-				return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('areas'),
-											 (u'Areas: {0} ==> deleted.'.format(area_name)))
-				)
-			else:
-				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('areas'),
-											 (u"To delete, select Area or more Areas."))
-				)
-		elif request.POST.get('del_current_btn'):
-			cur_area = get_object_or_404(Area, pk=request.POST.get('del_current_btn'))
+			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('areas'),
+										 (u'Areas: {0} ==> deleted.'.format(area_name)))
+			)
+		elif request.POST.get('delete_button'):
+			cur_area = get_object_or_404(Area, pk=request.POST.get('delete_button'))
 			area_name += '"' + cur_area.name + '", '
 			cur_area.delete()
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('areas'),
 										 (u'Areas: {0} ==> deleted.'.format(area_name)))
+				)
+		else:
+				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('areas'),
+											 (u"To delete, select Area or more Areas."))
 				)
 
 	# paginations
@@ -1270,29 +1398,59 @@ def years_group(request):
 	url_name = 'years_group'
 	but_name = 'static_data'
 
-	if request.method == "POST":
-		if request.POST.get('delete_button'):
-			if request.POST.get('yg_select'):
-				for yg_id in request.POST.getlist('yg_select'):
-					cur_yg = get_object_or_404(YearGroup, pk=yg_id)
-					yg_name += '"' + cur_yg.name + '", '
-					cur_yg.delete()
+	if request.method == "POST" and request.is_ajax():
+		data_post = request.POST
 
-				return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('years_group'),
-											 (u'Years Groups: {0} ==> deleted.'.format(yg_name)))
-				)
-			else:
-				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('years_group'),
-											 (u"To delete, select Years Group or more Years Groups."))
-				)
-		elif request.POST.get('del_current_btn'):
-			cur_yg = get_object_or_404(YearGroup, pk=request.POST.get('del_current_btn'))
-			yg_name += '"' + cur_yg.name + '", '
+		if 'run_id[]' in data_post:
+			data = ''
+			message = u'Are you sure you want to remove these objects:'
+			run_id = data_post.getlist('run_id[]')
+
+			for r in run_id:
+				cur_run = get_object_or_404(YearGroup, pk=int(r))
+				data += '"' + cur_run.name + '", '
+
+			data = data[:-2]
+			data = '<b>' + data + '</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		if 'cur_run_id' in data_post:
+			message = u'Are you sure you want to remove this objects:'
+			run_id = data_post['cur_run_id']
+			cur_run = get_object_or_404(YearGroup, pk=int(run_id))
+			data = '<b>"' + cur_run.name + '"</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		else:
+			data = ''
+			return HttpResponse(data)
+
+	if request.method == "POST":
+		# if request.POST.get('delete_button'):
+		if request.POST.get('yg_select'):
+			for yg_id in request.POST.getlist('yg_select'):
+				cur_yg = get_object_or_404(YearGroup, pk=yg_id)
+				yg_name += '"' + cur_yg.name + '", '
+				cur_yg.delete()
+			yg_name = yg_name[:-2]
+
+			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('years_group'),
+										 (u'Years Groups: {0} ==> deleted.'.format(yg_name)))
+			)
+		elif request.POST.get('delete_button'):
+			cur_yg = get_object_or_404(YearGroup, pk=request.POST.get('delete_button'))
+			yg_name += '"' + cur_yg.name + '"'
 			cur_yg.delete()
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('years_group'),
 										 (u'Years Group: {0} ==> deleted.'.format(yg_name)))
 				)
+		else:
+			return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('years_group'),
+										 (u"To delete, select Years Group or more Years Groups."))
+			)
 
 	# paginations
 	model_name = paginations(request, years_groups)
@@ -1408,28 +1566,59 @@ def satellite(request):
 	url_name = 'satellite'
 	but_name = 'static_data'
 
-	if request.method == "POST":
-		if request.POST.get('delete_button'):
-			if request.POST.get('satellite_select'):
-				for satellite_id in request.POST.getlist('satellite_select'):
-					cur_satellite = get_object_or_404(Satellite, pk=satellite_id)
-					satellite_name += '"' + cur_satellite.name + '", '
-					cur_satellite.delete()
+	if request.method == "POST" and request.is_ajax():
+		data_post = request.POST
 
-				return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('satellite'),
-											 (u'Satellites: {0} ==> deleted.'.format(satellite_name)))
-				)
-			else:
-				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('satellite'),
-											 (u"To delete, select Satellite or more Satellites."))
-				)
-		elif request.POST.get('del_current_btn'):
-			cur_satellite = get_object_or_404(Satellite, pk=request.POST.get('del_current_btn'))
-			satellite_name += '"' + cur_satellite.name + '", '
+		if 'run_id[]' in data_post:
+			data = ''
+			message = u'Are you sure you want to remove these objects:'
+			run_id = data_post.getlist('run_id[]')
+
+			for r in run_id:
+				cur_run = get_object_or_404(Satellite, pk=int(r))
+				data += '"' + cur_run.name + '", '
+
+			data = data[:-2]
+			data = '<b>' + data + '</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		if 'cur_run_id' in data_post:
+			message = u'Are you sure you want to remove this objects:'
+			run_id = data_post['cur_run_id']
+			cur_run = get_object_or_404(Satellite, pk=int(run_id))
+			data = '<b>"' + cur_run.name + '"</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		else:
+			data = ''
+			return HttpResponse(data)
+
+	if request.method == "POST":
+		# if request.POST.get('delete_button'):
+		if request.POST.get('satellite_select'):
+			for satellite_id in request.POST.getlist('satellite_select'):
+				cur_satellite = get_object_or_404(Satellite, pk=satellite_id)
+				satellite_name += '"' + cur_satellite.name + '", '
+				cur_satellite.delete()
+
+			satellite_name = satellite_name[:-2]
+
+			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('satellite'),
+										 (u'Satellites: {0} ==> deleted.'.format(satellite_name)))
+			)
+		elif request.POST.get('delete_button'):
+			cur_satellite = get_object_or_404(Satellite, pk=request.POST.get('delete_button'))
+			satellite_name += '"' + cur_satellite.name + '"'
 			cur_satellite.delete()
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('satellite'),
 										 (u'Satellite: {0} ==> deleted.'.format(satellite_name)))
+				)
+		else:
+				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('satellite'),
+											 (u"To delete, select Satellite or more Satellites."))
 				)
 
 	# paginations
@@ -1554,15 +1743,91 @@ def audit_history(request, run_id):
 	return data
 
 
+def get_files_dirs(url_path, full_path):
+	dict_dirs = {}
+	all_dirs = {}
+	dict_files = {}
+	all_files = {}
+	info_message = False
+
+	try:
+		root, dirs, files = os.walk(full_path).next()
+
+		for d in dirs:
+			date_modification = datetime.fromtimestamp(os.path.getmtime(full_path))
+			format_date_modification = datetime.strftime(date_modification, "%Y/%m/%d %H:%M:%S")
+
+			dict_dirs['name'] = d
+			dict_dirs['date'] = format_date_modification
+			all_dirs[d] = dict_dirs
+			dict_dirs = {}
+
+		for f in files:
+			kb = 1024.0
+			mb = 1024.0 * 1024.0
+			type_file = ''
+			size_file = ''
+			file_path = os.path.join(url_path, f)
+			full_file_path = os.path.join(full_path, f)
+			size = os.path.getsize(full_file_path)
+			date_modification = datetime.fromtimestamp(os.path.getmtime(full_file_path))
+			format_date_modification = datetime.strftime(date_modification, "%Y/%m/%d %H:%M:%S")
+			mime_type = magic.from_file(full_file_path, mime=True)
+			type_list = mime_type.split('/')
+
+			# print 'type ===================== ', mime_type
+
+			if size < kb:
+				size_file = "%.2f B" % (size)
+
+			if size > mb:
+				size = size / mb
+				size_file = "%.2f MB" % (size)
+
+			if size > kb:
+				size = float(size) / kb
+				size_file = "%.2f KB" % (size)
+
+			if type_list[0] == 'image':
+				type_file = type_list[0]
+			elif type_list[0] == 'text':
+				type_file = type_list[0]
+			elif type_list[0] == 'application':
+				if type_list[1] == 'pdf':
+					type_file = type_list[1]
+				elif type_list[1] == 'msword':
+					type_file = 'doc'
+				elif type_list[1] == 'octet-stream':
+					type_file = 'bin'
+				else:
+					type_file = 'archive'
+
+			dict_files['name'] = f
+			dict_files['path'] = file_path
+			dict_files['size'] = size_file
+			dict_files['date'] = format_date_modification
+			dict_files['type'] = type_file
+
+			all_files[f] = dict_files
+			dict_files = {}
+			# print 'all_dirs ===================== ', all_files
+			print '\n\n\n'
+	except StopIteration, e:
+		print 'StopIteration ===================== ', e
+		info_message = True
+	except OSError, e:
+		print 'OSError ===================== ', e
+		info_message = True
+
+	return all_dirs, all_files, info_message
+
+
 # view results
 @login_required
 @render_to('gsi/view_results.html')
 def view_results(request, run_id):
 	run_base = get_object_or_404(RunBase, pk=run_id)
 	title = 'View results "{0}"'.format(run_base.name)
-	dict_files = {}
-	info_message = ''
-	dirs = []
 	dir_root = get_dir_root_static_path()
 	resolution = run_base.resolution
 	folder = run_base.directory_path
@@ -1571,19 +1836,9 @@ def view_results(request, run_id):
 	static_dir_root = str(dir_root['static_dir_root']) + '/' + str(resolution) + '/' + str(folder)
 	static_dir_root = slash_remove_from_path(static_dir_root)
 
-	try:
-		try:
-			root, dirs, files = os.walk(static_dir_root_path).next()
+	dirs, files, info_message = get_files_dirs(static_dir_root, static_dir_root_path)
 
-			for f in files:
-				file_path = os.path.join(static_dir_root, f)
-				dict_files[f] = file_path
-		except StopIteration:
-			info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
-	except OSError:
-		info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
-
-	if not dict_files:
+	if info_message:
 		info_message = u'For run "{0}" there are no results to show.'.format(run_base.name)
 
 	data = {
@@ -1591,7 +1846,7 @@ def view_results(request, run_id):
 		'title': title,
 		'info_message': info_message,
 		'dirs': dirs,
-		'files': dict_files,
+		'files': files,
 		'prev_dir': 'd',
 	}
 
@@ -1604,14 +1859,13 @@ def view_results(request, run_id):
 def view_results_folder(request, run_id, prev_dir, dir):
 	run_base = get_object_or_404(RunBase, pk=run_id)
 	title = 'View results "{0}"'.format(run_base.name)
-	dict_files = {}
-	info_message = ''
-	dirs = []
 	back_prev = ''
 	back_cur = ''
+
 	dir_root = get_dir_root_static_path()
 	resolution = run_base.resolution
 	folder = run_base.directory_path
+
 	static_dir_root_path = str(dir_root['static_dir_root_path']) + '/' + str(resolution) + '/' + str(folder)
 	static_dir_root_path = slash_remove_from_path(static_dir_root_path)
 	static_dir_root = str(dir_root['static_dir_root']) + '/' + str(resolution) + '/' + str(folder)
@@ -1645,19 +1899,9 @@ def view_results_folder(request, run_id, prev_dir, dir):
 		static_dir_root_folder = static_dir_root + '/' + str(dir)
 		static_dir_root_folder = slash_remove_from_path(static_dir_root_folder)
 
-	try:
-		try:
-			root, dirs, files = os.walk(static_dir_root_path_folder).next()
+	dirs, files, info_message = get_files_dirs(static_dir_root_folder, static_dir_root_path_folder)
 
-			for f in files:
-				file_path = os.path.join(static_dir_root_folder, f)
-				dict_files[f] = file_path
-		except StopIteration:
-			info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
-	except OSError:
-		info_message = u'To get results, you need to submit the Run "{0}".'.format(run_base.name)
-
-	if not dict_files:
+	if info_message:
 		info_message = u'For run "{0}" there are no results to show.'.format(run_base.name)
 
 	data = {
@@ -1666,7 +1910,7 @@ def view_results_folder(request, run_id, prev_dir, dir):
 		'title': title,
 		'info_message': info_message,
 		'dirs': dirs,
-		'files': dict_files,
+		'files': files,
 		'back_prev': back_prev,
 		'back_cur': back_cur
 	}

@@ -48,3 +48,6 @@ restart:
 
 dep_migrate:
 	fab migrate
+
+update:
+	fab update

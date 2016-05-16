@@ -6,7 +6,7 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <form action="{% url 'run_progress' %}" method="post" enctype="multipart/form-data"
+        <form class="form-modal" action="{% url 'run_progress' %}" method="post" enctype="multipart/form-data"
           role="form" class="form-horizontal">
         {% csrf_token %}
             <table class="table table-striped table-hover">
@@ -46,10 +46,14 @@
             <!-- end pagination -->
 
             <div class="col-md-4 col-md-offset-8">
-                <button type="submit" name="delete_button" class="btn btn-danger btn-block">
+                <button type="button" class="btn btn-danger btn-block check-delete">
                     Delete
                 </button>
             </div>
+
+            <!-- Modal Check Delete Items -->
+            {% include '_modal_check_delete_items.html' %}
+            <!-- End Modal Check Delete Items -->
         </form>
     </div>
 </div>

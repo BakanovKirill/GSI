@@ -14,7 +14,7 @@
         <div class="col-md-12">
             <form action="
                 {% if card_id %}
-                    {% url url_form run_id cs_id card_id %}
+                    {% url url_form run_id cs_id card card_id %}
                 {% else %}
                     {% url url_form run_id cs_id %}
                 {% endif %}"

@@ -73,8 +73,16 @@ input[type="file"] {
     margin-bottom: 50px;
 }
 
+.margin-bottom-4 {
+    margin-bottom: 4px;
+}
+
 .margin-left-12 {
     margin-left: 20px;
+}
+
+.margin-left-10 {
+    margin-left: 10px;
 }
 
 .padding-0 {
@@ -502,3 +510,22 @@ li.active-main-menu, li.active-main-menu a:hover, li.li-menu > a:hover, .title:h
     text-align: left;
     font-size: 12px !important;
 }
+
+/* link for view result */
+.result {
+    color: black;
+}
+
+.result:hover {
+    text-decoration: none;
+}
+
+/* modal */
+.border-top-0 {
+    border-top: none;
+}
+
+.border-bottom-0 {
+    border-bottom: none;
+}
+

@@ -10,7 +10,7 @@ from core.utils import UnicodeNameMixin
 
 
 class NamedModel(UnicodeNameMixin, models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
 
     class Meta:
         abstract = True
@@ -110,8 +110,8 @@ class RFTrain(NamedModel, ParallelModel):
     config_file = models.CharField(max_length=200, blank=True)
     output_tile_subdir = models.CharField(max_length=200, blank=True)
     input_scale_factor = models.CharField(max_length=200, blank=True)
-    training = models.PositiveIntegerField(default=0, blank=True, null=True)
-    number_of_variable = models.PositiveIntegerField(default=0, blank=True, null=True)
+    training = models.PositiveIntegerField(blank=True, null=True)
+    number_of_variable = models.PositiveIntegerField(blank=True, null=True)
     number_of_thread = models.PositiveIntegerField(default=1, blank=True, null=True)
 
     class Meta:
