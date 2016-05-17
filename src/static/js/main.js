@@ -83,9 +83,13 @@ function invisibleDropMenu() {
   }
 }
 
+function invisibleSelect() {
+  $("select").selecter();
+}
+
 $(document).ready(function(){
   onOffSubMenu();
-  //invisibleDropMenuUser();
   invisibleDropMenu();
   onOffSubMenuUser();
+  invisibleSelect();
 });

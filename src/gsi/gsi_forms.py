@@ -18,7 +18,8 @@ class RunForm(forms.ModelForm):
 
     name = forms.CharField(
         widget=forms.TextInput(attrs={
-            'class': 'form-control border-bottom',
+            # 'class': 'form-control border-bottom',
+            'class': 'form-control',
             'placeholder': 'Name'
         }),
         label=u'Name',
@@ -53,10 +54,11 @@ class RunForm(forms.ModelForm):
     )
     resolution = forms.ModelChoiceField(
         widget=forms.Select(attrs={
-            "class": 'form-control border-bottom'
+            "class": 'form-control disabled'
+            # "class": 'fs-dropdown-item'
         }),
         queryset=Resolution.objects.all(),
-        # empty_label=None,
+        empty_label='Select',
         label=u'Resolution',
     )
     card_sequence = forms.CharField(
