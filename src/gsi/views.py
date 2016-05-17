@@ -1203,6 +1203,8 @@ def environment_group_edit(request, env_id):
 	}
 	func = var_group_update_create
 	form = None
+	url_name = 'environment_groups'
+	but_name = 'static_data'
 
 	if request.method == "POST":
 		# import pdb;pdb.set_trace()
@@ -1222,6 +1224,8 @@ def environment_group_edit(request, env_id):
 		'template_name': template_name,
 		'form': form,
 		'item_id': env_id,
+		'url_name': url_name,
+		'but_name': but_name,
 	}
 
 	return data
@@ -1321,6 +1325,8 @@ def area_add(request):
 	}
 	func = area_update_create
 	form = None
+	url_name = 'areas'
+	but_name = 'static_data'
 	available_tiles = Tile.objects.all()
 
 	if request.method == "POST":
@@ -1339,7 +1345,9 @@ def area_add(request):
 		'url_form': url_form,
 		'template_name': template_name,
 		'form': form,
-		'available_tiles': available_tiles
+		'available_tiles': available_tiles,
+		'url_name': url_name,
+		'but_name': but_name,
 	}
 
 	return data
@@ -1361,6 +1369,8 @@ def area_edit(request, area_id):
 	}
 	func = area_update_create
 	form = None
+	url_name = 'areas'
+	but_name = 'static_data'
 	chosen_tiles = area.tiles.all()
 	available_tiles = Tile.objects.exclude(id__in=area.tiles.values_list('id', flat=True))
 
@@ -1383,6 +1393,8 @@ def area_edit(request, area_id):
 		'item_id': area_id,
 		'available_tiles': available_tiles,
 		'chosen_tiles': chosen_tiles,
+		'url_name': url_name,
+		'but_name': but_name,
 	}
 
 	return data

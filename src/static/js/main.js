@@ -85,6 +85,7 @@ function invisibleDropMenu() {
 
 function invisibleSelect() {
   $("select").selecter();
+  //$("select").dropdown();
 }
 
 $(document).ready(function(){

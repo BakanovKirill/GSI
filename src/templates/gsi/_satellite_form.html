@@ -5,10 +5,10 @@
         </div>
     </div>
     <div class="col-md-10">
+        {{ form.name }}
         {% if form.name.errors %}
             <b class="error-form">{{ form.name.errors }}</b>
         {% endif %}
-        {{ form.name }}
     </div>
 </div>
 

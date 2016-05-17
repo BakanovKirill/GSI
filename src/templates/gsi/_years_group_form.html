@@ -39,9 +39,6 @@
                 <option value="{{ year.id }}">{{ year }}</option>
             {% endfor %}
         </select>
-        <button type="submit" name="add_button" class="btn btn-success margin-top-20 float-right">
-            Add
-        </button>
     </div>
 
     <div class="col-md-5">
@@ -53,6 +50,17 @@
                 <option value="{{ year.id }}">{{ year }}</option>
             {% endfor %}
         </select>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-5 col-md-offset-2">
+        <button type="submit" name="add_button" class="btn btn-success margin-top-20 float-right">
+            Add
+        </button>
+    </div>
+
+    <div class="col-md-5">
         <button type="submit" name="delete_button" class="btn btn-danger margin-top-20 float-right">
             Delete
         </button>

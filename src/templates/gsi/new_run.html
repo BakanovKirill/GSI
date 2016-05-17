@@ -23,10 +23,10 @@
                         </div>
                     </div>
                     <div class="col-md-10">
+                        {{ form.name }}
                         {% if form.name.errors %}
                             <b class="error-form">{{ form.name.errors }}</b>
                         {% endif %}
-                        {{ form.name }}
                     </div>
 				</div>
 
@@ -37,10 +37,10 @@
                         </div>
                     </div>
                     <div class="col-md-10">
+                        {{ form.description }}
                         {% if form.description.errors %}
                             <b class="error-form">{{ form.description.errors }}</b>
                         {% endif %}
-                        {{ form.description }}
                     </div>
 				</div>
 
@@ -51,11 +51,11 @@
                         </div>
                     </div>
                     <div class="col-md-10">
+                        {{ form.purpose }}
                         <b class="error-form">{{ form.purpose.errors }}</b>
                         {% if form.purpose.errors %}
                             <b class="error-form">{{ form.purpose.errors }}</b>
                         {% endif %}
-                        {{ form.purpose }}
                     </div>
 				</div>
 
@@ -81,11 +81,11 @@
                         </div>
                     </div>
                     <div class="col-md-4 new-select-style">
+                        {{ form.resolution }}
                         <b class="error-form">{{ form.resolution.errors }}</b>
                         {% if form.resolution.errors %}
                             <b class="error-form">{{ form.resolution.errors }}</b>
                         {% endif %}
-                        {{ form.resolution }}
                     </div>
 
                     <div class="col-md-2 right">
@@ -94,11 +94,11 @@
                         </div>
                     </div>
                     <div class="col-md-4">
+                        {{ form.directory_path }}
                         <b class="error-form">{{ form.directory_path.errors }}</b>
                         {% if form.directory_path.errors %}
                             <b class="error-form">{{ form.directory_path.errors }}</b>
                         {% endif %}
-                        {{ form.directory_path }}
                     </div>
                     <div class="col-md-6 col-md-offset-6">
                         <span id="helpBlock" class="help-block">

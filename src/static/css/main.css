@@ -33,6 +33,13 @@ input, textarea {
     box-shadow: 0 0px 0px rgba(0, 0, 0, 0) inset !important;
 }
 
+.errorlist {
+    font-size: 10px;
+    color: red;
+    padding-top: 5px;
+    text-align: left;
+}
+
 /*select {*/
     /*!*background-color: transparent !important;*!*/
     /*!*border-color: transparent !important;*!*/
