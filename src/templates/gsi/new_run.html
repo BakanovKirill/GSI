@@ -23,8 +23,10 @@
                         </div>
                     </div>
                     <div class="col-md-10">
-                        {{ form.name }}
-                        {% if form.name.errors %}
+                        {% if not form.name.errors %}
+                            {{ form.name }}
+                        {% else %}
+                            <span class="field-error">{{ form.name }}</span>
                             <b class="error-form">{{ form.name.errors }}</b>
                         {% endif %}
                     </div>
@@ -37,8 +39,10 @@
                         </div>
                     </div>
                     <div class="col-md-10">
-                        {{ form.description }}
-                        {% if form.description.errors %}
+                        {% if not form.description.errors %}
+                            {{ form.description }}
+                        {% else %}
+                            <span class="field-error">{{ form.name }}</span>
                             <b class="error-form">{{ form.description.errors }}</b>
                         {% endif %}
                     </div>
@@ -51,39 +55,26 @@
                         </div>
                     </div>
                     <div class="col-md-10">
-                        {{ form.purpose }}
-                        <b class="error-form">{{ form.purpose.errors }}</b>
-                        {% if form.purpose.errors %}
+                        {% if not form.purpose.errors %}
+                            {{ form.purpose }}
+                        {% else %}
+                            <span class="field-error">{{ form.purpose }}</span>
                             <b class="error-form">{{ form.purpose.errors }}</b>
                         {% endif %}
                     </div>
 				</div>
 
-                <!--<div class="row margin-top-15">-->
-                    <!--<div class="col-md-2 right">-->
-                        <!--<div class="form-group {% if form.card_sequence.errors %}has-error{% endif %}">-->
-                            <!--<label class="control-label">{{ form.card_sequence.label }}</label>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="col-md-4">-->
-                        <!--<b class="error-form">{{ form.card_sequence.errors }}</b>-->
-                        <!--{% if form.resolution.errors %}-->
-                            <!--<b class="error-form">{{ form.card_sequence.errors }}</b>-->
-                        <!--{% endif %}-->
-                        <!--{{ form.card_sequence }}-->
-                    <!--</div>-->
-				<!--</div>-->
-
                 <div class="row margin-top-15">
                     <div class="col-md-2 right">
-                        <div class="form-group {% if form.directory_path.errors %}has-error{% endif %}">
+                        <div class="form-group {% if form.resolution.errors %}has-error{% endif %}">
                             <label class="control-label">{{ form.resolution.label }}*</label>
                         </div>
                     </div>
-                    <div class="col-md-4 new-select-style">
-                        {{ form.resolution }}
-                        <b class="error-form">{{ form.resolution.errors }}</b>
-                        {% if form.resolution.errors %}
+                    <div class="col-md-4">
+                        {% if not form.resolution.errors %}
+                            {{ form.resolution }}
+                        {% else %}
+                            <span class="field-error">{{ form.resolution }}</span>
                             <b class="error-form">{{ form.resolution.errors }}</b>
                         {% endif %}
                     </div>
@@ -94,9 +85,10 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        {{ form.directory_path }}
-                        <b class="error-form">{{ form.directory_path.errors }}</b>
-                        {% if form.directory_path.errors %}
+                        {% if not form.directory_path.errors %}
+                            {{ form.directory_path }}
+                        {% else %}
+                            <span class="field-error">{{ form.directory_path }}</span>
                             <b class="error-form">{{ form.directory_path.errors }}</b>
                         {% endif %}
                     </div>

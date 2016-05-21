@@ -8,6 +8,15 @@ th {
     text-align: center;
 }
 
+.errorlist > li {
+    list-style-type: none;
+    padding-top: 10px;
+    margin-left: -25px;
+    font-size: 10px;
+    color: red;
+    text-align: left;
+}
+
 input[type="file"] {
     display: inline;
 }
@@ -17,6 +26,11 @@ input:focus, textarea:focus {
     /*border-color: transparent !important;*/
     /*box-shadow: 0 0 0px rgba(100, 100, 100, 0.9) inset, 0 0 0px rgba(100, 100, 100, 0.5) !important;*/
     border-bottom: 1px solid #66afe9 !important;
+}
+
+.field-error {
+    background-color: transparent !important;
+    border-bottom: 1px solid red !important;
 }
 
 /*select:active, select:focus {*/
@@ -33,12 +47,9 @@ input, textarea {
     box-shadow: 0 0px 0px rgba(0, 0, 0, 0) inset !important;
 }
 
-.errorlist {
-    font-size: 10px;
-    color: red;
-    padding-top: 5px;
-    text-align: left;
-}
+/*.errorlist {*/
+    /**/
+/*}*/
 
 /*select {*/
     /*!*background-color: transparent !important;*!*/

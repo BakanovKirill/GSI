@@ -44,7 +44,7 @@ class RunForm(forms.ModelForm):
     )
     directory_path = forms.CharField(
         widget=forms.TextInput(attrs={
-            'class': 'form-control border-bottom form-control padding-0 input-form',
+            'class': 'form-control border-bottom form-control input-form',
             'placeholder': 'Directory path'
         }),
         # required=False,

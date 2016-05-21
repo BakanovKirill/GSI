@@ -59,13 +59,15 @@
   color: #999;
   cursor: pointer;
   display: block;
-  font-size: 13px;
+  font-size: 14px;
   margin: 0;
   overflow: hidden;
-  padding: 10px 15px;
+  padding: 8px 0px;
+  margin-bottom: 6px;
   text-overflow: clip;
   z-index: 2;
-  border-radius: 3px;
+  border-radius: 0px;
+  text-indent: 15px;
 }
 .selecter-selected:after {
   height: 0;

@@ -88,9 +88,27 @@ function invisibleSelect() {
   //$("select").dropdown();
 }
 
+function chageColorError() {
+  if ( $('span').is('.field-error') ) {
+    alert('ERROR');
+    $('span.field-error > .form-control').toggleClass('field-error');
+    $('span.field-error > div.selecter > .selecter-selected').toggleClass('field-error');
+  }
+
+
+  //var elements = $('div .form-control');
+  //var elemsTotal = elements.length;
+  //alert(elemsTotal);
+  //
+  //for(var i = 0; i < elemsTotal; ++i){
+  //  alert($(elements[i]).val());
+  //}
+}
+
 $(document).ready(function(){
   onOffSubMenu();
   invisibleDropMenu();
   onOffSubMenuUser();
   invisibleSelect();
+  chageColorError();
 });
