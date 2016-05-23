@@ -5,10 +5,12 @@
         </div>
     </div>
     <div class="col-md-6">
-        {% if form.name.errors %}
+        {% if not form.name.errors %}
+            {{ form.name }}
+        {% else %}
+            <span class="field-error">{{ form.name }}</span>
             <b class="error-form">{{ form.name.errors }}</b>
         {% endif %}
-        {{ form.name }}
     </div>
 </div>
 
@@ -19,10 +21,13 @@
         </div>
     </div>
     <div class="col-md-6">
-        {% if form.environment_variables.errors %}
+        {% if not form.environment_variables.errors %}
+            {{ form.environment_variables }}
+        {% else %}
+            <span class="field-error">{{ form.environment_variables }}</span>
             <b class="error-form">{{ form.environment_variables.errors }}</b>
         {% endif %}
-        {{ form.environment_variables }}
+
     </div>
 </div>
 

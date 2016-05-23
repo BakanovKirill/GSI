@@ -5,17 +5,20 @@
         </div>
     </div>
     <div class="col-md-10">
-        {% if form.name.errors %}
+        {% if not form.name.errors %}
+            {{ form.name }}
+        {% else %}
+            <span class="field-error">{{ form.name }}</span>
             <b class="error-form">{{ form.name.errors }}</b>
         {% endif %}
-        {{ form.name }}
+
     </div>
 </div>
 
 <div class="row margin-top-15">
     <div class="col-md-2 right">
         <div class="form-group {% if form.years.errors %}has-error{% endif %}">
-            <label class="control-label">Years*</label>
+            <label class="control-label font-normal">Years</label>
         </div>
     </div>
 

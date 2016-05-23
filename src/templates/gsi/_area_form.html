@@ -5,17 +5,20 @@
         </div>
     </div>
     <div class="col-md-10">
-        {% if form.name.errors %}
+        {% if not form.name.errors %}
+            {{ form.name }}
+        {% else %}
+            <span class="field-error">{{ form.name }}</span>
             <b class="error-form">{{ form.name.errors }}</b>
         {% endif %}
-        {{ form.name }}
+
     </div>
 </div>
 
 <div class="row margin-top-15">
     <div class="col-md-2 right">
         <div class="form-group {% if form.tiles.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.tiles.label }}*</label>
+            <label class="control-label font-normal">{{ form.tiles.label }}</label>
         </div>
     </div>
 
@@ -39,9 +42,6 @@
                 <option value="{{ tile.id }}">{{ tile }}</option>
             {% endfor %}
         </select>
-        <button type="submit" name="add_button" class="btn btn-success margin-top-20 float-right">
-            Add
-        </button>
     </div>
 
     <div class="col-md-5">
@@ -53,27 +53,22 @@
                 <option value="{{ tile.id }}">{{ tile }}</option>
             {% endfor %}
         </select>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-5 col-md-offset-2">
+        <button type="submit" name="add_button" class="btn btn-success margin-top-20 float-right">
+            Add
+        </button>
+    </div>
+
+    <div class="col-md-5">
         <button type="submit" name="delete_button" class="btn btn-danger margin-top-20 float-right">
             Delete
         </button>
     </div>
 </div>
-
-<!--{% if tiles %}-->
-    <!--<div class="col-md-2 right">-->
-        <!--<div class="form-group {% if form.tiles.errors %}has-error{% endif %}">-->
-            <!--<label class="control-label">Added Tiles</label>-->
-        <!--</div>-->
-    <!--</div>-->
-
-    <!--<div class="col-md-4">-->
-        <!--<select multiple class="form-control">-->
-            <!--{% for tile in tiles %}-->
-                <!--<option>{{ tile }}</option>-->
-            <!--{% endfor %}-->
-        <!--</select>-->
-    <!--</div>-->
-<!--{% endif %}-->
 
 <div class="row margin-top-50">
     <div class="col-md-2">

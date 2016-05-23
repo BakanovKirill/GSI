@@ -97,12 +97,54 @@ function chageColorError() {
 
   var elems = $('div .form-control');
   var elemsTotal = elems.length;
-  for(var i=0; i<elemsTotal; ++i){
+  for(var i = 0; i < elemsTotal; ++i){
     if ($(elems[i]).val()){
       $(elems[i]).toggleClass('field-success');
-      $(elems[i]).nextAll().toggleClass('field-success');
+
+      //alert($(elems[i]).val());
+
+      if ($(elems[i]).nextAll().length > 0){
+        if ($(elems[i]).nextAll().hasClass('selecter-selected')){
+          $(elems[i]).nextAll().toggleClass('field-success');
+        }
+
+
+
+
+        //if ($(elems[i]).hasClass())
+        //selecter-selected
+
+
+
+
+        //alert($(elems[i]).nextAll()[0].tagName);
+        //alert($(elems[i]).nextAll().length);
+        //if ($(elems[i]).nextAll()[0].tagName == 'SPAN'){
+        //  $(elems[i]).nextAll().toggleClass('field-success');
+        //}
+      }
+
+      //if (!$(elems[i]).nextAll().length && $(elems[i]).nextAll()[0].tagName == 'SPAN'){
+      //  alert($(elems[i]).nextAll()[0].tagName);
+      //  $(elems[i]).nextAll().toggleClass('field-success');
+      //}
+
+
+      //$(elems[i]).nextAll().toggleClass('field-success');
     }
+
   }
+
+  //alert($('div .form-control').val());
+
+
+  //var elements = $('div .form-control');
+  //var elemsTotal = elements.length;
+  //alert(elemsTotal);
+  //
+  //for(var i = 0; i < elemsTotal; ++i){
+  //  alert($(elements[i]).val());
+  //}
 }
 
 $(document).ready(function(){

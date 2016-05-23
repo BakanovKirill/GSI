@@ -1165,6 +1165,8 @@ def environment_group_add(request):
 	}
 	func = var_group_update_create
 	form = None
+	url_name = 'environment_groups'
+	but_name = 'static_data'
 
 	if request.method == "POST":
 		response = get_post(request, EnvironmentGroupsForm,
@@ -1182,6 +1184,8 @@ def environment_group_add(request):
 		'url_form': url_form,
 		'template_name': template_name,
 		'form': form,
+		'url_name': url_name,
+		'but_name': but_name,
 	}
 
 	return data
