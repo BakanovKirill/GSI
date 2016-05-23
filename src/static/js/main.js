@@ -90,19 +90,19 @@ function invisibleSelect() {
 
 function chageColorError() {
   if ( $('span').is('.field-error') ) {
-    alert('ERROR');
+    //alert('ERROR');
     $('span.field-error > .form-control').toggleClass('field-error');
     $('span.field-error > div.selecter > .selecter-selected').toggleClass('field-error');
   }
 
-
-  //var elements = $('div .form-control');
-  //var elemsTotal = elements.length;
-  //alert(elemsTotal);
-  //
-  //for(var i = 0; i < elemsTotal; ++i){
-  //  alert($(elements[i]).val());
-  //}
+  var elems = $('div .form-control');
+  var elemsTotal = elems.length;
+  for(var i=0; i<elemsTotal; ++i){
+    if ($(elems[i]).val()){
+      $(elems[i]).toggleClass('field-success');
+      $(elems[i]).nextAll().toggleClass('field-success');
+    }
+  }
 }
 
 $(document).ready(function(){
