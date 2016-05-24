@@ -1,24 +1,31 @@
+//function reloadPage(obj) {
+//  alert($(obj).val());
+//  //window.location.reload();
+//  //setInterval(function() {
+//  //  $('.selecter-selected').load(location.href+' .selecter-selected*','');
+//  //}, 500);
+//  //setTimeout(function() {
+//  //  window.location.reload();
+//  //}, 500);
+//}
+//
+//function reloadSelect() {
+//  $( ".form-control" ).change(function() {
+//    alert('reloadSelect');
+//    //var sel_val = $('span.selecter-selected').text();
+//    $('span.selecter-selected').nextAll().toggleClass('field-success');
+//  });
+//}
+
 function onOffSubMenu() {
   var menuElem = document.getElementById('sweeties');
   var titleElem = document.getElementById('title');
 
   titleElem.onclick = function() {
-    //menuElem.classList.toggle('open');
-    //$(".icon-visible").toggle();
-    //if ( $("#sweeties").hasClass("sub-menu-visible") ) {
-    //  alert("У элемента задан класс sub-menu-visible!");
-    //}
-
     $('#icon_static').toggleClass("fa-chevron-right", "fa-chevron-down");
     $('#icon_static').toggleClass("fa-chevron-down", "fa-chevron-right");
     $('#sweeties').toggleClass("sub-menu-visible", "sub-menu-no-visible");
     $('#sweeties').toggleClass("sub-menu-no-visible", "sub-menu-visible");
-    //$("div.sub-menu-no-visible").toggleClass("sub-menu-visible");
-    //$("div.sub-menu-visible").toggleClass("sub-menu-no-visible");
-
-    //$("#sweeties").toggleClass("sub-menu");
-    //$("#title").addClass("active-static-data");
-    //$("#title").removeClass("li-menu");
   };
 }
 
@@ -33,38 +40,12 @@ function onOffSubMenuUser() {
   };
 }
 
-//function showSubMenu() {
-//  document.getElementById("dropdownMenu").classList.toggle("show");
-//}
-
 function showSubMenuUser() {
   document.getElementById("dropdownUser").classList.toggle("show");
 }
 
-function showSubMenuStaticData() {
-  //document.getElementById("subMenu").classList.toggle("show");
-  //$("div.sub-menu-no-visible").toggleClass("sub-menu-visible");
-}
-
 function invisibleDropMenu() {
   window.onclick = function(event) {
-    //if (!event.target.matches('.dropbtn')) {
-    //  var dropdowns = document.getElementsByClassName("dropdown-content");
-    //  var i;
-    //  event = event || window.event;
-    //  var target = event.target || event.srcElement;
-    //
-    //  for (i = 0; i < dropdowns.length; i++) {
-    //    var openDropdown = dropdowns[i];
-    //
-    //    if (openDropdown.classList.contains('show') && target.id !== "title") {
-    //      openDropdown.classList.remove('show');
-    //      //$(".icon-visible").toggle();
-    //      var menuElem = document.getElementById('subMenu');
-    //      //menuElem.classList.toggle('hide');
-    //    }
-    //  }
-    //}
     if (!event.target.matches('.dropbtn-user')) {
       var dropdowns = document.getElementsByClassName("dropdown-content-user");
       var i;
@@ -88,69 +69,77 @@ function invisibleSelect() {
   //$("select").dropdown();
 }
 
-function chageColorError() {
+function changeColorError() {
   if ( $('span').is('.field-error') ) {
-    //alert('ERROR');
     $('span.field-error > .form-control').toggleClass('field-error');
     $('span.field-error > div.selecter > .selecter-selected').toggleClass('field-error');
   }
+}
 
+function changeColorSuccess() {
   var elems = $('div .form-control');
   var elemsTotal = elems.length;
+
   for(var i = 0; i < elemsTotal; ++i){
     if ($(elems[i]).val()){
       $(elems[i]).toggleClass('field-success');
-
-      //alert($(elems[i]).val());
-
-      if ($(elems[i]).nextAll().length > 0){
-        if ($(elems[i]).nextAll().hasClass('selecter-selected')){
-          $(elems[i]).nextAll().toggleClass('field-success');
-        }
-
-
-
-
-        //if ($(elems[i]).hasClass())
-        //selecter-selected
-
-
-
-
-        //alert($(elems[i]).nextAll()[0].tagName);
-        //alert($(elems[i]).nextAll().length);
-        //if ($(elems[i]).nextAll()[0].tagName == 'SPAN'){
-        //  $(elems[i]).nextAll().toggleClass('field-success');
-        //}
-      }
-
-      //if (!$(elems[i]).nextAll().length && $(elems[i]).nextAll()[0].tagName == 'SPAN'){
-      //  alert($(elems[i]).nextAll()[0].tagName);
-      //  $(elems[i]).nextAll().toggleClass('field-success');
-      //}
-
-
-      //$(elems[i]).nextAll().toggleClass('field-success');
     }
-
   }
-
-  //alert($('div .form-control').val());
-
-
-  //var elements = $('div .form-control');
-  //var elemsTotal = elements.length;
-  //alert(elemsTotal);
-  //
-  //for(var i = 0; i < elemsTotal; ++i){
-  //  alert($(elements[i]).val());
-  //}
 }
 
+function colorBlackSelect() {
+  var select_item = $('span.selecter-selected');
+  var select_total = select_item.length;
+
+  for(var i = 0; i < select_total; ++i) {
+    var select_text = $(select_item[i]).text();
+
+    if (select_text.indexOf('Select') < 0){
+      $(select_item[i]).toggleClass('color-222');
+      $(select_item[i]).toggleClass('field-success');
+    } else {
+      $(select_item[i]).toggleClass('color-999');
+      $(select_item[i]).removeClass('field-success');
+    }
+  }
+
+
+}
+
+//function changeColorTyping(obj) {
+//  //var elems = $('div .form-control');
+//  //var elemsTotal = elems.length;
+//  alert('VAL = '+$(obj).val());
+//
+//  if ($(obj).val()) {
+//    $($(obj)).toggleClass('field-success');
+//  }
+//
+//
+//  //removeClass
+//
+//  //for(var i = 0; i < elemsTotal; ++i){
+//  //  if ($(elems[i]).val()){
+//  //    $(elems[i]).toggleClass('field-success');
+//  //
+//  //    if ($(elems[i]).nextAll().length > 0){
+//  //      if ($(elems[i]).nextAll().hasClass('selecter-selected')){
+//  //        $(elems[i]).nextAll().toggleClass('field-success');
+//  //        //alert('SELECT!');
+//  //      }
+//  //    }
+//  //  }
+//  //}
+//}
+
+
 $(document).ready(function(){
+  //reloadSelect();
   onOffSubMenu();
   invisibleDropMenu();
   onOffSubMenuUser();
   invisibleSelect();
-  chageColorError();
+  changeColorError();
+  changeColorSuccess();
+  colorBlackSelect();
 });

@@ -36,6 +36,7 @@ input:focus, textarea:focus {
 .field-success {
     background-color: transparent !important;
     border-bottom: 1px solid green !important;
+    color: #555;
 }
 
 /*select:active, select:focus {*/

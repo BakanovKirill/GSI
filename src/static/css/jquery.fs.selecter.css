@@ -145,6 +145,12 @@
   text-decoration: none;
   text-overflow: ellipsis;
 }
+.color-222 {
+  color: #222222;
+}
+.color-999 {
+  color: #999 !important;
+}
 .selecter-item.placeholder {
   display: none;
 }
@@ -156,8 +162,10 @@
   color: #999;
   cursor: default;
 }
+div.multiple > div.selecter-options > span.selecter-item:first-child {
+  color: #222222;
+}
 .selecter-item:first-child {
-  /*border-radius: 0;*/
   color: #999;
 }
 .selecter-item:last-child {

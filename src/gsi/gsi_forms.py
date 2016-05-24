@@ -20,7 +20,10 @@ class RunForm(forms.ModelForm):
         widget=forms.TextInput(attrs={
             # 'class': 'form-control border-bottom',
             'class': 'form-control',
-            'placeholder': 'Name'
+            'placeholder': 'Name',
+            # 'onChange': 'reloadPage(this)',
+            # 'onChange': 'changeColorTyping(this)',
+
         }),
         label=u'Name',
     )
@@ -28,7 +31,8 @@ class RunForm(forms.ModelForm):
         widget=forms.Textarea(attrs={
             'rows': '5',
             'class': 'form-control border-bottom',
-            'placeholder': 'Description'
+            'placeholder': 'Description',
+            # 'onChange': 'changeColorTyping()',
         }),
         required=False,
         label=u'Description'
@@ -37,7 +41,8 @@ class RunForm(forms.ModelForm):
         widget=forms.Textarea(attrs={
             'rows': '5',
             'class': 'form-control border-bottom',
-            'placeholder': 'Purpose of Run'
+            'placeholder': 'Purpose of Run',
+            # 'onChange': 'changeColorTyping()',
         }),
         required=False,
         label=u'Purpose of Run'
@@ -45,7 +50,8 @@ class RunForm(forms.ModelForm):
     directory_path = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'form-control border-bottom form-control input-form',
-            'placeholder': 'Directory path'
+            'placeholder': 'Directory path',
+            # 'onChange': 'changeColorTyping()',
         }),
         # required=False,
         label=u'Directory path',
@@ -54,8 +60,9 @@ class RunForm(forms.ModelForm):
     )
     resolution = forms.ModelChoiceField(
         widget=forms.Select(attrs={
-            "class": 'form-control disabled'
-            # "class": 'fs-dropdown-item'
+            'class': 'form-control disabled',
+            # 'onChange': "document.getElementById('new-run').submit()",
+            # 'onChange': 'changeColorTyping()',
         }),
         queryset=Resolution.objects.all(),
         empty_label='Select',
@@ -64,17 +71,12 @@ class RunForm(forms.ModelForm):
     card_sequence = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Card sequence'
+            'placeholder': 'Card sequence',
+            # 'onChange': 'changeColorTyping()',
         }),
         required=False,
         label=u'Card sequence',
     )
-    # card_sequence = forms.ModelChoiceField(
-    #     widget=forms.Select(attrs={"class": "form-control"}),
-    #     queryset=CardSequence.objects.all(),
-    #     # empty_label=None,
-    #     label=u'Card sequence',
-    # )
 
     class Meta:
         model = RunBase
@@ -85,7 +87,6 @@ class RunForm(forms.ModelForm):
             'purpose',
             'directory_path',
             'resolution',
-            # 'card_sequence',
         ]
 
 
@@ -171,6 +172,7 @@ class CardSequenceCreateForm(forms.ModelForm):
         widget=forms.Select(attrs={'class': 'form-control'}),
         queryset=VariablesGroup.objects.all(),
         required=False,
+        empty_label='Select',
         label=u'Environment base',
     )
     card_item = forms.ModelChoiceField(
@@ -178,6 +180,7 @@ class CardSequenceCreateForm(forms.ModelForm):
         # queryset=CardSequence.cards.through.objects.all(),
         # queryset=None,
         queryset=CardItem.objects.all(),
+        empty_label='Select',
         required=False,
         label=u'Card items',
     )
