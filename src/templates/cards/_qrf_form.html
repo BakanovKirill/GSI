@@ -5,8 +5,10 @@
         </div>
     </div>
     <div class="col-md-4">
-        {{ form.name }}
-        {% if form.name.errors %}
+        {% if not form.name.errors %}
+            {{ form.name }}
+        {% else %}
+            <span class="field-error">{{ form.name }}</span>
             <b class="error-form">{{ form.name.errors }}</b>
         {% endif %}
     </div>
@@ -19,8 +21,10 @@
         </div>
     </div>
     <div class="col-md-4">
-        {{ form.interval }}
-        {% if form.interval.errors %}
+        {% if not form.interval.errors %}
+            {{ form.interval }}
+        {% else %}
+            <span class="field-error">{{ form.interval }}</span>
             <b class="error-form">{{ form.interval.errors }}</b>
         {% endif %}
     </div>
@@ -31,8 +35,10 @@
         </div>
     </div>
     <div class="col-md-4">
-        {{ form.number_of_trees }}
         {% if form.number_of_trees.errors %}
+            {{ form.number_of_trees }}
+        {% else %}
+            <span class="field-error">{{ form.number_of_trees }}</span>
             <b class="error-form">{{ form.number_of_trees.errors }}</b>
         {% endif %}
     </div>
@@ -45,8 +51,10 @@
         </div>
     </div>
     <div class="col-md-4">
-        {{ form.number_of_threads }}
         {% if form.number_of_threads.errors %}
+            {{ form.number_of_threads }}
+        {% else %}
+            <span class="field-error">{{ form.number_of_threads }}</span>
             <b class="error-form">{{ form.number_of_threads.errors }}</b>
         {% endif %}
     </div>
@@ -57,8 +65,10 @@
         </div>
     </div>
     <div class="col-md-4">
-        {{ form.directory }}
-        {% if form.directory.errors %}
+        {% if not form.directory.errors %}
+            {{ form.directory }}
+        {% else %}
+            <span class="field-error">{{ form.directory }}</span>
             <b class="error-form">{{ form.directory.errors }}</b>
         {% endif %}
     </div>

@@ -470,6 +470,8 @@ def cs_runid_csid_mergecsv_edit(request, run_id, cs_id, card_id, mcsv_id):
 	content_type = get_object_or_404(ContentType, app_label='cards', model='mergecsv')
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
 
+	print '1 card_id ===================== ', card_id
+
 	try:
 		card_item = get_object_or_404(CardItem, object_id=mcsv_id, content_type=content_type)
 		card_sequence_card = CardSequence.cards.through.objects.get(id=card_id)
@@ -486,7 +488,7 @@ def cs_runid_csid_mergecsv_edit(request, run_id, cs_id, card_id, mcsv_id):
 						 'cancel_button': ['card_sequence_update']},
 		}
 		REVERSE_URL['mergecsv']['save_button'].append([run_id, cs_id])
-		REVERSE_URL['mergecsv']['save_and_continue'].append([run_id, cs_id, card_id])
+		REVERSE_URL['mergecsv']['save_and_continue'].append([run_id, cs_id, card_id, mcsv_id])
 		REVERSE_URL['mergecsv']['cancel_button'].append([run_id, cs_id])
 
 		if request.method == "POST":
@@ -513,6 +515,8 @@ def cs_runid_csid_mergecsv_edit(request, run_id, cs_id, card_id, mcsv_id):
 									   (u'The RFTrain Card "{0}" was removed from Card Sequence "{1}"'.format(
 										   mergecsv_card.name, card_sequence.name)
 									   )))
+
+	print '2 card_id ===================== ', card_id
 
 	data = {
 		'title': title,

@@ -5,8 +5,10 @@
         </div>
     </div>
     <div class="col-md-4">
-        {{ form.name }}
-        {% if form.name.errors %}
+        {% if not form.name.errors %}
+            {{ form.name }}
+        {% else %}
+            <span class="field-error">{{ form.name }}</span>
             <b class="error-form">{{ form.name.errors }}</b>
         {% endif %}
     </div>
@@ -19,8 +21,10 @@
         </div>
     </div>
     <div class="col-md-4">
-        {{ form.csv1 }}
-        {% if form.csv1.errors %}
+        {% if not form.csv1.errors %}
+            {{ form.csv1 }}
+        {% else %}
+            <span class="field-error">{{ form.csv1 }}</span>
             <b class="error-form">{{ form.csv1.errors }}</b>
         {% endif %}
     </div>
@@ -31,8 +35,10 @@
         </div>
     </div>
     <div class="col-md-4">
-        {{ form.csv2 }}
-        {% if form.csv2.errors %}
+        {% if not form.csv2.errors %}
+            {{ form.csv2 }}
+        {% else %}
+            <span class="field-error">{{ form.csv2 }}</span>
             <b class="error-form">{{ form.csv2.errors }}</b>
         {% endif %}
     </div>

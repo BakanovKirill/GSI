@@ -28,10 +28,13 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form.environment_base.errors %}
+        {% if not form.environment_base.errors %}
+            {{ form.environment_base }}
+        {% else %}
+            <span class="field-error">{{ form.environment_base }}</span>
             <b class="error-form">{{ form.environment_base.errors }}</b>
         {% endif %}
-        {{ form.environment_base }}
+
     </div>
 </div>
 
@@ -42,10 +45,12 @@
         </div>
     </div>
     <div class="col-md-10">
-        {% if form.environment_override.errors %}
+        {% if not form.environment_override.errors %}
+            {{ form.environment_override }}
+        {% else %}
+            <span class="field-error">{{ form.environment_override }}</span>
             <b class="error-form">{{ form.environment_override.errors }}</b>
         {% endif %}
-        {{ form.environment_override }}
     </div>
 </div>
 
@@ -56,10 +61,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form.card_item.errors %}
+        {% if not form.card_item.errors %}
+            {{ form.card_item }}
+        {% else %}
+            <span class="field-error">{{ form.card_item }}</span>
             <b class="error-form">{{ form.card_item.errors }}</b>
         {% endif %}
-        {{ form.card_item }}
     </div>
 
     <div class="col-md-2 right">
@@ -68,10 +75,12 @@
         </div>
     </div>
     <div class="col-md-2">
-        {% if form.order.errors %}
+        {% if not form.order.errors %}
+            {{ form.order }}
+        {% else %}
+            <span class="field-error">{{ form.order }}</span>
             <b class="error-form">{{ form.order.errors }}</b>
         {% endif %}
-        {{ form.order }}
     </div>
     <div class="col-md-2">
         <button type="submit" name="add_card_items_button" class="btn btn-primary btn-block">Added</button>
@@ -80,12 +89,12 @@
 
 {% if card_sequence_cards %}
 <div class="row margin-top-15">
-    <div class="col-md-2 right">
+    <div class="col-md-12">
         <div class="form-group {% if form.environment_override.errors %}has-error{% endif %}">
             <label class="control-label">Ordered card items</label>
         </div>
     </div>
-    <div class="col-md-10">
+    <div class="col-md-12">
         <div class="table-responsive">
             <table class="table table-striped table-hover">
                 <thead>

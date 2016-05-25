@@ -72,13 +72,15 @@ class RFScoreForm(forms.ModelForm):
         label=u'Name',
     )
     area = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": 'form-control'}),
+        widget=forms.Select(attrs={"class": 'form-control disabled'}),
         queryset=Area.objects.all(),
+        empty_label='Select',
         label=u'Area',
     )
     year_group = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": 'form-control'}),
+        widget=forms.Select(attrs={"class": 'form-control disabled'}),
         queryset=YearGroup.objects.all(),
+        empty_label='Select',
         label=u'Year group',
     )
     bias_corrn = forms.CharField(
@@ -228,8 +230,9 @@ class YearFilterForm(forms.ModelForm):
         label=u'Name',
     )
     area = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": 'form-control'}),
+        widget=forms.Select(attrs={"class": 'form-control disabled'}),
         queryset=Area.objects.all(),
+        empty_label='Select',
         label=u'Area',
     )
     filetype = forms.CharField(
@@ -306,8 +309,9 @@ class CollateForm(forms.ModelForm):
         label=u'Name',
     )
     area = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": 'form-control'}),
+        widget=forms.Select(attrs={"class": 'form-control disabled'}),
         queryset=Area.objects.all(),
+        empty_label='Select',
         label=u'Area',
     )
     mode = forms.CharField(
@@ -364,9 +368,10 @@ class PreProcForm(forms.ModelForm):
         label=u'Name',
     )
     area = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": 'form-control'}),
+        widget=forms.Select(attrs={"class": 'form-control disabled'}),
         queryset=Area.objects.all(),
         required=False,
+        empty_label='Select',
         label=u'Area',
     )
     mode = forms.CharField(
@@ -376,9 +381,10 @@ class PreProcForm(forms.ModelForm):
         label=u'Mode',
     )
     year_group = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": 'form-control'}),
+        widget=forms.Select(attrs={"class": 'form-control disabled'}),
         queryset=YearGroup.objects.all(),
         required=False,
+        empty_label='Select',
         label=u'Year group',
     )
 
@@ -441,8 +447,9 @@ class RFTrainForm(forms.ModelForm):
         label=u'Name',
     )
     tile_type = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": 'form-control'}),
+        widget=forms.Select(attrs={"class": 'form-control disabled'}),
         queryset=TileType.objects.all(),
+        empty_label='Select',
         label=u'Tile type',
     )
     number_of_trees = forms.IntegerField(
@@ -455,7 +462,7 @@ class RFTrainForm(forms.ModelForm):
     value = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=300,
-        required=False,
+        # required=False,
         label=u'Value',
     )
     config_file = forms.CharField(
@@ -531,8 +538,9 @@ class RandomForestForm(forms.ModelForm):
         label=u'AoI Name',
     )
     satellite = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": 'form-control'}),
+        widget=forms.Select(attrs={"class": 'form-control disabled'}),
         queryset=Satellite.objects.all(),
+        empty_label='Select',
         label=u'Satellite',
     )
     param_set = forms.CharField(

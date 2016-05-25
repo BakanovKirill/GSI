@@ -5,8 +5,10 @@
         </div>
     </div>
     <div class="col-md-4">
-        {{ form.name }}
-        {% if form.name.errors %}
+        {% if not form.name.errors %}
+            {{ form.name }}
+        {% else %}
+            <span class="field-error">{{ form.name }}</span>
             <b class="error-form">{{ form.name.errors }}</b>
         {% endif %}
     </div>
@@ -17,8 +19,10 @@
         </div>
     </div>
     <div class="col-md-2 margin-top-4">
-        {{ form.run_parallel }}
-        {% if form.run_parallel.errors %}
+        {% if not form.run_parallel.errors %}
+            {{ form.run_parallel }}
+        {% else %}
+            <span class="field-error">{{ form.run_parallel }}</span>
             <b class="error-form">{{ form.run_parallel.errors }}</b>
         {% endif %}
     </div>
@@ -31,8 +35,10 @@
         </div>
     </div>
     <div class="col-md-4">
-        {{ form.area }}
-        {% if form.area.errors %}
+        {% if not form.area.errors %}
+            {{ form.area }}
+        {% else %}
+            <span class="field-error">{{ form.area }}</span>
             <b class="error-form">{{ form.area.errors }}</b>
         {% endif %}
     </div>
@@ -45,8 +51,10 @@
         </div>
     </div>
     <div class="col-md-4">
-        {{ form.year_group }}
-        {% if form.year_group.errors %}
+        {% if not form.year_group.errors %}
+            {{ form.year_group }}
+        {% else %}
+            <span class="field-error">{{ form.year_group }}</span>
             <b class="error-form">{{ form.year_group.errors }}</b>
         {% endif %}
     </div>
@@ -59,8 +67,10 @@
         </div>
     </div>
     <div class="col-md-4">
-        {{ form.number_of_threads }}
-        {% if form.number_of_threads.errors %}
+        {% if not form.number_of_threads.errors %}
+            {{ form.number_of_threads }}
+        {% else %}
+            <span class="field-error">{{ form.number_of_threads }}</span>
             <b class="error-form">{{ form.number_of_threads.errors }}</b>
         {% endif %}
     </div>
@@ -73,8 +83,10 @@
         </div>
     </div>
     <div class="col-md-4">
-        {{ form.bias_corrn }}
-        {% if form.bias_corrn.errors %}
+        {% if not form.bias_corrn.errors %}
+            {{ form.bias_corrn }}
+        {% else %}
+            <span class="field-error">{{ form.bias_corrn }}</span>
             <b class="error-form">{{ form.bias_corrn.errors }}</b>
         {% endif %}
     </div>
@@ -85,8 +97,10 @@
         </div>
     </div>
     <div class="col-md-4">
-        {{ form.QRFopts }}
-        {% if form.QRFopts.errors %}
+        {% if not form.QRFopts.errors %}
+            {{ form.QRFopts }}
+        {% else %}
+            <span class="field-error">{{ form.QRFopts }}</span>
             <b class="error-form">{{ form.QRFopts.errors }}</b>
         {% endif %}
     </div>
@@ -99,8 +113,10 @@
         </div>
     </div>
     <div class="col-md-4">
-        {{ form.ref_target }}
-        {% if form.ref_target.errors %}
+        {% if not form.ref_target.errors %}
+            {{ form.ref_target }}
+        {% else %}
+            <span class="field-error">{{ form.ref_target }}</span>
             <b class="error-form">{{ form.ref_target.errors }}</b>
         {% endif %}
     </div>
@@ -111,8 +127,10 @@
         </div>
     </div>
     <div class="col-md-4">
-        {{ form.clean_name }}
         {% if form.clean_name.errors %}
+            {{ form.clean_name }}
+        {% else %}
+            <span class="field-error">{{ form.clean_name }}</span>
             <b class="error-form">{{ form.clean_name.errors }}</b>
         {% endif %}
     </div>
