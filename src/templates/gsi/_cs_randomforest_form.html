@@ -5,10 +5,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.name.errors %}
+        {% if not form_2.name.errors %}
+            {{ form_2.name }}
+        {% else %}
+            <span class="field-error">{{ form_2.name }}</span>
             <b class="error-form">{{ form_2.name.errors }}</b>
         {% endif %}
-        {{ form_2.name }}
     </div>
 
     <div class="col-md-2 right">
@@ -17,10 +19,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_1.order.errors %}
+        {% if not form_1.order.errors %}
+            {{ form_1.order }}
+        {% else %}
+            <span class="field-error">{{ form_1.order }}</span>
             <b class="error-form">{{ form_1.order.errors }}</b>
         {% endif %}
-        {{ form_1.order }}
     </div>
 </div>
 
@@ -31,10 +35,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.aoi_name.errors %}
+        {% if not form_2.aoi_name.errors %}
+            {{ form_2.aoi_name }}
+        {% else %}
+            <span class="field-error">{{ form_2.aoi_name }}</span>
             <b class="error-form">{{ form_2.aoi_name.errors }}</b>
         {% endif %}
-        {{ form_2.aoi_name }}
     </div>
 
     <div class="col-md-2 right">
@@ -43,10 +49,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.satellite.errors %}
+        {% if not form_2.satellite.errors %}
+            {{ form_2.satellite }}
+        {% else %}
+            <span class="field-error">{{ form_2.satellite }}</span>
             <b class="error-form">{{ form_2.satellite.errors }}</b>
         {% endif %}
-        {{ form_2.satellite }}
     </div>
 </div>
 
@@ -57,10 +65,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.param_set.errors %}
+        {% if not form_2.param_set.errors %}
+            {{ form_2.param_set }}
+        {% else %}
+            <span class="field-error">{{ form_2.param_set }}</span>
             <b class="error-form">{{ form_2.param_set.errors }}</b>
         {% endif %}
-        {{ form_2.param_set }}
     </div>
 
     <div class="col-md-2 right">
@@ -69,10 +79,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.run_set.errors %}
+        {% if not form_2.run_set.errors %}
+            {{ form_2.run_set }}
+        {% else %}
+            <span class="field-error">{{ form_2.run_set }}</span>
             <b class="error-form">{{ form_2.run_set.errors }}</b>
         {% endif %}
-        {{ form_2.run_set }}
     </div>
 </div>
 
@@ -83,10 +95,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.model.errors %}
+        {% if not form_2.model.errors %}
+            {{ form_2.model }}
+        {% else %}
+            <span class="field-error">{{ form_2.model }}</span>
             <b class="error-form">{{ form_2.model.errors }}</b>
         {% endif %}
-        {{ form_2.model }}
     </div>
 
     <div class="col-md-2 right">
@@ -95,10 +109,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.mvrf.errors %}
+        {% if not form_2.mvrf.errors %}
+            {{ form_2.mvrf }}
+        {% else %}
+            <span class="field-error">{{ form_2.mvrf }}</span>
             <b class="error-form">{{ form_2.mvrf.errors }}</b>
         {% endif %}
-        {{ form_2.mvrf }}
     </div>
 </div>
 

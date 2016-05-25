@@ -5,10 +5,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.name.errors %}
+        {% if not form_2.name.errors %}
+            {{ form_2.name }}
+        {% else %}
+            <span class="field-error">{{ form_2.name }}</span>
             <b class="error-form">{{ form_2.name.errors }}</b>
         {% endif %}
-        {{ form_2.name }}
     </div>
 
     <div class="col-md-2 right">
@@ -17,10 +19,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_1.order.errors %}
+        {% if not form_1.order.errors %}
+            {{ form_1.order }}
+        {% else %}
+            <span class="field-error">{{ form_1.order }}</span>
             <b class="error-form">{{ form_1.order.errors }}</b>
         {% endif %}
-        {{ form_1.order }}
     </div>
 </div>
 
@@ -31,10 +35,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.interval.errors %}
+        {% if not form_2.interval.errors %}
+            {{ form_2.interval }}
+        {% else %}
+            <span class="field-error">{{ form_2.interval }}</span>
             <b class="error-form">{{ form_2.interval.errors }}</b>
         {% endif %}
-        {{ form_2.interval }}
     </div>
 
     <div class="col-md-2 right">
@@ -43,10 +49,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.number_of_trees.errors %}
+        {% if not form_2.number_of_trees.errors %}
+            {{ form_2.number_of_trees }}
+        {% else %}
+            <span class="field-error">{{ form_2.number_of_trees }}</span>
             <b class="error-form">{{ form_2.number_of_trees.errors }}</b>
         {% endif %}
-        {{ form_2.number_of_trees }}
     </div>
 </div>
 
@@ -57,10 +65,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.number_of_threads.errors %}
+        {% if not form_2.number_of_threads.errors %}
+            {{ form_2.number_of_threads }}
+        {% else %}
+            <span class="field-error">{{ form_2.number_of_threads }}</span>
             <b class="error-form">{{ form_2.number_of_threads.errors }}</b>
         {% endif %}
-        {{ form_2.number_of_threads }}
     </div>
 
     <div class="col-md-2 right">
@@ -69,10 +79,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.directory.errors %}
+        {% if not form_2.directory.errors %}
+            {{ form_2.directory }}
+        {% else %}
+            <span class="field-error">{{ form_2.directory }}</span>
             <b class="error-form">{{ form_2.directory.errors }}</b>
         {% endif %}
-        {{ form_2.directory }}
     </div>
 </div>
 

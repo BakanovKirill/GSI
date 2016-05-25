@@ -5,10 +5,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.name.errors %}
+        {% if not form_2.name.errors %}
+            {{ form_2.name }}
+        {% else %}
+            <span class="field-error">{{ form_2.name }}</span>
             <b class="error-form">{{ form_2.name.errors }}</b>
         {% endif %}
-        {{ form_2.name }}
     </div>
 
     <div class="col-md-2 right">
@@ -17,10 +19,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_1.order.errors %}
+        {% if not form_1.order.errors %}
+            {{ form_1.order }}
+        {% else %}
+            <span class="field-error">{{ form_1.order }}</span>
             <b class="error-form">{{ form_1.order.errors }}</b>
         {% endif %}
-        {{ form_1.order }}
     </div>
 </div>
 
@@ -31,10 +35,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.csv1.errors %}
+        {% if not form_2.csv1.errors %}
+            {{ form_2.csv1 }}
+        {% else %}
+            <span class="field-error">{{ form_2.csv1 }}</span>
             <b class="error-form">{{ form_2.csv1.errors }}</b>
         {% endif %}
-        {{ form_2.csv1 }}
     </div>
 
     <div class="col-md-2 right">
@@ -43,10 +49,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.csv2.errors %}
+        {% if not form_2.csv2.errors %}
+            {{ form_2.csv2 }}
+        {% else %}
+            <span class="field-error">{{ form_2.csv2 }}</span>
             <b class="error-form">{{ form_2.csv2.errors }}</b>
         {% endif %}
-        {{ form_2.csv2 }}
     </div>
 </div>
 

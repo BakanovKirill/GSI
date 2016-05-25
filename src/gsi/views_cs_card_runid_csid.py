@@ -73,8 +73,8 @@ def cs_runid_csid_qrf_edit(request, run_id, cs_id, card_id, qrf_id):
 		url_form = 'cs_runid_csid_qrf_edit'
 		template_name = 'gsi/_cs_qrf_form.html'
 		func = qrf_update_create
-		form_1 = None
-		form_2 = None
+		form_1 = CardSequenceCardForm(instance=card_sequence_card)
+		form_2 = QRFForm(instance=qrf_card)
 
 		REVERSE_URL = {
 			'qrf': {'save_button': ['card_sequence_update'],
@@ -100,9 +100,6 @@ def cs_runid_csid_qrf_edit(request, run_id, cs_id, card_id, qrf_id):
 				return response
 			else:
 				form_2 = response
-		else:
-			form_1 = CardSequenceCardForm(instance=card_sequence_card)
-			form_2 = QRFForm(instance=qrf_card)
 	except ObjectDoesNotExist:
 		return HttpResponseRedirect(
 			u'%s?danger_message=%s' % (reverse('card_sequence_update', args=[run_id, cs_id]),
@@ -140,8 +137,8 @@ def cs_runid_csid_rfscore_edit(request, run_id, cs_id, card_id, rfscore_id):
 		url_form = 'cs_runid_csid_rfscore_edit'
 		template_name = 'gsi/_cs_rfscore_form.html'
 		func = rfscore_update_create
-		form_1 = None
-		form_2 = None
+		form_1 = CardSequenceCardForm(instance=card_sequence_card)
+		form_2 = RFScoreForm(instance=rfscore_card)
 
 		REVERSE_URL = {
 			'rfscore': {'save_button': ['card_sequence_update'],
@@ -167,9 +164,6 @@ def cs_runid_csid_rfscore_edit(request, run_id, cs_id, card_id, rfscore_id):
 				return response
 			else:
 				form_2 = response
-		else:
-			form_1 = CardSequenceCardForm(instance=card_sequence_card)
-			form_2 = RFScoreForm(instance=rfscore_card)
 	except ObjectDoesNotExist:
 		return HttpResponseRedirect(
 			u'%s?danger_message=%s' % (reverse('card_sequence_update', args=[run_id, cs_id]),
@@ -207,8 +201,8 @@ def cs_runid_csid_remap_edit(request, run_id, cs_id, card_id, remap_id):
 		url_form = 'cs_runid_csid_remap_edit'
 		template_name = 'gsi/_cs_remap_form.html'
 		func = remap_update_create
-		form_1 = None
-		form_2 = None
+		form_1 = CardSequenceCardForm(instance=card_sequence_card)
+		form_2 = RemapForm(instance=remap_card)
 
 		REVERSE_URL = {
 			'remap': {'save_button': ['card_sequence_update'],
@@ -234,9 +228,6 @@ def cs_runid_csid_remap_edit(request, run_id, cs_id, card_id, remap_id):
 				return response
 			else:
 				form_2 = response
-		else:
-			form_1 = CardSequenceCardForm(instance=card_sequence_card)
-			form_2 = RemapForm(instance=remap_card)
 	except ObjectDoesNotExist:
 		return HttpResponseRedirect(
 			u'%s?danger_message=%s' % (reverse('card_sequence_update', args=[run_id, cs_id]),
@@ -274,8 +265,8 @@ def cs_runid_csid_year_filter_edit(request, run_id, cs_id, card_id, yf_id):
 		url_form = 'cs_runid_csid_year_filter_edit'
 		template_name = 'gsi/_cs_year_filter_form.html'
 		func = year_filter_update_create
-		form_1 = None
-		form_2 = None
+		form_1 = CardSequenceCardForm(instance=card_sequence_card)
+		form_2 = YearFilterForm(instance=year_filter_card)
 
 		REVERSE_URL = {
 			'year_filter': {'save_button': ['card_sequence_update'],
@@ -301,9 +292,6 @@ def cs_runid_csid_year_filter_edit(request, run_id, cs_id, card_id, yf_id):
 				return response
 			else:
 				form_2 = response
-		else:
-			form_1 = CardSequenceCardForm(instance=card_sequence_card)
-			form_2 = YearFilterForm(instance=year_filter_card)
 	except ObjectDoesNotExist:
 		return HttpResponseRedirect(
 			u'%s?danger_message=%s' % (reverse('card_sequence_update', args=[run_id, cs_id]),
@@ -341,8 +329,8 @@ def cs_runid_csid_collate_edit(request, run_id, cs_id, card_id, collate_id):
 		url_form = 'cs_runid_csid_collate_edit'
 		template_name = 'gsi/_cs_collate_form.html'
 		func = collate_update_create
-		form_1 = None
-		form_2 = None
+		form_1 = CardSequenceCardForm(instance=card_sequence_card)
+		form_2 = CollateForm(instance=collate_card)
 
 		REVERSE_URL = {
 			'collate': {'save_button': ['card_sequence_update'],
@@ -368,9 +356,6 @@ def cs_runid_csid_collate_edit(request, run_id, cs_id, card_id, collate_id):
 				return response
 			else:
 				form_2 = response
-		else:
-			form_1 = CardSequenceCardForm(instance=card_sequence_card)
-			form_2 = CollateForm(instance=collate_card)
 	except ObjectDoesNotExist:
 		return HttpResponseRedirect(
 			u'%s?danger_message=%s' % (reverse('card_sequence_update', args=[run_id, cs_id]),
@@ -409,8 +394,8 @@ def cs_runid_csid_preproc_edit(request, run_id, cs_id, card_id, preproc_id):
 		url_form = 'cs_runid_csid_preproc_edit'
 		template_name = 'gsi/_cs_preproc_form.html'
 		func = preproc_update_create
-		form_1 = None
-		form_2 = None
+		form_1 = CardSequenceCardForm(instance=card_sequence_card)
+		form_2 = PreProcForm(instance=preproc_card)
 
 		REVERSE_URL = {
 			'preproc': {'save_button': ['card_sequence_update'],
@@ -437,9 +422,6 @@ def cs_runid_csid_preproc_edit(request, run_id, cs_id, card_id, preproc_id):
 				return response
 			else:
 				form_2 = response
-		else:
-			form_1 = CardSequenceCardForm(instance=card_sequence_card)
-			form_2 = PreProcForm(instance=preproc_card)
 	except ObjectDoesNotExist:
 		return HttpResponseRedirect(
 			u'%s?danger_message=%s' % (reverse('card_sequence_update', args=[run_id, cs_id]),
@@ -470,8 +452,6 @@ def cs_runid_csid_mergecsv_edit(request, run_id, cs_id, card_id, mcsv_id):
 	content_type = get_object_or_404(ContentType, app_label='cards', model='mergecsv')
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
 
-	print '1 card_id ===================== ', card_id
-
 	try:
 		card_item = get_object_or_404(CardItem, object_id=mcsv_id, content_type=content_type)
 		card_sequence_card = CardSequence.cards.through.objects.get(id=card_id)
@@ -479,8 +459,8 @@ def cs_runid_csid_mergecsv_edit(request, run_id, cs_id, card_id, mcsv_id):
 		url_form = 'cs_runid_csid_mergecsv_edit'
 		template_name = 'gsi/_cs_mergecsv_form.html'
 		func = mergecsv_update_create
-		form_1 = None
-		form_2 = None
+		form_1 = CardSequenceCardForm(instance=card_sequence_card)
+		form_2 = MergeCSVForm(instance=mergecsv_card)
 
 		REVERSE_URL = {
 			'mergecsv': {'save_button': ['card_sequence_update'],
@@ -506,17 +486,12 @@ def cs_runid_csid_mergecsv_edit(request, run_id, cs_id, card_id, mcsv_id):
 				return response
 			else:
 				form_2 = response
-		else:
-			form_1 = CardSequenceCardForm(instance=card_sequence_card)
-			form_2 = MergeCSVForm(instance=mergecsv_card)
 	except ObjectDoesNotExist:
 		return HttpResponseRedirect(
 			u'%s?danger_message=%s' % (reverse('card_sequence_update', args=[run_id, cs_id]),
 									   (u'The RFTrain Card "{0}" was removed from Card Sequence "{1}"'.format(
 										   mergecsv_card.name, card_sequence.name)
 									   )))
-
-	print '2 card_id ===================== ', card_id
 
 	data = {
 		'title': title,
@@ -548,8 +523,8 @@ def cs_runid_csid_rftrain_edit(request, run_id, cs_id, card_id, rftrain_id):
 		url_form = 'cs_runid_csid_rftrain_edit'
 		template_name = 'gsi/_cs_rftrain_form.html'
 		func = rftrain_update_create
-		form_1 = None
-		form_2 = None
+		form_1 = CardSequenceCardForm(instance=card_sequence_card)
+		form_2 = RFTrainForm(instance=rftrain_card)
 
 		REVERSE_URL = {
 			'rftrain': {'save_button': ['card_sequence_update'],
@@ -574,9 +549,6 @@ def cs_runid_csid_rftrain_edit(request, run_id, cs_id, card_id, rftrain_id):
 				return response
 			else:
 				form_2 = response
-		else:
-			form_1 = CardSequenceCardForm(instance=card_sequence_card)
-			form_2 = RFTrainForm(instance=rftrain_card)
 	except ObjectDoesNotExist:
 		return HttpResponseRedirect(
 			u'%s?danger_message=%s' % (reverse('card_sequence_update', args=[run_id, cs_id]),
@@ -614,8 +586,8 @@ def cs_runid_csid_randomforest_edit(request, run_id, cs_id, card_id, rf_id):
 		url_form = 'cs_runid_csid_randomforest_edit'
 		template_name = 'gsi/_cs_randomforest_form.html'
 		func = randomforest_update_create
-		form_1 = None
-		form_2 = None
+		form_1 = CardSequenceCardForm(instance=card_sequence_card)
+		form_2 = RandomForestForm(instance=randomforest_card)
 
 		REVERSE_URL = {
 			'randomforest': {'save_button': ['card_sequence_update'],
@@ -641,9 +613,6 @@ def cs_runid_csid_randomforest_edit(request, run_id, cs_id, card_id, rf_id):
 				return response
 			else:
 				form_2 = response
-		else:
-			form_1 = CardSequenceCardForm(instance=card_sequence_card)
-			form_2 = RandomForestForm(instance=randomforest_card)
 	except ObjectDoesNotExist:
 		return HttpResponseRedirect(
 			u'%s?danger_message=%s' % (reverse('card_sequence_update', args=[run_id, cs_id]),

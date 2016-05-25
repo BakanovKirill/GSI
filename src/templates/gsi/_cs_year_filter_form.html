@@ -5,10 +5,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.name.errors %}
+        {% if not form_2.name.errors %}
+            {{ form_2.name }}
+        {% else %}
+            <span class="field-error">{{ form_2.name }}</span>
             <b class="error-form">{{ form_2.name.errors }}</b>
         {% endif %}
-        {{ form_2.name }}
     </div>
 
     <div class="col-md-2 right">
@@ -17,10 +19,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_1.order.errors %}
+        {% if not form_1.order.errors %}
+            {{ form_1.order }}
+        {% else %}
+            <span class="field-error">{{ form_1.order }}</span>
             <b class="error-form">{{ form_1.order.errors }}</b>
         {% endif %}
-        {{ form_1.order }}
     </div>
 </div>
 
@@ -31,10 +35,12 @@
         </div>
     </div>
     <div class="col-md-2 margin-top-4">
-        {% if form_2.run_parallel.errors %}
+        {% if not form_2.run_parallel.errors %}
+            {{ form_2.run_parallel }}
+        {% else %}
+            <span class="field-error">{{ form_2.run_parallel }}</span>
             <b class="error-form">{{ form_2.run_parallel.errors }}</b>
         {% endif %}
-        {{ form_2.run_parallel }}
     </div>
 </div>
 
@@ -45,10 +51,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.area.errors %}
+        {% if not form_2.area.errors %}
+            {{ form_2.area }}
+        {% else %}
+            <span class="field-error">{{ form_2.area }}</span>
             <b class="error-form">{{ form_2.area.errors }}</b>
         {% endif %}
-        {{ form_2.area }}
     </div>
 
     <div class="col-md-2 right">
@@ -57,10 +65,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.filetype.errors %}
+        {% if not form_2.filetype.errors %}
+            {{ form_2.filetype }}
+        {% else %}
+            <span class="field-error">{{ form_2.filetype }}</span>
             <b class="error-form">{{ form_2.filetype.errors }}</b>
         {% endif %}
-        {{ form_2.filetype }}
     </div>
 </div>
 
@@ -71,10 +81,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.filter.errors %}
+        {% if not form_2.filter.errors %}
+            {{ form_2.filter }}
+        {% else %}
+            <span class="field-error">{{ form_2.filter }}</span>
             <b class="error-form">{{ form_2.filter.errors }}</b>
         {% endif %}
-        {{ form_2.filter }}
     </div>
 
     <div class="col-md-2 right">
@@ -83,10 +95,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.filter_output.errors %}
+        {% if not form_2.filter_output.errors %}
+            {{ form_2.filter_output }}
+        {% else %}
+            <span class="field-error">{{ form_2.filter_output }}</span>
             <b class="error-form">{{ form_2.filter_output.errors }}</b>
         {% endif %}
-        {{ form_2.filter_output }}
     </div>
 </div>
 
@@ -97,10 +111,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.extend_start.errors %}
+        {% if not form_2.extend_start.errors %}
+            {{ form_2.extend_start }}
+        {% else %}
+            <span class="field-error">{{ form_2.extend_start }}</span>
             <b class="error-form">{{ form_2.extend_start.errors }}</b>
         {% endif %}
-        {{ form_2.extend_start }}
     </div>
 
     <div class="col-md-2 right">
@@ -109,10 +125,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.input_fourier.errors %}
+        {% if not form_2.input_fourier.errors %}
+            {{ form_2.input_fourier }}
+        {% else %}
+            <span class="field-error">{{ form_2.input_fourier }}</span>
             <b class="error-form">{{ form_2.input_fourier.errors }}</b>
         {% endif %}
-        {{ form_2.input_fourier }}
     </div>
 </div>
 
@@ -123,10 +141,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.input_directory.errors %}
+        {% if not form_2.input_directory.errors %}
+            {{ form_2.input_directory }}
+        {% else %}
+            <span class="field-error">{{ form_2.input_directory }}</span>
             <b class="error-form">{{ form_2.input_directory.errors }}</b>
         {% endif %}
-        {{ form_2.input_directory }}
     </div>
 
     <div class="col-md-2 right">
@@ -135,10 +155,12 @@
         </div>
     </div>
     <div class="col-md-4">
-        {% if form_2.output_directory.errors %}
+        {% if not form_2.output_directory.errors %}
+            {{ form_2.output_directory }}
+        {% else %}
+            <span class="field-error">{{ form_2.output_directory }}</span>
             <b class="error-form">{{ form_2.output_directory.errors }}</b>
         {% endif %}
-        {{ form_2.output_directory }}
     </div>
 </div>
 
