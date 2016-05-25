@@ -104,7 +104,7 @@ def upload_file(request):
 					u'%s?status_message=%s' % (reverse('upload_file'),
 					(u'Test data "{0}" is loaded'.format(file_name)))
 			)
-		
+
 			# type_file = str(request.FILES['test_data'].content_type).split('/')[0]
 			# if type_file != 'image':
 			# 	handle_uploaded_file(request.FILES['test_data'], path_test_data)
