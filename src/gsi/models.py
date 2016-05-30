@@ -77,6 +77,18 @@ class Satellite(UnicodeNameMixin, models.Model):
     name = models.CharField(max_length=50)
 
 
+class InputDataDirectory(UnicodeNameMixin, models.Model):
+    name = models.CharField(max_length=100)
+    full_path = models.CharField(max_length=200, blank=True, null=True)
+
+
+class ListTestFiles(UnicodeNameMixin, models.Model):
+    name = models.CharField(max_length=100)
+    input_data_directory = models.ForeignKey('InputDataDirectory', related_name='data_directory')
+    size = models.PositiveIntegerField(blank=True, null=True)
+    date_modified = models.DateTimeField(blank=True, null=True)
+
+
 class Resolution(UnicodeNameMixin, models.Model):
     name = models.CharField(max_length=50, help_text=_('This will be a short display of the value, i.e. 1KM, 250M'))
     value = models.CharField(max_length=20, help_text=_('Value in meters, e.g 1000 for 1KM display name'))
@@ -170,14 +182,14 @@ class RunStep(UnicodeNameMixin, models.Model):
         is_last_step = False
 
         # write log file
-        path_file = '/home/gsi/LOGS/next_step.log'
-        now = datetime.now()
-        log_file = open(path_file, 'a')
-        log_file.writelines('{0}\n'.format(now))
-        log_file.writelines('STEPS: \n')
-        log_file.writelines('NEXT ==> {0}\n'.format(len(next_card)))
-        log_file.writelines('LAST ==> {0}\n\n\n'.format(is_last_step))
-        log_file.close()
+        # path_file = '/home/gsi/LOGS/next_step.log'
+        # now = datetime.now()
+        # log_file = open(path_file, 'a')
+        # log_file.writelines('{0}\n'.format(now))
+        # log_file.writelines('STEPS: \n')
+        # log_file.writelines('NEXT ==> {0}\n'.format(len(next_card)))
+        # log_file.writelines('LAST ==> {0}\n\n\n'.format(is_last_step))
+        # log_file.close()
 
         if len(next_card) == 0:
             return False, True

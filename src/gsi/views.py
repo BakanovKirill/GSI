@@ -24,7 +24,8 @@ from gsi.models import (Run, RunStep, Log, OrderedCardItem,
 						Year, Satellite)
 from gsi.gsi_items_update_create import *
 from gsi.gsi_forms import *
-from core.utils import (make_run, get_dir_root_static_path, slash_remove_from_path)
+from core.utils import (make_run, get_dir_root_static_path,
+                        slash_remove_from_path, get_files_dirs)
 from core.get_post import get_post
 from log.logger import get_logs
 from gsi.settings import (NUM_PAGINATIONS, PATH_RUNS_SCRIPTS, BASE_DIR,
@@ -321,7 +322,7 @@ def run_update(request, run_id):
 				# run_base.card_sequence = form.cleaned_data["card_sequence"]
 				run_base.directory_path = form.cleaned_data["directory_path"]
 				run_base.resolution = form.cleaned_data["resolution"]
-				run_base.author = request.user
+				# run_base.author = request.user
 				run_base.save()
 
 				if request.POST.get('save_button') is not None:
@@ -1759,83 +1760,81 @@ def audit_history(request, run_id):
 	return data
 
 
-def get_files_dirs(url_path, full_path):
-	dict_dirs = {}
-	all_dirs = {}
-	dict_files = {}
-	all_files = {}
-	info_message = False
-
-	try:
-		root, dirs, files = os.walk(full_path).next()
-
-		for d in dirs:
-			date_modification = datetime.fromtimestamp(os.path.getmtime(full_path))
-			format_date_modification = datetime.strftime(date_modification, "%Y/%m/%d %H:%M:%S")
-
-			dict_dirs['name'] = d
-			dict_dirs['date'] = format_date_modification
-			all_dirs[d] = dict_dirs
-			dict_dirs = {}
-
-		for f in files:
-			kb = 1024.0
-			mb = 1024.0 * 1024.0
-			type_file = ''
-			size_file = ''
-			file_path = os.path.join(url_path, f)
-			full_file_path = os.path.join(full_path, f)
-			size = os.path.getsize(full_file_path)
-			date_modification = datetime.fromtimestamp(os.path.getmtime(full_file_path))
-			format_date_modification = datetime.strftime(date_modification, "%Y/%m/%d %H:%M:%S")
-			mime_type = magic.from_file(full_file_path, mime=True)
-			type_list = mime_type.split('/')
-
-			# print 'type ===================== ', mime_type
-
-			if size < kb:
-				size_file = "%.2f B" % (size)
-
-			if size > mb:
-				size = size / mb
-				size_file = "%.2f MB" % (size)
-
-			if size > kb:
-				size = float(size) / kb
-				size_file = "%.2f KB" % (size)
-
-			if type_list[0] == 'image':
-				type_file = type_list[0]
-			elif type_list[0] == 'text':
-				type_file = type_list[0]
-			elif type_list[0] == 'application':
-				if type_list[1] == 'pdf':
-					type_file = type_list[1]
-				elif type_list[1] == 'msword':
-					type_file = 'doc'
-				elif type_list[1] == 'octet-stream':
-					type_file = 'bin'
-				else:
-					type_file = 'archive'
-
-			dict_files['name'] = f
-			dict_files['path'] = file_path
-			dict_files['size'] = size_file
-			dict_files['date'] = format_date_modification
-			dict_files['type'] = type_file
-
-			all_files[f] = dict_files
-			dict_files = {}
-			# print 'all_dirs ===================== ', all_files
-			print '\n\n\n'
-	except StopIteration, e:
-		print 'StopIteration ===================== ', e
-		info_message = True
-	except OSError, e:
-		print 'OSError ===================== ', e
-		info_message = True
-
-	return all_dirs, all_files, info_message
+# def get_files_dirs(url_path, full_path):
+# 	dict_dirs = {}
+# 	all_dirs = {}
+# 	dict_files = {}
+# 	all_files = {}
+# 	info_message = False
+#
+# 	try:
+# 		root, dirs, files = os.walk(full_path).next()
+#
+# 		for d in dirs:
+# 			date_modification = datetime.fromtimestamp(os.path.getmtime(full_path))
+# 			format_date_modification = datetime.strftime(date_modification, "%Y/%m/%d %H:%M:%S")
+#
+# 			dict_dirs['name'] = d
+# 			dict_dirs['date'] = format_date_modification
+# 			all_dirs[d] = dict_dirs
+# 			dict_dirs = {}
+#
+# 		for f in files:
+# 			kb = 1024.0
+# 			mb = 1024.0 * 1024.0
+# 			type_file = ''
+# 			size_file = ''
+# 			file_path = os.path.join(url_path, f)
+# 			full_file_path = os.path.join(full_path, f)
+# 			size = os.path.getsize(full_file_path)
+# 			date_modification = datetime.fromtimestamp(os.path.getmtime(full_file_path))
+# 			format_date_modification = datetime.strftime(date_modification, "%Y/%m/%d %H:%M:%S")
+# 			mime_type = magic.from_file(full_file_path, mime=True)
+# 			type_list = mime_type.split('/')
+#
+# 			if size < kb:
+# 				size_file = "%.2f B" % (size)
+#
+# 			if size > mb:
+# 				size = size / mb
+# 				size_file = "%.2f MB" % (size)
+#
+# 			if size > kb:
+# 				size = float(size) / kb
+# 				size_file = "%.2f KB" % (size)
+#
+# 			if type_list[0] == 'image':
+# 				type_file = type_list[0]
+# 			elif type_list[0] == 'text':
+# 				type_file = type_list[0]
+# 			elif type_list[0] == 'application':
+# 				if type_list[1] == 'pdf':
+# 					type_file = type_list[1]
+# 				elif type_list[1] == 'msword':
+# 					type_file = 'doc'
+# 				elif type_list[1] == 'octet-stream':
+# 					type_file = 'bin'
+# 				else:
+# 					type_file = 'archive'
+#
+# 			dict_files['name'] = f
+# 			dict_files['path'] = file_path
+# 			dict_files['size'] = size_file
+# 			dict_files['date'] = format_date_modification
+# 			dict_files['type'] = type_file
+#
+# 			all_files[f] = dict_files
+# 			dict_files = {}
+# 			# print 'all_dirs ===================== ', all_files
+# 			print '\n\n\n'
+# 	except StopIteration, e:
+# 		print 'StopIteration ===================== ', e
+# 		info_message = True
+# 	except OSError, e:
+# 		print 'OSError ===================== ', e
+# 		info_message = True
+#
+# 	return all_dirs, all_files, info_message
 
 
 # view results
@@ -1851,6 +1850,9 @@ def view_results(request, run_id):
 	static_dir_root_path = slash_remove_from_path(static_dir_root_path)
 	static_dir_root = str(dir_root['static_dir_root']) + '/' + str(resolution) + '/' + str(folder)
 	static_dir_root = slash_remove_from_path(static_dir_root)
+
+	print 'static_dir_root ============================ ', static_dir_root
+	print 'static_dir_root_path ============================ ', static_dir_root_path
 
 	dirs, files, info_message = get_files_dirs(static_dir_root, static_dir_root_path)
 
