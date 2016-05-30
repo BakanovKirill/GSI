@@ -452,13 +452,6 @@ class RFTrainForm(forms.ModelForm):
         empty_label='Select',
         label=u'Tile type',
     )
-    number_of_trees = forms.IntegerField(
-        widget=forms.NumberInput(attrs={'class': 'form-control'}),
-        initial=50,
-        validators=[validate_order],
-        required=False,
-        label=u'Number of trees',
-    )
     value = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=300,
@@ -482,6 +475,13 @@ class RFTrainForm(forms.ModelForm):
         max_length=200,
         required=False,
         label=u'Input scale factor',
+    )
+    number_of_trees = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        initial=50,
+        validators=[validate_order],
+        required=False,
+        label=u'Number of trees',
     )
     training = forms.IntegerField(
         widget=forms.NumberInput(attrs={'class': 'form-control'}),
