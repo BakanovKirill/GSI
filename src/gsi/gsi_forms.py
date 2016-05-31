@@ -6,7 +6,7 @@ from cards.models import CardItem
 from gsi.models import (RunBase, Resolution,
                         CardSequence, VariablesGroup,
                         HomeVariables, Tile, YearGroup,
-                        Year, Satellite)
+                        Year, Satellite, InputDataDirectory)
 
 
 class RunForm(forms.ModelForm):
@@ -350,6 +350,24 @@ class SatelliteForm(forms.ModelForm):
 
 class UploadFileForm(forms.Form):
     test_data = forms.FileField(label='Load Test Data')
+
+
+class InputDataDirectoryForm(forms.ModelForm):
+    """ form for editing InputDataDirectory """
+
+    def __init__(self, *args, **kwargs):
+        super(InputDataDirectoryForm, self).__init__(*args, **kwargs)
+
+    name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label=u'Name',
+    )
+
+    class Meta:
+        model = InputDataDirectory
+        fields = [
+            'name',
+        ]
 
 
 

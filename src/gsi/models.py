@@ -8,7 +8,8 @@ from django.utils.translation import \
     ugettext_lazy as _  # Always aware of translations to other languages in the future -> wrap all texts into _()
 from solo.models import SingletonModel
 
-from core.utils import (UnicodeNameMixin,
+from core.utils import (UnicodeNameMixin, create_new_folder,
+                        update_root_list_files, update_list_dirs,
                         slash_remove_from_path, create_symlink)
 from gsi.settings import STATIC_ROOT, STATIC_DIR
 
@@ -78,13 +79,23 @@ class Satellite(UnicodeNameMixin, models.Model):
 
 
 class InputDataDirectory(UnicodeNameMixin, models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     full_path = models.CharField(max_length=200, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        self.full_path = create_new_folder(self.name)
+        super(InputDataDirectory, self).save(*args, **kwargs)
+        update_root_list_files()
+        update_list_dirs()
 
 
 class ListTestFiles(UnicodeNameMixin, models.Model):
     name = models.CharField(max_length=100)
-    input_data_directory = models.ForeignKey('InputDataDirectory', related_name='data_directory')
+    input_data_directory = models.ForeignKey(
+            'InputDataDirectory',
+            blank=True,
+            null=True,
+            related_name='data_directory')
     size = models.PositiveIntegerField(blank=True, null=True)
     date_modified = models.DateTimeField(blank=True, null=True)
 

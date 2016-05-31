@@ -1,7 +1,7 @@
 from cards.models import CardItem, OrderedCardItem
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericStackedInline, GenericTabularInline
-from core.utils import make_run, upload_files
+from core.utils import (make_run, update_root_list_files, update_list_dirs, update_list_files)
 from .models import (HomeVariables, VariablesGroup, Tile, Area, YearGroup,
                      Year, CardSequence, RunBase, RunStep, Run,
                      Resolution, Log, TileType, Satellite, InputDataDirectory,
@@ -74,16 +74,16 @@ admin.site.register(Satellite, admin.ModelAdmin)
 
 class InputDataDirectoryAdmin(admin.ModelAdmin):
     list_display = ('name',)
-    actions = ('updated_file_list',)
+    actions = ('updated_test_data',)
 
-    def updated_file_list(self, request, queryset):
+    def updated_test_data(self, request, queryset):
+        update_root_list_files()
+        update_list_dirs()
+
         for dir in queryset:
-            pass
-            result = upload_files(dir.name)
-        #     print 'Run created: %s' % result['run'].id
-        #     print 'Step created: %s' % result['step'].id
+            update_list_files(dir)
         self.message_user(request, "For selected folders updated file list.")
-    updated_file_list.short_description = "Updated file list"
+    updated_test_data.short_description = "Updated Test Data"
 
 
 class ListTestFilesAdmin(admin.ModelAdmin):

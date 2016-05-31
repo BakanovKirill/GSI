@@ -6,8 +6,10 @@ from django.dispatch import receiver
 from django.core.exceptions import ObjectDoesNotExist
 
 
-from gsi.models import Tile, Area, RunBase, Run, CardSequence
+from gsi.models import (Tile, Area, RunBase,
+                        Run, CardSequence, InputDataDirectory)
 from log.logger import log_it
+from core.utils import update_list_files
 
 
 @receiver(post_save, sender=Tile)
@@ -56,3 +58,8 @@ def log_it_run(sender, instance, **kwargs):
         message = 'Run executed: Run ID - {0}; status - {1}'.format(
             instance.run_base.id, instance.state.capitalize())
         log_it(instance.user, 'Run', instance.run_base.id, message)
+
+
+@receiver(post_save, sender=InputDataDirectory)
+def mkdir(sender, instance, **kwargs):
+    update_list_files(instance)

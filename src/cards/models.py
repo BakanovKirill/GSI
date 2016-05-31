@@ -6,7 +6,8 @@ from django.utils.translation import \
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
-from core.utils import UnicodeNameMixin
+from core.utils import (UnicodeNameMixin, update_root_list_files,
+                        update_list_files, update_list_dirs)
 
 
 class NamedModel(UnicodeNameMixin, models.Model):
@@ -76,11 +77,17 @@ class YearFilter(NamedModel, ParallelModel):
 
 
 class Collate(NamedModel, ParallelModel):
+    def __init__(self, *args, **kwargs):
+        super(Collate, self).__init__(*args, **kwargs)
+        update_root_list_files()
+        update_list_dirs()
+
     area = models.ForeignKey('gsi.Area')
     mode = models.CharField(max_length=50, blank=True)
-    input_file = models.CharField(max_length=200, blank=True)
     output_tile_subdir = models.CharField(max_length=200, blank=True)
     input_scale_factor = models.CharField(max_length=200, blank=True)
+    input_data_directory = models.ForeignKey('gsi.InputDataDirectory', blank=True, null=True)
+    input_files = models.ManyToManyField('gsi.ListTestFiles', blank=True)
 
     class Meta:
         verbose_name_plural = _('Collate cards')
