@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='listtestfiles',
             name='size',
-            field=models.CharField(max_length=20, null=True, blank=True),
+            field=models.CharField(max_length=100, null=True, blank=True),
         ),
     ]

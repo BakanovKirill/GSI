@@ -14,11 +14,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='log',
             name='log_file_path',
-            field=models.CharField(max_length=100, null=True, blank=True),
+            field=models.CharField(max_length=200, null=True, blank=True),
         ),
         migrations.AlterField(
             model_name='log',
             name='name',
-            field=models.CharField(max_length=50, null=True, blank=True),
+            field=models.CharField(max_length=200, null=True, blank=True),
         ),
     ]
