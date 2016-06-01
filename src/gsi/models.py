@@ -79,8 +79,8 @@ class Satellite(UnicodeNameMixin, models.Model):
 
 
 class InputDataDirectory(UnicodeNameMixin, models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    full_path = models.CharField(max_length=200, blank=True, null=True)
+    name = models.CharField(max_length=50, unique=True)
+    full_path = models.CharField(max_length=100, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         self.full_path = create_new_folder(self.name)
@@ -90,7 +90,7 @@ class InputDataDirectory(UnicodeNameMixin, models.Model):
 
 
 class ListTestFiles(UnicodeNameMixin, models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=50)
     input_data_directory = models.ForeignKey(
             'InputDataDirectory',
             blank=True,
