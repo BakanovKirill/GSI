@@ -97,7 +97,7 @@ class ListTestFiles(UnicodeNameMixin, models.Model):
             null=True,
             related_name='data_directory')
     # size = models.PositiveIntegerField(blank=True, null=True)
-    size = models.CharField(max_length=20, blank=True, null=True)
+    size = models.CharField(max_length=100, blank=True, null=True)
     date_modified = models.DateTimeField(blank=True, null=True)
 
 
@@ -130,8 +130,8 @@ class CardSequence(UnicodeNameMixin, models.Model):
 
 
 class Log(UnicodeNameMixin, models.Model):
-    name = models.CharField(max_length=50, null=True, blank=True)
-    log_file_path = models.CharField(max_length=100, null=True, blank=True)
+    name = models.CharField(max_length=200, null=True, blank=True)
+    log_file_path = models.CharField(max_length=200, null=True, blank=True)
     log_file = models.FileField(blank=True, null=True)
 
 
