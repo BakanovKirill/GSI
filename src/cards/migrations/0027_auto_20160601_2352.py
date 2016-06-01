@@ -14,11 +14,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='collate',
             name='input_scale_factor',
-            field=models.CharField(max_length=50, blank=True),
+            field=models.CharField(max_length=200, blank=True),
         ),
         migrations.AlterField(
             model_name='collate',
             name='output_tile_subdir',
-            field=models.CharField(max_length=50, blank=True),
+            field=models.CharField(max_length=200, blank=True),
         ),
     ]
