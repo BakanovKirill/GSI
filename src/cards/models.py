@@ -78,9 +78,12 @@ class YearFilter(NamedModel, ParallelModel):
 
 class Collate(NamedModel, ParallelModel):
     def __init__(self, *args, **kwargs):
-        super(Collate, self).__init__(*args, **kwargs)
         update_root_list_files()
         update_list_dirs()
+        super(Collate, self).__init__(*args, **kwargs)
+
+        if self.input_data_directory is not None:
+            update_list_files(self.input_data_directory)
 
     area = models.ForeignKey('gsi.Area')
     mode = models.CharField(max_length=50, blank=True)
@@ -88,6 +91,11 @@ class Collate(NamedModel, ParallelModel):
     input_scale_factor = models.CharField(max_length=200, blank=True)
     input_data_directory = models.ForeignKey('gsi.InputDataDirectory', blank=True, null=True)
     input_files = models.ManyToManyField('gsi.ListTestFiles', blank=True, related_name='input_files')
+
+    # def save(self, *args, **kwargs):
+    #     # update_root_list_files()
+    #     # update_list_dirs()
+    #     super(Collate, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = _('Collate cards')

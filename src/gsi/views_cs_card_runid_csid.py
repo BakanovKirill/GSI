@@ -322,6 +322,11 @@ def cs_runid_csid_collate_edit(request, run_id, cs_id, card_id, collate_id):
 	content_type = get_object_or_404(ContentType, app_label='cards', model='collate')
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
 
+	available_files = ListTestFiles.objects.filter(
+			input_data_directory=collate_card.input_data_directory).exclude(
+			id__in=collate_card.input_files.values_list('id', flat=True))
+	chosen_files = collate_card.input_files.filter(input_data_directory=collate_card.input_data_directory)
+
 	try:
 		card_item = get_object_or_404(CardItem, object_id=collate_id, content_type=content_type)
 		card_sequence_card = CardSequence.cards.through.objects.get(id=card_id)
@@ -374,6 +379,8 @@ def cs_runid_csid_collate_edit(request, run_id, cs_id, card_id, collate_id):
 		'run_id': run_id,
 		'cs_id': cs_id,
 		'card': card_id,
+		'available_files': available_files,
+		'chosen_files': chosen_files,
 	}
 
 	return data

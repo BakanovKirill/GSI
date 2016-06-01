@@ -334,7 +334,8 @@ class CollateForm(forms.ModelForm):
         label=u'Input scale factor',
     )
     input_data_directory = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": 'form-control disabled'}),
+        widget=forms.Select(attrs={"class": 'form-control disabled',
+                                   "onchange": 'this.form.submit()'}),
         queryset=InputDataDirectory.objects.all(),
         empty_label='Select',
         required=False,

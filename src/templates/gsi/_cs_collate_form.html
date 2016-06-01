@@ -58,12 +58,26 @@
             <b class="error-form">{{ form_2.area.errors }}</b>
         {% endif %}
     </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.input_scale_factor.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form_2.input_scale_factor.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if not form_2.input_scale_factor.errors %}
+            {{ form_2.input_scale_factor }}
+        {% else %}
+            <span class="field-error">{{ form_2.input_scale_factor }}</span>
+            <b class="error-form">{{ form_2.input_scale_factor.errors }}</b>
+        {% endif %}
+    </div>
 </div>
 
 <div class="row margin-top-15">
     <div class="col-md-2 right">
         <div class="form-group {% if form_2.mode.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form_2.mode.label }}*</label>
+            <label class="control-label font-normal">{{ form_2.mode.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
@@ -76,24 +90,8 @@
     </div>
 
     <div class="col-md-2 right">
-        <div class="form-group {% if form_2.input_file.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form_2.input_file.label }}*</label>
-        </div>
-    </div>
-    <div class="col-md-4">
-        {% if not form_2.input_file.errors %}
-            {{ form_2.input_file }}
-        {% else %}
-            <span class="field-error">{{ form_2.input_file }}</span>
-            <b class="error-form">{{ form_2.input_file.errors }}</b>
-        {% endif %}
-    </div>
-</div>
-
-<div class="row margin-top-15">
-    <div class="col-md-2 right">
         <div class="form-group {% if form_2.output_tile_subdir.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form_2.output_tile_subdir.label }}*</label>
+            <label class="control-label font-normal">{{ form_2.output_tile_subdir.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
@@ -104,19 +102,62 @@
             <b class="error-form">{{ form_2.output_tile_subdir.errors }}</b>
         {% endif %}
     </div>
+</div>
 
+<div class="row margin-top-15">
     <div class="col-md-2 right">
-        <div class="form-group {% if form_2.input_scale_factor.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form_2.input_scale_factor.label }}*</label>
+        <div class="form-group {% if form_2.input_data_directory.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form_2.input_data_directory.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
-        {% if not form_2.input_scale_factor.errors %}
-            {{ form_2.input_scale_factor }}
+        {% if not form_2.input_data_directory.errors %}
+            {{ form_2.input_data_directory }}
         {% else %}
-            <span class="field-error">{{ form_2.input_scale_factor }}</span>
-            <b class="error-form">{{ form_2.input_scale_factor.errors }}</b>
+            <span class="field-error">{{ form_2.input_data_directory }}</span>
+            <b class="error-form">{{ form_2.input_data_directory.errors }}</b>
         {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.years.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">Input Files</label>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="form-group {% if form_2.years.errors %}has-error{% endif %}">
+            <p class="margin-top-8 margin-left-12">Available files</p>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="form-group {% if form_2.years.errors %}has-error{% endif %}">
+            <p class="margin-top-8 margin-left-12">Chosen files</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-5 col-md-offset-2">
+        <select multiple class="form-control" name="available" size="10">
+            {% for file in available_files %}
+                <option value="{{ file.id }}">{{ file }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-5">
+        {% if form_2.input_files.errors %}
+            <b class="error-form">{{ form_2.input_files.errors }}</b>
+        {% endif %}
+        <select multiple class="form-control" name="chosen" size="10">
+            {% for file in chosen_files %}
+                <option value="{{ file.id }}">{{ file }}</option>
+            {% endfor %}
+        </select>
     </div>
 </div>
 
