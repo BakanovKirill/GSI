@@ -87,7 +87,7 @@ class Collate(NamedModel, ParallelModel):
     output_tile_subdir = models.CharField(max_length=200, blank=True)
     input_scale_factor = models.CharField(max_length=200, blank=True)
     input_data_directory = models.ForeignKey('gsi.InputDataDirectory', blank=True, null=True)
-    input_files = models.ManyToManyField('gsi.ListTestFiles', blank=True)
+    input_files = models.ManyToManyField('gsi.ListTestFiles', blank=True, related_name='input_files')
 
     class Meta:
         verbose_name_plural = _('Collate cards')

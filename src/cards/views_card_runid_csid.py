@@ -11,6 +11,7 @@ from cards.cards_forms import *
 from .card_update_create import *
 # from .get_card_post import *
 from core.get_post import *
+from gsi.models import ListTestFiles
 
 REVERSE_URL = {
 	'qrf': {'save_button': ['proces_card_runid_csid'],
@@ -383,6 +384,7 @@ def new_runid_csid_collate(request, run_id, cs_id):
 	template_name = 'cards/_collate_form.html'
 	func = collate_update_create
 	form = None
+	available_files = ListTestFiles.objects.filter(input_data_directory=None)
 	REVERSE_URL['collate']['save_button'].append([run_id, cs_id])
 	REVERSE_URL['collate']['save_and_another'].append([run_id, cs_id])
 	REVERSE_URL['collate']['save_and_continue'].append([run_id, cs_id])
@@ -412,6 +414,7 @@ def new_runid_csid_collate(request, run_id, cs_id):
 		'template_name': template_name,
 		'run_id': run_id,
 		'cs_id': cs_id,
+		'available_files': available_files
 	}
 
 	return data
@@ -426,6 +429,16 @@ def new_runid_csid_collate_edit(request, run_id, cs_id, collate_id):
 	template_name = 'cards/_collate_form.html'
 	func = collate_update_create
 	form = None
+	available_files = ListTestFiles.objects.filter(
+			input_data_directory=collate_card.input_data_directory).exclude(
+			id__in=collate_card.input_files.values_list('id', flat=True))
+	# available_files = ListTestFiles.objects.filter(
+	# 		input_data_directory=collate_card.input_data_directory)
+	chosen_files = collate_card.input_files.all()
+
+	# chosen_years = years_group.years.all()
+	# available_years = Year.objects.exclude(id__in=years_group.years.values_list('id', flat=True))
+
 	REVERSE_URL['collate']['save_button'].append([run_id, cs_id])
 	REVERSE_URL['collate']['save_and_another'].append([run_id, cs_id])
 	REVERSE_URL['collate']['save_and_continue'].append([run_id, cs_id])
@@ -450,6 +463,8 @@ def new_runid_csid_collate_edit(request, run_id, cs_id, collate_id):
 		'template_name': template_name,
 		'run_id': run_id,
 		'cs_id': cs_id,
+		'available_files': available_files,
+		'chosen_files': chosen_files,
 	}
 
 	return data

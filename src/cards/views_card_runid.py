@@ -389,6 +389,7 @@ def new_runid_collate_edit(request, run_id, collate_id):
     template_name = 'cards/_collate_form.html'
     func = collate_update_create
     form = None
+    available_files = ListTestFiles.objects.filter(input_data_directory=None)
     REVERSE_URL['collate']['save_button'].append([run_id])
     REVERSE_URL['collate']['save_and_another'].append([run_id])
     REVERSE_URL['collate']['save_and_continue'].append([run_id])
@@ -413,6 +414,7 @@ def new_runid_collate_edit(request, run_id, collate_id):
         'url_form': url_form,
         'template_name': template_name,
         'run_id': run_id,
+        'available_files': available_files,
     }
 
     return data

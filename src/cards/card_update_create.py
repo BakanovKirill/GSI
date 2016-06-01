@@ -2,6 +2,7 @@
 from cards.models import (QRF, RFScore, Remap,
                           YearFilter, Collate, PreProc,
                           MergeCSV, RFTrain, RandomForest)
+from gsi.models import ListTestFiles
 
 
 def qrf_update_create(form, item_id=None):
@@ -154,7 +155,7 @@ def year_filter_update_create(form, item_id=None):
     return year_filter_card
 
 
-def collate_update_create(form, item_id=None):
+def collate_update_create(form, item_id=None, multiple=None, delete=False):
     cur_card = None
     collate_card = None
 
@@ -167,10 +168,11 @@ def collate_update_create(form, item_id=None):
                 name=form.cleaned_data["name"],
                 area=form.cleaned_data["area"],
                 mode=form.cleaned_data["mode"],
-                input_file=form.cleaned_data["input_file"],
+                # input_files=form.cleaned_data["input_files"],
                 output_tile_subdir=form.cleaned_data["output_tile_subdir"],
                 input_scale_factor=form.cleaned_data["input_scale_factor"],
                 run_parallel=form.cleaned_data["run_parallel"],
+                input_data_directory=form.cleaned_data["input_data_directory"],
             )
             collate_card = Collate.objects.get(id=item_id)
     else:
@@ -179,11 +181,26 @@ def collate_update_create(form, item_id=None):
                 name=form.cleaned_data["name"],
                 area=form.cleaned_data["area"],
                 mode=form.cleaned_data["mode"],
-                input_file=form.cleaned_data["input_file"],
+                # input_files=form.cleaned_data["input_files"],
                 output_tile_subdir=form.cleaned_data["output_tile_subdir"],
                 input_scale_factor=form.cleaned_data["input_scale_factor"],
                 run_parallel=form.cleaned_data["run_parallel"],
+                input_data_directory=form.cleaned_data["input_data_directory"],
             )
+
+    if multiple:
+        list_id = multiple.split('_')
+        for file_id in list_id:
+            if delete:
+                Collate.input_files.through.objects.filter(
+                    listtestfiles_id=file_id,
+                    collate_id = collate_card.id
+                ).delete()
+            else:
+                Collate.input_files.through.objects.create(
+                    listtestfiles_id=file_id,
+                    collate_id =collate_card.id
+                )
 
     return collate_card
 

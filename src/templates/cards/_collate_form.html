@@ -42,6 +42,20 @@
             <b class="error-form">{{ form.area.errors }}</b>
         {% endif %}
     </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.input_scale_factor.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.input_scale_factor.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if not form.input_scale_factor.errors %}
+            {{ form.input_scale_factor }}
+        {% else %}
+            <span class="field-error">{{ form.input_scale_factor }}</span>
+            <b class="error-form">{{ form.input_scale_factor.errors }}</b>
+        {% endif %}
+    </div>
 </div>
 
 <div class="row margin-top-15">
@@ -60,22 +74,6 @@
     </div>
 
     <div class="col-md-2 right">
-        <div class="form-group {% if form.input_file.errors %}has-error{% endif %}">
-            <label class="control-label font-normal">{{ form.input_file.label }}</label>
-        </div>
-    </div>
-    <div class="col-md-4">
-        {% if not form.input_file.errors %}
-            {{ form.input_file }}
-        {% else %}
-            <span class="field-error">{{ form.input_file }}</span>
-            <b class="error-form">{{ form.input_file.errors }}</b>
-        {% endif %}
-    </div>
-</div>
-
-<div class="row margin-top-15">
-    <div class="col-md-2 right">
         <div class="form-group {% if form.output_tile_subdir.errors %}has-error{% endif %}">
             <label class="control-label font-normal">{{ form.output_tile_subdir.label }}</label>
         </div>
@@ -88,19 +86,76 @@
             <b class="error-form">{{ form.output_tile_subdir.errors }}</b>
         {% endif %}
     </div>
+</div>
 
+<div class="row margin-top-15">
     <div class="col-md-2 right">
-        <div class="form-group {% if form.input_scale_factor.errors %}has-error{% endif %}">
-            <label class="control-label font-normal">{{ form.input_scale_factor.label }}</label>
+        <div class="form-group {% if form.input_data_directory.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.input_data_directory.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
-        {% if not form.input_scale_factor.errors %}
-            {{ form.input_scale_factor }}
+        {% if not form.input_data_directory.errors %}
+            {{ form.input_data_directory }}
         {% else %}
-            <span class="field-error">{{ form.input_scale_factor }}</span>
-            <b class="error-form">{{ form.input_scale_factor.errors }}</b>
+            <span class="field-error">{{ form.input_data_directory }}</span>
+            <b class="error-form">{{ form.input_data_directory.errors }}</b>
         {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.years.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">Input Files</label>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="form-group {% if form.years.errors %}has-error{% endif %}">
+            <p class="margin-top-8 margin-left-12">Available files</p>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="form-group {% if form.years.errors %}has-error{% endif %}">
+            <p class="margin-top-8 margin-left-12">Chosen files</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-5 col-md-offset-2">
+        <select multiple class="form-control" name="available" size="10">
+            {% for file in available_files %}
+                <option value="{{ file.id }}">{{ file }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-5">
+        {% if form.input_files.errors %}
+            <b class="error-form">{{ form.input_files.errors }}</b>
+        {% endif %}
+        <select multiple class="form-control" name="chosen" size="10">
+            {% for file in chosen_files %}
+                <option value="{{ file.id }}">{{ file }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-5 col-md-offset-2">
+        <button type="submit" name="add_button" class="btn btn-success margin-top-20 float-right">
+            Add
+        </button>
+    </div>
+
+    <div class="col-md-5">
+        <button type="submit" name="delete_button" class="btn btn-danger margin-top-20 float-right">
+            Delete
+        </button>
     </div>
 </div>
 

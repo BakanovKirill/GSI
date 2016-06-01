@@ -5,7 +5,8 @@ from core.validator_gsi import *
 from cards.models import (QRF, RFScore, Remap,
                           YearFilter, Collate, PreProc,
                           MergeCSV, RFTrain, RandomForest)
-from gsi.models import Area, YearGroup, TileType, Satellite
+from gsi.models import (Area, YearGroup, TileType,
+                        Satellite, InputDataDirectory, ListTestFiles)
 
 
 class QRFForm(forms.ModelForm):
@@ -320,12 +321,6 @@ class CollateForm(forms.ModelForm):
         required=False,
         label=u'Mode',
     )
-    input_file = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
-        max_length=200,
-        required=False,
-        label=u'Input file',
-    )
     output_tile_subdir = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=200,
@@ -338,6 +333,22 @@ class CollateForm(forms.ModelForm):
         required=False,
         label=u'Input scale factor',
     )
+    input_data_directory = forms.ModelChoiceField(
+        widget=forms.Select(attrs={"class": 'form-control disabled'}),
+        queryset=InputDataDirectory.objects.all(),
+        empty_label='Select',
+        required=False,
+        label=u'Input Data Directory',
+    )
+    input_files = forms.ModelMultipleChoiceField(
+        widget=forms.SelectMultiple(
+            attrs={'size': '10',
+                   'class': 'form-control'}
+        ),
+        queryset=ListTestFiles.objects.all(),
+        required=False,
+        label=u'Input Files',
+    )
 
     class Meta:
         model = Collate
@@ -345,10 +356,11 @@ class CollateForm(forms.ModelForm):
             'name',
             'area',
             'mode',
-            'input_file',
             'output_tile_subdir',
             'input_scale_factor',
             'run_parallel',
+            'input_data_directory',
+            'input_files',
         ]
 
 

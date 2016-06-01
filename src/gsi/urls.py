@@ -107,6 +107,13 @@ urlpatterns = [
     url(r'^run/satellite/add/$', 'gsi.views.satellite_add', name='satellite_add'),
     url(r'^run/satellite/(?P<satellite_id>\d+)/$', 'gsi.views.satellite_edit', name='satellite_edit'),
 
+    # input_data_dir_list
+    url(r'^run/input-data-dir/list/$', 'gsi.views.input_data_dir_list', name='input_data_dir_list'),
+
+    # input_data_dir_list edit
+    url(r'^run/input-data-dir/add/$', 'gsi.views.input_data_dir_add', name='input_data_dir_add'),
+    url(r'^run/input-data-dir/(?P<dir_id>\d+)/$', 'gsi.views.input_data_dir_edit', name='input_data_dir_edit'),
+
 
     # card sequence for new run base
     url(r'^run/card-sequence/add/$', 'gsi.views.run_new_card_sequence_add',

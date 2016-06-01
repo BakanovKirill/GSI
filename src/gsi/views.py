@@ -21,7 +21,7 @@ from django.conf import settings
 
 from gsi.models import (Run, RunStep, Log, OrderedCardItem,
 						HomeVariables, VariablesGroup, YearGroup,
-						Year, Satellite)
+						Year, Satellite, InputDataDirectory, ListTestFiles)
 from gsi.gsi_items_update_create import *
 from gsi.gsi_forms import *
 from core.utils import (make_run, get_dir_root_static_path,
@@ -1733,6 +1733,171 @@ def satellite_edit(request, satellite_id):
 		'template_name': template_name,
 		'form': form,
 		'item_id': satellite_id,
+	}
+
+	return data
+
+
+# InputDataDirectory list
+@login_required
+@render_to('gsi/input_data_dir_list.html')
+def input_data_dir_list(request):
+	title = 'Input Data Directory'
+	input_data_dirs = InputDataDirectory.objects.all()
+	input_data_dir_name = ''
+	url_name = 'input_data_dir_list'
+	but_name = 'static_data'
+
+	if request.method == "POST" and request.is_ajax():
+		data_post = request.POST
+
+		if 'run_id[]' in data_post:
+			data = ''
+			message = u'Are you sure you want to remove these objects:'
+			run_id = data_post.getlist('run_id[]')
+
+			for r in run_id:
+				cur_run = get_object_or_404(InputDataDirectory, pk=int(r))
+				data += '"' + cur_run.name + '", '
+
+			data = data[:-2]
+			data = '<b>' + data + '</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		if 'cur_run_id' in data_post:
+			message = u'Are you sure you want to remove this objects:'
+			run_id = data_post['cur_run_id']
+			cur_run = get_object_or_404(InputDataDirectory, pk=int(run_id))
+			data = '<b>"' + cur_run.name + '"</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		else:
+			data = ''
+			return HttpResponse(data)
+
+	if request.method == "POST":
+		# if request.POST.get('delete_button'):
+		if request.POST.get('input_data_dirs_select'):
+			for dir_id in request.POST.getlist('input_data_dirs_select'):
+				cur_dir = get_object_or_404(InputDataDirectory, pk=dir_id)
+				input_data_dir_name += '"' + cur_dir.name + '", '
+				cur_dir.delete()
+
+			input_data_dir_name = input_data_dir_name[:-2]
+
+			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('input_data_dir_list'),
+										 (u'Input Data Directorys: {0} ==> deleted.'.format(input_data_dir_name)))
+			)
+		elif request.POST.get('delete_button'):
+			cur_dir = get_object_or_404(InputDataDirectory, pk=request.POST.get('delete_button'))
+			input_data_dir_name += '"' + cur_dir.name + '"'
+			cur_dir.delete()
+
+			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('input_data_dir_list'),
+										 (u'Input Data Directory: {0} ==> deleted.'.format(input_data_dir_name)))
+				)
+		else:
+				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('input_data_dir_list'),
+											 (u"To delete, select Directory or more Directorys."))
+				)
+
+	# paginations
+	model_name = paginations(request, input_data_dirs)
+
+	data = {
+		'title': title,
+		'input_data_dirs': model_name,
+		'model_name': model_name,
+		'url_name': url_name,
+		'but_name': but_name,
+	}
+
+	return data
+
+
+# InputDataDirectory add
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def input_data_dir_add(request):
+	title = 'Input Data Directory Add'
+	url_form = 'input_data_dir_add'
+	url_name = 'input_data_dir_list'
+	but_name = 'static_data'
+	template_name = 'gsi/_input_data_dir_form.html'
+	reverse_url = {
+		'save_button': 'input_data_dir_list',
+		'save_and_another': 'input_data_dir_add',
+		'save_and_continue': 'input_data_dir_edit',
+		'cancel_button': 'input_data_dir_list'
+	}
+	func = data_dir_update_create
+	form = None
+	available_files = InputDataDirectory.objects.all()
+
+	if request.method == "POST":
+		response = get_post(request, InputDataDirectoryForm, 'Input Data Directory',
+							reverse_url, func)
+
+		if isinstance(response, HttpResponseRedirect):
+			return response
+		else:
+			form = response
+	else:
+		form = InputDataDirectoryForm()
+
+	data = {
+		'title': title,
+		'url_form': url_form,
+		'template_name': template_name,
+		'form': form,
+		'available_files': available_files,
+		'url_name': url_name,
+		'but_name': but_name,
+	}
+
+	return data
+
+
+# InputDataDirectory edit
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def input_data_dir_edit(request, dir_id):
+	data_dir = get_object_or_404(InputDataDirectory, pk=dir_id)
+	title = 'Input Data Directory Edit "%s"' % (data_dir.name)
+	url_name = 'input_data_dir_list'
+	but_name = 'static_data'
+	url_form = 'input_data_dir_edit'
+	template_name = 'gsi/_input_data_dir_form.html'
+	reverse_url = {
+		'save_button': 'input_data_dir_list',
+		'save_and_another': 'input_data_dir_add',
+		'save_and_continue': 'input_data_dir_edit',
+		'cancel_button': 'input_data_dir_list'
+	}
+	func = data_dir_update_create
+	form = None
+
+	if request.method == "POST":
+		response = get_post(request, InputDataDirectoryForm, 'Input Data Directory',
+							reverse_url, func, item_id=dir_id)
+
+		if isinstance(response, HttpResponseRedirect):
+			return response
+		else:
+			form = response
+	else:
+		form = InputDataDirectoryForm(instance=data_dir)
+
+	data = {
+		'title': title,
+		'url_form': url_form,
+		'url_name': url_name,
+		'but_name': but_name,
+		'template_name': template_name,
+		'form': form,
+		'item_id': dir_id,
 	}
 
 	return data

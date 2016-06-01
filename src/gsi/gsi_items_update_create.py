@@ -2,7 +2,8 @@
 from django.shortcuts import get_object_or_404
 
 from gsi.models import (VariablesGroup, Area, Tile,
-						YearGroup, CardSequence, Satellite)
+						YearGroup, CardSequence, Satellite,
+                        InputDataDirectory)
 
 
 def var_group_update_create(form, item_id=None):
@@ -127,6 +128,22 @@ def satellite_update_create(form, multiple=None, item_id=None, delete=False):
                 )
 
 	return result
+
+
+def data_dir_update_create(form, item_id=None):
+    # import pdb;pdb.set_trace()
+    if item_id:
+        InputDataDirectory.objects.filter(id=item_id).update(
+            name=form.cleaned_data["name"],
+        )
+        result = InputDataDirectory.objects.get(id=item_id)
+    else:
+        result = InputDataDirectory.objects.create(
+            name=form.cleaned_data["name"],
+        )
+
+    return result
+
 
 
 

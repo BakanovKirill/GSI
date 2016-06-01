@@ -6,25 +6,25 @@
 {% block content %}
     <div class="row">
         <div class="col-md-12">
-            <form class="form-modal" action="{% url 'satellite' %}" method="post" enctype="multipart/form-data"
+            <form class="form-modal" action="{% url 'input_data_dir_list' %}" method="post" enctype="multipart/form-data"
                   role="form" class="form-horizontal">
                 {% csrf_token %}
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
                             <th>Select</th>
-                            <th>Name</th>
+                            <th>Input Directory</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for satellite in satellites %}
+                        {% for dir in input_data_dirs %}
                             <tr>
-                                <td><input type="checkbox" name="satellite_select" value="{{ satellite.id }}"></td>
-                                <td>{{ satellite.name }}</td>
+                                <td><input type="checkbox" name="input_data_dirs_select" value="{{ dir.id }}"></td>
+                                <td>{{ dir.name }}</td>
                                 <td>
-                                    <a href="{% url 'satellite_edit' satellite.id %}" role="button"><img class="" src="{% static 'img/edit-18.png' %}"/></a>
-                                    <button class="btn del-btn check-cur-delete" type="button" name="del_current_btn" value="{{ satellite.id }}">
+                                    <!--<a href="{% url 'input_data_dir_edit' dir.id %}" role="button"><img class="" src="{% static 'img/edit-18.png' %}"/></a>-->
+                                    <button class="btn del-btn check-cur-delete" type="button" name="del_current_btn" value="{{ dir.id }}">
                                         <img src="{% static 'img/delete-18.png' %}"/>
                                     </button>
                                 </td>
@@ -39,13 +39,13 @@
 
                 <div class="row margin-top-50">
                     <div class="col-md-4 col-md-offset-4">
-                        <a class="btn btn-primary btn-block" href="{% url 'satellite_add' %}" role="button">
-                            New Satellite
+                        <a class="btn btn-primary btn-block" href="{% url 'input_data_dir_add' %}" role="button">
+                            New Input Data Directory
                         </a>
                     </div>
                     <div class="col-md-4">
                         <button type="button" class="btn btn-danger btn-block check-delete">
-                            Delete Satellites
+                            Delete Input Data Directory
                         </button>
                     </div>
                 </div>
