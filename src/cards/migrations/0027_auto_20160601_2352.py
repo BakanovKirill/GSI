@@ -7,18 +7,18 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cards', '0024_auto_20160601_0727'),
+        ('cards', '0026_auto_20160601_2133'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='collate',
             name='input_scale_factor',
-            field=models.CharField(max_length=200, blank=True),
+            field=models.CharField(max_length=50, blank=True),
         ),
         migrations.AlterField(
             model_name='collate',
             name='output_tile_subdir',
-            field=models.CharField(max_length=200, blank=True),
+            field=models.CharField(max_length=50, blank=True),
         ),
     ]
