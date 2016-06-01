@@ -129,8 +129,8 @@ class CardSequence(UnicodeNameMixin, models.Model):
 
 
 class Log(UnicodeNameMixin, models.Model):
-    name = models.CharField(max_length=200, null=True, blank=True)
-    log_file_path = models.CharField(max_length=300, null=True, blank=True)
+    name = models.CharField(max_length=50, null=True, blank=True)
+    log_file_path = models.CharField(max_length=100, null=True, blank=True)
     log_file = models.FileField(blank=True, null=True)
 
 
