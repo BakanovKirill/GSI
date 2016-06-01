@@ -96,7 +96,8 @@ class ListTestFiles(UnicodeNameMixin, models.Model):
             blank=True,
             null=True,
             related_name='data_directory')
-    size = models.PositiveIntegerField(blank=True, null=True)
+    # size = models.PositiveIntegerField(blank=True, null=True)
+    size = models.CharField(max_length=20, blank=True, null=True)
     date_modified = models.DateTimeField(blank=True, null=True)
 
 
