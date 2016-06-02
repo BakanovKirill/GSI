@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'cards',
     'gsi',
     'log',
+    'tags',
 
 )
 
@@ -205,6 +206,19 @@ PATH_RUNS_SCRIPTS = '/lustre/w23/mattgsi/scripts/runs'
 
 # number paginations
 NUM_PAGINATIONS = 7
+
+# Card Type
+CARD_TYPE = {
+    'rftrain': 'RFTrain',
+    'mergecsv': 'MergeCSV',
+    'preproc': 'PreProc',
+    'collate': 'Collate',
+    'yearfilter': 'YearFilter',
+    'remap': 'Remap',
+    'rfscore': 'RFScore',
+    'qrf': 'QRF',
+    'randomforest': 'RandomForest'
+}
 
 try:
     from settings_local import *

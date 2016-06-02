@@ -87,32 +87,35 @@ urlpatterns = [
         name='environment_group_edit'),
 
     # areas
-    url(r'^run/areas/list/$', 'gsi.views.areas', name='areas'),
+    url(r'^areas/list/$', 'gsi.views.areas', name='areas'),
 
     # areas edit
-    url(r'^run/area/add/$', 'gsi.views.area_add', name='area_add'),
-    url(r'^run/area/(?P<area_id>\d+)/$', 'gsi.views.area_edit', name='area_edit'),
+    url(r'^area/add/$', 'gsi.views.area_add', name='area_add'),
+    url(r'^area/(?P<area_id>\d+)/$', 'gsi.views.area_edit', name='area_edit'),
 
     # years group
-    url(r'^run/years-group/list/$', 'gsi.views.years_group', name='years_group'),
+    url(r'^years-group/list/$', 'gsi.views.years_group', name='years_group'),
 
     # years group edit
-    url(r'^run/years-group/add/$', 'gsi.views.years_group_add', name='years_group_add'),
-    url(r'^run/years-group/(?P<yg_id>\d+)/$', 'gsi.views.years_group_edit', name='years_group_edit'),
+    url(r'^year-group/add/$', 'gsi.views.years_group_add', name='years_group_add'),
+    url(r'^year-group/(?P<yg_id>\d+)/$', 'gsi.views.years_group_edit', name='years_group_edit'),
 
     # satellite
-    url(r'^run/satellite/list/$', 'gsi.views.satellite', name='satellite'),
+    url(r'^satellites/list/$', 'gsi.views.satellite', name='satellite'),
 
     # satellite edit
-    url(r'^run/satellite/add/$', 'gsi.views.satellite_add', name='satellite_add'),
-    url(r'^run/satellite/(?P<satellite_id>\d+)/$', 'gsi.views.satellite_edit', name='satellite_edit'),
+    url(r'^satellite/add/$', 'gsi.views.satellite_add', name='satellite_add'),
+    url(r'^satellite/(?P<satellite_id>\d+)/$', 'gsi.views.satellite_edit', name='satellite_edit'),
 
     # input_data_dir_list
-    url(r'^run/input-data-dir/list/$', 'gsi.views.input_data_dir_list', name='input_data_dir_list'),
+    url(r'^input-data-dirs/list/$', 'gsi.views.input_data_dir_list', name='input_data_dir_list'),
 
     # input_data_dir_list edit
-    url(r'^run/input-data-dir/add/$', 'gsi.views.input_data_dir_add', name='input_data_dir_add'),
-    url(r'^run/input-data-dir/(?P<dir_id>\d+)/$', 'gsi.views.input_data_dir_edit', name='input_data_dir_edit'),
+    url(r'^input-data-dir/add/$', 'gsi.views.input_data_dir_add', name='input_data_dir_add'),
+    url(r'^input-data-dir/(?P<dir_id>\d+)/$', 'gsi.views.input_data_dir_edit', name='input_data_dir_edit'),
+
+    # menu editing cards
+    url(r'^cards/list/$', 'gsi.views.cards_list', name='cards_list'),
 
 
     # card sequence for new run base
