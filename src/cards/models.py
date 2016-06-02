@@ -79,9 +79,9 @@ class YearFilter(NamedModel, ParallelModel):
 
 class Collate(NamedModel, ParallelModel):
     def __init__(self, *args, **kwargs):
-        update_root_list_files()
-        update_list_dirs()
         super(Collate, self).__init__(*args, **kwargs)
+        # update_root_list_files()
+        # update_list_dirs()
 
         if self.input_data_directory is not None:
             update_list_files(self.input_data_directory)

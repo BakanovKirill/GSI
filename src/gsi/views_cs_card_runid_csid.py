@@ -15,6 +15,7 @@ from cards.cards_forms import *
 from cards.card_update_create import *
 # from .get_card_post import *
 from core.get_post import *
+from core.utils import update_root_list_files
 from gsi.models import CardSequence
 from cards.models import CardItem
 from gsi.gsi_forms import CardSequenceCardForm
@@ -321,6 +322,7 @@ def cs_runid_csid_collate_edit(request, run_id, cs_id, card_id, collate_id):
 	collate_card = get_object_or_404(Collate, pk=collate_id)
 	content_type = get_object_or_404(ContentType, app_label='cards', model='collate')
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
+	update_root_list_files()
 
 	available_files = ListTestFiles.objects.filter(
 			input_data_directory=collate_card.input_data_directory).exclude(

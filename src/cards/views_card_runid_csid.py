@@ -9,7 +9,7 @@ from django.conf import settings
 
 from cards.cards_forms import *
 from .card_update_create import *
-# from .get_card_post import *
+from core.utils import update_root_list_files
 from core.get_post import *
 from gsi.models import ListTestFiles
 
@@ -382,6 +382,7 @@ def new_runid_csid_collate(request, run_id, cs_id):
 	title = 'New Collate Card'
 	url_form = 'new_runid_csid_collate'
 	template_name = 'cards/_collate_form.html'
+	update_root_list_files()
 	func = collate_update_create
 	form = None
 	available_files = ListTestFiles.objects.filter(input_data_directory=None)
@@ -429,6 +430,7 @@ def new_runid_csid_collate_edit(request, run_id, cs_id, collate_id):
 	template_name = 'cards/_collate_form.html'
 	func = collate_update_create
 	form = None
+	update_root_list_files()
 
 	available_files = ListTestFiles.objects.filter(
 			input_data_directory=collate_card.input_data_directory).exclude(

@@ -9,6 +9,7 @@ from .models import (RFScore, QRF, Collate, YearFilter,
                      Remap, PreProc, MergeCSV, RFTrain,
                      CardItem, OrderedCardItem, RandomForest)
 from gsi.models import ListTestFiles
+from core.utils import update_root_list_files
 
 admin.site.register(QRF, admin.ModelAdmin)
 admin.site.register(RFScore, admin.ModelAdmin)
@@ -33,13 +34,17 @@ class CollateAdminForm(forms.ModelForm):
         if 'input_data_directory' in self.initial:
             self.fields['input_files'].queryset = ListTestFiles.objects.filter(
                     Q(input_data_directory=self.initial['input_data_directory']))
-        else:
-            pass
 
 
 class CollateAdmin(admin.ModelAdmin):
     form = CollateAdminForm
     filter_horizontal = ('input_files',)
+    actions = ('update_list_files',)
+
+    def update_list_files(self, request, queryset):
+        update_root_list_files()
+        self.message_user(request, "Files in root directory updated.")
+    update_list_files.short_description = "Update List Files"
 
 
 class CardItemAdmin(admin.ModelAdmin):
