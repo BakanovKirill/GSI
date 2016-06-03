@@ -25,14 +25,14 @@ function initCheckDeleteItems() {
             },
             'success': function(data, status, xhr){
                 if (!data){
-                    data = 'To delete, select Run or more Runs.';
+                    data = 'To delete, select Item or more Itemss.';
                     modal.find('div.div-cancel').removeClass("col-sm-6");
                     modal.find('div.div-cancel').addClass("col-sm-4 col-sm-offset-4")
                     modal.find('.cancel-but').html('Ok');
                     modal.find('.del-but').hide();
                 }
                 else {
-                    modal.find('.cancel-but').html("No. I don't want delete this item.");
+                    modal.find('.cancel-but').html("No. I don't want delete this Item.");
                     modal.find('div.div-cancel').removeClass("col-sm-4 col-sm-offset-4");
                     modal.find('div.div-cancel').addClass("col-sm-6");
                     modal.find('.del-but').show();

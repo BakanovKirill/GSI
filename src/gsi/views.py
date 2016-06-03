@@ -1905,7 +1905,7 @@ def input_data_dir_edit(request, dir_id):
 	return data
 
 
-# Editing Cards
+# Cards List
 @login_required
 @render_to('gsi/cards_list.html')
 def cards_list(request, *args, **kwargs):
@@ -1918,9 +1918,67 @@ def cards_list(request, *args, **kwargs):
 	# content_type_name = ContentType.objects.get(app_label="cards", model="qrf")
 	# class_obj_1 = content_type_name.model_class()
 	# class_obj_2 = content_type_name.get_object_for_this_type(name='AUZ_SOC3_QRF')
-	#
 	# print 'class_obj ========================== ', class_obj_2.interval
-	# user_type.get_object_for_this_type(username='Guido')
+
+	if request.method == "POST" and request.is_ajax():
+		data_post = request.POST
+
+		if 'run_id[]' in data_post:
+			data = ''
+			message = u'Are you sure you want to remove these objects:'
+			card_id = data_post.getlist('run_id[]')
+
+			for c in card_id:
+				cur_card = get_object_or_404(CardItem, pk=int(c))
+				data += '"' + str(cur_card) + '", '
+
+			data = data[:-2]
+			data = '<b>' + data + '</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		if 'cur_run_id' in data_post:
+			message = u'Are you sure you want to remove this objects:'
+			card_id = data_post['cur_run_id']
+			cur_card = get_object_or_404(CardItem, pk=int(card_id))
+			data = '<b>"' + str(cur_card) + '"</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		else:
+			data = ''
+			return HttpResponse(data)
+
+	if request.method == "POST":
+		if request.POST.get('card_select'):
+			for card_id in request.POST.getlist('card_select'):
+				cur_card = get_object_or_404(CardItem, pk=card_id)
+				cards_name += '"' + str(cur_card) + '", '
+				content_type_card = ContentType.objects.get(id=cur_card.content_type_id)
+				class_obj = content_type_card.get_object_for_this_type(name=str(cur_card))
+				cur_card.delete()
+				class_obj.delete()
+
+			cards_name = cards_name[:-2]
+
+			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('cards_list'),
+										 (u'Cards: {0} ==> deleted.'.format(cards_name)))
+			)
+		elif request.POST.get('delete_button'):
+			cur_card = get_object_or_404(CardItem, pk=request.POST.get('delete_button'))
+			cards_name += '"' + str(cur_card) + '"'
+			content_type_card = ContentType.objects.get(id=cur_card.content_type_id)
+			class_obj = content_type_card.get_object_for_this_type(name=str(cur_card))
+			cur_card.delete()
+			class_obj.delete()
+
+			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('cards_list'),
+										 (u'Card: {0} ==> deleted.'.format(cards_name)))
+				)
+		else:
+				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('cards_list'),
+											 (u"To delete, select Card or more Cards."))
+				)
 
 	# paginations
 	model_name = paginations(request, cards_all)
@@ -1931,6 +1989,49 @@ def cards_list(request, *args, **kwargs):
 		'model_name': model_name,
 		'url_name': url_name,
 		'but_name': but_name,
+	}
+
+	return data
+
+
+# Cards List
+@login_required
+@render_to('gsi/cards_list.html')
+def cards_edit(request, card_id):
+	data_card = get_object_or_404(InputDataDirectory, pk=dir_id)
+	title = 'Input Data Directory Edit "%s"' % (data_card)
+	url_name = 'cards_list'
+	but_name = 'static_data'
+	url_form = 'cards_edit'
+	template_name = 'gsi/_input_data_dir_form.html'
+	reverse_url = {
+		'save_button': 'cards_list',
+		'save_and_another': 'input_data_dir_add',
+		'save_and_continue': 'cards_edit',
+		'cancel_button': 'cards_list'
+	}
+	func = data_dir_update_create
+	form = None
+
+	if request.method == "POST":
+		response = get_post(request, InputDataDirectoryForm, 'Input Data Directory',
+							reverse_url, func, item_id=dir_id)
+
+		if isinstance(response, HttpResponseRedirect):
+			return response
+		else:
+			form = response
+	else:
+		form = InputDataDirectoryForm(instance=data_dir)
+
+	data = {
+		'title': title,
+		'url_form': url_form,
+		'url_name': url_name,
+		'but_name': but_name,
+		'template_name': template_name,
+		'form': form,
+		'item_id': dir_id,
 	}
 
 	return data
