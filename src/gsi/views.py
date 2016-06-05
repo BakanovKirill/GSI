@@ -1915,6 +1915,9 @@ def cards_list(request, *args, **kwargs):
 	url_name = 'cards_list'
 	but_name = 'static_data'
 
+	for x in cards_all:
+		print 'model ============== ', x.content_type.model
+
 	# content_type_name = ContentType.objects.get(app_label="cards", model="qrf")
 	# class_obj_1 = content_type_name.model_class()
 	# class_obj_2 = content_type_name.get_object_for_this_type(name='AUZ_SOC3_QRF')
@@ -1996,14 +1999,19 @@ def cards_list(request, *args, **kwargs):
 
 # Cards List
 @login_required
-@render_to('gsi/cards_list.html')
-def cards_edit(request, card_id):
-	data_card = get_object_or_404(InputDataDirectory, pk=dir_id)
-	title = 'Input Data Directory Edit "%s"' % (data_card)
+@render_to('gsi/card_editions.html')
+def card_edit(request, card_id):
+	data_card = get_object_or_404(CardItem, pk=card_id)
+	title = 'Card Editing "%s"' % (data_card)
 	url_name = 'cards_list'
 	but_name = 'static_data'
-	url_form = 'cards_edit'
-	template_name = 'gsi/_input_data_dir_form.html'
+	url_form = 'card_edit'
+	card_model = data_card.content_type.model if data_card.content_type.model != 'yearfilter' else 'year_filter'
+	template_name = 'cards/_{0}_form.html'.format(card_model)
+
+	print 'template_name ========================= ', template_name
+
+	# template_name = 'gsi/_input_data_dir_form.html'
 	reverse_url = {
 		'save_button': 'cards_list',
 		'save_and_another': 'input_data_dir_add',
@@ -2015,14 +2023,14 @@ def cards_edit(request, card_id):
 
 	if request.method == "POST":
 		response = get_post(request, InputDataDirectoryForm, 'Input Data Directory',
-							reverse_url, func, item_id=dir_id)
+							reverse_url, func, item_id=card_id)
 
 		if isinstance(response, HttpResponseRedirect):
 			return response
 		else:
 			form = response
 	else:
-		form = InputDataDirectoryForm(instance=data_dir)
+		form = InputDataDirectoryForm(instance=data_card)
 
 	data = {
 		'title': title,
@@ -2031,7 +2039,7 @@ def cards_edit(request, card_id):
 		'but_name': but_name,
 		'template_name': template_name,
 		'form': form,
-		'item_id': dir_id,
+		'card_id': card_id,
 	}
 
 	return data

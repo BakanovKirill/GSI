@@ -114,8 +114,12 @@ urlpatterns = [
     url(r'^input-data-dir/add/$', 'gsi.views.input_data_dir_add', name='input_data_dir_add'),
     url(r'^input-data-dir/(?P<dir_id>\d+)/$', 'gsi.views.input_data_dir_edit', name='input_data_dir_edit'),
 
-    # menu editing cards
+    # MENU editing cards
+    # cards list
     url(r'^cards/list/$', 'gsi.views.cards_list', name='cards_list'),
+
+    # cards edit
+    url(r'^cards/(?P<card_id>\d+)/$', 'gsi.views.card_edit', name='card_edit'),
 
 
     # card sequence for new run base
