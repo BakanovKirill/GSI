@@ -7,6 +7,7 @@ from django.db import models
 from django.utils.translation import \
     ugettext_lazy as _  # Always aware of translations to other languages in the future -> wrap all texts into _()
 from solo.models import SingletonModel
+from django.db import IntegrityError
 
 from core.utils import (UnicodeNameMixin, create_new_folder,
                         update_root_list_files, update_list_dirs,
@@ -83,8 +84,11 @@ class InputDataDirectory(UnicodeNameMixin, models.Model):
     full_path = models.CharField(max_length=200, blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        self.full_path = create_new_folder(self.name)
-        super(InputDataDirectory, self).save(*args, **kwargs)
+        try:
+            self.full_path = create_new_folder(self.name)
+            super(InputDataDirectory, self).save(*args, **kwargs)
+        except IntegrityError, e:
+            print 'IntegrityError: ============= ', e
         update_root_list_files()
         update_list_dirs()
 

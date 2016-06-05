@@ -1744,6 +1744,7 @@ def satellite_edit(request, satellite_id):
 def input_data_dir_list(request):
 	title = 'Input Data Directory'
 	input_data_dirs = InputDataDirectory.objects.all()
+	home_var = HomeVariables.objects.all()
 	input_data_dir_name = ''
 	url_name = 'input_data_dir_list'
 	but_name = 'static_data'
@@ -1785,18 +1786,25 @@ def input_data_dir_list(request):
 				input_data_dir_name += '"' + cur_dir.name + '", '
 				cur_dir.delete()
 
+				dir_path = os.path.join(home_var[0].RF_AUXDATA_DIR, cur_dir.name)
+				if os.path.exists(dir_path):
+					shutil.rmtree(dir_path)
+
 			input_data_dir_name = input_data_dir_name[:-2]
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('input_data_dir_list'),
-										 (u'Input Data Directorys: {0} ==> deleted.'.format(input_data_dir_name)))
+										 (u'Input Data Directorys "{0}": deleted.'.format(input_data_dir_name)))
 			)
 		elif request.POST.get('delete_button'):
 			cur_dir = get_object_or_404(InputDataDirectory, pk=request.POST.get('delete_button'))
 			input_data_dir_name += '"' + cur_dir.name + '"'
 			cur_dir.delete()
+			dir_path = os.path.join(home_var[0].RF_AUXDATA_DIR, cur_dir.name)
+			if os.path.exists(dir_path):
+				shutil.rmtree(dir_path)
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('input_data_dir_list'),
-										 (u'Input Data Directory: {0} ==> deleted.'.format(input_data_dir_name)))
+										 (u'Input Data Directory "{0}": deleted.'.format(input_data_dir_name)))
 				)
 		else:
 				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('input_data_dir_list'),
