@@ -1,22 +1,3 @@
-//function reloadPage(obj) {
-//  alert($(obj).val());
-//  //window.location.reload();
-//  //setInterval(function() {
-//  //  $('.selecter-selected').load(location.href+' .selecter-selected*','');
-//  //}, 500);
-//  //setTimeout(function() {
-//  //  window.location.reload();
-//  //}, 500);
-//}
-//
-//function reloadSelect() {
-//  $( ".form-control" ).change(function() {
-//    alert('reloadSelect');
-//    //var sel_val = $('span.selecter-selected').text();
-//    $('span.selecter-selected').nextAll().toggleClass('field-success');
-//  });
-//}
-
 function onOffSubMenu() {
   var menuElem = document.getElementById('sweeties');
   var titleElem = document.getElementById('title');
@@ -102,8 +83,20 @@ function colorBlackSelect() {
       $(select_item[i]).removeClass('field-success');
     }
   }
+}
 
+function selectAllAvialable() {
+  $('#select-available-files option').each(function(){
+    $('div.available div.multiple select option').attr("selected", "selected");
+    $('div.available div.multiple div.selecter-options span.selecter-item').attr("class", "selecter-item selected");
+  });
+}
 
+function selectAllChosen() {
+  $('#select-chosen-files option').each(function(){
+    $('div.chosen div.multiple select option').attr("selected", "selected");
+    $('div.chosen div.multiple div.selecter-options span.selecter-item').attr("class", "selecter-item selected");
+  });
 }
 
 //function changeColorTyping(obj) {
@@ -134,7 +127,7 @@ function colorBlackSelect() {
 
 
 $(document).ready(function(){
-  //reloadSelect();
+  //selectAll();
   onOffSubMenu();
   invisibleDropMenu();
   onOffSubMenuUser();
