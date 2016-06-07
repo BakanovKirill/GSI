@@ -344,7 +344,7 @@ class CollateForm(forms.ModelForm):
     input_files = forms.ModelMultipleChoiceField(
         widget=forms.SelectMultiple(
             attrs={'size': '10',
-                   'class': 'form-control'}
+                   'class': 'form-control disabled'}
         ),
         queryset=ListTestFiles.objects.all(),
         required=False,
