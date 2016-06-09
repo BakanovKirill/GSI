@@ -105,55 +105,61 @@
 </div>
 
 <div class="row margin-top-15">
-    <div class="col-md-2 right">
+    <div class="col-md-4 left">
         <div class="form-group {% if form.years.errors %}has-error{% endif %}">
-            <label class="control-label font-normal">Input Files</label>
+            <label class="control-label font-normal">Available Input Files</label>
         </div>
     </div>
 
-    <div class="col-md-5">
-        <div class="form-group {% if form.years.errors %}has-error{% endif %}">
-            <p class="margin-top-8 margin-left-12">Available files</p>
-        </div>
-    </div>
-
-    <div class="col-md-5">
-        <div class="form-group {% if form.years.errors %}has-error{% endif %}">
-            <p class="margin-top-8 margin-left-12">Chosen files</p>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-5 col-md-offset-2">
-        <select multiple class="form-control" name="available" size="10">
+    <div class="col-md-10 col-md-offset-2 available">
+        <select multiple class="form-control" id="select-available-files" name="available" size="10">
             {% for file in available_files %}
                 <option value="{{ file.id }}">{{ file }}</option>
             {% endfor %}
         </select>
     </div>
 
-    <div class="col-md-5">
+    <div class="col-md-3 col-md-offset-2">
+        <button type="button" name="add_button" class="btn btn-block btn-primary margin-top-20 float-right"
+        onclick="selectAllAvialable()">
+            Select All
+        </button>
+    </div>
+
+    <div class="col-md-3">
+        <button type="submit" name="add_button" class="btn btn-success margin-top-20 float-right btn-block">
+            Add
+        </button>
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-4 left">
+        <div class="form-group {% if form.years.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">Chosen Input Files</label>
+        </div>
+    </div>
+
+    <div class="col-md-10 col-md-offset-2 chosen">
         {% if form.input_files.errors %}
             <b class="error-form">{{ form.input_files.errors }}</b>
         {% endif %}
-        <select multiple class="form-control" name="chosen" size="10">
+        <select multiple class="form-control" id="select-chosen-files" name="chosen" size="10">
             {% for file in chosen_files %}
                 <option value="{{ file.id }}">{{ file }}</option>
             {% endfor %}
         </select>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-md-5 col-md-offset-2">
-        <button type="submit" name="add_button" class="btn btn-success margin-top-20 float-right">
-            Add
+    <div class="col-md-3 col-md-offset-2">
+        <button type="button" name="select_all_delete_button" class="btn btn-block btn-primary margin-top-20 float-right"
+        onclick="selectAllChosen()">
+            Select All
         </button>
     </div>
 
-    <div class="col-md-5">
-        <button type="submit" name="delete_button" class="btn btn-danger margin-top-20 float-right">
+    <div class="col-md-3">
+        <button type="submit" name="delete_button" class="btn btn-danger margin-top-20 float-right btn-block">
             Delete
         </button>
     </div>
