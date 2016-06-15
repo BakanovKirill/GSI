@@ -2024,8 +2024,8 @@ def view_results(request, run_id):
 	static_dir_root = str(dir_root['static_dir_root']) + '/' + str(resolution) + '/' + str(folder)
 	static_dir_root = slash_remove_from_path(static_dir_root)
 
-	print 'static_dir_root ============================ ', static_dir_root
-	print 'static_dir_root_path ============================ ', static_dir_root_path
+	# print 'static_dir_root ============================ ', static_dir_root
+	# print 'static_dir_root_path ============================ ', static_dir_root_path
 
 	dirs, files, info_message = get_files_dirs(static_dir_root, static_dir_root_path)
 

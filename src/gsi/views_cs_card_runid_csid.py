@@ -322,7 +322,7 @@ def cs_runid_csid_collate_edit(request, run_id, cs_id, card_id, collate_id):
 	collate_card = get_object_or_404(Collate, pk=collate_id)
 	content_type = get_object_or_404(ContentType, app_label='cards', model='collate')
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
-	update_list_files(collate_card.input_data_directory)
+	# update_list_files(collate_card.input_data_directory)
 
 	available_files = ListTestFiles.objects.filter(
 			input_data_directory=collate_card.input_data_directory).exclude(
@@ -349,6 +349,9 @@ def cs_runid_csid_collate_edit(request, run_id, cs_id, card_id, collate_id):
 		REVERSE_URL['collate']['cancel_button'].append([run_id, cs_id])
 
 		if request.method == "POST":
+			if request.POST.get('update_data') is not None:
+				update_list_files(collate_card.input_data_directory)
+
 			cs_form = [CardSequenceCardForm, card_sequence_card, card_item]
 			response = get_post(request, CollateForm, 'Collate Card', REVERSE_URL['collate'],
 								func, args=True, item_id=collate_id, cs_form=cs_form)
