@@ -51,3 +51,6 @@ dep_migrate:
 
 update:
 	fab update
+
+ngnix:
+	fab ngnix
