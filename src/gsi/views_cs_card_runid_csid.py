@@ -15,7 +15,7 @@ from cards.cards_forms import *
 from cards.card_update_create import *
 # from .get_card_post import *
 from core.get_post import *
-from core.utils import update_root_list_files
+from core.utils import update_list_files
 from gsi.models import CardSequence
 from cards.models import CardItem
 from gsi.gsi_forms import CardSequenceCardForm
@@ -322,7 +322,7 @@ def cs_runid_csid_collate_edit(request, run_id, cs_id, card_id, collate_id):
 	collate_card = get_object_or_404(Collate, pk=collate_id)
 	content_type = get_object_or_404(ContentType, app_label='cards', model='collate')
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
-	update_root_list_files()
+	# update_list_files(collate_card.input_data_directory)
 
 	available_files = ListTestFiles.objects.filter(
 			input_data_directory=collate_card.input_data_directory).exclude(
@@ -349,6 +349,9 @@ def cs_runid_csid_collate_edit(request, run_id, cs_id, card_id, collate_id):
 		REVERSE_URL['collate']['cancel_button'].append([run_id, cs_id])
 
 		if request.method == "POST":
+			if request.POST.get('update_data') is not None:
+				update_list_files(collate_card.input_data_directory)
+
 			cs_form = [CardSequenceCardForm, card_sequence_card, card_item]
 			response = get_post(request, CollateForm, 'Collate Card', REVERSE_URL['collate'],
 								func, args=True, item_id=collate_id, cs_form=cs_form)
@@ -369,7 +372,6 @@ def cs_runid_csid_collate_edit(request, run_id, cs_id, card_id, collate_id):
 									   (u'The RFTrain Card "{0}" was removed from Card Sequence "{1}"'.format(
 										   collate_card.name, card_sequence.name)
 									   )))
-
 
 	data = {
 		'title': title,

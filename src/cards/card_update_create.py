@@ -162,8 +162,12 @@ def collate_update_create(form, item_id=None, multiple=None, delete=False):
     if Collate.objects.filter(name=form.cleaned_data["name"]).exists():
         cur_card = Collate.objects.get(name=form.cleaned_data["name"])
 
+        if cur_card.input_data_directory != form.cleaned_data["input_data_directory"]:
+            Collate.input_files.through.objects.filter(
+                    collate_id = cur_card.id).delete()
+
     if item_id:
-        if cur_card == None or cur_card.id == int(item_id):
+        if cur_card != None or cur_card.id == int(item_id):
             Collate.objects.filter(id=item_id).update(
                 name=form.cleaned_data["name"],
                 area=form.cleaned_data["area"],

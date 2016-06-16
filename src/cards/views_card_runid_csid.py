@@ -9,7 +9,7 @@ from django.conf import settings
 
 from cards.cards_forms import *
 from .card_update_create import *
-from core.utils import update_root_list_files
+from core.utils import update_root_list_files, update_list_files
 from core.get_post import *
 from gsi.models import ListTestFiles
 
@@ -382,7 +382,7 @@ def new_runid_csid_collate(request, run_id, cs_id):
 	title = 'New Collate Card'
 	url_form = 'new_runid_csid_collate'
 	template_name = 'cards/_collate_form.html'
-	update_root_list_files()
+	# update_root_list_files()
 	func = collate_update_create
 	form = None
 	available_files = ListTestFiles.objects.filter(input_data_directory=None)
@@ -392,6 +392,9 @@ def new_runid_csid_collate(request, run_id, cs_id):
 	REVERSE_URL['collate']['cancel_button'].append([run_id, cs_id])
 
 	if request.method == "POST":
+		if request.POST.get('update_data') is not None:
+			update_root_list_files()
+
 		response = get_post(request, CollateForm, 'Collate Card',
 							REVERSE_URL['collate'], func, args=True)
 
@@ -430,7 +433,7 @@ def new_runid_csid_collate_edit(request, run_id, cs_id, collate_id):
 	template_name = 'cards/_collate_form.html'
 	func = collate_update_create
 	form = None
-	update_root_list_files()
+	# update_list_files(collate_card.input_data_directory)
 
 	available_files = ListTestFiles.objects.filter(
 			input_data_directory=collate_card.input_data_directory).exclude(
@@ -443,6 +446,9 @@ def new_runid_csid_collate_edit(request, run_id, cs_id, collate_id):
 	REVERSE_URL['collate']['cancel_button'].append([run_id, cs_id])
 
 	if request.method == "POST":
+		if request.POST.get('update_data') is not None:
+			update_list_files(collate_card.input_data_directory)
+
 		response = get_post(request, CollateForm, 'Collate Card', REVERSE_URL['collate'],
 							func, args=True, item_id=collate_id)
 
