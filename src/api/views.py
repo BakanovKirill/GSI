@@ -98,17 +98,18 @@ def update_run(request, run_id):
                             shell=True,
                         )
 
-                    # write log file
-                    # path_file = '/home/gsi/LOGS/api_success.log'
-                    # now = datetime.now()
-                    # log_api_file = open(path_file, 'a')
-                    # log_api_file.writelines('{0}\n'.format(now))
-                    # log_api_file.writelines('SCRIPTS: \n')
-                    # log_api_file.writelines('name ==> {0}\n'.format(script['script_name']))
-                    # log_api_file.writelines('next run ==> {0}\n'.format(next_step.parent_run.id))
-                    # log_api_file.writelines('next card ==> {0}\n'.format(next_step.card_item.id))
-                    # log_api_file.writelines('state ==> {0}\n\n\n'.format(step.state))
-                    # log_api_file.close()
+                        # write log file
+                        path_file = '/home/gsi/LOGS/api_success.log'
+                        now = datetime.now()
+                        log_api_file = open(path_file, 'a')
+                        log_api_file.writelines('{0}\n'.format(now))
+                        log_api_file.writelines('SCRIPTS: \n')
+                        log_api_file.writelines('LAST ==> {0}\n'.format(last)
+                        log_api_file.writelines('LAST BUT ONE ==> {0}\n'.format(last_but_one[0])
+                        # log_api_file.writelines('next run ==> {0}\n'.format(next_step.parent_run.id))
+                        # log_api_file.writelines('next card ==> {0}\n'.format(next_step.card_item.id))
+                        log_api_file.writelines('state ==> {0}\n\n\n'.format(step.state))
+                        log_api_file.close()
 
                     log_name = '{0}_{1}.log'.format(value_list[0], value_list[2])
                     path_log = script['path_runs_logs']
