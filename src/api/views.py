@@ -68,8 +68,8 @@ def update_run(request, run_id):
                 step.save()
             elif state == 'fail' or cur_state == 'fail':
                 log_file.writelines('FAIL: ' + str(state) + '\n')
-                step.state = state
-                run.state = state
+                step.state = 'fail'
+                run.state = 'fail'
                 step.save()
                 run.save()
                 # break
