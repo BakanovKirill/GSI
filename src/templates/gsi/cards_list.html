@@ -26,7 +26,7 @@
                                 <td class="left">{{ card }}</td>
                                 <td class="left">{{ card.content_type.model|type }}</td>
                                 <td>
-                                    <a href="{% url 'card_edit' card.id %}" role="button"><img class="" src="{% static 'img/edit-18.png' %}"/></a>
+                                    <!--<a href="{% url 'card_edit' card.id %}" name="card_edit" role="button"><img class="" src="{% static 'img/edit-18.png' %}"/></a>-->
                                     <button class="btn del-btn check-cur-delete" type="button" name="del_current_btn" value="{{ card.id }}">
                                         <img src="{% static 'img/delete-18.png' %}"/>
                                     </button>
@@ -41,12 +41,12 @@
                 <!-- end pagination -->
 
                 <div class="row margin-top-50">
-                    <div class="col-md-4 col-md-offset-4">
-                        <a class="btn btn-primary btn-block" href="{% url 'satellite_add' %}" role="button">
-                            New Card
-                        </a>
-                    </div>
-                    <div class="col-md-4">
+                    <!--<div class="col-md-4 col-md-offset-4">-->
+                        <!--<a class="btn btn-primary btn-block" href="{% url 'satellite_add' %}" role="button">-->
+                            <!--New Card-->
+                        <!--</a>-->
+                    <!--</div>-->
+                    <div class="col-md-4 col-md-offset-8">
                         <button type="button" class="btn btn-danger btn-block check-delete">
                             Delete Cards
                         </button>

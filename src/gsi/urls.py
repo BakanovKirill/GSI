@@ -119,7 +119,7 @@ urlpatterns = [
     url(r'^cards/list/$', 'gsi.views.cards_list', name='cards_list'),
 
     # cards edit
-    url(r'^cards/(?P<card_id>\d+)/$', 'gsi.views.card_edit', name='card_edit'),
+    url(r'^card/(?P<card_id>\d+)/$', 'gsi.views.card_edit', name='card_edit'),
 
 
     # card sequence for new run base

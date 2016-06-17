@@ -24,6 +24,8 @@ from gsi.models import (Run, RunStep, Log, OrderedCardItem,
 						HomeVariables, VariablesGroup, YearGroup,
 						Year, Satellite, InputDataDirectory, ListTestFiles)
 from cards.models import CardItem, Collate
+from cards.card_update_create import *
+from cards.cards_forms import *
 from gsi.gsi_items_update_create import *
 from gsi.gsi_forms import *
 from core.utils import (make_run, get_dir_root_static_path,
@@ -1923,13 +1925,16 @@ def cards_list(request, *args, **kwargs):
 	url_name = 'cards_list'
 	but_name = 'static_data'
 
-	for x in cards_all:
-		print 'model ============== ', x.content_type.model
-
+	# for x in cards_all:
+	# 	print 'model ============== ', x.content_type.model
+	#
 	# content_type_name = ContentType.objects.get(app_label="cards", model="qrf")
 	# class_obj_1 = content_type_name.model_class()
 	# class_obj_2 = content_type_name.get_object_for_this_type(name='AUZ_SOC3_QRF')
-	# print 'class_obj ========================== ', class_obj_2.interval
+	# print 'class_obj 2 ========================== ', class_obj_2
+	# print 'class_obj 1 ========================== ', class_obj_1
+	# print 'class_obj 2 ID ========================== ', class_obj_2.id
+	# print 'class_obj 2 interval ========================== ', class_obj_2.interval
 
 	if request.method == "POST" and request.is_ajax():
 		data_post = request.POST
@@ -1971,6 +1976,8 @@ def cards_list(request, *args, **kwargs):
 				class_obj.delete()
 
 			cards_name = cards_name[:-2]
+
+			# print 'cards_name ===================== ', cards_name
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('cards_list'),
 										 (u'Cards: {0} ==> deleted.'.format(cards_name)))
@@ -2016,8 +2023,43 @@ def card_edit(request, card_id):
 	url_form = 'card_edit'
 	card_model = data_card.content_type.model if data_card.content_type.model != 'yearfilter' else 'year_filter'
 	template_name = 'cards/_{0}_form.html'.format(card_model)
+	func_dict = {
+		'qrf': qrf_update_create,
+		'rfscore': rfscore_update_create,
+		'remap': remap_update_create,
+		'yearfilter': year_filter_update_create,
+		'collate': collate_update_create,
+		'preproc': preproc_update_create,
+		'mergecsv': mergecsv_update_create,
+		'rftrain': rftrain_update_create,
+		'randomforest': randomforest_update_create,
+	}
+
+	form_dict = {
+		'qrf': QRFForm,
+		'rfscore': RFScoreForm,
+		'remap': RemapForm,
+		'yearfilter': YearFilterForm,
+		'collate': CollateForm,
+		'preproc': PreProcForm,
+		'mergecsv': MergeCSVForm,
+		'rftrain': RFTrainForm,
+		'randomforest': RandomForestForm,
+	}
 
 	print 'template_name ========================= ', template_name
+	print 'card_model ========================= ', card_model
+	# print 'data_card ========================= ', data_card
+
+	content_type_name = ContentType.objects.get(app_label="cards", model=data_card.content_type.model)
+	class_model = content_type_name.model_class()
+	card_name = content_type_name.get_object_for_this_type(name=data_card)
+	cur_card = get_object_or_404(class_model, pk=card_name.id)
+
+	print 'card_name ========================== ', card_name
+	print 'class_model ========================== ', class_model
+	print 'content_type_name ========================== ', content_type_name
+	print 'card_name ID ========================== ', card_name.id
 
 	# template_name = 'gsi/_input_data_dir_form.html'
 	reverse_url = {
@@ -2026,19 +2068,20 @@ def card_edit(request, card_id):
 		'save_and_continue': 'cards_edit',
 		'cancel_button': 'cards_list'
 	}
-	func = data_dir_update_create
+	func = func_dict[data_card.content_type.model]
+	card_form = form_dict[data_card.content_type.model]
 	form = None
 
 	if request.method == "POST":
-		response = get_post(request, InputDataDirectoryForm, 'Input Data Directory',
-							reverse_url, func, item_id=card_id)
+		response = get_post(request, card_form, str(content_type_name),
+							reverse_url, func, item_id=card_name.id)
 
 		if isinstance(response, HttpResponseRedirect):
 			return response
 		else:
 			form = response
 	else:
-		form = InputDataDirectoryForm(instance=data_card)
+		form = card_form(instance=card_name)
 
 	data = {
 		'title': title,
