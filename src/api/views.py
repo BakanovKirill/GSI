@@ -71,7 +71,7 @@ def update_run(request, run_id):
                 run.save()
                 # break
             elif state == 'running' or cur_state == 'running':
-                # log_file.writelines('RUNNING: ' + str(state) + '\n\n')
+                log_file.writelines('RUNNING: ' + str(state) + '\n\n')
                 step.state = state
                 step.save()
             elif state == 'success' or cur_state == 'success':
