@@ -1,0 +1,151 @@
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.name.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.name.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if not form_2.name.errors %}
+            {{ form_2.name }}
+        {% else %}
+            <span class="field-error">{{ form_2.name }}</span>
+            <b class="error-form">{{ form_2.name.errors }}</b>
+        {% endif %}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_1.order.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form_1.order.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if not form_1.order.errors %}
+            {{ form_1.order }}
+        {% else %}
+            <span class="field-error">{{ form_1.order }}</span>
+            <b class="error-form">{{ form_1.order.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.output_tile_subdir.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form_2.output_tile_subdir.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-2 margin-top-4">
+        {% if not form_2.output_tile_subdir.errors %}
+            {{ form_2.output_tile_subdir }}
+        {% else %}
+            <span class="field-error">{{ form_2.output_tile_subdir }}</span>
+            <b class="error-form">{{ form_2.output_tile_subdir.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.year_group.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form_2.year_group.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if not form_2.year_group.errors %}
+            {{ form_2.year_group }}
+        {% else %}
+            <span class="field-error">{{ form_2.year_group }}</span>
+            <b class="error-form">{{ form_2.year_group.errors }}</b>
+        {% endif %}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.period.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form_2.period.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if not form_2.period.errors %}
+            {{ form_2.period }}
+        {% else %}
+            <span class="field-error">{{ form_2.period }}</span>
+            <b class="error-form">{{ form_2.period.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.filter.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form_2.filter.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if not form_2.filter.errors %}
+            {{ form_2.filter }}
+        {% else %}
+            <span class="field-error">{{ form_2.filter }}</span>
+            <b class="error-form">{{ form_2.filter.errors }}</b>
+        {% endif %}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.filter_out.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form_2.filter_out.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if not form_2.filter_out.errors %}
+            {{ form_2.filter_out }}
+        {% else %}
+            <span class="field-error">{{ form_2.filter_out }}</span>
+            <b class="error-form">{{ form_2.filter_out.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.input_fourier.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form_2.input_fourier.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if not form_2.input_fourier.errors %}
+            {{ form_2.input_fourier }}
+        {% else %}
+            <span class="field-error">{{ form_2.input_fourier }}</span>
+            <b class="error-form">{{ form_2.input_fourier.errors }}</b>
+        {% endif %}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.out_dir.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form_2.out_dir.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if not form_2.out_dir.errors %}
+            {{ form_2.out_dir }}
+        {% else %}
+            <span class="field-error">{{ form_2.out_dir }}</span>
+            <b class="error-form">{{ form_2.out_dir.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-50">
+    <div class="col-md-2">
+        <button type="submit" name="cancel_button" class="btn btn-default btn-block">Cancel</button>
+    </div>
+    <div class="col-md-4 col-md-offset-4">
+        <button type="submit" name="save_and_continue_editing_button" class="btn btn-primary btn-block">
+            Save and continue editing
+        </button>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" name="save_button" class="btn btn-primary btn-block">Save</button>
+    </div>
+</div>
+
+<p><input type="hidden">{{ form_1.card_item }}</p>

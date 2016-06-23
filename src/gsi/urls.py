@@ -161,8 +161,8 @@ urlpatterns = [
         'gsi.views_cs_card_runid_csid.cs_runid_csid_rftrain_edit', name='cs_runid_csid_rftrain_edit'),
     url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/(?P<card_id>\d+)/randomforest/(?P<rf_id>\d+)/$',
         'gsi.views_cs_card_runid_csid.cs_runid_csid_randomforest_edit', name='cs_runid_csid_randomforest_edit'),
-    # url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/(?P<card_id>\d+)/calcstats/(?P<calcstats_id>\d+)/$',
-    #     'gsi.views_cs_card_runid_csid.cs_runid_csid_calcstats_edit', name='cs_runid_csid_calcstats_edit'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/(?P<card_id>\d+)/calcstats/(?P<calcstats_id>\d+)/$',
+        'gsi.views_cs_card_runid_csid.cs_runid_csid_calcstats_edit', name='cs_runid_csid_calcstats_edit'),
 
 
     # new runID card-sequenceID cards add

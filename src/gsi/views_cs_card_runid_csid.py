@@ -644,3 +644,67 @@ def cs_runid_csid_randomforest_edit(request, run_id, cs_id, card_id, rf_id):
 	}
 
 	return data
+
+
+@login_required
+@render_to('cards/new_runid_csid_card.html')
+def cs_runid_csid_calcstats_edit(request, run_id, cs_id, card_id, calcstats_id):
+	title = 'CalcStats Card Edit'
+	calcstats_card = get_object_or_404(CalcStats, pk=calcstats_id)
+	content_type = get_object_or_404(ContentType, app_label='cards', model='calcstats')
+	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
+
+	try:
+		card_item = get_object_or_404(CardItem, object_id=calcstats_id, content_type=content_type)
+		card_sequence_card = CardSequence.cards.through.objects.get(id=card_id)
+
+		url_form = 'cs_runid_csid_calcstats_edit'
+		template_name = 'gsi/_cs_calcstats_form.html'
+		func = calcstats_update_create
+		form_1 = CardSequenceCardForm(instance=card_sequence_card)
+		form_2 = CalcStatsForm(instance=calcstats_card)
+
+		REVERSE_URL = {
+			'calcstats': {'save_button': ['card_sequence_update'],
+							 'save_and_continue': ['cs_runid_csid_calcstats_edit'],
+							 'cancel_button': ['card_sequence_update']}
+		}
+		REVERSE_URL['calcstats']['save_button'].append([run_id, cs_id])
+		REVERSE_URL['calcstats']['save_and_continue'].append([run_id, cs_id, card_id])
+		REVERSE_URL['calcstats']['cancel_button'].append([run_id, cs_id])
+
+		if request.method == "POST":
+			cs_form = [CardSequenceCardForm, card_sequence_card, card_item]
+			response = get_post(request, CalcStatsForm, 'CalcStats Card', REVERSE_URL['calcstats'],
+								func, args=True, item_id=calcstats_id, cs_form=cs_form)
+
+			if response == None:
+				return HttpResponseRedirect(
+					u'%s?danger_message=%s' % (reverse('cs_runid_csid_calcstats_edit', args=[run_id, cs_id, card_id, calcstats_id]),
+											   (u"CalcStats Card with the same name already exists"))
+				)
+
+			if isinstance(response, HttpResponseRedirect):
+				return response
+			else:
+				form_2 = response
+	except ObjectDoesNotExist:
+		return HttpResponseRedirect(
+			u'%s?danger_message=%s' % (reverse('card_sequence_update', args=[run_id, cs_id]),
+									   (u'The CalcStats Card "{0}" was removed from Card Sequence "{1}"'.format(
+										   randomforest_card.name, card_sequence.name)
+									   )))
+
+	data = {
+		'title': title,
+		'form_1': form_1,
+		'form_2': form_2,
+		'card_id': calcstats_id,
+		'url_form': url_form,
+		'template_name': template_name,
+		'run_id': run_id,
+		'cs_id': cs_id,
+		'card': card_id,
+	}
+
+	return data

@@ -132,6 +132,8 @@
                                                 {% url 'cs_runid_csid_rftrain_edit' run_id cs_id card.id card.card_item.object_id %}
                                             {% elif card.card_item.content_type.model == 'randomforest' %}
                                                 {% url 'cs_runid_csid_randomforest_edit' run_id cs_id card.id card.card_item.object_id %}
+                                            {% elif card.card_item.content_type.model == 'calcstats' %}
+                                                {% url 'cs_runid_csid_calcstats_edit' run_id cs_id card.id card.card_item.object_id %}
                                             {% endif %}
                                         {% else %}
                                             {% if card.card_item.content_type.model == 'qrf' %}
