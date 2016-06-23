@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from cards.models import (QRF, RFScore, Remap,
                           YearFilter, Collate, PreProc,
-                          MergeCSV, RFTrain, RandomForest)
+                          MergeCSV, RFTrain, RandomForest,
+                          CalcStats)
 from gsi.models import ListTestFiles
 
 
@@ -315,7 +316,7 @@ def randomforest_update_create(form, item_id=None):
         cur_card = RandomForest.objects.get(name=form.cleaned_data["name"])
 
     if item_id:
-        if cur_card == None or cur_card.id == int(item_id):
+        if cur_card != None or cur_card.id == int(item_id):
             RandomForest.objects.filter(id=item_id).update(
                 name=form.cleaned_data["name"],
                 aoi_name=form.cleaned_data["aoi_name"],
@@ -339,3 +340,39 @@ def randomforest_update_create(form, item_id=None):
             )
 
     return randomforest_card
+
+
+def calcstats_update_create(form, item_id=None):
+    cur_card = None
+    calcstats_card = None
+
+    if CalcStats.objects.filter(name=form.cleaned_data["name"]).exists():
+        cur_card = CalcStats.objects.get(name=form.cleaned_data["name"])
+
+    if item_id:
+        if cur_card != None or cur_card.id == int(item_id):
+            CalcStats.objects.filter(id=item_id).update(
+                name=form.cleaned_data["name"],
+                output_tile_subdir=form.cleaned_data["output_tile_subdir"],
+                year_group=form.cleaned_data["year_group"],
+                period=form.cleaned_data["period"],
+                filter=form.cleaned_data["filter"],
+                filter_out=form.cleaned_data["filter_out"],
+                input_fourier=form.cleaned_data["input_fourier"],
+                out_dir=form.cleaned_data["out_dir"],
+            )
+            calcstats_card = CalcStats.objects.get(id=item_id)
+    else:
+        if cur_card == None:
+            calcstats_card = CalcStats.objects.create(
+                name=form.cleaned_data["name"],
+                output_tile_subdir=form.cleaned_data["output_tile_subdir"],
+                year_group=form.cleaned_data["year_group"],
+                period=form.cleaned_data["period"],
+                filter=form.cleaned_data["filter"],
+                filter_out=form.cleaned_data["filter_out"],
+                input_fourier=form.cleaned_data["input_fourier"],
+                out_dir=form.cleaned_data["out_dir"],
+            )
+
+    return calcstats_card

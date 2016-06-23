@@ -50,6 +50,10 @@ REVERSE_URL = {
 	            'save_and_another': ['new_runid_csid_randomforest'],
 	            'save_and_continue': ['new_runid_csid_randomforest_edit'],
 	            'cancel_button': ['proces_card_runid_csid']},
+	'calcstats': {'save_button': ['proces_card_runid_csid'],
+	            'save_and_another': ['new_runid_csid_calcstats'],
+	            'save_and_continue': ['new_runid_csid_calcstats_edit'],
+	            'cancel_button': ['proces_card_runid_csid']},
 }
 
 
@@ -789,6 +793,86 @@ def new_runid_csid_randomforest_edit(request, run_id, cs_id, rf_id):
 		'template_name': template_name,
 		'run_id': run_id,
 		'card_id': rf_id,
+		'cs_id': cs_id,
+	}
+
+	return data
+
+
+@login_required
+@render_to('cards/new_runid_csid_card.html')
+def new_runid_csid_calcstats(request, run_id, cs_id):
+	title = 'New CalcStats Card'
+	url_form = 'new_runid_csid_calcstats'
+	template_name = 'cards/_calcstats_form.html'
+	func = calcstats_update_create
+	form = None
+	REVERSE_URL['calcstats']['save_button'].append([run_id, cs_id])
+	REVERSE_URL['calcstats']['save_and_another'].append([run_id, cs_id])
+	REVERSE_URL['calcstats']['save_and_continue'].append([run_id, cs_id])
+	REVERSE_URL['calcstats']['cancel_button'].append([run_id, cs_id])
+
+	if request.method == "POST":
+		response = get_post(request, CalcStatsForm, 'CalcStats Card',
+							REVERSE_URL['calcstats'], func, args=True)
+
+		if response == None:
+			return HttpResponseRedirect(
+				u'%s?danger_message=%s' % (reverse('new_runid_csid_calcstats', args=[run_id, cs_id]),
+										   (u"CalcStats Card with the same name already exists"))
+			)
+
+		if isinstance(response, HttpResponseRedirect):
+			return response
+		else:
+			form = response
+	else:
+		form = CalcStatsForm()
+
+	data = {
+		'title': title,
+		'form': form,
+		'url_form': url_form,
+		'template_name': template_name,
+		'run_id': run_id,
+		'cs_id': cs_id,
+	}
+
+	return data
+
+
+@login_required
+@render_to('cards/new_runid_csid_card.html')
+def new_runid_csid_calcstats_edit(request, run_id, cs_id, calcstats_id):
+	title = 'New CalcStats Card'
+	calcstats_card = get_object_or_404(CalcStats, pk=calcstats_id)
+	url_form = 'new_runid_csid_calcstats_edit'
+	template_name = 'cards/_calcstats_form.html'
+	func = calcstats_update_create
+	form = None
+	REVERSE_URL['calcstats']['save_button'].append([run_id, cs_id])
+	REVERSE_URL['calcstats']['save_and_another'].append([run_id, cs_id])
+	REVERSE_URL['calcstats']['save_and_continue'].append([run_id, cs_id])
+	REVERSE_URL['calcstats']['cancel_button'].append([run_id, cs_id])
+
+	if request.method == "POST":
+		response = get_post(request, CalcStatsForm, 'CalcStats Card',
+							REVERSE_URL['calcstats'], func, args=True, item_id=calcstats_id)
+
+		if isinstance(response, HttpResponseRedirect):
+			return response
+		else:
+			form = response
+	else:
+		form = CalcStatsForm(instance=calcstats_card)
+
+	data = {
+		'title': title,
+		'form': form,
+		'url_form': url_form,
+		'template_name': template_name,
+		'run_id': run_id,
+		'card_id': calcstats_id,
 		'cs_id': cs_id,
 	}
 

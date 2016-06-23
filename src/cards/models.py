@@ -147,6 +147,31 @@ class RandomForest(NamedModel):
         return u"{0}".format(self.name)
 
 
+PERIOD = (
+    ('year', 'Year'),
+    ('quarter', 'Quarter'),
+    ('month', 'Month'),
+    ('doy', 'Stats per Year'),
+)
+
+FILTER_OUT = (
+    ('0', '0'),
+    ('1', '1'),
+    ('2', '2'),
+    ('3', '3'),
+    ('4', '4'),
+)
+
+class CalcStats(NamedModel):
+    output_tile_subdir = models.CharField(max_length=200)
+    year_group = models.ForeignKey('gsi.YearGroup', null=True, blank=True)
+    period = models.CharField(max_length=100, choices=PERIOD, default='year', null=True, blank=True)
+    filter = models.FloatField(default=0, blank=True, null=True)
+    filter_out = models.CharField(max_length=100, choices=FILTER_OUT, null=True, blank=True)
+    input_fourier = models.CharField(max_length=200, null=True, blank=True)
+    out_dir = models.CharField(max_length=200, null=True, blank=True)
+
+
 class CardItem(models.Model):
     CONTENT_LIMIT = (
         models.Q(app_label='cards', model='rftrain') |
@@ -157,7 +182,8 @@ class CardItem(models.Model):
         models.Q(app_label='cards', model='remap') |
         models.Q(app_label='cards', model='rfscore') |
         models.Q(app_label='cards', model='qrf') |
-        models.Q(app_label='cards', model='randomforest')
+        models.Q(app_label='cards', model='randomforest') |
+        models.Q(app_label='cards', model='calcstats')
     )
 
     content_type = models.ForeignKey(ContentType, limit_choices_to=CONTENT_LIMIT)
@@ -199,7 +225,7 @@ ContentType.__unicode__ = __unicode__
 def auto_add_card_item(sender, instance=None, created=False, **kwargs):
     list_of_models = (
         RFScore, RFTrain, QRF, YearFilter, MergeCSV,
-        Collate, PreProc, Remap, RandomForest
+        Collate, PreProc, Remap, RandomForest, CalcStats
     )
     if sender in list_of_models:
         if created:

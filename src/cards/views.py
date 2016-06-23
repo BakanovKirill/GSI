@@ -83,6 +83,11 @@ def processing_card_menu(request, rev_url, args=False):
                 response = HttpResponseRedirect(reverse(rev_url['randomforest_button'][0], args=rev_url['randomforest_button'][1]))
             else:
                 response = HttpResponseRedirect(reverse(rev_url['randomforest_button']))
+        elif request.POST.get('calcstats_button') is not None:
+            if args:
+                response = HttpResponseRedirect(reverse(rev_url['calcstats_button'][0], args=rev_url['calcstats_button'][1]))
+            else:
+                response = HttpResponseRedirect(reverse(rev_url['calcstats_button']))
         elif request.POST.get('cancel_button') is not None:
             if args:
                 response = HttpResponseRedirect(reverse(rev_url['cancel_button'][0], args=rev_url['cancel_button'][1]))
@@ -159,6 +164,7 @@ def proces_card_runid_csid(request, run_id, cs_id):
         'margecsv_button': ['new_runid_csid_mergecsv', [run_id, cs_id]],
         'rftrain_button': ['new_runid_csid_rftrain', [run_id, cs_id]],
         'randomforest_button': ['new_runid_csid_randomforest', [run_id, cs_id]],
+        'calcstats_button': ['new_runid_csid_calcstats', [run_id, cs_id]],
         'cancel_button': ['card_sequence_update', [run_id, cs_id]]
     }
 

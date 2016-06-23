@@ -4,7 +4,7 @@ from django import forms
 from core.validator_gsi import *
 from cards.models import (QRF, RFScore, Remap,
                           YearFilter, Collate, PreProc,
-                          MergeCSV, RFTrain, RandomForest)
+                          MergeCSV, RFTrain, RandomForest, CalcStats)
 from gsi.models import (Area, YearGroup, TileType,
                         Satellite, InputDataDirectory, ListTestFiles)
 
@@ -586,4 +586,72 @@ class RandomForestForm(forms.ModelForm):
             'run_set',
             'model',
             'mvrf',
+        ]
+
+
+class CalcStatsForm(forms.ModelForm):
+    """ form for editing CalcStats Card """
+
+    def __init__(self, *args, **kwargs):
+        super(CalcStatsForm, self).__init__(*args, **kwargs)
+
+    name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=100,
+        label=u'Name',
+    )
+    output_tile_subdir = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=200,
+        label=u'Output Tile Subdir',
+    )
+    year_group = forms.ModelChoiceField(
+        widget=forms.Select(attrs={"class": 'form-control disabled'}),
+        queryset=YearGroup.objects.all(),
+        empty_label='Select',
+        required=False,
+        label=u'Year group',
+    )
+    # period = forms.ModelChoiceField(
+    #     widget=forms.Select(attrs={"class": 'form-control disabled'}),
+    #     label=u'Period',
+    # )
+    filter = forms.FloatField(
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1'}),
+        initial=0,
+        validators=[validate_order],
+        error_messages={'required': 'Order must be a positive number'},
+        required=False,
+        label=u'Filter',
+    )
+    filter_out = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=200,
+        required=False,
+        label=u'Filter Out',
+    )
+    input_fourier = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=200,
+        required=False,
+        label=u'Input Fourier',
+    )
+    out_dir = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=200,
+        required=False,
+        label=u'Out Dir',
+    )
+
+    class Meta:
+        model = CalcStats
+        fields = [
+            'name',
+            'output_tile_subdir',
+            'year_group',
+            'period',
+            'filter',
+            'filter_out',
+            'input_fourier',
+            'out_dir',
         ]
