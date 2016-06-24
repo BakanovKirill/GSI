@@ -76,6 +76,7 @@ def update_run(request, run_id):
                 step.save()
             elif state == 'success' or cur_state == 'success':
                 log_file.writelines('SUCCESS: ' + str(state) + '\n\n')
+                log_file.writelines('get_next_step => {0}\n'.format(step.get_next_step()))
                 next_step, is_last_step = step.get_next_step()
                 step.state = state
                 step.save()
