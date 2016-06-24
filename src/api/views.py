@@ -80,6 +80,9 @@ def update_run(request, run_id):
                 step.state = state
                 step.save()
 
+                log_file.writelines('next_step => {0}\n'.format(next_step))
+                log_file.writelines('is_last_step => {0}\n'.format(is_last_step))
+
                 log_file.writelines('last_but_one => {0}\n'.format(last_but_one))
                 log_file.writelines('last => {0}\n'.format(last))
 
