@@ -4,9 +4,10 @@ from django import forms
 from core.validator_gsi import *
 from cards.models import (QRF, RFScore, Remap,
                           YearFilter, Collate, PreProc,
-                          MergeCSV, RFTrain, RandomForest, CalcStats)
+                          MergeCSV, RFTrain, RandomForest, CalcStats,
+                          FILTER_OUT, PERIOD)
 from gsi.models import (Area, YearGroup, TileType,
-                        Satellite, InputDataDirectory, ListTestFiles)
+                        Satellite, InputDataDirectory, ListTestFiles,)
 
 
 class QRFForm(forms.ModelForm):
@@ -595,6 +596,14 @@ class CalcStatsForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CalcStatsForm, self).__init__(*args, **kwargs)
 
+        filter_out = forms.ModelChoiceField(
+            widget=forms.Select(attrs={'class': 'form-control  disabled'}),
+            queryset=FILTER_OUT,
+            empty_label='Select',
+            required=False,
+            label=u'Filter Out',
+        )
+
     name = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=100,
@@ -612,10 +621,14 @@ class CalcStatsForm(forms.ModelForm):
         required=False,
         label=u'Year group',
     )
-    # period = forms.ModelChoiceField(
-    #     widget=forms.Select(attrs={"class": 'form-control disabled'}),
-    #     label=u'Period',
-    # )
+    period = forms.CharField(
+        widget=forms.Select(
+                attrs={"class": 'form-control disabled'},
+                choices=PERIOD
+        ),
+        required=False,
+        label=u'Period',
+    )
     filter = forms.FloatField(
         widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1'}),
         initial=0,
@@ -625,8 +638,10 @@ class CalcStatsForm(forms.ModelForm):
         label=u'Filter',
     )
     filter_out = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
-        max_length=200,
+        widget=forms.Select(
+                attrs={'class': 'form-control  disabled'},
+                choices=FILTER_OUT
+        ),
         required=False,
         label=u'Filter Out',
     )
