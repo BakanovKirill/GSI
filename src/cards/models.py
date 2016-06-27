@@ -151,7 +151,7 @@ PERIOD = (
     ('year', 'Year'),
     ('quarter', 'Quarter'),
     ('month', 'Month'),
-    ('doy', 'Stats per Year'),
+    ('doy', 'DoY'),
 )
 
 FILTER_OUT = (
