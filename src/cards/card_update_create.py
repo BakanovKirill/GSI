@@ -345,9 +345,20 @@ def randomforest_update_create(form, item_id=None):
 def calcstats_update_create(form, item_id=None):
     cur_card = None
     calcstats_card = None
+    filter_out = form.cleaned_data["filter_out"]
+    doy_variable = form.cleaned_data["doy_variable"]
 
     if CalcStats.objects.filter(name=form.cleaned_data["name"]).exists():
         cur_card = CalcStats.objects.get(name=form.cleaned_data["name"])
+
+    if form.cleaned_data["period"] != 'doy':
+        doy_variable = ''
+
+    if form.cleaned_data["filter_out"] == 'select':
+        filter_out = ''
+
+    print 'PERIOD =================== ', form.cleaned_data["period"]
+    print 'DOY =================== ', doy_variable
 
     if item_id:
         if cur_card != None or cur_card.id == int(item_id):
@@ -356,8 +367,9 @@ def calcstats_update_create(form, item_id=None):
                 output_tile_subdir=form.cleaned_data["output_tile_subdir"],
                 year_group=form.cleaned_data["year_group"],
                 period=form.cleaned_data["period"],
+                doy_variable=doy_variable,
                 filter=form.cleaned_data["filter"],
-                filter_out=form.cleaned_data["filter_out"],
+                filter_out=filter_out,
                 input_fourier=form.cleaned_data["input_fourier"],
                 out_dir=form.cleaned_data["out_dir"],
             )
@@ -369,8 +381,9 @@ def calcstats_update_create(form, item_id=None):
                 output_tile_subdir=form.cleaned_data["output_tile_subdir"],
                 year_group=form.cleaned_data["year_group"],
                 period=form.cleaned_data["period"],
+                doy_variable=doy_variable,
                 filter=form.cleaned_data["filter"],
-                filter_out=form.cleaned_data["filter_out"],
+                filter_out=filter_out,
                 input_fourier=form.cleaned_data["input_fourier"],
                 out_dir=form.cleaned_data["out_dir"],
             )

@@ -660,10 +660,9 @@ class CalcStatsForm(forms.ModelForm):
         required=False,
         label=u'Out Dir',
     )
-    doy = forms.CharField(
+    doy_variable = forms.CharField(
         widget=forms.TextInput(
-                attrs={'class': 'form-control doy',
-                       'disabled': 'disabled'}
+                attrs={'class': 'form-control doy disabled'}
         ),
         max_length=200,
         required=False,
@@ -681,4 +680,5 @@ class CalcStatsForm(forms.ModelForm):
             'filter_out',
             'input_fourier',
             'out_dir',
+            'doy_variable',
         ]

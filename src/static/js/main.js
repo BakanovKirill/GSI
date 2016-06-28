@@ -129,14 +129,49 @@ function visibleDoy(){
   var doyElement = $('span.field-success').html();
 
   if (doyElement === 'Input a variable'){
-    $('.doy').attr('disabled', false);
-    $(".doy-label").removeClass("disabled-doy");
-    $(".doy-label").addClass("visible-doy");
+    //$('.doy').attr('disabled', false);
+    $(".doy-label").removeClass("disabled");
+    $(".doy").removeClass("disabled");
+    //$(".doy-label").removeClass("disabled-doy");
+    $(".doy-label").addClass("visible");
+    $(".doy").addClass("visible");
+    //$(".doy-label").addClass("visible-doy");
   } else {
-    $('.doy').attr('disabled', true);
-    $(".doy-label").removeClass("visible-doy");
-    $(".doy-label").addClass("disabled-doy");
+    //$('.doy').attr('disabled', true);
+    //$(".doy-label").removeClass("visible-doy");
+    $(".doy").removeClass("visible");
+    $(".doy-label").removeClass("visible");
+    $(".doy").addClass("disabled");
+    $(".doy-label").addClass("disabled");
+    //$(".doy-label").addClass("disabled-doy");
   };
+}
+
+function statusPeriod(){
+  var periodElement = $('span.field-success').html();
+
+  if (periodElement === 'Input a variable'){
+    $(".doy").removeClass("disabled");
+    $(".doy-label").removeClass("disabled");
+    $(".doy").addClass("visible");
+    $(".doy-label").addClass("visible");
+
+
+    //$('.doy').attr('disabled', false);
+    //$(".doy-label").removeClass("disabled-doy");
+    //$(".doy-label").addClass("visible-doy");
+  } else {
+    $(".doy").removeClass("visible");
+    $(".doy-label").removeClass("visible");
+    $(".doy").addClass("disabled");
+    $(".doy-label").addClass("disabled");
+
+    //$('.doy').attr('disabled', true);
+    //$(".doy-label").removeClass("visible-doy");
+    //$(".doy-label").addClass("disabled-doy");
+  };
+
+  //alert(periodElement);
 }
 
 
@@ -149,4 +184,5 @@ $(document).ready(function(){
   changeColorError();
   changeColorSuccess();
   colorBlackSelect();
+  statusPeriod();
 });
