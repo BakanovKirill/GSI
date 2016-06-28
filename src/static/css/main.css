@@ -21,6 +21,10 @@ input[type="file"] {
     display: inline;
 }
 
+input[type="text"]:disabled {
+    background: #fff;
+}
+
 input:focus, textarea:focus {
     background-color: transparent !important;
     /*border-color: transparent !important;*/
@@ -626,5 +630,14 @@ li.active-main-menu, li.active-main-menu a:hover, li.li-menu > a:hover, .title:h
 
 .border-bottom-0 {
     border-bottom: none;
+}
+
+/* disabled DoY*/
+.disabled-doy {
+    color: #cccccc;
+}
+
+.visible-doy {
+    color: #333;
 }
 

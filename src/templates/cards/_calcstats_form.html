@@ -48,12 +48,28 @@
             <label class="control-label font-normal">{{ form.period.label }}</label>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4 period">
         {% if not form.period.errors %}
             {{ form.period }}
         {% else %}
             <span class="field-error">{{ form.period }}</span>
             <b class="error-form">{{ form.period.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 col-md-offset-6 right">
+        <div class="form-group {% if form.period.errors %}has-error{% endif %}">
+            <label class="control-label font-normal disabled-doy doy-label">Enter your Period</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if not form.doy.errors %}
+            {{ form.doy }}
+        {% else %}
+            <span class="field-error">{{ form.doy }}</span>
+            <b class="error-form">{{ form.doy.errors }}</b>
         {% endif %}
     </div>
 </div>

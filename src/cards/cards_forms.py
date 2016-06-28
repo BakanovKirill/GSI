@@ -623,7 +623,10 @@ class CalcStatsForm(forms.ModelForm):
     )
     period = forms.CharField(
         widget=forms.Select(
-                attrs={"class": 'form-control disabled'},
+                attrs={
+                    "class": 'form-control disabled',
+                    "onchange": 'visibleDoy()'
+                },
                 choices=PERIOD
         ),
         required=False,
@@ -656,6 +659,15 @@ class CalcStatsForm(forms.ModelForm):
         max_length=200,
         required=False,
         label=u'Out Dir',
+    )
+    doy = forms.CharField(
+        widget=forms.TextInput(
+                attrs={'class': 'form-control doy',
+                       'disabled': 'disabled'}
+        ),
+        max_length=200,
+        required=False,
+        label=u'Input a variable',
     )
 
     class Meta:

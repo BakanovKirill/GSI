@@ -125,6 +125,20 @@ function selectAllChosen() {
 //  //}
 //}
 
+function visibleDoy(){
+  var doyElement = $('span.field-success').html();
+
+  if (doyElement === 'Input a variable'){
+    $('.doy').attr('disabled', false);
+    $(".doy-label").removeClass("disabled-doy");
+    $(".doy-label").addClass("visible-doy");
+  } else {
+    $('.doy').attr('disabled', true);
+    $(".doy-label").removeClass("visible-doy");
+    $(".doy-label").addClass("disabled-doy");
+  };
+}
+
 
 $(document).ready(function(){
   //selectAll();
