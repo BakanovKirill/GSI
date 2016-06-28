@@ -168,7 +168,7 @@ def collate_update_create(form, item_id=None, multiple=None, delete=False):
                     collate_id = cur_card.id).delete()
 
     if item_id:
-        if cur_card != None or cur_card.id == int(item_id):
+        if cur_card == None or cur_card.id == int(item_id):
             Collate.objects.filter(id=item_id).update(
                 name=form.cleaned_data["name"],
                 area=form.cleaned_data["area"],
@@ -316,7 +316,7 @@ def randomforest_update_create(form, item_id=None):
         cur_card = RandomForest.objects.get(name=form.cleaned_data["name"])
 
     if item_id:
-        if cur_card != None or cur_card.id == int(item_id):
+        if cur_card == None or cur_card.id == int(item_id):
             RandomForest.objects.filter(id=item_id).update(
                 name=form.cleaned_data["name"],
                 aoi_name=form.cleaned_data["aoi_name"],
@@ -357,11 +357,8 @@ def calcstats_update_create(form, item_id=None):
     if form.cleaned_data["filter_out"] == 'select':
         filter_out = ''
 
-    print 'PERIOD =================== ', form.cleaned_data["period"]
-    print 'DOY =================== ', doy_variable
-
     if item_id:
-        if cur_card != None or cur_card.id == int(item_id):
+        if cur_card == None or cur_card.id == int(item_id):
             CalcStats.objects.filter(id=item_id).update(
                 name=form.cleaned_data["name"],
                 output_tile_subdir=form.cleaned_data["output_tile_subdir"],
