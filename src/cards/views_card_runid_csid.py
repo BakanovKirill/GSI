@@ -854,7 +854,6 @@ def new_runid_csid_calcstats_edit(request, run_id, cs_id, calcstats_id):
 	REVERSE_URL['calcstats']['save_and_another'].append([run_id, cs_id])
 	REVERSE_URL['calcstats']['save_and_continue'].append([run_id, cs_id])
 	REVERSE_URL['calcstats']['cancel_button'].append([run_id, cs_id])
-	period_list = ['year', 'quarter', 'month']
 
 	if request.method == "POST":
 		response = get_post(request, CalcStatsForm, 'CalcStats Card',

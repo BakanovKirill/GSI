@@ -75,6 +75,22 @@
 </div>
 
 <div class="row margin-top-15">
+    <div class="col-md-2 col-md-offset-6 right">
+        <div class="form-group {% if form_2.doy_variable.errors %}has-error{% endif %}">
+            <label class="control-label font-normal doy-label disabled">{{ form_2.doy_variable.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if not form_2.doy_variable.errors %}
+            {{ form_2.doy_variable }}
+        {% else %}
+            <span class="field-error">{{ form_2.doy_variable }}</span>
+            <b class="error-form">{{ form_2.doy_variable.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-15">
     <div class="col-md-2 right">
         <div class="form-group {% if form_2.filter.errors %}has-error{% endif %}">
             <label class="control-label font-normal">{{ form_2.filter.label }}</label>
