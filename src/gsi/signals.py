@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
+import os
 
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.core.exceptions import ObjectDoesNotExist
 
 
-from gsi.models import (Tile, Area, RunBase,
-                        Run, CardSequence, InputDataDirectory)
+from gsi.models import (Tile, Area, RunBase, Run, CardSequence,
+                        InputDataDirectory, HomeVariables)
 from log.logger import log_it
 from core.utils import update_list_files
 

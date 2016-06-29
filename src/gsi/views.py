@@ -29,7 +29,7 @@ from cards.cards_forms import *
 from gsi.gsi_items_update_create import *
 from gsi.gsi_forms import *
 from core.utils import (make_run, get_dir_root_static_path,
-                        slash_remove_from_path, get_files_dirs)
+                        slash_remove_from_path, get_files_dirs, create_sub_dir)
 from core.get_post import get_post
 from log.logger import get_logs
 from gsi.settings import (NUM_PAGINATIONS, PATH_RUNS_SCRIPTS, BASE_DIR,
@@ -272,25 +272,34 @@ def new_run(request):
 		form = RunForm(request.POST)
 
 		if form.is_valid():
-			new_run_base = RunBase.objects.create(
-				name=form.cleaned_data["name"],
-				description=form.cleaned_data["description"],
-				purpose=form.cleaned_data["purpose"],
-				# card_sequence=form.cleaned_data["card_sequence"],
-				directory_path=form.cleaned_data["directory_path"],
-				resolution=form.cleaned_data["resolution"],
-				author=request.user,
-			)
-
-			if request.POST.get('save_button') is not None:
-				return HttpResponseRedirect(
-						u'%s?status_message=%s' % (reverse('run_setup'),
-						(u"RunID {0} created successfully".format(new_run_base.id)))
+			if not RunBase.objects.filter(name=form.cleaned_data["name"]).exists():
+				new_run_base = RunBase.objects.create(
+					name=form.cleaned_data["name"],
+					description=form.cleaned_data["description"],
+					purpose=form.cleaned_data["purpose"],
+					# card_sequence=form.cleaned_data["card_sequence"],
+					directory_path=form.cleaned_data["directory_path"],
+					resolution=form.cleaned_data["resolution"],
+					author=request.user,
 				)
-			if request.POST.get('save_update_button') is not None:
+
+				path_dir = os.path.join(str(new_run_base.resolution), str(new_run_base.directory_path))
+				create_sub_dir(path_dir)
+
+				if request.POST.get('save_button') is not None:
+					return HttpResponseRedirect(
+							u'%s?status_message=%s' % (reverse('run_setup'),
+							(u"RunID {0} created successfully".format(new_run_base.id)))
+					)
+				if request.POST.get('save_update_button') is not None:
+					return HttpResponseRedirect(
+							u'%s?status_message=%s' % (reverse('run_update', args=[new_run_base.id]),
+							(u"RunID {0} created successfully. You may edit it again below.".format(new_run_base.id)))
+					)
+			else:
 				return HttpResponseRedirect(
-						u'%s?status_message=%s' % (reverse('run_update', args=[new_run_base.id]),
-						(u"RunID {0} created successfully".format(new_run_base.id)))
+						u'%s?status_message=%s' % (reverse('new_run'),
+						(u'Run with the name "{0}" already exists.'.format(form.cleaned_data["name"])))
 				)
 	else:
 		form = RunForm()
@@ -309,6 +318,7 @@ def run_update(request, run_id):
 	run_base = get_object_or_404(RunBase, pk=run_id)
 	title = 'Edit "{0}"'.format(run_base.name)
 	form = None
+	cur_run = None
 
 	if request.method == "POST":
 		form = RunForm(request.POST)
@@ -320,24 +330,36 @@ def run_update(request, run_id):
 			)
 		else:
 			if form.is_valid():
-				if request.POST.get('save_button') is not None:
-					run_base.name = form.cleaned_data["name"]
-					run_base.description = form.cleaned_data["description"]
-					run_base.purpose = form.cleaned_data["purpose"]
-					# run_base.card_sequence = form.cleaned_data["card_sequence"]
-					run_base.directory_path = form.cleaned_data["directory_path"]
-					run_base.resolution = form.cleaned_data["resolution"]
-					# run_base.author = request.user
-					run_base.save()
+				if RunBase.objects.filter(name=form.cleaned_data["name"]).exists():
+					cur_run = RunBase.objects.get(name=form.cleaned_data["name"])
 
+				if cur_run == None or cur_run.id == int(run_id):
+					if request.POST.get('save_button') is not None:
+						run_base.name = form.cleaned_data["name"]
+						run_base.description = form.cleaned_data["description"]
+						run_base.purpose = form.cleaned_data["purpose"]
+						# run_base.card_sequence = form.cleaned_data["card_sequence"]
+						run_base.directory_path = form.cleaned_data["directory_path"]
+						run_base.resolution = form.cleaned_data["resolution"]
+						# run_base.author = request.user
+						run_base.save()
+
+						path_dir = os.path.join(str(run_base.resolution), str(run_base.directory_path))
+						create_sub_dir(path_dir)
+
+						return HttpResponseRedirect(
+								u'%s?status_message=%s' % (reverse('run_setup'),
+								(u"Run {0} updated successfully".format(run_base.name)))
+						)
+					if request.POST.get('edit_run_details_button') is not None:
+						return HttpResponseRedirect(
+								u'%s?info_message=%s' % (reverse('card_sequence_update', args=[run_id, run_base.card_sequence.id]),
+								(u"Edit Card Sequence {0}".format(run_base.card_sequence)))
+						)
+				else:
 					return HttpResponseRedirect(
-							u'%s?status_message=%s' % (reverse('run_setup'),
-							(u"Run {0} updated successfully".format(run_base.name)))
-					)
-				if request.POST.get('edit_run_details_button') is not None:
-					return HttpResponseRedirect(
-							u'%s?info_message=%s' % (reverse('card_sequence_update', args=[run_id, run_base.card_sequence.id]),
-							(u"Edit Card Sequence {0}".format(run_base.card_sequence)))
+							u'%s?status_message=%s' % (reverse('run_update', args=[run_id]),
+							(u'Run with the name "{0}" already exists.'.format(form.cleaned_data["name"])))
 					)
 	else:
 		form = RunForm(instance=run_base)
