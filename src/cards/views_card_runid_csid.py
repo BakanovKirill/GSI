@@ -390,6 +390,7 @@ def new_runid_csid_collate(request, run_id, cs_id):
 	func = collate_update_create
 	form = None
 	available_files = ListTestFiles.objects.filter(input_data_directory=None)
+	available_files = available_files.order_by('name')
 	REVERSE_URL['collate']['save_button'].append([run_id, cs_id])
 	REVERSE_URL['collate']['save_and_another'].append([run_id, cs_id])
 	REVERSE_URL['collate']['save_and_continue'].append([run_id, cs_id])
@@ -443,6 +444,8 @@ def new_runid_csid_collate_edit(request, run_id, cs_id, collate_id):
 			input_data_directory=collate_card.input_data_directory).exclude(
 			id__in=collate_card.input_files.values_list('id', flat=True))
 	chosen_files = collate_card.input_files.filter(input_data_directory=collate_card.input_data_directory)
+	available_files = available_files.order_by('name')
+	chosen_files = chosen_files.order_by('name')
 
 	REVERSE_URL['collate']['save_button'].append([run_id, cs_id])
 	REVERSE_URL['collate']['save_and_another'].append([run_id, cs_id])
