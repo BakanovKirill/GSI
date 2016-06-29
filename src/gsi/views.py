@@ -320,16 +320,16 @@ def run_update(request, run_id):
 			)
 		else:
 			if form.is_valid():
-				run_base.name = form.cleaned_data["name"]
-				run_base.description = form.cleaned_data["description"]
-				run_base.purpose = form.cleaned_data["purpose"]
-				# run_base.card_sequence = form.cleaned_data["card_sequence"]
-				run_base.directory_path = form.cleaned_data["directory_path"]
-				run_base.resolution = form.cleaned_data["resolution"]
-				# run_base.author = request.user
-				run_base.save()
-
 				if request.POST.get('save_button') is not None:
+					run_base.name = form.cleaned_data["name"]
+					run_base.description = form.cleaned_data["description"]
+					run_base.purpose = form.cleaned_data["purpose"]
+					# run_base.card_sequence = form.cleaned_data["card_sequence"]
+					run_base.directory_path = form.cleaned_data["directory_path"]
+					run_base.resolution = form.cleaned_data["resolution"]
+					# run_base.author = request.user
+					run_base.save()
+
 					return HttpResponseRedirect(
 							u'%s?status_message=%s' % (reverse('run_setup'),
 							(u"Run {0} updated successfully".format(run_base.name)))
@@ -337,7 +337,7 @@ def run_update(request, run_id):
 				if request.POST.get('edit_run_details_button') is not None:
 					return HttpResponseRedirect(
 							u'%s?info_message=%s' % (reverse('card_sequence_update', args=[run_id, run_base.card_sequence.id]),
-							(u"Update Card Sequence {0}".format(run_base.card_sequence)))
+							(u"Edit Card Sequence {0}".format(run_base.card_sequence)))
 					)
 	else:
 		form = RunForm(instance=run_base)
@@ -524,7 +524,7 @@ def run_new_card_sequence_update(request, cs_id):
 
 				return HttpResponseRedirect(
 						u'%s?status_message=%s' % (reverse('new_run'),
-						(u"The card sequence '{0}' created successfully.".
+						(u"The card sequence '{0}' update successfully.".
 						 format(card_sequence.name)))
 				)
 		elif request.POST.get('delete_button') is not None:
@@ -553,7 +553,7 @@ def run_new_card_sequence_update(request, cs_id):
 		elif request.POST.get('cancel_button') is not None:
 			return HttpResponseRedirect(
 					u'%s?info_message=%s' % (reverse('run_new_card_sequence_list'),
-					(u"Card Sequence created canceled"))
+					(u"Card Sequence update canceled"))
 			)
 	else:
 		form = CardSequenceCreateForm(instance=card_sequence)
@@ -668,7 +668,7 @@ def card_sequence_update(request, run_id, cs_id):
 
 				return HttpResponseRedirect(
 					u'%s?status_message=%s' % (reverse('card_sequence_update', args=[run_id, card_sequence.id]),
-					(u"The new card item '{0}' was changed successfully. You may edit it again below.".
+					(u"The new card item '{0}' was update successfully. You may edit it again below.".
 					 format(card_sequence.name)))
 				)
 		elif request.POST.get('save_button') is not None:
@@ -679,7 +679,7 @@ def card_sequence_update(request, run_id, cs_id):
 
 			return HttpResponseRedirect(
 					u'%s?status_message=%s' % (reverse('run_update', args=[run_id]),
-					(u"The card sequence '{0}' created successfully.".
+					(u"The card sequence '{0}' update successfully.".
 					 format(card_sequence.name)))
 			)
 		elif request.POST.get('delete_button') is not None:
