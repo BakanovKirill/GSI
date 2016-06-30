@@ -200,7 +200,7 @@ class RemapForm(forms.ModelForm):
     )
     refstats_scale = forms.IntegerField(
         widget=forms.NumberInput(attrs={'class': 'form-control'}),
-        initial=1,
+        initial=0,
         validators=[validate_order],
         required=False,
         label=u'Refstats scale',
