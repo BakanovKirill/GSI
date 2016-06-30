@@ -147,6 +147,12 @@ class RemapForm(forms.ModelForm):
         max_length=100,
         label=u'Name',
     )
+    year_group = forms.ModelChoiceField(
+        widget=forms.Select(attrs={"class": 'form-control disabled'}),
+        queryset=YearGroup.objects.all(),
+        empty_label='Select',
+        label=u'Year group',
+    )
     file_spec = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=200,
@@ -192,11 +198,42 @@ class RemapForm(forms.ModelForm):
         required=False,
         label=u'Refstats file',
     )
-    refstats_scale = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
-        max_length=200,
+    refstats_scale = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        initial=1,
+        validators=[validate_order],
         required=False,
         label=u'Refstats scale',
+    )
+    conditional_mean = forms.BooleanField(
+        initial=False,
+        required=False,
+        label=u'ConditionalMean',
+    )
+    conditional_min = forms.BooleanField(
+        initial=False,
+        required=False,
+        label=u'ConditionalMin',
+    )
+    conditional_median = forms.BooleanField(
+        initial=False,
+        required=False,
+        label=u'ConditionalMedian',
+    )
+    conditional_max = forms.BooleanField(
+        initial=False,
+        required=False,
+        label=u'ConditionalMax',
+    )
+    lower_quartile = forms.BooleanField(
+        initial=False,
+        required=False,
+        label=u'LowerQuartile',
+    )
+    upper_quartile = forms.BooleanField(
+        initial=False,
+        required=False,
+        label=u'UpperQuartile',
     )
 
     class Meta:
@@ -205,6 +242,7 @@ class RemapForm(forms.ModelForm):
             'name',
             'file_spec',
             'roi',
+            'year_group',
             'output_root',
             'output_suffix',
             'scale',
@@ -213,6 +251,12 @@ class RemapForm(forms.ModelForm):
             'refstats_file',
             'refstats_scale',
             'run_parallel',
+            'conditional_mean',
+            'conditional_min',
+            'conditional_median',
+            'conditional_max',
+            'lower_quartile',
+            'upper_quartile',
         ]
 
 

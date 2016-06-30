@@ -12,18 +12,34 @@
             <b class="error-form">{{ form.name.errors }}</b>
         {% endif %}
     </div>
+</div>
 
+<div class="row margin-top-15">
     <div class="col-md-2 right">
         <div class="form-group {% if form.run_parallel.errors %}has-error{% endif %}">
             <label class="control-label font-normal">{{ form.run_parallel.label }}</label>
         </div>
     </div>
-    <div class="col-md-2 margin-top-4">
+    <div class="col-md-2 margin-top-4 left">
         {% if not form.run_parallel.errors %}
             {{ form.run_parallel }}
         {% else %}
             <span class="field-error">{{ form.run_parallel }}</span>
             <b class="error-form">{{ form.run_parallel.errors }}</b>
+        {% endif %}
+    </div>
+
+    <div class="col-md-2 col-md-offset-2 right">
+        <div class="form-group {% if form.year_group.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.year_group.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if not form.year_group.errors %}
+            {{ form.year_group }}
+        {% else %}
+            <span class="field-error">{{ form.year_group }}</span>
+            <b class="error-form">{{ form.year_group.errors }}</b>
         {% endif %}
     </div>
 </div>
@@ -34,7 +50,7 @@
             <label class="control-label">{{ form.file_spec.label }}*</label>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-10">
         {% if not form.file_spec.errors %}
             {{ form.file_spec }}
         {% else %}
@@ -42,13 +58,15 @@
             <b class="error-form">{{ form.file_spec.errors }}</b>
         {% endif %}
     </div>
+</div>
 
+<div class="row margin-top-15">
     <div class="col-md-2 right">
         <div class="form-group {% if form.roi.errors %}has-error{% endif %}">
             <label class="control-label">{{ form.roi.label }}*</label>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-10">
         {% if not form.roi.errors %}
             {{ form.roi }}
         {% else %}
@@ -64,7 +82,7 @@
             <label class="control-label">{{ form.output_root.label }}*</label>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-10">
         {% if not form.output_root.errors %}
             {{ form.output_root }}
         {% else %}
@@ -72,7 +90,97 @@
             <b class="error-form">{{ form.output_root.errors }}</b>
         {% endif %}
     </div>
+</div>
 
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.conditional_mean.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.conditional_mean.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-2 margin-top-4 left">
+        {% if not form.conditional_mean.errors %}
+            {{ form.conditional_mean }}
+        {% else %}
+            <span class="field-error">{{ form.conditional_mean }}</span>
+            <b class="error-form">{{ form.conditional_mean.errors }}</b>
+        {% endif %}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.conditional_min.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.conditional_min.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-2 margin-top-4 left">
+        {% if not form.conditional_min.errors %}
+            {{ form.conditional_min }}
+        {% else %}
+            <span class="field-error">{{ form.conditional_min }}</span>
+            <b class="error-form">{{ form.conditional_min.errors }}</b>
+        {% endif %}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.conditional_median.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.conditional_median.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-2 margin-top-4 left">
+        {% if not form.conditional_median.errors %}
+            {{ form.conditional_median }}
+        {% else %}
+            <span class="field-error">{{ form.conditional_median }}</span>
+            <b class="error-form">{{ form.conditional_median.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.conditional_max.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.conditional_max.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-2 margin-top-4 left">
+        {% if not form.conditional_max.errors %}
+            {{ form.conditional_max }}
+        {% else %}
+            <span class="field-error">{{ form.conditional_max }}</span>
+            <b class="error-form">{{ form.conditional_max.errors }}</b>
+        {% endif %}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.lower_quartile.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.lower_quartile.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-2 margin-top-4 left">
+        {% if not form.lower_quartile.errors %}
+            {{ form.lower_quartile }}
+        {% else %}
+            <span class="field-error">{{ form.lower_quartile }}</span>
+            <b class="error-form">{{ form.lower_quartile.errors }}</b>
+        {% endif %}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.upper_quartile.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.upper_quartile.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-2 margin-top-4 left">
+        {% if not form.upper_quartile.errors %}
+            {{ form.upper_quartile }}
+        {% else %}
+            <span class="field-error">{{ form.upper_quartile }}</span>
+            <b class="error-form">{{ form.upper_quartile.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-15">
     <div class="col-md-2 right">
         <div class="form-group {% if form.output_suffix.errors %}has-error{% endif %}">
             <label class="control-label font-normal">{{ form.output_suffix.label }}</label>

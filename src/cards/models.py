@@ -48,6 +48,8 @@ class RFScore(NamedModel, ParallelModel):
 
 
 class Remap(NamedModel, ParallelModel):
+    # area = models.ForeignKey('gsi.Area', blank=True, null=True)
+    year_group = models.ForeignKey('gsi.YearGroup', blank=True, null=True)
     file_spec = models.CharField(max_length=200)
     roi = models.CharField(max_length=200)
     output_root = models.CharField(max_length=200)
@@ -56,7 +58,14 @@ class Remap(NamedModel, ParallelModel):
     output = models.CharField(max_length=200, blank=True)
     color_table = models.CharField(max_length=200, blank=True)
     refstats_file = models.CharField(max_length=200, blank=True)
-    refstats_scale = models.CharField(max_length=200, blank=True)
+    refstats_scale = models.PositiveIntegerField(blank=True, null=True)
+
+    conditional_mean = models.BooleanField(default=False)
+    conditional_min = models.BooleanField(default=False)
+    conditional_median = models.BooleanField(default=False)
+    conditional_max = models.BooleanField(default=False)
+    lower_quartile = models.BooleanField(default=False)
+    upper_quartile = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = _('Remap cards')
@@ -64,6 +73,7 @@ class Remap(NamedModel, ParallelModel):
 
 class YearFilter(NamedModel, ParallelModel):
     area = models.ForeignKey('gsi.Area')
+    # year_group = models.ForeignKey('gsi.YearGroup', null=True)
     filetype = models.CharField(max_length=50)
     filter = models.CharField(max_length=200, blank=True)
     filter_output = models.CharField(max_length=200, blank=True)

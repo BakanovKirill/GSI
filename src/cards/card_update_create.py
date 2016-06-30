@@ -85,8 +85,10 @@ def remap_update_create(form, item_id=None):
         if cur_card == None or cur_card.id == int(item_id):
             Remap.objects.filter(id=item_id).update(
                 name=form.cleaned_data["name"],
+                run_parallel=form.cleaned_data["run_parallel"],
                 file_spec=form.cleaned_data["file_spec"],
                 roi=form.cleaned_data["roi"],
+                area=form.cleaned_data["area"],
                 output_root=form.cleaned_data["output_root"],
                 output_suffix=form.cleaned_data["output_suffix"],
                 scale=form.cleaned_data["scale"],
@@ -94,15 +96,22 @@ def remap_update_create(form, item_id=None):
                 color_table=form.cleaned_data["color_table"],
                 refstats_file=form.cleaned_data["refstats_file"],
                 refstats_scale=form.cleaned_data["refstats_scale"],
-                run_parallel=form.cleaned_data["run_parallel"],
+                conditional_mean=form.cleaned_data["conditional_mean"],
+                conditional_min=form.cleaned_data["conditional_min"],
+                conditional_median=form.cleaned_data["conditional_median"],
+                conditional_max=form.cleaned_data["conditional_max"],
+                lower_quartile=form.cleaned_data["lower_quartile"],
+                upper_quartile=form.cleaned_data["upper_quartile"],
             )
             remap_card = Remap.objects.get(id=item_id)
     else:
         if cur_card == None:
             remap_card = Remap.objects.create(
                 name=form.cleaned_data["name"],
+                run_parallel=form.cleaned_data["run_parallel"],
                 file_spec=form.cleaned_data["file_spec"],
                 roi=form.cleaned_data["roi"],
+                area=form.cleaned_data["area"],
                 output_root=form.cleaned_data["output_root"],
                 output_suffix=form.cleaned_data["output_suffix"],
                 scale=form.cleaned_data["scale"],
@@ -110,7 +119,12 @@ def remap_update_create(form, item_id=None):
                 color_table=form.cleaned_data["color_table"],
                 refstats_file=form.cleaned_data["refstats_file"],
                 refstats_scale=form.cleaned_data["refstats_scale"],
-                run_parallel=form.cleaned_data["run_parallel"],
+                conditional_mean=form.cleaned_data["conditional_mean"],
+                conditional_min=form.cleaned_data["conditional_min"],
+                conditional_median=form.cleaned_data["conditional_median"],
+                conditional_max=form.cleaned_data["conditional_max"],
+                lower_quartile=form.cleaned_data["lower_quartile"],
+                upper_quartile=form.cleaned_data["upper_quartile"],
             )
 
     return remap_card
