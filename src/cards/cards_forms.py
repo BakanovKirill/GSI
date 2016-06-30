@@ -151,6 +151,7 @@ class RemapForm(forms.ModelForm):
         widget=forms.Select(attrs={"class": 'form-control disabled'}),
         queryset=YearGroup.objects.all(),
         empty_label='Select',
+        required=False,
         label=u'Year group',
     )
     file_spec = forms.CharField(
