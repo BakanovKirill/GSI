@@ -42,8 +42,24 @@
             <b class="error-form">{{ form_2.run_parallel.errors }}</b>
         {% endif %}
     </div>
+</div>
 
-    <div class="col-md-2 col-md-offset-2 right">
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form_2.model_name.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form_2.model_name.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if not form_2.model_name.errors %}
+            {{ form_2.model_name }}
+        {% else %}
+            <span class="field-error">{{ form_2.model_name }}</span>
+            <b class="error-form">{{ form_2.model_name.errors }}</b>
+        {% endif %}
+    </div>
+
+    <div class="col-md-2 right">
         <div class="form-group {% if form_2.year_group.errors %}has-error{% endif %}">
             <label class="control-label font-normal">{{ form_2.year_group.label }}</label>
         </div>

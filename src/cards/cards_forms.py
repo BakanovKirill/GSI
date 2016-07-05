@@ -154,6 +154,11 @@ class RemapForm(forms.ModelForm):
         required=False,
         label=u'Year group',
     )
+    model_name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=100,
+        label=u'Model Name',
+    )
     file_spec = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=200,
@@ -244,6 +249,7 @@ class RemapForm(forms.ModelForm):
             'file_spec',
             'roi',
             'year_group',
+            'model_name',
             'output_root',
             'output_suffix',
             'scale',

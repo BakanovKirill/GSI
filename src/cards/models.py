@@ -52,6 +52,7 @@ class Remap(NamedModel, ParallelModel):
     year_group = models.ForeignKey('gsi.YearGroup', blank=True, null=True)
     file_spec = models.CharField(max_length=200)
     roi = models.CharField(max_length=200)
+    model_name = models.CharField(max_length=200, blank=True, null=True)
     output_root = models.CharField(max_length=200)
     output_suffix = models.CharField(max_length=200, blank=True)
     scale = models.CharField(max_length=200, blank=True)
