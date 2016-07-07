@@ -16,7 +16,7 @@ function visibleUsernameTopInput() {
 
 function visiblePasswordTopInput() {
   $('.pass').css('display', 'none');
-  var pass = document.getElementById("password");
+  var pass = document.getElementById("id_new_password1");
 
   if (pass.value === '') {
     $('.pass').css('display', 'none');
@@ -28,7 +28,7 @@ function visiblePasswordTopInput() {
 
 function visibleRePasswordTopInput() {
   $('.re-pass').css('display', 'none');
-  var re_pass = document.getElementById("re-password");
+  var re_pass = document.getElementById("id_new_password2");
 
   if (re_pass.value === '') {
     $('.re-pass').css('display', 'none');
@@ -40,7 +40,7 @@ function visibleRePasswordTopInput() {
 
 function visibleEmailTopInput() {
   $('.email').css('display', 'none');
-  var email = document.getElementById("email");
+  var email = document.getElementById("id_email");
 
   if (email.value === '') {
     $('.email').css('display', 'none');
@@ -50,6 +50,34 @@ function visibleEmailTopInput() {
   }
 }
 
+function addClassEmailField() {
+  $("input#id_email").addClass("border-bottom form-control padding-0");
+  $("input#id_email").attr("placeholder", "Enter your email");
+
+  $('input#id_email').on('input', function(){ visibleEmailTopInput() });
+  $('input#id_email').on('keyup', function(){ visibleEmailTopInput() });
+}
+
+function addClassPasswordField() {
+  $("input#id_new_password1").addClass("border-bottom form-control padding-0 form-password");
+  $("input#id_new_password1").attr("placeholder", "Enter your password");
+
+  $('input#id_new_password1').on('input', function(){ visiblePasswordTopInput()() });
+  $('input#id_new_password1').on('keyup', function(){ visiblePasswordTopInput() });
+
+
+  $("input#id_new_password2").addClass("border-bottom form-control padding-0 input-form");
+  $("input#id_new_password2").attr("placeholder", "Confirm password");
+
+  $('input#id_new_password2').on('input', function(){ visibleRePasswordTopInput()() });
+  $('input#id_new_password2').on('keyup', function(){ visibleRePasswordTopInput() });
+}
+
+
 $(document).ready(function(){
-  setFocus();
+  if ($("input").is("#username") == true) {
+    setFocus();
+  }
+  addClassEmailField();
+  addClassPasswordField();
 });

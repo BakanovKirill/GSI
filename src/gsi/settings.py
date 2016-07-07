@@ -126,6 +126,31 @@ REGISTRATION_OPEN = True
 LOGIN_URL = 'users:auth_login'
 LOGOUT_URL = 'users:auth_logout'
 
+# to send the activation code
+# EMAIL_HOST = 'localhost'
+# EMAIL_PORT = 1025
+# EMAIL_HOST_USER = ''
+# EMAIL_HOST_PASSWORD = ''
+# EMAIL_USE_TLS = False
+# DEFAULT_FROM_EMAIL = 'info@google.ru'
+
+# mailgun settings
+# EMAIL_USE_TLS = True
+# EMAIL_HOST = 'smtp.mailgun.org'
+# EMAIL_HOST_USER = 'postmaster@sandboxb0a57a3959a74e848bcdde911debdc02.mailgun.org'
+# EMAIL_HOST_PASSWORD = 'b8eaad09132286b3742260a52dbcba6a'
+# EMAIL_PORT = 587
+
+#send email for forgot password
+# EMAIL_USE_TLS = True
+MAIL_USE_SSL = True
+EMAIL_HOST = 'smtp.example.com'
+EMAIL_PORT = 12333
+EMAIL_HOST_USER = 'user@user.post.com'
+EMAIL_HOST_PASSWORD = 'password'
+DEFAULT_FROM_EMAIL = 'noreply@exemple.com'
+EMAIL_BACKEND = 'smtp.backend'
+
 # Logging settings for django projects
 MAIN_FILE = os.path.join(BASE_DIR, "core/main.log")
 MAIN_DEBUG_FILE = os.path.join(BASE_DIR, "core/main_debug.log")
@@ -217,7 +242,8 @@ CARD_TYPE = {
     'remap': 'Remap',
     'rfscore': 'RFScore',
     'qrf': 'QRF',
-    'randomforest': 'RandomForest'
+    'randomforest': 'RandomForest',
+    'calcstats': 'CalcStats'
 }
 
 try:

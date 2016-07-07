@@ -39,7 +39,7 @@
                     <!--<div class="col-md-4 col-md-offset-4">-->
                         <span class="img-top-input font-9 blue-color-bootstrap email"><b>Email</b></span>
                         <img class="img-top-input float-right top-25 email" src="{% static 'img/email_18.png' %}"/>
-                        <input type="text" class="border-bottom form-control padding-0" id="email"
+                        <input type="text" class="border-bottom form-control padding-0" id="id_email"
                                value="" name="email" placeholder="Email" oninput="visibleEmailTopInput()" onkeyup="visibleEmailTopInput()" />
                         <span class="help-block">{{ form.errors.email.as_text }}</span>
                     <!--</div>-->
@@ -49,7 +49,7 @@
                     <!--<div class="col-md-4 col-md-offset-4">-->
                         <span class="img-top-input font-9 blue-color-bootstrap pass"><b>Password</b></span>
                         <img class="img-top-input float-right top-25 pass" src="{% static 'img/eye_18.png' %}"/>
-                        <input type="password" class="border-bottom form-control padding-0 form-password" id="password"
+                        <input type="password" class="border-bottom form-control padding-0 form-password" id="id_new_password1"
                                value="" name="password1" placeholder="Password" onkeyup="visiblePasswordTopInput()" />
                         <span class="help-block">{{ form.errors.password1.as_text }}</span>
                     <!--</div>-->
@@ -59,7 +59,7 @@
                     <!--<div class="col-md-4 col-md-offset-4">-->
                         <span class="img-top-input font-9 blue-color-bootstrap re-pass"><b>Retype password</b></span>
                         <img class="img-top-input float-right top-25 re-pass" src="{% static 'img/eye_18.png' %}"/>
-                        <input type="password" class="border-bottom form-control padding-0 input-form" id="re-password"
+                        <input type="password" class="border-bottom form-control padding-0 input-form" id="id_new_password2"
                                value="" name="password2" placeholder="Retype password" onkeyup="visibleRePasswordTopInput()" />
                         <span class="help-block">{{ form.errors.password2.as_text }}</span>
                     <!--</div>-->

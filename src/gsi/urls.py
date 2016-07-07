@@ -19,6 +19,7 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+# from django.contrib.auth.views.password_reset import views as auth_views
 from django.views.generic.base import RedirectView
 from django.contrib.auth.decorators import login_required
 
@@ -29,11 +30,12 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
 
     # temporary blocking
-    url(r'^$', 'gsi.views.blocking', name='block'),
+    # url(r'^$', 'gsi.views.blocking', name='block'),
 
 
     # index
-    url(r'^index/$', 'gsi.views.index', name='index'),
+    # url(r'^index/$', 'gsi.views.index', name='index'),
+    url(r'^$', 'gsi.views.index', name='index'),
 
 
     # upload file
@@ -375,6 +377,12 @@ urlpatterns = [
     url(r'^register/complete/$', RedirectView.as_view(pattern_name='index'),
         name='registration_complete'),
     url(r'^', include('registration.backends.simple.urls', namespace='users')),
+
+    # reset password option
+    url(r'^reset/password_reset/$', 'django.contrib.auth.views.password_reset', name='reset_password_reset1'),
+    url(r'^reset/password_reset/done/$', 'django.contrib.auth.views.password_reset_done', name='password_reset_done'),
+    url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', 'django.contrib.auth.views.password_reset_confirm', name='password_reset_confirm'),
+    url(r'^reset/done/$', 'django.contrib.auth.views.password_reset_complete', name='password_reset_complete'),
 
 
     # api
