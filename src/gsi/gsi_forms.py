@@ -155,9 +155,9 @@ class CardSequenceCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CardSequenceCreateForm, self).__init__(*args, **kwargs)
 
-        # if 'instance' in kwargs:
-        #     self.fields['card_item'].queryset = CardItem.objects.exclude(
-        #         id__in=kwargs['instance'].cards.values_list('id', flat=True))
+        if 'instance' in kwargs:
+            self.fields['card_item'].queryset = CardItem.objects.filter(
+                id__in=kwargs['instance'].cards.values_list('id', flat=True))
 
     # name = forms.CharField(
     #     widget=forms.TextInput(attrs={'class': 'form-control'}),
@@ -178,8 +178,9 @@ class CardSequenceCreateForm(forms.ModelForm):
     card_item = forms.ModelChoiceField(
         widget=forms.Select(attrs={'class': 'form-control'}),
         # queryset=CardSequence.cards.through.objects.all(),
-        # queryset=None,
-        queryset=CardItem.objects.all(),
+        # queryset=CardSequence.objects.filter(),
+        queryset=None,
+        # queryset=CardItem.objects.all(),
         empty_label='Select',
         required=False,
         label=u'Card items',

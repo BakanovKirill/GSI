@@ -87,6 +87,22 @@ class UploadStaticDataView(FormView):
                 '%s?status_message=%s' % (reverse('index'), message))
 
 
+def write_card_to_cs(card_sequence, query):
+	dict_carditem_order = {}
+	carditem_select = query.getlist('carditem_select')
+	carditem_order = query.getlist('carditem_order')
+	num_card = len(carditem_select)
+
+	for n in xrange(num_card):
+		card_item = get_object_or_404(CardItem, pk=int(carditem_select[n]))
+
+		CardSequence.cards.through.objects.create(
+			sequence=card_sequence,
+			card_item=card_item,
+			order=int(carditem_order[n]),
+		)
+
+
 # upload_static_data_view = user_passes_test(login_url='/', redirect_field_name='')(UploadStaticDataView.as_view())
 
 
@@ -290,26 +306,15 @@ def new_run(request):
 
 				if request.POST.get('save_button') is not None:
 					if request.POST.get('carditem_select'):
-						dict_carditem_order = {}
-						carditem_select = request.POST.getlist('carditem_select')
-						carditem_order = request.POST.getlist('carditem_order')
-						num_card = len(carditem_select)
-
-						for n in xrange(num_card):
-							card_item = get_object_or_404(CardItem, pk=int(carditem_select[n]))
-
-							CardSequence.cards.through.objects.create(
-								sequence=card_sequence,
-								card_item=card_item,
-								order=int(carditem_order[n]),
-							)
+						write_card_to_cs(card_sequence, request.POST)
 
 					return HttpResponseRedirect(
 							u'%s?status_message=%s' % (reverse('run_setup'),
 							(u"RunID {0} created successfully".format(new_run_base.id)))
 					)
 				if request.POST.get('save_update_button') is not None:
-					print 'new run POST save_update_button =========================='
+					if request.POST.get('carditem_select'):
+						write_card_to_cs(card_sequence, request.POST)
 					return HttpResponseRedirect(
 							u'%s?status_message=%s' % (reverse('run_update', args=[new_run_base.id]),
 							(u"RunID {0} created successfully. You may edit it again below.".format(new_run_base.id)))
