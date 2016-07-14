@@ -99,51 +99,19 @@ function selectAllChosen() {
   });
 }
 
-//function changeColorTyping(obj) {
-//  //var elems = $('div .form-control');
-//  //var elemsTotal = elems.length;
-//  alert('VAL = '+$(obj).val());
-//
-//  if ($(obj).val()) {
-//    $($(obj)).toggleClass('field-success');
-//  }
-//
-//
-//  //removeClass
-//
-//  //for(var i = 0; i < elemsTotal; ++i){
-//  //  if ($(elems[i]).val()){
-//  //    $(elems[i]).toggleClass('field-success');
-//  //
-//  //    if ($(elems[i]).nextAll().length > 0){
-//  //      if ($(elems[i]).nextAll().hasClass('selecter-selected')){
-//  //        $(elems[i]).nextAll().toggleClass('field-success');
-//  //        //alert('SELECT!');
-//  //      }
-//  //    }
-//  //  }
-//  //}
-//}
-
 function visibleDoy(){
   var doyElement = $('span.field-success').html();
 
   if (doyElement === 'Input a variable'){
-    //$('.doy').attr('disabled', false);
     $(".doy-label").removeClass("disabled");
     $(".doy").removeClass("disabled");
-    //$(".doy-label").removeClass("disabled-doy");
     $(".doy-label").addClass("visible");
     $(".doy").addClass("visible");
-    //$(".doy-label").addClass("visible-doy");
   } else {
-    //$('.doy').attr('disabled', true);
-    //$(".doy-label").removeClass("visible-doy");
     $(".doy").removeClass("visible");
     $(".doy-label").removeClass("visible");
     $(".doy").addClass("disabled");
     $(".doy-label").addClass("disabled");
-    //$(".doy-label").addClass("disabled-doy");
   };
 }
 
@@ -155,23 +123,45 @@ function statusPeriod(){
     $(".doy-label").removeClass("disabled");
     $(".doy").addClass("visible");
     $(".doy-label").addClass("visible");
-
-
-    //$('.doy').attr('disabled', false);
-    //$(".doy-label").removeClass("disabled-doy");
-    //$(".doy-label").addClass("visible-doy");
   } else {
     $(".doy").removeClass("visible");
     $(".doy-label").removeClass("visible");
     $(".doy").addClass("disabled");
     $(".doy-label").addClass("disabled");
-
-    //$('.doy').attr('disabled', true);
-    //$(".doy-label").removeClass("visible-doy");
-    //$(".doy-label").addClass("disabled-doy");
   };
+}
 
-  //alert(periodElement);
+function getRandomArbitary(min, max)
+{
+  return Math.random() * (max - min) + min;
+}
+
+function addRunCardItem(){
+  var select = $("#carditem_all option:selected").text();
+  var select_val = $("#carditem_all option:selected").val();
+  var order = $("input#order_carditem").val();
+  var id_str = new String(getRandomArbitary(1, 10000)).replace(/\./g, "");
+  var indetificator = Number(id_str);
+  //alert('1 indetificator = '+indetificator);
+  //alert('Select VAL = '+select_val);
+  //alert('Select TXT = '+select);
+  //alert('Order VAL = '+order);
+
+  $("tbody").append('<tr id="'+indetificator+'"></tr>');
+  $("tbody > tr#"+indetificator).append('<td class="'+indetificator+'"><input type="checkbox" name="carditem_select" value="'+select_val+'" class="select_item" checked></td>');
+  $("tbody > tr#"+indetificator).append('<td class="'+indetificator+'">'+select+'</td>');
+  $("tbody > tr#"+indetificator).append('<td class="'+indetificator+'" name="carditem_order"><input type="text" class="center non-input" name="carditem_order" value="'+order+'" class="select_item"</td>');
+  $("tbody > tr#"+indetificator).append('<td class="'+indetificator+'"><button class="btn del-btn check-cur-delete" type="button" name="del_current_btn" value="'+indetificator+'" onclick="deleteCurrentCardItem('+indetificator+')"><img src="/static/img/delete-18.png"/></button></td>');
+  //alert('2 indetificator = '+indetificator);
+}
+
+function deleteCurrentCardItem(item){
+  //alert('deleteCurrentCardItem = '+item);
+  var name = new String(item);
+  //alert('TAG = '+$("tr#"+item));
+
+  $("tr#"+item).detach();
+  $("td."+item).detach();
 }
 
 

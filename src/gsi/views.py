@@ -267,6 +267,7 @@ def run_setup(request):
 def new_run(request):
 	title = 'New Run'
 	form = None
+	cards_item = CardItem.objects.all()
 
 	if request.method == "POST":
 		form = RunForm(request.POST)
@@ -285,13 +286,30 @@ def new_run(request):
 
 				path_dir = os.path.join(str(new_run_base.resolution), str(new_run_base.directory_path))
 				create_sub_dir(path_dir)
+				card_sequence = new_run_base.card_sequence
 
 				if request.POST.get('save_button') is not None:
+					if request.POST.get('carditem_select'):
+						dict_carditem_order = {}
+						carditem_select = request.POST.getlist('carditem_select')
+						carditem_order = request.POST.getlist('carditem_order')
+						num_card = len(carditem_select)
+
+						for n in xrange(num_card):
+							card_item = get_object_or_404(CardItem, pk=int(carditem_select[n]))
+
+							CardSequence.cards.through.objects.create(
+								sequence=card_sequence,
+								card_item=card_item,
+								order=int(carditem_order[n]),
+							)
+
 					return HttpResponseRedirect(
 							u'%s?status_message=%s' % (reverse('run_setup'),
 							(u"RunID {0} created successfully".format(new_run_base.id)))
 					)
 				if request.POST.get('save_update_button') is not None:
+					print 'new run POST save_update_button =========================='
 					return HttpResponseRedirect(
 							u'%s?status_message=%s' % (reverse('run_update', args=[new_run_base.id]),
 							(u"RunID {0} created successfully. You may edit it again below.".format(new_run_base.id)))
@@ -307,6 +325,7 @@ def new_run(request):
 	data = {
 		'title': title,
 		'form': form,
+		'cards_item': cards_item
 	}
 
 	return data

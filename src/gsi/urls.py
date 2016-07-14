@@ -140,9 +140,10 @@ urlpatterns = [
     url(r'^run/(?P<run_id>\d+)/card-sequence/setup/$', 'gsi.views.card_sequence',
         name='card_sequence'),
 
-    # -------------------------------------------------------------------- ???
+    # ----- CARDS ---------------------------------------------------------------
 
     # card item edit for card sequence // runID->csID->card_item
+
     # url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/card-item/(?P<card_item_id>\d+)/$',
     #     'gsi.views.card_item_update', name='card_item_update'),
     url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/(?P<card_id>\d+)/qrf/(?P<qrf_id>\d+)/$',
