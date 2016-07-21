@@ -109,7 +109,7 @@ def update_run(request, run_id):
                     # script = create_scripts(run, sequence, card, step)
 
                     if run_parallel:
-                        name_card = '{0}_{1}'.format(next_step.card_item.id, n)
+                        name_card = '{0}_{1}_{2}'.format(next_step.card_item.id, n, number_sub_cards)
                         for n in number_sub_cards:
                             ex_fe_com = Popen(
                                 'nohup {0} {1} {2} &'.format(
