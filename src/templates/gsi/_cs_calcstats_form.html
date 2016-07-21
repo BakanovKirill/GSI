@@ -30,11 +30,27 @@
 
 <div class="row margin-top-15">
     <div class="col-md-2 right">
+        <div class="form-group {% if form_2.run_parallel.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form_2.run_parallel.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-2 margin-top-4">
+        {% if not form_2.run_parallel.errors %}
+            {{ form_2.run_parallel }}
+        {% else %}
+            <span class="field-error">{{ form_2.run_parallel }}</span>
+            <b class="error-form">{{ form_2.run_parallel.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
         <div class="form-group {% if form_2.output_tile_subdir.errors %}has-error{% endif %}">
             <label class="control-label">{{ form_2.output_tile_subdir.label }}*</label>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-10">
         {% if not form_2.output_tile_subdir.errors %}
             {{ form_2.output_tile_subdir }}
         {% else %}

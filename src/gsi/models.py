@@ -118,6 +118,8 @@ class OrderedCardItem(models.Model):
     card_item = models.ForeignKey('cards.CardItem', related_name='ordered_cards')
     sequence = models.ForeignKey('CardSequence')
     order = models.PositiveIntegerField(default=0)
+    run_parallel = models.BooleanField(default=False)
+    number_sub_cards = models.PositiveIntegerField(default=0)
 
     def __unicode__(self):
         return u"{0}".format(self.card_item)

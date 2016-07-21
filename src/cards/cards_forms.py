@@ -654,7 +654,11 @@ class CalcStatsForm(forms.ModelForm):
             required=False,
             label=u'Filter Out',
         )
-
+    run_parallel = forms.BooleanField(
+        initial=False,
+        required=False,
+        label=u'Run parallel',
+    )
     name = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=100,
@@ -724,6 +728,7 @@ class CalcStatsForm(forms.ModelForm):
         model = CalcStats
         fields = [
             'name',
+            'run_parallel',
             'output_tile_subdir',
             'year_group',
             'period',

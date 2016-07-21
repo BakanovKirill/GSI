@@ -42,6 +42,13 @@ def update_run(request, run_id):
                 parent_run=run,
                 card_item=card)
             cur_state = step.state
+            run_parallel = False
+
+            try:
+                if card.run_parallel:
+                    run_parallel = True
+            except Exception:
+                pass
 
             # logs for api
             path_file = '/home/gsi/LOGS/api_status.log'
@@ -72,8 +79,15 @@ def update_run(request, run_id):
                 # break
             elif state == 'running':
                 log_file.writelines('RUNNING: ' + str(state) + '\n\n')
-                step.state = state
-                step.save()
+
+                if step.state == 'fail':
+                    step.state = 'fail'
+                    run.state = 'fail'
+                    step.save()
+                    run.save()
+                else:
+                    step.state = state
+                    step.save()
             elif state == 'success':
                 log_file.writelines('SUCCESS: ' + str(state) + '\n\n')
                 log_file.writelines('get_next_step => {0}\n'.format(step.get_next_step()))
@@ -89,19 +103,38 @@ def update_run(request, run_id):
 
                 if next_step:
                     data['next_step'] = next_step.id
-                    script = create_scripts(run, sequence, card, step)
+                    run_parallel = next_step.card_item.run_parallel
+                    number_sub_cards = next_step.card_item.number_sub_cards
 
-                    if last_but_one[0] == last:
-                        log_file.writelines('next RUN => {0}\n'.format(next_step.parent_run.id))
-                        log_file.writelines('card_item.id => {0}\n'.format(next_step.card_item.id))
-                        ex_fe_com = Popen(
-                            'nohup {0} {1} {2} &'.format(
-                                EXECUTE_FE_COMMAND,
-                                next_step.parent_run.id,
-                                next_step.card_item.id
-                            ),
-                            shell=True,
-                        )
+                    # script = create_scripts(run, sequence, card, step)
+
+                    if run_parallel:
+                        name_card = '{0}_{1}'.format(next_step.card_item.id, n)
+                        for n in number_sub_cards:
+                            ex_fe_com = Popen(
+                                'nohup {0} {1} {2} &'.format(
+                                    EXECUTE_FE_COMMAND,
+                                    next_step.parent_run.id,
+                                    name_card
+                                ),
+                                shell=True,
+                            )
+                    else:
+                        if last_but_one[0] == last:
+                            log_file.writelines('next RUN => {0}\n'.format(next_step.parent_run.id))
+                            log_file.writelines('card_item.id => {0}\n'.format(next_step.card_item.id))
+                            ex_fe_com = Popen(
+                                'nohup {0} {1} {2} &'.format(
+                                    EXECUTE_FE_COMMAND,
+                                    next_step.parent_run.id,
+                                    next_step.card_item.id
+                                ),
+                                shell=True,
+                            )
+
+                        # print 'EXECUTE_FE_COMMAND ================ ', EXECUTE_FE_COMMAND
+                        # print 'parent_run ================ ', next_step.parent_run.id
+                        # print 'card_item ================ ', next_step.card_item.id
 
                         # write log file
                         path_file = '/home/gsi/LOGS/api_success.log'

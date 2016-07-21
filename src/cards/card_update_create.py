@@ -385,6 +385,7 @@ def calcstats_update_create(form, item_id=None):
                 filter_out=filter_out,
                 input_fourier=form.cleaned_data["input_fourier"],
                 out_dir=form.cleaned_data["out_dir"],
+                run_parallel=form.cleaned_data["run_parallel"],
             )
             calcstats_card = CalcStats.objects.get(id=item_id)
     else:
@@ -399,6 +400,7 @@ def calcstats_update_create(form, item_id=None):
                 filter_out=filter_out,
                 input_fourier=form.cleaned_data["input_fourier"],
                 out_dir=form.cleaned_data["out_dir"],
+                run_parallel=form.cleaned_data["run_parallel"],
             )
 
     return calcstats_card
