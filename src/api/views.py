@@ -69,9 +69,9 @@ def update_run(request, run_id):
                 if card.run_parallel:
                     run_parallel = True
             except Exception, e:
-                log_file.writelines('ERROR run_parallel => {0}\n\n'.format(e) + '\n')
+                log_file.writelines('ERROR run_parallel => {0}\n\n'.format(e))
 
-            log_file.writelines('run_parallel => {0}\n\n'.format(run_parallel) + '\n\n')
+            log_file.writelines('run_parallel => {0}\n'.format(run_parallel))
             log_file.writelines('====== RUN_ID:\n')
             log_file.writelines('run_id => {0}\n'.format(str(run_id)))
             # log_file.writelines('====== Run:\n')
