@@ -57,21 +57,21 @@ def update_run(request, run_id):
             log_file.writelines('RUNCARDS_{0}:\n'.format(card.id))
             log_file.writelines('STATUS:\n')
             log_file.writelines(str(now) + '\n')
-            log_file.writelines(str(state) + '\n')
+            log_file.writelines(str(state) + '\n\n')
             log_file.writelines('====== RUN_ID:\n')
-            log_file.writelines('run_id => {0}\n'.format(str(run_id)))
+            log_file.writelines('run_id => {0}\n\n'.format(str(run_id)))
             log_file.writelines('====== Run:\n')
-            log_file.writelines('name RUN => {0} :: id => {1}\n'.format(str(run), str(run.id)))
+            log_file.writelines('name RUN => {0} :: id => {1}\n\n'.format(str(run), str(run.id)))
             log_file.writelines('====== OrderedCardItem:\n')
-            log_file.writelines('name CARD => {0} :: id => {1}\n'.format(str(card), str(card.id)))
+            log_file.writelines('name CARD => {0} :: id => {1}\n\n'.format(str(card), str(card.id)))
             log_file.writelines('====== RunStep:\n')
-            log_file.writelines('name STEP => {0} :: id => {1}\n\n\n'.format(str(step), str(step.id)))
+            log_file.writelines('name STEP => {0} :: id => {1}\n\n'.format(str(step), str(step.id)))
             # log_file.close()
 
             # for step in steps:
             # Go to the next step only on success state
             if state == 'fail':
-                log_file.writelines('FAIL: ' + str(state) + '\n')
+                log_file.writelines('FAIL: ' + str(state) + '\n\n')
                 step.state = 'fail'
                 run.state = 'fail'
                 step.save()

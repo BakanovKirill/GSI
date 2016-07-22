@@ -217,3 +217,11 @@ class RunStep(UnicodeNameMixin, models.Model):
             return step, is_last_step
         else:
             return False, False
+
+
+# class SubCardItem(UnicodeNameMixin, models.Model):
+#     name = models.CharField(max_length=100)
+#     state = models.CharField(max_length=100, choices=STATES, default='pending')
+#
+#     def __unicode__(self):
+#         return u"{0}".format(self.name)

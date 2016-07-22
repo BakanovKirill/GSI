@@ -203,6 +203,7 @@ class CardItem(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     order = models.PositiveIntegerField(default=0)
+    # sub_card_item = models.ManyToManyField('gsi.SubCardItem', null=True, blank=True)
 
     class Meta:
         unique_together = ('content_type', 'object_id')
