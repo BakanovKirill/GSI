@@ -72,8 +72,8 @@ def update_run(request, run_id):
                 log_file.writelines('ERROR run_parallel => {0}\n\n'.format(e))
 
             log_file.writelines('run_parallel => {0}\n'.format(run_parallel))
-            log_file.writelines('====== RUN_ID:\n')
-            log_file.writelines('run_id => {0}\n'.format(str(run_id)))
+            # log_file.writelines('====== RUN_ID:\n')
+            log_file.writelines('RUN ID => {0}\n'.format(str(run_id)))
             # log_file.writelines('====== Run:\n')
             # log_file.writelines('name RUN => {0} :: id => {1}\n'.format(str(run), str(run.id)))
             # log_file.writelines('====== OrderedCardItem:\n')
