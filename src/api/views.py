@@ -42,14 +42,19 @@ def update_run(request, run_id):
                 parent_run=run,
                 card_item=card)
             cur_state = step.state
-            # run_parallel = False
-            run_parallel = card.card_item.run_parallel
+            run_parallel = False
 
-            try:
-                if card.run_parallel:
-                    run_parallel = True
-            except Exception:
-                pass
+
+            # try:
+            #     run_parallel = card.card_item.run_parallel
+            # except Exception, e:
+            #     run_parallel = False
+
+            # try:
+            #     if card.run_parallel:
+            #         run_parallel = True
+            # except Exception, e:
+            #     pass
 
             # logs for api
             path_file = '/home/gsi/LOGS/api_status.log'
@@ -59,6 +64,13 @@ def update_run(request, run_id):
             log_file.writelines('STATUS:\n')
             log_file.writelines(str(now) + '\n')
             log_file.writelines(str(state) + '\n')
+
+            try:
+                if card.run_parallel:
+                    run_parallel = True
+            except Exception, e:
+                log_file.writelines('ERROR run_parallel => {0}\n\n'.format(e) + '\n')
+
             log_file.writelines('run_parallel => {0}\n\n'.format(run_parallel) + '\n\n')
             log_file.writelines('====== RUN_ID:\n')
             log_file.writelines('run_id => {0}\n'.format(str(run_id)))
