@@ -60,7 +60,9 @@ def update_run(request, run_id):
             path_file = '/home/gsi/LOGS/api_status.log'
             now = datetime.now()
             log_file = open(path_file, 'a')
-            log_file.writelines('RUNCARDS_{0}:\n'.format(card.id))
+
+            log_file.writelines('RUN-{0}:\n'.format(run_card_id))
+            log_file.writelines('CARDS-{0}:\n'.format(card.id))
             log_file.writelines('STATUS:\n')
             log_file.writelines(str(now) + '\n')
             log_file.writelines(str(state) + '\n')
