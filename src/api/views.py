@@ -42,7 +42,8 @@ def update_run(request, run_id):
                 parent_run=run,
                 card_item=card)
             cur_state = step.state
-            run_parallel = False
+            # run_parallel = False
+            run_parallel = card.card_item.run_parallel
 
             try:
                 if card.run_parallel:
@@ -57,28 +58,29 @@ def update_run(request, run_id):
             log_file.writelines('RUNCARDS_{0}:\n'.format(card.id))
             log_file.writelines('STATUS:\n')
             log_file.writelines(str(now) + '\n')
-            log_file.writelines(str(state) + '\n\n')
+            log_file.writelines(str(state) + '\n')
+            log_file.writelines('run_parallel => {0}\n\n'.format(run_parallel) + '\n\n')
             log_file.writelines('====== RUN_ID:\n')
-            log_file.writelines('run_id => {0}\n\n'.format(str(run_id)))
-            log_file.writelines('====== Run:\n')
-            log_file.writelines('name RUN => {0} :: id => {1}\n\n'.format(str(run), str(run.id)))
-            log_file.writelines('====== OrderedCardItem:\n')
-            log_file.writelines('name CARD => {0} :: id => {1}\n\n'.format(str(card), str(card.id)))
-            log_file.writelines('====== RunStep:\n')
-            log_file.writelines('name STEP => {0} :: id => {1}\n\n'.format(str(step), str(step.id)))
+            log_file.writelines('run_id => {0}\n'.format(str(run_id)))
+            # log_file.writelines('====== Run:\n')
+            # log_file.writelines('name RUN => {0} :: id => {1}\n'.format(str(run), str(run.id)))
+            # log_file.writelines('====== OrderedCardItem:\n')
+            # log_file.writelines('name CARD => {0} :: id => {1}\n'.format(str(card), str(card.id)))
+            # log_file.writelines('====== RunStep:\n')
+            # log_file.writelines('name STEP => {0} :: id => {1}\n'.format(str(step), str(step.id)))
             # log_file.close()
 
             # for step in steps:
             # Go to the next step only on success state
             if state == 'fail':
-                log_file.writelines('FAIL: ' + str(state) + '\n\n')
+                log_file.writelines('FAIL: ' + str(state) + '\n')
                 step.state = 'fail'
                 run.state = 'fail'
                 step.save()
                 run.save()
                 # break
             elif state == 'running':
-                log_file.writelines('RUNNING: ' + str(state) + '\n\n')
+                log_file.writelines('RUNNING: ' + str(state) + '\n')
 
                 if step.state == 'fail':
                     step.state = 'fail'
@@ -89,7 +91,7 @@ def update_run(request, run_id):
                     step.state = state
                     step.save()
             elif state == 'success':
-                log_file.writelines('SUCCESS: ' + str(state) + '\n\n')
+                log_file.writelines('SUCCESS: ' + str(state) + '\n')
                 log_file.writelines('get_next_step => {0}\n'.format(step.get_next_step()))
                 next_step, is_last_step = step.get_next_step()
                 step.state = state
@@ -103,7 +105,7 @@ def update_run(request, run_id):
 
                 if next_step:
                     data['next_step'] = next_step.id
-                    run_parallel = next_step.card_item.run_parallel
+                    run_parallel_next_step = next_step.card_item.run_parallel
                     number_sub_cards = next_step.card_item.number_sub_cards
 
                     # script = create_scripts(run, sequence, card, step)
