@@ -222,6 +222,8 @@ class RunStep(UnicodeNameMixin, models.Model):
 # class SubCardItem(UnicodeNameMixin, models.Model):
 #     name = models.CharField(max_length=100)
 #     state = models.CharField(max_length=100, choices=STATES, default='pending')
+#     run_id = models.PositiveIntegerField()
+#     card_id = models.PositiveIntegerField()
 #
 #     def __unicode__(self):
 #         return u"{0}".format(self.name)

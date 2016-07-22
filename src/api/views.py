@@ -30,6 +30,7 @@ def update_run(request, run_id):
     order_card_item_id = value_list[2]
     last = value_list[-1]
     last_but_one = value_list[-2:-1]
+    name_sub_card = ''
 
     if data['status']:
         state = data['status']
@@ -43,12 +44,6 @@ def update_run(request, run_id):
                 card_item=card)
             cur_state = step.state
             run_parallel = False
-
-
-            # try:
-            #     run_parallel = card.card_item.run_parallel
-            # except Exception, e:
-            #     run_parallel = False
 
             # try:
             #     if card.run_parallel:
@@ -70,6 +65,7 @@ def update_run(request, run_id):
             try:
                 if card.run_parallel:
                     run_parallel = True
+                    name_sub_card = '{0}_{1}'.format(card.id, last_but_one)
             except Exception, e:
                 log_file.writelines('ERROR run_parallel => {0}\n\n'.format(e))
 
@@ -88,6 +84,9 @@ def update_run(request, run_id):
             # Go to the next step only on success state
             if state == 'fail':
                 log_file.writelines('FAIL: ' + str(state) + '\n')
+                if run_parallel:
+                    pass
+
                 step.state = 'fail'
                 run.state = 'fail'
                 step.save()
