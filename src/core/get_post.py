@@ -2,12 +2,34 @@
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.contrib.contenttypes.models import ContentType
 
 from gsi.models import Area
 from gsi.update_create import cs_cards_update
 
 
-def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=None, cs_form=False):
+def add_card_in_cardsequence(card, cs_id):
+    from gsi.models import CardSequence
+    from cards.models import CardItem
+
+    try:
+        card_model = ContentType.objects.get_for_model(card.__class__).model
+        content_type = get_object_or_404(ContentType, app_label='cards', model=card_model)
+        cs = get_object_or_404(CardSequence, pk=cs_id)
+        card_item = get_object_or_404(
+                CardItem,
+                content_type=content_type,
+                object_id=card.id
+        )
+        CardSequence.cards.through.objects.create(
+            sequence=cs,
+            card_item=card_item,
+        )
+    except Exception, e:
+        print 'ERROR ADD CARD in CS ======== ', e
+
+
+def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=None, cs_form=False, cs_id=None):
     response = None
 
     # import pdb;pdb.set_trace()
@@ -24,7 +46,6 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                     obj = func(form_1, multiple=multiple, item_id=item_id)
                 else:
                     obj = func(form_1, item_id=item_id)
-
                 if obj == None:
                     return None
             else:
@@ -33,7 +54,7 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                     obj = func(form_1, multiple=multiple)
                 else:
                     obj = func(form_1)
-
+                    add_card_in_cardsequence(obj, cs_id)
                 if obj == None:
                     return None
 
@@ -73,7 +94,7 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                     obj = func(form_1, multiple=multiple)
                 else:
                     obj = func(form_1)
-
+                    add_card_in_cardsequence(obj, cs_id)
                 if obj == None:
                     return None
 

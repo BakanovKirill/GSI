@@ -75,7 +75,7 @@ def new_runid_csid_qrf(request, run_id, cs_id):
 	if request.method == "POST":
 		# import pdb;pdb.set_trace()
 		response = get_post(request, QRFForm, 'QRF Card',
-							REVERSE_URL['qrf'], func, args=True)
+							REVERSE_URL['qrf'], func, args=True, cs_id=cs_id)
 
 		if response == None:
 			return HttpResponseRedirect(
@@ -87,6 +87,8 @@ def new_runid_csid_qrf(request, run_id, cs_id):
 			return response
 		else:
 			form = response
+			# if request.POST.get('save_button') is not None:
+
 	else:
 		form = QRFForm()
 
@@ -155,7 +157,7 @@ def new_runid_csid_rfscore(request, run_id, cs_id):
 
 	if request.method == "POST":
 		response = get_post(request, RFScoreForm, 'RFScore Card',
-							REVERSE_URL['rfscore'], func, args=True)
+							REVERSE_URL['rfscore'], func, args=True, cs_id=cs_id)
 
 		if response == None:
 			return HttpResponseRedirect(
@@ -235,7 +237,7 @@ def new_runid_csid_remap(request, run_id, cs_id):
 
 	if request.method == "POST":
 		response = get_post(request, RemapForm, 'Remap Card',
-							REVERSE_URL['remap'], func, args=True)
+							REVERSE_URL['remap'], func, args=True, cs_id=cs_id)
 
 		if response == None:
 			return HttpResponseRedirect(
@@ -315,7 +317,7 @@ def new_runid_csid_year_filter(request, run_id, cs_id):
 
 	if request.method == "POST":
 		response = get_post(request, YearFilterForm, 'YearFilter Card',
-							REVERSE_URL['year_filter'], func, args=True)
+							REVERSE_URL['year_filter'], func, args=True, cs_id=cs_id)
 
 		if response == None:
 			return HttpResponseRedirect(
@@ -401,7 +403,7 @@ def new_runid_csid_collate(request, run_id, cs_id):
 			update_root_list_files()
 
 		response = get_post(request, CollateForm, 'Collate Card',
-							REVERSE_URL['collate'], func, args=True)
+							REVERSE_URL['collate'], func, args=True, cs_id=cs_id)
 
 		if response == None:
 			return HttpResponseRedirect(
@@ -496,7 +498,7 @@ def new_runid_csid_preproc(request, run_id, cs_id):
 
 	if request.method == "POST":
 		response = get_post(request, PreProcForm, 'PreProc Card',
-							REVERSE_URL['preproc'], func, args=True)
+							REVERSE_URL['preproc'], func, args=True, cs_id=cs_id)
 
 		if response == None:
 			return HttpResponseRedirect(
@@ -577,7 +579,7 @@ def new_runid_csid_mergecsv(request, run_id, cs_id):
 
 	if request.method == "POST":
 		response = get_post(request, MergeCSVForm, 'MergeCSV Card',
-							REVERSE_URL['mergecsv'], func, args=True)
+							REVERSE_URL['mergecsv'], func, args=True, cs_id=cs_id)
 
 		if response == None:
 			return HttpResponseRedirect(
@@ -657,7 +659,7 @@ def new_runid_csid_rftrain(request, run_id, cs_id):
 
 	if request.method == "POST":
 		response = get_post(request, RFTrainForm, 'RFTrain Card',
-							REVERSE_URL['rftrain'], func, args=True)
+							REVERSE_URL['rftrain'], func, args=True, cs_id=cs_id)
 
 		if response == None:
 			return HttpResponseRedirect(
@@ -737,7 +739,7 @@ def new_runid_csid_randomforest(request, run_id, cs_id):
 
 	if request.method == "POST":
 		response = get_post(request, RandomForestForm, 'RandomForest Card',
-							REVERSE_URL['randomforest'], func, args=True)
+							REVERSE_URL['randomforest'], func, args=True, cs_id=cs_id)
 
 		if response == None:
 			return HttpResponseRedirect(
@@ -817,7 +819,7 @@ def new_runid_csid_calcstats(request, run_id, cs_id):
 
 	if request.method == "POST":
 		response = get_post(request, CalcStatsForm, 'CalcStats Card',
-							REVERSE_URL['calcstats'], func, args=True)
+							REVERSE_URL['calcstats'], func, args=True, cs_id=cs_id)
 
 		if response == None:
 			return HttpResponseRedirect(
