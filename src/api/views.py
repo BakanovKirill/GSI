@@ -10,7 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 
 from core.utils import validate_status, write_log, create_scripts
-from gsi.models import Run, RunStep, CardSequence, OrderedCardItem
+from gsi.models import Run, RunStep, CardSequence, OrderedCardItem, SubCardItem
 from gsi.settings import EXECUTE_FE_COMMAND
 from cards.models import CardItem
 
@@ -30,7 +30,8 @@ def update_run(request, run_id):
     order_card_item_id = value_list[2]
     last = value_list[-1]
     last_but_one = value_list[-2:-1]
-    name_sub_card = ''
+    cur_counter = last_but_one[0]
+    name_sub_card = '{0}_{1}'.format(order_card_item_id, cur_counter)
 
     if data['status']:
         state = data['status']
@@ -65,7 +66,7 @@ def update_run(request, run_id):
             try:
                 if card.run_parallel:
                     run_parallel = True
-                    name_sub_card = '{0}_{1}'.format(card.id, last_but_one)
+                    name_sub_card = '{0}_{1}'.format(card.id, cur_counter)
             except Exception, e:
                 log_file.writelines('ERROR run_parallel => {0}\n\n'.format(e))
 
@@ -85,24 +86,38 @@ def update_run(request, run_id):
             if state == 'fail':
                 log_file.writelines('FAIL: ' + str(state) + '\n')
                 if run_parallel:
-                    pass
+                    sub_card_item = get_object_or_404(
+                            SubCardItem,
+                            name=name_sub_card,
+                            run_id=int(run_card_id),
+                            card_id=int(order_card_item_id)
+                    )
+                    sub_card_item.state = state
+                    sub_card_item.save()
 
-                step.state = 'fail'
-                run.state = 'fail'
+                step.state = state
                 step.save()
+                run.state = state
                 run.save()
-                # break
             elif state == 'running':
                 log_file.writelines('RUNNING: ' + str(state) + '\n')
 
-                if step.state == 'fail':
-                    step.state = 'fail'
-                    run.state = 'fail'
-                    step.save()
+                if run_parallel:
+                    sub_card_item = get_object_or_404(
+                            SubCardItem,
+                            name=name_sub_card,
+                            run_id=int(run_card_id),
+                            card_id=int(order_card_item_id)
+                    )
+                    sub_card_item.state = state
+                    sub_card_item.save()
+
+                step.state = state
+                step.save()
+
+                if run.state != 'fail':
+                    run.state = state
                     run.save()
-                else:
-                    step.state = state
-                    step.save()
             elif state == 'success':
                 log_file.writelines('SUCCESS: ' + str(state) + '\n')
                 log_file.writelines('get_next_step => {0}\n'.format(step.get_next_step()))
@@ -118,24 +133,45 @@ def update_run(request, run_id):
 
                 if next_step:
                     data['next_step'] = next_step.id
+                    finished = False
                     run_parallel_next_step = next_step.card_item.run_parallel
-                    number_sub_cards = next_step.card_item.number_sub_cards
-
+                    # number_sub_cards = next_step.card_item.number_sub_cards
                     # script = create_scripts(run, sequence, card, step)
 
+                    # CHECK ALL THE SUB CARDS!!!!!!!
                     if run_parallel:
-                        name_card = '{0}_{1}'.format(next_step.card_item.id, n)
-                        for n in number_sub_cards:
-                            ex_fe_com = Popen(
-                                'nohup {0} {1} {2} &'.format(
-                                    EXECUTE_FE_COMMAND,
-                                    next_step.parent_run.id,
-                                    name_card
-                                ),
-                                shell=True,
-                            )
+                        sub_card_item = SubCardItem.objects.filter(
+                                name=name_sub_card,
+                                run_id=int(run_card_id),
+                                card_id=int(order_card_item_id)
+                        ).values_list('state')
+
+                        if 'running' not in sub_card_item:
+                            finished = True
                     else:
-                        if last_but_one[0] == last:
+                        if cur_counter == last:
+                            finished = True
+
+                    if finished:
+                        if run_parallel_next_step:
+                            next_sub_cards_item = SubCardItem.objects.filter(
+                                    run_id=next_step.parent_run.id,
+                                    card_id=next_step.card_item.id
+                            )
+                            count = 1
+
+                            for n in next_sub_cards_item:
+                                name_card = '{0}_{1}'.format(next_step.card_item.id, count)
+                                ex_fe_com = Popen(
+                                    'nohup {0} {1} {2} &'.format(
+                                        EXECUTE_FE_COMMAND,
+                                        n.parent_run.id,
+                                        n.card_item.id
+                                    ),
+                                    shell=True,
+                                )
+                                count += 1
+                        else:
                             log_file.writelines('next RUN => {0}\n'.format(next_step.parent_run.id))
                             log_file.writelines('card_item.id => {0}\n'.format(next_step.card_item.id))
                             ex_fe_com = Popen(
@@ -146,6 +182,7 @@ def update_run(request, run_id):
                                 ),
                                 shell=True,
                             )
+
 
                         # print 'EXECUTE_FE_COMMAND ================ ', EXECUTE_FE_COMMAND
                         # print 'parent_run ================ ', next_step.parent_run.id
@@ -170,18 +207,46 @@ def update_run(request, run_id):
 
                 if is_last_step:
                     data['is_last_step'] = True
+
+                    if run_parallel:
+                        sub_card_item = get_object_or_404(
+                                SubCardItem,
+                                name=name_sub_card,
+                                run_id=int(run_card_id),
+                                card_id=int(order_card_item_id)
+                        )
+                        sub_card_item.state = 'success'
+                        sub_card_item.save()
                     step.state = 'success'
                     run.state = 'success'
                     step.save()
                     run.save()
             else:
                 log_file.writelines('ELSE: ' + str(state) + '\n')
+                if run_parallel:
+                    sub_card_item = get_object_or_404(
+                            SubCardItem,
+                            name=name_sub_card,
+                            run_id=int(run_card_id),
+                            card_id=int(order_card_item_id)
+                    )
+                    sub_card_item.state = state
+                    sub_card_item.save()
                 step.state = state
                 step.save()
 
             log_file.writelines('\n\n\n')
             log_file.close()
-
+        except Exception, e:
+            # error for api
+            path_file = '/home/gsi/LOGS/api_error.err'
+            now = datetime.now()
+            log_file1 = open(path_file, 'a')
+            log_file1.writelines('ERRROR API-{0}:'.format(card.id) + '\n')
+            log_file1.writelines(str(now) + '\n')
+            log_file1.writelines(str(e) + '\n')
+            log_file1.writelines('\n\n\n')
+            log_file1.close()
         except ObjectDoesNotExist as e:
             data['status'] = False
             data['message'] = str(e)
@@ -189,13 +254,13 @@ def update_run(request, run_id):
             # error for api
             path_file = '/home/gsi/LOGS/runcards_status.err'
             now = datetime.now()
-            log_file = open(path_file, 'a')
-            log_file.writelines('ERRROR runcards_{0}:'.format(card.id) + '\n')
-            log_file.writelines(str(now) + '\n')
-            log_file.writelines(str(e) + '\n')
+            log_file2 = open(path_file, 'a')
+            log_file2.writelines('ERRROR runcards_{0}:'.format(card.id) + '\n')
+            log_file2.writelines(str(now) + '\n')
+            log_file2.writelines(str(e) + '\n')
 
-            log_file.writelines('\n\n\n')
-            log_file.close()
+            log_file2.writelines('\n\n\n')
+            log_file2.close()
     else:
         return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
