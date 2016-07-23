@@ -86,14 +86,14 @@ def update_run(request, run_id):
             if state == 'fail':
                 log_file.writelines('FAIL: ' + str(state) + '\n')
                 if run_parallel:
-                    sub_card_item = get_object_or_404(
-                            SubCardItem,
+                    sub_card_item = SubCardItem.objects.filter(
                             name=name_sub_card,
                             run_id=int(run_card_id),
                             card_id=int(order_card_item_id)
                     )
-                    sub_card_item.state = state
-                    sub_card_item.save()
+                    for n in sub_card_item:
+                        n.state = state
+                        n.save()
 
                 step.state = state
                 step.save()
@@ -103,14 +103,14 @@ def update_run(request, run_id):
                 log_file.writelines('RUNNING: ' + str(state) + '\n')
 
                 if run_parallel:
-                    sub_card_item = get_object_or_404(
-                            SubCardItem,
+                    sub_card_item = SubCardItem.objects.filter(
                             name=name_sub_card,
                             run_id=int(run_card_id),
                             card_id=int(order_card_item_id)
                     )
-                    sub_card_item.state = state
-                    sub_card_item.save()
+                    for n in sub_card_item:
+                        n.state = state
+                        n.save()
 
                 step.state = state
                 step.save()
@@ -141,7 +141,6 @@ def update_run(request, run_id):
                     # CHECK ALL THE SUB CARDS!!!!!!!
                     if run_parallel:
                         sub_card_item = SubCardItem.objects.filter(
-                                name=name_sub_card,
                                 run_id=int(run_card_id),
                                 card_id=int(order_card_item_id)
                         ).values_list('state')
@@ -209,14 +208,15 @@ def update_run(request, run_id):
                     data['is_last_step'] = True
 
                     if run_parallel:
-                        sub_card_item = get_object_or_404(
-                                SubCardItem,
+                        sub_card_item = SubCardItem.objects.filter(
                                 name=name_sub_card,
                                 run_id=int(run_card_id),
                                 card_id=int(order_card_item_id)
                         )
-                        sub_card_item.state = 'success'
-                        sub_card_item.save()
+
+                        for n in sub_card_item:
+                            n.state = 'success'
+                            n.save()
                     step.state = 'success'
                     run.state = 'success'
                     step.save()
@@ -224,14 +224,15 @@ def update_run(request, run_id):
             else:
                 log_file.writelines('ELSE: ' + str(state) + '\n')
                 if run_parallel:
-                    sub_card_item = get_object_or_404(
-                            SubCardItem,
+                    sub_card_item = SubCardItem.objects.filter(
                             name=name_sub_card,
                             run_id=int(run_card_id),
                             card_id=int(order_card_item_id)
                     )
-                    sub_card_item.state = state
-                    sub_card_item.save()
+
+                    for n in sub_card_item:
+                        n.state = state
+                        n.save()
                 step.state = state
                 step.save()
 
