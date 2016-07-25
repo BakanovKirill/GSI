@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block title %}
+    {{ title }}
+{% endblock title %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="jumbotron font-14">
+            {% autoescape on %}
+                <p class="text-align-left">{{ log_info|safe }}</p>
+            {% endautoescape %}
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-default btn-block" href="{% url 'sub_card_details' run_id card_id %}" role="button">
+                Back
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

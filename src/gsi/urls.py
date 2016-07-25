@@ -67,8 +67,14 @@ urlpatterns = [
     # run details
     url(r'^run/details/(?P<run_id>\d+)/$', 'gsi.views.run_details', name='run_details'),
 
+    # sub cards of card run details
+    url(r'^run/(?P<run_id>\d+)/carditem/(?P<card_id>\d+)/details/$', 'gsi.views.sub_card_details', name='sub_card_details'),
+
     # log view cards
-    url(r'^run/(?P<run_id>\d+)/card/log/(?P<card_id>\d+)/$', 'gsi.views.view_log_file', name='view_log_file'),
+    url(r'^run/(?P<run_id>\d+)/card/(?P<card_id>\d+)/log/(?P<status>\w+)/$', 'gsi.views.view_log_file', name='view_log_file'),
+
+    # log view sub cards
+    url(r'^run/(?P<run_id>\d+)/card/(?P<card_id>\d+)/subcard/log/(?P<count>\d+)/(?P<status>\w+)/$', 'gsi.views.view_log_file_sub_card', name='view_log_file_sub_card'),
 
     # setup static data
     url(r'^run/static-data/setup/$', 'gsi.views.static_data_setup', name='static_data_setup'),

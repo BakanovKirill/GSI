@@ -155,6 +155,12 @@ EMAIL_BACKEND = 'smtp.backend'
 MAIN_FILE = os.path.join(BASE_DIR, "core/main.log")
 MAIN_DEBUG_FILE = os.path.join(BASE_DIR, "core/main_debug.log")
 
+# # Time Format
+# TIME_FORMAT = (
+#     '%H:%M:%S.%f',  # '14:30:59.000200'
+# )
+
+# Logging setting
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,

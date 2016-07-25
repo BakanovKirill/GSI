@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block title %}
+    {{ title }}
+    <h4>{{ sub_title }}</h4>
+{% endblock title %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <form action="{% url 'sub_card_details' run_id card_id %}" method="post" enctype="multipart/form-data"
+          role="form" class="form-horizontal">
+            {% csrf_token %}
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Sub Card ID</th>
+                        <th>Card Run</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for card in sub_cards %}
+                        <tr>
+                            <td><input type="radio" name="details_file" value="{{ card.name }}"></td>
+                            <td>{{ card.name }}</td>
+                            <td>{{ card_name }}</td>
+                            {% if card.start_date %}
+                                <td>{{ card.start_date|date:"d/m/Y" }}</td>
+                            {% else %}
+                                <td>{{ card.start_date|default:"no date set" }}</td>
+                            {% endif %}
+                            {% if card.start_time %}
+                                <td>{{ card.start_date.time|date:"c" }}</td>
+                            {% else %}
+                                <td>{{ card.start_time|default:"no time set" }}</td>
+                            {% endif %}
+                            <td>{{ card.state }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- pagination -->
+            {% include 'paginations.html' %}
+            <!-- end pagination -->
+
+            <div class="col-md-4">
+                <a class="btn btn-default btn-block" href="{% url 'run_details' run_id %}" role="button">
+                    Cancel
+                </a>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" name="err_button" class="btn btn-danger btn-block" value="err">
+                    View Error Log Card
+                </button>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" name="out_button" class="btn btn-primary btn-block" value="out">
+                    View Out Log Card
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

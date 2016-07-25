@@ -22,7 +22,7 @@ from django.conf import settings
 
 from gsi.models import (Run, RunStep, Log, OrderedCardItem,
 						HomeVariables, VariablesGroup, YearGroup,
-						Year, Satellite, InputDataDirectory, ListTestFiles)
+						Year, Satellite, InputDataDirectory, ListTestFiles, SubCardItem)
 from cards.models import CardItem, Collate
 from cards.card_update_create import *
 from cards.cards_forms import *
@@ -965,28 +965,28 @@ def run_progress(request):
 	return data
 
 
-# execute run
+# details run
 @login_required
 @render_to('gsi/run_details.html')
 def run_details(request, run_id):
-	title = 'Run Details'
 	sub_title = 'The View Log file select and hit view'
 	runs_step = RunStep.objects.filter(parent_run=run_id)
 	runs_step.order_by('card_item.card_item.order')
 	run = get_object_or_404(Run, pk=run_id)
 	url_name = 'run_details'
+	title = 'Run "{0}" Details'.format(runs_step[0].parent_run)
 
 	if request.method == "POST":
 		if request.POST.get('details_file'):
 			step = get_object_or_404(RunStep, pk=request.POST.get('details_file'))
 
-			if request.POST.get('log_out_button', ''):
+			if request.POST.get('out_button', ''):
 				return HttpResponseRedirect(u'%s?status_message=%s' %
-										(reverse('view_log_file', args=[run_id, step.card_item.id]),
+										(reverse('view_log_file', args=[run_id, step.card_item.id, 'Out']),
 										 (u'Log Out file for the Card "{0}".'.format(step.card_item))))
-			elif request.POST.get('log_err_button', ''):
+			elif request.POST.get('err_button', ''):
 				return HttpResponseRedirect(u'%s?status_message=%s' %
-										(reverse('view_log_file', args=[run_id, step.card_item.id]),
+										(reverse('view_log_file', args=[run_id, step.card_item.id, 'Error']),
 										 (u'Log Error file for the Card "{0}".'.format(step.card_item))))
 		else:
 			return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('run_details', args=[run_id]),
@@ -1011,50 +1011,146 @@ def run_details(request, run_id):
 # view out/error log files for cards
 @login_required
 @render_to('gsi/view_log_file.html')
-def view_log_file(request, run_id, card_id):
-	status = ''
+def view_log_file(request, run_id, card_id, status):
 	log_info = ''
-	run_step_card = RunStep.objects.filter(card_item__id=card_id).first()
+
 	run = get_object_or_404(Run, pk=run_id)
 	log = get_object_or_404(Log, pk=run.log.id)
 	log_path = log.log_file_path
+	card_name = 'runcard_{0}'.format(card_id)
+	path_log_file = os.path.join(str(log_path), str(card_name))
 
-	if request.method == "GET":
-		status = request.GET.get('status_message', '')
+	title = 'Log {0} file for the Card Item "{1}"'.format(status, run)
+	sub_title = 'The View Log file select and hit view'
 
-	out_ext = 'Out' in status and 'out' or ''
-	err_ext = 'Error' in status and 'err' or ''
-	out = 'Out' in status and 'Out' or ''
-	err = 'Error' in status and 'Error' or ''
-	log_file  = 'runcard_{0}.{1}'.format(card_id, out_ext or err_ext)
-	log_file_path = '{0}/{1}'.format(log_path, log_file)
-
-	try:
-		fd = open(log_file_path, 'r')
-		for line in fd.readlines():
-			log_info += line + '<br />'
-	except Exception, e:
-		print 'ERROR view_log_file: ', e
-
-		# logs for api
-		path_file = '/home/gsi/LOGS/log_file.log'
-		now = datetime.now()
-		log_file = open(path_file, 'a')
-		log_file.writelines(str(now) + '\n')
-		log_file.writelines('ERROR => {0}\n\n\n'.format(e))
-		log_file.close()
-
-
-		mess = out or err
-		return HttpResponseRedirect(u'%s?danger_message=%s' %
-									(reverse('run_details', args=[run_id]),
-									 (u'Log {0} for Card "{1}" not found!').
-									 format(mess, run_step_card)))
+	if status == 'Out':
+		try:
+			fd = open(path_log_file, 'r')
+			for line in fd.readlines():
+				log_info += line + '<br />'
+		except Exception, e:
+			print 'ERROR Out view_log_file: ', e
+			return HttpResponseRedirect(u'%s?danger_message=%s' %
+										(reverse('run_details', args=[run_id]),
+										 (u'Log Out file "{0}" not found.'.format(card_name))))
+	elif status == 'Error':
+		try:
+			fd = open(path_log_file, 'r')
+			for line in fd.readlines():
+				log_info += line + '<br />'
+		except Exception, e:
+			print 'ERROR Error view_log_file: ', e
+			return HttpResponseRedirect(u'%s?danger_message=%s' %
+										(reverse('run_details', args=[run_id]),
+										 (u'Log Error file "{0}" not found.'.format(card_name))))
 
 	data = {
-		'title': status,
+		'title': title,
 		'run_id': run_id,
-		'log_info': log_info
+		'card_id': card_id,
+		'log_info': log_info,
+	}
+
+	return data
+
+
+# view out/error log files for cards
+@login_required
+@render_to('gsi/view_log_file_sub_card.html')
+def view_log_file_sub_card(request, run_id, card_id, count, status):
+	log_info = ''
+
+	runs_step = RunStep.objects.filter(parent_run=run_id).first()
+	run_step_card = RunStep.objects.filter(card_item__id=card_id).first()
+
+	title = 'Log {0} file for the Sub Card "{1}"'.format(status, run_step_card.card_item)
+	sub_title = 'The View Log file select and hit view'
+
+	run = get_object_or_404(Run, pk=run_id)
+	log = get_object_or_404(Log, pk=run.log.id)
+	log_path = log.log_file_path
+	card_name = 'runcard_{0}_{1}'.format(card_id, count)
+	path_log_file = os.path.join(str(log_path), str(card_name))
+
+	if status == 'Out':
+		try:
+			fd = open(path_log_file, 'r')
+			for line in fd.readlines():
+				log_info += line + '<br />'
+		except Exception, e:
+			print 'ERROR Out view_log_file_sub_card: ', e
+			return HttpResponseRedirect(u'%s?danger_message=%s' %
+										(reverse('sub_card_details', args=[run_id, card_id]),
+										 (u'Log Out file "{0}" not found.'.format(card_name))))
+	elif status == 'Error':
+		try:
+			fd = open(path_log_file, 'r')
+			for line in fd.readlines():
+				log_info += line + '<br />'
+		except Exception, e:
+			print 'ERROR Error view_log_file_sub_card: ', e
+			return HttpResponseRedirect(u'%s?danger_message=%s' %
+										(reverse('sub_card_details', args=[run_id, card_id]),
+										 (u'Log Error file "{0}" not found.'.format(card_name))))
+
+	data = {
+		'title': title,
+		'run_id': run_id,
+		'card_id': card_id,
+		'log_info': log_info,
+	}
+
+	return data
+
+
+# details parallel card of run
+@login_required
+@render_to('gsi/sub_card_details.html')
+def sub_card_details(request, run_id, card_id):
+	url_name = 'sub_card_details'
+	sub_cards = SubCardItem.objects.filter(
+			run_id=run_id, card_id=card_id)
+	sub_cards.order_by('sub_cards.start_time')
+	run = get_object_or_404(Run, pk=run_id)
+	log = get_object_or_404(Log, pk=run.log.id)
+	log_path = log.log_file_path
+	runs_step = RunStep.objects.filter(parent_run=run_id).first()
+	run_step_card = RunStep.objects.filter(card_item__id=card_id).first()
+	title = 'Sub Cards of Card "{0}" Details'.format(run_step_card.card_item)
+	sub_title = 'The View Log file select and hit view'
+
+	if request.method == "POST":
+		if request.POST.get('details_file'):
+
+			if request.POST.get('err_button', ''):
+				log_err = request.POST.get('details_file')
+				count = log_err.split('_')[1]
+				return HttpResponseRedirect(u'%s?status_message=%s' %
+										(reverse('view_log_file_sub_card', args=[run_id, card_id, count, 'Error']),
+										 (u'Log Error file for the Card "{0}".'.format(run_step_card.card_item))))
+			elif request.POST.get('out_button', ''):
+				log_err = request.POST.get('details_file')
+				count = log_err.split('_')[1]
+				return HttpResponseRedirect(u'%s?status_message=%s' %
+										(reverse('view_log_file_sub_card', args=[run_id, card_id, count, 'Out']),
+										 (u'Log Out file for the Card "{0}".'.format(run_step_card.card_item))))
+		else:
+			return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('sub_card_details', args=[run_id, card_id]),
+																   (u"To view the Card Log, select Card.")))
+
+	# paginations
+	model_name = paginations(request, sub_cards)
+
+	data = {
+		'title': title,
+		'sub_title': sub_title,
+		'run_id': run_id,
+		'card_id': card_id,
+		'sub_cards': model_name,
+		'card_name': run_step_card.card_item,
+		'model_name': model_name,
+		'url_name': url_name,
+		'obj_id': run_id,
 	}
 
 	return data

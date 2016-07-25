@@ -24,8 +24,17 @@
                 </thead>
                 <tbody>
                     {% for run in runs_step %}
-                        <tr>
-                            <td><input type="radio" name="details_file" value="{{ run.id }}"></td>
+                        <a>
+                            {% if run.card_item.run_parallel %}
+                                <td>
+                                    <a href="{% url 'sub_card_details' run_id run.card_item.id %}">
+                                        <img class="" src="{% static 'img/parallel-1-18.png' %}"/>
+                                    </a>
+                                </td>
+                                <!--<td><input type="radio" name="details_file" value="{{ run.id }}"></td>-->
+                            {% else%}
+                                <td><input type="radio" name="details_file" value="{{ run.id }}"></td>
+                            {% endif %}
                             <td>{{ run.card_item.id }}</td>
                             <td>{{ run.card_item }}</td>
                             <td>{{ run.start_date|date:"d/m/Y" }}</td>
@@ -45,12 +54,12 @@
                 </a>
             </div>
             <div class="col-md-4">
-                <button type="submit" name="log_err_button" class="btn btn-danger btn-block" value="err_log">
+                <button type="submit" name="err_button" class="btn btn-danger btn-block" value="err_log">
                     View Error Log Card
                 </button>
             </div>
             <div class="col-md-4">
-                <button type="submit" name="log_out_button" class="btn btn-primary btn-block" value="out_log">
+                <button type="submit" name="out_button" class="btn btn-primary btn-block" value="out_log">
                     View Out Log Card
                 </button>
             </div>
