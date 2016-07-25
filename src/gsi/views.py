@@ -1014,17 +1014,20 @@ def run_details(request, run_id):
 def view_log_file(request, run_id, card_id, status):
 	log_info = ''
 
-	run = get_object_or_404(Run, pk=run_id)
-	log = get_object_or_404(Log, pk=run.log.id)
-	log_path = log.log_file_path
-	card_name = 'runcard_{0}'.format(card_id)
-	path_log_file = os.path.join(str(log_path), str(card_name))
+	try:
+		run = get_object_or_404(Run, pk=run_id)
+		log = get_object_or_404(Log, pk=run.log.id)
+		log_path = log.log_file_path
+	except Exception:
+		log_path = ''
 
 	title = 'Log {0} file for the Card Item "{1}"'.format(status, run)
 	sub_title = 'The View Log file select and hit view'
 
 	if status == 'Out':
 		try:
+			card_name = 'runcard_{0}.out'.format(card_id)
+			path_log_file = os.path.join(str(log_path), str(card_name))
 			fd = open(path_log_file, 'r')
 			for line in fd.readlines():
 				log_info += line + '<br />'
@@ -1035,6 +1038,8 @@ def view_log_file(request, run_id, card_id, status):
 										 (u'Log Out file "{0}" not found.'.format(card_name))))
 	elif status == 'Error':
 		try:
+			card_name = 'runcard_{0}.err'.format(card_id)
+			path_log_file = os.path.join(str(log_path), str(card_name))
 			fd = open(path_log_file, 'r')
 			for line in fd.readlines():
 				log_info += line + '<br />'
@@ -1066,11 +1071,14 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
 	title = 'Log {0} file for the Sub Card "{1}"'.format(status, run_step_card.card_item)
 	sub_title = 'The View Log file select and hit view'
 
-	run = get_object_or_404(Run, pk=run_id)
-	log = get_object_or_404(Log, pk=run.log.id)
-	log_path = log.log_file_path
-	card_name = ''
-	path_log_file = os.path.join(str(log_path), str(card_name))
+	try:
+		run = get_object_or_404(Run, pk=run_id)
+		log = get_object_or_404(Log, pk=run.log.id)
+		log_path = log.log_file_path
+	except Exception:
+		log_path = ''
+	# card_name = ''
+	# path_log_file = os.path.join(str(log_path), str(card_name))
 
 	if status == 'Out':
 		card_name = 'runcard_{0}_{1}.out'.format(card_id, count)
