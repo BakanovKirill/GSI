@@ -1069,10 +1069,12 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
 	run = get_object_or_404(Run, pk=run_id)
 	log = get_object_or_404(Log, pk=run.log.id)
 	log_path = log.log_file_path
-	card_name = 'runcard_{0}_{1}'.format(card_id, count)
+	card_name = ''
 	path_log_file = os.path.join(str(log_path), str(card_name))
 
 	if status == 'Out':
+		card_name = 'runcard_{0}_{1}.out'.format(card_id, count)
+		path_log_file = os.path.join(str(log_path), str(card_name))
 		try:
 			fd = open(path_log_file, 'r')
 			for line in fd.readlines():
@@ -1083,6 +1085,8 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
 										(reverse('sub_card_details', args=[run_id, card_id]),
 										 (u'Log Out file "{0}" not found.'.format(card_name))))
 	elif status == 'Error':
+		card_name = 'runcard_{0}_{1}.err'.format(card_id, count)
+		path_log_file = os.path.join(str(log_path), str(card_name))
 		try:
 			fd = open(path_log_file, 'r')
 			for line in fd.readlines():
