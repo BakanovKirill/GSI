@@ -972,7 +972,6 @@ def run_details(request, run_id):
 	sub_title = 'The View Log file select and hit view'
 	runs_step = RunStep.objects.filter(parent_run=run_id)
 	runs_step.order_by('card_item.card_item.order')
-	run = get_object_or_404(Run, pk=run_id)
 	url_name = 'run_details'
 	title = 'Run "{0}" Details'.format(runs_step[0].parent_run)
 
@@ -1123,9 +1122,6 @@ def sub_card_details(request, run_id, card_id):
 	sub_cards = SubCardItem.objects.filter(
 			run_id=run_id, card_id=card_id)
 	sub_cards.order_by('sub_cards.start_time')
-	run = get_object_or_404(Run, pk=run_id)
-	log = get_object_or_404(Log, pk=run.log.id)
-	log_path = log.log_file_path
 	runs_step = RunStep.objects.filter(parent_run=run_id).first()
 	run_step_card = RunStep.objects.filter(card_item__id=card_id).first()
 	title = 'Sub Cards of Card "{0}" Details'.format(run_step_card.card_item)
