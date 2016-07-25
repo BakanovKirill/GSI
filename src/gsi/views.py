@@ -28,7 +28,7 @@ from cards.card_update_create import *
 from cards.cards_forms import *
 from gsi.gsi_items_update_create import *
 from gsi.gsi_forms import *
-from core.utils import (make_run, get_dir_root_static_path,
+from core.utils import (make_run, get_dir_root_static_path, get_path_folder_run,
                         slash_remove_from_path, get_files_dirs, create_sub_dir)
 from core.get_post import get_post
 from log.logger import get_logs
@@ -1012,16 +1012,26 @@ def run_details(request, run_id):
 @render_to('gsi/view_log_file.html')
 def view_log_file(request, run_id, card_id, status):
 	log_info = ''
-
-	try:
-		run = get_object_or_404(Run, pk=run_id)
-		log = get_object_or_404(Log, pk=run.log.id)
-		log_path = log.log_file_path
-	except Exception:
-		log_path = ''
+	run = get_object_or_404(Run, pk=run_id)
+	runs_step = RunStep.objects.filter(parent_run=run_id).first()
+	run_step_card = RunStep.objects.filter(card_item__id=card_id).first()
 
 	title = 'Log {0} file for the Card Item "{1}"'.format(status, run)
 	sub_title = 'The View Log file select and hit view'
+
+	try:
+		log = get_object_or_404(Log, pk=run.log.id)
+		log_path = log.log_file_path
+	except Exception:
+		log_name = '{}_{}.log'.format(run.id, run_step_card.card_item.id)
+		log_path = get_path_folder_run(run)
+		log = Log.objects.create(
+				name=log_name,
+				log_file=log_name,
+				log_file_path=log_path
+			)
+		run.log = log
+		run.save()
 
 	if status == 'Out':
 		try:
@@ -1070,12 +1080,22 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
 	title = 'Log {0} file for the Sub Card "{1}"'.format(status, run_step_card.card_item)
 	sub_title = 'The View Log file select and hit view'
 
+	run = get_object_or_404(Run, pk=run_id)
+
 	try:
-		run = get_object_or_404(Run, pk=run_id)
 		log = get_object_or_404(Log, pk=run.log.id)
 		log_path = log.log_file_path
 	except Exception:
-		log_path = ''
+		log_name = '{}_{}.log'.format(run.id, run_step_card.card_item.id)
+		log_path = get_path_folder_run(run)
+		log = Log.objects.create(
+				name=log_name,
+				log_file=log_name,
+				log_file_path=log_path
+			)
+		run.log = log
+		run.save()
+
 	# card_name = ''
 	# path_log_file = os.path.join(str(log_path), str(card_name))
 
