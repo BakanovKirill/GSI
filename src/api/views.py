@@ -32,6 +32,7 @@ def update_run(request, run_id):
     last_but_one = value_list[-2:-1]
     cur_counter = last_but_one[0]
     name_sub_card = '{0}_{1}'.format(order_card_item_id, cur_counter)
+    finished = False
 
     if data['status']:
         state = data['status']
@@ -135,7 +136,6 @@ def update_run(request, run_id):
 
                 if next_step:
                     data['next_step'] = next_step.id
-                    finished = False
                     run_parallel_next_step = next_step.card_item.run_parallel
                     # number_sub_cards = next_step.card_item.number_sub_cards
                     # script = create_scripts(run, sequence, card, step)
@@ -212,20 +212,21 @@ def update_run(request, run_id):
                 if is_last_step:
                     data['is_last_step'] = True
 
-                    if run_parallel:
-                        sub_card_item = SubCardItem.objects.filter(
-                                name=name_sub_card,
-                                run_id=int(run_card_id),
-                                card_id=int(order_card_item_id)
-                        )
+                    if finished:
+                        if run_parallel:
+                            sub_card_item = SubCardItem.objects.filter(
+                                    name=name_sub_card,
+                                    run_id=int(run_card_id),
+                                    card_id=int(order_card_item_id)
+                            )
 
-                        for n in sub_card_item:
-                            n.state = 'success'
-                            n.save()
-                    step.state = 'success'
-                    run.state = 'success'
-                    step.save()
-                    run.save()
+                            for n in sub_card_item:
+                                n.state = 'success'
+                                n.save()
+                        step.state = 'success'
+                        run.state = 'success'
+                        step.save()
+                        run.save()
             else:
                 log_file.writelines('ELSE: ' + str(state) + '\n')
                 if run_parallel:
@@ -238,6 +239,7 @@ def update_run(request, run_id):
                     for n in sub_card_item:
                         n.state = state
                         n.save()
+
                 step.state = state
                 step.save()
 
