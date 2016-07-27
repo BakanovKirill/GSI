@@ -112,12 +112,14 @@ def update_run(request, run_id):
                         n.state = state
                         n.save()
 
-                step.state = state
-                step.save()
-
                 if run.state != 'fail':
+                    step.state = state
+                    step.save()
                     run.state = state
                     run.save()
+                elif run.state == 'fail':
+                    step.state = 'fail'
+                    step.save()
             elif state == 'success':
                 log_file.writelines('SUCCESS: ' + str(state) + '\n')
                 log_file.writelines('get_next_step => {0}\n'.format(step.get_next_step()))
