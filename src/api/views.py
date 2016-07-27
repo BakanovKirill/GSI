@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 
-from core.utils import validate_status, write_log, create_scripts
+from core.utils import validate_status, write_log, create_scripts, get_path_folder_run
 from gsi.models import Run, RunStep, CardSequence, OrderedCardItem, SubCardItem
 from gsi.settings import EXECUTE_FE_COMMAND
 from cards.models import CardItem
@@ -164,8 +164,8 @@ def update_run(request, run_id):
                                 ex_fe_com = Popen(
                                     'nohup {0} {1} {2} &'.format(
                                         EXECUTE_FE_COMMAND,
-                                        n.parent_run.id,
-                                        n.card_item.id
+                                        n.run_id,
+                                        n.name
                                     ),
                                     shell=True,
                                 )
@@ -201,7 +201,8 @@ def update_run(request, run_id):
                         log_api_file.close()
 
                     log_name = '{0}_{1}.log'.format(value_list[0], value_list[2])
-                    path_log = script['path_runs_logs']
+                    path_log = get_path_folder_run(run)
+                    # path_log = script['path_runs_logs']
                     write_log(log_name, run, path_log)
 
                 if is_last_step:
@@ -246,6 +247,13 @@ def update_run(request, run_id):
             log_file1.writelines('ERRROR API-{0}:'.format(card.id) + '\n')
             log_file1.writelines(str(now) + '\n')
             log_file1.writelines(str(e) + '\n')
+
+            log_file.writelines('RUN-{0}:\n'.format(run_card_id))
+            log_file.writelines('CARDS-{0}:\n'.format(card.id))
+            log_file.writelines('STATUS:\n')
+            log_file.writelines(str(now) + '\n')
+            log_file.writelines(str(state) + '\n')
+
             log_file1.writelines('\n\n\n')
             log_file1.close()
         except ObjectDoesNotExist as e:
