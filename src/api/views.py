@@ -192,6 +192,8 @@ def update_run(request, run_id):
                         now = datetime.now()
                         log_api_file = open(path_file, 'a')
                         log_api_file.writelines('{0}\n'.format(now))
+                        log_file.writelines('RUN-{0}:\n'.format(run_card_id))
+                        log_file.writelines('CARDS-{0}:\n'.format(card.id))
                         log_api_file.writelines('SCRIPTS: \n')
                         log_api_file.writelines('LAST ==> {0}\n'.format(last))
                         log_api_file.writelines('LAST BUT ONE ==> {0}\n'.format(last_but_one[0]))
@@ -248,11 +250,11 @@ def update_run(request, run_id):
             log_file1.writelines(str(now) + '\n')
             log_file1.writelines(str(e) + '\n')
 
-            log_file.writelines('RUN-{0}:\n'.format(run_card_id))
-            log_file.writelines('CARDS-{0}:\n'.format(card.id))
-            log_file.writelines('STATUS:\n')
-            log_file.writelines(str(now) + '\n')
-            log_file.writelines(str(state) + '\n')
+            log_file1.writelines('RUN-{0}:\n'.format(run_card_id))
+            log_file1.writelines('CARDS-{0}:\n'.format(card.id))
+            log_file1.writelines('STATUS:\n')
+            log_file1.writelines(str(now) + '\n')
+            log_file1.writelines(str(state) + '\n')
 
             log_file1.writelines('\n\n\n')
             log_file1.close()
@@ -261,7 +263,7 @@ def update_run(request, run_id):
             data['message'] = str(e)
 
             # error for api
-            path_file = '/home/gsi/LOGS/runcards_status.err'
+            path_file = '/home/gsi/LOGS/api_status.err'
             now = datetime.now()
             log_file2 = open(path_file, 'a')
             log_file2.writelines('ERRROR runcards_{0}:'.format(card.id) + '\n')
