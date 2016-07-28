@@ -192,6 +192,8 @@ def update_run(request, run_id):
                     # number_sub_cards = next_step.card_item.number_sub_cards
                     # script = create_scripts(run, sequence, card, step)
 
+                    log_file.writelines('NEXT CARD run_parallel => {0}\n'.format(run_parallel_next_step))
+
                     # CHECK ALL THE SUB CARDS!!!!!!!
                     finished = is_finished(int(run_card_id), int(order_card_item_id), cur_counter, last, run_parallel)
                     if run_parallel:
