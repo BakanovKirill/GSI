@@ -159,7 +159,7 @@ def update_run(request, run_id):
 
                             for n in next_sub_cards_item:
                                 name_card = '{0}%{1}'.format(n.run_id, n.name)
-                                params.apend(name_card)
+                                params.append(name_card)
 
                                 # name_card = '{0}_{1}'.format(next_step.card_item.id, count)
                                 # ex_fe_com = Popen(
