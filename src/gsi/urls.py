@@ -23,7 +23,7 @@ from django.contrib.auth import views as auth_views
 from django.views.generic.base import RedirectView
 from django.contrib.auth.decorators import login_required
 
-from gsi.views import UploadStaticDataView
+# from gsi.views import UploadStaticDataView
 
 
 urlpatterns = [

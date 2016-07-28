@@ -29,7 +29,7 @@
                         <tbody>
                             {% for rb in run_bases %}
                                 <tr>
-                                    <td><input type="checkbox" name="execute_runs" value="{{ rb.id }}"></td>
+                                    <td><input type="radio" name="execute_runs" value="{{ rb.id }}"></td>
                                     <td>{{ rb.name }}</td>
                                     <td>{{ rb.author }}</td>
                                     <td>{{ rb.date_created|date:"d/m/Y" }}</td>

@@ -833,30 +833,32 @@ def submit_run(request):
 	url_name = 'submit_run'
 
 	if request.method == "POST":
-		if request.POST.getlist('execute_runs'):
-			for run_id in request.POST.getlist('execute_runs'):
-				rb = get_object_or_404(RunBase, pk=run_id)
-				execute_run = make_run(rb, request.user)
+		if request.POST.get('execute_runs', ''):
+			run_id = request.POST.get('execute_runs', '')
+			# for run_id in id_runs:
+			# 	rb = get_object_or_404(RunBase, pk=run_id)
+			# 	# execute_run = make_run(rb, request.user)
+			# 	name_runs += '"' + str(rb.name) + '", '
 
-				# print 'execute_run ========================= ', execute_run
+			rb = get_object_or_404(RunBase, pk=run_id)
+			execute_run = make_run(rb, request.user)
 
-				if not execute_run:
-					return HttpResponseRedirect(u'%s?danger_message=%s' %
-												(reverse('submit_run'),
-												 (u'Unable to execute the Run. \
-												 Please contact the administrator!'))
-												)
-				name_runs += '"' + str(execute_run['run'].run_base.name) + '", '
+			if not execute_run:
+				return HttpResponseRedirect(u'%s?danger_message=%s' %
+				                            (reverse('submit_run'),
+				                             (u'Unable to execute the Run. \
+				                             Please contact the administrator!')))
 
-			runs_id = '_'.join(request.POST.getlist('execute_runs'))
 			now_date = datetime.now()
 			now_date_formating = now_date.strftime("%d/%m/%Y")
 			now_time = now_date.strftime("%H:%M")
 
+			print 'execute_run'
+
 			return HttpResponseRedirect(u'%s?status_message=%s' %
-						(reverse('execute_runs', args=[execute_run['run'].id]),
-						 (u"Runs: {0} has been submitted to back end and {1} on {2}".
-						  format(name_runs, now_time, now_date_formating)))
+						(reverse('submit_run'),
+						 (u'Run "{0}" has been submitted to back end and {1} on {2}'.
+						  format(rb.name, now_time, now_date_formating)))
 			)
 		else:
 			return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('submit_run'),
