@@ -194,14 +194,15 @@ def update_run(request, run_id):
 
                     # CHECK ALL THE SUB CARDS!!!!!!!
                     finished = is_finished(int(run_card_id), int(order_card_item_id), cur_counter, last, run_parallel)
-                    # if run_parallel:
-                    #     sub_card_item = SubCardItem.objects.filter(
-                    #             run_id=int(run_card_id),
-                    #             card_id=int(order_card_item_id)
-                    #     ).values_list('state')
-                    #
-                    #     if 'running' not in sub_card_item:
-                    #         finished = True
+                    if run_parallel:
+                        sub_card_item = get_object_or_404(
+                                SubCardItem,
+                                name=name_sub_card,
+                                run_id=int(run_card_id),
+                                card_id=int(order_card_item_id)
+                        )
+                        sub_card_item.state = state
+                        sub_card_item.save()
                     # else:
                     #     if cur_counter == last:
                     #         finished = True
@@ -209,6 +210,8 @@ def update_run(request, run_id):
                     log_file.writelines('finished => {0}\n'.format(finished))
 
                     if finished:
+                        step.state = 'success'
+                        step.save()
                         if run_parallel_next_step:
                             next_sub_cards_item = SubCardItem.objects.filter(
                                     run_id=next_step.parent_run.id,
@@ -280,15 +283,15 @@ def update_run(request, run_id):
 
                     if finished:
                         if run_parallel:
-                            sub_card_item = SubCardItem.objects.filter(
+                            sub_card_item = get_object_or_404(
+                                    SubCardItem,
                                     name=name_sub_card,
                                     run_id=int(run_card_id),
                                     card_id=int(order_card_item_id)
                             )
 
-                            for n in sub_card_item:
-                                n.state = 'success'
-                                n.save()
+                            sub_card_item.state = 'success'
+                            sub_card_item.save()
                         step.state = 'success'
                         run.state = 'success'
                         step.save()
