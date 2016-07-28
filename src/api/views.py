@@ -9,7 +9,8 @@ from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 
-from core.utils import validate_status, write_log, create_scripts, get_path_folder_run
+from core.utils import (validate_status, write_log, create_scripts,
+                        get_path_folder_run, execute_fe_command)
 from gsi.models import Run, RunStep, CardSequence, OrderedCardItem, SubCardItem
 from gsi.settings import EXECUTE_FE_COMMAND
 from cards.models import CardItem
@@ -46,12 +47,6 @@ def update_run(request, run_id):
                 card_item=card)
             cur_state = step.state
             run_parallel = False
-
-            # try:
-            #     if card.run_parallel:
-            #         run_parallel = True
-            # except Exception, e:
-            #     pass
 
             # logs for api
             path_file = '/home/gsi/LOGS/api_status.log'
@@ -159,19 +154,24 @@ def update_run(request, run_id):
                                     run_id=next_step.parent_run.id,
                                     card_id=next_step.card_item.id
                             )
-                            count = 1
+                            # count = 1
+                            params = []
 
                             for n in next_sub_cards_item:
-                                name_card = '{0}_{1}'.format(next_step.card_item.id, count)
-                                ex_fe_com = Popen(
-                                    'nohup {0} {1} {2} &'.format(
-                                        EXECUTE_FE_COMMAND,
-                                        n.run_id,
-                                        n.name
-                                    ),
-                                    shell=True,
-                                )
-                                count += 1
+                                name_card = '{0}%{1}'.format(n.run_id, n.name)
+                                params.apend(name_card)
+
+                                # name_card = '{0}_{1}'.format(next_step.card_item.id, count)
+                                # ex_fe_com = Popen(
+                                #     'nohup {0} {1} {2} &'.format(
+                                #         EXECUTE_FE_COMMAND,
+                                #         n.run_id,
+                                #         n.name
+                                #     ),
+                                #     shell=True,
+                                # )
+                                # count += 1
+                            execute_fe_command(params)
                         else:
                             log_file.writelines('next RUN => {0}\n'.format(next_step.parent_run.id))
                             log_file.writelines('card_item.id => {0}\n'.format(next_step.card_item.id))
