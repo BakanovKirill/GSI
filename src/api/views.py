@@ -125,9 +125,9 @@ def update_run(request, run_id):
 
                 log_file.writelines('next_step => {0}\n'.format(next_step))
                 log_file.writelines('is_last_step => {0}\n'.format(is_last_step))
-                log_file.writelines('cur_counter => {0}\n'.format(cur_counter))
+                # log_file.writelines('last_but_one => {0}\n'.format(last_but_one))
 
-                log_file.writelines('last_but_one => {0}\n'.format(last_but_one))
+                log_file.writelines('cur_counter => {0}\n'.format(cur_counter))
                 log_file.writelines('last => {0}\n'.format(last))
 
                 if next_step:
@@ -202,6 +202,8 @@ def update_run(request, run_id):
                         log_api_file.writelines('LAST BUT ONE ==> {0}\n'.format(last_but_one[0]))
                         # log_api_file.writelines('next run ==> {0}\n'.format(next_step.parent_run.id))
                         # log_api_file.writelines('next card ==> {0}\n'.format(next_step.card_item.id))
+                        log_file.writelines('CUR_counter => {0}\n'.format(cur_counter))
+                        log_file.writelines('LAST => {0}\n'.format(last))
                         log_api_file.writelines('state ==> {0}\n\n\n'.format(step.state))
                         log_api_file.close()
 
