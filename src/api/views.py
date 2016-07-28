@@ -52,6 +52,16 @@ def update_run(request, run_id):
     name_sub_card = '{0}_{1}'.format(order_card_item_id, cur_counter)
     finished = False
 
+    # logs for api
+    path_file = '/home/gsi/LOGS/api_run.log'
+    now = datetime.now()
+    api_run = open(path_file, 'a')
+
+    api_run.writelines('RUN {0}:\n'.format(run_id))
+    api_run.writelines('STATUS {0}:\n'.format(data['status']))
+    api_run.writelines('\n\n\n')
+    api_run.close
+
     if data['status']:
         state = data['status']
 
