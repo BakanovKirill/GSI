@@ -47,7 +47,7 @@ def update_run(request, run_id):
     api_run = open(path_file, 'a')
 
     data = validate_status(request.query_params.get('status', False))
-    value_list = str(run_id).split('.')
+
 
     api_run.writelines('RUN {0}:\n'.format(run_id))
     # api_run.writelines('RUN ID {0}:\n'.format(run_card_id))
@@ -57,7 +57,7 @@ def update_run(request, run_id):
     api_run.close
 
 
-
+    value_list = str(run_id).split('.')
     run_card_id = value_list[0]
     card_sequence_id = value_list[1]
     order_card_item_id = value_list[2]
