@@ -149,6 +149,8 @@ def update_run(request, run_id):
                         if cur_counter == last:
                             finished = True
 
+                    log_file.writelines('finished => {0}\n'.format(finished))
+
                     if finished:
                         if run_parallel_next_step:
                             next_sub_cards_item = SubCardItem.objects.filter(
@@ -215,6 +217,8 @@ def update_run(request, run_id):
                 if is_last_step:
                     data['is_last_step'] = True
 
+                    log_file.writelines('Finished Last Step => {0}\n'.format(finished))
+
                     if finished:
                         if run_parallel:
                             sub_card_item = SubCardItem.objects.filter(
@@ -230,6 +234,8 @@ def update_run(request, run_id):
                         run.state = 'success'
                         step.save()
                         run.save()
+
+                        log_file.writelines('Step State => {0}\n'.format(step.state))
             else:
                 log_file.writelines('ELSE: ' + str(state) + '\n')
                 if run_parallel:
