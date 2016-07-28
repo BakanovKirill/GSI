@@ -20,6 +20,23 @@ from cards.models import CardItem
 # example:
 # http://indy4.epcc.ed.ac.uk:/run/20.5.1/?status=running
 
+
+def is_finished(run_i, card_id, cur_counter, last, run_parallel):
+    if run_parallel:
+        sub_card_item = SubCardItem.objects.filter(
+                run_id=int(run_card_id),
+                card_id=int(order_card_item_id)
+        ).values_list('state')
+
+        if 'running' not in sub_card_item:
+            return True
+    else:
+        if cur_counter == last:
+            return True
+
+    return False
+
+
 @api_view(['GET'])
 def update_run(request, run_id):
     """ update the status cards of the runs """
@@ -167,6 +184,7 @@ def update_run(request, run_id):
 
                 log_file.writelines('cur_counter => {0}\n'.format(cur_counter))
                 log_file.writelines('last => {0}\n'.format(last))
+                log_file.writelines('cur_counter & last => {0}\n'.format(cur_counter == last))
 
                 if next_step:
                     data['next_step'] = next_step.id
@@ -175,17 +193,18 @@ def update_run(request, run_id):
                     # script = create_scripts(run, sequence, card, step)
 
                     # CHECK ALL THE SUB CARDS!!!!!!!
-                    if run_parallel:
-                        sub_card_item = SubCardItem.objects.filter(
-                                run_id=int(run_card_id),
-                                card_id=int(order_card_item_id)
-                        ).values_list('state')
-
-                        if 'running' not in sub_card_item:
-                            finished = True
-                    else:
-                        if cur_counter == last:
-                            finished = True
+                    finished = is_finished(int(run_card_id), int(order_card_item_id), cur_counter, last, run_parallel)
+                    # if run_parallel:
+                    #     sub_card_item = SubCardItem.objects.filter(
+                    #             run_id=int(run_card_id),
+                    #             card_id=int(order_card_item_id)
+                    #     ).values_list('state')
+                    #
+                    #     if 'running' not in sub_card_item:
+                    #         finished = True
+                    # else:
+                    #     if cur_counter == last:
+                    #         finished = True
 
                     log_file.writelines('finished => {0}\n'.format(finished))
 
@@ -256,6 +275,8 @@ def update_run(request, run_id):
                     data['is_last_step'] = True
 
                     log_file.writelines('Finished Last Step => {0}\n'.format(finished))
+
+                    finished = is_finished(int(run_card_id), int(order_card_item_id), cur_counter, last, run_parallel)
 
                     if finished:
                         if run_parallel:
