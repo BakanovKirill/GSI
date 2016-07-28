@@ -95,8 +95,32 @@ def update_run(request, run_id):
                 step.save()
                 run.state = state
                 run.save()
+
+                # write log file
+                path_file = '/home/gsi/LOGS/api_fail.log'
+                now = datetime.now()
+                api_fail = open(path_file, 'a')
+                api_fail.writelines('{0}\n'.format(now))
+                api_fail.writelines('RUN-{0}:\n'.format(run_card_id))
+                api_fail.writelines('CARDS-{0}:\n'.format(card.id))
+                api_fail.writelines('LAST ==> {0}\n'.format(last))
+                api_fail.writelines('LAST BUT ONE ==> {0}\n'.format(last_but_one[0]))
+                # api_fail.writelines('next run ==> {0}\n'.format(next_step.parent_run.id))
+                # api_fail.writelines('next card ==> {0}\n'.format(next_step.card_item.id))
+                api_fail.writelines('CUR_counter => {0}\n'.format(cur_counter))
+                api_fail.writelines('LAST => {0}\n'.format(last))
+                api_fail.writelines('state ==> {0}\n\n\n'.format(step.state))
+                api_fail.close()
             elif state == 'running':
                 log_file.writelines('RUNNING: ' + str(state) + '\n')
+
+                # write log file
+                path_file = '/home/gsi/LOGS/api_running.log'
+                now = datetime.now()
+                api_running = open(path_file, 'a')
+                api_running.writelines('{0}\n'.format(now))
+                api_running.writelines('RUN 1 -{0}:\n'.format(run_card_id))
+                api_running.writelines('CARDS 1 -{0}:\n'.format(card.id))
 
                 if run_parallel:
                     sub_card_item = SubCardItem.objects.filter(
@@ -116,12 +140,26 @@ def update_run(request, run_id):
                 elif run.state == 'fail':
                     step.state = 'fail'
                     step.save()
+
+                # write log file
+                now2 = datetime.now()
+                api_running.writelines('{0}\n'.format(now2))
+                api_running.writelines('RUN 2-{0}:\n'.format(run_card_id))
+                api_running.writelines('CARDS 2-{0}:\n'.format(card.id))
+                api_running.writelines('LAST ==> {0}\n'.format(last))
+                api_running.writelines('LAST BUT ONE ==> {0}\n'.format(last_but_one[0]))
+                # api_running.writelines('next run ==> {0}\n'.format(next_step.parent_run.id))
+                # api_running.writelines('next card ==> {0}\n'.format(next_step.card_item.id))
+                api_running.writelines('CUR_counter => {0}\n'.format(cur_counter))
+                api_running.writelines('LAST => {0}\n'.format(last))
+                api_running.writelines('state ==> {0}\n\n\n'.format(step.state))
+                api_running.close()
             elif state == 'success':
                 log_file.writelines('SUCCESS: ' + str(state) + '\n')
                 log_file.writelines('get_next_step => {0}\n'.format(step.get_next_step()))
                 next_step, is_last_step = step.get_next_step()
-                step.state = state
-                step.save()
+                # step.state = state
+                # step.save()
 
                 log_file.writelines('next_step => {0}\n'.format(next_step))
                 log_file.writelines('is_last_step => {0}\n'.format(is_last_step))
