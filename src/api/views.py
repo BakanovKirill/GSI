@@ -153,7 +153,7 @@ def update_run(request, run_id):
                             next_sub_cards_item = SubCardItem.objects.filter(
                                     run_id=next_step.parent_run.id,
                                     card_id=next_step.card_item.id
-                            )
+                            ).order_by('start_date')
                             # count = 1
                             params = []
 

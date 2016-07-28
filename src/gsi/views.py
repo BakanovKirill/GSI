@@ -838,6 +838,8 @@ def submit_run(request):
 				rb = get_object_or_404(RunBase, pk=run_id)
 				execute_run = make_run(rb, request.user)
 
+				# print 'execute_run ========================= ', execute_run
+
 				if not execute_run:
 					return HttpResponseRedirect(u'%s?danger_message=%s' %
 												(reverse('submit_run'),
