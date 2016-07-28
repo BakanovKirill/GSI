@@ -50,9 +50,10 @@ def update_run(request, run_id):
 
 
     api_run.writelines('RUN {0}:\n'.format(run_id))
+    api_run.writelines('request{0}:\n'.format(request))
     # api_run.writelines('RUN ID {0}:\n'.format(run_card_id))
     api_run.writelines('STATUS {0}:\n'.format(data['status']))
-    api_run.writelines('VAL LIST {0}:\n'.format(value_list))
+    # api_run.writelines('VAL LIST {0}:\n'.format(value_list))
     api_run.writelines('\n\n\n')
     api_run.close
 
