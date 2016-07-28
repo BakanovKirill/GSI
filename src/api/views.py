@@ -41,7 +41,20 @@ def is_finished(run_i, card_id, cur_counter, last, run_parallel):
 def update_run(request, run_id):
     """ update the status cards of the runs """
 
+    # logs for api
+    path_file = '/home/gsi/LOGS/api_run.log'
+    now = datetime.now()
+    api_run = open(path_file, 'a')
+
     data = validate_status(request.query_params.get('status', False))
+
+    api_run.writelines('RUN {0}:\n'.format(run_id))
+    # api_run.writelines('RUN ID {0}:\n'.format(run_card_id))
+    api_run.writelines('STATUS {0}:\n'.format(data['status']))
+    api_run.writelines('\n\n\n')
+    api_run.close
+
+
     value_list = run_id.split('.')
     run_card_id = value_list[0]
     card_sequence_id = value_list[1]
@@ -52,16 +65,10 @@ def update_run(request, run_id):
     name_sub_card = '{0}_{1}'.format(order_card_item_id, cur_counter)
     finished = False
 
-    # logs for api
-    path_file = '/home/gsi/LOGS/api_run.log'
-    now = datetime.now()
-    api_run = open(path_file, 'a')
 
-    api_run.writelines('RUN {0}:\n'.format(run_id))
-    api_run.writelines('RUN ID {0}:\n'.format(run_card_id))
-    api_run.writelines('STATUS {0}:\n'.format(data['status']))
-    api_run.writelines('\n\n\n')
-    api_run.close
+
+
+
 
     if data['status']:
         state = data['status']
