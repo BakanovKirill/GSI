@@ -4,6 +4,7 @@ import time
 from multiprocessing import Process
 import Queue
 import traceback
+from subprocess import Popen, PIPE
 
 from django.shortcuts import get_object_or_404
 
