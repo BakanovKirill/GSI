@@ -22,7 +22,7 @@ from cards.models import CardItem
 
 
 def is_finished(run_id, card_id, cur_counter, last, run_parallel):
-    logs for api
+    # logs for api
     path_file = '/home/gsi/LOGS/is_finished.log'
     now = datetime.now()
     api_run = open(path_file, 'a')
