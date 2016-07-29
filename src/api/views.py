@@ -345,12 +345,12 @@ def update_run(request, run_id):
             path_file = '/home/gsi/LOGS/api_error.err'
             now = datetime.now()
             log_file1 = open(path_file, 'a')
-            log_file1.writelines('ERRROR API-{0}:'.format(card.id) + '\n')
+            log_file1.writelines('ERRROR API-{0}:'.format(run_id) + '\n')
             log_file1.writelines(str(now) + '\n')
             log_file1.writelines(str(e) + '\n')
 
             log_file1.writelines('RUN-{0}:\n'.format(run_card_id))
-            log_file1.writelines('CARDS-{0}:\n'.format(card.id))
+            log_file1.writelines('CARDS-{0}:\n'.format(order_card_item_id))
             log_file1.writelines('STATUS:\n')
             log_file1.writelines(str(now) + '\n')
             log_file1.writelines(str(state) + '\n')
@@ -365,7 +365,7 @@ def update_run(request, run_id):
             path_file = '/home/gsi/LOGS/api_status.err'
             now = datetime.now()
             log_file2 = open(path_file, 'a')
-            log_file2.writelines('ERRROR runcards_{0}:'.format(card.id) + '\n')
+            log_file2.writelines('ERRROR runcards_{0}:'.format(run_card_id) + '\n')
             log_file2.writelines(str(now) + '\n')
             log_file2.writelines(str(e) + '\n')
 
