@@ -34,6 +34,7 @@ def is_finished(run_id, card_id, cur_counter, last, run_parallel):
         ).values_list('state')
 
         is_finish = ('running' not in sub_card_item and 'pending' not in sub_card_item)
+        api_run.writelines('ALL STATUSES: {0}\n'.format(sub_card_item))
         api_run.writelines('IS FINISH: {0}\n'.format(is_finish))
 
         if 'running' not in sub_card_item and 'pending' not in sub_card_item:
