@@ -197,27 +197,25 @@ def update_run(request, run_id):
                 api_running.writelines('state ==> {0}\n\n\n'.format(step.state))
                 api_running.close()
             elif state == 'success':
+                next_step, is_last_step = step.get_next_step()
+
+                # ********** WRITE LOG *****************************
                 log_file.writelines('SUCCESS: ' + str(state) + '\n')
                 log_file.writelines('get_next_step => {0}\n'.format(step.get_next_step()))
-                next_step, is_last_step = step.get_next_step()
-                # step.state = state
-                # step.save()
-
                 log_file.writelines('next_step => {0}\n'.format(next_step))
                 log_file.writelines('is_last_step => {0}\n'.format(is_last_step))
-                # log_file.writelines('last_but_one => {0}\n'.format(last_but_one))
-
                 log_file.writelines('cur_counter => {0}\n'.format(cur_counter))
                 log_file.writelines('last => {0}\n'.format(last))
                 log_file.writelines('cur_counter & last => {0}\n'.format(cur_counter == last))
+                # *************************************************
 
                 if next_step:
                     data['next_step'] = next_step.id
                     run_parallel_next_step = next_step.card_item.run_parallel
-                    # number_sub_cards = next_step.card_item.number_sub_cards
-                    # script = create_scripts(run, sequence, card, step)
 
+                    # ********** WRITE LOG *****************************
                     log_file.writelines('NEXT CARD run_parallel => {0}\n'.format(run_parallel_next_step))
+                    # *************************************************
 
                     # CHECK ALL THE SUB CARDS!!!!!!!
                     finished = is_finished(int(run_card_id), int(order_card_item_id), cur_counter, last, run_parallel)
@@ -230,11 +228,10 @@ def update_run(request, run_id):
                         )
                         sub_card_item.state = state
                         sub_card_item.save()
-                    # else:
-                    #     if cur_counter == last:
-                    #         finished = True
 
+                    # *************************************************
                     log_file.writelines('finished => {0}\n'.format(finished))
+                    # *************************************************
 
                     if finished:
                         step.state = 'success'
@@ -274,11 +271,6 @@ def update_run(request, run_id):
                                 shell=True,
                             )
 
-
-                        # print 'EXECUTE_FE_COMMAND ================ ', EXECUTE_FE_COMMAND
-                        # print 'parent_run ================ ', next_step.parent_run.id
-                        # print 'card_item ================ ', next_step.card_item.id
-
                         # write log file
                         path_file = '/home/gsi/LOGS/api_success.log'
                         now = datetime.now()
@@ -289,8 +281,6 @@ def update_run(request, run_id):
                         log_api_file.writelines('SCRIPTS: \n')
                         log_api_file.writelines('LAST ==> {0}\n'.format(last))
                         log_api_file.writelines('LAST BUT ONE ==> {0}\n'.format(last_but_one[0]))
-                        # log_api_file.writelines('next run ==> {0}\n'.format(next_step.parent_run.id))
-                        # log_api_file.writelines('next card ==> {0}\n'.format(next_step.card_item.id))
                         log_file.writelines('CUR_counter => {0}\n'.format(cur_counter))
                         log_file.writelines('LAST => {0}\n'.format(last))
                         log_api_file.writelines('state ==> {0}\n\n\n'.format(step.state))
@@ -303,10 +293,11 @@ def update_run(request, run_id):
 
                 if is_last_step:
                     data['is_last_step'] = True
-
-                    log_file.writelines('Finished Last Step => {0}\n'.format(finished))
-
                     finished = is_finished(int(run_card_id), int(order_card_item_id), cur_counter, last, run_parallel)
+
+                    # *************************************************
+                    log_file.writelines('Finished Last Step => {0}\n'.format(finished))
+                    # *************************************************
 
                     if finished:
                         if run_parallel:
