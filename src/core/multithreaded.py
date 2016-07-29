@@ -36,14 +36,14 @@ class MultiprocessingCards(multiprocessing.Process):
 				self.__queue.put(item) # If the mistake was, then again with that data
 		return
 	def multiprocessing_cards(self, param):
-		print 'RES ========================== ', param
+		# print 'RES ========================== ', param
 
 		param_list = param.split('%')
 		run_id = param_list[0]
 		card_id = param_list[1]
 
-		print 'run_id ========================== ', run_id
-		print 'card_id ========================== ', card_id
+		# print 'run_id ========================== ', run_id
+		# print 'card_id ========================== ', card_id
 
 		ex_fe_com = Popen(
 	        'nohup {0} {1} {2} &'.format(

@@ -21,11 +21,11 @@ from cards.models import CardItem
 # http://indy4.epcc.ed.ac.uk:/run/20.5.1/?status=running
 
 
-def is_finished(run_i, card_id, cur_counter, last, run_parallel):
+def is_finished(run_id, card_id, cur_counter, last, run_parallel):
     if run_parallel:
         sub_card_item = SubCardItem.objects.filter(
-                run_id=int(run_card_id),
-                card_id=int(order_card_item_id)
+                run_id=int(run_id),
+                card_id=int(card_id)
         ).values_list('state')
 
         if 'running' not in sub_card_item:
@@ -131,20 +131,20 @@ def update_run(request, run_id):
                 run.save()
 
                 # write log file
-                path_file = '/home/gsi/LOGS/api_fail.log'
-                now = datetime.now()
-                api_fail = open(path_file, 'a')
-                api_fail.writelines('{0}\n'.format(now))
-                api_fail.writelines('RUN-{0}:\n'.format(run_card_id))
-                api_fail.writelines('CARDS-{0}:\n'.format(card.id))
-                api_fail.writelines('LAST ==> {0}\n'.format(last))
-                api_fail.writelines('LAST BUT ONE ==> {0}\n'.format(last_but_one[0]))
-                # api_fail.writelines('next run ==> {0}\n'.format(next_step.parent_run.id))
-                # api_fail.writelines('next card ==> {0}\n'.format(next_step.card_item.id))
-                api_fail.writelines('CUR_counter => {0}\n'.format(cur_counter))
-                api_fail.writelines('LAST => {0}\n'.format(last))
-                api_fail.writelines('state ==> {0}\n\n\n'.format(step.state))
-                api_fail.close()
+                # path_file = '/home/gsi/LOGS/api_fail.log'
+                # now = datetime.now()
+                # api_fail = open(path_file, 'a')
+                # api_fail.writelines('{0}\n'.format(now))
+                # api_fail.writelines('RUN-{0}:\n'.format(run_card_id))
+                # api_fail.writelines('CARDS-{0}:\n'.format(card.id))
+                # api_fail.writelines('LAST ==> {0}\n'.format(last))
+                # api_fail.writelines('LAST BUT ONE ==> {0}\n'.format(last_but_one[0]))
+                # # api_fail.writelines('next run ==> {0}\n'.format(next_step.parent_run.id))
+                # # api_fail.writelines('next card ==> {0}\n'.format(next_step.card_item.id))
+                # api_fail.writelines('CUR_counter => {0}\n'.format(cur_counter))
+                # api_fail.writelines('LAST => {0}\n'.format(last))
+                # api_fail.writelines('state ==> {0}\n\n\n'.format(step.state))
+                # api_fail.close()
             elif state == 'running':
                 log_file.writelines('RUNNING: ' + str(state) + '\n')
 
