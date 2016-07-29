@@ -28,7 +28,7 @@ def is_finished(run_id, card_id, cur_counter, last, run_parallel):
                 card_id=int(card_id)
         ).values_list('state')
 
-        if 'running' not in sub_card_item:
+        if 'running' not in sub_card_item or 'pending' not in sub_card_item:
             return True
     else:
         if cur_counter == last:
@@ -153,8 +153,8 @@ def update_run(request, run_id):
                 now = datetime.now()
                 api_running = open(path_file, 'a')
                 api_running.writelines('{0}\n'.format(now))
-                api_running.writelines('RUN 1 -{0}:\n'.format(run_card_id))
-                api_running.writelines('CARDS 1 -{0}:\n'.format(card.id))
+                api_running.writelines('RUN {0}:\n'.format(run_card_id))
+                api_running.writelines('CARDS {0}:\n'.format(card.id))
 
                 if run_parallel:
                     sub_card_item = SubCardItem.objects.filter(
@@ -167,23 +167,22 @@ def update_run(request, run_id):
                         n.save()
 
                 if run.state != 'fail':
-                    step.state = state
-                    step.save()
                     run.state = state
                     run.save()
-                elif run.state == 'fail':
-                    step.state = 'fail'
+
+                if step.state != 'fail':
+                    step.state = state
                     step.save()
 
+                # if run.state == 'fail':
+                #     step.state = 'fail'
+                #     step.save()
+
                 # write log file
-                now2 = datetime.now()
-                api_running.writelines('{0}\n'.format(now2))
-                api_running.writelines('RUN 2-{0}:\n'.format(run_card_id))
-                api_running.writelines('CARDS 2-{0}:\n'.format(card.id))
                 api_running.writelines('LAST ==> {0}\n'.format(last))
                 api_running.writelines('LAST BUT ONE ==> {0}\n'.format(last_but_one[0]))
-                # api_running.writelines('next run ==> {0}\n'.format(next_step.parent_run.id))
-                # api_running.writelines('next card ==> {0}\n'.format(next_step.card_item.id))
+                api_running.writelines('next run ==> {0}\n'.format(next_step.parent_run.id))
+                api_running.writelines('next card ==> {0}\n'.format(next_step.card_item.id))
                 api_running.writelines('CUR_counter => {0}\n'.format(cur_counter))
                 api_running.writelines('LAST => {0}\n'.format(last))
                 api_running.writelines('state ==> {0}\n\n\n'.format(step.state))
