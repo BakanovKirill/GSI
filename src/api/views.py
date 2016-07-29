@@ -31,13 +31,13 @@ def is_finished(run_id, card_id, cur_counter, last, run_parallel):
         sub_card_item = SubCardItem.objects.filter(
                 run_id=int(run_id),
                 card_id=int(card_id)
-        ).values_list('state')
+        ).values_list('state', flat=True)
 
         is_finish = ('running' not in sub_card_item and 'pending' not in sub_card_item)
         api_run.writelines('ALL STATUSES: {0}\n'.format(sub_card_item))
         api_run.writelines('IS FINISH: {0}\n'.format(is_finish))
 
-        if 'running' not in sub_card_item and 'pending' not in sub_card_item:
+        if 'running' not in sub_card_item and 'running' not in sub_card_item:
             return True
     else:
         if cur_counter == last:
