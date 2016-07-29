@@ -58,11 +58,11 @@ def update_run(request, run_id):
     name_sub_card = '{0}_{1}'.format(order_card_item_id, cur_counter)
     finished = False
 
-    api_run.writelines('RUN {0}:\n'.format(run_id))
-    api_run.writelines('request{0}:\n'.format(request.query_params))
-    api_run.writelines('RUN ID {0}:\n'.format(run_card_id))
-    api_run.writelines('STATUS {0}:\n'.format(data['status']))
-    api_run.writelines('VAL LIST {0}:\n'.format(value_list))
+    api_run.writelines('RUN: {0}\n'.format(run_id))
+    api_run.writelines('request: {0}\n'.format(request.query_params))
+    api_run.writelines('RUN ID: {0}\n'.format(run_card_id))
+    api_run.writelines('STATUS: {0}\n'.format(data['status']))
+    api_run.writelines('VAL LIST: {0}\n'.format(value_list))
     api_run.writelines('\n\n\n')
     api_run.close
 
@@ -342,13 +342,11 @@ def update_run(request, run_id):
             log_file1 = open(path_file, 'a')
             log_file1.writelines('ERRROR API-{0}:'.format(run_id) + '\n')
             log_file1.writelines(str(now) + '\n')
-            log_file1.writelines(str(e) + '\n')
+            log_file1.writelines('Error Status: {0}\n'.format(str(e)))
 
-            log_file1.writelines('RUN-{0}:\n'.format(run_card_id))
-            log_file1.writelines('CARDS-{0}:\n'.format(order_card_item_id))
-            log_file1.writelines('STATUS:\n')
-            log_file1.writelines(str(now) + '\n')
-            log_file1.writelines(str(state) + '\n')
+            # log_file1.writelines('RUN-{0}:\n'.format(run_card_id))
+            # log_file1.writelines('CARDS-{0}:\n'.format(order_card_item_id))
+            log_file1.writelines('STATUS: {0}\n'.format(str(state)))
 
             log_file1.writelines('\n\n\n')
             log_file1.close()
