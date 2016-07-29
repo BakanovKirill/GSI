@@ -394,6 +394,8 @@ urlpatterns = [
 
     # api
     url(r'^step/(?P<step_id>\d+)/$', 'api.views.update_step', name='update_step'),
-    url(r'^run/(?P<run_id>\d+\.\d+\.\d+\.\d+\.\d+)/$', 'api.views.update_run',
+    # url(r'^run/(?P<run_id>\d+\.\d+\.\d+\.\d+\.\d+)/$', 'api.views.update_run',
+    #     name='update_run'),
+    url(r'^run/(?P<run_id>\w+\.\w+\.\w+\.\w+\.\w+)/$', 'api.views.update_run',
         name='update_run'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
