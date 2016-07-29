@@ -199,6 +199,7 @@ def update_run(request, run_id):
             elif state == 'success':
                 next_step, is_last_step = step.get_next_step()
                 new_sub_card_item = None
+                params = []
                 if run_parallel:
                     new_sub_card_item = SubCardItem.objects.filter(
                                             run_id=int(run_card_id),
@@ -249,7 +250,6 @@ def update_run(request, run_id):
                                     card_id=next_step.card_item.id
                             ).order_by('start_date')
                             # count = 1
-                            params = []
 
                             for n in next_sub_cards_item:
                                 name_card = '{0}%{1}'.format(n.run_id, n.name)
