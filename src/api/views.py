@@ -22,10 +22,10 @@ from cards.models import CardItem
 
 
 def is_finished(run_id, card_id, cur_counter, last, run_parallel):
-    # logs for api
-    # path_file = '/home/gsi/LOGS/is_finished.log'
-    # now = datetime.now()
-    # api_run = open(path_file, 'a')
+    logs for api
+    path_file = '/home/gsi/LOGS/is_finished.log'
+    now = datetime.now()
+    api_run = open(path_file, 'a')
 
     if run_parallel:
         sub_card_item = SubCardItem.objects.filter(
@@ -33,11 +33,8 @@ def is_finished(run_id, card_id, cur_counter, last, run_parallel):
                 card_id=int(card_id)
         ).values_list('state')
 
-        # is_finish = 'running' not in sub_card_item or 'pending' not in sub_card_item
-
-        # api_run.writelines('LOSY STATE: {0}\n'.format(sub_card_item))
-
-        # api_run.writelines('VAL LIST: {0}\n'.format(value_list))
+        is_finish = ('running' not in sub_card_item and 'pending' not in sub_card_item)
+        api_run.writelines('IS FINISH: {0}\n'.format(is_finish))
 
         if 'running' not in sub_card_item and 'pending' not in sub_card_item:
             return True
@@ -47,8 +44,8 @@ def is_finished(run_id, card_id, cur_counter, last, run_parallel):
 
 
 
-    # api_run.writelines('\n\n\n')
-    # api_run.close
+    api_run.writelines('\n\n\n')
+    api_run.close
 
     return False
 
