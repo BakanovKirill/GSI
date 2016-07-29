@@ -155,8 +155,6 @@ def update_run(request, run_id):
                 # api_fail.writelines('CARDS-{0}:\n'.format(card.id))
                 # api_fail.writelines('LAST ==> {0}\n'.format(last))
                 # api_fail.writelines('LAST BUT ONE ==> {0}\n'.format(last_but_one[0]))
-                # # api_fail.writelines('next run ==> {0}\n'.format(next_step.parent_run.id))
-                # # api_fail.writelines('next card ==> {0}\n'.format(next_step.card_item.id))
                 # api_fail.writelines('CUR_counter => {0}\n'.format(cur_counter))
                 # api_fail.writelines('LAST => {0}\n'.format(last))
                 # api_fail.writelines('state ==> {0}\n\n\n'.format(step.state))
@@ -197,10 +195,7 @@ def update_run(request, run_id):
                 # write log file
                 api_running.writelines('LAST ==> {0}\n'.format(last))
                 api_running.writelines('LAST BUT ONE ==> {0}\n'.format(last_but_one[0]))
-                api_running.writelines('next run ==> {0}\n'.format(next_step.parent_run.id))
-                api_running.writelines('next card ==> {0}\n'.format(next_step.card_item.id))
                 api_running.writelines('CUR_counter => {0}\n'.format(cur_counter))
-                api_running.writelines('LAST => {0}\n'.format(last))
                 api_running.writelines('state ==> {0}\n\n\n'.format(step.state))
                 api_running.close()
             elif state == 'success':
