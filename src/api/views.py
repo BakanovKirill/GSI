@@ -47,17 +47,6 @@ def update_run(request, run_id):
     api_run = open(path_file, 'a')
 
 
-
-
-    api_run.writelines('RUN {0}:\n'.format(run_id))
-    api_run.writelines('request{0}:\n'.format(request.query_params))
-    # api_run.writelines('RUN ID {0}:\n'.format(run_card_id))
-    # api_run.writelines('STATUS {0}:\n'.format(data['status']))
-    # api_run.writelines('VAL LIST {0}:\n'.format(value_list))
-    api_run.writelines('\n\n\n')
-    api_run.close
-
-
     data = validate_status(request.query_params.get('status', False))
     value_list = str(run_id).split('.')
     run_card_id = value_list[0]
@@ -69,7 +58,13 @@ def update_run(request, run_id):
     name_sub_card = '{0}_{1}'.format(order_card_item_id, cur_counter)
     finished = False
 
-
+    api_run.writelines('RUN {0}:\n'.format(run_id))
+    api_run.writelines('request{0}:\n'.format(request.query_params))
+    api_run.writelines('RUN ID {0}:\n'.format(run_card_id))
+    api_run.writelines('STATUS {0}:\n'.format(data['status']))
+    api_run.writelines('VAL LIST {0}:\n'.format(value_list))
+    api_run.writelines('\n\n\n')
+    api_run.close
 
 
 
