@@ -81,8 +81,6 @@ def update_run(request, run_id):
     api_run.close
 
 
-
-
     if data['status']:
         state = data['status']
 
@@ -114,6 +112,13 @@ def update_run(request, run_id):
             except Exception, e:
                 log_file.writelines('ERROR run_parallel => {0}\n\n'.format(e))
 
+            if run_parallel:
+                new_sub_card_item = SubCardItem.objects.filter(
+                                        run_id=int(run_card_id),
+                                        card_id=int(order_card_item_id),
+                                        state='pending'
+                                    ).order_by('start_date')[:6]
+
             log_file.writelines('run_parallel => {0}\n'.format(run_parallel))
             # log_file.writelines('====== RUN_ID:\n')
             log_file.writelines('RUN ID => {0}\n'.format(str(run_id)))
@@ -136,8 +141,11 @@ def update_run(request, run_id):
                             card_id=int(order_card_item_id)
                     )
                     for n in sub_card_item:
+                        name_card = '{0}%{1}'.format(n.run_id, n.name)
+                        params.append(name_card)
                         n.state = state
                         n.save()
+                    execute_fe_command(params)
 
                 step.state = state
                 step.save()
@@ -200,12 +208,6 @@ def update_run(request, run_id):
                 next_step, is_last_step = step.get_next_step()
                 new_sub_card_item = None
                 params = []
-                if run_parallel:
-                    new_sub_card_item = SubCardItem.objects.filter(
-                                            run_id=int(run_card_id),
-                                            card_id=int(order_card_item_id),
-                                            state='pending'
-                                        ).order_by('start_date')[:6]
 
                 # ********** WRITE LOG *****************************
                 log_file.writelines('SUCCESS: ' + str(state) + '\n')
