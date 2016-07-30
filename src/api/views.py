@@ -205,7 +205,7 @@ def update_run(request, run_id):
                                             run_id=int(run_card_id),
                                             card_id=int(order_card_item_id),
                                             state='pending'
-                                        ).order_by('-start_date')[:1]
+                                        ).order_by('start_date')[:6]
 
                 # ********** WRITE LOG *****************************
                 log_file.writelines('SUCCESS: ' + str(state) + '\n')
