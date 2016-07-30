@@ -43,8 +43,6 @@ def is_finished(run_id, card_id, cur_counter, last, run_parallel):
         if cur_counter == last:
             return True
 
-
-
     api_run.writelines('\n\n\n')
     api_run.close
 
@@ -55,7 +53,7 @@ def is_finished(run_id, card_id, cur_counter, last, run_parallel):
 def update_run(request, run_id):
     """ update the status cards of the runs """
 
-    # logs for api
+    # ************************* logs for api
     path_file = '/home/gsi/LOGS/api_run.log'
     now = datetime.now()
     api_run = open(path_file, 'a')
@@ -72,6 +70,7 @@ def update_run(request, run_id):
     name_sub_card = '{0}_{1}'.format(order_card_item_id, cur_counter)
     finished = False
 
+    # ***********************************************************************
     api_run.writelines('RUN: {0}\n'.format(run_id))
     api_run.writelines('request: {0}\n'.format(request.query_params))
     api_run.writelines('RUN ID: {0}\n'.format(run_card_id))
@@ -79,7 +78,7 @@ def update_run(request, run_id):
     api_run.writelines('VAL LIST: {0}\n'.format(value_list))
     api_run.writelines('\n\n\n')
     api_run.close
-
+    # ***********************************************************************
 
     if data['status']:
         state = data['status']
@@ -94,7 +93,7 @@ def update_run(request, run_id):
             cur_state = step.state
             run_parallel = False
 
-            # logs for api
+            # ************************* logs for api
             path_file = '/home/gsi/LOGS/api_status.log'
             now = datetime.now()
             log_file = open(path_file, 'a')
@@ -104,6 +103,7 @@ def update_run(request, run_id):
             log_file.writelines('STATUS:\n')
             log_file.writelines(str(now) + '\n')
             log_file.writelines(str(state) + '\n')
+            # ***********************************************************************
 
             try:
                 if card.run_parallel:
@@ -119,6 +119,7 @@ def update_run(request, run_id):
                                         state='pending'
                                     ).order_by('start_date')[:6]
 
+            # ***********************************************************************
             log_file.writelines('run_parallel => {0}\n'.format(run_parallel))
             # log_file.writelines('====== RUN_ID:\n')
             log_file.writelines('RUN ID => {0}\n'.format(str(run_id)))
@@ -129,11 +130,17 @@ def update_run(request, run_id):
             # log_file.writelines('====== RunStep:\n')
             # log_file.writelines('name STEP => {0} :: id => {1}\n'.format(str(step), str(step.id)))
             # log_file.close()
+            # ***********************************************************************
 
             # for step in steps:
             # Go to the next step only on success state
             if state == 'fail':
+                # ***********************************************************************
                 log_file.writelines('FAIL: ' + str(state) + '\n')
+                # ***********************************************************************
+
+                params = []
+                
                 if run_parallel:
                     sub_card_item = SubCardItem.objects.filter(
                             name=name_sub_card,
@@ -152,6 +159,7 @@ def update_run(request, run_id):
                 run.state = state
                 run.save()
 
+                # ***********************************************************************
                 # write log file
                 # path_file = '/home/gsi/LOGS/api_fail.log'
                 # now = datetime.now()
@@ -165,9 +173,11 @@ def update_run(request, run_id):
                 # api_fail.writelines('LAST => {0}\n'.format(last))
                 # api_fail.writelines('state ==> {0}\n\n\n'.format(step.state))
                 # api_fail.close()
+                # ***********************************************************************
             elif state == 'running':
                 log_file.writelines('RUNNING: ' + str(state) + '\n')
 
+                # ***********************************************************************
                 # write log file
                 path_file = '/home/gsi/LOGS/api_running.log'
                 now = datetime.now()
@@ -175,6 +185,7 @@ def update_run(request, run_id):
                 api_running.writelines('{0}\n'.format(now))
                 api_running.writelines('RUN {0}:\n'.format(run_card_id))
                 api_running.writelines('CARDS {0}:\n'.format(card.id))
+                # ***********************************************************************
 
                 if run_parallel:
                     sub_card_item = SubCardItem.objects.filter(
@@ -198,12 +209,14 @@ def update_run(request, run_id):
                 #     step.state = 'fail'
                 #     step.save()
 
+                # ***********************************************************************
                 # write log file
                 api_running.writelines('LAST ==> {0}\n'.format(last))
                 api_running.writelines('LAST BUT ONE ==> {0}\n'.format(last_but_one[0]))
                 api_running.writelines('CUR_counter => {0}\n'.format(cur_counter))
                 api_running.writelines('state ==> {0}\n\n\n'.format(step.state))
                 api_running.close()
+                # ***********************************************************************
             elif state == 'success':
                 next_step, is_last_step = step.get_next_step()
                 new_sub_card_item = None
@@ -257,16 +270,6 @@ def update_run(request, run_id):
                                 name_card = '{0}%{1}'.format(n.run_id, n.name)
                                 params.append(name_card)
 
-                                # name_card = '{0}_{1}'.format(next_step.card_item.id, count)
-                                # ex_fe_com = Popen(
-                                #     'nohup {0} {1} {2} &'.format(
-                                #         EXECUTE_FE_COMMAND,
-                                #         n.run_id,
-                                #         n.name
-                                #     ),
-                                #     shell=True,
-                                # )
-                                # count += 1
                             execute_fe_command(params)
                         else:
                             log_file.writelines('next RUN => {0}\n'.format(next_step.parent_run.id))
@@ -280,6 +283,7 @@ def update_run(request, run_id):
                                 shell=True,
                             )
 
+                        # ***********************************************************************
                         # write log file
                         path_file = '/home/gsi/LOGS/api_success.log'
                         now = datetime.now()
@@ -294,6 +298,7 @@ def update_run(request, run_id):
                         log_file.writelines('LAST => {0}\n'.format(last))
                         log_api_file.writelines('state ==> {0}\n\n\n'.format(step.state))
                         log_api_file.close()
+                        # ***********************************************************************
                     else:
                         if new_sub_card_item:
                             name_card = '{0}%{1}'.format(
@@ -342,9 +347,14 @@ def update_run(request, run_id):
                         step.save()
                         run.save()
 
+                        # ***********************************************************************
                         log_file.writelines('Step State => {0}\n'.format(step.state))
+                        # ***********************************************************************
             else:
+                # ***********************************************************************
                 log_file.writelines('ELSE: ' + str(state) + '\n')
+                # ***********************************************************************
+
                 if run_parallel:
                     sub_card_item = SubCardItem.objects.filter(
                             name=name_sub_card,
@@ -359,9 +369,12 @@ def update_run(request, run_id):
                 step.state = state
                 step.save()
 
+            # ***********************************************************************
             log_file.writelines('\n\n\n')
             log_file.close()
+            # ***********************************************************************
         except Exception, e:
+            # ***********************************************************************
             # error for api
             path_file = '/home/gsi/LOGS/api_error.err'
             now = datetime.now()
@@ -376,10 +389,12 @@ def update_run(request, run_id):
 
             log_file1.writelines('\n\n\n')
             log_file1.close()
+            # ***********************************************************************
         except ObjectDoesNotExist as e:
             data['status'] = False
             data['message'] = str(e)
 
+            # ***********************************************************************
             # error for api
             path_file = '/home/gsi/LOGS/api_status.err'
             now = datetime.now()
@@ -390,6 +405,7 @@ def update_run(request, run_id):
 
             log_file2.writelines('\n\n\n')
             log_file2.close()
+            # ***********************************************************************
     else:
         return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
