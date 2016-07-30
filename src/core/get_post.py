@@ -12,6 +12,8 @@ def add_card_in_cardsequence(card, cs_id):
     from gsi.models import CardSequence
     from cards.models import CardItem
 
+    order_num = 0
+
     try:
         card_model = ContentType.objects.get_for_model(card.__class__).model
         content_type = get_object_or_404(ContentType, app_label='cards', model=card_model)
@@ -21,7 +23,17 @@ def add_card_in_cardsequence(card, cs_id):
                 content_type=content_type,
                 object_id=card.id
         )
+        cs_all = CardSequence.cards.through.objects.filter(
+                    sequence=cs,
+                ).count()
+
+        print 'CS ALL ================== ', cs_all
+
+        if cs_all:
+            order_num = cs_all + 1
+
         CardSequence.cards.through.objects.create(
+            order=order_num,
             sequence=cs,
             card_item=card_item,
         )
@@ -92,6 +104,7 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                 if request.POST.getlist('available'):
                     multiple = '_'.join(request.POST.getlist('available'))
                     obj = func(form_1, multiple=multiple)
+                    add_card_in_cardsequence(obj, cs_id)
                 else:
                     obj = func(form_1)
                     add_card_in_cardsequence(obj, cs_id)
@@ -173,6 +186,7 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                     obj = func(form_1, multiple=multiple)
                 else:
                     obj = func(form_1)
+                    add_card_in_cardsequence(obj, cs_id)
 
                 if obj == None:
                     return None
