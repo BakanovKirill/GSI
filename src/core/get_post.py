@@ -27,8 +27,6 @@ def add_card_in_cardsequence(card, cs_id):
                     sequence=cs,
                 ).count()
 
-        print 'CS ALL ================== ', cs_all
-
         if cs_all:
             order_num = cs_all + 1
 

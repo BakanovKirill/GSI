@@ -12,20 +12,6 @@
             <b class="error-form">{{ form.name.errors }}</b>
         {% endif %}
     </div>
-
-    <div class="col-md-2 right">
-        <div class="form-group {% if form.run_parallel.errors %}has-error{% endif %}">
-            <label class="control-label font-normal">{{ form.run_parallel.label }}</label>
-        </div>
-    </div>
-    <div class="col-md-2 margin-top-4">
-        {% if not form.run_parallel.errors %}
-            {{ form.run_parallel }}
-        {% else %}
-            <span class="field-error">{{ form.run_parallel }}</span>
-            <b class="error-form">{{ form.run_parallel.errors }}</b>
-        {% endif %}
-    </div>
 </div>
 
 <div class="row margin-top-15">

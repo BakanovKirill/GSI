@@ -1,4 +1,5 @@
 #coding: utf8
+import os
 import multiprocessing
 import time
 from multiprocessing import Process
@@ -37,8 +38,9 @@ class MultiprocessingCards(multiprocessing.Process):
 				self.__queue.put(item) # If the mistake was, then again with that data
 		return
 	def multiprocessing_cards(self, param):
+		param_list = param.split('%')
+
 		if self.flag == 'cards':
-			param_list = param.split('%')
 			run_id = param_list[0]
 			card_id = param_list[1]
 
@@ -52,7 +54,19 @@ class MultiprocessingCards(multiprocessing.Process):
 		    )
 
 		if self.flag == 'file':
-			pass
+			fd = open(param_list[0], 'w+')
+			fd.write(param_list[2])
+
+            # fd.write('# Sequence: {0}, card: {1} - Generated {2} \n\n'.\
+            #          format(sequence.name, card.card_item, step.start_date))
+            # fd.writelines('. ' + RESOLUTION_ENV_SCRIPT + '\n\n')
+            # fd.writelines(export_home_var + '\n\n')
+            # fd.writelines(LOCAL_VAR_GROUPS + '\n\n')
+            # fd.writelines(ENVIROMENT_OVERRIDE + '\n\n')
+            # fd.writelines(EXECUTABLE[n])
+			os.chmod(param_list[0], 0777)
+			os.chmod(param_list[1], 0777)
+			fd.close()
 
 # def run_process_cards(run_id, card_id, num=1):
 # 	queue = multiprocessing.JoinableQueue() # создаем очередь заданий
