@@ -12,10 +12,11 @@ from gsi.settings import EXECUTE_FE_COMMAND
 
 
 class MultiprocessingCards(multiprocessing.Process):
-	def __init__(self,queue):
+	def __init__(self, queue, flag='cards'):
 		multiprocessing.Process.__init__(self)
 		self.__queue = queue # Queue of the tasks
 		self.kill_received = False # If I'll want stoped variable
+		self.flag = flag
 	def run(self):
 		while not self.kill_received:
 			try:
@@ -36,23 +37,22 @@ class MultiprocessingCards(multiprocessing.Process):
 				self.__queue.put(item) # If the mistake was, then again with that data
 		return
 	def multiprocessing_cards(self, param):
-		# print 'RES ========================== ', param
+		if self.flag == 'cards':
+			param_list = param.split('%')
+			run_id = param_list[0]
+			card_id = param_list[1]
 
-		param_list = param.split('%')
-		run_id = param_list[0]
-		card_id = param_list[1]
+			ex_fe_com = Popen(
+		        'nohup {0} {1} {2} &'.format(
+		            EXECUTE_FE_COMMAND,
+		            run_id,
+		            card_id
+		        ),
+		        shell=True,
+		    )
 
-		# print 'run_id ========================== ', run_id
-		# print 'card_id ========================== ', card_id
-
-		ex_fe_com = Popen(
-	        'nohup {0} {1} {2} &'.format(
-	            EXECUTE_FE_COMMAND,
-	            run_id,
-	            card_id
-	        ),
-	        shell=True,
-	    )
+		if self.flag == 'file':
+			pass
 
 # def run_process_cards(run_id, card_id, num=1):
 # 	queue = multiprocessing.JoinableQueue() # создаем очередь заданий
