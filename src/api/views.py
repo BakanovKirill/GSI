@@ -140,7 +140,7 @@ def update_run(request, run_id):
                 # ***********************************************************************
 
                 params = []
-                
+
                 if run_parallel:
                     sub_card_item = SubCardItem.objects.filter(
                             name=name_sub_card,
@@ -148,11 +148,11 @@ def update_run(request, run_id):
                             card_id=int(order_card_item_id)
                     )
                     for n in sub_card_item:
-                        name_card = '{0}%{1}'.format(n.run_id, n.name)
-                        params.append(name_card)
+                        # name_card = '{0}%{1}'.format(n.run_id, n.name)
+                        # params.append(name_card)
                         n.state = state
                         n.save()
-                    execute_fe_command(params)
+                    # execute_fe_command(params)
 
                 step.state = state
                 step.save()
