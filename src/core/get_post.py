@@ -28,7 +28,7 @@ def add_card_in_cardsequence(card, cs_id):
                 ).count()
 
         if cs_all:
-            order_num = cs_all + 1
+            order_num = cs_all
 
         CardSequence.cards.through.objects.create(
             order=order_num,
