@@ -667,6 +667,7 @@ class CalcStatsForm(forms.ModelForm):
     output_tile_subdir = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         max_length=200,
+        required=False,
         label=u'Output Tile Subdir',
     )
     year_group = forms.ModelChoiceField(
