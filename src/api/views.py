@@ -195,11 +195,11 @@ def update_run(request, run_id):
                     )
                     for n in sub_card_item:
                         if n.state != 'pending':
-	                        n.state = 'fail'
+                            n.state = 'fail'
                             n.save()
                         else:
-	                        n.state = state
-	                        n.save()
+                            n.state = state
+                            n.save()
 
 			    if step.state != 'pending':
 				    step.state = 'fail'
