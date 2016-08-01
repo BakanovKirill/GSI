@@ -358,7 +358,7 @@ def update_run(request, run_id):
                         # ***********************************************************************
                         log_file.writelines('Step State => {0}\n'.format(step.state))
                         # ***********************************************************************
-            elif state == 'pending':
+            else:
                 # ***********************************************************************
                 log_file.writelines('ELSE: ' + str(state) + '\n')
                 # ***********************************************************************
@@ -371,7 +371,7 @@ def update_run(request, run_id):
                     )
 
                     for n in sub_card_item:
-                        n.state = 'running'
+                        n.state = state
                         n.save()
 
                 step.state = state
