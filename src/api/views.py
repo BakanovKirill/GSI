@@ -194,16 +194,24 @@ def update_run(request, run_id):
                             card_id=int(order_card_item_id)
                     )
                     for n in sub_card_item:
-                        n.state = state
-                        n.save()
+                        if n.state != 'pending':
+	                        n.state = 'fail'
+                            n.save()
+                        else:
+	                        n.state = state
+	                        n.save()
+
+			    if step.state != 'pending':
+				    step.state = 'fail'
+                    step.save()
 
                 if run.state != 'fail':
                     run.state = state
                     run.save()
 
-                if step.state != 'fail':
-                    step.state = state
-                    step.save()
+                # if step.state != 'fail':
+                #     step.state = state
+                #     step.save()
 
                 # if run.state == 'fail':
                 #     step.state = 'fail'
