@@ -7,7 +7,8 @@ import Queue
 import traceback
 from subprocess import Popen, PIPE
 
-from django.shortcuts import get_object_or_404
+# from django.shortcuts import get_object_or_404
+from django.http import HttpResponseRedirect
 
 from gsi.settings import EXECUTE_FE_COMMAND
 
@@ -52,6 +53,10 @@ class MultiprocessingCards(multiprocessing.Process):
 		        ),
 		        shell=True,
 		    )
+
+			return HttpResponseRedirect(u'%s?status_message=%s' %
+			                            (reverse('submit_run'),
+			                             (u'Card "{0}" has been submitted'.format(card_id))))
 
 		if self.flag == 'file':
 			fd = open(param_list[0], 'w+')
