@@ -670,6 +670,13 @@ class CalcStatsForm(forms.ModelForm):
         required=False,
         label=u'Output Tile Subdir',
     )
+    area = forms.ModelChoiceField(
+        widget=forms.Select(attrs={"class": 'form-control disabled'}),
+        queryset=Area.objects.all(),
+        required=False,
+        empty_label='Select',
+        label=u'Area',
+    )
     year_group = forms.ModelChoiceField(
         widget=forms.Select(attrs={"class": 'form-control disabled'}),
         queryset=YearGroup.objects.all(),
@@ -732,6 +739,7 @@ class CalcStatsForm(forms.ModelForm):
             'run_parallel',
             'output_tile_subdir',
             'year_group',
+            'area',
             'period',
             'filter',
             'filter_out',

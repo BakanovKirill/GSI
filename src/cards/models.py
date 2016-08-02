@@ -177,6 +177,7 @@ FILTER_OUT = (
 class CalcStats(NamedModel, ParallelModel):
     output_tile_subdir = models.CharField(max_length=200)
     year_group = models.ForeignKey('gsi.YearGroup', null=True, blank=True)
+    area = models.ForeignKey('gsi.Area', null=True, blank=True)
     period = models.CharField(max_length=100, choices=PERIOD, default='year', null=True, blank=True)
     doy_variable = models.CharField(max_length=200, null=True, blank=True)
     filter = models.FloatField(default=0, blank=True, null=True)

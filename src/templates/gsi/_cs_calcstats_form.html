@@ -62,6 +62,20 @@
 
 <div class="row margin-top-15">
     <div class="col-md-2 right">
+        <div class="form-group {% if form_2.area.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form_2.area.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if not form_2.area.errors %}
+            {{ form_2.area }}
+        {% else %}
+            <span class="field-error">{{ form_2.area }}</span>
+            <b class="error-form">{{ form_2.area.errors }}</b>
+        {% endif %}
+    </div>
+
+    <div class="col-md-2 right">
         <div class="form-group {% if form_2.year_group.errors %}has-error{% endif %}">
             <label class="control-label font-normal">{{ form_2.year_group.label }}</label>
         </div>
@@ -74,7 +88,9 @@
             <b class="error-form">{{ form_2.year_group.errors }}</b>
         {% endif %}
     </div>
+</div>
 
+<div class="row margin-top-15">
     <div class="col-md-2 right">
         <div class="form-group {% if form_2.period.errors %}has-error{% endif %}">
             <label class="control-label font-normal">{{ form_2.period.label }}</label>
