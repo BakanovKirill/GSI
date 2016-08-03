@@ -180,7 +180,7 @@ class CalcStats(NamedModel, ParallelModel):
     area = models.ForeignKey('gsi.Area', null=True, blank=True)
     period = models.CharField(max_length=100, choices=PERIOD, default='year', null=True, blank=True)
     doy_variable = models.CharField(max_length=200, null=True, blank=True)
-    filter = models.FloatField(default=0, blank=True, null=True)
+    filter = models.PositiveIntegerField(default=0, blank=True, null=True)
     filter_out = models.CharField(max_length=100, choices=FILTER_OUT, null=True, blank=True)
     input_fourier = models.CharField(max_length=200, null=True, blank=True)
     out_dir = models.CharField(max_length=200, null=True, blank=True)

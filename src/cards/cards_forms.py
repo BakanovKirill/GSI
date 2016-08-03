@@ -696,7 +696,7 @@ class CalcStatsForm(forms.ModelForm):
         label=u'Period',
     )
     filter = forms.FloatField(
-        widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '1'}),
         initial=0,
         validators=[validate_order],
         error_messages={'required': 'Order must be a positive number'},
