@@ -978,6 +978,7 @@ def run_details(request, run_id):
 	runs_step.order_by('card_item.card_item.order')
 	url_name = 'run_details'
 	# title = 'Run "{0}" Details'.format(runs_step[0].parent_run)
+	title = 'Run "{0}" Details'.format(runs_step)
 
 	if request.method == "POST":
 		if request.POST.get('details_file'):
