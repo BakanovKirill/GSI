@@ -112,12 +112,12 @@ def update_run(request, run_id):
             except Exception, e:
                 log_file.writelines('ERROR run_parallel => {0}\n\n'.format(e))
 
-            if run_parallel:
-                new_sub_card_item = SubCardItem.objects.filter(
-                                        run_id=int(run_card_id),
-                                        card_id=int(order_card_item_id),
-                                        state='pending'
-                                    ).order_by('start_date')[:6]
+            # if run_parallel:
+            #     new_sub_card_item = SubCardItem.objects.filter(
+            #                             run_id=int(run_card_id),
+            #                             card_id=int(order_card_item_id),
+            #                             state='pending'
+            #                         ).order_by('start_date')[:6]
 
             # ***********************************************************************
             log_file.writelines('run_parallel => {0}\n'.format(run_parallel))
@@ -194,16 +194,16 @@ def update_run(request, run_id):
                             card_id=int(order_card_item_id)
                     )
                     for n in sub_card_item:
-                        if n.state != 'pending':
+                        if n.state == 'running':
                             n.state = 'fail'
                             n.save()
                         else:
                             n.state = state
                             n.save()
 
-			    if step.state != 'pending':
-				    step.state = 'fail'
-                    step.save()
+			    # if step.state != 'pending':
+				 #    step.state = 'fail'
+                 #    step.save()
 
                 if run.state != 'fail':
                     run.state = state
