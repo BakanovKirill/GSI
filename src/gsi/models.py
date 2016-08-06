@@ -65,6 +65,9 @@ class Area(UnicodeNameMixin, models.Model):
     name = models.CharField(max_length=50, unique=True)
     tiles = models.ManyToManyField(Tile, related_name='areas')
 
+    class Meta:
+        ordering = ['name']
+
 
 class Year(UnicodeNameMixin, models.Model):
     name = models.CharField(max_length=4)
