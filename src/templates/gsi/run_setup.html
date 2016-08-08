@@ -29,9 +29,12 @@
                             <td>{{ run_base.date_created|date:"d/m/Y" }}</td>
                             <td>{{ run_base.date_modified|date:"d/m/Y" }}</td>
                             <td>
-                                <a href="{% url 'run_update' run_base.id %}"><img src="{% static 'img/edit-18.png' %}"/></a>
-                                <button class="btn del-btn check-cur-delete" type="button" name="del_current_btn" value="{{ run_base.id }}">
+                                <a href="{% url 'run_update' run_base.id %}" data-toggle="tooltip" data-placement="top" title="Run Edit"><img src="{% static 'img/edit-18.png' %}" title="Run edit" /></a>
+                                <!-- <button class="btn del-btn check-cur-delete" type="button" name="del_current_btn" value="{{ run_base.id }}">
                                     <img src="{% static 'img/delete-18.png' %}"/>
+                                </button> -->
+                                <button class="btn btn-img run-copy" type="submit" name="copy_btn" value="{{ run_base.id }}" data-toggle="tooltip" data-placement="top" title="Run Copy">
+                                    <img src="{% static 'img/copy-18.png' %}"/>
                                 </button>
                             </td>
                         </tr>

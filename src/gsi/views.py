@@ -103,6 +103,49 @@ def write_card_to_cs(card_sequence, query):
 		)
 
 
+def get_name_runbase(name):
+	if '*cp' in name:
+		list_name = name.split('*cp')
+		return list_name[0]
+	else:
+		return name
+
+
+def create_new_runbase(name):
+	new_rb = None
+	rb = get_object_or_404(RunBase, name=name)
+	rb_count = RunBase.objects.all().count()
+	get_name = get_name_runbase(name)
+	new_name = '{0}*cp{1}'.format(get_name, rb_count)
+
+	if RunBase.objects.filter(name=new_name).exists():
+		try:
+			new_name = '{0}_{1}'.format(new_name, 1)
+		except ValueError:
+			num = int(rb_count) + 1
+			new_name = '{0}*cp{1}'.format(new_name, num)
+		# except TypeError:
+		# 	num_name = int(name_list[2:][0]) + 1
+		# 	new_name = '{0}*cp{1}'.format(name, num_name)
+
+	try:
+		new_rb = RunBase.objects.create(
+					name=new_name,
+					author=rb.author,
+					description=rb.description,
+					purpose=rb.purpose,
+					directory_path=rb.directory_path,
+					resolution=rb.resolution,
+					# card_sequence=rb.card_sequence
+				)
+		new_rb.card_sequence = rb.card_sequence
+		new_rb.save()
+	except Exception, e:
+		print 'ERROR create_new_runbase ============== ', e
+
+	return new_rb
+
+
 # upload_static_data_view = user_passes_test(login_url='/', redirect_field_name='')(UploadStaticDataView.as_view())
 
 
@@ -229,6 +272,7 @@ def run_setup(request):
 			data = '{0} {1}?'.format(message, data)
 
 			return HttpResponse(data)
+
 		if 'cur_run_id' in data_post:
 			message = u'Are you sure you want to remove this objects:'
 			run_id = data_post['cur_run_id']
@@ -242,8 +286,10 @@ def run_setup(request):
 			return HttpResponse(data)
 
 	if request.method == "POST":
-		if request.POST.get('run_select'):
-			for run_id in request.POST.getlist('run_select'):
+		data_post = request.POST
+
+		if data_post.get('run_select'):
+			for run_id in data_post.getlist('run_select'):
 				cur_run = get_object_or_404(RunBase, pk=run_id)
 				run_name += '"' + cur_run.name + '", '
 				cur_run.delete()
@@ -252,8 +298,17 @@ def run_setup(request):
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_setup'),
 										 (u'Run(s): {0} ==> deleted.'.format(run_name)))
 			)
-		elif request.POST.get('delete_button'):
-			run_bases_current = get_object_or_404(RunBase, pk=request.POST.get('delete_button'))
+		elif data_post.get('copy_btn'):
+			run_bases_current = get_object_or_404(RunBase, pk=data_post.get('copy_btn'))
+			run_name += '"' + run_bases_current.name + '"'
+			new_rb = create_new_runbase(run_bases_current.name)
+
+			return HttpResponseRedirect(u'%s?status_message=%s' %
+										(reverse('run_setup'), (u'Run the "{0}" Run successfully copied from the "{1}".'.\
+										format(run_name, new_rb.name)))
+										)
+		elif data_post.get('delete_button'):
+			run_bases_current = get_object_or_404(RunBase, pk=data_post.get('delete_button'))
 			run_name += '"' + run_bases_current.name + '"'
 			run_bases_current.delete()
 
@@ -832,38 +887,61 @@ def submit_run(request):
 	name_runs = ''
 	url_name = 'submit_run'
 
-	if request.method == "POST":
-		if request.POST.get('execute_runs', ''):
-			run_id = request.POST.get('execute_runs', '')
-			# for run_id in id_runs:
-			# 	rb = get_object_or_404(RunBase, pk=run_id)
-			# 	# execute_run = make_run(rb, request.user)
-			# 	name_runs += '"' + str(rb.name) + '", '
+	if request.method == "POST" and request.is_ajax():
+		data_post = request.POST
 
+		if 'cur_run_id' in data_post:
+			run_id = data_post['cur_run_id']
 			rb = get_object_or_404(RunBase, pk=run_id)
 			execute_run = make_run(rb, request.user)
 
 			if not execute_run:
 				return HttpResponseRedirect(u'%s?danger_message=%s' %
-				                            (reverse('submit_run'),
-				                             (u'Unable to execute the Run. \
-				                             Please contact the administrator!')))
+											(reverse('submit_run'),
+											(u'Unable to execute the Run. \
+											Please contact the administrator!')))
 
 			now_date = datetime.now()
 			now_date_formating = now_date.strftime("%d/%m/%Y")
 			now_time = now_date.strftime("%H:%M")
+			data = u'Run "{0}" has been submitted to back end and {1} on {2}'.format(rb.name, now_time, now_date_formating)
 
-			print 'execute_run'
-
-			return HttpResponseRedirect(u'%s?status_message=%s' %
-						(reverse('submit_run'),
-						 (u'Run "{0}" has been submitted to back end and {1} on {2}'.
-						  format(rb.name, now_time, now_date_formating)))
-			)
+			return HttpResponse(data)
 		else:
-			return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('submit_run'),
-										 (u"For start choose Run(s)"))
-			)
+			data = u"For start choose Run"
+			return HttpResponse(data)
+
+		# if request.POST.get('execute_runs', ''):
+		# 	run_id = request.POST.get('execute_runs', '')
+		# 	# for run_id in id_runs:
+		# 	# 	rb = get_object_or_404(RunBase, pk=run_id)
+		# 	# 	# execute_run = make_run(rb, request.user)
+		# 	# 	name_runs += '"' + str(rb.name) + '", '
+		#
+		# 	rb = get_object_or_404(RunBase, pk=run_id)
+		# 	execute_run = make_run(rb, request.user)
+		#
+		# 	if not execute_run:
+		# 		return HttpResponseRedirect(u'%s?danger_message=%s' %
+		# 		                            (reverse('submit_run'),
+		# 		                             (u'Unable to execute the Run. \
+		# 		                             Please contact the administrator!')))
+		#
+		# 	now_date = datetime.now()
+		# 	now_date_formating = now_date.strftime("%d/%m/%Y")
+		# 	now_time = now_date.strftime("%H:%M")
+		#
+		# 	print 'execute_run'
+		#
+		# 	return HttpResponseRedirect(u'%s?status_message=%s' %
+		# 				(reverse('submit_run'),
+		# 				 (u'Run "{0}" has been submitted to back end and {1} on {2}'.
+		# 				  format(rb.name, now_time, now_date_formating)))
+		# 	)
+		# else:
+		# 	return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('submit_run'),
+		# 								 (u"For start choose Run(s)"))
+		# 	)
 
 	# paginations
 	model_name = paginations(request, run_bases)

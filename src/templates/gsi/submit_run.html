@@ -12,7 +12,7 @@
 {% block content %}
     <div class="row-fluid">
         <div class="col-md-12">
-            <form action="{% url 'submit_run' %}" method="post" enctype="multipart/form-data"
+            <form class="form-modal" action="{% url 'submit_run' %}" method="post" enctype="multipart/form-data"
                   role="form" class="form-horizontal">
                 {% csrf_token %}
                 <div class="table-responsive">
@@ -29,7 +29,7 @@
                         <tbody>
                             {% for rb in run_bases %}
                                 <tr>
-                                    <td><input type="radio" name="execute_runs" value="{{ rb.id }}"></td>
+                                    <td><input type="radio" class="execute_runs" name="execute_runs" value="{{ rb.id }}"></td>
                                     <td>{{ rb.name }}</td>
                                     <td>{{ rb.author }}</td>
                                     <td>{{ rb.date_created|date:"d/m/Y" }}</td>
@@ -44,11 +44,15 @@
                     <!-- end pagination -->
 
                     <div class="col-md-4 col-md-offset-8">
-                        <button type="submit" name="save_button" class="btn btn-primary btn-block">
+                        <button type="button" name="save_button" class="btn btn-primary btn-block pre-process">
                             Execute
                         </button>
                     </div>
                 </div>
+
+                <!-- Preloader -->
+                <!-- Modal Preload -->
+                {% include '_modal_preload.html' %}
             </form>
         </div>
     </div>

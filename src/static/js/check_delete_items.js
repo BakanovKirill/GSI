@@ -80,7 +80,78 @@ function initCheckCurDeleteItems() {
     });
 }
 
+// initial tooltip for bootstrap
+function initTooltipBootstrap(){
+    $('[data-toggle="tooltip"]').tooltip();
+}
+
+function initPrelod(){
+    $('button.pre-process').click(function(event){
+        var modal = $('#modalPreload');
+        var form_url = $('.form-modal').attr('action');
+        var cur_run_id = $('input:radio[name=execute_runs]:checked').val();
+
+        $.ajax({
+            url: form_url,
+            type: 'POST',
+            'async': true,
+            'dataType': 'text',
+            data: {
+                'cur_run_id': cur_run_id,
+                'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+            },
+            'error': function(xhr, status, error){
+                var message = 'An unexpected error occurred. Try later.';
+                modal.find('.modal-body').html(message);
+                modal.modal('show');
+
+            },
+            beforeSend: function(){
+                // alert('beforeSend');
+                $(".close").remove();
+                modal.find('div.progress').removeClass("disabled");
+                modal.find('div.progress').addClass("visible");
+                modal.modal({
+                    'keyboard': false,
+                    'backdrop': false,
+                    'show': true
+                });
+	        },
+            'success': function(data, status, xhr){
+                // alert(data);
+                $('<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>').prependTo("div.modal-header");
+
+                if (data !== 'For start choose Run') {
+                    modal.find('.modal-body').html(data);
+                    setTimeout(function() {$(location).attr('href',form_url);}, 2000);
+                } else {
+                    modal.find('.modal-body').html(data);
+                }
+
+                $('.modal-content').click(function(){
+                    // location.reload(True);
+                    $(location).attr('href',form_url);
+                });
+            },
+        });
+        return false;
+    });
+}
+
+// function initReloadPage(){
+//     var form_url = location.href;
+//
+//     $('.modal-content').click(function(){
+//         // location.reload();
+//         $(location).attr('href',form_url);
+//     });
+// }
+
+
 $(document).ready(function(){
     initCheckDeleteItems();
     initCheckCurDeleteItems();
+    initTooltipBootstrap();
+    initPrelod();
+    // initReloadPage();
 });
