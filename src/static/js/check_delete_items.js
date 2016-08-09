@@ -85,6 +85,7 @@ function initTooltipBootstrap(){
     $('[data-toggle="tooltip"]').tooltip();
 }
 
+
 function initPrelod(){
     $('button.pre-process').click(function(event){
         var modal = $('#modalPreload');
@@ -124,6 +125,7 @@ function initPrelod(){
 	        },
             'success': function(data, status, xhr){
                 // alert(data);
+                $("#modalfooter").remove();
                 $('<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>').prependTo("div.modal-header");
 
                 if (data !== 'For start choose Run') {
