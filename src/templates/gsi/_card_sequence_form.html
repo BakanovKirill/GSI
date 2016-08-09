@@ -153,8 +153,8 @@
                                             {% elif card.card_item.content_type.model == 'rftrain' %}
                                                 {% url 'cs_run_csid_rftrain_edit' cs_id card.card_item.object_id %}
                                             {% endif %}
-                                        {% endif %}"><img src="{% static 'img/edit-18.png' %}"/></a>
-                                <button class="btn del-btn" type="submit" name="del_current_btn" value="{{ card.id }}">
+                                        {% endif %}" data-toggle="tooltip" data-placement="top" title="Edit"><img src="{% static 'img/edit-18.png' %}"/></a>
+                                <button class="btn del-btn" type="submit" name="del_current_btn" value="{{ card.id }}" data-toggle="tooltip" data-placement="top" title="Delete">
                                     <img src="{% static 'img/delete-18.png' %}"/>
                                 </button>
                             </td>
