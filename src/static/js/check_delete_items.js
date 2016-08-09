@@ -102,8 +102,13 @@ function initPrelod(){
             },
             'error': function(xhr, status, error){
                 var message = 'An unexpected error occurred. Try later.';
+                $('<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>').prependTo("div.modal-header");
                 modal.find('.modal-body').html(message);
                 modal.modal('show');
+                $('.modal-content').click(function(){
+                    // location.reload(True);
+                    $(location).attr('href',form_url);
+                });
 
             },
             beforeSend: function(){
@@ -123,7 +128,7 @@ function initPrelod(){
 
                 if (data !== 'For start choose Run') {
                     modal.find('.modal-body').html(data);
-                    setTimeout(function() {$(location).attr('href',form_url);}, 2000);
+                    setTimeout(function() {$(location).attr('href',form_url);}, 3000);
                 } else {
                     modal.find('.modal-body').html(data);
                 }

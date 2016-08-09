@@ -22,7 +22,8 @@ from django.conf import settings
 
 from gsi.models import (Run, RunStep, Log, OrderedCardItem,
 						HomeVariables, VariablesGroup, YearGroup,
-						Year, Satellite, InputDataDirectory, ListTestFiles, SubCardItem)
+						Year, Satellite, InputDataDirectory, ListTestFiles,
+						SubCardItem)
 from cards.models import CardItem, Collate
 from cards.card_update_create import *
 from cards.cards_forms import *
@@ -144,6 +145,20 @@ def create_new_runbase(name):
 		print 'ERROR create_new_runbase ============== ', e
 
 	return new_rb
+
+
+def get_number_cards(rb, user):
+	num_card = 0
+	run = Run.objects.create(run_base=rb, user=user)
+	all_card = OrderedCardItem.objects.filter(sequence__runbase=run.run_base)
+
+	for card in all_card:
+		if card.run_parallel:
+			num_card += card.number_sub_cards
+		else:
+			num_card += 1
+
+	return num_card
 
 
 # upload_static_data_view = user_passes_test(login_url='/', redirect_field_name='')(UploadStaticDataView.as_view())
@@ -893,6 +908,7 @@ def submit_run(request):
 		if 'cur_run_id' in data_post:
 			run_id = data_post['cur_run_id']
 			rb = get_object_or_404(RunBase, pk=run_id)
+			num_cards = get_number_cards(rb, request.user)
 			execute_run = make_run(rb, request.user)
 
 			if not execute_run:
@@ -904,7 +920,8 @@ def submit_run(request):
 			now_date = datetime.now()
 			now_date_formating = now_date.strftime("%d/%m/%Y")
 			now_time = now_date.strftime("%H:%M")
-			data = u'Run "{0}" has been submitted to back end and {1} on {2}'.format(rb.name, now_time, now_date_formating)
+			data = u'Run "{0}" has been submitted to back end and {1} on {2}<br>Processed {3} Cards'.\
+					format(rb.name, now_time, now_date_formating, num_cards)
 
 			return HttpResponse(data)
 		else:
