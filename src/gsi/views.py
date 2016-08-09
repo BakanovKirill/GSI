@@ -376,7 +376,7 @@ def new_run(request):
 					)
 			else:
 				return HttpResponseRedirect(
-						u'%s?status_message=%s' % (reverse('new_run'),
+						u'%s?warning_message=%s' % (reverse('new_run'),
 						(u'Run with the name "{0}" already exists.'.format(form.cleaned_data["name"])))
 				)
 	else:

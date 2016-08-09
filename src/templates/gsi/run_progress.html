@@ -18,7 +18,7 @@
                         <th>Date</th>
                         <th>Status</th>
                         <th>Autor Execute</th>
-                        <th>Details</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,7 +32,7 @@
                             <td>{{ run.state }}</td>
                             <td>{{ run.user }}</td>
                             <td>
-                                <a href="{% url 'run_details' run.id %}">
+                                <a href="{% url 'run_details' run.id %}" data-toggle="tooltip" data-placement="top" title="Details">
                                     <img class="" src="{% static 'img/details_18.png' %}"/>
                                 </a>
                             </td>

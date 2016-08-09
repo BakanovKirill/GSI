@@ -23,8 +23,10 @@
                                 <td><input type="checkbox" name="satellite_select" value="{{ satellite.id }}"></td>
                                 <td>{{ satellite.name }}</td>
                                 <td>
-                                    <a href="{% url 'satellite_edit' satellite.id %}" role="button"><img class="" src="{% static 'img/edit-18.png' %}"/></a>
-                                    <button class="btn del-btn check-cur-delete" type="button" name="del_current_btn" value="{{ satellite.id }}">
+                                    <a href="{% url 'satellite_edit' satellite.id %}" role="button"  data-toggle="tooltip" data-placement="top" title="Edit">
+                                        <img class="" src="{% static 'img/edit-18.png' %}"/>
+                                    </a>
+                                    <button class="btn del-btn check-cur-delete" type="button" name="del_current_btn" value="{{ satellite.id }}"  data-toggle="tooltip" data-placement="top" title="Delete">
                                         <img src="{% static 'img/delete-18.png' %}"/>
                                     </button>
                                 </td>
