@@ -112,7 +112,7 @@ def get_name_runbase(name):
 		return name
 
 
-def create_new_runbase(name):
+def create_new_runbase(request, name):
 	new_rb = None
 	rb = get_object_or_404(RunBase, name=name)
 	rb_count = RunBase.objects.all().count()
@@ -132,15 +132,28 @@ def create_new_runbase(name):
 	try:
 		new_rb = RunBase.objects.create(
 					name=new_name,
-					author=rb.author,
+					author=request.user,
 					description=rb.description,
 					purpose=rb.purpose,
 					directory_path=rb.directory_path,
 					resolution=rb.resolution,
-					# card_sequence=rb.card_sequence
 				)
-		new_rb.card_sequence = rb.card_sequence
-		new_rb.save()
+		new_rb_cs = get_object_or_404(CardSequence, pk=new_rb.card_sequence.id)
+
+		new_rb_cs.environment_base = rb.card_sequence.environment_base
+		new_rb_cs.environment_override = rb.card_sequence.environment_override
+		new_rb_cs.save()
+
+		new_rb_cs_cards = CardSequence.cards.through.objects.filter(sequence_id=new_rb_cs.id)
+		card_sequence = CardSequence.objects.get(id=new_rb_cs.id)
+		copy_rb_cs_cards = CardSequence.cards.through.objects.filter(sequence_id=rb.card_sequence.id)
+
+		for n in copy_rb_cs_cards:
+			CardSequence.cards.through.objects.create(
+				sequence=card_sequence,
+				card_item=n.card_item,
+				order=n.order,
+			)
 	except Exception, e:
 		print 'ERROR create_new_runbase ============== ', e
 
@@ -316,7 +329,7 @@ def run_setup(request):
 		elif data_post.get('copy_btn'):
 			run_bases_current = get_object_or_404(RunBase, pk=data_post.get('copy_btn'))
 			run_name += '"' + run_bases_current.name + '"'
-			new_rb = create_new_runbase(run_bases_current.name)
+			new_rb = create_new_runbase(request, run_bases_current.name)
 
 			return HttpResponseRedirect(u'%s?status_message=%s' %
 										(reverse('run_setup'), (u'Run the "{0}" Run successfully copied from the "{1}".'.\
