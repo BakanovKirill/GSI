@@ -115,6 +115,7 @@ class PreProc(NamedModel, ParallelModel):
     area = models.ForeignKey('gsi.Area', null=True, blank=True)
     mode = models.CharField(max_length=50, blank=True)
     year_group = models.ForeignKey('gsi.YearGroup', null=True, blank=True)
+    path_spec_location = models.CharField(max_length=200, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = _('PreProc cards')
@@ -184,6 +185,7 @@ class CalcStats(NamedModel, ParallelModel):
     filter_out = models.CharField(max_length=100, choices=FILTER_OUT, null=True, blank=True)
     input_fourier = models.CharField(max_length=200, null=True, blank=True)
     out_dir = models.CharField(max_length=200, null=True, blank=True)
+    path_spec_location = models.CharField(max_length=200, null=True, blank=True)
 
 
 class CardItem(models.Model):

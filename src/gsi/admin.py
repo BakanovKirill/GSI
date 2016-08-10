@@ -22,12 +22,12 @@ class CardsInline(admin.TabularInline):
     fields = ('card_item', 'order')
 
 
-# class CardSequenceAdmin(admin.ModelAdmin):
-#     inlines = (CardsInline,)
-#     exclude = ('cards',)
+class CardSequenceAdmin(admin.ModelAdmin):
+    inlines = (CardsInline,)
+    exclude = ('cards',)
 
 
-# admin.site.register(CardSequence, CardSequenceAdmin)
+admin.site.register(CardSequence, CardSequenceAdmin)
 admin.site.register(Area, AreaAdmin)
 admin.site.register(HomeVariables, SingletonModelAdmin)
 admin.site.register(VariablesGroup, admin.ModelAdmin)

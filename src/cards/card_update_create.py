@@ -241,6 +241,7 @@ def preproc_update_create(form, item_id=None):
                 mode=form.cleaned_data["mode"],
                 year_group=form.cleaned_data["year_group"],
                 run_parallel=form.cleaned_data["run_parallel"],
+                path_spec_location=form.cleaned_data["path_spec_location"],
             )
             preproc_card = PreProc.objects.get(id=item_id)
     else:
@@ -251,6 +252,7 @@ def preproc_update_create(form, item_id=None):
                 mode=form.cleaned_data["mode"],
                 year_group=form.cleaned_data["year_group"],
                 run_parallel=form.cleaned_data["run_parallel"],
+                path_spec_location=form.cleaned_data["path_spec_location"],
             )
 
     return preproc_card
@@ -387,6 +389,7 @@ def calcstats_update_create(form, item_id=None):
                 input_fourier=form.cleaned_data["input_fourier"],
                 out_dir=form.cleaned_data["out_dir"],
                 run_parallel=form.cleaned_data["run_parallel"],
+                path_spec_location=form.cleaned_data["path_spec_location"],
             )
             calcstats_card = CalcStats.objects.get(id=item_id)
     else:
@@ -403,6 +406,7 @@ def calcstats_update_create(form, item_id=None):
                 input_fourier=form.cleaned_data["input_fourier"],
                 out_dir=form.cleaned_data["out_dir"],
                 run_parallel=form.cleaned_data["run_parallel"],
+                path_spec_location=form.cleaned_data["path_spec_location"],
             )
 
     return calcstats_card

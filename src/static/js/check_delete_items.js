@@ -129,13 +129,16 @@ function initPrelod(){
                 $('<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>').prependTo("div.modal-header");
 
                 if (data !== 'For start choose Run') {
+                    // alert('For start choose Run');
                     modal.find('.modal-body').html(data);
-                    setTimeout(function() {$(location).attr('href',form_url);}, 3000);
+                    // setTimeout(function() {$(location).attr('href',form_url);}, 3000);
                 } else {
+                    // alert('NO For start choose Run');
                     modal.find('.modal-body').html(data);
                 }
 
                 $('.modal-content').click(function(){
+                    // alert('CLICK');
                     // location.reload(True);
                     $(location).attr('href',form_url);
                 });

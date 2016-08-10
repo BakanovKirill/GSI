@@ -452,6 +452,12 @@ class PreProcForm(forms.ModelForm):
         empty_label='Select',
         label=u'Year group',
     )
+    path_spec_location = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=200,
+        required=False,
+        label=u'PreprocSpec location',
+    )
 
     class Meta:
         model = PreProc
@@ -461,6 +467,7 @@ class PreProcForm(forms.ModelForm):
             'mode',
             'year_group',
             'run_parallel',
+            'path_spec_location',
         ]
 
 
@@ -731,6 +738,12 @@ class CalcStatsForm(forms.ModelForm):
         required=False,
         label=u'Input a variable',
     )
+    path_spec_location = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=200,
+        required=False,
+        label=u'PreprocSpec location',
+    )
 
     class Meta:
         model = CalcStats
@@ -746,4 +759,5 @@ class CalcStatsForm(forms.ModelForm):
             'input_fourier',
             'out_dir',
             'doy_variable',
+            'path_spec_location',
         ]

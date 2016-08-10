@@ -62,6 +62,22 @@
 
 <div class="row margin-top-15">
     <div class="col-md-2 right">
+        <div class="form-group {% if form_2.path_spec_location.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form_2.path_spec_location.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-10">
+        {% if not form_2.path_spec_location.errors %}
+            {{ form_2.path_spec_location }}
+        {% else %}
+            <span class="field-error">{{ form_2.path_spec_location }}</span>
+            <b class="error-form">{{ form_2.path_spec_location.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
         <div class="form-group {% if form_2.area.errors %}has-error{% endif %}">
             <label class="control-label font-normal">{{ form_2.area.label }}</label>
         </div>

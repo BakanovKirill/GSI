@@ -15,7 +15,7 @@
 
     <div class="col-md-2 right">
         <div class="form-group {% if form_1.order.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form_1.order.label }}</label>
+            <label class="control-label font-normal">{{ form_1.order.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
@@ -31,7 +31,7 @@
 <div class="row margin-top-15">
     <div class="col-md-2 right">
         <div class="form-group {% if form_2.run_parallel.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form_2.run_parallel.label }}</label>
+            <label class="control-label font-normal">{{ form_2.run_parallel.label }}</label>
         </div>
     </div>
     <div class="col-md-2 margin-top-4">
@@ -46,8 +46,24 @@
 
 <div class="row margin-top-15">
     <div class="col-md-2 right">
+        <div class="form-group {% if form_2.path_spec_location.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form_2.path_spec_location.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-10">
+        {% if not form_2.path_spec_location.errors %}
+            {{ form_2.path_spec_location }}
+        {% else %}
+            <span class="field-error">{{ form_2.path_spec_location }}</span>
+            <b class="error-form">{{ form_2.path_spec_location.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
         <div class="form-group {% if form_2.area.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form_2.area.label }}*</label>
+            <label class="control-label font-normal">{{ form_2.area.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
@@ -61,7 +77,7 @@
 
     <div class="col-md-2 right">
         <div class="form-group {% if form_2.year_group.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form_2.year_group.label }}*</label>
+            <label class="control-label font-normal">{{ form_2.year_group.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
@@ -77,7 +93,7 @@
 <div class="row margin-top-15">
     <div class="col-md-2 right">
         <div class="form-group {% if form_2.mode.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form_2.mode.label }}*</label>
+            <label class="control-label font-normal">{{ form_2.mode.label }}</label>
         </div>
     </div>
     <div class="col-md-4">

@@ -912,10 +912,12 @@ def submit_run(request):
 			execute_run = make_run(rb, request.user)
 
 			if not execute_run:
-				return HttpResponseRedirect(u'%s?danger_message=%s' %
-											(reverse('submit_run'),
-											(u'Unable to execute the Run. \
-											Please contact the administrator!')))
+				data = u'Unable to execute the Run. Please contact the administrator!'
+				return HttpResponse(data)
+
+			if execute_run['error']:
+				data = u'<b>ERROR</b>: {0}'.format(execute_run['error'])
+				return HttpResponse(data)
 
 			now_date = datetime.now()
 			now_date_formating = now_date.strftime("%d/%m/%Y")

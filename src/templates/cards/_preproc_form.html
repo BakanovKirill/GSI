@@ -12,7 +12,9 @@
             <b class="error-form">{{ form.name.errors }}</b>
         {% endif %}
     </div>
+</div>
 
+<div class="row margin-top-15">
     <div class="col-md-2 right">
         <div class="form-group {% if form.run_parallel.errors %}has-error{% endif %}">
             <label class="control-label font-normal">{{ form.run_parallel.label }}</label>
@@ -24,6 +26,22 @@
         {% else %}
             <span class="field-error">{{ form.run_parallel }}</span>
             <b class="error-form">{{ form.run_parallel.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.path_spec_location.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.path_spec_location.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-10">
+        {% if not form.path_spec_location.errors %}
+            {{ form.path_spec_location }}
+        {% else %}
+            <span class="field-error">{{ form.path_spec_location }}</span>
+            <b class="error-form">{{ form.path_spec_location.errors }}</b>
         {% endif %}
     </div>
 </div>
