@@ -49,6 +49,12 @@ def is_finished(run_id, card_id, cur_counter, last, run_parallel):
     return False
 
 
+def get_state_fail(obj, state):
+    if obj.state != 'fail':
+        obj.state = state
+        obj.save()
+
+
 @api_view(['GET'])
 def update_run(request, run_id):
     """ update the status cards of the runs """
@@ -201,21 +207,8 @@ def update_run(request, run_id):
                             n.state = state
                             n.save()
 
-			    # if step.state != 'pending':
-				 #    step.state = 'fail'
-                 #    step.save()
-
-                if run.state != 'fail':
-                    run.state = state
-                    run.save()
-
-                # if step.state != 'fail':
-                #     step.state = state
-                #     step.save()
-
-                # if run.state == 'fail':
-                #     step.state = 'fail'
-                #     step.save()
+                run_state = get_state_fail(run, state)
+                step_state = get_state_fail(step, state)
 
                 # ***********************************************************************
                 # write log file
@@ -260,23 +253,13 @@ def update_run(request, run_id):
 
                     # CHECK ALL THE SUB CARDS!!!!!!!
                     finished = is_finished(int(run_card_id), int(order_card_item_id), cur_counter, last, run_parallel)
-                    # if run_parallel:
-                    #     sub_card_item = get_object_or_404(
-                    #             SubCardItem,
-                    #             name=name_sub_card,
-                    #             run_id=int(run_card_id),
-                    #             card_id=int(order_card_item_id)
-                    #     )
-                    #     sub_card_item.state = state
-                    #     sub_card_item.save()
 
                     # *************************************************
                     log_file.writelines('finished => {0}\n'.format(finished))
                     # *************************************************
 
                     if finished:
-                        step.state = 'success'
-                        step.save()
+                        step_state = get_state_fail(step, state)
 
                         if run_parallel_next_step:
                             next_sub_cards_item = SubCardItem.objects.filter(
@@ -362,10 +345,8 @@ def update_run(request, run_id):
 
                             sub_card_item.state = 'success'
                             sub_card_item.save()
-                        step.state = 'success'
-                        run.state = 'success'
-                        step.save()
-                        run.save()
+                        run_state = get_state_fail(run, state)
+                        step_state = get_state_fail(step, state)
 
                         # ***********************************************************************
                         log_file.writelines('Step State => {0}\n'.format(step.state))
@@ -386,8 +367,8 @@ def update_run(request, run_id):
                         n.state = state
                         n.save()
 
-                step.state = state
-                step.save()
+                run_state = get_state_fail(run, state)
+                step_state = get_state_fail(step, state)
 
             # ***********************************************************************
             log_file.writelines('\n\n\n')
@@ -413,6 +394,13 @@ def update_run(request, run_id):
         except ObjectDoesNotExist as e:
             data['status'] = False
             data['message'] = str(e)
+
+            # run.state = state
+            # step.state = state
+            # run.save()
+            # step.save()
+
+
 
             # ***********************************************************************
             # error for api
