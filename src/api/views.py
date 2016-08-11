@@ -63,6 +63,7 @@ def update_run(request, run_id):
     path_file = '/home/gsi/LOGS/api_run.log'
     now = datetime.now()
     api_run = open(path_file, 'a')
+    # ***********************************************************************
 
 
     data = validate_status(request.query_params.get('status', False))
@@ -77,6 +78,7 @@ def update_run(request, run_id):
     finished = False
 
     # ***********************************************************************
+    api_run.writelines('User: {0}\n'.format(request.user))
     api_run.writelines('RUN: {0}\n'.format(run_id))
     api_run.writelines('request: {0}\n'.format(request.query_params))
     api_run.writelines('RUN ID: {0}\n'.format(run_card_id))
