@@ -910,6 +910,7 @@ def card_item_update(request, run_id, cs_id, card_item_id):
 @login_required
 @render_to('gsi/submit_run.html')
 def submit_run(request):
+	# import pdb;pdb.set_trace()
 	run_bases = RunBase.objects.all().order_by('-date_modified')
 	title = 'Submit a Run'
 	name_runs = ''
@@ -976,15 +977,16 @@ def submit_run(request):
 			# 								 (u"For start choose Run(s)"))
 			# 	)
 		except Exception, e:
+			print 'ERROR submit_run ====================== ', e
 			# ***********************************************************************
 			# write log file
-			path_file = '/home/gsi/LOGS/submit_run.log'
-			now = datetime.now()
-			log_submit_run_file = open(path_file, 'a')
-			log_submit_run_file.writelines('{0}\n'.format(now))
-			log_submit_run_file.writelines('ERROR = {0}:\n'.format(e))
-			log_submit_run_file.writelines('\n\n\n')
-			log_alog_submit_run_filepi_file.close()
+			# path_file = '/home/gsi/LOGS/submit_run.log'
+			# now = datetime.now()
+			# log_submit_run_file = open(path_file, 'a')
+			# log_submit_run_file.writelines('{0}\n'.format(now))
+			# log_submit_run_file.writelines('ERROR = {0}:\n'.format(e))
+			# log_submit_run_file.writelines('\n\n\n')
+			# log_submit_run_file.close()
 			# ***********************************************************************
 
 	# paginations
