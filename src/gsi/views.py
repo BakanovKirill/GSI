@@ -918,62 +918,74 @@ def submit_run(request):
 	if request.method == "POST" and request.is_ajax():
 		data_post = request.POST
 
-		if 'cur_run_id' in data_post:
-			run_id = data_post['cur_run_id']
-			rb = get_object_or_404(RunBase, pk=run_id)
-			execute_run = make_run(rb, request.user)
+		try:
+			if 'cur_run_id' in data_post:
+				run_id = data_post['cur_run_id']
+				rb = get_object_or_404(RunBase, pk=run_id)
+				execute_run = make_run(rb, request.user)
 
-			if not execute_run:
-				data = u'Unable to execute the Run. Please contact the administrator!'
+				if not execute_run:
+					data = u'Unable to execute the Run. Please contact the administrator!'
+					return HttpResponse(data)
+
+				if execute_run['error']:
+					data = u'<b>ERROR</b>: {0}'.format(execute_run['error'])
+					return HttpResponse(data)
+
+				num_cards = get_number_cards(execute_run['run'], request.user)
+				now_date = datetime.now()
+				now_date_formating = now_date.strftime("%d/%m/%Y")
+				now_time = now_date.strftime("%H:%M")
+				data = u'Run "{0}" has been submitted to back end and {1} on {2}<br>Processed {3} Cards'.\
+						format(rb.name, now_time, now_date_formating, num_cards)
+
+				return HttpResponse(data)
+			else:
+				data = u"For start choose Run"
 				return HttpResponse(data)
 
-			if execute_run['error']:
-				data = u'<b>ERROR</b>: {0}'.format(execute_run['error'])
-				return HttpResponse(data)
-
-			num_cards = get_number_cards(execute_run['run'], request.user)
-			now_date = datetime.now()
-			now_date_formating = now_date.strftime("%d/%m/%Y")
-			now_time = now_date.strftime("%H:%M")
-			data = u'Run "{0}" has been submitted to back end and {1} on {2}<br>Processed {3} Cards'.\
-					format(rb.name, now_time, now_date_formating, num_cards)
-
-			return HttpResponse(data)
-		else:
-			data = u"For start choose Run"
-			return HttpResponse(data)
-
-		# if request.POST.get('execute_runs', ''):
-		# 	run_id = request.POST.get('execute_runs', '')
-		# 	# for run_id in id_runs:
-		# 	# 	rb = get_object_or_404(RunBase, pk=run_id)
-		# 	# 	# execute_run = make_run(rb, request.user)
-		# 	# 	name_runs += '"' + str(rb.name) + '", '
-		#
-		# 	rb = get_object_or_404(RunBase, pk=run_id)
-		# 	execute_run = make_run(rb, request.user)
-		#
-		# 	if not execute_run:
-		# 		return HttpResponseRedirect(u'%s?danger_message=%s' %
-		# 		                            (reverse('submit_run'),
-		# 		                             (u'Unable to execute the Run. \
-		# 		                             Please contact the administrator!')))
-		#
-		# 	now_date = datetime.now()
-		# 	now_date_formating = now_date.strftime("%d/%m/%Y")
-		# 	now_time = now_date.strftime("%H:%M")
-		#
-		# 	print 'execute_run'
-		#
-		# 	return HttpResponseRedirect(u'%s?status_message=%s' %
-		# 				(reverse('submit_run'),
-		# 				 (u'Run "{0}" has been submitted to back end and {1} on {2}'.
-		# 				  format(rb.name, now_time, now_date_formating)))
-		# 	)
-		# else:
-		# 	return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('submit_run'),
-		# 								 (u"For start choose Run(s)"))
-		# 	)
+			# if request.POST.get('execute_runs', ''):
+			# 	run_id = request.POST.get('execute_runs', '')
+			# 	# for run_id in id_runs:
+			# 	# 	rb = get_object_or_404(RunBase, pk=run_id)
+			# 	# 	# execute_run = make_run(rb, request.user)
+			# 	# 	name_runs += '"' + str(rb.name) + '", '
+			#
+			# 	rb = get_object_or_404(RunBase, pk=run_id)
+			# 	execute_run = make_run(rb, request.user)
+			#
+			# 	if not execute_run:
+			# 		return HttpResponseRedirect(u'%s?danger_message=%s' %
+			# 		                            (reverse('submit_run'),
+			# 		                             (u'Unable to execute the Run. \
+			# 		                             Please contact the administrator!')))
+			#
+			# 	now_date = datetime.now()
+			# 	now_date_formating = now_date.strftime("%d/%m/%Y")
+			# 	now_time = now_date.strftime("%H:%M")
+			#
+			# 	print 'execute_run'
+			#
+			# 	return HttpResponseRedirect(u'%s?status_message=%s' %
+			# 				(reverse('submit_run'),
+			# 				 (u'Run "{0}" has been submitted to back end and {1} on {2}'.
+			# 				  format(rb.name, now_time, now_date_formating)))
+			# 	)
+			# else:
+			# 	return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('submit_run'),
+			# 								 (u"For start choose Run(s)"))
+			# 	)
+		except Exception, e:
+			# ***********************************************************************
+			# write log file
+			path_file = '/home/gsi/LOGS/submit_run.log'
+			now = datetime.now()
+			log_submit_run_file = open(path_file, 'a')
+			log_submit_run_file.writelines('{0}\n'.format(now))
+			log_submit_run_file.writelines('ERROR = {0}:\n'.format(e))
+			log_submit_run_file.writelines('\n\n\n')
+			log_alog_submit_run_filepi_file.close()
+			# ***********************************************************************
 
 	# paginations
 	model_name = paginations(request, run_bases)
