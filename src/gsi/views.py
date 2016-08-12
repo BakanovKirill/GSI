@@ -162,8 +162,8 @@ def create_new_runbase(request, name):
 
 def get_number_cards(rb, user):
 	num_card = 0
-	run = Run.objects.create(run_base=rb, user=user)
-	all_card = OrderedCardItem.objects.filter(sequence__runbase=run.run_base)
+	# run = get_object_or_404(Run, run_base=rb, user=user)
+	all_card = OrderedCardItem.objects.filter(sequence__runbase=rb.run_base)
 
 	for card in all_card:
 		if card.run_parallel:
@@ -921,7 +921,6 @@ def submit_run(request):
 		if 'cur_run_id' in data_post:
 			run_id = data_post['cur_run_id']
 			rb = get_object_or_404(RunBase, pk=run_id)
-			num_cards = get_number_cards(rb, request.user)
 			execute_run = make_run(rb, request.user)
 
 			if not execute_run:
@@ -932,6 +931,7 @@ def submit_run(request):
 				data = u'<b>ERROR</b>: {0}'.format(execute_run['error'])
 				return HttpResponse(data)
 
+			num_cards = get_number_cards(execute_run['run'], request.user)
 			now_date = datetime.now()
 			now_date_formating = now_date.strftime("%d/%m/%Y")
 			now_time = now_date.strftime("%H:%M")
