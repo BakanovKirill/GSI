@@ -780,7 +780,7 @@ def card_sequence_update(request, run_id, cs_id):
 		'yearfilter': ['new_runid_csid_year_filter', [run_id, cs_id]],
 		'collate': ['new_runid_csid_collate', [run_id, cs_id]],
 		'preproc': ['new_runid_csid_preproc', [run_id, cs_id]],
-		'margecsv': ['new_runid_csid_mergecsv', [run_id, cs_id]],
+		'mergecsv': ['new_runid_csid_mergecsv', [run_id, cs_id]],
 		'rftrain': ['new_runid_csid_rftrain', [run_id, cs_id]],
 		'randomforest': ['new_runid_csid_randomforest', [run_id, cs_id]],
 		'calcstats': ['new_runid_csid_calcstats', [run_id, cs_id]],
