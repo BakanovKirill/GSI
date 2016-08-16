@@ -146,6 +146,16 @@ urlpatterns = [
     url(r'^run/(?P<run_id>\d+)/card-sequence/setup/$', 'gsi.views.card_sequence',
         name='card_sequence'),
 
+    # processing card
+    url(r'^run/card-sequence/processing-card/add$',
+        'cards.views.proces_card_new_run', name='proces_card_new_run'),
+
+    url(r'^run/(?P<run_id>\d+)/card-sequence/processing-card/add$',
+        'cards.views.proces_card_runid', name='proces_card_runid'),
+
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/$',
+        'cards.views.proces_card_runid_csid', name='proces_card_runid_csid'),
+
     # ----- CARDS ---------------------------------------------------------------
 
     # card item edit for card sequence // runID->csID->card_item
@@ -259,17 +269,6 @@ urlpatterns = [
         'gsi.views_cs_card_run_csid.cs_run_csid_mergecsv_edit', name='cs_run_csid_mergecsv_edit'),
     url(r'^run/card-sequence/(?P<cs_id>\d+)/rftrain/(?P<rftrain_id>\d+)/$',
         'gsi.views_cs_card_run_csid.cs_run_csid_rftrain_edit', name='cs_run_csid_rftrain_edit'),
-
-
-    # processing card
-    url(r'^run/card-sequence/processing-card/add$',
-        'cards.views.proces_card_new_run', name='proces_card_new_run'),
-
-    url(r'^run/(?P<run_id>\d+)/card-sequence/processing-card/add$',
-        'cards.views.proces_card_runid', name='proces_card_runid'),
-
-    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/$',
-        'cards.views.proces_card_runid_csid', name='proces_card_runid_csid'),
 
     # --------------------------------------------------------------------
 

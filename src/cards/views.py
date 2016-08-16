@@ -11,28 +11,6 @@ from django.conf import settings
 from cards.cards_forms import *
 
 
-def qrf_card_update_create(form, qrf_id=None):
-    if qrf_id:
-        QRF.objects.filter(id=qrf_id).update(
-            name=form.cleaned_data["name"],
-            interval=form.cleaned_data["interval"],
-            number_of_trees=form.cleaned_data["number_of_trees"],
-            number_of_threads=form.cleaned_data["number_of_threads"],
-            directory=form.cleaned_data["directory"],
-        )
-        qrf_card = QRF.objects.get(id=qrf_id)
-    else:
-        qrf_card = QRF.objects.create(
-            name=form.cleaned_data["name"],
-            interval=form.cleaned_data["interval"],
-            number_of_trees=form.cleaned_data["number_of_trees"],
-            number_of_threads=form.cleaned_data["number_of_threads"],
-            directory=form.cleaned_data["directory"],
-        )
-
-    return qrf_card
-
-
 def processing_card_menu(request, rev_url, args=False):
     # import pdb;pdb.set_trace()
     response = None
@@ -205,57 +183,3 @@ def proces_card_run_new_csid(request, cs_id):
     }
 
     return data
-
-
-
-
-
-
-
-
-
-# @login_required
-# @render_to('cards/proces_card_sequence_card_edit.html')
-# def proces_card_sequence_card_edit(request, run_id, cs_id):
-#     title = 'Create New Processing Cards'
-#     url_form = 'proces_card_sequence_card_edit'
-#     template_name = 'cards/_create_processing_card_form.html'
-#
-#     if request.method == "POST":
-#         if request.POST.get('cancel_button') is not None:
-#             return HttpResponseRedirect(
-#                 reverse('card_sequence_update', args=[run_id, cs_id])
-#             )
-#
-#     data = {
-#         'title': title,
-#         'run_id': run_id,
-#         'cs_id': cs_id,
-#         'url_form': url_form,
-#         'template_name': template_name,
-#     }
-#
-#     return data
-
-
-# @login_required
-# @render_to('cards/proces_card_sequence_card_new.html')
-# def proces_card_sequence_card_new(request, run_id):
-#     title = 'Create New Processing Cards'
-#     url_form = 'proces_card_sequence_card_new'
-#     template_name = 'cards/_create_processing_card_form.html'
-#
-#     if request.method == "POST":
-#         if request.POST.get('cancel_button') is not None:
-#             return HttpResponseRedirect(
-#                 reverse('add_card_sequence', args=[run_id])
-#             )
-#
-#     data = {
-#         'title': title,
-#         'run_id': run_id,
-#         'url_form': url_form,
-#         'template_name': template_name,
-#     }
-#
-#     return data

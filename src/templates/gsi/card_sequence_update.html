@@ -19,7 +19,7 @@
                            {% elif cs_id %}
                             {% url 'run_new_card_sequence_update' cs_id %}
                            {% endif %}" method="post"
-                enctype="multipart/form-data" role="form" class="form-horizontal">
+                enctype="multipart/form-data" role="form" class="form-horizontal form-modal">
                 {% csrf_token %}
 
                 {% include "gsi/_card_sequence_form.html" %}

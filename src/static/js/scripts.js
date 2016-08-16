@@ -131,8 +131,7 @@ function statusPeriod(){
   };
 }
 
-function getRandomArbitary(min, max)
-{
+function getRandomArbitary(min, max){
   return Math.random() * (max - min) + min;
 }
 
@@ -164,6 +163,20 @@ function deleteCurrentCardItem(item){
   $("td."+item).detach();
 }
 
+// initial tooltip for bootstrap
+function initTooltipBootstrap(){
+    $('[data-toggle="tooltip"]').tooltip();
+}
+
+function initCreateCard(){
+    $('button.create_card').click(function(event){
+        var modal = $('#modalCreateCard');
+        // var form_modal = $('.form-modal').attr('action');
+
+        modal.modal('show');
+    });
+}
+
 
 $(document).ready(function(){
   //selectAll();
@@ -175,4 +188,6 @@ $(document).ready(function(){
   changeColorSuccess();
   colorBlackSelect();
   statusPeriod();
+  initTooltipBootstrap();
+  initCreateCard();
 });

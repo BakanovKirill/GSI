@@ -64,7 +64,6 @@ function initCheckCurDeleteItems() {
                 var message = 'An unexpected error occurred. Try later.';
                 modal.find('.modal-body').html(message);
                 modal.modal('show');
-
             },
             'success': function(data, status, xhr){
                 modal.find('.cancel-but').html("No. I don't want delete this item.");
@@ -79,12 +78,6 @@ function initCheckCurDeleteItems() {
         return false;
     });
 }
-
-// initial tooltip for bootstrap
-function initTooltipBootstrap(){
-    $('[data-toggle="tooltip"]').tooltip();
-}
-
 
 function initPrelod(){
     $('button.pre-process').click(function(event){
@@ -148,20 +141,9 @@ function initPrelod(){
     });
 }
 
-// function initReloadPage(){
-//     var form_url = location.href;
-//
-//     $('.modal-content').click(function(){
-//         // location.reload();
-//         $(location).attr('href',form_url);
-//     });
-// }
-
 
 $(document).ready(function(){
     initCheckDeleteItems();
     initCheckCurDeleteItems();
-    initTooltipBootstrap();
     initPrelod();
-    // initReloadPage();
 });
