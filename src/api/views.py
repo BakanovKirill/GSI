@@ -22,10 +22,14 @@ from cards.models import CardItem
 
 
 def is_finished(run_id, card_id, cur_counter, last, run_parallel):
+    # ***********************************************************************
     # logs for api
     path_file = '/home/gsi/LOGS/is_finished.log'
     now = datetime.now()
     api_run = open(path_file, 'a')
+    api_run.writelines('RUN: {0}\n'.format(run_id))
+    api_run.writelines('CARD: {0}\n'.format(card_id))
+    # ***********************************************************************
 
     if run_parallel:
         sub_card_item = SubCardItem.objects.filter(
@@ -34,19 +38,23 @@ def is_finished(run_id, card_id, cur_counter, last, run_parallel):
         ).values_list('state', flat=True)
 
         is_finish = ('running' not in sub_card_item and 'pending' not in sub_card_item)
-        api_run.writelines('ALL STATUSES: {0}\n'.format(sub_card_item))
-        api_run.writelines('RUN: {0}\n'.format(run_id))
-        api_run.writelines('CARD: {0}\n'.format(card_id))
-        api_run.writelines('IS FINISH: {0}\n'.format(is_finish))
 
-        if 'running' not in sub_card_item and 'running' not in sub_card_item:
+        # ***********************************************************************
+        # api_run.writelines('ALL STATUSES: {0}\n'.format(sub_card_item))
+        api_run.writelines('SUB CARD: {0}\n'.format(sub_card_item))
+        api_run.writelines('IS FINISH: {0}\n'.format(is_finish))
+        # ***********************************************************************
+
+        if 'running' not in sub_card_item and 'pending' not in sub_card_item:
             return True
     else:
         if cur_counter == last:
             return True
 
+    # ***********************************************************************
     api_run.writelines('\n\n\n')
     api_run.close
+    # ***********************************************************************
 
     return False
 
@@ -103,12 +111,9 @@ def update_run(request, run_id):
             path_file = '/home/gsi/LOGS/api_status.log'
             now = datetime.now()
             log_file = open(path_file, 'a')
-
-            log_file.writelines('RUN-{0}:\n'.format(run_card_id))
-            log_file.writelines('CARDS-{0}:\n'.format(card.id))
-            log_file.writelines('STATUS:\n')
             log_file.writelines(str(now) + '\n')
-            log_file.writelines(str(state) + '\n')
+            log_file.writelines('RUN-{0}:\n'.format(str(run_id))))
+            log_file.writelines('STATUS: {0}\n'.format(str(state)))
             # ***********************************************************************
 
             try:
@@ -116,7 +121,7 @@ def update_run(request, run_id):
                     run_parallel = True
                     name_sub_card = '{0}_{1}'.format(card.id, cur_counter)
             except Exception, e:
-                log_file.writelines('ERROR run_parallel => {0}\n\n'.format(e))
+                log_file.writelines('ERROR RUN PARALLEL: {0}\n\n'.format(e))
 
             # if run_parallel:
             #     new_sub_card_item = SubCardItem.objects.filter(
@@ -126,23 +131,14 @@ def update_run(request, run_id):
             #                         ).order_by('start_date')[:6]
 
             # ***********************************************************************
-            log_file.writelines('run_parallel => {0}\n'.format(run_parallel))
-            # log_file.writelines('====== RUN_ID:\n')
-            log_file.writelines('RUN ID => {0}\n'.format(str(run_id)))
-            # log_file.writelines('====== Run:\n')
-            # log_file.writelines('name RUN => {0} :: id => {1}\n'.format(str(run), str(run.id)))
-            # log_file.writelines('====== OrderedCardItem:\n')
-            # log_file.writelines('name CARD => {0} :: id => {1}\n'.format(str(card), str(card.id)))
-            # log_file.writelines('====== RunStep:\n')
-            # log_file.writelines('name STEP => {0} :: id => {1}\n'.format(str(step), str(step.id)))
-            # log_file.close()
+            log_file.writelines('RUN PARALLEL: {0}\n'.format(run_parallel))
             # ***********************************************************************
 
             # for step in steps:
             # Go to the next step only on success state
             if state == 'fail':
                 # ***********************************************************************
-                log_file.writelines('FAIL: ' + str(state) + '\n')
+                log_file.writelines('FAIL state: ' + str(state) + '\n')
                 # ***********************************************************************
 
                 params = []
@@ -154,11 +150,8 @@ def update_run(request, run_id):
                             card_id=int(order_card_item_id)
                     )
                     for n in sub_card_item:
-                        # name_card = '{0}%{1}'.format(n.run_id, n.name)
-                        # params.append(name_card)
                         n.state = state
                         n.save()
-                    # execute_fe_command(params)
 
                 step.state = state
                 step.save()
@@ -181,7 +174,7 @@ def update_run(request, run_id):
                 # api_fail.close()
                 # ***********************************************************************
             elif state == 'running':
-                log_file.writelines('RUNNING: ' + str(state) + '\n')
+                log_file.writelines('RUNNING state: ' + str(state) + '\n')
 
                 # ***********************************************************************
                 # write log file
@@ -189,8 +182,7 @@ def update_run(request, run_id):
                 now = datetime.now()
                 api_running = open(path_file, 'a')
                 api_running.writelines('{0}\n'.format(now))
-                api_running.writelines('RUN {0}:\n'.format(run_card_id))
-                api_running.writelines('CARDS {0}:\n'.format(card.id))
+                api_running.writelines('RUN: {0}:\n'.format(run_id))
                 # ***********************************************************************
 
                 if run_parallel:
@@ -212,10 +204,10 @@ def update_run(request, run_id):
 
                 # ***********************************************************************
                 # write log file
-                api_running.writelines('LAST ==> {0}\n'.format(last))
-                api_running.writelines('LAST BUT ONE ==> {0}\n'.format(last_but_one[0]))
-                api_running.writelines('CUR_counter => {0}\n'.format(cur_counter))
-                api_running.writelines('state ==> {0}\n\n\n'.format(step.state))
+                # api_running.writelines('LAST ==> {0}\n'.format(last))
+                # api_running.writelines('LAST BUT ONE ==> {0}\n'.format(last_but_one[0]))
+                # api_running.writelines('CUR_counter => {0}\n'.format(cur_counter))
+                api_running.writelines('STATE: {0}\n\n\n'.format(step.state))
                 api_running.close()
                 # ***********************************************************************
             elif state == 'success':
@@ -224,13 +216,13 @@ def update_run(request, run_id):
                 params = []
 
                 # ********** WRITE LOG *****************************
-                log_file.writelines('SUCCESS: ' + str(state) + '\n')
-                log_file.writelines('get_next_step => {0}\n'.format(step.get_next_step()))
-                log_file.writelines('next_step => {0}\n'.format(next_step))
-                log_file.writelines('is_last_step => {0}\n'.format(is_last_step))
-                log_file.writelines('cur_counter => {0}\n'.format(cur_counter))
-                log_file.writelines('last => {0}\n'.format(last))
-                log_file.writelines('cur_counter & last => {0}\n'.format(cur_counter == last))
+                log_file.writelines('SUCCESS state: ' + str(state) + '\n')
+                # log_file.writelines('get_next_step => {0}\n'.format(step.get_next_step()))
+                log_file.writelines('NEXT STEP: {0}\n'.format(next_step))
+                log_file.writelines('LAST STEP: {0}\n'.format(is_last_step))
+                log_file.writelines('cur_counter: {0}\n'.format(cur_counter))
+                log_file.writelines('last: {0}\n'.format(last))
+                log_file.writelines('cur_counter & last == {0}\n'.format(cur_counter == last))
                 # *************************************************
 
                 if run_parallel:
@@ -356,7 +348,7 @@ def update_run(request, run_id):
                         log_api_file.writelines('{0}\n'.format(now))
                         log_api_file.writelines('RUN-{0}:\n'.format(run_card_id))
                         log_api_file.writelines('CARDS-{0}:\n'.format(card.id))
-                        log_api_file.writelines('SCRIPTS: \n')
+                        log_api_file.writelines('PARALLEL: {0}\n'.format(run_parallel))
                         log_api_file.writelines('LAST ==> {0}\n'.format(last))
                         log_api_file.writelines('LAST BUT ONE ==> {0}\n'.format(last_but_one[0]))
                         log_file.writelines('CUR_counter => {0}\n'.format(cur_counter))
