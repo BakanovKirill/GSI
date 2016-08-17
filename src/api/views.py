@@ -355,8 +355,8 @@ def update_run(request, run_id):
                         # ***********************************************************************
 
                     # ***********************************************************************
-                    log_file.writelines('RUN last_step State => {0}\n'.format(run_state))
-                    log_file.writelines('Step last_step State => {0}\n'.format(step_state))
+                    log_file.writelines('RUN last_step State => {0}\n'.format(run.state))
+                    log_file.writelines('Step last_step State => {0}\n'.format(step.state))
                     # ***********************************************************************
             else:
                 # ***********************************************************************
