@@ -350,8 +350,14 @@ def update_run(request, run_id):
                         step_state = get_state_fail(step, state)
 
                         # ***********************************************************************
-                        log_file.writelines('Step State => {0}\n'.format(step.state))
+                        log_file.writelines('RUN finished State => {0}\n'.format(run_state))
+                        log_file.writelines('Step finished State => {0}\n'.format(step_state))
                         # ***********************************************************************
+
+                    # ***********************************************************************
+                    log_file.writelines('RUN last_step State => {0}\n'.format(run_state))
+                    log_file.writelines('Step last_step State => {0}\n'.format(step_state))
+                    # ***********************************************************************
             else:
                 # ***********************************************************************
                 log_file.writelines('ELSE: ' + str(state) + '\n')
