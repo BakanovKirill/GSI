@@ -35,6 +35,8 @@ def is_finished(run_id, card_id, cur_counter, last, run_parallel):
 
         is_finish = ('running' not in sub_card_item and 'pending' not in sub_card_item)
         api_run.writelines('ALL STATUSES: {0}\n'.format(sub_card_item))
+        api_run.writelines('RUN: {0}\n'.format(run_id))
+        api_run.writelines('CARD: {0}\n'.format(card_id))
         api_run.writelines('IS FINISH: {0}\n'.format(is_finish))
 
         if 'running' not in sub_card_item and 'running' not in sub_card_item:
@@ -79,12 +81,9 @@ def update_run(request, run_id):
 
     # ***********************************************************************
     api_run.writelines('RUN: {0}\n'.format(run_id))
-    api_run.writelines('request: {0}\n'.format(request.query_params))
-    api_run.writelines('RUN ID: {0}\n'.format(run_card_id))
     api_run.writelines('STATUS: {0}\n'.format(data['status']))
-    api_run.writelines('VAL LIST: {0}\n'.format(value_list))
     api_run.writelines('\n\n\n')
-    api_run.close
+    api_run.close()
     # ***********************************************************************
 
     if data['status']:
@@ -288,7 +287,7 @@ def update_run(request, run_id):
 
                         # ***********************************************************************
                         # write log file
-                        path_file = '/home/gsi/LOGS/api_success.log'
+                        path_file = '/home/gsi/LOGS/api_success_next_step.log'
                         now = datetime.now()
                         log_api_file = open(path_file, 'a')
                         log_api_file.writelines('{0}\n'.format(now))
@@ -348,6 +347,23 @@ def update_run(request, run_id):
                             sub_card_item.save()
                         run_state = get_state_fail(run, state)
                         step_state = get_state_fail(step, state)
+
+                        # ***********************************************************************
+                        # write log file
+                        path_file = '/home/gsi/LOGS/api_success_last_step.log'
+                        now = datetime.now()
+                        log_api_file = open(path_file, 'a')
+                        log_api_file.writelines('{0}\n'.format(now))
+                        log_api_file.writelines('RUN-{0}:\n'.format(run_card_id))
+                        log_api_file.writelines('CARDS-{0}:\n'.format(card.id))
+                        log_api_file.writelines('SCRIPTS: \n')
+                        log_api_file.writelines('LAST ==> {0}\n'.format(last))
+                        log_api_file.writelines('LAST BUT ONE ==> {0}\n'.format(last_but_one[0]))
+                        log_file.writelines('CUR_counter => {0}\n'.format(cur_counter))
+                        log_file.writelines('LAST => {0}\n'.format(last))
+                        log_api_file.writelines('state ==> {0}\n\n\n'.format(step.state))
+                        log_api_file.close()
+                        # ***********************************************************************
 
                         # ***********************************************************************
                         log_file.writelines('RUN finished State => {0}\n'.format(run_state))
