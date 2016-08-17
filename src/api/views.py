@@ -378,6 +378,8 @@ def update_run(request, run_id):
                 step_state = get_state_fail(step, state)
 
             # ***********************************************************************
+            log_file.writelines('RUN END State => {0}\n'.format(run.state))
+            log_file.writelines('Step END State => {0}\n'.format(step.state))
             log_file.writelines('\n\n\n')
             log_file.close()
             # ***********************************************************************
