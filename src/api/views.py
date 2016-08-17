@@ -112,7 +112,7 @@ def update_run(request, run_id):
             now = datetime.now()
             log_file = open(path_file, 'a')
             log_file.writelines(str(now) + '\n')
-            log_file.writelines('RUN-{0}:\n'.format(str(run_id))))
+            log_file.writelines('RUN-{0}:\n'.format(str(run_id)))
             log_file.writelines('STATUS: {0}\n'.format(str(state)))
             # ***********************************************************************
 
