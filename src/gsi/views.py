@@ -773,8 +773,6 @@ def card_sequence_update(request, run_id, cs_id):
 	url_process_card = 'proces_card_sequence_card_edit'
 	form = None
 
-	print 'card_sequence_update ======================='
-
 	REVERCE_URL = {
 		'qrf': ['new_runid_csid_qrf', [run_id, cs_id]],
 		'rfscore': ['new_runid_csid_rfscore', [run_id, cs_id]],
@@ -865,11 +863,6 @@ def card_sequence_update(request, run_id, cs_id):
 			return HttpResponseRedirect(
 					u'%s?info_message=%s' % (reverse('run_update', args=[run_id]),
 					(u'Card Sequence "{0}" created canceled'.format(card_sequence.name)))
-			)
-		elif data_post.get('cancel_new_card') is not None:
-			return HttpResponseRedirect(
-					u'%s?info_message=%s' % (reverse('card_sequence_update', args=[run_id, cs_id]),
-					(u'New Processed Card created canceled'))
 			)
 	else:
 		form = CardSequenceCreateForm(instance=card_sequence)
@@ -1002,13 +995,13 @@ def submit_run(request):
 			print 'ERROR submit_run ====================== ', e
 			# ***********************************************************************
 			# write log file
-			# path_file = '/home/gsi/LOGS/submit_run.log'
-			# now = datetime.now()
-			# log_submit_run_file = open(path_file, 'a')
-			# log_submit_run_file.writelines('{0}\n'.format(now))
-			# log_submit_run_file.writelines('ERROR = {0}:\n'.format(e))
-			# log_submit_run_file.writelines('\n\n\n')
-			# log_submit_run_file.close()
+			path_file = '/home/gsi/LOGS/submit_run.log'
+			now = datetime.now()
+			log_submit_run_file = open(path_file, 'a')
+			log_submit_run_file.writelines('{0}\n'.format(now))
+			log_submit_run_file.writelines('ERROR = {0}:\n'.format(e))
+			log_submit_run_file.writelines('\n\n\n')
+			log_submit_run_file.close()
 			# ***********************************************************************
 
 	# paginations
