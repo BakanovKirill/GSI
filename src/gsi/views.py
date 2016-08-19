@@ -5,6 +5,7 @@ import shutil
 import getpass
 from datetime import datetime
 import magic
+import copy
 
 from annoying.decorators import render_to
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -104,10 +105,9 @@ def write_card_to_cs(card_sequence, query):
 		)
 
 
-def get_name_runbase(name):
+def get_copy_name(name):
 	if '*cp' in name:
-		list_name = name.split('*cp')
-		return list_name[0]
+		return name.split('*cp')[0]
 	else:
 		return name
 
@@ -116,22 +116,22 @@ def create_new_runbase(request, name):
 	new_rb = None
 	rb = get_object_or_404(RunBase, name=name)
 	rb_count = RunBase.objects.all().count()
-	get_name = get_name_runbase(name)
-	new_name = '{0}*cp{1}'.format(get_name, rb_count)
+	copy_name_rb = get_copy_name(name)
+	new_name_rb = '{0}*cp{1}'.format(copy_name_rb, rb_count)
 
-	if RunBase.objects.filter(name=new_name).exists():
+	if RunBase.objects.filter(name=new_name_rb).exists():
 		try:
-			new_name = '{0}_{1}'.format(new_name, 1)
+			new_name_rb = '{0}_{1}'.format(new_name_rb, 1)
 		except ValueError:
 			num = int(rb_count) + 1
-			new_name = '{0}*cp{1}'.format(new_name, num)
+			new_name_rb = '{0}*cp{1}'.format(new_name_rb, num)
 		# except TypeError:
 		# 	num_name = int(name_list[2:][0]) + 1
-		# 	new_name = '{0}*cp{1}'.format(name, num_name)
+		# 	new_name_rb = '{0}*cp{1}'.format(name, num_name)
 
 	try:
 		new_rb = RunBase.objects.create(
-					name=new_name,
+					name=new_name_rb,
 					author=request.user,
 					description=rb.description,
 					purpose=rb.purpose,
@@ -149,9 +149,16 @@ def create_new_runbase(request, name):
 		copy_rb_cs_cards = CardSequence.cards.through.objects.filter(sequence_id=rb.card_sequence.id)
 
 		for n in copy_rb_cs_cards:
+			name_ci = str(n.card_item)
+			new_name_ci = '{0}*cp{1}'.format(name_ci, rb_count)
+			# print 'NAME content_type ============= ', str(n.card_item)
+			# print 'NAME NEW content_type ============= ', new_name_ci
+			# print 'content_type ============= ', n.card_item.content_type.model
+
+			new_card_item = n.card_item
 			CardSequence.cards.through.objects.create(
 				sequence=card_sequence,
-				card_item=n.card_item,
+				card_item=new_card_item,
 				order=n.order,
 			)
 	except Exception, e:
