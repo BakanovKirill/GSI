@@ -31,8 +31,10 @@ from cards.cards_forms import *
 from gsi.gsi_items_update_create import *
 from gsi.gsi_forms import *
 from core.utils import (make_run, get_dir_root_static_path, get_path_folder_run,
-                        slash_remove_from_path, get_files_dirs, create_sub_dir)
+						slash_remove_from_path, get_files_dirs, create_sub_dir,
+						get_copy_name)
 from core.get_post import get_post
+from core.copy_card import create_copycard
 from log.logger import get_logs
 from gsi.settings import (NUM_PAGINATIONS, PATH_RUNS_SCRIPTS, BASE_DIR,
 						  STATIC_ROOT, STATIC_DIR)
@@ -105,11 +107,11 @@ def write_card_to_cs(card_sequence, query):
 		)
 
 
-def get_copy_name(name):
-	if '*cp' in name:
-		return name.split('*cp')[0]
-	else:
-		return name
+# def get_copy_name(name):
+# 	if '*cp' in name:
+# 		return name.split('*cp')[0]
+# 	else:
+# 		return name
 
 
 def create_new_runbase(request, name):
@@ -149,16 +151,22 @@ def create_new_runbase(request, name):
 		copy_rb_cs_cards = CardSequence.cards.through.objects.filter(sequence_id=rb.card_sequence.id)
 
 		for n in copy_rb_cs_cards:
-			name_ci = str(n.card_item)
-			new_name_ci = '{0}*cp{1}'.format(name_ci, rb_count)
+			card_model = n.card_item.content_type.model
+			new_copy_card = create_copycard(str(n.card_item), card_model)
+			content_type = get_object_or_404(ContentType, app_label='cards', model=card_model)
+			card_item = get_object_or_404(CardItem, content_type=content_type, object_id=new_copy_card.id)
+
+			# print 'new_copy_card ============================= ', new_copy_card
+			# name_ci = str(n.card_item)
+			# new_name_ci = '{0}*cp{1}'.format(name_ci, rb_count)
 			# print 'NAME content_type ============= ', str(n.card_item)
 			# print 'NAME NEW content_type ============= ', new_name_ci
 			# print 'content_type ============= ', n.card_item.content_type.model
 
-			new_card_item = n.card_item
+			# new_card_item = n.card_item
 			CardSequence.cards.through.objects.create(
 				sequence=card_sequence,
-				card_item=new_card_item,
+				card_item=card_item,
 				order=n.order,
 			)
 	except Exception, e:
