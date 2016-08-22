@@ -48,11 +48,8 @@ class MultiprocessingCards(multiprocessing.Process):
 			card_id = param_list[1]
 
 			ex_fe_com = Popen(
-				'nohup {0} {1} {2} &'.format(
-					EXECUTE_FE_COMMAND,
-					run_id,
-					card_id
-				),
+				'set execute=nohup {0} {1} {2} &; sleep 1; execute; kill execute &'.format(EXECUTE_FE_COMMAND, run_id, card_id),
+				# 'nohup {0} {1} {2} &'.format(EXECUTE_FE_COMMAND, run_id, card_id),
 				shell=True,
 			)
 
