@@ -12,7 +12,7 @@ from django.shortcuts import get_object_or_404
 from core.utils import (validate_status, write_log, create_scripts,
                         get_path_folder_run, execute_fe_command)
 from gsi.models import Run, RunStep, CardSequence, OrderedCardItem, SubCardItem
-from gsi.settings import EXECUTE_FE_COMMAND
+from gsi.settings import EXECUTE_FE_COMMAND, FE_SUBMIT
 from cards.models import CardItem
 
 # update the status of the runs
@@ -254,20 +254,35 @@ def update_run(request, run_id):
                         step_state = get_state_fail(step, state)
 
                         if run_parallel_next_step:
-                            next_sub_cards_item = SubCardItem.objects.filter(
-                                    run_id=next_step.parent_run.id,
-                                    card_id=next_step.card_item.id
-                            ).order_by('start_date')
-                            # count = 1
+                            # next_sub_cards_item = SubCardItem.objects.filter(
+                            #         run_id=next_step.parent_run.id,
+                            #         card_id=next_step.card_item.id
+                            # ).order_by('start_date')
+                            # # count = 1
+                            #
+                            # for n in next_sub_cards_item:
+                            #     name_card = '{0}%{1}'.format(n.run_id, n.name)
+                            #     params.append(name_card)
+                            #
+                            # execute_fe_command(params)
 
-                            for n in next_sub_cards_item:
-                                name_card = '{0}%{1}'.format(n.run_id, n.name)
-                                params.append(name_card)
-
-                            execute_fe_command(params)
+                            master_script_name = '{0}_master.sh'.format(next_step.card_item.id)
+                            ex_fe_com = Popen(
+                                'nohup {0} {1} {2} &'.format(
+                                    EXECUTE_FE_COMMAND,
+                                    next_step.parent_run.id,
+                                    master_script_name
+                                ),
+                                shell=True,
+                            )
+                            # *************************************************
+                            log_file.writelines('MASTER SCRIPT {0}\n'.format(master_script_name))
+                            # *************************************************
                         else:
+                            # *************************************************
                             log_file.writelines('next RUN => {0}\n'.format(next_step.parent_run.id))
                             log_file.writelines('card_item.id => {0}\n'.format(next_step.card_item.id))
+                            # *************************************************
                             ex_fe_com = Popen(
                                 'nohup {0} {1} {2} &'.format(
                                     EXECUTE_FE_COMMAND,

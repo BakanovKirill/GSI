@@ -233,7 +233,7 @@ LOGGING = {
 }
 
 EXECUTE_FE_COMMAND = '/home/gsi/gsi_files/bin/execute_FE_command'
-# EXECUTE_FE_COMMAND = '/home/w23/mattgsi/bin/fe_submit'
+FE_SUBMIT = '/home/w23/mattgsi/bin/fe_submit'
 PATH_RUNS_SCRIPTS = '/lustre/w23/mattgsi/scripts/runs'
 PROCESS_NUM = 10
 
