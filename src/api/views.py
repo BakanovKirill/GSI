@@ -266,7 +266,7 @@ def update_run(request, run_id):
                             #
                             # execute_fe_command(params)
 
-                            master_script_name = '{0}_master.sh'.format(next_step.card_item.id)
+                            master_script_name = '{0}_master'.format(next_step.card_item.id)
                             ex_fe_com = Popen(
                                 'nohup {0} {1} {2} &'.format(
                                     EXECUTE_FE_COMMAND,
