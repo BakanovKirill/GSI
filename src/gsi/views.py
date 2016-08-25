@@ -188,12 +188,6 @@ def get_number_cards(rb, user):
 
 	return num_card
 
-
-def sortByAlphabet(inputStr):
-	print 'inputStr ==================== ', type(inputStr)
-	return inputStr[0]
-
-
 # upload_static_data_view = user_passes_test(login_url='/', redirect_field_name='')(UploadStaticDataView.as_view())
 
 
@@ -2332,36 +2326,10 @@ def cards_list(request, *args, **kwargs):
 	url_name = 'cards_list'
 	but_name = 'static_data'
 
-	# sortByAlphabet(inputStr)
-
-
-	for x in cards_all:
-		print 'model ============== ', x.content_type.carditem
-	#
-	# content_type_name = ContentType.objects.get(app_label="cards", model="qrf")
-	# class_obj_1 = content_type_name.model_class()
-	# class_obj_2 = content_type_name.get_object_for_this_type(name='AUZ_SOC3_QRF')
-	# print 'class_obj 2 ========================== ', class_obj_2
-	# print 'class_obj 1 ========================== ', class_obj_1
-	# print 'class_obj 2 ID ========================== ', class_obj_2.id
-	# print 'class_obj 2 interval ========================== ', class_obj_2.interval
-
-	# for n in cards_all:
-		# print 'card_list ====================== ', n.content_type.model.object_id
-		# card_list.append(str(n))
-	#
-	# print 'cards_all ====================== ', cards_all
-	#
 	if request.method == "GET":
 		order_by = request.GET.get('order_by', '')
 
-		if order_by in ('name',):
-			cards_all = cards_all.order_by('content_type__carditem__orderedcarditem__card_item',)
-
-			if request.GET.get('reverse', '') == '1':
-				cards_all = cards_all.reverse()
-
-		if order_by in ('content_type__model',):
+		if order_by in ('name', 'content_type__model'):
 			cards_all = cards_all.order_by(order_by)
 
 			if request.GET.get('reverse', '') == '1':
