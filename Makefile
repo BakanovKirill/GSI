@@ -54,3 +54,6 @@ update:
 
 ngnix:
 	fab ngnix
+
+fill_name:
+	fab fill_name_carditem

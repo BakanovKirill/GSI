@@ -36,7 +36,7 @@
         {% if user.is_authenticated %}
             <!-- Start Body -->
             <div class="row">
-                <div class="col-md-10 col-md-offset-1 center">
+                <div class="col-md-12 center">
                     <!-- Start Top Menu -->
                     <div class="row">
                         <div class="col-md-12 center">
@@ -83,7 +83,7 @@
 
                     <div class="row">
                         <!-- Start Main Menu Left Sidebar -->
-                        <div class="col-md-4 li-menu dropdown-left-0 left" id="dropdownMenu">
+                        <div class="col-md-3 li-menu dropdown-left-0 left" id="dropdownMenu">
                             <ul class="nav nav-pills nav-stacked">
                                 <li class="{% if url_name == 'home' %}active-main-menu{% else %}li-menu{% endif %}">
                                     <a href="{% url 'index' %}">
@@ -157,7 +157,7 @@
                         <!-- End Main Menu Left Sidebar -->
 
                         <!-- Start Status Messages -->
-                        <div class="col-md-8">
+                        <div class="col-md-9">
                             <!-- Start Authorization -->
                             {% block status_message_auth %}{% endblock status_message_auth %}
                             <!-- End Authorization -->
@@ -206,7 +206,7 @@
                         <!-- End Status Messages -->
 
                         <!-- Start Content -->
-                        <div class="col-md-8">
+                        <div class="col-md-9">
                             <!-- Title -->
                             <h2>{% block title %}{% endblock title %}</h2>
                             <!-- End Title -->
