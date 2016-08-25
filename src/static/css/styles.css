@@ -43,6 +43,13 @@ input:focus, textarea:focus {
     color: #555;
 }
 
+.upload-file {
+    text-align: center;
+    width: 50%;
+    padding: 0px;
+    border-style: none none !important;
+}
+
 /*select:active, select:focus {*/
     /*!*border: 0 !important;*!*/
     /*!*color: red;*!*/

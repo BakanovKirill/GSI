@@ -1,10 +1,11 @@
 <!-- pagination -->
 {% if model_name.has_other_pages %}
+{% with order_by=request.GET.order_by reverse=request.GET.reverse %}
     <nav class="right">
         <ul class="pagination pagination-black">
             {% if model_name.has_previous %}
                 <li>
-                    <a href="{% if obj_id and card_id %}{% url url_name obj_id card_id %}{% elif obj_id %}{% url url_name obj_id %}{% else %}{% url url_name %}{% endif %}?page={{ model_name.previous_page_number }}" class="no-border">
+                    <a href="{% if obj_id and card_id %}{% url url_name obj_id card_id %}{% elif obj_id %}{% url url_name obj_id %}{% else %}{% url url_name %}{% endif %}?page={{ model_name.previous_page_number }}&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}" class="no-border">
                         Previous
                     </a>
                 </li>
@@ -12,14 +13,15 @@
 
             {% for p in model_name.paginator.page_range %}
                 <li {% if model_name.number == p %}class="active"{% endif %}>
-                    <a href="{% if obj_id and card_id %}{% url url_name obj_id card_id %}{% elif obj_id %}{% url url_name obj_id %}{% else %}{% url url_name %}{% endif %}?page={{ p }}">{{ p }}</a>
+                    <a href="{% if obj_id and card_id %}{% url url_name obj_id card_id %}{% elif obj_id %}{% url url_name obj_id %}{% else %}{% url url_name %}{% endif %}?page={{ p }}&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}">{{ p }}</a>
                 </li>
             {% endfor %}
 
             {% if model_name.has_next %}
-                <li><a href="{% if obj_id and card_id %}{% url url_name obj_id card_id %}{% elif obj_id %}{% url url_name obj_id %}{% else %}{% url url_name %}{% endif %}?page={{ model_name.next_page_number }}" class="no-border">Next</a></li>
+                <li><a href="{% if obj_id and card_id %}{% url url_name obj_id card_id %}{% elif obj_id %}{% url url_name obj_id %}{% else %}{% url url_name %}{% endif %}?page={{ model_name.next_page_number }}&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}" class="no-border">Next</a></li>
             {% endif %}
         </ul>
     </nav>
+{% endwith %}
 {% endif %}
 <!-- end pagination -->

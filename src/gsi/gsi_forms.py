@@ -352,6 +352,10 @@ class SatelliteForm(forms.ModelForm):
 class UploadFileForm(forms.Form):
     test_data = forms.FileField(label='Load Test Data')
 
+    def __init__(self, *args, **kwargs):
+        super(UploadFileForm, self).__init__(*args, **kwargs)
+        self.fields['test_data'].widget.attrs.update({'class': 'form-control upload-file'})
+
 
 class InputDataDirectoryForm(forms.ModelForm):
     """ form for editing InputDataDirectory """
@@ -369,9 +373,3 @@ class InputDataDirectoryForm(forms.ModelForm):
         fields = [
             'name',
         ]
-
-
-
-
-
-

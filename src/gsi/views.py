@@ -52,9 +52,9 @@ TITLES = {
 
 
 def handle_uploaded_file(f, path):
-    with open(path, 'a') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
+	with open(path, 'a') as destination:
+		for chunk in f.chunks():
+			destination.write(chunk)
 
 
 @render_to('gsi/blocking.html')
@@ -73,9 +73,9 @@ class UploadStaticDataView(FormView):
 		title = 'Upload Test Data'
 		url_name = 'upload_file'
 		context.update({
-            'title': title,
+			'title': title,
 			'url_name': url_name,
-        })
+		})
 
 		return context
 
@@ -88,7 +88,7 @@ class UploadStaticDataView(FormView):
 		message = u'Test data "{0}" is loaded'.format(file_name)
 
 		return HttpResponseRedirect(
-                '%s?status_message=%s' % (reverse('index'), message))
+				'%s?status_message=%s' % (reverse('index'), message))
 
 
 def write_card_to_cs(card_sequence, query):
@@ -187,6 +187,11 @@ def get_number_cards(rb, user):
 			num_card += 1
 
 	return num_card
+
+
+def sortByAlphabet(inputStr):
+	print 'inputStr ==================== ', type(inputStr)
+	return inputStr[0]
 
 
 # upload_static_data_view = user_passes_test(login_url='/', redirect_field_name='')(UploadStaticDataView.as_view())
@@ -297,6 +302,14 @@ def run_setup(request):
 	run_bases = RunBase.objects.all().order_by('-date_modified')
 	run_name = ''
 	url_name = 'run_setup'
+
+	if request.method == "GET":
+		order_by = request.GET.get('order_by', '')
+		if order_by in ('name', 'author', 'date_created', 'date_modified'):
+			run_bases = run_bases.order_by(order_by)
+
+			if request.GET.get('reverse', '') == '1':
+				run_bases = run_bases.reverse()
 
 	if request.method == "POST" and request.is_ajax():
 		data_post = request.POST
@@ -946,6 +959,14 @@ def submit_run(request):
 	name_runs = ''
 	url_name = 'submit_run'
 
+	if request.method == "GET":
+		order_by = request.GET.get('order_by', '')
+		if order_by in ('name', 'author', 'date_created', 'date_modified'):
+			run_bases = run_bases.order_by(order_by)
+
+			if request.GET.get('reverse', '') == '1':
+				run_bases = run_bases.reverse()
+
 	if request.method == "POST" and request.is_ajax():
 		data_post = request.POST
 
@@ -987,9 +1008,9 @@ def submit_run(request):
 			#
 			# 	if not execute_run:
 			# 		return HttpResponseRedirect(u'%s?danger_message=%s' %
-			# 		                            (reverse('submit_run'),
-			# 		                             (u'Unable to execute the Run. \
-			# 		                             Please contact the administrator!')))
+			# 									(reverse('submit_run'),
+			# 									 (u'Unable to execute the Run. \
+			# 									 Please contact the administrator!')))
 			#
 			# 	now_date = datetime.now()
 			# 	now_date_formating = now_date.strftime("%d/%m/%Y")
@@ -1063,6 +1084,14 @@ def run_progress(request):
 	title = 'Run Progress'
 	url_name = 'run_progress'
 	run_name = ''
+
+	if request.method == "GET":
+		order_by = request.GET.get('order_by', '')
+		if order_by in ('id', 'run_base', 'run_date', 'state', 'user'):
+			runs = runs.order_by(order_by)
+
+			if request.GET.get('reverse', '') == '1':
+				runs = runs.reverse()
 
 	if request.method == "POST" and request.is_ajax():
 		data_post = request.POST
@@ -1414,6 +1443,15 @@ def environment_groups(request):
 	url_name = 'environment_groups'
 	but_name = 'static_data'
 
+	if request.method == "GET":
+		order_by = request.GET.get('order_by', '')
+
+		if order_by in ('name',):
+			environments = environments.order_by(order_by)
+
+			if request.GET.get('reverse', '') == '1':
+				environments = environments.reverse()
+
 	if request.method == "POST" and request.is_ajax():
 		data_post = request.POST
 
@@ -1581,6 +1619,15 @@ def areas(request):
 	area_name = ''
 	url_name = 'areas'
 	but_name = 'static_data'
+
+	if request.method == "GET":
+		order_by = request.GET.get('order_by', '')
+
+		if order_by in ('name',):
+			areas = areas.order_by(order_by)
+
+			if request.GET.get('reverse', '') == '1':
+				areas = areas.reverse()
 
 	if request.method == "POST" and request.is_ajax():
 		data_post = request.POST
@@ -1751,6 +1798,15 @@ def years_group(request):
 	url_name = 'years_group'
 	but_name = 'static_data'
 
+	if request.method == "GET":
+		order_by = request.GET.get('order_by', '')
+
+		if order_by in ('name',):
+			years_groups = years_groups.order_by(order_by)
+
+			if request.GET.get('reverse', '') == '1':
+				years_groups = years_groups.reverse()
+
 	if request.method == "POST" and request.is_ajax():
 		data_post = request.POST
 
@@ -1919,6 +1975,15 @@ def satellite(request):
 	url_name = 'satellite'
 	but_name = 'static_data'
 
+	if request.method == "GET":
+		order_by = request.GET.get('order_by', '')
+
+		if order_by in ('name',):
+			satellites = satellites.order_by(order_by)
+
+			if request.GET.get('reverse', '') == '1':
+				satellites = satellites.reverse()
+
 	if request.method == "POST" and request.is_ajax():
 		data_post = request.POST
 
@@ -2084,6 +2149,15 @@ def input_data_dir_list(request):
 	input_data_dir_name = ''
 	url_name = 'input_data_dir_list'
 	but_name = 'static_data'
+
+	if request.method == "GET":
+		order_by = request.GET.get('order_by', '')
+
+		if order_by in ('name',):
+			input_data_dirs = input_data_dirs.order_by(order_by)
+
+			if request.GET.get('reverse', '') == '1':
+				input_data_dirs = input_data_dirs.reverse()
 
 	if request.method == "POST" and request.is_ajax():
 		data_post = request.POST
@@ -2253,12 +2327,16 @@ def input_data_dir_edit(request, dir_id):
 def cards_list(request, *args, **kwargs):
 	title = 'Editing Cards'
 	cards_all = CardItem.objects.all()
+	card_list = []
 	cards_name = ''
 	url_name = 'cards_list'
 	but_name = 'static_data'
 
-	# for x in cards_all:
-	# 	print 'model ============== ', x.content_type.model
+	# sortByAlphabet(inputStr)
+
+
+	for x in cards_all:
+		print 'model ============== ', x.content_type.carditem
 	#
 	# content_type_name = ContentType.objects.get(app_label="cards", model="qrf")
 	# class_obj_1 = content_type_name.model_class()
@@ -2267,6 +2345,27 @@ def cards_list(request, *args, **kwargs):
 	# print 'class_obj 1 ========================== ', class_obj_1
 	# print 'class_obj 2 ID ========================== ', class_obj_2.id
 	# print 'class_obj 2 interval ========================== ', class_obj_2.interval
+
+	# for n in cards_all:
+		# print 'card_list ====================== ', n.content_type.model.object_id
+		# card_list.append(str(n))
+	#
+	# print 'cards_all ====================== ', cards_all
+	#
+	if request.method == "GET":
+		order_by = request.GET.get('order_by', '')
+
+		if order_by in ('name',):
+			cards_all = cards_all.order_by('content_type__carditem__orderedcarditem__card_item',)
+
+			if request.GET.get('reverse', '') == '1':
+				cards_all = cards_all.reverse()
+
+		if order_by in ('content_type__model',):
+			cards_all = cards_all.order_by(order_by)
+
+			if request.GET.get('reverse', '') == '1':
+				cards_all = cards_all.reverse()
 
 	if request.method == "POST" and request.is_ajax():
 		data_post = request.POST
@@ -2304,6 +2403,7 @@ def cards_list(request, *args, **kwargs):
 				cards_name += '"' + str(cur_card) + '", '
 				content_type_card = ContentType.objects.get(id=cur_card.content_type_id)
 				class_obj = content_type_card.get_object_for_this_type(name=str(cur_card))
+				# print 'str(cur_card) =========================== ', str(cur_card)
 				cur_card.delete()
 				class_obj.delete()
 

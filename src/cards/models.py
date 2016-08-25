@@ -202,6 +202,7 @@ class CardItem(models.Model):
         models.Q(app_label='cards', model='calcstats')
     )
 
+    # name = models.CharField(max_length=200, null=True, blank=True)
     content_type = models.ForeignKey(ContentType, limit_choices_to=CONTENT_LIMIT)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
@@ -210,6 +211,13 @@ class CardItem(models.Model):
 
     class Meta:
         unique_together = ('content_type', 'object_id')
+
+    def get_name(self):
+        return u"{0}".format(self.content_object)
+
+    # def save(self, *args, **kwargs):
+    #     self.name = u"{0}".format(self.content_object)
+    #     return super(CardItem, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return u"{0}".format(self.content_object)
