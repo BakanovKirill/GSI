@@ -6,8 +6,7 @@ from django.utils.translation import \
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
-from core.utils import (UnicodeNameMixin, update_root_list_files,
-                        update_list_files, update_list_dirs)
+from core.utils import (UnicodeNameMixin, update_list_files)
 
 
 class NamedModel(UnicodeNameMixin, models.Model):
@@ -101,11 +100,6 @@ class Collate(NamedModel, ParallelModel):
     input_scale_factor = models.CharField(max_length=200, blank=True)
     input_data_directory = models.ForeignKey('gsi.InputDataDirectory', blank=True, null=True)
     input_files = models.ManyToManyField('gsi.ListTestFiles', blank=True, related_name='input_files')
-
-    # def save(self, *args, **kwargs):
-    #     # update_root_list_files()
-    #     # update_list_dirs()
-    #     super(Collate, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = _('Collate cards')

@@ -24,7 +24,6 @@ from gsi.models import (Run, RunStep, Log, OrderedCardItem,
 						HomeVariables, VariablesGroup, YearGroup,
 						Year, Satellite, InputDataDirectory,
 						SubCardItem)
-# from cards.models import CardItem, Collate
 from cards.card_update_create import *
 from cards.cards_forms import *
 from gsi.gsi_items_update_create import *
@@ -35,8 +34,7 @@ from core.utils import (make_run, get_dir_root_static_path, get_path_folder_run,
 from core.get_post import get_post
 from core.copy_card import create_copycard
 from log.logger import get_logs
-from gsi.settings import (NUM_PAGINATIONS, PATH_RUNS_SCRIPTS, BASE_DIR,
-							STATIC_ROOT, STATIC_DIR)
+from gsi.settings import (PATH_RUNS_SCRIPTS)
 from core.paginations import paginations
 
 TITLES = {
@@ -345,7 +343,7 @@ def run_setup(request):
 			run_name = run_name[:-2]
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_setup'),
-										 (u'Run(s): {0} ==> deleted.'.format(run_name)))
+										(u'Run(s): {0} ==> deleted.'.format(run_name)))
 			)
 		elif data_post.get('copy_btn'):
 			run_bases_current = get_object_or_404(RunBase, pk=data_post.get('copy_btn'))
@@ -353,7 +351,7 @@ def run_setup(request):
 			new_rb = create_new_runbase(request, run_bases_current.name)
 
 			return HttpResponseRedirect(u'%s?status_message=%s' %
-										(reverse('run_setup'), (u'Run the "{0}" Run successfully copied from the "{1}".'.\
+										(reverse('run_setup'), (u'Run the "{0}" Run successfully copied from the "{1}".'.
 										format(run_name, new_rb.name)))
 										)
 		elif data_post.get('delete_button'):
@@ -366,7 +364,7 @@ def run_setup(request):
 										)
 		else:
 			return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('run_setup'),
-										 (u"To delete, select Run or more Runs."))
+										(u"To delete, select Run or more Runs."))
 			)
 
 	# paginations
@@ -461,7 +459,7 @@ def run_update(request, run_id):
 				if RunBase.objects.filter(name=form.cleaned_data["name"]).exists():
 					cur_run = RunBase.objects.get(name=form.cleaned_data["name"])
 
-				if cur_run == None or cur_run.id == int(run_id):
+				if cur_run is None or cur_run.id == int(run_id):
 					if request.POST.get('save_button') is not None:
 						run_base.name = form.cleaned_data["name"]
 						run_base.description = form.cleaned_data["description"]
@@ -598,7 +596,7 @@ def run_new_card_sequence_add(request):
 						u'%s?status_message=%s' % (reverse('run_new_card_sequence_update',
 													args=[card_sequence.id]),
 													(u"The card sequence '{0}' created successfully. You may edit it again below.".
-						 							format(card_sequence.name)))
+													format(card_sequence.name)))
 				)
 		elif request.POST.get('save_button') is not None:
 			form = CardSequenceCreateForm(request.POST)
@@ -650,9 +648,9 @@ def run_new_card_sequence_update(request, cs_id):
 
 				return HttpResponseRedirect(
 					u'%s?status_message=%s' % (reverse('run_new_card_sequence_update',
-													   args=[card_sequence.id]),
+					args=[card_sequence.id]),
 					(u"The new card item '{0}' was changed successfully. You may edit it again below.".
-					 format(card_sequence.name)))
+					format(card_sequence.name)))
 				)
 		elif request.POST.get('save_and_continue_editing_button') is not None:
 			form = CardSequenceCreateForm(request.POST)
@@ -662,9 +660,9 @@ def run_new_card_sequence_update(request, cs_id):
 
 				return HttpResponseRedirect(
 					u'%s?status_message=%s' % (reverse('run_new_card_sequence_update',
-													   args=[card_sequence.id]),
-					(u"The new card item '{0}' was changed successfully. You may edit it again below.".
-					 format(card_sequence.name)))
+													args=[card_sequence.id]),
+													(u"The new card item '{0}' was changed successfully. You may edit it again below.".
+													format(card_sequence.name)))
 				)
 		elif request.POST.get('save_button') is not None:
 			form = CardSequenceCreateForm(request.POST)
@@ -675,7 +673,7 @@ def run_new_card_sequence_update(request, cs_id):
 				return HttpResponseRedirect(
 						u'%s?status_message=%s' % (reverse('new_run'),
 						(u"The card sequence '{0}' update successfully.".
-						 format(card_sequence.name)))
+						format(card_sequence.name)))
 				)
 		elif request.POST.get('delete_button') is not None:
 			form = CardSequenceCreateForm(request.POST)
@@ -692,13 +690,13 @@ def run_new_card_sequence_update(request, cs_id):
 
 					return HttpResponseRedirect(u'%s?status_message=%s' %
 												(reverse('run_new_card_sequence_update', args=[cs_id]),
-												 (u'Card Sequence: {0} ==> deleted.'.
-												  format(cs_name)))
+												(u'Card Sequence: {0} ==> deleted.'.
+												format(cs_name)))
 					)
 				else:
 					return HttpResponseRedirect(u'%s?warning_message=%s' %
 												(reverse('run_new_card_sequence_update', args=[cs_id]),
-												 (u"To delete, select Card Sequence or more Card Sequences."))
+												(u"To delete, select Card Sequence or more Card Sequences."))
 					)
 		elif request.POST.get('cancel_button') is not None:
 			return HttpResponseRedirect(
@@ -741,8 +739,8 @@ def add_card_sequence(request, run_id):
 
 				return HttpResponseRedirect(
 					u'%s?status_message=%s' % (reverse('card_sequence_update', args=[run_id, card_sequence.id]),
-					(u"The new card item '{0}' was changed successfully. You may edit it again below.".\
-					 format(card_sequence.name)))
+					(u"The new card item '{0}' was changed successfully. You may edit it again below.".
+					format(card_sequence.name)))
 				)
 		elif request.POST.get('save_and_continue_editing_button') is not None:
 			form = CardSequenceCreateForm(request.POST)
@@ -753,7 +751,7 @@ def add_card_sequence(request, run_id):
 				return HttpResponseRedirect(
 						u'%s?status_message=%s' % (reverse('card_sequence_update', args=[run_id, card_sequence.id]),
 						(u"The card sequence '{0}' created successfully. You may edit it again below.".
-						 format(card_sequence.name)))
+						format(card_sequence.name)))
 				)
 		elif request.POST.get('save_button') is not None:
 			form = CardSequenceCreateForm(request.POST)
@@ -764,7 +762,7 @@ def add_card_sequence(request, run_id):
 			return HttpResponseRedirect(
 					u'%s?status_message=%s' % (reverse('card_sequence', args=[run_id]),
 					(u"The card sequence '{0}' created successfully.".
-					 format(card_sequence.name)))
+					format(card_sequence.name)))
 			)
 		elif request.POST.get('cancel_button') is not None:
 			return HttpResponseRedirect(
@@ -823,7 +821,7 @@ def card_sequence_update(request, run_id, cs_id):
 				return HttpResponseRedirect(
 					u'%s?status_message=%s' % (reverse('card_sequence_update', args=[run_id, card_sequence.id]),
 					(u"The new card item '{0}' was changed successfully. You may edit it again below.".
-					 format(card_sequence.name)))
+					format(card_sequence.name)))
 				)
 		elif data_post.get('save_and_continue_editing_button') is not None:
 			form = CardSequenceCreateForm(data_post, instance=card_sequence)
@@ -834,7 +832,7 @@ def card_sequence_update(request, run_id, cs_id):
 				return HttpResponseRedirect(
 					u'%s?status_message=%s' % (reverse('card_sequence_update', args=[run_id, card_sequence.id]),
 					(u"The new card item '{0}' was update successfully. You may edit it again below.".
-					 format(card_sequence.name)))
+					format(card_sequence.name)))
 				)
 		elif data_post.get('save_button') is not None:
 			form = CardSequenceCreateForm(data_post, instance=card_sequence)
@@ -845,7 +843,7 @@ def card_sequence_update(request, run_id, cs_id):
 			return HttpResponseRedirect(
 					u'%s?status_message=%s' % (reverse('run_update', args=[run_id]),
 					(u"The card sequence '{0}' update successfully.".
-					 format(card_sequence.name)))
+					format(card_sequence.name)))
 			)
 		elif data_post.get('delete_button') is not None:
 			form = CardSequenceCreateForm(data_post, instance=card_sequence)
@@ -863,12 +861,12 @@ def card_sequence_update(request, run_id, cs_id):
 
 					return HttpResponseRedirect(u'%s?status_message=%s' %
 												(reverse('card_sequence_update', args=[run_id, cs_id]),
-												 (u'Card Items: {0} ==> deleted.'.format(cs_name)))
+												(u'Card Items: {0} ==> deleted.'.format(cs_name)))
 					)
 				else:
 					return HttpResponseRedirect(u'%s?warning_message=%s' %
 												(reverse('card_sequence_update', args=[run_id, cs_id]),
-												 (u"To delete, select Card Item or more Card Items."))
+												(u"To delete, select Card Item or more Card Items."))
 					)
 		elif data_post.get('del_current_btn'):
 			card_id = data_post.get('del_current_btn')
@@ -878,7 +876,7 @@ def card_sequence_update(request, run_id, cs_id):
 
 			return HttpResponseRedirect(u'%s?status_message=%s' %
 										(reverse('card_sequence_update', args=[run_id, cs_id]),
-										 (u'Card Item: {0} ==> deleted.'.format(cs_name)))
+										(u'Card Item: {0} ==> deleted.'.format(cs_name)))
 										)
 		elif data_post.get('cancel_button') is not None:
 			return HttpResponseRedirect(
@@ -982,7 +980,7 @@ def submit_run(request):
 				now_date_formating = now_date.strftime("%d/%m/%Y")
 				now_time = now_date.strftime("%H:%M")
 				data = u'Run "{0}" has been submitted to back end and {1} on {2}<br>Processed {3} Cards'.\
-						format(rb.name, now_time, now_date_formating, num_cards)
+					format(rb.name, now_time, now_date_formating, num_cards)
 
 				return HttpResponse(data)
 			else:
@@ -1260,7 +1258,7 @@ def view_log_file(request, run_id, card_id, status):
 			print 'ERROR Out view_log_file: ', e
 			return HttpResponseRedirect(u'%s?danger_message=%s' %
 										(reverse('run_details', args=[run_id]),
-										 (u'Log Out file "{0}" not found.'.format(card_name))))
+										(u'Log Out file "{0}" not found.'.format(card_name))))
 	elif status == 'Error':
 		try:
 			card_name = 'runcard_{0}.err'.format(card_id)
@@ -1272,7 +1270,7 @@ def view_log_file(request, run_id, card_id, status):
 			print 'ERROR Error view_log_file: ', e
 			return HttpResponseRedirect(u'%s?danger_message=%s' %
 										(reverse('run_details', args=[run_id]),
-										 (u'Log Error file "{0}" not found.'.format(card_name))))
+										(u'Log Error file "{0}" not found.'.format(card_name))))
 
 	data = {
 		'title': title,
@@ -1326,7 +1324,7 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
 			print 'ERROR Out view_log_file_sub_card: ', e
 			return HttpResponseRedirect(u'%s?danger_message=%s' %
 										(reverse('sub_card_details', args=[run_id, card_id]),
-										 (u'Log Out file "{0}" not found.'.format(card_name))))
+										(u'Log Out file "{0}" not found.'.format(card_name))))
 	elif status == 'Error':
 		card_name = 'runcard_{0}_{1}.err'.format(card_id, count)
 		path_log_file = os.path.join(str(log_path), str(card_name))
@@ -1338,7 +1336,7 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
 			print 'ERROR Error view_log_file_sub_card: ', e
 			return HttpResponseRedirect(u'%s?danger_message=%s' %
 										(reverse('sub_card_details', args=[run_id, card_id]),
-										 (u'Log Error file "{0}" not found.'.format(card_name))))
+										(u'Log Error file "{0}" not found.'.format(card_name))))
 
 	data = {
 		'title': title,
@@ -1437,12 +1435,12 @@ def home_variable_setup(request):
 		if request.POST.get('save_button') is not None:
 			return HttpResponseRedirect(u'%s?status_message=%s' %
 										(reverse('static_data_setup'),
-										 (u"Home variables successfully updated"))
+										(u"Home variables successfully updated"))
 			)
 		if request.POST.get('save_and_continue_button') is not None:
 			return HttpResponseRedirect(u'%s?status_message=%s' %
 										(reverse('home_variable_setup'),
-										 (u"Home variables successfully updated"))
+										(u"Home variables successfully updated"))
 			)
 	else:
 		form = HomeVariablesForm(instance=variables)
@@ -1519,8 +1517,8 @@ def environment_groups(request):
 
 			return HttpResponseRedirect(u'%s?status_message=%s' %
 										(reverse('environment_groups'),
-										 (u'Environment Groups: {0} ==> deleted.'.
-										  format(env_name)))
+										(u'Environment Groups: {0} ==> deleted.'.
+										format(env_name)))
 			)
 		elif request.POST.get('delete_button'):
 			cur_env = get_object_or_404(VariablesGroup, pk=request.POST.get('delete_button'))
@@ -1529,11 +1527,11 @@ def environment_groups(request):
 
 			return HttpResponseRedirect(u'%s?status_message=%s' %
 										(reverse('environment_groups'),
-										 (u'Environment Group: {0} ==> deleted.'.
-										  format(env_name))))
+										(u'Environment Group: {0} ==> deleted.'.
+										format(env_name))))
 		else:
 			return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('environment_groups'),
-										 (u"To delete, select Group or more Groups."))
+										(u"To delete, select Group or more Groups."))
 			)
 
 	# paginations
@@ -1694,7 +1692,7 @@ def areas(request):
 			area_ids = '_'.join(request.POST.getlist('env_select'))
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('areas'),
-										 (u'Areas: {0} ==> deleted.'.format(area_name)))
+										(u'Areas: {0} ==> deleted.'.format(area_name)))
 			)
 		elif request.POST.get('delete_button'):
 			cur_area = get_object_or_404(Area, pk=request.POST.get('delete_button'))
@@ -1702,11 +1700,11 @@ def areas(request):
 			cur_area.delete()
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('areas'),
-										 (u'Areas: {0} ==> deleted.'.format(area_name)))
+										(u'Areas: {0} ==> deleted.'.format(area_name)))
 				)
 		else:
 				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('areas'),
-											 (u"To delete, select Area or more Areas."))
+											(u"To delete, select Area or more Areas."))
 				)
 
 	# paginations
@@ -1871,7 +1869,7 @@ def years_group(request):
 			yg_name = yg_name[:-2]
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('years_group'),
-										 (u'Years Groups: {0} ==> deleted.'.format(yg_name)))
+										(u'Years Groups: {0} ==> deleted.'.format(yg_name)))
 			)
 		elif request.POST.get('delete_button'):
 			cur_yg = get_object_or_404(YearGroup, pk=request.POST.get('delete_button'))
@@ -1879,11 +1877,11 @@ def years_group(request):
 			cur_yg.delete()
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('years_group'),
-										 (u'Years Group: {0} ==> deleted.'.format(yg_name)))
+										(u'Years Group: {0} ==> deleted.'.format(yg_name)))
 				)
 		else:
 			return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('years_group'),
-										 (u"To delete, select Years Group or more Years Groups."))
+										(u"To delete, select Years Group or more Years Groups."))
 			)
 
 	# paginations
@@ -2049,7 +2047,7 @@ def satellite(request):
 			satellite_name = satellite_name[:-2]
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('satellite'),
-										 (u'Satellites: {0} ==> deleted.'.format(satellite_name)))
+										(u'Satellites: {0} ==> deleted.'.format(satellite_name)))
 			)
 		elif request.POST.get('delete_button'):
 			cur_satellite = get_object_or_404(Satellite, pk=request.POST.get('delete_button'))
@@ -2057,11 +2055,11 @@ def satellite(request):
 			cur_satellite.delete()
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('satellite'),
-										 (u'Satellite: {0} ==> deleted.'.format(satellite_name)))
+										(u'Satellite: {0} ==> deleted.'.format(satellite_name)))
 				)
 		else:
 				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('satellite'),
-											 (u"To delete, select Satellite or more Satellites."))
+											(u"To delete, select Satellite or more Satellites."))
 				)
 
 	# paginations
@@ -2228,7 +2226,7 @@ def input_data_dir_list(request):
 			input_data_dir_name = input_data_dir_name[:-2]
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('input_data_dir_list'),
-										 (u'Input Data Directorys "{0}": deleted.'.format(input_data_dir_name)))
+										(u'Input Data Directorys "{0}": deleted.'.format(input_data_dir_name)))
 			)
 		elif request.POST.get('delete_button'):
 			cur_dir = get_object_or_404(InputDataDirectory, pk=request.POST.get('delete_button'))
@@ -2239,11 +2237,11 @@ def input_data_dir_list(request):
 				shutil.rmtree(dir_path)
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('input_data_dir_list'),
-										 (u'Input Data Directory "{0}": deleted.'.format(input_data_dir_name)))
+										(u'Input Data Directory "{0}": deleted.'.format(input_data_dir_name)))
 				)
 		else:
 				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('input_data_dir_list'),
-											 (u"To delete, select Directory or more Directorys."))
+											(u"To delete, select Directory or more Directorys."))
 				)
 
 	# paginations
@@ -2411,7 +2409,7 @@ def cards_list(request, *args, **kwargs):
 			# print 'cards_name ===================== ', cards_name
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('cards_list'),
-										 (u'Cards: {0} ==> deleted.'.format(cards_name)))
+										(u'Cards: {0} ==> deleted.'.format(cards_name)))
 			)
 		elif request.POST.get('delete_button'):
 			cur_card = get_object_or_404(CardItem, pk=request.POST.get('delete_button'))
@@ -2422,11 +2420,11 @@ def cards_list(request, *args, **kwargs):
 			class_obj.delete()
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('cards_list'),
-										 (u'Card: {0} ==> deleted.'.format(cards_name)))
+										(u'Card: {0} ==> deleted.'.format(cards_name)))
 				)
 		else:
 				return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('cards_list'),
-											 (u"To delete, select Card or more Cards."))
+											(u"To delete, select Card or more Cards."))
 				)
 
 	# paginations
@@ -2562,9 +2560,6 @@ def view_results(request, run_id):
 	static_dir_root_path = slash_remove_from_path(static_dir_root_path)
 	static_dir_root = str(dir_root['static_dir_root']) + '/' + str(resolution) + '/' + str(folder)
 	static_dir_root = slash_remove_from_path(static_dir_root)
-
-	# print 'static_dir_root ============================ ', static_dir_root
-	# print 'static_dir_root_path ============================ ', static_dir_root_path
 
 	dirs, files, info_message = get_files_dirs(static_dir_root, static_dir_root_path)
 
