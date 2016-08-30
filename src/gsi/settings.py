@@ -141,7 +141,7 @@ LOGOUT_URL = 'users:auth_logout'
 # EMAIL_HOST_PASSWORD = 'b8eaad09132286b3742260a52dbcba6a'
 # EMAIL_PORT = 587
 
-#send email for forgot password
+# send email for forgot password
 # EMAIL_USE_TLS = True
 MAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.example.com'

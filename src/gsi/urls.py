@@ -1,6 +1,3 @@
-from django.conf.urls.static import static
-from django.conf import settings
-
 """GSI URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -16,13 +13,16 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
+
+# -*- coding: utf-8 -*-
+from django.conf.urls.static import static
+from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 # from django.contrib.auth.views.password_reset import views as auth_views
 from django.views.generic.base import RedirectView
-from django.contrib.auth.decorators import login_required
-
+# from django.contrib.auth.decorators import login_required
 # from gsi.views import UploadStaticDataView
 
 
@@ -156,16 +156,21 @@ urlpatterns = [
     url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/$',
         'cards.views.proces_card_runid_csid', name='proces_card_runid_csid'),
 
-    # ----- CARDS ---------------------------------------------------------------
+    # ----- CARDS -------------------------------------------------------------
 
     # card item edit for card sequence // runID->csID->card_item
 
     # url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/card-item/(?P<card_item_id>\d+)/$',
     #     'gsi.views.card_item_update', name='card_item_update'),
-    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/(?P<card_id>\d+)/qrf/(?P<qrf_id>\d+)/$',
-        'gsi.views_cs_card_runid_csid.cs_runid_csid_qrf_edit', name='cs_runid_csid_qrf_edit'),
-    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/(?P<card_id>\d+)/rfscore/(?P<rfscore_id>\d+)/$',
-        'gsi.views_cs_card_runid_csid.cs_runid_csid_rfscore_edit', name='cs_runid_csid_rfscore_edit'),
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/(?P<card_id>\d+)\
+        /qrf/(?P<qrf_id>\d+)/$',
+        'gsi.views_cs_card_runid_csid.cs_runid_csid_qrf_edit',
+        name='cs_runid_csid_qrf_edit'),
+
+    url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/(?P<card_id>\d+)\
+        /rfscore/(?P<rfscore_id>\d+)/$',
+        'gsi.views_cs_card_runid_csid.cs_runid_csid_rfscore_edit',
+        name='cs_runid_csid_rfscore_edit'),
     url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/(?P<card_id>\d+)/remap/(?P<remap_id>\d+)/$',
         'gsi.views_cs_card_runid_csid.cs_runid_csid_remap_edit', name='cs_runid_csid_remap_edit'),
     url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/(?P<card_id>\d+)/yearfilter/(?P<yf_id>\d+)/$',

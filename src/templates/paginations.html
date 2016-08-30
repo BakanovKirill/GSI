@@ -5,15 +5,13 @@
         <ul class="pagination pagination-black">
             {% if model_name.has_previous %}
                 <li>
-                    <a href="{% if obj_id and card_id %}{% url url_name obj_id card_id %}{% elif obj_id %}{% url url_name obj_id %}{% else %}{% url url_name %}{% endif %}?page={{ model_name.previous_page_number }}&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}" class="no-border">
-                        Previous
-                    </a>
+                    <a href="{% if obj_id and card_id %}{% url url_name obj_id card_id %}{% elif obj_id %}{% url url_name obj_id %}{% else %}{% url url_name %}{% endif %}?page={{ model_name.previous_page_number }}&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}" class="no-border">Previous</a>
                 </li>
             {% endif %}
 
             {% for p in model_name.paginator.page_range %}
                 <li {% if model_name.number == p %}class="active"{% endif %}>
-                    <a href="{% if obj_id and card_id %}{% url url_name obj_id card_id %}{% elif obj_id %}{% url url_name obj_id %}{% else %}{% url url_name %}{% endif %}?page={{ p }}&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}">{{ p }}</a>
+                    <a class="go" href="{% if obj_id and card_id %}{% url url_name obj_id card_id %}{% elif obj_id %}{% url url_name obj_id %}{% else %}{% url url_name %}{% endif %}?page={{ p }}&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}">{{ p }}</a>
                 </li>
             {% endfor %}
 

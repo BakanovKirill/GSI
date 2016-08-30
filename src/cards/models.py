@@ -175,6 +175,7 @@ FILTER_OUT = (
     ('4', '4'),
 )
 
+
 class CalcStats(NamedModel, ParallelModel):
     output_tile_subdir = models.CharField(max_length=200)
     year_group = models.ForeignKey('gsi.YearGroup', null=True, blank=True)

@@ -1,31 +1,30 @@
 # -*- coding: utf-8 -*-
-import datetime
+from datetime import datetime
 import os
 import shutil
-import getpass
-from datetime import datetime
-import magic
-import copy
+# import getpass
+# from datetime import datetime
+# import magic
+# import copy
 
 from annoying.decorators import render_to
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic.edit import FormView
 from django.contrib.contenttypes.models import ContentType
-from django.http import JsonResponse
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.template.defaultfilters import filesizeformat
-from django.views.generic import UpdateView
-from django.utils.decorators import method_decorator
-from django.conf import settings
+# from django.http import JsonResponse
+# from django.template.defaultfilters import filesizeformat
+# from django.views.generic import UpdateView
+# from django.utils.decorators import method_decorator
+# from django.conf import settings
 
 from gsi.models import (Run, RunStep, Log, OrderedCardItem,
 						HomeVariables, VariablesGroup, YearGroup,
-						Year, Satellite, InputDataDirectory, ListTestFiles,
+						Year, Satellite, InputDataDirectory,
 						SubCardItem)
-from cards.models import CardItem, Collate
+# from cards.models import CardItem, Collate
 from cards.card_update_create import *
 from cards.cards_forms import *
 from gsi.gsi_items_update_create import *
@@ -37,7 +36,7 @@ from core.get_post import get_post
 from core.copy_card import create_copycard
 from log.logger import get_logs
 from gsi.settings import (NUM_PAGINATIONS, PATH_RUNS_SCRIPTS, BASE_DIR,
-						  STATIC_ROOT, STATIC_DIR)
+							STATIC_ROOT, STATIC_DIR)
 from core.paginations import paginations
 
 TITLES = {
@@ -518,12 +517,12 @@ def run_new_card_sequence_list(request):
 
 			return HttpResponseRedirect(u'%s?status_message=%s' %
 										(reverse('run_new_card_sequence_list'),
-										 (u'Card Sequence: {0} ==> deleted.'.
-										  format(cs_name)))
+										(u'Card Sequence: {0} ==> deleted.'.
+										format(cs_name)))
 			)
 		else:
 			return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('run_new_card_sequence_list'),
-										 (u"To delete, select Card Sequence or more Card Sequences."))
+										(u"To delete, select Card Sequence or more Card Sequences."))
 			)
 
 	data = {
@@ -550,12 +549,12 @@ def card_sequence(request, run_id):
 
 			return HttpResponseRedirect(u'%s?status_message=%s' %
 										(reverse('card_sequence', args=[run_id]),
-										 (u'Card Sequence: {0} ==> deleted.'.
-										  format(cs_name)))
+										(u'Card Sequence: {0} ==> deleted.'.
+										format(cs_name)))
 			)
 		else:
 			return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('card_sequence', args=[run_id]),
-										 (u"To delete, select Card Sequence or more Card Sequences."))
+										(u"To delete, select Card Sequence or more Card Sequences."))
 			)
 
 	data = {
@@ -586,8 +585,8 @@ def run_new_card_sequence_add(request):
 
 				return HttpResponseRedirect(
 					u'%s?status_message=%s' % (reverse('run_new_card_sequence_update', args=[card_sequence.id]),
-					(u"The new card item '{0}' was changed successfully. You may edit it again below.".\
-					 format(card_sequence.name)))
+					(u"The new card item '{0}' was changed successfully. You may edit it again below.".
+					format(card_sequence.name)))
 				)
 		elif request.POST.get('save_and_continue_editing_button') is not None:
 			form = CardSequenceCreateForm(request.POST)
@@ -597,9 +596,9 @@ def run_new_card_sequence_add(request):
 
 				return HttpResponseRedirect(
 						u'%s?status_message=%s' % (reverse('run_new_card_sequence_update',
-														   args=[card_sequence.id]),
-						(u"The card sequence '{0}' created successfully. You may edit it again below.".
-						 format(card_sequence.name)))
+													args=[card_sequence.id]),
+													(u"The card sequence '{0}' created successfully. You may edit it again below.".
+						 							format(card_sequence.name)))
 				)
 		elif request.POST.get('save_button') is not None:
 			form = CardSequenceCreateForm(request.POST)
@@ -610,7 +609,7 @@ def run_new_card_sequence_add(request):
 				return HttpResponseRedirect(
 						u'%s?status_message=%s' % (reverse('new_run'),
 						(u"The card sequence '{0}' created successfully.".
-						 format(card_sequence.name)))
+						format(card_sequence.name)))
 				)
 		elif request.POST.get('cancel_button') is not None:
 			return HttpResponseRedirect(
@@ -1081,7 +1080,13 @@ def run_progress(request):
 
 	if request.method == "GET":
 		order_by = request.GET.get('order_by', '')
-		if order_by in ('id', 'run_base', 'run_date', 'state', 'user'):
+		if order_by in ('run_base',):
+			runs = runs.order_by('run_base__name')
+
+			if request.GET.get('reverse', '') == '1':
+				runs = runs.reverse()
+
+		if order_by in ('id', 'run_date', 'state', 'user'):
 			runs = runs.order_by(order_by)
 
 			if request.GET.get('reverse', '') == '1':
@@ -1126,11 +1131,11 @@ def run_progress(request):
 			run_name = run_name[:-2]
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_progress'),
-										 (u'Run(s): {0} ==> deleted.'.format(run_name)))
+				(u'Run(s): {0} ==> deleted.'.format(run_name)))
 			)
 		else:
 			return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('run_progress'),
-										 (u"To delete, select Run or more Runs."))
+				(u"To delete, select Run or more Runs."))
 			)
 
 	# paginations
@@ -1152,7 +1157,7 @@ def run_progress(request):
 def run_details(request, run_id):
 	sub_title = 'The View Log file select and hit view'
 	runs_step = RunStep.objects.filter(parent_run=run_id)
-	runs_step.order_by('card_item.card_item.order')
+	runs_step.order_by('card_item__order')
 	url_name = 'run_details'
 
 	if runs_step:
@@ -1160,21 +1165,47 @@ def run_details(request, run_id):
 	else:
 		title = 'No data to display'
 
+	if request.method == "GET":
+		order_by = request.GET.get('order_by', '')
+		if order_by in ('card_item_id',):
+			runs_step = runs_step.order_by('card_item__id')
+
+			if request.GET.get('reverse', '') == '1':
+				runs_step = runs_step.reverse()
+
+		if order_by in ('card_item',):
+			runs_step = runs_step.order_by('card_item__card_item__name')
+
+			if request.GET.get('reverse', '') == '1':
+				runs_step = runs_step.reverse()
+
+		if order_by in ('order',):
+			runs_step = runs_step.order_by('card_item__order')
+
+			if request.GET.get('reverse', '') == '1':
+				runs_step = runs_step.reverse()
+
+		if order_by in ('start_date', 'state'):
+			runs_step = runs_step.order_by(order_by)
+
+			if request.GET.get('reverse', '') == '1':
+				runs_step = runs_step.reverse()
+
 	if request.method == "POST":
 		if request.POST.get('details_file'):
 			step = get_object_or_404(RunStep, pk=request.POST.get('details_file'))
 
 			if request.POST.get('out_button', ''):
 				return HttpResponseRedirect(u'%s?status_message=%s' %
-										(reverse('view_log_file', args=[run_id, step.card_item.id, 'Out']),
-										 (u'Log Out file for the Card "{0}".'.format(step.card_item))))
+					(reverse('view_log_file', args=[run_id, step.card_item.id, 'Out']),
+					(u'Log Out file for the Card "{0}".'.format(step.card_item))))
 			elif request.POST.get('err_button', ''):
 				return HttpResponseRedirect(u'%s?status_message=%s' %
 										(reverse('view_log_file', args=[run_id, step.card_item.id, 'Error']),
-										 (u'Log Error file for the Card "{0}".'.format(step.card_item))))
+										(u'Log Error file for the Card "{0}".'.format(step.card_item))))
 		else:
 			return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('run_details', args=[run_id]),
-																   (u"To view the Card Log, select Card.")))
+																(u"To view the Card Log, select Card.")))
 
 	# paginations
 	model_name = paginations(request, runs_step)
@@ -1340,16 +1371,16 @@ def sub_card_details(request, run_id, card_id):
 				count = log_err.split('_')[1]
 				return HttpResponseRedirect(u'%s?status_message=%s' %
 										(reverse('view_log_file_sub_card', args=[run_id, card_id, count, 'Error']),
-										 (u'Log Error file for the Card "{0}".'.format(run_step_card.card_item))))
+										(u'Log Error file for the Card "{0}".'.format(run_step_card.card_item))))
 			elif request.POST.get('out_button', ''):
 				log_err = request.POST.get('details_file')
 				count = log_err.split('_')[1]
 				return HttpResponseRedirect(u'%s?status_message=%s' %
 										(reverse('view_log_file_sub_card', args=[run_id, card_id, count, 'Out']),
-										 (u'Log Out file for the Card "{0}".'.format(run_step_card.card_item))))
+										(u'Log Out file for the Card "{0}".'.format(run_step_card.card_item))))
 		else:
 			return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('sub_card_details', args=[run_id, card_id]),
-																   (u"To view the Card Log, select Card.")))
+																(u"To view the Card Log, select Card.")))
 
 	# paginations
 	model_name = paginations(request, sub_cards)

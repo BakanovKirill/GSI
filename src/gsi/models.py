@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 from datetime import datetime
-import os
-from subprocess import call
+# import os
+# from subprocess import call
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -174,11 +175,8 @@ STATES = (
 class Run(models.Model):
     user = models.ForeignKey(User, null=True, blank=True)
     run_base = models.ForeignKey(RunBase)
-
     state = models.CharField(max_length=100, choices=STATES, default='running')
-
     log = models.ForeignKey(Log, null=True, blank=True)
-
     run_date = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
@@ -188,9 +186,7 @@ class Run(models.Model):
 class RunStep(UnicodeNameMixin, models.Model):
     parent_run = models.ForeignKey(Run)
     card_item = models.ForeignKey(OrderedCardItem)
-
     state = models.CharField(max_length=100, choices=STATES, default='pending')
-
     start_date = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
