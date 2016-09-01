@@ -358,7 +358,7 @@ class UploadFileForm(forms.Form):
 
 
 class InputDataDirectoryForm(forms.ModelForm):
-    """ form for editing InputDataDirectory """
+    """form for editing InputDataDirectory"""
 
     def __init__(self, *args, **kwargs):
         super(InputDataDirectoryForm, self).__init__(*args, **kwargs)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 
-from core.validator_gsi import *
+from core.validator_gsi import validate_order
 from cards.models import (QRF, RFScore, Remap,
                           YearFilter, Collate, PreProc,
                           MergeCSV, RFTrain, RandomForest, CalcStats,
@@ -11,7 +11,9 @@ from gsi.models import (Area, YearGroup, TileType,
 
 
 class QRFForm(forms.ModelForm):
+
     """ form for editing QRF Card """
+
     def __init__(self, *args, **kwargs):
         super(QRFForm, self).__init__(*args, **kwargs)
 

@@ -335,7 +335,15 @@ def run_setup(request):
 	if request.method == "POST":
 		data_post = request.POST
 
-		if data_post.get('run_select'):
+		if data_post.get('copy_btn'):
+			run_bases_current = get_object_or_404(RunBase, pk=data_post.get('copy_btn'))
+			run_name += '"' + run_bases_current.name + '"'
+			new_rb = create_new_runbase(request, run_bases_current.name)
+
+			return HttpResponseRedirect(u'%s?status_message=%s' %
+				(reverse('run_setup'), (u'Run the {0} has been successfully copied. Creates a copy of the "{1}".'.
+				format(run_name, new_rb.name))))
+		elif data_post.get('run_select') and not data_post.get('copy_btn'):
 			for run_id in data_post.getlist('run_select'):
 				cur_run = get_object_or_404(RunBase, pk=run_id)
 				run_name += '"' + cur_run.name + '", '
@@ -345,15 +353,6 @@ def run_setup(request):
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_setup'),
 										(u'Run(s): {0} ==> deleted.'.format(run_name)))
 			)
-		elif data_post.get('copy_btn'):
-			run_bases_current = get_object_or_404(RunBase, pk=data_post.get('copy_btn'))
-			run_name += '"' + run_bases_current.name + '"'
-			new_rb = create_new_runbase(request, run_bases_current.name)
-
-			return HttpResponseRedirect(u'%s?status_message=%s' %
-										(reverse('run_setup'), (u'Run the "{0}" Run successfully copied from the "{1}".'.
-										format(run_name, new_rb.name)))
-										)
 		elif data_post.get('delete_button'):
 			run_bases_current = get_object_or_404(RunBase, pk=data_post.get('delete_button'))
 			run_name += '"' + run_bases_current.name + '"'

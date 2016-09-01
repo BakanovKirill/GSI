@@ -100,10 +100,10 @@ class InputDataDirectory(UnicodeNameMixin, models.Model):
 class ListTestFiles(UnicodeNameMixin, models.Model):
     name = models.CharField(max_length=200)
     input_data_directory = models.ForeignKey(
-            'InputDataDirectory',
-            blank=True,
-            null=True,
-            related_name='data_directory')
+        'InputDataDirectory',
+        blank=True,
+        null=True,
+        related_name='data_directory')
     # size = models.PositiveIntegerField(blank=True, null=True)
     size = models.CharField(max_length=100, blank=True, null=True)
     date_modified = models.DateTimeField(blank=True, null=True)
