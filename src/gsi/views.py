@@ -104,13 +104,6 @@ def write_card_to_cs(card_sequence, query):
 		)
 
 
-# def get_copy_name(name):
-# 	if '*cp' in name:
-# 		return name.split('*cp')[0]
-# 	else:
-# 		return name
-
-
 def create_new_runbase(request, name):
 	new_rb = None
 	rb = get_object_or_404(RunBase, name=name)
@@ -804,6 +797,37 @@ def card_sequence_update(request, run_id, cs_id):
 		'calcstats': ['new_runid_csid_calcstats', [run_id, cs_id]],
 		'cancel': ['card_sequence_update', [run_id, cs_id]]
 	}
+
+	if request.method == "POST" and request.is_ajax():
+		data_post = request.POST
+
+		if 'run_id[]' in data_post:
+			data = ''
+			message = u'Are you sure you want to remove these objects:'
+			cs_id = data_post.getlist('run_id[]')
+
+			for r in cs_id:
+				# cur_run = get_object_or_404(RunBase, pk=int(r))
+				cur_cs = get_object_or_404(CardSequence.cards.through, pk=int(r))
+				data += '"' + str(cur_cs) + '", '
+
+			data = data[:-2]
+			data = '<b>' + data + '</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+
+		if 'cur_run_id' in data_post:
+			message = u'Are you sure you want to remove this objects:'
+			cs_id = data_post['cur_run_id']
+			cur_cs = get_object_or_404(CardSequence.cards.through, pk=int(cs_id))
+			data = '<b>"' + str(cur_cs) + '"</b>'
+			data = '{0} {1}?'.format(message, data)
+
+			return HttpResponse(data)
+		else:
+			data = ''
+			return HttpResponse(data)
 
 	if request.method == "POST":
 		data_post = request.POST

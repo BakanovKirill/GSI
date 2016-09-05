@@ -154,9 +154,9 @@
                                                 {% url 'cs_run_csid_rftrain_edit' cs_id card.card_item.object_id %}
                                             {% endif %}
                                         {% endif %}" data-toggle="tooltip" data-placement="top" title="Edit"><img src="{% static 'img/edit-18.png' %}"/></a>
-                                <button class="btn del-btn" type="submit" name="del_current_btn" value="{{ card.id }}" data-toggle="tooltip" data-placement="top" title="Delete">
+                                <!-- <button class="btn del-btn check-cur-delete" type="submit" name="del_current_btn" value="{{ card.id }}" data-toggle="tooltip" data-placement="top" title="Delete">
                                     <img src="{% static 'img/delete-18.png' %}"/>
-                                </button>
+                                </button> -->
                             </td>
                         </tr>
                     {% endfor %}
@@ -164,12 +164,10 @@
             </table>
         </div>
     </div>
-    <div class="col-md-12">
-        <div class="col-md-4 col-md-offset-8">
-            <button type="submit" name="delete_button" class="btn btn-danger btn-block">
-                Delete Card Sequences
-            </button>
-        </div>
+    <div class="col-md-3">
+        <button type="submit" name="delete_button" class="btn btn-danger btn-block check-delete">
+            Delete Card Sequences
+        </button>
     </div>
 </div>
 {% endif %}
@@ -198,5 +196,5 @@
 </div>
 
 <!-- Modal Check Delete Items -->
-{% include 'gsi/_modal_new_card.html' %}
+{% include '_modal_check_delete_items.html' %}
 <!-- End Modal Check Delete Items -->
