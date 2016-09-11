@@ -61,7 +61,7 @@
             <label class="control-label font-normal">Configuration files</label>
         </div>
     </div>
-    <div class="col-md-4" id="select-files">
+    <div class="col-md-10" id="select-files">
         <select class="form-control">
             <option value="select">Select</option>
             {% for file in files %}
@@ -69,13 +69,15 @@
             {% endfor %}
         </select>
     </div>
+</div>
 
-    <div class="col-md-2 right">
+<div class="row margin-top-15">
+    <div class="col-md-3 right">
         <div class="form-group {% if form.content_object.errors %}has-error{% endif %}">
             <label class="control-label font-normal">Selected the Configuration file</label>
         </div>
     </div>
-    <div class="col-md-4" id="select-files">
+    <div class="col-md-9" id="select-files">
         <input class="form-control config-file" id="id_configfile" name="configfile" type="text" readonly="readonly" {% if cs_configfile %}value="{{ cs_configfile }}"{% endif %}/>
     </div>
 </div>
