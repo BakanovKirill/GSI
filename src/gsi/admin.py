@@ -37,7 +37,7 @@ admin.site.register(Tile, admin.ModelAdmin)
 
 
 class RunBaseAdmin(admin.ModelAdmin):
-    list_display = ('name', 'author', 'date_created', 'date_modified',)
+    list_display = ('name', 'author', 'card_sequence', 'date_created', 'date_modified',)
     readonly_fields = ('author',)
     actions = ('launch',)
 
