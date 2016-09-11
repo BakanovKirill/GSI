@@ -236,6 +236,7 @@ EXECUTE_FE_COMMAND = '/home/gsi/gsi_files/bin/execute_FE_command'
 FE_SUBMIT = '/home/w23/mattgsi/bin/fe_submit'
 PATH_RUNS_SCRIPTS = '/lustre/w23/mattgsi/scripts/runs'
 PROCESS_NUM = 10
+CONFIGFILE_PATH = '$RF_AUXDATA_DIR/'
 
 # number paginations
 NUM_PAGINATIONS = 7

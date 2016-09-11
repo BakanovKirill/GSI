@@ -6,7 +6,7 @@ from cards.models import CardItem
 from gsi.models import (RunBase, Resolution,
                         CardSequence, VariablesGroup,
                         HomeVariables, Tile, YearGroup,
-                        Year, Satellite, InputDataDirectory)
+                        Year, Satellite, InputDataDirectory, ConfigFile)
 
 
 class RunForm(forms.ModelForm):
@@ -111,6 +111,11 @@ class CardSequenceForm(forms.ModelForm):
         required=False,
         label=u'Environment base',
     )
+    configfile = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=False,
+        label=u'Configuration Files',
+    )
 
     class Meta:
         model = CardSequence
@@ -118,6 +123,7 @@ class CardSequenceForm(forms.ModelForm):
             'name',
             'environment_base',
             'environment_override',
+            'configfile',
         ]
 
 
@@ -194,6 +200,11 @@ class CardSequenceCreateForm(forms.ModelForm):
         required=False,
         label=u'Ordered card items',
     )
+    # configfile = forms.CharField(
+    #     widget=forms.TextInput(attrs={'class': 'form-control'}),
+    #     required=False,
+    #     label=u'Configuration Files',
+    # )
 
     class Meta:
         model = CardSequence.cards.through
@@ -203,6 +214,7 @@ class CardSequenceCreateForm(forms.ModelForm):
             'environment_override',
             'card_item',
             'order',
+            # 'configfile',
         ]
 
 
@@ -373,3 +385,10 @@ class InputDataDirectoryForm(forms.ModelForm):
         fields = [
             'name',
         ]
+
+
+class ConfigFileForm(forms.ModelForm):
+    """form for editing ConfigFile"""
+
+    def __init__(self, *args, **kwargs):
+        super(ConfigFileForm, self).__init__(*args, **kwargs)

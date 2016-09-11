@@ -171,10 +171,26 @@ function initTooltipBootstrap(){
 function initCreateCard(){
     $('button.create_card').click(function(event){
         var modal = $('#modalCreateCard');
-        // var form_modal = $('.form-modal').attr('action');
-
         modal.modal('show');
     });
+}
+
+function initSelectConfigFile(){
+    var config_file = $('#id_configfile');
+
+    $('div#select-files > div.selecter > div.selecter-options > span.selecter-item').click(function(event){
+        var select = $(this).text();
+        // $(this).toggleClass("selecter-item selected");
+        $(this).removeClass("selecter-item");
+        $(this).addClass("selecter-item selected");
+        $(this).attr("name", "select-file");
+        $(config_file).val(select);
+        // alert(select);
+    });
+
+    // var select = $("#select-files option:selected").text();
+
+
 }
 
 
@@ -190,4 +206,5 @@ $(document).ready(function(){
   statusPeriod();
   initTooltipBootstrap();
   initCreateCard();
+  initSelectConfigFile();
 });

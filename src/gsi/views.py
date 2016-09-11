@@ -30,11 +30,11 @@ from gsi.gsi_items_update_create import *
 from gsi.gsi_forms import *
 from core.utils import (make_run, get_dir_root_static_path, get_path_folder_run,
 						slash_remove_from_path, get_files_dirs, create_sub_dir,
-						get_copy_name)
+						get_copy_name, get_files, get_card_model)
 from core.get_post import get_post
 from core.copy_card import create_copycard
 from log.logger import get_logs
-from gsi.settings import (PATH_RUNS_SCRIPTS)
+from gsi.settings import (PATH_RUNS_SCRIPTS, CONFIGFILE_PATH)
 from core.paginations import paginations
 
 TITLES = {
@@ -52,6 +52,26 @@ def handle_uploaded_file(f, path):
 	with open(path, 'a') as destination:
 		for chunk in f.chunks():
 			destination.write(chunk)
+
+
+def update_qrf_rftrain_card(cs, cs_cards):
+	from cards.models import QRF, RFTrain
+
+	configfile = cs.configfile
+	qrf_directory = str(configfile).split('.cfg')[0]
+	rftrain_configfile = '{0}{1}'.format(CONFIGFILE_PATH, configfile)
+
+	for n in cs_cards:
+		card_model = n.card_item.content_type.model
+
+		if card_model == 'qrf':
+			data_card = QRF.objects.get(name=n.card_item.content_object)
+			data_card.directory = qrf_directory
+			data_card.save()
+		elif card_model == 'rftrain':
+			data_card = RFTrain.objects.get(name=n.card_item.content_object)
+			data_card.config_file = rftrain_configfile
+			data_card.save()
 
 
 @render_to('gsi/blocking.html')
@@ -340,7 +360,9 @@ def run_setup(request):
 			for run_id in data_post.getlist('run_select'):
 				cur_run = get_object_or_404(RunBase, pk=run_id)
 				run_name += '"' + cur_run.name + '", '
+				rb_cs = get_object_or_404(CardSequence, id=cur_run.card_sequence.id)
 				cur_run.delete()
+				rb_cs.delete()
 			run_name = run_name[:-2]
 
 			return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_setup'),
@@ -349,7 +371,9 @@ def run_setup(request):
 		elif data_post.get('delete_button'):
 			run_bases_current = get_object_or_404(RunBase, pk=data_post.get('delete_button'))
 			run_name += '"' + run_bases_current.name + '"'
+			rb_cs = get_object_or_404(CardSequence, id=run_bases_current.card_sequence.id)
 			run_bases_current.delete()
+			rb_cs.delete()
 
 			return HttpResponseRedirect(u'%s?status_message=%s' %
 										(reverse('run_setup'), (u'Run: {0} ==> deleted.'.format(run_name)))
@@ -778,10 +802,14 @@ def add_card_sequence(request, run_id):
 @login_required
 @render_to('gsi/card_sequence_update.html')
 def card_sequence_update(request, run_id, cs_id):
+	home_var = HomeVariables.objects.all()
+	rf_auxdata_path = home_var[0].RF_AUXDATA_DIR
+	files, error = get_files(rf_auxdata_path, '.cfg')
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
 	card_sequence_cards = CardSequence.cards.through.objects.filter(sequence_id=cs_id)
 	title = 'Card Sequence {0}'.format(card_sequence.name)
 	url_process_card = 'proces_card_sequence_card_edit'
+	cs_configfile = card_sequence.configfile
 	form = None
 
 	REVERCE_URL = {
@@ -831,6 +859,7 @@ def card_sequence_update(request, run_id, cs_id):
 
 	if request.method == "POST":
 		data_post = request.POST
+		data_configfile = data_post.get('configfile', '')
 
 		if data_post.get('new_card'):
 			new_card = data_post.get('new_card')
@@ -850,7 +879,11 @@ def card_sequence_update(request, run_id, cs_id):
 			form = CardSequenceCreateForm(data_post, instance=card_sequence)
 
 			if form.is_valid():
-				card_sequence = create_update_card_sequence(form, cs_id)
+				if data_configfile:
+					card_sequence = create_update_card_sequence(form, configfile=data_configfile, cs_id=cs_id)
+					update_qrf_rftrain_card(card_sequence, card_sequence_cards)
+				else:
+					card_sequence = create_update_card_sequence(form, cs_id=cs_id)
 
 				return HttpResponseRedirect(
 					u'%s?status_message=%s' % (reverse('card_sequence_update', args=[run_id, card_sequence.id]),
@@ -861,7 +894,11 @@ def card_sequence_update(request, run_id, cs_id):
 			form = CardSequenceCreateForm(data_post, instance=card_sequence)
 
 			if form.is_valid():
-				card_sequence = create_update_card_sequence(form, cs_id)
+				if data_configfile:
+					card_sequence = create_update_card_sequence(form, configfile=data_configfile, cs_id=cs_id)
+					update_qrf_rftrain_card(card_sequence, card_sequence_cards)
+				else:
+					card_sequence = create_update_card_sequence(form, cs_id=cs_id)
 
 			return HttpResponseRedirect(
 					u'%s?status_message=%s' % (reverse('run_update', args=[run_id]),
@@ -917,6 +954,8 @@ def card_sequence_update(request, run_id, cs_id):
 		'card_sequence_cards': card_sequence_cards,
 		'card_sequence': card_sequence,
 		'url_process_card': url_process_card,
+		'files': files,
+		'cs_configfile': cs_configfile
 	}
 
 	return data

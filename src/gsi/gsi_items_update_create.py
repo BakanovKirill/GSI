@@ -3,7 +3,22 @@ from django.shortcuts import get_object_or_404
 
 from gsi.models import (VariablesGroup, Area, Tile,
 						YearGroup, CardSequence, Satellite,
-                        InputDataDirectory)
+                        InputDataDirectory, ConfigFile)
+
+
+def configfile_update_create(pathname):
+	# configfiles = ConfigFile.objects.all(pathname=pathname).exists()
+	# configfile = None
+	if not ConfigFile.objects.filter(pathname=pathname).exists():
+		configfile = ConfigFile.objects.create(
+			pathname=pathname,
+		)
+	else:
+		configfile = ConfigFile.objects.get(
+			pathname=pathname,
+		)
+
+	return configfile
 
 
 def var_group_update_create(form, item_id=None):
@@ -80,12 +95,21 @@ def yg_update_create(form, multiple=None, item_id=None, delete=False):
     return result
 
 
-def create_update_card_sequence(form, cs_id=None):
+def create_update_card_sequence(form, configfile=None, cs_id=None):
+	# configfile = None
+	# configfile = form.cleaned_data["configfile"]
+	# configfile = configfile_update_create(form.cleaned_data["configfile"])
+	# print 'configfile type ================================ ', type(configfile)
+
 	if cs_id:
 		card_sequence = CardSequence.objects.get(id=cs_id)
 		# card_sequence.name = form.cleaned_data["name"]
 		card_sequence.environment_override = form.cleaned_data["environment_override"]
 		card_sequence.environment_base = form.cleaned_data["environment_base"]
+
+		if configfile:
+			configfile = configfile_update_create(configfile)
+			card_sequence.configfile = configfile
 		card_sequence.save()
 	else:
 		card_sequence = CardSequence.objects.create(
@@ -93,6 +117,11 @@ def create_update_card_sequence(form, cs_id=None):
 			environment_override=form.cleaned_data["environment_override"],
 			environment_base=form.cleaned_data["environment_base"],
 		)
+
+		if configfile:
+			configfile = configfile_update_create(configfile)
+			card_sequence.configfile = configfile
+		card_sequence.save()
 
 	if form.cleaned_data["card_item"]:
 		CardSequence.cards.through.objects.create(
@@ -143,7 +172,3 @@ def data_dir_update_create(form, item_id=None):
         )
 
     return result
-
-
-
-

@@ -15,7 +15,7 @@
 
     <div class="col-md-2 right">
         <div class="form-group {% if form.name.errors %}has-error{% endif %}">
-            <label class="control-label">Name</label>
+            <label class="control-label">Name*</label>
         </div>
     </div>
     <div class="col-md-4 left margin-top-8 grey-color">
@@ -24,7 +24,7 @@
 
     <div class="col-md-2 right">
         <div class="form-group {% if form.content_object.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.environment_base.label }}</label>
+            <label class="control-label font-normal">{{ form.environment_base.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
@@ -41,7 +41,7 @@
 <div class="row margin-top-15">
     <div class="col-md-2 right">
         <div class="form-group {% if form.environment_override.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.environment_override.label }}</label>
+            <label class="control-label font-normal">{{ form.environment_override.label }}</label>
         </div>
     </div>
     <div class="col-md-10">
@@ -54,10 +54,37 @@
     </div>
 </div>
 
+<!-- select config file -->
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.content_object.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">Configuration files</label>
+        </div>
+    </div>
+    <div class="col-md-4" id="select-files">
+        <select class="form-control">
+            <option value="select">Select</option>
+            {% for file in files %}
+                <option class="select-file" name="file" value="{{ file }}">{{ file }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.content_object.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">Selected the Configuration file</label>
+        </div>
+    </div>
+    <div class="col-md-4" id="select-files">
+        <input class="form-control config-file" id="id_configfile" name="configfile" type="text" readonly="readonly" {% if cs_configfile %}value="{{ cs_configfile }}"{% endif %}/>
+    </div>
+</div>
+<!-- end select config file -->
+
 <div class="row margin-top-15" id="add_item_order">
-    <div class="col-md-2 right" >
+    <div class="col-md-2 right">
         <div class="form-group {% if form.cards.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.card_item.label }}</label>
+            <label class="control-label font-normal">{{ form.card_item.label }}</label>
         </div>
     </div>
     <div class="col-md-4">
@@ -71,7 +98,7 @@
 
     <div class="col-md-2 right">
         <div class="form-group {% if form.order.errors %}has-error{% endif %}">
-            <label class="control-label">{{ form.order.label }}</label>
+            <label class="control-label font-normal">{{ form.order.label }}</label>
         </div>
     </div>
     <div class="col-md-2">
@@ -91,7 +118,7 @@
 <div class="row margin-top-15">
     <div class="col-md-12">
         <div class="form-group {% if form.environment_override.errors %}has-error{% endif %}">
-            <label class="control-label">Ordered card items</label>
+            <label class="control-label font-normal">Ordered card items:</label>
         </div>
     </div>
     <div class="col-md-12">

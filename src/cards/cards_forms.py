@@ -43,7 +43,7 @@ class QRFForm(forms.ModelForm):
         label=u'Number of threads',
     )
     directory = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}),
         max_length=300,
         required=False,
         label=u'Directory',
@@ -533,7 +533,7 @@ class RFTrainForm(forms.ModelForm):
         label=u'Value',
     )
     config_file = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}),
         max_length=200,
         required=False,
         label=u'Config file',
