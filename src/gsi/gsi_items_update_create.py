@@ -7,8 +7,6 @@ from gsi.models import (VariablesGroup, Area, Tile,
 
 
 def configfile_update_create(pathname):
-	# configfiles = ConfigFile.objects.all(pathname=pathname).exists()
-	# configfile = None
 	if not ConfigFile.objects.filter(pathname=pathname).exists():
 		configfile = ConfigFile.objects.create(
 			pathname=pathname,
@@ -96,11 +94,6 @@ def yg_update_create(form, multiple=None, item_id=None, delete=False):
 
 
 def create_update_card_sequence(form, configfile=None, cs_id=None):
-	# configfile = None
-	# configfile = form.cleaned_data["configfile"]
-	# configfile = configfile_update_create(form.cleaned_data["configfile"])
-	# print 'configfile type ================================ ', type(configfile)
-
 	if cs_id:
 		card_sequence = CardSequence.objects.get(id=cs_id)
 		# card_sequence.name = form.cleaned_data["name"]

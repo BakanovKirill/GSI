@@ -111,11 +111,6 @@ class CardSequenceForm(forms.ModelForm):
         required=False,
         label=u'Environment base',
     )
-    configfile = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
-        required=False,
-        label=u'Configuration Files',
-    )
 
     class Meta:
         model = CardSequence
@@ -123,7 +118,6 @@ class CardSequenceForm(forms.ModelForm):
             'name',
             'environment_base',
             'environment_override',
-            'configfile',
         ]
 
 
@@ -200,11 +194,6 @@ class CardSequenceCreateForm(forms.ModelForm):
         required=False,
         label=u'Ordered card items',
     )
-    # configfile = forms.CharField(
-    #     widget=forms.TextInput(attrs={'class': 'form-control'}),
-    #     required=False,
-    #     label=u'Configuration Files',
-    # )
 
     class Meta:
         model = CardSequence.cards.through
@@ -214,7 +203,6 @@ class CardSequenceCreateForm(forms.ModelForm):
             'environment_override',
             'card_item',
             'order',
-            # 'configfile',
         ]
 
 
