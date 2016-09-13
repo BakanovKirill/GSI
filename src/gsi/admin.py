@@ -5,7 +5,7 @@ from core.utils import (make_run, update_root_list_files, update_list_dirs, upda
 from .models import (HomeVariables, VariablesGroup, Tile, Area, YearGroup,
                      Year, CardSequence, RunBase, RunStep, Run,
                      Resolution, Log, TileType, Satellite, InputDataDirectory,
-                     ListTestFiles)
+                     ListTestFiles, SubCardItem)
 from solo.admin import SingletonModelAdmin
 
 
@@ -91,5 +91,13 @@ class ListTestFilesAdmin(admin.ModelAdmin):
     readonly_fields = ('name', 'input_data_directory', 'size', 'date_modified',)
 
 
+class SubCardItemAdmin(admin.ModelAdmin):
+    list_display = ('name', 'state', 'run_id', 'card_id', 'start_date', 'start_time',)
+    readonly_fields = ('name', 'state', 'run_id', 'card_id', 'start_date', 'start_time',)
+    list_display = ('name', 'state', 'run_id', 'card_id', 'start_date', 'start_time',)
+    search_fields = ('name', 'state', 'run_id', 'card_id', 'start_date', 'start_time',)
+
+
 admin.site.register(InputDataDirectory, InputDataDirectoryAdmin)
 admin.site.register(ListTestFiles, ListTestFilesAdmin)
+admin.site.register(SubCardItem, SubCardItemAdmin)
