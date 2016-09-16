@@ -10,6 +10,9 @@ from gsi.models import (Area, YearGroup, TileType,
                         Satellite, InputDataDirectory, ListTestFiles,)
 
 
+# , 'readonly': 'readonly'
+
+
 class QRFForm(forms.ModelForm):
 
     """ form for editing QRF Card """
@@ -43,7 +46,7 @@ class QRFForm(forms.ModelForm):
         label=u'Number of threads',
     )
     directory = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control config-file', 'readonly': 'readonly'}),
+        widget=forms.TextInput(attrs={'class': 'form-control config-file'}),
         max_length=300,
         required=False,
         label=u'Directory',
@@ -533,7 +536,7 @@ class RFTrainForm(forms.ModelForm):
         label=u'Value',
     )
     config_file = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control config-file', 'readonly': 'readonly'}),
+        widget=forms.TextInput(attrs={'class': 'form-control config-file'}),
         max_length=200,
         required=False,
         label=u'Config file',
