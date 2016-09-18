@@ -95,7 +95,7 @@ class SubCardItemAdmin(admin.ModelAdmin):
     list_display = ('name', 'state', 'run_id', 'card_id', 'start_date', 'start_time',)
     readonly_fields = ('name', 'state', 'run_id', 'card_id', 'start_date', 'start_time',)
     list_display = ('name', 'state', 'run_id', 'card_id', 'start_date', 'start_time',)
-    search_fields = ('name', 'state', 'run_id', 'card_id', 'start_date', 'start_time',)
+    search_fields = ('name', 'state', 'run_id', 'start_date', 'start_time',)
 
 
 admin.site.register(InputDataDirectory, InputDataDirectoryAdmin)
