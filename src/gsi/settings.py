@@ -241,6 +241,9 @@ CONFIGFILE_PATH = '$RF_AUXDATA_DIR/'
 # number paginations
 NUM_PAGINATIONS = 7
 
+# number execute runs
+EXEC_RUNS = 1500
+
 # Card Type
 CARD_TYPE = {
     'rftrain': 'RFTrain',
