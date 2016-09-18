@@ -242,7 +242,7 @@ CONFIGFILE_PATH = '$RF_AUXDATA_DIR/'
 NUM_PAGINATIONS = 7
 
 # number execute runs
-EXEC_RUNS = 1500
+EXEC_RUNS = 500
 
 # Card Type
 CARD_TYPE = {
