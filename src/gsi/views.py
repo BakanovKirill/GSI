@@ -1415,13 +1415,21 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
 @render_to('gsi/sub_card_details.html')
 def sub_card_details(request, run_id, card_id):
 	url_name = 'sub_card_details'
-	sub_cards = SubCardItem.objects.filter(
-			run_id=run_id, card_id=card_id)
+	sub_cards = SubCardItem.objects.filter(run_id=run_id, card_id=card_id)
 	sub_cards.order_by('sub_cards.start_time')
-	runs_step = RunStep.objects.filter(parent_run=run_id).first()
+	# runs_step = RunStep.objects.filter(parent_run=run_id).first()
 	run_step_card = RunStep.objects.filter(card_item__id=card_id).first()
 	title = 'Sub Cards of Card "{0}" Details'.format(run_step_card.card_item)
 	sub_title = 'The View Log file select and hit view'
+
+	if request.method == "GET":
+		order_by = request.GET.get('order_by', '')
+
+		if order_by in ('name', 'start_date', 'start_time', 'state'):
+			sub_cards = sub_cards.order_by(order_by)
+
+			if request.GET.get('reverse', '') == '1':
+				sub_cards = sub_cards.reverse()
 
 	if request.method == "POST":
 		if request.POST.get('details_file'):
