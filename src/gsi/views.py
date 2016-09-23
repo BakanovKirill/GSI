@@ -8,7 +8,7 @@ import shutil
 # import copy
 
 from annoying.decorators import render_to
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
@@ -201,7 +201,7 @@ def get_number_cards(rb, user):
 # upload_static_data_view = user_passes_test(login_url='/', redirect_field_name='')(UploadStaticDataView.as_view())
 
 
-@login_required
+@user_passes_test(lambda u: u.is_superuser)
 @render_to('gsi/upload_file.html')
 def upload_file(request):
 	title = 'Upload Test Data'
@@ -2546,8 +2546,8 @@ def card_edit(request, card_id):
 		'randomforest': RandomForestForm,
 	}
 
-	print 'template_name ========================= ', template_name
-	print 'card_model ========================= ', card_model
+	# print 'template_name ========================= ', template_name
+	# print 'card_model ========================= ', card_model
 	# print 'data_card ========================= ', data_card
 
 	content_type_name = ContentType.objects.get(app_label="cards", model=data_card.content_type.model)
@@ -2555,10 +2555,10 @@ def card_edit(request, card_id):
 	card_name = content_type_name.get_object_for_this_type(name=data_card)
 	cur_card = get_object_or_404(class_model, pk=card_name.id)
 
-	print 'card_name ========================== ', card_name
-	print 'class_model ========================== ', class_model
-	print 'content_type_name ========================== ', content_type_name
-	print 'card_name ID ========================== ', card_name.id
+	# print 'card_name ========================== ', card_name
+	# print 'class_model ========================== ', class_model
+	# print 'content_type_name ========================== ', content_type_name
+	# print 'card_name ID ========================== ', card_name.id
 
 	# template_name = 'gsi/_input_data_dir_form.html'
 	reverse_url = {
@@ -2708,6 +2708,23 @@ def view_results_folder(request, run_id, prev_dir, dir):
 		'files': files,
 		'back_prev': back_prev,
 		'back_cur': back_cur
+	}
+
+	return data
+
+
+# view Customer section
+@login_required
+@render_to('gsi/customer_section.html')
+def customer_section(request):
+	customer = request.user
+	title = 'Customer {0} section'.format(customer)
+	url_name = 'customer_section'
+
+	data = {
+		'title': title,
+		'customer': customer,
+		'url_name': url_name,
 	}
 
 	return data

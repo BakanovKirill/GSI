@@ -128,6 +128,9 @@ urlpatterns = [
 	# cards edit
 	url(r'^card/(?P<card_id>\d+)/$', 'gsi.views.card_edit', name='card_edit'),
 
+	# Customer section
+	url(r'^customer/$', 'gsi.views.customer_section', name='customer_section'),
+
 
 	# card sequence for new run base
 	url(r'^run/card-sequence/add/$', 'gsi.views.run_new_card_sequence_add',

@@ -85,71 +85,79 @@
                         <!-- Start Main Menu Left Sidebar -->
                         <div class="col-md-3 li-menu dropdown-left-0 left" id="dropdownMenu">
                             <ul class="nav nav-pills nav-stacked">
-                                <li class="{% if url_name == 'home' %}active-main-menu{% else %}li-menu{% endif %}">
-                                    <a href="{% url 'index' %}">
-                                        <img class="right-indent-10" src="{% static 'img/overview.png' %}">
-                                        OVERVIEW
-                                    </a>
-                                </li>
-                                <li class="{% if url_name == 'run_setup' %}active-main-menu{% else %}li-menu{% endif %}">
-                                    <a href="{% url 'run_setup' %}">
-                                        <img class="right-indent-10" src="{% static 'img/setup_new_run.png' %}">
-                                        SETUP NEW RUN
-                                    </a>
-                                </li>
-                                <li class="{% if url_name == 'submit_run' %}active-main-menu{% else %}li-menu{% endif %}">
-                                    <a href="{% url 'submit_run' %}">
-                                        <img class="right-indent-10" src="{% static 'img/submit_a_run.png' %}">
-                                        SUBMIT A RUN
-                                    </a>
-                                </li>
-                                <li class="{% if url_name == 'run_progress' %}active-main-menu{% else %}li-menu{% endif %}">
-                                    <a href="{% url 'run_progress' %}">
-                                        <img class="right-indent-10" src="{% static 'img/view_run_progress.png' %}">
-                                        VIEW RUN PROGRESS
-                                    </a>
-                                </li>
+                                {% if user.is_superuser %}
+                                    <li class="{% if url_name == 'home' %}active-main-menu{% else %}li-menu{% endif %}">
+                                        <a href="{% url 'index' %}">
+                                            <img class="right-indent-10" src="{% static 'img/overview.png' %}">
+                                            OVERVIEW
+                                        </a>
+                                    </li>
+                                    <li class="{% if url_name == 'run_setup' %}active-main-menu{% else %}li-menu{% endif %}">
+                                        <a href="{% url 'run_setup' %}">
+                                            <img class="right-indent-10" src="{% static 'img/setup_new_run.png' %}">
+                                            SETUP NEW RUN
+                                        </a>
+                                    </li>
+                                    <li class="{% if url_name == 'submit_run' %}active-main-menu{% else %}li-menu{% endif %}">
+                                        <a href="{% url 'submit_run' %}">
+                                            <img class="right-indent-10" src="{% static 'img/submit_a_run.png' %}">
+                                            SUBMIT A RUN
+                                        </a>
+                                    </li>
+                                    <li class="{% if url_name == 'run_progress' %}active-main-menu{% else %}li-menu{% endif %}">
+                                        <a href="{% url 'run_progress' %}">
+                                            <img class="right-indent-10" src="{% static 'img/view_run_progress.png' %}">
+                                            VIEW RUN PROGRESS
+                                        </a>
+                                    </li>
 
-                                <!-- sub setup static data menu -->
-                                <div id="sweeties" class="{% if but_name == 'static_data' %}sub-menu-visible{% else %}sub-menu-no-visible{% endif %}">
-                                    <button class="title {% if but_name == 'static_data' %}active-static-data{% endif %}" id="title" onclick="showSubMenuStaticData()">
-                                        <img class="right-indent-10" src="{% static 'img/setup_static_data.png' %}">
-                                        SETUP STATIC DATA
-                                        <i id="icon_static" class="fa {% if but_name == 'static_data' %}fa-chevron-down{% else %}fa-chevron-right{% endif %} icon-visible"></i>
-                                        <!--<i class="fa fa-chevron-right icon-visible"></i>-->
-                                        <!--<i class="fa fa-chevron-down icon-visible" style="display: none"></i>-->
-                                    </button>
-                                    <div id="subMenu">
-                                        <ul>
-                                            <li class="li-sub-menu {% if url_name == 'home_variable' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                <a href="{% url 'home_variable_setup' %}">Setup home variables</a>
-                                            </li>
-                                            <li class="li-sub-menu {% if url_name == 'environment_groups' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                <a href="{% url 'environment_groups' %}">Environment Groups</a>
-                                            </li>
-                                            <li class="li-sub-menu {% if url_name == 'areas' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                <a href="{% url 'areas' %}">Areas</a>
-                                            </li>
-                                            <li class="li-sub-menu {% if url_name == 'years_group' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                <a href="{% url 'years_group' %}">Year groups</a>
-                                            </li>
-                                            <li class="li-sub-menu {% if url_name == 'satellite' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                <a href="{% url 'satellite' %}">Satellites</a>
-                                            </li>
-                                            <li class="li-sub-menu {% if url_name == 'input_data_dir_list' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                <a href="{% url 'input_data_dir_list' %}">Input Data Directory</a>
-                                            </li>
-                                            <li class="li-sub-menu {% if url_name == 'cards_list' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                <a href="{% url 'cards_list' %}">Cards</a>
-                                            </li>
-                                        </ul>
+                                    <!-- sub setup static data menu -->
+                                    <div id="sweeties" class="{% if but_name == 'static_data' %}sub-menu-visible{% else %}sub-menu-no-visible{% endif %}">
+                                        <button class="title {% if but_name == 'static_data' %}active-static-data{% endif %}" id="title" onclick="showSubMenuStaticData()">
+                                            <img class="right-indent-10" src="{% static 'img/setup_static_data.png' %}">
+                                            SETUP STATIC DATA
+                                            <i id="icon_static" class="fa {% if but_name == 'static_data' %}fa-chevron-down{% else %}fa-chevron-right{% endif %} icon-visible"></i>
+                                            <!--<i class="fa fa-chevron-right icon-visible"></i>-->
+                                            <!--<i class="fa fa-chevron-down icon-visible" style="display: none"></i>-->
+                                        </button>
+                                        <div id="subMenu">
+                                            <ul>
+                                                <li class="li-sub-menu {% if url_name == 'home_variable' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                    <a href="{% url 'home_variable_setup' %}">Setup home variables</a>
+                                                </li>
+                                                <li class="li-sub-menu {% if url_name == 'environment_groups' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                    <a href="{% url 'environment_groups' %}">Environment Groups</a>
+                                                </li>
+                                                <li class="li-sub-menu {% if url_name == 'areas' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                    <a href="{% url 'areas' %}">Areas</a>
+                                                </li>
+                                                <li class="li-sub-menu {% if url_name == 'years_group' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                    <a href="{% url 'years_group' %}">Year groups</a>
+                                                </li>
+                                                <li class="li-sub-menu {% if url_name == 'satellite' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                    <a href="{% url 'satellite' %}">Satellites</a>
+                                                </li>
+                                                <li class="li-sub-menu {% if url_name == 'input_data_dir_list' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                    <a href="{% url 'input_data_dir_list' %}">Input Data Directory</a>
+                                                </li>
+                                                <li class="li-sub-menu {% if url_name == 'cards_list' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                    <a href="{% url 'cards_list' %}">Cards</a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
-                                </div>
-                                <!-- end sub setup static data menu -->
-                                <li class="{% if url_name == 'upload_file' %}active-main-menu{% else %}li-menu{% endif %}">
-                                    <a href="{% url 'upload_file' %}" id="upload_file">
-                                        <img class="right-indent-10" src="{% static 'img/upload.png' %}">
-                                        UPLOAD TEST DATA
+                                    <!-- end sub setup static data menu -->
+                                    <li class="{% if url_name == 'upload_file' %}active-main-menu{% else %}li-menu{% endif %}">
+                                        <a href="{% url 'upload_file' %}" id="upload_file">
+                                            <img class="right-indent-10" src="{% static 'img/upload.png' %}">
+                                            UPLOAD TEST DATA
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                <li class="{% if url_name == 'customer_section' %}active-main-menu{% else %}li-menu{% endif %}">
+                                    <a href="{% url 'customer_section' %}">
+                                        <img class="right-indent-10" src="{% static 'img/customer_section.png' %}">
+                                        CUSTOMER SECTION
                                     </a>
                                 </li>
                             </ul>
