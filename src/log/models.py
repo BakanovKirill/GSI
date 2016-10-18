@@ -12,3 +12,14 @@ class Log(models.Model):
 
 	def __unicode__(self):
 		return u'%s' % self.message[:25]
+
+
+class LogDebug(models.Model):
+	""" debug log """
+	name = models.CharField(max_length=100)
+	# user = models.ForeignKey(User, blank=True, null=True)
+	log = models.TextField(blank=True, null=True)
+	create_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
+	def __unicode__(self):
+		return u'%s' % self.name

@@ -30,6 +30,12 @@ mkmigr_cards:
 migrate_cards:
 	$(MANAGE) migrate cards
 
+mkmigr_log:
+	$(MANAGE) makemigrations log
+
+migrate_log:
+	$(MANAGE) migrate log
+
 test_gsi:
 	$(MANAGE) test gsi
 
