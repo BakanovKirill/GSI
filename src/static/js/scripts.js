@@ -177,7 +177,6 @@ function initCreateCard(){
 
 function initSelectConfigFile(){
     var config_file = $('#id_configfile');
-
     $('div#select-files > div.selecter > div.selecter-options > span.selecter-item').click(function(event){
         var select = $(this).text();
         // $(this).toggleClass("selecter-item selected");
@@ -187,10 +186,7 @@ function initSelectConfigFile(){
         $(config_file).val(select);
         // alert(select);
     });
-
     // var select = $("#select-files option:selected").text();
-
-
 }
 
 
