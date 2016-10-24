@@ -1,11 +1,11 @@
-# INSTALLATION
+## INSTALLATION
 
 
 `python bootstrap-buildout.py`
 
 `bin/buildout`
 
-# STARTING in the Local Environment
+## STARTING in the Local Environment
 
 
 `cd gsi`
@@ -14,7 +14,7 @@
 
 `make run`
 
-# DATABASE (locally deploy a working version)
+## DATABASE (locally deploy a working version)
 
 
 `cd gsi`
@@ -29,6 +29,6 @@
 
 
 
-# Project page:
+### Project page:
 
 http://indy4.epcc.ed.ac.uk/
