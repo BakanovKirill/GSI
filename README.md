@@ -24,10 +24,10 @@
 `createdb gsi`
 
 `make update_dev_db`
-#### To run this command, you must specify three parameters:
+#### To run this command, you must specify three parameters in the fabfile.py:
 `GSI_APP_SERVER = <username> @ <server name>`
 
-`REMOTE_CODE_DIR = root folder of the project,`
+`REMOTE_CODE_DIR = root folder of the project`
 
 `ENV_PASS = password to login on ssh.`
 
