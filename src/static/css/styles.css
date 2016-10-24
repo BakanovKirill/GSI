@@ -17,6 +17,10 @@ th {
     text-align: left;
 }
 
+.hv-error > ul.errorlist > li {
+    text-align: right !important;
+}
+
 input[type="file"] {
     display: inline;
 }

@@ -184,9 +184,7 @@ function initSelectConfigFile(){
         $(this).addClass("selecter-item selected");
         $(this).attr("name", "select-file");
         $(config_file).val(select);
-        // alert(select);
     });
-    // var select = $("#select-files option:selected").text();
 }
 
 

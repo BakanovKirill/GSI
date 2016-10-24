@@ -1508,10 +1508,6 @@ def home_variable_setup(request):
     except HomeVariables.DoesNotExist:
         variables = ''
 
-    if not variables:
-        return HttpResponseRedirect(u'%s?danger_message=%s' % (
-            reverse('index'), (u'Please fill the Home Variables.')))
-
     if request.method == "POST":
         form = HomeVariablesForm(request.POST)
 
@@ -1525,16 +1521,16 @@ def home_variable_setup(request):
             variables.SAT_DIF_DIR_ROOT = form.cleaned_data["SAT_DIF_DIR_ROOT"]
             variables.save()
 
-        if request.POST.get('save_button') is not None:
-            return HttpResponseRedirect(u'%s?status_message=%s' % (
-                reverse('static_data_setup'),
-                (u"Home variables successfully updated")))
-        if request.POST.get('save_and_continue_button') is not None:
-            return HttpResponseRedirect(u'%s?status_message=%s' % (
-                reverse('home_variable_setup'),
-                (u"Home variables successfully updated")))
+            if request.POST.get('save_button') is not None:
+                return HttpResponseRedirect(u'%s?status_message=%s' % (
+                    reverse('static_data_setup'),
+                    (u"Home variables successfully updated")))
+            if request.POST.get('save_and_continue_button') is not None:
+                return HttpResponseRedirect(u'%s?status_message=%s' % (
+                    reverse('home_variable_setup'),
+                    (u"Home variables successfully updated")))
     else:
-        form = HomeVariablesForm(instance=variables)
+        form = HomeVariablesForm()
 
     data = {
         'title': title,

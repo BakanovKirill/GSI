@@ -1,139 +1,120 @@
 {% extends "base.html" %}
 {% load static from staticfiles %}
-
 {% block title %}{{ title }}{% endblock title %}
-
-{% block status_message %}
-    {% if form.errors %}
-        Please, correct the following errors!
-    {% endif %}
-{% endblock status_message %}
+{% block status_message %} {% if form.errors %} Please, correct the following errors! {% endif %} {% endblock status_message %}
 
 {% block content %}
-    <div class="row-fluid">
-        <div class="col-md-12">
-            <form action="{% url 'home_variable_setup' %}" method="post" enctype="multipart/form-data"
-                  role="form" class="form-horizontal">
-                {% csrf_token %}
+<div class="row-fluid">
+    <div class="col-md-12">
+        <form action="{% url 'home_variable_setup' %}" method="post" enctype="multipart/form-data" role="form" class="form-horizontal">
+            {% csrf_token %}
 
-                <div class="row margin-top-15">
-                    <div class="col-md-5 right">
-                        <div class="form-group {% if form.SAT_TIF_DIR_ROOT.errors %}has-error{% endif %}">
-                            <label class="control-label">{{ form.SAT_TIF_DIR_ROOT.label }}*</label>
-                        </div>
-                    </div>
-                    <div class="col-md-7">
-                        {% if form.SAT_TIF_DIR_ROOT.errors %}
-                            <b class="error-form">{{ form.SAT_TIF_DIR_ROOT.errors }}</b>
-                        {% endif %}
-                        {{ form.SAT_TIF_DIR_ROOT }}
-                        <span class="help-block">
-                            {{ form.SAT_TIF_DIR_ROOT.help_text }}
-                        </span>
+            <div class="row margin-top-15">
+                <div class="col-md-5 right">
+                    <div class="form-group {% if form.SAT_TIF_DIR_ROOT.errors %}has-error{% endif %}">
+                        <label class="control-label">{{ form.SAT_TIF_DIR_ROOT.label }}*</label>
+                        {% if form.SAT_TIF_DIR_ROOT.errors %}<b class="error-form hv-error">{{ form.SAT_TIF_DIR_ROOT.errors }}</b>{% endif %}
                     </div>
                 </div>
+                <div class="col-md-7">
+                    {{ form.SAT_TIF_DIR_ROOT }}
+                    <span class="help-block">
+                        {{ form.SAT_TIF_DIR_ROOT.help_text }}
+                    </span>
+                </div>
+            </div>
 
-                <div class="row margin-top-15">
-                    <div class="col-md-5 right">
-                        <div class="form-group {% if form.name.errors %}has-error{% endif %}">
-                            <label class="control-label">{{ form.RF_DIR_ROOT.label }}*</label>
-                        </div>
-                    </div>
-                    <div class="col-md-7">
-                        {% if form.RF_DIR_ROOT.errors %}
-                            <b class="error-form">{{ form.RF_DIR_ROOT.errors }}</b>
-                        {% endif %}
-                        {{ form.RF_DIR_ROOT }}
-                        <span class="help-block">
-                            {{ form.RF_DIR_ROOT.help_text }}
-                        </span>
+            <div class="row margin-top-15">
+                <div class="col-md-5 right">
+                    <div class="form-group {% if form.RF_DIR_ROOT.errors %}has-error{% endif %}">
+                        <label class="control-label">{{ form.RF_DIR_ROOT.label }}*</label>
+                        {% if form.RF_DIR_ROOT.errors %}<b class="error-form hv-error">{{ form.RF_DIR_ROOT.errors }}</b>{% endif %}
                     </div>
                 </div>
+                <div class="col-md-7">
+                    {{ form.RF_DIR_ROOT }}
+                    <span class="help-block">
+                        {{ form.RF_DIR_ROOT.help_text }}
+                    </span>
+                </div>
+            </div>
 
-                <div class="row margin-top-15">
-                    <div class="col-md-5 right">
-                        <div class="form-group {% if form.USER_DATA_DIR_ROOT.errors %}has-error{% endif %}">
-                            <label class="control-label">{{ form.USER_DATA_DIR_ROOT.label }}*</label>
-                        </div>
-                    </div>
-                    <div class="col-md-7">
-                        {% if form.USER_DATA_DIR_ROOT.errors %}
-                            <b class="error-form">{{ form.USER_DATA_DIR_ROOT.errors }}</b>
-                        {% endif %}
-                        {{ form.USER_DATA_DIR_ROOT }}
-                        <span class="help-block">
-                            {{ form.USER_DATA_DIR_ROOT.help_text }}
-                        </span>
+            <div class="row margin-top-15">
+                <div class="col-md-5 right">
+                    <div class="form-group {% if form.USER_DATA_DIR_ROOT.errors %}has-error{% endif %}">
+                        <label class="control-label">{{ form.USER_DATA_DIR_ROOT.label }}*</label>
+                        {% if form.USER_DATA_DIR_ROOT.errors %}<b class="error-form hv-error">{{ form.USER_DATA_DIR_ROOT.errors }}</b>{% endif %}
                     </div>
                 </div>
+                <div class="col-md-7">
+                    {{ form.USER_DATA_DIR_ROOT }}
+                    <span class="help-block">
+                        {{ form.USER_DATA_DIR_ROOT.help_text }}
+                    </span>
+                </div>
+            </div>
 
-                <div class="row margin-top-15">
-                    <div class="col-md-5 right">
-                        <div class="form-group {% if form.MODIS_DIR_ROOT.errors %}has-error{% endif %}">
-                            <label class="control-label">{{ form.MODIS_DIR_ROOT.label }}*</label>
-                        </div>
-                    </div>
-                    <div class="col-md-7">
-                        {% if form.MODIS_DIR_ROOT.errors %}
-                            <b class="error-form">{{ form.MODIS_DIR_ROOT.errors }}</b>
-                        {% endif %}
-                        {{ form.MODIS_DIR_ROOT }}
-                        <span class="help-block">
-                            {{ form.MODIS_DIR_ROOT.help_text }}
-                        </span>
+            <div class="row margin-top-15">
+                <div class="col-md-5 right">
+                    <div class="form-group {% if form.MODIS_DIR_ROOT.errors %}has-error{% endif %}">
+                        <label class="control-label">{{ form.MODIS_DIR_ROOT.label }}*</label>
+                        {% if form.MODIS_DIR_ROOT.errors %}<b class="error-form hv-error">{{ form.MODIS_DIR_ROOT.errors }}</b> {% endif %}
                     </div>
                 </div>
+                <div class="col-md-7">
+                    {{ form.MODIS_DIR_ROOT }}
+                    <span class="help-block">
+                        {{ form.MODIS_DIR_ROOT.help_text }}
+                    </span>
+                </div>
+            </div>
 
-                <div class="row margin-top-15">
-                    <div class="col-md-5 right">
-                        <div class="form-group {% if form.RF_AUXDATA_DIR.errors %}has-error{% endif %}">
-                            <label class="control-label">{{ form.RF_AUXDATA_DIR.label }}*</label>
-                        </div>
-                    </div>
-                    <div class="col-md-7">
-                        {% if form.RF_AUXDATA_DIR.errors %}
-                            <b class="error-form">{{ form.RF_AUXDATA_DIR.errors }}</b>
-                        {% endif %}
-                        {{ form.RF_AUXDATA_DIR }}
-                        <span class="help-block">
-                            {{ form.RF_AUXDATA_DIR.help_text }}
-                        </span>
+            <div class="row margin-top-15">
+                <div class="col-md-5 right">
+                    <div class="form-group {% if form.RF_AUXDATA_DIR.errors %}has-error{% endif %}">
+                        <label class="control-label">{{ form.RF_AUXDATA_DIR.label }}*</label>
+                        {% if form.RF_AUXDATA_DIR.errors %}<b class="error-form hv-error">{{ form.RF_AUXDATA_DIR.errors }}</b>{% endif %}
                     </div>
                 </div>
+                <div class="col-md-7">
+                    {{ form.RF_AUXDATA_DIR }}
+                    <span class="help-block">
+                        {{ form.RF_AUXDATA_DIR.help_text }}
+                    </span>
+                </div>
+            </div>
 
-                <div class="row margin-top-15">
-                    <div class="col-md-5 right">
-                        <div class="form-group {% if form.SAT_DIF_DIR_ROOT.errors %}has-error{% endif %}">
-                            <label class="control-label">{{ form.SAT_DIF_DIR_ROOT.label }}*</label>
-                        </div>
-                    </div>
-                    <div class="col-md-7">
-                        {% if form.SAT_DIF_DIR_ROOT.errors %}
-                            <b class="error-form">{{ form.SAT_DIF_DIR_ROOT.errors }}</b>
-                        {% endif %}
-                        {{ form.SAT_DIF_DIR_ROOT }}
-                        <span class="help-block">
-                            {{ form.SAT_DIF_DIR_ROOT.help_text }}
-                        </span>
+            <div class="row margin-top-15">
+                <div class="col-md-5 right">
+                    <div class="form-group {% if form.SAT_DIF_DIR_ROOT.errors %}has-error{% endif %}">
+                        <label class="control-label">{{ form.SAT_DIF_DIR_ROOT.label }}*</label>
+                        {% if form.SAT_DIF_DIR_ROOT.errors %}<b class="error-form hv-error">{{ form.SAT_DIF_DIR_ROOT.errors }}</b>{% endif %}
                     </div>
                 </div>
+                <div class="col-md-7">
+                    {{ form.SAT_DIF_DIR_ROOT }}
+                    <span class="help-block">
+                        {{ form.SAT_DIF_DIR_ROOT.help_text }}
+                    </span>
+                </div>
+            </div>
 
-                <div class="col-md-3">
-                    <a class="btn btn-default btn-block" href="{% url 'static_data_setup' %}" role="button">
-                        Cancel
-                    </a>
-                </div>
-                <div class="col-md-6">
-                    <button type="submit" name="save_and_continue_button" class="btn btn-primary btn-block">
-                        Save and continue editing
-                    </button>
-                </div>
-                <div class="col-md-3">
-                    <button type="submit" name="save_button" class="btn btn-primary btn-block">
-                        Save
-                    </button>
-                </div>
-            </form>
-        </div>
+            <div class="col-md-3">
+                <a class="btn btn-default btn-block" href="{% url 'static_data_setup' %}" role="button">
+                    Cancel
+                </a>
+            </div>
+            <div class="col-md-6">
+                <button type="submit" name="save_and_continue_button" class="btn btn-primary btn-block">
+                    Save and continue editing
+                </button>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" name="save_button" class="btn btn-primary btn-block">
+                    Save
+                </button>
+            </div>
+        </form>
     </div>
+</div>
 {% endblock content %}

@@ -3,14 +3,14 @@ from django import forms
 
 from core.validator_gsi import *
 from cards.models import CardItem
-from gsi.models import (RunBase, Resolution,
-                        CardSequence, VariablesGroup,
-                        HomeVariables, Tile, YearGroup,
-                        Year, Satellite, InputDataDirectory, ConfigFile)
+from gsi.models import (RunBase, Resolution, CardSequence, VariablesGroup,
+                        HomeVariables, Tile, YearGroup, Year, Satellite,
+                        InputDataDirectory, ConfigFile)
 
 
 class RunForm(forms.ModelForm):
     """ form for editing RunBase """
+
     def __init__(self, *args, **kwargs):
         super(RunForm, self).__init__(*args, **kwargs)
         self.fields['card_sequence'].widget.attrs['disabled'] = 'disabled'
@@ -23,10 +23,8 @@ class RunForm(forms.ModelForm):
             'placeholder': 'Name',
             # 'onChange': 'reloadPage(this)',
             # 'onChange': 'changeColorTyping(this)',
-
         }),
-        label=u'Name',
-    )
+        label=u'Name', )
     description = forms.CharField(
         widget=forms.Textarea(attrs={
             'rows': '5',
@@ -35,8 +33,7 @@ class RunForm(forms.ModelForm):
             # 'onChange': 'changeColorTyping()',
         }),
         required=False,
-        label=u'Description'
-    )
+        label=u'Description')
     purpose = forms.CharField(
         widget=forms.Textarea(attrs={
             'rows': '5',
@@ -45,8 +42,7 @@ class RunForm(forms.ModelForm):
             # 'onChange': 'changeColorTyping()',
         }),
         required=False,
-        label=u'Purpose of Run'
-    )
+        label=u'Purpose of Run')
     directory_path = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'form-control border-bottom form-control input-form',
@@ -56,8 +52,7 @@ class RunForm(forms.ModelForm):
         # required=False,
         label=u'Directory path',
         help_text=u'Directory path is the name of the directory \
-            that result will be stored'
-    )
+            that result will be stored')
     resolution = forms.ModelChoiceField(
         widget=forms.Select(attrs={
             'class': 'form-control disabled',
@@ -66,8 +61,7 @@ class RunForm(forms.ModelForm):
         }),
         queryset=Resolution.objects.all(),
         empty_label='Select',
-        label=u'Resolution',
-    )
+        label=u'Resolution', )
     card_sequence = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'form-control',
@@ -75,8 +69,7 @@ class RunForm(forms.ModelForm):
             # 'onChange': 'changeColorTyping()',
         }),
         required=False,
-        label=u'Card sequence',
-    )
+        label=u'Card sequence', )
 
     class Meta:
         model = RunBase
@@ -92,25 +85,24 @@ class RunForm(forms.ModelForm):
 
 class CardSequenceForm(forms.ModelForm):
     """ form for editing CardSecuence """
+
     def __init__(self, *args, **kwargs):
         super(CardSequenceForm, self).__init__(*args, **kwargs)
 
     name = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
-        label=u'Name',
-    )
+        label=u'Name', )
     environment_override = forms.CharField(
         required=False,
-        widget=forms.Textarea(attrs={'rows': '5', 'class': 'form-control'}),
-        label=u'Environment override',
-    )
+        widget=forms.Textarea(attrs={'rows': '5',
+                                     'class': 'form-control'}),
+        label=u'Environment override', )
     environment_base = forms.ModelChoiceField(
         widget=forms.Select(attrs={'class': 'form-control'}),
         queryset=VariablesGroup.objects.all(),
         # empty_label=None,
         required=False,
-        label=u'Environment base',
-    )
+        label=u'Environment base', )
 
     class Meta:
         model = CardSequence
@@ -123,24 +115,25 @@ class CardSequenceForm(forms.ModelForm):
 
 class CardSequenceCardForm(forms.ModelForm):
     """ form for editing CardSecuence """
+
     def __init__(self, *args, **kwargs):
         super(CardSequenceCardForm, self).__init__(*args, **kwargs)
 
     card_item = forms.ModelChoiceField(
-        widget=forms.Select(attrs={'class': 'form-control disabled', 'type': "hidden"}),
+        widget=forms.Select(
+            attrs={'class': 'form-control disabled',
+                   'type': "hidden"}),
         # queryset=CardSequence.cards.through.objects.all(),
         queryset=CardItem.objects.all(),
         # empty_label=None,
-        label=u'Environment base',
-    )
+        label=u'Environment base', )
     order = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'type': 'number',
         }),
         validators=[validate_order],
-        label=u'Order',
-    )
+        label=u'Order', )
 
     class Meta:
         model = CardSequence.cards.through
@@ -152,29 +145,30 @@ class CardSequenceCardForm(forms.ModelForm):
 
 class CardSequenceCreateForm(forms.ModelForm):
     """ form for editing CardSecuence """
+
     def __init__(self, *args, **kwargs):
         super(CardSequenceCreateForm, self).__init__(*args, **kwargs)
 
         if 'instance' in kwargs:
             self.fields['card_item'].queryset = CardItem.objects.filter(
-                id__in=kwargs['instance'].cards.values_list('id', flat=True))
+                id__in=kwargs['instance'].cards.values_list(
+                    'id', flat=True))
 
     # name = forms.CharField(
     #     widget=forms.TextInput(attrs={'class': 'form-control'}),
     #     label=u'Name',
     # )
     environment_override = forms.CharField(
-        widget=forms.Textarea(attrs={'rows': '5', 'class': 'form-control'}),
+        widget=forms.Textarea(attrs={'rows': '5',
+                                     'class': 'form-control'}),
         required=False,
-        label=u'Environment override',
-    )
+        label=u'Environment override', )
     environment_base = forms.ModelChoiceField(
         widget=forms.Select(attrs={'class': 'form-control'}),
         queryset=VariablesGroup.objects.all(),
         required=False,
         empty_label='Select',
-        label=u'Environment base',
-    )
+        label=u'Environment base', )
     card_item = forms.ModelChoiceField(
         widget=forms.Select(attrs={'class': 'form-control'}),
         # queryset=CardSequence.cards.through.objects.all(),
@@ -183,8 +177,7 @@ class CardSequenceCreateForm(forms.ModelForm):
         # queryset=CardItem.objects.all(),
         empty_label='Select',
         required=False,
-        label=u'Card items',
-    )
+        label=u'Card items', )
     order = forms.IntegerField(
         widget=forms.NumberInput(attrs={'class': 'form-control'}),
         initial=0,
@@ -192,8 +185,7 @@ class CardSequenceCreateForm(forms.ModelForm):
         error_messages={'required': 'Order must be a positive number'},
         # empty_label=None,
         required=False,
-        label=u'Ordered card items',
-    )
+        label=u'Ordered card items', )
 
     class Meta:
         model = CardSequence.cards.through
@@ -208,39 +200,34 @@ class CardSequenceCreateForm(forms.ModelForm):
 
 class HomeVariablesForm(forms.ModelForm):
     """ form for editing Home Variables """
-    def __init__(self, *args, **kwargs):
-        super(HomeVariablesForm, self).__init__(*args, **kwargs)
 
     SAT_TIF_DIR_ROOT = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         help_text='SAT_TIF_DIR_ROOT',
-        label=u'Satelite Data Top Level',
-    )
+        label=u'Satelite Data Top Level', )
     RF_DIR_ROOT = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         help_text='RF_DIR_ROOT',
-        label=u'Top directory for Random Forest Files',
-    )
+        label=u'Top directory for Random Forest Files', )
     USER_DATA_DIR_ROOT = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         help_text='USER_DATA_DIR_ROOT',
-        label=u'Top Level for user data dir',
-    )
+        label=u'Top Level for user data dir', )
     MODIS_DIR_ROOT = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         help_text='MODIS_DIR_ROOT',
-        label=u'Top Level for raw Modis data',
-    )
+        label=u'Top Level for raw Modis data', )
     RF_AUXDATA_DIR = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         help_text='RF_AUXDATA_DIR',
-        label=u'Top Level for Auxilliary data (SOIL, DEM etc.)',
-    )
+        label=u'Top Level for Auxilliary data (SOIL, DEM etc.)', )
     SAT_DIF_DIR_ROOT = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         help_text='SAT_DIF_DIR_ROOT',
-        label=u'Top Level for Satelite TF files',
-    )
+        label=u'Top Level for Satelite TF files', )
+
+    def __init__(self, *args, **kwargs):
+        super(HomeVariablesForm, self).__init__(*args, **kwargs)
 
     class Meta:
         model = HomeVariables
@@ -256,17 +243,17 @@ class HomeVariablesForm(forms.ModelForm):
 
 class EnvironmentGroupsForm(forms.ModelForm):
     """ form for editing Environment Groups """
+
     def __init__(self, *args, **kwargs):
         super(EnvironmentGroupsForm, self).__init__(*args, **kwargs)
 
     name = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
-        label=u'Name',
-    )
+        label=u'Name', )
     environment_variables = forms.CharField(
-        widget=forms.Textarea(attrs={'rows': '5', 'class': 'form-control'}),
-        label=u'Environment variables'
-    )
+        widget=forms.Textarea(attrs={'rows': '5',
+                                     'class': 'form-control'}),
+        label=u'Environment variables')
 
     class Meta:
         model = VariablesGroup
@@ -278,23 +265,21 @@ class EnvironmentGroupsForm(forms.ModelForm):
 
 class AreasForm(forms.ModelForm):
     """ form for editing Areas """
+
     def __init__(self, *args, **kwargs):
         super(AreasForm, self).__init__(*args, **kwargs)
 
     name = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
-        label=u'Name',
-    )
+        label=u'Name', )
     tiles = forms.ModelMultipleChoiceField(
         widget=forms.SelectMultiple(
             attrs={'size': '10',
-                   'class': 'form-control'}
-        ),
+                   'class': 'form-control'}),
         queryset=Tile.objects.all(),
         # empty_label=None,
         required=False,
-        label=u'Tiles',
-    )
+        label=u'Tiles', )
 
     class Meta:
         model = VariablesGroup
@@ -306,22 +291,20 @@ class AreasForm(forms.ModelForm):
 
 class YearGroupForm(forms.ModelForm):
     """ form for editing YearGroup """
+
     def __init__(self, *args, **kwargs):
         super(YearGroupForm, self).__init__(*args, **kwargs)
 
     name = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
-        label=u'Name',
-    )
+        label=u'Name', )
     years = forms.ModelMultipleChoiceField(
         widget=forms.SelectMultiple(
             attrs={'size': '10',
-                   'class': 'form-control'}
-        ),
+                   'class': 'form-control'}),
         queryset=Year.objects.all(),
         required=False,
-        label=u'Years',
-    )
+        label=u'Years', )
 
     class Meta:
         model = YearGroup
@@ -339,14 +322,11 @@ class SatelliteForm(forms.ModelForm):
 
     name = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
-        label=u'Name',
-    )
+        label=u'Name', )
 
     class Meta:
         model = Satellite
-        fields = [
-            'name',
-        ]
+        fields = ['name', ]
 
 
 class UploadFileForm(forms.Form):
@@ -354,7 +334,9 @@ class UploadFileForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(UploadFileForm, self).__init__(*args, **kwargs)
-        self.fields['test_data'].widget.attrs.update({'class': 'form-control upload-file'})
+        self.fields['test_data'].widget.attrs.update({
+            'class': 'form-control upload-file'
+        })
 
 
 class InputDataDirectoryForm(forms.ModelForm):
@@ -365,14 +347,11 @@ class InputDataDirectoryForm(forms.ModelForm):
 
     name = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
-        label=u'Name',
-    )
+        label=u'Name', )
 
     class Meta:
         model = InputDataDirectory
-        fields = [
-            'name',
-        ]
+        fields = ['name', ]
 
 
 class ConfigFileForm(forms.ModelForm):
