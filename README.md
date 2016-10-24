@@ -5,9 +5,27 @@
 
 `bin/buildout`
 
-`bin/django makemigrations`
+# STARTING in the Local Environment
 
-`bin/django migrate`
+
+`cd gsi`
+
+`source .env/bin/activate`
+
+`make run`
+
+# DATABASE (locally deploy a working version)
+
+
+`cd gsi`
+
+`source .env/bin/activate`
+
+`createdb gsi`
+
+`make update_dev_db`
+
+
 
 
 Project page:
