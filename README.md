@@ -24,6 +24,14 @@
 `createdb gsi`
 
 `make update_dev_db`
+#### To run this command, you must specify three parameters:
+`GSI_APP_SERVER = <username> @ <server name>`
+
+`REMOTE_CODE_DIR = root folder of the project,`
+
+`ENV_PASS = password to login on ssh.`
+
+`These data are in module "local".`
 
 
 
