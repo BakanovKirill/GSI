@@ -63,3 +63,6 @@ ngnix:
 
 fill_name:
 	fab fill_name_carditem
+
+update_dev_db:
+	fab update_dev_db
