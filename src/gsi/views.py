@@ -1498,7 +1498,6 @@ def static_data_setup(request):
 @render_to('gsi/home_variable_setup.html')
 def home_variable_setup(request):
     title = 'Home Variables'
-    # variables = get_object_or_404(HomeVariables, pk=1)
     form = None
     url_name = 'home_variable'
     but_name = 'static_data'
@@ -1530,7 +1529,10 @@ def home_variable_setup(request):
                     reverse('home_variable_setup'),
                     (u"Home variables successfully updated")))
     else:
-        form = HomeVariablesForm()
+        if variables:
+            form = HomeVariablesForm(instance=variables)
+        else:
+            form = HomeVariablesForm()
 
     data = {
         'title': title,
