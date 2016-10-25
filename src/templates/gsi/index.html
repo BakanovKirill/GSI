@@ -2,5 +2,7 @@
 {% load static from staticfiles %}
 
 {% block content %}
-    
+    {% if not is_homevar %}
+        <h3>For correctly work the GSi service, please create the new <a href="{% url 'home_variable_setup' %}">"Home Variables".</a></h3>
+    {% endif %}
 {% endblock content %}
