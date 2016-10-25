@@ -263,9 +263,12 @@ def upload_file(request):
 def index(request):
     title = 'Main Menu'
     url_name = 'home'
+    is_homevar = False
 
     try:
         home_var = HomeVariables.objects.all()[0]
+        if home_var.RF_AUXDATA_DIR:
+            is_homevar = True
     except IndexError:
         home_var = ''
 
@@ -293,7 +296,7 @@ def index(request):
                     'test_data'].errors.as_text()))))
     else:
         form = UploadFileForm()
-    data = {'title': title, 'form': form, 'url_name': url_name}
+    data = {'title': title, 'form': form, 'url_name': url_name, 'is_homevar': is_homevar}
 
     return data
 
