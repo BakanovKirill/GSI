@@ -22,7 +22,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from gsi.models import (Run, RunStep, Log, OrderedCardItem, HomeVariables,
                         VariablesGroup, YearGroup, Year, Satellite,
-                        InputDataDirectory, SubCardItem, Resolution)
+                        InputDataDirectory, SubCardItem, Resolution, Tile)
 from cards.card_update_create import *
 from cards.cards_forms import *
 from gsi.gsi_items_update_create import *
@@ -2860,7 +2860,7 @@ def resolution(request):
 
             return HttpResponseRedirect(u'%s?status_message=%s' % (
                 reverse('resolution'),
-                (u'Resolution "{0}" deleted.'.format(resolution_name))))
+                (u'Resolutions "{0}" deleted.'.format(resolution_name))))
         elif request.POST.get('delete_button'):
             cur_resolution = get_object_or_404(
                 Resolution, pk=request.POST.get('delete_button'))
@@ -2975,6 +2975,187 @@ def resolution_edit(request, resolution_id):
         'template_name': template_name,
         'form': form,
         'item_id': resolution_id,
+    }
+
+    return data
+
+
+# Tiles list
+@login_required
+@render_to('gsi/tiles_list.html')
+def tiles(request):
+    title = 'Tiles'
+    tile = Tile.objects.all()
+    tile_name = ''
+    url_name = 'tiles'
+    but_name = 'static_data'
+
+    if request.method == "GET":
+        order_by = request.GET.get('order_by', '')
+
+        if order_by in ('name',):
+            tile = tile.order_by(order_by)
+
+            if request.GET.get('reverse', '') == '1':
+                tile = tile.reverse()
+
+    if request.method == "POST" and request.is_ajax():
+        data_post = request.POST
+
+        if 'run_id[]' in data_post:
+            data = ''
+            message = u'Are you sure you want to remove these objects:'
+            run_id = data_post.getlist('run_id[]')
+
+            for r in run_id:
+                cur_run = get_object_or_404(Tile, pk=int(r))
+                data += '"' + cur_run.name + '", '
+
+            data = data[:-2]
+            data = '<b>' + data + '</b>'
+            data = '{0} {1}?'.format(message, data)
+
+            return HttpResponse(data)
+
+        if 'cur_run_id' in data_post:
+            message = u'Are you sure you want to remove this objects:'
+            run_id = data_post['cur_run_id']
+            cur_run = get_object_or_404(Tile, pk=int(run_id))
+            data = '<b>"' + cur_run.name + '"</b>'
+            data = '{0} {1}?'.format(message, data)
+
+            return HttpResponse(data)
+        else:
+            data = ''
+            return HttpResponse(data)
+
+    if request.method == "POST":
+        # if request.POST.get('delete_button'):
+        if request.POST.get('tile_select'):
+            for tile_id in request.POST.getlist('tile_select'):
+                cur_tile = get_object_or_404(Tile, pk=tile_id)
+                tile_name += '"' + cur_tile.name + '", '
+                cur_tile.delete()
+
+            tile_name = tile_name[:-2]
+
+            return HttpResponseRedirect(u'%s?status_message=%s' % (
+                reverse('tiles'),
+                (u'Tiles "{0}" deleted.'.format(tile_name))))
+        elif request.POST.get('delete_button'):
+            cur_tile = get_object_or_404(
+                Tile, pk=request.POST.get('delete_button'))
+            tile_name += '"' + cur_tile.name + '"'
+            cur_tile.delete()
+
+            return HttpResponseRedirect(u'%s?status_message=%s' % (
+                reverse('tiles'),
+                (u'Tile "{0}" deleted.'.format(tile_name))))
+        else:
+            return HttpResponseRedirect(u'%s?warning_message=%s' % (
+                reverse('tiles'),
+                (u"To delete, select Tile or more Tiles.")))
+
+    # paginations
+    model_name = paginations(request, tile)
+
+    data = {
+        'title': title,
+        'tiles': model_name,
+        'model_name': model_name,
+        'url_name': url_name,
+        'but_name': but_name,
+    }
+
+    return data
+
+
+# Tiles add
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def tile_add(request):
+    title = 'Tile Add'
+    url_form = 'tile_add'
+    url_name = 'tiles'
+    but_name = 'static_data'
+    template_name = 'gsi/_tile_form.html'
+    reverse_url = {
+        'save_button': 'tiles',
+        'save_and_another': 'tile_add',
+        'save_and_continue': 'tile_edit',
+        'cancel_button': 'tiles'
+    }
+    func = tile_update_create
+    form = None
+    available_tiles = Tile.objects.all()
+
+    if request.method == "POST":
+        response = get_post(request, TileForm, 'Tile', reverse_url,
+                            func)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
+    else:
+        form = TileForm()
+
+    data = {
+        'title': title,
+        'url_form': url_form,
+        'template_name': template_name,
+        'form': form,
+        'available_tiles': available_tiles,
+        'url_name': url_name,
+        'but_name': but_name,
+    }
+
+    return data
+
+
+# Tiles edit
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def tile_edit(request, tile_id):
+    tile = get_object_or_404(Tile, pk=tile_id)
+    title = 'Tile Edit "%s"' % (tile.name)
+    url_name = 'tiles'
+    but_name = 'static_data'
+    url_form = 'tile_edit'
+    template_name = 'gsi/_tile_form.html'
+    reverse_url = {
+        'save_button': 'tiles',
+        'save_and_another': 'tile_add',
+        'save_and_continue': 'tile_edit',
+        'cancel_button': 'tiles'
+    }
+    func = tile_update_create
+    form = None
+
+    if request.method == "POST":
+        response = get_post(
+            request,
+            TileForm,
+            'Tile',
+            reverse_url,
+            func,
+            item_id=tile_id)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
+    else:
+        form = TileForm(instance=tile)
+
+    data = {
+        'title': title,
+        'url_form': url_form,
+        'url_name': url_name,
+        'but_name': but_name,
+        'template_name': template_name,
+        'form': form,
+        'item_id': tile_id,
     }
 
     return data

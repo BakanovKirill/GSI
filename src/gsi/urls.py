@@ -121,6 +121,13 @@ urlpatterns = [
 	url(r'^resolution/add/$', 'gsi.views.resolution_add', name='resolution_add'),
 	url(r'^resolution/(?P<resolution_id>\d+)/$', 'gsi.views.resolution_edit', name='resolution_edit'),
 
+	# tiles
+	url(r'^tiles/list/$', 'gsi.views.tiles', name='tiles'),
+
+	# tiles edit
+	url(r'^tile/add/$', 'gsi.views.tile_add', name='tile_add'),
+	url(r'^tile/(?P<tile_id>\d+)/$', 'gsi.views.tile_edit', name='tile_edit'),
+
 	# input_data_dir_list
 	url(r'^input-data-dirs/list/$', 'gsi.views.input_data_dir_list', name='input_data_dir_list'),
 

@@ -380,3 +380,18 @@ class ResolutionForm(forms.ModelForm):
     class Meta:
         model = Resolution
         fields = ['name', 'value',]
+
+
+class TileForm(forms.ModelForm):
+    """form for editing Tile"""
+
+    def __init__(self, *args, **kwargs):
+        super(TileForm, self).__init__(*args, **kwargs)
+
+    name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label=u'Name', )
+
+    class Meta:
+        model = Tile
+        fields = ['name', ]

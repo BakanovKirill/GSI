@@ -181,3 +181,18 @@ def resolution_update_create(form, item_id=None):
         )
 
     return resolution
+
+
+def tile_update_create(form, item_id=None):
+    # import pdb;pdb.set_trace()
+    if item_id:
+        Tile.objects.filter(id=item_id).update(
+            name=form.cleaned_data["name"],
+        )
+        tile = Tile.objects.get(id=item_id)
+    else:
+        tile = Tile.objects.create(
+            name=form.cleaned_data["name"],
+        )
+
+    return tile
