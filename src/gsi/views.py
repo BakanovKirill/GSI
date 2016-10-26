@@ -22,7 +22,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from gsi.models import (Run, RunStep, Log, OrderedCardItem, HomeVariables,
                         VariablesGroup, YearGroup, Year, Satellite,
-                        InputDataDirectory, SubCardItem)
+                        InputDataDirectory, SubCardItem, Resolution)
 from cards.card_update_create import *
 from cards.cards_forms import *
 from gsi.gsi_items_update_create import *
@@ -2794,6 +2794,187 @@ def customer_section(request):
         'title': title,
         'customer': customer,
         'url_name': url_name,
+    }
+
+    return data
+
+
+# Resolution list
+@login_required
+@render_to('gsi/resolution_list.html')
+def resolution(request):
+    title = 'Resolutions'
+    resolution = Resolution.objects.all()
+    resolution_name = ''
+    url_name = 'resolution'
+    but_name = 'static_data'
+
+    if request.method == "GET":
+        order_by = request.GET.get('order_by', '')
+
+        if order_by in ('name', 'value'):
+            resolution = resolution.order_by(order_by)
+
+            if request.GET.get('reverse', '') == '1':
+                resolution = resolution.reverse()
+
+    if request.method == "POST" and request.is_ajax():
+        data_post = request.POST
+
+        if 'run_id[]' in data_post:
+            data = ''
+            message = u'Are you sure you want to remove these objects:'
+            run_id = data_post.getlist('run_id[]')
+
+            for r in run_id:
+                cur_run = get_object_or_404(Resolution, pk=int(r))
+                data += '"' + cur_run.name + '", '
+
+            data = data[:-2]
+            data = '<b>' + data + '</b>'
+            data = '{0} {1}?'.format(message, data)
+
+            return HttpResponse(data)
+
+        if 'cur_run_id' in data_post:
+            message = u'Are you sure you want to remove this objects:'
+            run_id = data_post['cur_run_id']
+            cur_run = get_object_or_404(Resolution, pk=int(run_id))
+            data = '<b>"' + cur_run.name + '"</b>'
+            data = '{0} {1}?'.format(message, data)
+
+            return HttpResponse(data)
+        else:
+            data = ''
+            return HttpResponse(data)
+
+    if request.method == "POST":
+        # if request.POST.get('delete_button'):
+        if request.POST.get('resolution_select'):
+            for satellite_id in request.POST.getlist('resolution_select'):
+                cur_resolution = get_object_or_404(Resolution, pk=satellite_id)
+                resolution_name += '"' + cur_resolution.name + '", '
+                cur_resolution.delete()
+
+            resolution_name = resolution_name[:-2]
+
+            return HttpResponseRedirect(u'%s?status_message=%s' % (
+                reverse('resolution'),
+                (u'Resolution "{0}" deleted.'.format(resolution_name))))
+        elif request.POST.get('delete_button'):
+            cur_resolution = get_object_or_404(
+                Resolution, pk=request.POST.get('delete_button'))
+            resolution_name += '"' + cur_resolution.name + '"'
+            cur_resolution.delete()
+
+            return HttpResponseRedirect(u'%s?status_message=%s' % (
+                reverse('resolution'),
+                (u'Resolution "{0}" deleted.'.format(resolution_name))))
+        else:
+            return HttpResponseRedirect(u'%s?warning_message=%s' % (
+                reverse('resolution'),
+                (u"To delete, select Resolution or more Resolutions.")))
+
+    # paginations
+    model_name = paginations(request, resolution)
+
+    data = {
+        'title': title,
+        'resolutions': model_name,
+        'model_name': model_name,
+        'url_name': url_name,
+        'but_name': but_name,
+    }
+
+    return data
+
+
+# Resolution add
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def resolution_add(request):
+    title = 'Resolution Add'
+    url_form = 'resolution_add'
+    url_name = 'resolution'
+    but_name = 'static_data'
+    template_name = 'gsi/_resolution_form.html'
+    reverse_url = {
+        'save_button': 'resolution',
+        'save_and_another': 'resolution_add',
+        'save_and_continue': 'resolution_edit',
+        'cancel_button': 'resolution'
+    }
+    func = resolution_update_create
+    form = None
+    available_resolution = Resolution.objects.all()
+
+    if request.method == "POST":
+        response = get_post(request, ResolutionForm, 'Resolution', reverse_url,
+                            func)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
+    else:
+        form = ResolutionForm()
+
+    data = {
+        'title': title,
+        'url_form': url_form,
+        'template_name': template_name,
+        'form': form,
+        'available_resolution': available_resolution,
+        'url_name': url_name,
+        'but_name': but_name,
+    }
+
+    return data
+
+
+# Resolution edit
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def resolution_edit(request, resolution_id):
+    resolution = get_object_or_404(Resolution, pk=resolution_id)
+    title = 'Resolution Edit "%s"' % (resolution.name)
+    url_name = 'resolution'
+    but_name = 'static_data'
+    url_form = 'resolution_edit'
+    template_name = 'gsi/_resolution_form.html'
+    reverse_url = {
+        'save_button': 'resolution',
+        'save_and_another': 'resolution_add',
+        'save_and_continue': 'resolution_edit',
+        'cancel_button': 'resolution'
+    }
+    func = resolution_update_create
+    form = None
+
+    if request.method == "POST":
+        response = get_post(
+            request,
+            ResolutionForm,
+            'Resolution',
+            reverse_url,
+            func,
+            item_id=resolution_id)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
+    else:
+        form = ResolutionForm(instance=resolution)
+
+    data = {
+        'title': title,
+        'url_form': url_form,
+        'url_name': url_name,
+        'but_name': but_name,
+        'template_name': template_name,
+        'form': form,
+        'item_id': resolution_id,
     }
 
     return data

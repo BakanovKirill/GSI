@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import get_object_or_404
 
-from gsi.models import (VariablesGroup, Area, Tile,
+from gsi.models import (VariablesGroup, Area, Tile, Resolution,
 						YearGroup, CardSequence, Satellite,
                         InputDataDirectory, ConfigFile)
 
@@ -165,3 +165,19 @@ def data_dir_update_create(form, item_id=None):
         )
 
     return result
+
+
+def resolution_update_create(form, item_id=None):
+    if item_id:
+        Resolution.objects.filter(id=item_id).update(
+            name=form.cleaned_data["name"],
+            value=form.cleaned_data["value"],
+        )
+        resolution = Resolution.objects.get(id=item_id)
+    else:
+        resolution = Resolution.objects.create(
+            name=form.cleaned_data["name"],
+            value=form.cleaned_data["value"],
+        )
+
+    return resolution

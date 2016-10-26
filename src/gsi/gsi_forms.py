@@ -359,3 +359,24 @@ class ConfigFileForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ConfigFileForm, self).__init__(*args, **kwargs)
+
+
+class ResolutionForm(forms.ModelForm):
+    """form for editing Resolution"""
+
+    def __init__(self, *args, **kwargs):
+        super(ResolutionForm, self).__init__(*args, **kwargs)
+
+    name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label=u'Name',
+        help_text='This will be a short display of the value, i.e. 1KM, 250M',)
+
+    value = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label=u'Value',
+        help_text='Value in meters, e.g 1000 for 1KM display name',)
+
+    class Meta:
+        model = Resolution
+        fields = ['name', 'value',]

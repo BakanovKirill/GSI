@@ -137,6 +137,9 @@
                                                 <li class="li-sub-menu {% if url_name == 'satellite' %}active-main-menu{% else %}li-menu{% endif %}">
                                                     <a href="{% url 'satellite' %}">Satellites</a>
                                                 </li>
+                                                <li class="li-sub-menu {% if url_name == 'resolution' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                    <a href="{% url 'resolution' %}">Resolution</a>
+                                                </li>
                                                 <li class="li-sub-menu {% if url_name == 'input_data_dir_list' %}active-main-menu{% else %}li-menu{% endif %}">
                                                     <a href="{% url 'input_data_dir_list' %}">Input Data Directory</a>
                                                 </li>
@@ -154,6 +157,7 @@
                                         </a>
                                     </li>
                                 {% endif %}
+
                                 <li class="{% if url_name == 'customer_section' %}active-main-menu{% else %}li-menu{% endif %}">
                                     <a href="{% url 'customer_section' %}">
                                         <img class="right-indent-10" src="{% static 'img/customer_section.png' %}">

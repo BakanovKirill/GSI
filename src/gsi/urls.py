@@ -114,6 +114,13 @@ urlpatterns = [
 	url(r'^satellite/add/$', 'gsi.views.satellite_add', name='satellite_add'),
 	url(r'^satellite/(?P<satellite_id>\d+)/$', 'gsi.views.satellite_edit', name='satellite_edit'),
 
+	# resolution
+	url(r'^resolution/list/$', 'gsi.views.resolution', name='resolution'),
+
+	# resolution edit
+	url(r'^resolution/add/$', 'gsi.views.resolution_add', name='resolution_add'),
+	url(r'^resolution/(?P<resolution_id>\d+)/$', 'gsi.views.resolution_edit', name='resolution_edit'),
+
 	# input_data_dir_list
 	url(r'^input-data-dirs/list/$', 'gsi.views.input_data_dir_list', name='input_data_dir_list'),
 
