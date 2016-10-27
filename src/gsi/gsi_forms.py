@@ -395,3 +395,18 @@ class TileForm(forms.ModelForm):
     class Meta:
         model = Tile
         fields = ['name', ]
+
+
+class YearForm(forms.ModelForm):
+    """form for editing Year"""
+
+    def __init__(self, *args, **kwargs):
+        super(YearForm, self).__init__(*args, **kwargs)
+
+    name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label=u'Name', )
+
+    class Meta:
+        model = Year
+        fields = ['name', ]

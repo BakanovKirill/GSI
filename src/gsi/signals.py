@@ -18,7 +18,7 @@ def added_update_area_for_each_tile(sender, instance, **kwargs):
     try:
         area = Area.objects.get(tiles=instance)
         area.name = instance.name
-    except ObjectDoesNotExist:
+    except Exception:
         area = Area(name=instance.name)
     finally:
         area.save()

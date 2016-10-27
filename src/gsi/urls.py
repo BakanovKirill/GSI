@@ -128,6 +128,13 @@ urlpatterns = [
 	url(r'^tile/add/$', 'gsi.views.tile_add', name='tile_add'),
 	url(r'^tile/(?P<tile_id>\d+)/$', 'gsi.views.tile_edit', name='tile_edit'),
 
+	# years
+	url(r'^years/list/$', 'gsi.views.years', name='years'),
+
+	# years edit
+	url(r'^year/add/$', 'gsi.views.year_add', name='year_add'),
+	url(r'^year/(?P<year_id>\d+)/$', 'gsi.views.year_edit', name='year_edit'),
+
 	# input_data_dir_list
 	url(r'^input-data-dirs/list/$', 'gsi.views.input_data_dir_list', name='input_data_dir_list'),
 

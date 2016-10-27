@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 
 from gsi.models import (VariablesGroup, Area, Tile, Resolution,
 						YearGroup, CardSequence, Satellite,
-                        InputDataDirectory, ConfigFile)
+                        InputDataDirectory, ConfigFile, Year)
 
 
 def configfile_update_create(pathname):
@@ -196,3 +196,18 @@ def tile_update_create(form, item_id=None):
         )
 
     return tile
+
+
+def year_update_create(form, item_id=None):
+    # import pdb;pdb.set_trace()
+    if item_id:
+        Year.objects.filter(id=item_id).update(
+            name=form.cleaned_data["name"],
+        )
+        year = Year.objects.get(id=item_id)
+    else:
+        year = Year.objects.create(
+            name=form.cleaned_data["name"],
+        )
+
+    return year

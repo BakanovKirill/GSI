@@ -3159,3 +3159,184 @@ def tile_edit(request, tile_id):
     }
 
     return data
+
+
+# Years list
+@login_required
+@render_to('gsi/years_list.html')
+def years(request):
+    title = 'Years'
+    years = Year.objects.all().order_by('name')
+    year_name = ''
+    url_name = 'years'
+    but_name = 'static_data'
+
+    if request.method == "GET":
+        order_by = request.GET.get('order_by', '')
+
+        if order_by in ('name',):
+            years = years.order_by(order_by)
+
+            if request.GET.get('reverse', '') == '1':
+                years = years.reverse()
+
+    if request.method == "POST" and request.is_ajax():
+        data_post = request.POST
+
+        if 'run_id[]' in data_post:
+            data = ''
+            message = u'Are you sure you want to remove these objects:'
+            run_id = data_post.getlist('run_id[]')
+
+            for r in run_id:
+                cur_run = get_object_or_404(Year, pk=int(r))
+                data += '"' + cur_run.name + '", '
+
+            data = data[:-2]
+            data = '<b>' + data + '</b>'
+            data = '{0} {1}?'.format(message, data)
+
+            return HttpResponse(data)
+
+        if 'cur_run_id' in data_post:
+            message = u'Are you sure you want to remove this objects:'
+            run_id = data_post['cur_run_id']
+            cur_run = get_object_or_404(Year, pk=int(run_id))
+            data = '<b>"' + cur_run.name + '"</b>'
+            data = '{0} {1}?'.format(message, data)
+
+            return HttpResponse(data)
+        else:
+            data = ''
+            return HttpResponse(data)
+
+    if request.method == "POST":
+        # if request.POST.get('delete_button'):
+        if request.POST.get('year_select'):
+            for year_id in request.POST.getlist('year_select'):
+                cur_year = get_object_or_404(Year, pk=year_id)
+                year_name += '"' + cur_year.name + '", '
+                cur_year.delete()
+
+            year_name = year_name[:-2]
+
+            return HttpResponseRedirect(u'%s?status_message=%s' % (
+                reverse('years'),
+                (u'Tiles "{0}" deleted.'.format(year_name))))
+        elif request.POST.get('delete_button'):
+            cur_year = get_object_or_404(
+                Year, pk=request.POST.get('delete_button'))
+            year_name += '"' + cur_year.name + '"'
+            cur_year.delete()
+
+            return HttpResponseRedirect(u'%s?status_message=%s' % (
+                reverse('years'),
+                (u'Year "{0}" deleted.'.format(year_name))))
+        else:
+            return HttpResponseRedirect(u'%s?warning_message=%s' % (
+                reverse('years'),
+                (u"To delete, select Year or more Years.")))
+
+    # paginations
+    model_name = paginations(request, years)
+
+    data = {
+        'title': title,
+        'years': model_name,
+        'model_name': model_name,
+        'url_name': url_name,
+        'but_name': but_name,
+    }
+
+    return data
+
+
+# Year add
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def year_add(request):
+    title = 'Year Add'
+    url_form = 'year_add'
+    url_name = 'years'
+    but_name = 'static_data'
+    template_name = 'gsi/_year_form.html'
+    reverse_url = {
+        'save_button': 'years',
+        'save_and_another': 'year_add',
+        'save_and_continue': 'year_edit',
+        'cancel_button': 'years'
+    }
+    func = year_update_create
+    form = None
+    available_years = Year.objects.all()
+
+    if request.method == "POST":
+        response = get_post(request, YearForm, 'Year', reverse_url,
+                            func)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
+    else:
+        form = YearForm()
+
+    data = {
+        'title': title,
+        'url_form': url_form,
+        'template_name': template_name,
+        'form': form,
+        'available_years': available_years,
+        'url_name': url_name,
+        'but_name': but_name,
+    }
+
+    return data
+
+
+# Year edit
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def year_edit(request, year_id):
+    year = get_object_or_404(Year, pk=year_id)
+    title = 'Year Edit "%s"' % (year.name)
+    url_name = 'years'
+    but_name = 'static_data'
+    url_form = 'year_edit'
+    template_name = 'gsi/_year_form.html'
+    reverse_url = {
+        'save_button': 'years',
+        'save_and_another': 'year_add',
+        'save_and_continue': 'year_edit',
+        'cancel_button': 'years'
+    }
+    func = year_update_create
+    form = None
+
+    if request.method == "POST":
+        response = get_post(
+            request,
+            YearForm,
+            'Year',
+            reverse_url,
+            func,
+            item_id=year_id)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
+    else:
+        form = YearForm(instance=year)
+
+    data = {
+        'title': title,
+        'url_form': url_form,
+        'url_name': url_name,
+        'but_name': but_name,
+        'template_name': template_name,
+        'form': form,
+        'item_id': year_id,
+    }
+
+    return data
