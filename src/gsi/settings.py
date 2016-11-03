@@ -244,6 +244,9 @@ NUM_PAGINATIONS = 7
 # number execute runs
 EXEC_RUNS = 2000
 
+# Google maps
+GOOGLE_MAP_ZOOM = 15
+
 # Card Type
 CARD_TYPE = {
     'rftrain': 'RFTrain',

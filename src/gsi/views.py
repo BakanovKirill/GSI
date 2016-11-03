@@ -34,7 +34,7 @@ from core.utils import (make_run, get_dir_root_static_path,
 from core.get_post import get_post
 from core.copy_card import create_copycard
 from log.logger import get_logs
-from gsi.settings import (PATH_RUNS_SCRIPTS, CONFIGFILE_PATH)
+from gsi.settings import (PATH_RUNS_SCRIPTS, CONFIGFILE_PATH, GOOGLE_MAP_ZOOM)
 from core.paginations import paginations
 
 TITLES = {
@@ -2782,23 +2782,6 @@ def view_results_folder(request, run_id, prev_dir, dir):
     return data
 
 
-# view Customer section
-@login_required
-@render_to('gsi/customer_section.html')
-def customer_section(request):
-    customer = request.user
-    title = 'Customer {0} section'.format(customer)
-    url_name = 'customer_section'
-
-    data = {
-        'title': title,
-        'customer': customer,
-        'url_name': url_name,
-    }
-
-    return data
-
-
 # Resolution list
 @login_required
 @render_to('gsi/resolution_list.html')
@@ -3337,6 +3320,38 @@ def year_edit(request, year_id):
         'template_name': template_name,
         'form': form,
         'item_id': year_id,
+    }
+
+    return data
+
+
+# view Customer section
+@login_required
+@render_to('gsi/customer_section.html')
+def customer_section(request):
+    customer = request.user
+    title = 'Customer {0} section'.format(customer)
+    url_name = 'customer_section'
+    eLat = 0
+    eLng = 0
+
+    if request.method == "POST":
+        data_request = request.POST
+
+        if data_request.get('eLat', ''):
+            eLat = data_request.get('eLat', '')
+
+        if data_request.get('eLng', ''):
+            eLng = data_request.get('eLng', '')
+
+
+    data = {
+        'title': title,
+        'customer': customer,
+        'url_name': url_name,
+        'eLat': eLat,
+        'eLng': eLng,
+        'GOOGLE_MAP_ZOOM': GOOGLE_MAP_ZOOM
     }
 
     return data

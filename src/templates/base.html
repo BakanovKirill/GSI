@@ -4,8 +4,11 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+
     <title>Greetings</title>
+
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet"
@@ -30,7 +33,7 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" type="text/css" />
 </head>
 
-<body>
+<body onload='initMap()'>
     <!-- Start Container -->
     <div class="container">
         {% if user.is_authenticated %}
@@ -299,5 +302,8 @@
     <!-- custom scripts -->
     <script type="text/javascript" src="{% static 'js/scripts.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/scripts_ajax.js' %}"></script>
+    <!--  
+    <script type="text/javascript" src="{% static 'js/scripts_google_maps.js' %}"></script>
+    -->
 </body>
 </html>

@@ -1,4 +1,4 @@
-/* body */
+margin-top/* body */
 /*body {*/
     /*background-image: url(img/background_log.jpg);*/
     /*background-color: #c7b39b;*/
@@ -173,6 +173,18 @@ input, textarea {
 
 .margin-top-25 {
     margin-top: 25px;
+}
+
+.margin-top-30 {
+    margin-top: 30px;
+}
+
+.margin-top-35 {
+    margin-top: 35px;
+}
+
+.margin-top-40 {
+    margin-top: 40px;
 }
 
 .margin-top-50 {
@@ -669,6 +681,11 @@ li.active-main-menu, li.active-main-menu a:hover, li.li-menu > a:hover, .title:h
 /* gsi iframe for gsi maps */
 .border-none {
     border-width: 0;
+}
+
+#map {
+    width: 860px;
+    height: 600px;
 }
 
 /* preload */
