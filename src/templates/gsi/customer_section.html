@@ -196,7 +196,7 @@
 
             var jayzMapType = new google.maps.StyledMapType(my_styles, styledMapOptions);
 
-  map.mapTypes.set(MY_MAPTYPE_ID, jayzMapType);
+            map.mapTypes.set(MY_MAPTYPE_ID, jayzMapType);
             // map.setMapTypeId(google.maps.MapTypeId.HYBRID);
 
             cur_marker = new google.maps.Marker({
@@ -241,7 +241,7 @@
 
         // Removes the markers from the map, but keeps them in the array.
         function removeMarkers() {
-            selectPolygon.fillOpacity = 1.0;
+            // selectPolygon.fillOpacity = 1.0;
             for (var i = 0; i < markers.length; i++) {
                 markers[i].setMap(null);
             }
