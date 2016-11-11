@@ -74,3 +74,5 @@ src/*.egg-info
 
 settings_local.py
 local_settings.py
+local/
+fab_local.py

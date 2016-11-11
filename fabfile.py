@@ -1,7 +1,7 @@
 # coding: utf-8
 from fabric.api import *
 
-from local.fab_local import GSI_APP_SERVER, REMOTE_CODE_DIR, ENV_PASS
+from fab_local import GSI_APP_SERVER, REMOTE_CODE_DIR, ENV_PASS
 
 env.password = ENV_PASS
 env.hosts = [GSI_APP_SERVER]
