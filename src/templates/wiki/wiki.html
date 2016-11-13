@@ -1,0 +1,26 @@
+{% extends "base_wiki.html" %}
+{% load static from staticfiles %}
+
+{% block title %}{{ title }}{% endblock title %}
+
+{% block content %}
+    Hello, WIKI!
+    {% autoescape on %}
+    <form action="{% url 'wiki' %}" method="post">
+		{% csrf_token %}
+		<label for="name">Ваше имя:</label><br/>
+		<input id="name" name="name" type="text"/><br/>
+		<label for="letter">Сообщение:</label><br/>
+		<!-- создаём HTML-редактор для текстового поля (textarea), у которого идентификатор равен "letter" (id="letter") -->
+
+		<img class="button" src="{% static 'img/bold.gif' %}" name="btnBold" title="Bold" onClick="doAddTags('<strong>','</strong>','letter')">
+
+		<button type="button" class="btn btn-danger btn-block check-delete" onClick="doAddTags('<strong>','</strong>','letter')">
+			Bold
+		</button>
+
+		<textarea id="letter" name="letter" class="ed"></textarea><br/>
+		<input value="Отправить сообщение" type="submit"/>
+	</form>
+    {% endautoescape %}
+{% endblock content %}

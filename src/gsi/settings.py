@@ -54,6 +54,7 @@ INSTALLED_APPS = (
     'gsi',
     'log',
     'tags',
+    'wiki'
 
 )
 

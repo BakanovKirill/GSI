@@ -1514,18 +1514,27 @@ def home_variable_setup(request):
         form = HomeVariablesForm(request.POST)
 
         if form.is_valid():
-            variables.SAT_TIF_DIR_ROOT = form.cleaned_data["SAT_TIF_DIR_ROOT"]
-            variables.RF_DIR_ROOT = form.cleaned_data["RF_DIR_ROOT"]
-            variables.USER_DATA_DIR_ROOT = form.cleaned_data[
-                "USER_DATA_DIR_ROOT"]
-            variables.MODIS_DIR_ROOT = form.cleaned_data["MODIS_DIR_ROOT"]
-            variables.RF_AUXDATA_DIR = form.cleaned_data["RF_AUXDATA_DIR"]
-            variables.SAT_DIF_DIR_ROOT = form.cleaned_data["SAT_DIF_DIR_ROOT"]
-            variables.save()
+            if variables:
+                variables.SAT_TIF_DIR_ROOT = form.cleaned_data["SAT_TIF_DIR_ROOT"]
+                variables.RF_DIR_ROOT = form.cleaned_data["RF_DIR_ROOT"]
+                variables.USER_DATA_DIR_ROOT = form.cleaned_data["USER_DATA_DIR_ROOT"]
+                variables.MODIS_DIR_ROOT = form.cleaned_data["MODIS_DIR_ROOT"]
+                variables.RF_AUXDATA_DIR = form.cleaned_data["RF_AUXDATA_DIR"]
+                variables.SAT_DIF_DIR_ROOT = form.cleaned_data["SAT_DIF_DIR_ROOT"]
+                variables.save()
+            else:
+                variables = HomeVariables.objects.create(
+                        SAT_TIF_DIR_ROOT = form.cleaned_data["SAT_TIF_DIR_ROOT"],
+                        RF_DIR_ROOT = form.cleaned_data["RF_DIR_ROOT"],
+                        USER_DATA_DIR_ROOT = form.cleaned_data["USER_DATA_DIR_ROOT"],
+                        MODIS_DIR_ROOT = form.cleaned_data["MODIS_DIR_ROOT"],
+                        RF_AUXDATA_DIR = form.cleaned_data["RF_AUXDATA_DIR"],
+                        SAT_DIF_DIR_ROOT = form.cleaned_data["SAT_DIF_DIR_ROOT"]
+                    )
 
             if request.POST.get('save_button') is not None:
                 return HttpResponseRedirect(u'%s?status_message=%s' % (
-                    reverse('static_data_setup'),
+                    reverse('home_variable_setup'),
                     (u"Home variables successfully updated")))
             if request.POST.get('save_and_continue_button') is not None:
                 return HttpResponseRedirect(u'%s?status_message=%s' % (
