@@ -141,9 +141,147 @@ function initPrelod(){
     });
 }
 
+// function initWikiUpdate(){
+//     $('button.btn-link').click(function(event){
+//         alert('initWikiUpdate');
+//         var link = $(this);
+//         var modal = $('#modalWiki');
+//         var form_url = $('.form-modal').attr('action');
+//         var wiki_id = link.attr("value")
+//
+//         // alert('link = '+link.attr("value"));
+//
+//         $.ajax({
+//             'url': form_url,
+//             'dataType': 'text',
+//             'type': 'post',
+//             data: {
+//                 'wiki_id': wiki_id,
+//                 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+//             },
+//             'success': function(data, status, xhr){
+//                 alert('status = '+status);
+//
+//                 var titleWiki = document.getElementById('title');
+//
+//                 alert('titleWiki = '+titleWiki.value);
+//                 // check if we got successfull response from the server
+//                 // if (status != 'success') {
+//                 //   alert(gettext('There was an error on the server. Please, try again a bit later.'));
+//                 //   return false;
+//                 // }
+//
+//                 // update modal window with arrived content from the server
+//                 // var modal = $('#modalWiki'),
+//                 //   html = $(data), form = html.find('#content-column form');
+//                 // modal.find('.modal-title').html(html.find('#content-column h2').text());
+//                 // modal.find('.modal-body').html(form);
+//
+//                 // init our edit form
+//                 // initEditWikiForm(form, modal);
+//
+//
+//                 // setup and show modal window finally
+//                 modal.modal({
+//                     'keyboard': false,
+//                     'backdrop': false,
+//                     'show': true
+//                 });
+//             },
+//             'error': function(){
+//                 var message = 'An unexpected error occurred. Try later.';
+//                 modal.find('.modal-body').html(message);
+//                 modal.modal('show');
+//                 // return false;
+//             }
+//         });
+//
+//         // var modal = $('#modalWiki');
+//         // modal.modal('show');
+//
+//         return false;
+//     });
+// }
+
+function initWikiUpdate() {
+    $('a.wiki-edit-form-link').click(function(event){
+        var link = $(this);
+        $.ajax({
+            'url': link.attr('href'),
+            'dataType': 'html',
+            'type': 'get',
+            'success': function(data, status, xhr){
+                // check if we got successfull response from the server
+                if (status != 'success') {
+                    alert(gettext('There was an error on the server. Please, try again a bit later.'));
+                    return false;
+                }
+
+                // update modal window with arrived content from the server
+                var modal = $('#modalWiki'), html = $(data), form = html.find('#content-column form');
+                modal.find('.modal-title').html(html.find('#content-column h2').text());
+                modal.find('.modal-body').html(form);
+
+                // init our edit form
+                initEditWikiForm(form, modal);
+
+                // setup and show modal window finally
+                modal.modal({
+                    'keyboard': false,
+                    'backdrop': false,
+                    'show': true
+                });
+            },
+            'error': function(){
+                alert(gettext('There was an error on the server. Please, try again a bit later.'));
+                return false
+            }
+        });
+
+        return false;
+    });
+}
+
+function initEditWikiForm(form, modal) {
+    // close modal window on Cancel button click
+    form.find('input[name="cancel_button"]').click(function(event){
+        modal.modal('hide');
+        return false;
+    });
+
+    // make form work in AJAX mode
+    form.ajaxForm({
+        'dataType': 'html',
+        'error': function(){
+            alert(gettext('There was an error on the server. Please, try again a bit later.'));
+            return false;
+        },
+        'success': function(data, status, xhr) {
+            var html = $(data), newform = html.find('#content-column form');
+
+            // copy alert to modal window
+            modal.find('.modal-body').html(html.find('.alert'));
+
+            // copy form to modal if we found it in server response
+            if (newform.length > 0) {
+                modal.find('.modal-body').append(newform);
+
+                // initialize form fields and buttons
+                initEditWikiForm(newform, modal);
+            } else {
+                // if no form, it means success and we need to reload page
+                // to get updated wiki article;
+                // reload after 2 seconds, so that user can read success message
+                setTimeout(function(){location.reload(true);}, 100);
+            }
+        }
+    });
+}
+
 
 $(document).ready(function(){
     initCheckDeleteItems();
     initCheckCurDeleteItems();
     initPrelod();
+    initWikiUpdate();
 });

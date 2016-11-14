@@ -36,6 +36,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
 # Application definition
 
 INSTALLED_APPS = (
@@ -49,6 +51,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'solo',
     'registration',
+    'crispy_forms',
 
     'cards',
     'gsi',

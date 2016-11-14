@@ -1,6 +1,8 @@
-from cards.models import CardItem, OrderedCardItem
+# -*- coding: utf-8 -*-
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericStackedInline, GenericTabularInline
+
+from cards.models import CardItem, OrderedCardItem
 from core.utils import (make_run, update_root_list_files, update_list_dirs, update_list_files)
 from .models import (HomeVariables, VariablesGroup, Tile, Area, YearGroup,
                      Year, CardSequence, RunBase, RunStep, Run,

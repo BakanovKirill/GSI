@@ -7,11 +7,12 @@
 }
 .button {
 	margin: 1px;
-	padding: 2px;
+	padding: 3px;
+	margin-top: 25px;
 }
 .button:hover {
 	opacity:.60;
-	filter: alpha(opacity=60); 
+	filter: alpha(opacity=60);
 	-moz-opacity: 0.60;
 }
 .ed {

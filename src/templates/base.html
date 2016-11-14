@@ -31,6 +31,7 @@
 
     <!-- custom styles -->
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" type="text/css" />
+    <link rel="stylesheet" href="{% static 'css/styles-editor.css' %}" type="text/css" />
 </head>
 
 <body onload='initMap()'>
@@ -227,7 +228,7 @@
                         <!-- End Status Messages -->
 
                         <!-- Start Content -->
-                        <div class="col-md-9">
+                        <div class="col-md-9" id="content-column">
                             <!-- Title -->
                             <h2>{% block title %}{% endblock title %}</h2>
                             <!-- End Title -->
@@ -250,7 +251,7 @@
                     <!-- Start Footer -->
                     <div class="row">
                         <div class="col-md-12 center margin-top-50 margin-bottom-50 font-11">
-                            &copy; 2015 GSi Web Site
+                            &copy; 2016 GSi Web Site
                         </div>
                     </div>
                     <!-- End Footer -->
@@ -277,6 +278,20 @@
     </div>
     <!-- End Modal Upload Test Data -->
 
+    <!-- Modal of Wiki -->
+    <div class="modal fade" id="modalWiki" tabindex="-1" role="dialog" aria-labelledby="modalWikiLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h2 class="modal-title" id="modalWikiLabel">Editing the article</h2>
+                </div>
+                <div class="modal-body"><!-- --></div>
+                <div class="modal-footer"><!-- --></div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal of Wiki -->
 
 
     <!-- jQuery -->
@@ -302,7 +317,9 @@
     <!-- custom scripts -->
     <script type="text/javascript" src="{% static 'js/scripts.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/scripts_ajax.js' %}"></script>
-    <!--  
+    <!-- editor -->
+    <script type="text/javascript" src="{% static 'js/ed.js' %}"></script>
+    <!--
     <script type="text/javascript" src="{% static 'js/scripts_google_maps.js' %}"></script>
     -->
 </body>

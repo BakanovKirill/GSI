@@ -9,118 +9,90 @@
 
 var textarea;
 var content;
-document.write("<link href=\"editor/styles.css\" rel=\"stylesheet\" type=\"text/css\">");
 
-function edToolbar(obj) {
+function doImage(obj){
+	textarea = document.getElementById(obj);
+	var url = prompt('Enter the Image URL:','http://');
 
-	document.write("<img class=\"button\" src=\"editor/images/bold.gif\" name=\"btnBold\" title=\"Bold\" onClick=\"doAddTags('<strong>','</strong>','" + obj + "')\">");
-    document.write("<img class=\"button\" src=\"editor/images/italic.gif\" name=\"btnItalic\" title=\"Italic\" onClick=\"doAddTags('<em>','</em>','" + obj + "')\">");
-	document.write("<img class=\"button\" src=\"editor/images/underline.gif\" name=\"btnUnderline\" title=\"Underline\" onClick=\"doAddTags('<u>','</u>','" + obj + "')\">");
-	document.write("<img class=\"button\" src=\"editor/images/link.gif\" name=\"btnLink\" title=\"Insert Link\" onClick=\"doURL('" + obj + "')\">");
-	document.write("<img class=\"button\" src=\"editor/images/image.gif\" name=\"btnPicture\" title=\"Insert Picture\" onClick=\"doImage('" + obj + "')\">");
-	document.write("<img class=\"button\" src=\"editor/images/ordered.gif\" name=\"btnList\" title=\"Ordered List\" onClick=\"doList('<ol>','</ol>','" + obj + "')\">");
-	document.write("<img class=\"button\" src=\"editor/images/unordered.gif\" name=\"btnList\" title=\"Unordered List\" onClick=\"doList('<ul>','</ul>','" + obj + "')\">");
-	document.write("<img class=\"button\" src=\"editor/images/quote.gif\" name=\"btnQuote\" title=\"Quote\" onClick=\"doAddTags('<blockquote>','</blockquote>','" + obj + "')\">");
-  	document.write("<img class=\"button\" src=\"editor/images/code.gif\" name=\"btnCode\" title=\"Code\" onClick=\"doAddTags('<code>','</code>','" + obj + "')\">");
-    document.write("<br>");
-	//document.write("<textarea id=\""+ obj +"\" name = \"" + obj + "\" cols=\"" + width + "\" rows=\"" + height + "\"></textarea>");
+	var scrollTop = textarea.scrollTop;
+	var scrollLeft = textarea.scrollLeft;
 
-
-		}
-
-function doImage(obj)
-{
-textarea = document.getElementById(obj);
-var url = prompt('Enter the Image URL:','http://');
-
-var scrollTop = textarea.scrollTop;
-var scrollLeft = textarea.scrollLeft;
-
-if (url != '' && url != null) {
-
-	if (document.selection)
-			{
-				textarea.focus();
-				var sel = document.selection.createRange();
-				sel.text = '<img src="' + url + '">';
-			}
-   else
-    {
-		var len = textarea.value.length;
-	    var start = textarea.selectionStart;
-		var end = textarea.selectionEnd;
-
-        var sel = textarea.value.substring(start, end);
-	    //alert(sel);
-		var rep = '<img src="' + url + '">';
-        textarea.value =  textarea.value.substring(0,start) + rep + textarea.value.substring(end,len);
-		textarea.scrollTop = scrollTop;
-		textarea.scrollLeft = scrollLeft;
-	}
- }
-}
-
-function doURL(obj)
-{
-var sel;
-textarea = document.getElementById(obj);
-var url = prompt('Enter the URL:','http://');
-var scrollTop = textarea.scrollTop;
-var scrollLeft = textarea.scrollLeft;
-
-if (url != '' && url != null) {
-
-	if (document.selection)
-			{
-				textarea.focus();
-				var sel = document.selection.createRange();
-
-				if(sel.text==""){
-					sel.text = '<a href="' + url + '">' + url + '</a>';
-					} else {
-					sel.text = '<a href="' + url + '">' + sel.text + '</a>';
-					}
-				//alert(sel.text);
-
-			}
-   else
-    {
-		var len = textarea.value.length;
-	    var start = textarea.selectionStart;
-		var end = textarea.selectionEnd;
-
-		var sel = textarea.value.substring(start, end);
-
-		if(sel==""){
-		sel=url;
-		} else
-		{
-        var sel = textarea.value.substring(start, end);
-		}
-	    //alert(sel);
-
-
-		var rep = '<a href="' + url + '">' + sel + '</a>';;
-        textarea.value =  textarea.value.substring(0,start) + rep + textarea.value.substring(end,len);
-		textarea.scrollTop = scrollTop;
-		textarea.scrollLeft = scrollLeft;
-	}
- }
-}
-
-function doAddTags(tag1,tag2,obj){
-    alert(tag1+obj+tag2);
-
-    textarea = document.getElementById(obj);
-	// Code for IE
-	if (document.selection)
-		{
+	if (url != '' && url != null) {
+		if (document.selection) {
 			textarea.focus();
 			var sel = document.selection.createRange();
-			//alert(sel.text);
-			sel.text = tag1 + sel.text + tag2;
+			sel.text = '<img src="' + url + '">';
+		} else {
+			var len = textarea.value.length;
+		    var start = textarea.selectionStart;
+			var end = textarea.selectionEnd;
+
+	        var sel = textarea.value.substring(start, end);
+		    //alert(sel);
+			var rep = '<img src="' + url + '">';
+	        textarea.value =  textarea.value.substring(0, start) + rep + textarea.value.substring(end, len);
+			textarea.scrollTop = scrollTop;
+			textarea.scrollLeft = scrollLeft;
 		}
-    else{  // Code for Mozilla Firefox
+	}
+}
+
+function doURL(obj){
+	var sel;
+	textarea = document.getElementById(obj);
+	var url = prompt('Enter the URL:','http://');
+	var scrollTop = textarea.scrollTop;
+	var scrollLeft = textarea.scrollLeft;
+
+	if (url != '' && url != null) {
+		if (document.selection){
+			textarea.focus();
+			var sel = document.selection.createRange();
+
+			if(sel.text==""){
+				sel.text = '<a href="' + url + '">' + url + '</a>';
+				} else {
+				sel.text = '<a href="' + url + '">' + sel.text + '</a>';
+				}
+			//alert(sel.text);
+		} else {
+			var len = textarea.value.length;
+		    var start = textarea.selectionStart;
+			var end = textarea.selectionEnd;
+
+			var sel = textarea.value.substring(start, end);
+
+			if(sel==""){
+				sel=url;
+			} else {
+	        	var sel = textarea.value.substring(start, end);
+			}
+		    //alert(sel);
+
+			var rep = '<a href="' + url + '">' + sel + '</a>';;
+	        textarea.value =  textarea.value.substring(0,start) + rep + textarea.value.substring(end,len);
+			textarea.scrollTop = scrollTop;
+			textarea.scrollLeft = scrollLeft;
+		}
+	}
+}
+
+function doAddTags(tag1, tag2, obj){
+    textarea = document.getElementById(obj);
+
+	// Code for IE
+	if (document.selection){
+		textarea.focus();
+		var sel = document.selection.createRange();
+		var index_of_two = sel.indexOf('<','>');
+		var index_of_slash = sel.indexOf('</','>');
+		// alert(sel.text);
+		if (sel) {
+			if (index_of_two >= '0' && index_of_slash >= '0' || index_of_two == '-1' && index_of_slash == '-1') {
+				sel.text = tag1 + sel.text + tag2;
+			}
+		}
+	} else {  // Code for Mozilla Firefox
 		var len = textarea.value.length;
 	    var start = textarea.selectionStart;
 		var end = textarea.selectionEnd;
@@ -129,36 +101,40 @@ function doAddTags(tag1,tag2,obj){
 		var scrollLeft = textarea.scrollLeft;
 
         var sel = textarea.value.substring(start, end);
-	    //alert(sel);
-		var rep = tag1 + sel + tag2;
-        textarea.value =  textarea.value.substring(0,start) + rep + textarea.value.substring(end,len);
+		var index_of_two = sel.indexOf('<','>');
+		var index_of_slash = sel.indexOf('</','>');
+	    // alert(sel);
+		// alert('index_of_two = '+index_of_two);
+		// alert('index_of_slash = '+index_of_slash);
+		if (sel) {
+			if (index_of_two >= '0' && index_of_slash >= '0' || index_of_two == '-1' && index_of_slash == '-1') {
+				var rep = tag1 + sel + tag2;
+		        textarea.value =  textarea.value.substring(0, start) + rep + textarea.value.substring(end, len);
 
-		textarea.scrollTop = scrollTop;
-		textarea.scrollLeft = scrollLeft;
+				textarea.scrollTop = scrollTop;
+				textarea.scrollLeft = scrollLeft;
+			}
+		}
 	}
 }
 
-function doList(tag1,tag2,obj){
-textarea = document.getElementById(obj);
+function doList(tag1, tag2, obj){
+	textarea = document.getElementById(obj);
 
-// Code for IE
-		if (document.selection)
-			{
-				textarea.focus();
-				var sel = document.selection.createRange();
-				var list = sel.text.split('\n');
+	// Code for IE
+	if (document.selection){
+		textarea.focus();
+		var sel = document.selection.createRange();
+		var list = sel.text.split('\n');
 
-				for(i=0;i<list.length;i++)
-				{
-				list[i] = '<li>' + list[i] + '</li>';
-				}
-				//alert(list.join("\n"));
-				sel.text = tag1 + '\n' + list.join("\n") + '\n' + tag2;
-
-			} else
-			// Code for Firefox
-			{
-
+		for(i=0;i<list.length;i++)
+		{
+		list[i] = '<li>' + list[i] + '</li>';
+		}
+		//alert(list.join("\n"));
+		sel.text = tag1 + '\n' + list.join("\n") + '\n' + tag2;
+	} else {
+		// Code for Firefox
 		var len = textarea.value.length;
 	    var start = textarea.selectionStart;
 		var end = textarea.selectionEnd;
@@ -167,23 +143,29 @@ textarea = document.getElementById(obj);
 		var scrollTop = textarea.scrollTop;
 		var scrollLeft = textarea.scrollLeft;
 
+	    var sel = textarea.value.substring(start, end);
+		var index_of_two = sel.indexOf('<','>');
+		var index_of_slash = sel.indexOf('</','>');
+	    // alert(sel);
 
-        var sel = textarea.value.substring(start, end);
-	    //alert(sel);
+		if (sel) {
+			if (index_of_two >= '0' && index_of_slash >= '0' || index_of_two == '-1' && index_of_slash == '-1') {
+				var list = sel.split('\n');
 
-		var list = sel.split('\n');
+				for(i=0; i<list.length; i++){
+					list[i] = '<li>' + list[i] + '</li>';
+				}
+				// alert(list.join("<br>"));
 
-		for(i=0;i<list.length;i++)
-		{
-		list[i] = '<li>' + list[i] + '</li>';
+				var rep = '\n' + tag1 + '\n' + list.join("\n") + '\n' + tag2 + '\n';
+				textarea.value =  textarea.value.substring(0, start) + rep + textarea.value.substring(end, len);
+
+				alert('rep = '+rep);
+				alert('textarea = '+textarea.value);
+
+				textarea.scrollTop = scrollTop;
+				textarea.scrollLeft = scrollLeft;
+			}
 		}
-		//alert(list.join("<br>"));
-
-
-		var rep = tag1 + '\n' + list.join("\n") + '\n' +tag2;
-		textarea.value =  textarea.value.substring(0,start) + rep + textarea.value.substring(end,len);
-
-		textarea.scrollTop = scrollTop;
-		textarea.scrollLeft = scrollLeft;
- }
+	}
 }
