@@ -205,7 +205,11 @@ function initPrelod(){
 
 function initWikiUpdate() {
     $('a.wiki-edit-form-link').click(function(event){
+        $("#div_id_content > div.controls").addClass("textarea");
         var link = $(this);
+
+        // alert('initWikiUpdate');
+
         $.ajax({
             'url': link.attr('href'),
             'dataType': 'html',
@@ -213,7 +217,7 @@ function initWikiUpdate() {
             'success': function(data, status, xhr){
                 // check if we got successfull response from the server
                 if (status != 'success') {
-                    alert(gettext('There was an error on the server. Please, try again a bit later.'));
+                    alert('There was an error on the server. Please, try again a bit later.');
                     return false;
                 }
 
@@ -233,7 +237,7 @@ function initWikiUpdate() {
                 });
             },
             'error': function(){
-                alert(gettext('There was an error on the server. Please, try again a bit later.'));
+                alert('There was an error on the server. Please, try again a bit later.');
                 return false
             }
         });
@@ -243,6 +247,9 @@ function initWikiUpdate() {
 }
 
 function initEditWikiForm(form, modal) {
+    // alert('initEditWikiForm');
+    // alert('Form = '+form);
+
     // close modal window on Cancel button click
     form.find('input[name="cancel_button"]').click(function(event){
         modal.modal('hide');
@@ -253,7 +260,7 @@ function initEditWikiForm(form, modal) {
     form.ajaxForm({
         'dataType': 'html',
         'error': function(){
-            alert(gettext('There was an error on the server. Please, try again a bit later.'));
+            alert('There was an error on the server. Please, try again a bit later.');
             return false;
         },
         'success': function(data, status, xhr) {
@@ -272,9 +279,21 @@ function initEditWikiForm(form, modal) {
                 // if no form, it means success and we need to reload page
                 // to get updated wiki article;
                 // reload after 2 seconds, so that user can read success message
-                setTimeout(function(){location.reload(true);}, 100);
+                setTimeout(function(){location.reload(true);}, 50);
             }
         }
+    });
+}
+
+
+function initUploadFile(){
+    // alert('initUploadFile');
+    $('#btnPicture').click(function(event){
+        var values = [];
+        var modal = $('#uploadFile');
+        var form_modal = $('.form-modal').attr('action');
+
+		modal.modal('show');
     });
 }
 
@@ -284,4 +303,5 @@ $(document).ready(function(){
     initCheckCurDeleteItems();
     initPrelod();
     initWikiUpdate();
+    initUploadFile();
 });

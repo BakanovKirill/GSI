@@ -1,19 +1,27 @@
 {% extends "base.html" %}
 {% load static from staticfiles %}
 
-{% block title %}{{ title }}{% endblock title %}
+{% block title %}{% endblock title %}
 
 {% block content %}
-    Hello, WIKI!
-    {% autoescape off %}
-    {% for w in wiki %}
-        <h3>{{ w.title }}</h3>
-        <p>{{ w.content }}</p>
-        <button type="button" class="btn btn-link" value="{{ w.id }}">Edit</button>
+    <div class="row">
+        <div class="col-md-12 left">
+            {% autoescape off %}
+            {% for w in wiki %}
+                <h2 class="left">{{ w.title }}</h2>
+                {{ w.content }}
+                <br /><hr size="2px" /><br />
+                <a href="{% url "wiki_edit" w.id %}" class="wiki-edit-form-link">Edit</a>
+            {% endfor %}
+            {% endautoescape %}
+        </div>
+    </div>
 
-        <a href="{% url "wiki_edit" w.id %}" class="wiki-edit-form-link">Edit 2</a>
-
-    {% endfor %}
-    {% endautoescape %}
-    <button type="button" class="btn btn-link">Add</button>
+    <!-- <div class="row">
+        <div class="col-md-3">
+            <button type="button" class="btn btn-primary btn-block">
+                New Article
+            </button>
+        </div>
+    </div> -->
 {% endblock content %}

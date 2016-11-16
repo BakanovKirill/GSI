@@ -28,7 +28,7 @@ from crispy_forms.bootstrap import FormActions
 # from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit
 
 from wiki.models import Wiki
-from wiki.wiki_form import WikiForm
+from gsi.views import handle_uploaded_file
 
 
 @login_required
@@ -39,20 +39,25 @@ def wiki_show(request):
 
     if request.is_ajax():
         data_post = request.POST
+        data_get = request.GET
 
-        print 'AJAX ============ ', data_post
+        # print 'AJAX POST ============ ', data_post['img']
+        # print 'AJAX POST type ============ ', type(data_post['img'])
+        # # print 'AJAX GET ============ ', data_get
+        #
+        # file_name = str(data_post['img']).decode('utf-8')
+        # path_test_data = os.path.join('/home/greg/Elance_com/KeyUA/GSI/TinyMCE', file_name)
+        # handle_uploaded_file(data_post['img'], path_test_data)
 
-        if 'wiki_id' in data_post:
-            status = 'succes'
-
-            return HttpResponse(status)
+        # if 'wiki_id' in data_post:
+        #     status = 'succes'
+        #
+        #     return HttpResponse(status)
 
     if request.method == "POST":
         data_post = request.POST
 
         print 'POST ============ ', data_post
-
-
 
     data = {
         'title': title,
@@ -77,24 +82,35 @@ class WikiUpdateForm(ModelForm):
             kwargs={'pk': kwargs['instance'].id})
         self.helper.form_method = 'POST'
         self.helper.form_class = 'form-horizontal'
+        self.helper.form_id = 'form_upload_file'
 
         # set form field properties
         self.helper.help_text_inline = True
         self.helper.html5_required = True
-        self.helper.label_class = 'col-sm-3 control-label'
-        self.helper.field_class = 'col-sm-9'
+        self.helper.label_class = 'col-sm-1 control-label'
+        self.helper.field_class = 'col-sm-11 textarea'
 
         self.helper.layout = Layout(
             Field('title'),
-            HTML("""<img class="button" src="/static/img/bold.gif" name="btnBold" title="Bold" onClick="doAddTags('<strong>','</strong>','id_content')">"""),
-            HTML("""<img class="button" src="/static/img/italic.gif" name="btnItalic" title="Italic" onClick="doAddTags('<em>','</em>','id_content')">"""),
-            HTML("""<img class="button" src="/static/img/underline.gif" name="btnUnderline" title="Underline" onClick="doAddTags('<u>','</u>','id_content')">"""),
-            HTML("""<img class="button" src="/static/img/link.gif" name="btnLink" title="Insert Link" onClick="doURL('id_content')">"""),
-            HTML("""<img class="button" src="/static/img/image.gif" name="btnPicture" title="Insert Picture" onClick="doImage('id_content')">"""),
-            HTML("""<img class="button" src="/static/img/ordered.gif" name="btnList" title="Ordered List" onClick="doList('<ol>','</ol>','id_content')">"""),
-            HTML("""<img class="button" src="/static/img/unordered.gif" name="btnList" title="Unordered List" onClick="doList('<ul>','</ul>','id_content')">"""),
-            HTML("""<img class="button" src="/static/img/quote.gif" name="btnQuote" title="Quote" onClick="doAddTags('<blockquote>','</blockquote>','id_content')">"""),
-            HTML("""<img class="button" src="/static/img/code.gif" name="btnCode" title="Code" onClick="doAddTags('<code>','</code>','id_content')">"""),
+            HTML("""<img class="button" src="/static/img/editor/bold.png" name="btnBold" title="Bold" onClick="doAddTags('<strong>','</strong>','id_content')">"""),
+            HTML("""<img class="button" src="/static/img/editor/italic.png" name="btnItalic" title="Italic" onClick="doAddTags('<em>','</em>','id_content')">"""),
+            HTML("""<img class="button" src="/static/img/editor/underline.png" name="btnUnderline" title="Underline" onClick="doAddTags('<u>','</u>','id_content')">"""),
+            HTML("""<img class="button" src="/static/img/editor/ordered.png" name="btnOrdered" title="Ordered List" onClick="doList('<ol>','</ol>','id_content')">"""),
+            HTML("""<img class="button" src="/static/img/editor/unordered.png" name="btnUnordered" title="Unordered List" onClick="doList('<ul>','</ul>','id_content')">"""),
+
+            HTML("""<img class="button" src="/static/img/editor/paragraph.png" name="btnParagraph" title="New Paragraph" onClick="doAddTags('<p>','</p>','id_content')">"""),
+            HTML("""<img class="button" src="/static/img/editor/header-3.png" name="btnH3" title="Header 3" onClick="doAddTags('<h3>','</h3>','id_content')">"""),
+            HTML("""<img class="button" src="/static/img/editor/header-4.png" name="btnH4" title="Header 4" onClick="doAddTags('<h4>','</h4>','id_content')">"""),
+            HTML("""<img class="button" src="/static/img/editor/anchor.png" name="btnAnchor" title="Anchor" onClick="doAnchor('id_content')">"""),
+
+            HTML("""<img class="button" src="/static/img/editor/quote.png" name="btnQuote" title="Quote" onClick="doAddTags('<blockquote>','</blockquote>','id_content')">"""),
+            HTML("""<img class="button" src="/static/img/editor/code.png" name="btnCode" title="Code" onClick="doAddTags('<code>','</code>','id_content')">"""),
+
+            # HTML("""<input type="file" class="input" id="upload_pic" accept="image/*"><img class="button" type="submit" src="/static/img/image.gif" id="btnPicture" name="btnPicture" title="Insert Picture" onClick="doImage('upload_pic', 'id_content')">"""),
+            HTML("""<img class="button" src="/static/img/editor/image.png" id="btnPicture" name="btnPicture" title="Insert Picture" onClick="doImage('id_content')">"""),
+
+            HTML("""<img class="button" src="/static/img/editor/link.png" name="btnLink" title="Insert Link" onClick="doURL('id_content')">"""),
+            HTML("""<img class="button" src="/static/img/editor/top.png" name="btnTop" title="Go Up" onClick="doTop('id_content')">"""),
             Field('content'),
             ButtonHolder(
                 Submit('add_button', _(u'Save'), css_class="btn btn-success"),
@@ -113,6 +129,10 @@ class WikiUpdateView(UpdateView):
             _(u"Wiki article updated successfully!"))
 
     def post(self, request, *args, **kwargs):
+        if request.method == "POST":
+            data_post = request.POST
+            print 'POST WikiUpdateView ============================== ', data_post
+
         if request.POST.get('cancel_button'):
             return HttpResponseRedirect(
                 u'%s?status_message=%s' % (reverse('wiki_show'),

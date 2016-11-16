@@ -7,12 +7,17 @@
 // URL: http://www.corpocrat.com
 /******************************************/
 
+// var up_file;
 var textarea;
 var content;
 
+
 function doImage(obj){
-	textarea = document.getElementById(obj);
-	var url = prompt('Enter the Image URL:','http://');
+    // alert(window.location.host);
+    var host_name = 'http://' + window.location.host + '/media/wiki/'
+    textarea = document.getElementById(obj);
+
+	var url = prompt('Enter the Image URL:', host_name);
 
 	var scrollTop = textarea.scrollTop;
 	var scrollLeft = textarea.scrollLeft;
@@ -21,7 +26,7 @@ function doImage(obj){
 		if (document.selection) {
 			textarea.focus();
 			var sel = document.selection.createRange();
-			sel.text = '<img src="' + url + '">';
+			sel.text = '<br /><img src="' + url + '" class="border-1" vspace="30" width="80%"><br />';
 		} else {
 			var len = textarea.value.length;
 		    var start = textarea.selectionStart;
@@ -29,11 +34,65 @@ function doImage(obj){
 
 	        var sel = textarea.value.substring(start, end);
 		    //alert(sel);
-			var rep = '<img src="' + url + '">';
+			var rep = '<br /><img src="' + url + '" class="border-1" vspace="30" width="80%"><br />';
 	        textarea.value =  textarea.value.substring(0, start) + rep + textarea.value.substring(end, len);
 			textarea.scrollTop = scrollTop;
 			textarea.scrollLeft = scrollLeft;
 		}
+	}
+}
+
+function doAnchor(obj){
+    textarea = document.getElementById(obj);
+	var url = prompt('Enter the Ancor name:', '');
+    var anchor = '<p><a name="' + url +'"></a></p> '
+
+	var scrollTop = textarea.scrollTop;
+	var scrollLeft = textarea.scrollLeft;
+
+	if (url != '' && url != null) {
+		if (document.selection) {
+			textarea.focus();
+			var sel = document.selection.createRange();
+			sel.text = anchor;
+		} else {
+			var len = textarea.value.length;
+		    var start = textarea.selectionStart;
+			var end = textarea.selectionEnd;
+
+	        var sel = textarea.value.substring(start, end);
+		    //alert(sel);
+			// var rep = '<br /><img src="' + url + '" class="border-1" vspace="30" width="80%"><br />';
+	        textarea.value =  textarea.value.substring(0, start) + anchor + textarea.value.substring(end, len);
+			textarea.scrollTop = scrollTop;
+			textarea.scrollLeft = scrollLeft;
+		}
+	}
+}
+
+function doTop(obj){
+    textarea = document.getElementById(obj);
+	// var url = prompt('Enter the Ancor name:', '');
+    var anchor = '<a href="#top">top&uarr;</a>'
+
+	var scrollTop = textarea.scrollTop;
+	var scrollLeft = textarea.scrollLeft;
+
+	if (document.selection) {
+		textarea.focus();
+		var sel = document.selection.createRange();
+		sel.text = anchor;
+	} else {
+		var len = textarea.value.length;
+	    var start = textarea.selectionStart;
+		var end = textarea.selectionEnd;
+
+        var sel = textarea.value.substring(start, end);
+	    //alert(sel);
+		// var rep = '<br /><img src="' + url + '" class="border-1" vspace="30" width="80%"><br />';
+        textarea.value =  textarea.value.substring(0, start) + anchor + textarea.value.substring(end, len);
+		textarea.scrollTop = scrollTop;
+		textarea.scrollLeft = scrollLeft;
 	}
 }
 
@@ -50,10 +109,10 @@ function doURL(obj){
 			var sel = document.selection.createRange();
 
 			if(sel.text==""){
-				sel.text = '<a href="' + url + '">' + url + '</a>';
-				} else {
-				sel.text = '<a href="' + url + '">' + sel.text + '</a>';
-				}
+				sel.text = '<a href="' + url + '" target="_blank">' + url + '</a>';
+			} else {
+				sel.text = '<a href="' + url + '" target="_blank">' + sel.text + '</a>';
+			}
 			//alert(sel.text);
 		} else {
 			var len = textarea.value.length;
@@ -69,7 +128,12 @@ function doURL(obj){
 			}
 		    //alert(sel);
 
-			var rep = '<a href="' + url + '">' + sel + '</a>';;
+            if(url.indexOf('#') + 1) {
+                var rep = '<a href="' + url + '">' + sel + '</a>';
+            } else {
+                var rep = '<a href="' + url + '" target="_blank">' + sel + '</a>';
+            }
+
 	        textarea.value =  textarea.value.substring(0,start) + rep + textarea.value.substring(end,len);
 			textarea.scrollTop = scrollTop;
 			textarea.scrollLeft = scrollLeft;
@@ -79,6 +143,11 @@ function doURL(obj){
 
 function doAddTags(tag1, tag2, obj){
     textarea = document.getElementById(obj);
+
+    if (tag1 == '<code>') {
+        tag1 = '<br />' + tag1
+        tag2 = tag2 + '<br />'
+    }
 
 	// Code for IE
 	if (document.selection){
@@ -160,8 +229,8 @@ function doList(tag1, tag2, obj){
 				var rep = '\n' + tag1 + '\n' + list.join("\n") + '\n' + tag2 + '\n';
 				textarea.value =  textarea.value.substring(0, start) + rep + textarea.value.substring(end, len);
 
-				alert('rep = '+rep);
-				alert('textarea = '+textarea.value);
+				// alert('rep = '+rep);
+				// alert('textarea = '+textarea.value);
 
 				textarea.scrollTop = scrollTop;
 				textarea.scrollLeft = scrollLeft;

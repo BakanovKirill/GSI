@@ -121,6 +121,7 @@ DEBUG_TOOLBAR_PATCH_SETTINGS = True
 ENABLE_DEBUG_TOOLBAR = False
 
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # home folder for new cripts
 SCRIPTS_HOME = '/lustre/w23/mattgsi/'

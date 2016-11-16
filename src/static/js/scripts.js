@@ -187,6 +187,11 @@ function initSelectConfigFile(){
     });
 }
 
+function initAddFormatingTextarrea(){
+    // textarea
+    $("#div_id_content > div.controls").addClass("textarea");
+}
+
 
 $(document).ready(function(){
   //selectAll();
@@ -201,4 +206,5 @@ $(document).ready(function(){
   initTooltipBootstrap();
   initCreateCard();
   initSelectConfigFile();
+  initAddFormatingTextarrea();
 });
