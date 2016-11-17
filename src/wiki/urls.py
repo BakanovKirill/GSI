@@ -11,6 +11,5 @@ from wiki.views import WikiUpdateView
 urlpatterns = [
 	url(r'^$', 'wiki.views.wiki_show', name='wiki_show'),
 	# url(r'/(?P<wiki_id>\w+)/edit/^$', 'wiki.views.wiki_edit', name='wiki_edit'),
-	url(r'^(?P<pk>\d+)/edit/$', WikiUpdateView.as_view(),
-        name='wiki_edit'),
+	url(r'^(?P<pk>\d+)/edit/$', WikiUpdateView.as_view(), name='wiki_edit'),
 ]
