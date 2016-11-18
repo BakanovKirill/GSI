@@ -1,0 +1,384 @@
+/* body */
+body {
+    background: url(../img/background_log.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover; /* Safari 3.1+ и Chrome 4.0+ */
+    -moz-background-size: cover; /* Firefox 3.6+ */
+    -o-background-size: cover; /* Opera 9.6+ */
+    background-size: cover;
+}
+
+/* background registrations */
+.reg-form {
+    /*background-color: white;*/
+    z-index: 5;
+}
+
+.background-white {
+    top: 10px;
+    background-color: white;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    /*margin: 10px;*/
+    /*width: 550px;*/
+    /*height: 250px;*/
+    /*z-index: 1;*/
+    /*position: relative;*/
+    /*top: -250px;*/
+}
+
+/* alert */
+.alert {
+  margin: 10px 0 5px 0;
+}
+
+/* placement */
+.center {
+    text-align: center;
+}
+
+.right {
+    text-align: right;
+}
+
+.left {
+    text-align: left;
+}
+
+/* alignment */
+.float-right {
+    float: right;
+}
+
+/* indents */
+.top-25 {
+    top: 25px;
+}
+
+.margin-top-4 {
+    margin-top: 4px;
+}
+
+.margin-top-8 {
+    margin-top: 8px;
+}
+
+.margin-top-15 {
+    margin-top: 15px;
+}
+
+.margin-top-20 {
+    margin-top: 20px;
+}
+
+.margin-top-25 {
+    margin-top: 25px;
+}
+
+.margin-top-50 {
+    margin-top: 50px;
+}
+
+.margin-top-040 {
+    margin-top: -40px;
+}
+
+.margin-bottom-50 {
+    margin-bottom: 50px;
+}
+
+.margin-left-12 {
+    margin-left: 20px;
+}
+
+.padding-0 {
+    padding: 0px;
+}
+
+.padding-left-0 {
+    padding: 0px 15px 0px 0px;
+}
+
+.padding-rigth-0 {
+    padding: 0px 0px 0px 15px;
+}
+
+
+/*.btn-block-50 {*/
+    /*padding-left: 0;*/
+    /*padding-right: 0;*/
+    /*width: 50%;*/
+/*}*/
+
+/* color */
+.red-color {
+    color: red;
+}
+
+.blue-color-bootstrap {
+    color: #265a88;
+}
+
+/* main menu */
+li.main-menu {
+    margin-bottom: 15px;
+    padding: 0px;
+}
+
+.input-width-35 {
+    width: 35%;
+}
+
+/* display */
+.disabled {
+    display: none !important;
+}
+
+.visible {
+    display: block !important;
+}
+
+/* fonts style*/
+.font-9 {
+    font-size: 9px;
+}
+
+.font-11 {
+    font-size: 11px;
+}
+
+.font-size-12 {
+    font-size: 12px;
+}
+
+.font-14 {
+    font-size: 14px;
+}
+
+.font-normal {
+    font-weight: 500;
+}
+
+/* borders style */
+.border-bottom {
+    border: 0;
+    border-bottom: 1px solid #ccc;
+    border-radius: 0px;
+    box-shadow: 0 0px 0px rgba(0, 0, 0, 0) inset;
+}
+
+.border-bottom:focus {
+    border-color: white;
+    box-shadow: 0 0 0px rgba(100, 100, 100, 0.9) inset, 0 0 0px rgba(100, 100, 100, 0.5);
+    border-bottom: 1px solid #66afe9;
+}
+
+/* search */
+.dropdown-search {
+    position: relative;
+    display: inline-block;
+    min-width: 150px;
+    left: -100px;
+    top: 10px;
+}
+
+.search-form {
+    border: 0;
+    /*border-bottom: 1px solid #ccc;*/
+    border-radius: 0px;
+    box-shadow: 0 0px 0px rgba(0, 0, 0, 0) inset;
+    background-color: transparent;
+    color: #c1d9ee !important;
+}
+
+/* forms log and signup */
+.form-password:focus {
+    border-color: white;
+    box-shadow: 0 0 0px rgba(100, 100, 100, 0.9) inset, 0 0 0px rgba(100, 100, 100, 0.5);
+    border-bottom: 1px solid #66afe9;
+}
+
+/* pic for forms log and signup */
+.img-top-input {
+    z-index: 4;
+    position: relative;
+    display: none;
+}
+
+.input-form {
+    z-index: 2;
+    position: relative;
+}
+
+.img-top-input:focus {
+    display: block;
+}
+
+/* no yelow autofill for google chrome */
+input {outline: none;}
+input:-webkit-autofill {
+    -webkit-box-shadow: inset 0 0 0 50px #fff !important; /* background color */
+}
+
+/* main menu style */
+.main-menu {
+    top: 15px;
+    background-image: linear-gradient(to bottom, #337ab7 0px, #265a88 100%);
+    background-repeat: repeat-x;
+    border-color: #245580;
+}
+
+.dropdown-left-0 {
+    left: -16px;
+    border-radius: 0px;
+    border-color: #fff;
+    top: 50px;
+}
+
+.brand-logo {
+    color: white !important;
+}
+
+.brand-logo:hover {
+    color: #c1d9ee !important;
+}
+
+.menu-panel {
+    background-color: transparent;
+}
+
+/* dropdown main menu style */
+.right-indent-10 {
+    padding-right: 10px;
+}
+
+.acordion > a {
+    clear: both;
+    color: #333;
+    display: block;
+    font-weight: 400;
+    line-height: 1.42857;
+    padding: 3px 20px;
+    white-space: nowrap;
+}
+
+.li-menu {
+    font-size: 14px;
+    background-color: white;
+}
+
+.acordion > a:hover, .li-menu > li > a:hover {
+    text-decoration: none !important;
+    color: #428bca;
+    background-color: transparent;
+    background-image: none;
+}
+
+.li-menu > li > a > i:hover {
+    background-color: transparent !important;
+    color: transparent !important;
+}
+
+.navbar-main-menu {
+    min-height: 50px;
+    max-height: 50px;
+}
+
+/**/
+
+.dropbtn {
+    background-color: transparent;
+    color: white;
+    /*padding: 15px;*/
+    /*margin-top: 15px;*/
+    font-size: 24px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    min-width: 150px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    /*background-color: #f9f9f9;*/
+    min-width: 200px;
+    width: 250px;
+    /*box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);*/
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 15px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: transparent;
+    text-decoration: none !important;
+    color: #428bca;
+    background-image: none;
+}
+
+/*.dropdown:hover .dropdown-content {*/
+    /*!*display: block;*!*/
+/*}*/
+
+.dropdown:hover .dropbtn {
+    background-color: transparent;
+}
+
+.display-no-table {
+    display: table-cell;
+}
+
+/* on/off sub menu */
+.sub-menu ul {
+  margin: 0;
+  list-style: none;
+  padding-left: 20px;
+  display: none;
+}
+
+/*.sub-menu .title::before {*/
+  /*font-size: 80%;*/
+  /*color: green;*/
+/*}*/
+
+.icon-visible {
+    color: black;
+}
+
+.title {
+    color: #428bca;
+}
+
+.sub-menu.open ul {
+  display: block;
+}
+
+.li-sub-menu-left-30 {
+    padding-left: 30px !important;
+}
+
+/* user profile */
+.user-profile {
+    left: 120px;
+    top: 7px;
+}
+
+.dropbtn-user {
+    background-color: transparent;
+    color: white;
+    /*padding: 15px;*/
+    /*margin-top: 15px;*/
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+}
