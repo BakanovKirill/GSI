@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block title %}Wiki Edit Articles{% endblock title %}
+
+{% block content %}
+    {% crispy form %}
+    <!-- 
+    <form method="post" id="wiki_edit" action="{% url 'wiki_edit' article.id %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <p><input type="submit" value="post"></p>
+    </form>
+    -->
+{% endblock content %}

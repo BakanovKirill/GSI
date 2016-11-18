@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block title %}{% endblock title %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12 left">
+            {% autoescape off %}
+            {% for w in articles %}
+                <h2 class="left">{{ w.title }}</h2>
+                {{ w.content }}
+                <br /><hr /><br />
+                <a href="{% url "wiki_edit" w.id %}">Edit</a>
+            {% endfor %}
+            {% endautoescape %}
+        </div>
+    </div>
+
+    <!-- <div class="row">
+        <div class="col-md-3">
+            <button type="button" class="btn btn-primary btn-block">
+                New Article
+            </button>
+        </div>
+    </div> -->
+{% endblock content %}
