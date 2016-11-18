@@ -38,8 +38,11 @@ ALLOWED_HOSTS = ['*']
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
-# Application definition
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_IMAGE_BACKEND = "pillow"
+CKEDITOR_JQUERY_URL = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'
 
+# Application definition
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -53,11 +56,15 @@ INSTALLED_APPS = (
     'registration',
     'crispy_forms',
 
+    'ckeditor',
+    'ckeditor_uploader',
+
     'cards',
     'gsi',
     'log',
     'tags',
-    'wiki'
+    'wiki',
+    'articles',
 
 )
 

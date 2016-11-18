@@ -37,28 +37,6 @@ def wiki_show(request):
     title = 'Wiki'
     wiki = Wiki.objects.all()
 
-    if request.is_ajax():
-        data_post = request.POST
-        data_get = request.GET
-
-        # print 'AJAX POST ============ ', data_post['img']
-        # print 'AJAX POST type ============ ', type(data_post['img'])
-        # # print 'AJAX GET ============ ', data_get
-        #
-        # file_name = str(data_post['img']).decode('utf-8')
-        # path_test_data = os.path.join('/home/greg/Elance_com/KeyUA/GSI/TinyMCE', file_name)
-        # handle_uploaded_file(data_post['img'], path_test_data)
-
-        # if 'wiki_id' in data_post:
-        #     status = 'succes'
-        #
-        #     return HttpResponse(status)
-
-    if request.method == "POST":
-        data_post = request.POST
-
-        print 'POST ============ ', data_post
-
     data = {
         'title': title,
         'wiki': wiki,
@@ -88,7 +66,7 @@ class WikiUpdateForm(ModelForm):
         self.helper.help_text_inline = True
         self.helper.html5_required = True
         self.helper.label_class = 'col-sm-1 control-label'
-        self.helper.field_class = 'col-sm-11 textarea'
+        self.helper.field_class = 'col-sm-11'
 
         self.helper.layout = Layout(
             Field('title'),

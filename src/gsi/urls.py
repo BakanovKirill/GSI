@@ -421,10 +421,14 @@ urlpatterns = [
 	#	 name='update_run'),
 	url(r'^run/(?P<run_id>\w+\.\w+\.\w+\.\w+\.\w+)/$', 'api.views.update_run',
 		name='update_run'),
+
+	# django-ckeditor
+	url(r'^ckeditor/', include('ckeditor_uploader.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns += [
-	url(r'^wiki/', include('wiki.urls')),
+	# url(r'^wiki/', include('wiki.urls')),
+	url(r'^wiki/', include('articles.urls')),
 	url(r'^cards/', include('cards.urls')),
 ]
 

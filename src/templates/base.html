@@ -286,7 +286,7 @@
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                     <h2 class="modal-title" id="modalWikiLabel">Editing the article</h2>
                 </div>
-                <div class="modal-body"><!-- --></div>
+                <div class="modal-body"><iframe ckass="iframe-modal" src="" style="zoom:0.60" width="99.6%" height="250" frameborder="0"><!-- --></iframe></div>
                 <div class="modal-footer"><!-- --></div>
             </div>
         </div>
@@ -313,6 +313,10 @@
             integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
             crossorigin="anonymous">
     </script>
+
+    <!-- CKEditor JavaScript -->
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
 
     <!-- custom scripts -->
     <script type="text/javascript" src="{% static 'js/scripts.js' %}"></script>

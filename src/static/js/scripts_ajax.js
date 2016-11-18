@@ -205,10 +205,8 @@ function initPrelod(){
 
 function initWikiUpdate() {
     $('a.wiki-edit-form-link').click(function(event){
-        $("#div_id_content > div.controls").addClass("textarea");
+        // alert('initWikiUpdate!');
         var link = $(this);
-
-        // alert('initWikiUpdate');
 
         $.ajax({
             'url': link.attr('href'),
@@ -225,6 +223,7 @@ function initWikiUpdate() {
                 var modal = $('#modalWiki'), html = $(data), form = html.find('#content-column form');
                 modal.find('.modal-title').html(html.find('#content-column h2').text());
                 modal.find('.modal-body').html(form);
+                // $('iframe').attr("src", "http://127.0.0.1:8000/wiki/1/edit/");
 
                 // init our edit form
                 initEditWikiForm(form, modal);
@@ -272,6 +271,7 @@ function initEditWikiForm(form, modal) {
             // copy form to modal if we found it in server response
             if (newform.length > 0) {
                 modal.find('.modal-body').append(newform);
+                // $('iframe').attr("src", "http://127.0.0.1:8000/wiki/1/edit/");
 
                 // initialize form fields and buttons
                 initEditWikiForm(newform, modal);
@@ -302,6 +302,6 @@ $(document).ready(function(){
     initCheckDeleteItems();
     initCheckCurDeleteItems();
     initPrelod();
-    initWikiUpdate();
     initUploadFile();
+    // initWikiUpdate();
 });

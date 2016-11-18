@@ -42,6 +42,12 @@ mkmigr_wiki:
 migrate_wiki:
 	$(MANAGE) migrate wiki
 
+mkmigr_article:
+	$(MANAGE) makemigrations articles
+
+migrate_article:
+	$(MANAGE) migrate articles
+
 test_gsi:
 	$(MANAGE) test gsi
 
