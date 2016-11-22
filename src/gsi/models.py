@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-# import os
-# from subprocess import call
 
 from django.contrib.auth.models import User
 from django.db import models

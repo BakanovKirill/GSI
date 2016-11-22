@@ -10,9 +10,6 @@ from gsi.models import (Area, YearGroup, TileType,
                         Satellite, InputDataDirectory, ListTestFiles,)
 
 
-# , 'readonly': 'readonly'
-
-
 class QRFForm(forms.ModelForm):
 
     """ form for editing QRF Card """

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 
-from core.validator_gsi import *
+from core.validator_gsi import validate_order
 from cards.models import CardItem
 from gsi.models import (RunBase, Resolution, CardSequence, VariablesGroup,
                         HomeVariables, Tile, YearGroup, Year, Satellite,
