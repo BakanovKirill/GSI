@@ -2,10 +2,6 @@
 from datetime import datetime
 import os
 import shutil
-# import getpass
-# from datetime import datetime
-# import magic
-# import copy
 
 from annoying.decorators import render_to
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -14,11 +10,6 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic.edit import FormView
 from django.contrib.contenttypes.models import ContentType
-# from django.http import JsonResponse
-# from django.template.defaultfilters import filesizeformat
-# from django.views.generic import UpdateView
-# from django.utils.decorators import method_decorator
-# from django.conf import settings
 
 from gsi.models import (Run, RunStep, Log, OrderedCardItem, HomeVariables,
                         VariablesGroup, YearGroup, Year, Satellite,
