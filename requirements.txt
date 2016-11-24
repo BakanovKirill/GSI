@@ -1,3 +1,5 @@
+configparser
+django==1.8
 six
 gsi
 django-debug-toolbar
