@@ -1,19 +1,47 @@
 ******************************************
-Model GSI
+Project structure GSi
 ******************************************
 
-Views
-======
+Models & Views
+===============
 
-.. automodule:: gsi.views
-    :members:
-    :undoc-members:
-    :inherited-members:
+Articles
+------------------
 
 Models
-======
+~~~~~~~~~~~~~~~~~~
+
+.. automodule:: articles.models
+    :members:
+    :private-members:
+    :special-members:
+
+Views
+~~~~~~~~~~~~~~~~~~
+
+.. automodule:: articles.views
+    :members: wiki_show, ArticleUpdateForm, WikiUpdateView
+
+Cards
+------------------
+
+.. automodule:: cards.models
+    :members:
+    :private-members:
+    :special-members:
+
+.. automodule:: cards.views
+    :members:
+    :private-members:
+    :special-members:
+
+Gsi
+------------------
 
 .. automodule:: gsi.models
     :members:
-    :undoc-members:
-    :inherited-members:
+
+.. automodule:: gsi.views
+    :members:
+    :private-members:
+    :special-members:

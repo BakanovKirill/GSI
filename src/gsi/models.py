@@ -14,6 +14,7 @@ from gsi.settings import STATIC_ROOT, STATIC_DIR
 
 
 class HomeVariables(SingletonModel):
+    ''' Model for the Home Variables'''
     SAT_TIF_DIR_ROOT = models.CharField(
         max_length=300,
         verbose_name=_('Satelite Data Top Level'),
