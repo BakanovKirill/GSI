@@ -35,6 +35,7 @@ sys.path.insert(0, os.path.abspath('../../../eggs/Django-1.8-py2.7.egg/django/co
 sys.path.insert(0, os.path.abspath('../../../eggs/django_annoying-0.10.3-py2.7.egg'))
 
 
+
 # sys.path.insert(0, os.path.abspath('../../../eggs/django_solo-1.1.2-py2.7.egg'))
 # sys.path.insert(0, os.path.abspath('../../../eggs/python_magic-0.4.11-py2.7.egg'))
 # sys.path.insert(0, os.path.abspath('../../../eggs/Django-1.8-py2.7.egg/django/core/management'))
@@ -134,7 +135,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'GSi'
-copyright = u'2016, KeyUA'
+copyright = u'2016, GSi'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -277,7 +278,7 @@ latex_elements = {
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
   ('index', 'GSi.tex', u'GSi Documentation',
-   u'KeyUA', 'manual'),
+   u'GSi', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

@@ -13,8 +13,6 @@ Models
 
 .. automodule:: articles.models
     :members:
-    :private-members:
-    :special-members:
 
 Views
 ~~~~~~~~~~~~~~~~~~

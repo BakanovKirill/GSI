@@ -68,10 +68,13 @@ class ArticleUpdateForm(ModelForm):
 
 class WikiUpdateView(UpdateView):
     ''' View WikiUpdateView '''
-    
+
     model = Article
     template_name = 'articles/wiki_edit.html'
     form_class = ArticleUpdateForm
+
+    def __init__(self, *args, **kwargs):
+        super(WikiUpdateView, self).__init__(*args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super(WikiUpdateView, self).get_form_kwargs()
