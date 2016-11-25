@@ -10,6 +10,7 @@ from core.utils import (UnicodeNameMixin, update_list_files)
 
 
 class NamedModel(UnicodeNameMixin, models.Model):
+    ''' '''
     name = models.CharField(max_length=100)
 
     class Meta:
@@ -24,6 +25,7 @@ class ParallelModel(models.Model):
 
 
 class QRF(NamedModel):
+    """ """
     interval = models.CharField(max_length=200, blank=True)
     number_of_trees = models.IntegerField(default=0, blank=True)
     number_of_threads = models.IntegerField(default=1, blank=True)

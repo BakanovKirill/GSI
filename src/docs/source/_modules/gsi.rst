@@ -2,26 +2,23 @@
 Project structure GSi
 ******************************************
 
-Models & Views
+Cards APP
 ===============
-
-Articles
-------------------
 
 Models
 ~~~~~~~~~~~~~~~~~~
 
-.. automodule:: articles.models
+.. automodule:: cards.models
     :members:
 
 Views
 ~~~~~~~~~~~~~~~~~~
 
-.. automodule:: articles.views
-    :members: wiki_show, ArticleUpdateForm, WikiUpdateView
+.. automodule:: cards.views
+    :members:
 
-Cards
-------------------
+Gsi APP
+===============
 
 .. automodule:: cards.models
     :members:
