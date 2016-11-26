@@ -65,7 +65,6 @@ INSTALLED_APPS = (
     'tags',
     'wiki',
     'articles',
-
 )
 
 MIDDLEWARE_CLASSES = (

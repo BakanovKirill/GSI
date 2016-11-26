@@ -260,6 +260,3 @@ class SubCardItem(UnicodeNameMixin, models.Model):
     card_id = models.PositiveIntegerField()
     start_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     start_time = models.TimeField(auto_now_add=True, null=True, blank=True)
-
-    def __unicode__(self):
-        return u"{0}".format(self.name)

@@ -39,7 +39,7 @@ It is intended to execute the created runs.
 
 
 Page “Run Progress” (`indy4.epcc.ed.ac.uk/run/progress/ <http://indy4.epcc.ed.ac.uk/run/progress/>`_)
----------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------
 
 It is intended to show a process execute Runs. It is possible to remove.
 
@@ -74,7 +74,7 @@ Setting paths for home variables.
       :align: center
 
 Page “Environment Groups” (`indy4.epcc.ed.ac.uk/run/environment-groups/ <http://indy4.epcc.ed.ac.uk/run/environment-groups/>`_)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Creating, editing and deleting data of the *"Environment Groups"*. Data from this menu are used to create new Runs.
 

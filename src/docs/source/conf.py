@@ -15,28 +15,46 @@ import sys, os
 
 # documentation root, use os.path.abspath to make it absolute, like shown here
 
-# sys.path.insert(0, os.path.abspath('../..'))
-# from django.conf import settings
-# settings.configure()
-#
-
-
-# sys.path.append(sys.path.insert(0, os.path.abspath('../../')))
-# sys.path.append(sys.path.insert(0, os.path.abspath('../../../eggs/')))
-
 sys.path.append(sys.path.insert(0, os.path.abspath('../../')))
-sys.path.append(sys.path.insert(0, os.path.abspath('../../../eggs/')))
-# os.environ['DJANGO_SETTINGS_MODULE'] = 'gsi.settings'
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gsi.settings")
 
 sys.path.insert(0, os.path.abspath('../../../eggs/django_solo-1.1.2-py2.7.egg'))
 sys.path.insert(0, os.path.abspath('../../../eggs/python_magic-0.4.11-py2.7.egg'))
 sys.path.insert(0, os.path.abspath('../../../eggs/Django-1.8-py2.7.egg/django/core/management'))
 sys.path.insert(0, os.path.abspath('../../../eggs/django_annoying-0.10.3-py2.7.egg'))
 
+from django.conf import settings
+settings.configure()
+
+from gsi.settings import BASE_DIR
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'gsi.settings'
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gsi.settings")
+
+
+# sys.path.append(sys.path.insert(0, os.path.abspath('../../')))
+# sys.path.append(sys.path.insert(0, os.path.abspath('../../../eggs/')))
+
+# sys.path.append(sys.path.insert(0, os.path.abspath('.')))
+# sys.path.append(sys.path.insert(0, os.path.abspath('../')))
+# sys.path.append(sys.path.insert(0, os.path.abspath('../../')))
+# sys.path.append(sys.path.insert(0, os.path.abspath('../../../src/')))
+
+# sys.path.insert(0, os.path.abspath("../../"))
+# sys.path.append(sys.path.insert(0, os.path.abspath('../../../eggs/')))
+
+
+
 
 
 # sys.path.insert(0, os.path.abspath('../../../eggs/django_solo-1.1.2-py2.7.egg'))
+# sys.path.insert(0, os.path.abspath('../../../eggs/python_magic-0.4.11-py2.7.egg'))
+# sys.path.insert(0, os.path.abspath('../../../eggs/Django-1.8-py2.7.egg/django/core/management'))
+# sys.path.insert(0, os.path.abspath('../../../eggs/django_annoying-0.10.3-py2.7.egg'))
+
+
+
+
+# sys.path.insert(0, os.path.abspath('../../core'))
 # sys.path.insert(0, os.path.abspath('../../../eggs/python_magic-0.4.11-py2.7.egg'))
 # sys.path.insert(0, os.path.abspath('../../../eggs/Django-1.8-py2.7.egg/django/core/management'))
 # sys.path.insert(0, os.path.abspath('../../../eggs/django_annoying-0.10.3-py2.7.egg'))
@@ -46,7 +64,19 @@ sys.path.insert(0, os.path.abspath('../../../eggs/django_annoying-0.10.3-py2.7.e
 # sys.path.insert(0, '/data/work/virtualenvs/gsi/src/GSI/eggs/Django-1.8-py2.7.egg/django/core/management')
 # sys.path.insert(0, '/data/work/virtualenvs/gsi/src/GSI/eggs/django_annoying-0.10.3-py2.7.egg')
 
-print 'path =================== ',  os.path.abspath('../../../eggs/')
+# from django.conf import settings
+# settings.configure()
+#
+# from gsi.settings import BASE_DIR
+#
+# os.environ['DJANGO_SETTINGS_MODULE'] = 'gsi.settings'
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gsi.settings")
+
+
+
+# print 'path =================== ',  os.path.abspath('../../../eggs/')
+
+
 
 
 # setup Django

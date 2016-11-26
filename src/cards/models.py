@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -10,7 +11,10 @@ from core.utils import (UnicodeNameMixin, update_list_files)
 
 
 class NamedModel(UnicodeNameMixin, models.Model):
-    ''' '''
+    """**Abstract model**.
+
+    Inherits the *"name"* field
+    """
     name = models.CharField(max_length=100)
 
     class Meta:
@@ -18,6 +22,12 @@ class NamedModel(UnicodeNameMixin, models.Model):
 
 
 class ParallelModel(models.Model):
+    """**Abstract model.**
+
+        Inherits the *"run_parallel"* field
+
+    """
+
     run_parallel = models.BooleanField(default=False)
 
     class Meta:
@@ -25,7 +35,20 @@ class ParallelModel(models.Model):
 
 
 class QRF(NamedModel):
-    """ """
+    """**Model for the cards QRF.**
+
+    :Fields:
+
+        *interval*: confidence interval (overrides $QRF_INTERVAL)
+
+        *number_of_trees*: number of trees to use for QRF (overrides actual number of trees created)
+
+        *number_of_threads*: number of parallel threads to use for QRF
+
+        *directory*: Identifies parent directory for trees, if not in default location (under $RF_DIR)
+
+    """
+
     interval = models.CharField(max_length=200, blank=True)
     number_of_trees = models.IntegerField(default=0, blank=True)
     number_of_threads = models.IntegerField(default=1, blank=True)
@@ -36,6 +59,26 @@ class QRF(NamedModel):
 
 
 class RFScore(NamedModel, ParallelModel):
+    """**Model for the cards RFScore.**
+
+    :Fields:
+
+        *area*: inherited from the Area model of applications GSI
+
+        *year_group*: inherited from the YearGroup model of applications GSI
+
+        *bias_corrn*: number of parallel threads to use for QRF
+
+        *number_of_threads*: number of parallel threads used for QRF, if enabled ($QRF_INTERVAL>0)
+
+        *QRFopts*: Controls outputs: 0=None, 1=Mean, 2=Median, 4=Min, 8=Max, 16=LowerQ, 32=UpperQ, 64=QRFstats (set OR of values), 128=Std Error, 256=Std Dev, 512=Variance (sigma sq), 1024=nVar, 2048=per pixel Quantile
+
+        *ref_target*: Datatype used for training (eg 'Biomass'), which triggers generation of new target <90th quantile
+
+        *clean_name*: Text to uniquely identify filename for new cleaned target (<RefTarget>_<CleanName>)
+
+    """
+
     area = models.ForeignKey('gsi.Area')
     year_group = models.ForeignKey('gsi.YearGroup')
     bias_corrn = models.CharField(max_length=200, blank=True)
@@ -49,7 +92,26 @@ class RFScore(NamedModel, ParallelModel):
 
 
 class Remap(NamedModel, ParallelModel):
-    # area = models.ForeignKey('gsi.Area', blank=True, null=True)
+    """Model for the cards Remap.
+
+    **FIELDS:**
+
+        *area*: inherited from the Area model of applications GSI
+
+        *year_group*: inherited from the YearGroup model of applications GSI
+
+        *bias_corrn*: number of parallel threads to use for QRF
+
+        *number_of_threads*: number of parallel threads used for QRF, if enabled ($QRF_INTERVAL>0)
+
+        *QRFopts*: Controls outputs: 0=None, 1=Mean, 2=Median, 4=Min, 8=Max, 16=LowerQ, 32=UpperQ, 64=QRFstats (set OR of values), 128=Std Error, 256=Std Dev, 512=Variance (sigma sq), 1024=nVar, 2048=per pixel Quantile
+
+        *ref_target*: Datatype used for training (eg 'Biomass'), which triggers generation of new target <90th quantile
+
+        *clean_name*: Text to uniquely identify filename for new cleaned target (<RefTarget>_<CleanName>)
+
+    """
+
     year_group = models.ForeignKey('gsi.YearGroup', blank=True, null=True)
     file_spec = models.CharField(max_length=200)
     roi = models.CharField(max_length=200)

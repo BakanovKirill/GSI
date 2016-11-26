@@ -19,8 +19,6 @@ Contents:
    _general/4_backend.rst
    _modules/gsi.rst
 
-
-
 Indices and tables
 ******************
 

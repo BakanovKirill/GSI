@@ -2,41 +2,27 @@
 Project structure GSi
 ******************************************
 
-Cards APP
-===============
+Cards aplication
+=================
 
-Models
-~~~~~~~~~~~~~~~~~~
-
-.. automodule:: cards.models
-    :members:
-
-Views
-~~~~~~~~~~~~~~~~~~
-
-.. automodule:: cards.views
-    :members:
-
-Gsi APP
-===============
+Cards views
+------------------
 
 .. automodule:: cards.models
     :members:
-    :private-members:
-    :special-members:
 
-.. automodule:: cards.views
-    :members:
-    :private-members:
-    :special-members:
 
-Gsi
+Gsi aplication
+===============
+
+Gsi models
 ------------------
 
 .. automodule:: gsi.models
     :members:
 
+Gsi views
+------------------
+
 .. automodule:: gsi.views
     :members:
-    :private-members:
-    :special-members:
