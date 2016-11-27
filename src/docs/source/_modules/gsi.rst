@@ -114,31 +114,13 @@ Project structure
     |   │   ├── back-18.png
     |   │   ├── background_log.jpg
     |   │   ├── back-to-up-18.png
-    |   │   ├── bold.gif
     |   │   ├── chevron-double-right-18.png
-    |   │   ├── code.gif
     |   │   ├── copy-18.png
     |   │   ├── customer_section.png
     |   │   ├── delete-18.png
     |   │   ├── details_18.png
     |   │   ├── download-18.png
     |   │   ├── edit-18.png
-    |   │   ├── editor
-    |   │   │   ├── anchor.png
-    |   │   │   ├── bold.png
-    |   │   │   ├── border-image.png
-    |   │   │   ├── code.png
-    |   │   │   ├── header-3.png
-    |   │   │   ├── header-4.png
-    |   │   │   ├── image.png
-    |   │   │   ├── italic.png
-    |   │   │   ├── link.png
-    |   │   │   ├── ordered.png
-    |   │   │   ├── paragraph.png
-    |   │   │   ├── quote.png
-    |   │   │   ├── top.png
-    |   │   │   ├── underline.png
-    |   │   │   └── unordered.png
     |   │   ├── email_18.png
     |   │   ├── eye_18.png
     |   │   ├── file-18.png
@@ -151,24 +133,17 @@ Project structure
     |   │   ├── folder-18.png
     |   │   ├── go-folder-18.png
     |   │   ├── image-18.png
-    |   │   ├── image.gif
-    |   │   ├── italic.gif
-    |   │   ├── link.gif
     |   │   ├── logout.png
     |   │   ├── menu-down-18.png
     |   │   ├── order-18.png
-    |   │   ├── ordered.gif
     |   │   ├── overview.png
     |   │   ├── parallel-1-18.png
     |   │   ├── parallel-2-18.png
     |   │   ├── profile-18.png
-    |   │   ├── quote.gif
     |   │   ├── settings.png
     |   │   ├── setup_new_run.png
     |   │   ├── setup_static_data.png
     |   │   ├── submit_a_run.png
-    |   │   ├── underline.gif
-    |   │   ├── unordered.gif
     |   │   ├── upload.png
     |   │   └── view_run_progress.png
     |   └── js
