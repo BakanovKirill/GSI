@@ -10,6 +10,22 @@ Project structure
 * folder with templates: **template**;
 * folder with custom tags: **tags**;
 
+-- *"__init__.py"*: the file for to initialize of the packages.
+
+-- *"urls.py"*: the file for the URLs of web pages.
+
+-- *"admin.py"*: the file to display models in the admin part of the project.
+
+-- *"migrations"*: the package migration of models. At each change in the tables creates a new migration.
+
+-- *"template"*: the folder for templates of web pages.
+
+-- *"static/css"*: the folder for styles of css.
+
+-- *"static/js"*: the folder for JavaScript files which used in the project.
+
+-- *"static/img"*: the folder for images which used in the project.
+
 -- Structure of folders:
 
     **api** - source code to work with api::
