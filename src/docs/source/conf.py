@@ -21,6 +21,7 @@ sys.path.insert(0, os.path.abspath('../../../eggs/django_solo-1.1.2-py2.7.egg'))
 sys.path.insert(0, os.path.abspath('../../../eggs/python_magic-0.4.11-py2.7.egg'))
 sys.path.insert(0, os.path.abspath('../../../eggs/Django-1.8-py2.7.egg/django/core/management'))
 sys.path.insert(0, os.path.abspath('../../../eggs/django_annoying-0.10.3-py2.7.egg'))
+sys.path.insert(0, os.path.abspath('../../../eggs/djangorestframework-3.5.1-py2.7.egg'))
 
 from django.conf import settings
 settings.configure()
