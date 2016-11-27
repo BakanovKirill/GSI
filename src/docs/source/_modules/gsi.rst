@@ -156,6 +156,115 @@ Project structure
     |       └── upload_file.js
 
 
+    **template** - folder with templates::
+
+    |── template
+    |   ├── base.html
+    |   ├── base_registrations.html
+    |   ├── base_wiki.html
+    |   ├── cards
+    |   │   ├── _calcstats_form.html
+    |   │   ├── _collate_form.html
+    |   │   ├── _create_processing_card_form.html
+    |   │   ├── _mergecsv_form.html
+    |   │   ├── new_run_card.html
+    |   │   ├── new_run_csid_card.html
+    |   │   ├── new_runid_card.html
+    |   │   ├── new_runid_csid_card.html
+    |   │   ├── _preproc_form.html
+    |   │   ├── proces_card_sequence_cards.html
+    |   │   ├── processing_card_new_run.html
+    |   │   ├── _qrf_form.html
+    |   │   ├── _randomforest_form.html
+    |   │   ├── _remap_form.html
+    |   │   ├── _rfscore_form.html
+    |   │   ├── _rftrain_form.html
+    |   │   └── _year_filter_form.html
+    |   ├── gsi
+    |   │   ├── add_card_sequence.html
+    |   │   ├── _area_form.html
+    |   │   ├── areas_list.html
+    |   │   ├── audit_history.html
+    |   │   ├── blocking.html
+    |   │   ├── card_editions.html
+    |   │   ├── card_item_update.html
+    |   │   ├── _card_sequence_form.html
+    |   │   ├── card_sequence.html
+    |   │   ├── card_sequence_update.html
+    |   │   ├── cards_list.html
+    |   │   ├── _cs_calcstats_form.html
+    |   │   ├── _cs_collate_form.html
+    |   │   ├── _cs_mergecsv_form.html
+    |   │   ├── _cs_preproc_form.html
+    |   │   ├── _cs_qrf_form.html
+    |   │   ├── _cs_randomforest_form.html
+    |   │   ├── _cs_remap_form.html
+    |   │   ├── _cs_rfscore_form.html
+    |   │   ├── _cs_rftrain_form.html
+    |   │   ├── _cs_year_filter_form.html
+    |   │   ├── customer_section.html
+    |   │   ├── _env_group_form.html
+    |   │   ├── environment_groups_list.html
+    |   │   ├── execute_run.html
+    |   │   ├── gsi_map.html
+    |   │   ├── home_variable_setup.html
+    |   │   ├── index.html
+    |   │   ├── _input_data_dir_form.html
+    |   │   ├── input_data_dir_list.html
+    |   │   ├── _modal_new_card.html
+    |   │   ├── new_card_sequence.html
+    |   │   ├── new_run.html
+    |   │   ├── _ordered_card_items.html
+    |   │   ├── _resolution_form.html
+    |   │   ├── resolution_list.html
+    |   │   ├── run_details.html
+    |   │   ├── run_new_card_sequence_list.html
+    |   │   ├── run_progress.html
+    |   │   ├── run_setup.html
+    |   │   ├── run_update.html
+    |   │   ├── _satellite_form.html
+    |   │   ├── satellite_list.html
+    |   │   ├── static_data_item_edit.html
+    |   │   ├── static_data_setup.html
+    |   │   ├── sub_card_details.html
+    |   │   ├── submit_run.html
+    |   │   ├── _tile_form.html
+    |   │   ├── tiles_list.html
+    |   │   ├── upload_file.html
+    |   │   ├── view_log_file.html
+    |   │   ├── view_log_file_sub_card.html
+    |   │   ├── view_results_folder.html
+    |   │   ├── view_results.html
+    |   │   ├── _year_form.html
+    |   │   ├── _years_group_form.html
+    |   │   ├── years_group_list.html
+    |   │   └── years_list.html
+    |   ├── _modal_check_delete_items.html
+    |   ├── _modal_preload.html
+    |   ├── paginations.html
+    |   ├── registration
+    |   │   ├── login.html
+    |   │   ├── password_change_done.html
+    |   │   ├── password_change_form.html
+    |   │   ├── password_reset_complete.html
+    |   │   ├── password_reset_confirm.html
+    |   │   ├── password_reset_done.html
+    |   │   ├── password_reset_email.html
+    |   │   ├── password_reset_form.html
+    |   │   └── registration_form.html
+
+
+    **tags** - folder with custom tags::
+
+    |── tags
+    |  ├── __init__.py
+    |   ├── __init__.pyc
+    |   └── templatetags
+    |       ├── gsi_tags.py
+    |       ├── gsi_tags.pyc
+    |       ├── __init__.py
+    |       └── __init__.pyc
+
 
 Cards aplication
 =================
