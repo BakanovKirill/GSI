@@ -47,11 +47,11 @@ class QRF(NamedModel):
 
     :Fields:
 
-        **interval**: confidence interval (overrides $QRF_INTERVAL)
+        **interval**: Confidence interval (overrides $QRF_INTERVAL)
 
-        **number_of_trees**: number of trees to use for QRF (overrides actual number of trees created)
+        **number_of_trees**: Number of trees to use for QRF (overrides actual number of trees created)
 
-        **number_of_threads**: number of parallel threads to use for QRF
+        **number_of_threads**: Number of parallel threads to use for QRF
 
         **directory**: Identifies parent directory for trees, if not in default location (under $RF_DIR)
 
@@ -80,13 +80,13 @@ class RFScore(NamedModel, ParallelModel):
 
     :Fields:
 
-        **area**: inherited from the Area model of applications GSI
+        **area**: Relation with the Area model from the applications GSI
 
-        **year_group**: inherited from the YearGroup model of applications GSI
+        **year_group**: Relation with the YearGroup model from the applications GSI
 
-        **bias_corrn**: number of parallel threads to use for QRF
+        **bias_corrn**:Nnumber of parallel threads to use for QRF
 
-        **number_of_threads**: number of parallel threads used for QRF, if enabled ($QRF_INTERVAL>0)
+        **number_of_threads**: Number of parallel threads used for QRF, if enabled ($QRF_INTERVAL>0)
 
         **QRFopts**: Controls outputs: 0=None, 1=Mean, 2=Median, 4=Min, 8=Max, 16=LowerQ, 32=UpperQ, 64=QRFstats (set OR of values), 128=Std Error, 256=Std Dev, 512=Variance (sigma sq), 1024=nVar, 2048=per pixel Quantile
 
@@ -131,39 +131,39 @@ class Remap(NamedModel, ParallelModel):
 
     :Fields:
 
-        **year_group**: inherited from the YearGroup model of applications GSI
+        **year_group**: Relation with the YearGroup model from the applications GSI
 
         **file_spec**: <subdir>/<fileroot> below $RF_DIR/Tiles/hxxvyy
 
-        **roi**: <filename> with single line comprising: MinLat MinLon MaxLat MaxLon
+        **roi**: <filename> With single line comprising: MinLat MinLon MaxLat MaxLon
 
-        **model_name**: the name of the model
+        **model_name**: The name of the model
 
-        **output_root**: pathname and root for filename of all outputs generated (<OutRoot>_<ParamName>.tif)
+        **output_root**: Pathname and root for filename of all outputs generated (<OutRoot>_<ParamName>.tif)
 
-        **output_suffix**: suffix for output filenames, eg <OutRoout>/<ParamName>_<OutSuffix>.tif
+        **output_suffix**: Suffix for output filenames, eg <OutRoout>/<ParamName>_<OutSuffix>.tif
 
-        **scale**: spatial resolution of required output (1000=1km, 250=250m etc)
+        **scale**: Spatial resolution of required output (1000=1km, 250=250m etc)
 
         **output**: 1 for .tif, 2 for .png, 4 for .csv (OR value for multiple outputs)
 
-        **color_table**: full pathname for required colour LUT for .png
+        **color_table**: Full pathname for required colour LUT for .png
 
-        **refstats_file**: geotiff <filename>.tif
+        **refstats_file**: Geotiff <filename>.tif
 
-        **refstats_scale**: scale factor for RefStatsFile pixel values
+        **refstats_scale**: Scale factor for RefStatsFile pixel values
 
-        **conditional_mean**: boolean field
+        **conditional_mean**: Boolean field
 
-        **conditional_min**: boolean field
+        **conditional_min**: Boolean field
 
-        **conditional_median**: boolean field
+        **conditional_median**: Boolean field
 
-        **conditional_max**: boolean field
+        **conditional_max**: Boolean field
 
-        **lower_quartile**: boolean field
+        **lower_quartile**: Boolean field
 
-        **upper_quartile**: boolean field
+        **upper_quartile**: Boolean field
 
     """
 
@@ -197,25 +197,25 @@ class YearFilter(NamedModel, ParallelModel):
         Applies filtering across multiple years (either Fourier filter of specified order, or Kalman
         filter with specified gain scale factor) to all geotiff input images for the specified time period,
         covering (per-year) output from Calcstats or output from RFscore.
-        
+
 
     :Fields:
 
-        **area**: inherited from the Area model of applications GSI
+        **area**: Relation with the Area model from the applications GSI
 
-        **filetype**: values to determine which files to output
+        **filetype**: Values to determine which files to output
 
-        **filter**: smoothing filter method
+        **filter**: Smoothing filter method
 
-        **filter_output**: selection of output images
+        **filter_output**: Selection of output images
 
-        **extend_start**: number of years to extend the start backwards to attempt better early fit (default=0)
+        **extend_start**: Number of years to extend the start backwards to attempt better early fit (default=0)
 
-        **input_fourier**: value for NDVI files, maximum Fourier order used in CalcStats
+        **input_fourier**: Value for NDVI files, maximum Fourier order used in CalcStats
 
-        **output_directory**: specific output directory
+        **output_directory**: Specific output directory
 
-        **input_directory**: specific input directory
+        **input_directory**: Specific input directory
 
     """
 
@@ -234,6 +234,29 @@ class YearFilter(NamedModel, ParallelModel):
 
 
 class Collate(NamedModel, ParallelModel):
+    """**Model for the cards Collate.**
+
+    :Functions:
+        Processing GeoTIFF files to specify the tiles.
+
+
+    :Fields:
+
+        **area**: Relation with the Area model from the applications GSI
+
+        **mode**: Data are MODIS, DEM and soil
+
+        **output_tile_subdir**: Output tile subdirectory/filename root
+
+        **input_scale_factor**: Input scale factor
+
+        **input_data_directory**: Relation with the InputDataDirectory model from the applications GSI
+
+        **input_files**: Input ad-hoc geotiff filename, assumed to be in $RF_AUXDATA_DIR directory.
+        Relation with the InputDataDirectory model from the applications GSI
+
+    """
+
     def __init__(self, *args, **kwargs):
         super(Collate, self).__init__(*args, **kwargs)
 
@@ -252,6 +275,26 @@ class Collate(NamedModel, ParallelModel):
 
 
 class PreProc(NamedModel, ParallelModel):
+    """**Model for the cards PreProc.**
+
+    :Functions:
+        The normal use for PreProc is to extract selected bands from MODIS hdf files (in the per-tile
+        directory structure under $MODIS_DIR), saving the extracted images as GeoTiffs in the
+        appropriate per-tile location in the directory structure under $SAT_TIF_DIR.
+
+
+    :Fields:
+
+        **area**: Relation with the Area model from the applications GSI
+
+        **mode**: Extracts GeoTiffs from hdf and performs stats for selected year(s)
+
+        **year_group**: Relation with the YearGroup model from the applications GSI
+
+        **path_spec_location**: The full path to a specific hdf file
+
+    """
+
     area = models.ForeignKey('gsi.Area', null=True, blank=True)
     mode = models.CharField(max_length=50, blank=True)
     year_group = models.ForeignKey('gsi.YearGroup', null=True, blank=True)
@@ -262,6 +305,20 @@ class PreProc(NamedModel, ParallelModel):
 
 
 class MergeCSV(NamedModel, models.Model):
+    """**Model for the cards MergeCSV.**
+
+    :Functions:
+        Data on csv files.
+
+
+    :Fields:
+
+        **csv1**: Filename
+
+        **csv2**: Filename
+
+    """
+
     csv1 = models.CharField(max_length=200, blank=True)
     csv2 = models.CharField(max_length=200, blank=True)
 
@@ -270,6 +327,40 @@ class MergeCSV(NamedModel, models.Model):
 
 
 class RFTrain(NamedModel, ParallelModel):
+    """**Model for the cards RFTrain.**
+
+    :Functions:
+        Core Random Forest processing, which uses the specified “target” (Y-parameter) imagery as
+        the basis for training using all the specified input “X-parameter” images as the basis. (this
+        will enable subsequent scoring using other images (different times/locations) for X-
+        parameters to derive the target Y-parameter values for those times and locations.
+
+        The main output from RFtrain are a set of decision trees, which define how any combination
+        of input X-parameters can be used to predict a corresponding output Y-parameter.
+
+
+    :Fields:
+
+        **tile_type**: Relation with the TileType model from the applications GSI
+
+        **number_of_trees**: The number of trees to use in randomForest (default = 50)
+
+        **value**: Value
+
+        **config_file**: The configuration file
+
+        **output_tile_subdir**: The output tile subdirectory
+
+        **input_scale_factor**: The input scale factor
+
+        **training**: Integer field
+
+        **number_of_variable**: Number of iterations used for tree node (or automatically calculated if not defined)
+
+        **number_of_thread**: Number of parallel threads used for tree generation (default is one, if not defined)
+
+    """
+
     tile_type = models.ForeignKey('gsi.TileType')
     number_of_trees = models.IntegerField(default=50, blank=True)
     value = models.CharField(max_length=200)
@@ -285,6 +376,28 @@ class RFTrain(NamedModel, ParallelModel):
 
 
 class RandomForest(NamedModel):
+    """**Model for the cards RandomForest.**
+
+    :Functions:
+        Random Forest processing.
+
+
+    :Fields:
+
+        **aoi_name**: Character field
+
+        **satellite**: Relation with the Satellite model from the applications GSI
+
+        **param_set**: Text field
+
+        **run_set**: Character field
+
+        **model**: Character field
+
+        **mvrf**: Character field
+
+    """
+
     aoi_name = models.CharField(max_length=200)
     satellite = models.ForeignKey('gsi.Satellite')
     param_set = models.TextField()
@@ -317,6 +430,38 @@ FILTER_OUT = (
 
 
 class CalcStats(NamedModel, ParallelModel):
+    """**Model for the cards CalcStats.**
+
+    :Functions:
+        Applies filtering (either Fourier filter of specified order, or Kalman filter with specified gain
+        scale factor) to all geotiff input images for the specified time period. Also performs statistics
+        on the resulting imagery, giving mean, min, max, median values per pixel.
+
+
+    :Fields:
+
+        **output_tile_subdir**: Output directory
+
+        **year_group**: Relation with the YearGroup model from the applications GSI
+
+        **area**: Relation with the Area model from the applications GSI
+
+        **period**: Time period over which statistics are calculated
+
+        **doy_variable**: Character field
+
+        **filter**: Order of Fourier series to fit to time-series (default=0)
+
+        **filter_out**: Filtered outputs
+
+        **input_fourier**: Character field
+
+        **out_dir**: Output directory (if non-MODIS tile specified as first argument)
+
+        **path_spec_location**: The path to the location of a special file
+
+    """
+
     output_tile_subdir = models.CharField(max_length=200)
     year_group = models.ForeignKey('gsi.YearGroup', null=True, blank=True)
     area = models.ForeignKey('gsi.Area', null=True, blank=True)
@@ -330,6 +475,29 @@ class CalcStats(NamedModel, ParallelModel):
 
 
 class CardItem(models.Model):
+    """**Model for the cards CardItem.**
+
+    :Functions:
+        It writes to the database all models Cards application.
+
+    :CONTENT_LIMIT:
+        The list of the all models Cards application.
+
+
+    :Fields:
+
+        **name**: Model name
+
+        **content_type**: Relation with the ContentType model
+
+        **object_id**: ID of the element from the model
+
+        **content_object**: Associates model element and its ID
+
+        **order**: The order of an element
+
+    """
+
     CONTENT_LIMIT = (
         models.Q(app_label='cards', model='rftrain') |
         models.Q(app_label='cards', model='mergecsv') |
@@ -364,6 +532,29 @@ class CardItem(models.Model):
 
 
 class OrderedCardItem(models.Model):
+    """**Model for the cards OrderedCardItem.**
+
+    :Functions:
+        It writes to the database all models Cards application.
+
+    :CONTENT_LIMIT:
+        The list of the all models Cards application.
+
+
+    :Fields:
+
+        **name**: Model name
+
+        **content_type**: Relation with the ContentType model
+
+        **object_id**: ID of the element from the model
+
+        **content_object**: Associates model element and its ID
+
+        **order**: The order of an element the CardItem model
+
+    """
+
     card_item = models.ForeignKey(CardItem)
     order = models.PositiveIntegerField(default=0)
 
@@ -372,6 +563,8 @@ class OrderedCardItem(models.Model):
 
 
 def get_card_item(self):
+    """Get an element the CardItem model or create a new."""
+
     card_item, created = CardItem.objects.get_or_create(
             content_type=ContentType.objects.get_for_model(self.__class__),
             object_id=self.pk,
@@ -388,6 +581,8 @@ ContentType.__unicode__ = __unicode__
 
 @receiver(post_save)
 def auto_add_card_item(sender, instance=None, created=False, **kwargs):
+    """To write a new element models of the Cards applications in the CardItem model."""
+
     list_of_models = (
         RFScore, RFTrain, QRF, YearFilter, MergeCSV,
         Collate, PreProc, Remap, RandomForest, CalcStats

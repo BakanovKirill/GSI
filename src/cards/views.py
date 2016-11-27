@@ -12,6 +12,22 @@ from cards.cards_forms import *
 
 
 def processing_card_menu(request, rev_url, args=False):
+    """The function to receive a response depending on the type of card.
+
+    :Arguments:
+        **request:** The request is sent to the server when processing the page
+
+        **rev_url:** Dictionary. It contains values for reverse after processing of form.
+
+            *rev_url[<name_card>][0]*: url for reverse,
+
+            If the element to edit, then the variable is its id:
+
+            *rev_url[<name_card>][1]*: id of element,
+
+        **args:** Boolean. If the value is True, then edit the element and contains id
+
+    """
     # import pdb;pdb.set_trace()
     response = None
 

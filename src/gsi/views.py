@@ -252,6 +252,8 @@ def upload_file(request):
 @login_required
 @render_to('gsi/index.html')
 def index(request):
+    """View of the Main page."""
+
     title = 'Main Menu'
     url_name = 'home'
     is_homevar = False

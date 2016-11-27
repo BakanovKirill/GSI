@@ -25,10 +25,11 @@ sys.path.insert(0, os.path.abspath('../../../eggs/django_annoying-0.10.3-py2.7.e
 from django.conf import settings
 settings.configure()
 
-from gsi.settings import BASE_DIR
+from gsi import settings
+# from gsi.settings import BASE_DIR
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'gsi.settings'
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gsi.settings")
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gsi.settings')
 
 
 # sys.path.append(sys.path.insert(0, os.path.abspath('../../')))
