@@ -20,44 +20,6 @@ from gsi.models import CardSequence
 from cards.models import CardItem
 from gsi.gsi_forms import CardSequenceCardForm
 
-# REVERSE_URL = {
-# 	'qrf': {'save_button': ['card_sequence_update'],
-# 	        'save_and_continue': ['cs_runid_csid_qrf_edit'],
-# 	        'cancel_button': ['card_sequence_update']},
-#
-# 	'rfscore': {'save_button': ['card_sequence_update'],
-# 	            'save_and_continue': ['cs_runid_csid_rfscore_edit'],
-# 	            'cancel_button': ['card_sequence_update']},
-#
-# 	'remap': {'save_button': ['card_sequence_update'],
-# 	          'save_and_continue': ['cs_runid_csid_remap_edit'],
-# 	          'cancel_button': ['card_sequence_update']},
-#
-# 	'year_filter': {'save_button': ['card_sequence_update'],
-# 	                'save_and_continue': ['cs_runid_csid_year_filter_edit'],
-# 	                'cancel_button': ['card_sequence_update']},
-#
-# 	'collate': {'save_button': ['card_sequence_update'],
-# 	            'save_and_continue': ['cs_runid_csid_collate_edit'],
-# 	            'cancel_button': ['card_sequence_update']},
-#
-# 	'preproc': {'save_button': ['card_sequence_update'],
-# 	            'save_and_continue': ['cs_runid_csid_preproc_edit'],
-# 	            'cancel_button': ['card_sequence_update']},
-#
-# 	'mergecsv': {'save_button': ['card_sequence_update'],
-# 	             'save_and_continue': ['cs_runid_csid_mergecsv_edit'],
-# 	             'cancel_button': ['card_sequence_update']},
-#
-# 	'rftrain': {'save_button': ['card_sequence_update'],
-# 	            'save_and_continue': ['cs_runid_csid_rftrain_edit'],
-# 	            'cancel_button': ['card_sequence_update']},
-#
-# 	'randomforest': {'save_button': ['card_sequence_update'],
-# 	            'save_and_continue': ['cs_runid_csid_randomforest_edit'],
-# 	            'cancel_button': ['card_sequence_update']}
-# }
-
 
 @login_required
 @render_to('cards/runid_csid_card.html')

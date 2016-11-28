@@ -28,16 +28,6 @@ from log.logger import get_logs
 from gsi.settings import (PATH_RUNS_SCRIPTS, CONFIGFILE_PATH, GOOGLE_MAP_ZOOM)
 from core.paginations import paginations
 
-TITLES = {
-    'home': ['Home', 'index'],
-    'setup_run': ['GSI Run Setup', 'run_setup'],
-    'edit_run': ['GSI Edit Run', 'run_update'],
-    'new_run': ['GSI New Run', 'new_run'],
-    'card_sequence': ['GSI Card Sequence', 'card_sequence'],
-    'add_card_sequence': ['GSI New Card Sequence', 'new_card_sequence'],
-    'card_item_update': ['GSI Card Item', 'card_item_update'],
-}
-
 
 def handle_uploaded_file(f, path):
     with open(path, 'a') as destination:
@@ -63,12 +53,6 @@ def update_qrf_rftrain_card(cs, cs_cards):
             data_card = RFTrain.objects.get(name=n.card_item.content_object)
             data_card.config_file = rftrain_configfile
             data_card.save()
-
-
-@render_to('gsi/blocking.html')
-def blocking(request):
-    data = {}
-    return data
 
 
 class UploadStaticDataView(FormView):
@@ -518,36 +502,6 @@ def run_update(request, run_id):
 
 
 @login_required
-@render_to('gsi/run_new_card_sequence_list.html')
-def run_new_card_sequence_list(request):
-    title = 'Card Sequences'
-    card_sequences = CardSequence.objects.all()
-    cs_name = ''
-
-    if request.method == "POST":
-        if request.POST.get('cs_select'):
-            for cs_id in request.POST.getlist('cs_select'):
-                cur_cs = get_object_or_404(CardSequence, pk=cs_id)
-                cs_name += '"' + cur_cs.name + '", '
-                cur_cs.delete()
-
-            return HttpResponseRedirect(u'%s?status_message=%s' % (
-                reverse('run_new_card_sequence_list'), (
-                    u'Card Sequence: {0} ==> deleted.'.format(cs_name))))
-        else:
-            return HttpResponseRedirect(u'%s?warning_message=%s' % (
-                reverse('run_new_card_sequence_list'),
-                (u"To delete, select Card Sequence or more Card Sequences.")))
-
-    data = {
-        'title': title,
-        'card_sequences': card_sequences,
-    }
-
-    return data
-
-
-@login_required
 @render_to('gsi/card_sequence.html')
 def card_sequence(request, run_id):
     card_sequences = CardSequence.objects.all()
@@ -574,212 +528,6 @@ def card_sequence(request, run_id):
         'title': title,
         'card_sequences': card_sequences,
         'run_id': run_id,
-    }
-
-    return data
-
-
-@login_required
-@render_to('gsi/add_card_sequence.html')
-def run_new_card_sequence_add(request):
-    title = 'New Card Sequence'
-    href = 'run_new_card_sequence_add'
-    form = None
-
-    if request.method == "POST":
-        if request.POST.get('create_processing_card') is not None:
-            return HttpResponseRedirect(reverse('proces_card_new_run'))
-        elif request.POST.get('add_card_items_button') is not None:
-            # import pdb;pdb.set_trace()
-            form = CardSequenceCreateForm(request.POST)
-
-            if form.is_valid():
-                card_sequence = create_update_card_sequence(form)
-
-                return HttpResponseRedirect(u'%s?status_message=%s' % (reverse(
-                    'run_new_card_sequence_update', args=[card_sequence.id]
-                ), (u"The new card item '{0}' was changed successfully. You may edit it again below.".
-                    format(card_sequence.name))))
-        elif request.POST.get('save_and_continue_editing_button') is not None:
-            form = CardSequenceCreateForm(request.POST)
-
-            if form.is_valid():
-                card_sequence = create_update_card_sequence(form)
-
-                return HttpResponseRedirect(u'%s?status_message=%s' % (reverse(
-                    'run_new_card_sequence_update', args=[card_sequence.id]
-                ), (u"The card sequence '{0}' created successfully. You may edit it again below.".
-                    format(card_sequence.name))))
-        elif request.POST.get('save_button') is not None:
-            form = CardSequenceCreateForm(request.POST)
-
-            if form.is_valid():
-                card_sequence = create_update_card_sequence(form)
-
-                return HttpResponseRedirect(u'%s?status_message=%s' % (
-                    reverse('new_run'),
-                    (u"The card sequence '{0}' created successfully.".format(
-                        card_sequence.name))))
-        elif request.POST.get('cancel_button') is not None:
-            return HttpResponseRedirect(u'%s?info_message=%s' %
-                                        (reverse('run_new_card_sequence_list'),
-                                         (u"Card Sequence created canceled")))
-    else:
-        form = CardSequenceCreateForm()
-
-    data = {
-        'title': title,
-        'form': form,
-        'href': href,
-    }
-
-    return data
-
-
-@login_required
-@render_to('gsi/card_sequence_update.html')
-def run_new_card_sequence_update(request, cs_id):
-    card_sequence = get_object_or_404(CardSequence, pk=cs_id)
-    card_sequence_cards = CardSequence.cards.through.objects.filter(
-        sequence_id=cs_id)
-    title = 'Card Sequence %s' % (card_sequence.name)
-    url_process_card = 'run_new_card_sequence_update'
-    form = None
-
-    if request.method == "POST":
-        if request.POST.get('create_processing_card') is not None:
-            return HttpResponseRedirect(
-                reverse(
-                    'proces_card_run_new_csid', args=[cs_id]))
-        elif request.POST.get('add_card_items_button') is not None:
-            form = CardSequenceCreateForm(request.POST)
-
-            if form.is_valid():
-                card_sequence = create_update_card_sequence(form, cs_id)
-
-                return HttpResponseRedirect(u'%s?status_message=%s' % (reverse(
-                    'run_new_card_sequence_update', args=[card_sequence.id]
-                ), (u"The new card item '{0}' was changed successfully. You may edit it again below.".
-                    format(card_sequence.name))))
-        elif request.POST.get('save_and_continue_editing_button') is not None:
-            form = CardSequenceCreateForm(request.POST)
-
-            if form.is_valid():
-                card_sequence = create_update_card_sequence(form, cs_id)
-
-                return HttpResponseRedirect(u'%s?status_message=%s' % (reverse(
-                    'run_new_card_sequence_update', args=[card_sequence.id]
-                ), (u"The new card item '{0}' was changed successfully. You may edit it again below.".
-                    format(card_sequence.name))))
-        elif request.POST.get('save_button') is not None:
-            form = CardSequenceCreateForm(request.POST)
-
-            if form.is_valid():
-                card_sequence = create_update_card_sequence(form, cs_id)
-
-                return HttpResponseRedirect(u'%s?status_message=%s' % (
-                    reverse('new_run'), (
-                        u"The card sequence '{0}' update successfully.".format(
-                            card_sequence.name))))
-        elif request.POST.get('delete_button') is not None:
-            form = CardSequenceCreateForm(request.POST)
-
-            if form.is_valid():
-                # card_sequence = create_update_card_sequence(form, cs_id)
-
-                if request.POST.get('cs_select'):
-                    cs_name = ''
-                    for card_id in request.POST.getlist('cs_select'):
-                        cur_cs = get_object_or_404(
-                            CardSequence.cards.through, pk=card_id)
-                        cs_name += '"' + str(cur_cs.card_item) + '", '
-                        cur_cs.delete()
-
-                    return HttpResponseRedirect(u'%s?status_message=%s' % (
-                        reverse(
-                            'run_new_card_sequence_update', args=[cs_id]),
-                        (u'Card Sequence: {0} ==> deleted.'.format(cs_name))))
-                else:
-                    return HttpResponseRedirect(u'%s?warning_message=%s' % (
-                        reverse(
-                            'run_new_card_sequence_update', args=[cs_id]),
-                        (u"To delete, select Card Sequence or more Card Sequences."
-                         )))
-        elif request.POST.get('cancel_button') is not None:
-            return HttpResponseRedirect(u'%s?info_message=%s' %
-                                        (reverse('run_new_card_sequence_list'),
-                                         (u"Card Sequence update canceled")))
-    else:
-        form = CardSequenceCreateForm(instance=card_sequence)
-
-    data = {
-        'title': title,
-        'form': form,
-        'cs_id': cs_id,
-        'card_sequence_cards': card_sequence_cards,
-        'card_sequence': card_sequence,
-        'url_process_card': url_process_card,
-    }
-
-    return data
-
-
-@login_required
-@render_to('gsi/add_card_sequence.html')
-def add_card_sequence(request, run_id):
-    card_items = CardItem.objects.all()
-    title = 'New Card Sequence'
-    href = 'add_card_sequence {0}'.format(run_id)
-    form = None
-
-    if request.method == "POST":
-        if request.POST.get('create_processing_card') is not None:
-            return HttpResponseRedirect(
-                reverse(
-                    'proces_card_runid', args=[run_id]))
-        elif request.POST.get('add_card_items_button') is not None:
-            form = CardSequenceCreateForm(request.POST)
-
-            if form.is_valid():
-                card_sequence = create_update_card_sequence(form)
-
-                return HttpResponseRedirect(u'%s?status_message=%s' % (reverse(
-                    'card_sequence_update', args=[run_id, card_sequence.id]
-                ), (u"The new card item '{0}' was changed successfully. You may edit it again below.".
-                    format(card_sequence.name))))
-        elif request.POST.get('save_and_continue_editing_button') is not None:
-            form = CardSequenceCreateForm(request.POST)
-
-            if form.is_valid():
-                card_sequence = create_update_card_sequence(form)
-
-                return HttpResponseRedirect(u'%s?status_message=%s' % (reverse(
-                    'card_sequence_update', args=[run_id, card_sequence.id]
-                ), (u"The card sequence '{0}' created successfully. You may edit it again below.".
-                    format(card_sequence.name))))
-        elif request.POST.get('save_button') is not None:
-            form = CardSequenceCreateForm(request.POST)
-
-            if form.is_valid():
-                card_sequence = create_update_card_sequence(form)
-
-            return HttpResponseRedirect(u'%s?status_message=%s' % (reverse(
-                'card_sequence', args=[run_id]), (
-                    u"The card sequence '{0}' created successfully.".format(
-                        card_sequence.name))))
-        elif request.POST.get('cancel_button') is not None:
-            return HttpResponseRedirect(u'%s?info_message=%s' % (reverse(
-                'card_sequence',
-                args=[run_id]), (u"Card Sequence created canceled")))
-    else:
-        form = CardSequenceCreateForm()
-
-    data = {
-        'title': title,
-        'form': form,
-        'run_id': run_id,
-        'card_items': card_items,
-        'href': href,
     }
 
     return data
