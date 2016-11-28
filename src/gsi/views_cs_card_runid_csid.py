@@ -60,7 +60,7 @@ from gsi.gsi_forms import CardSequenceCardForm
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
+@render_to('cards/runid_csid_card.html')
 def cs_runid_csid_qrf_edit(request, run_id, cs_id, card_id, qrf_id):
 	title = 'QRF Card Edit'
 	qrf_card = get_object_or_404(QRF, pk=qrf_id)
@@ -124,7 +124,7 @@ def cs_runid_csid_qrf_edit(request, run_id, cs_id, card_id, qrf_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
+@render_to('cards/runid_csid_card.html')
 def cs_runid_csid_rfscore_edit(request, run_id, cs_id, card_id, rfscore_id):
 	title = 'RFScore Card Edit'
 	rfscore_card = get_object_or_404(RFScore, pk=rfscore_id)
@@ -188,7 +188,7 @@ def cs_runid_csid_rfscore_edit(request, run_id, cs_id, card_id, rfscore_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
+@render_to('cards/runid_csid_card.html')
 def cs_runid_csid_remap_edit(request, run_id, cs_id, card_id, remap_id):
 	title = 'Remap Card Edit'
 	remap_card = get_object_or_404(Remap, pk=remap_id)
@@ -252,7 +252,7 @@ def cs_runid_csid_remap_edit(request, run_id, cs_id, card_id, remap_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
+@render_to('cards/runid_csid_card.html')
 def cs_runid_csid_year_filter_edit(request, run_id, cs_id, card_id, yf_id):
 	title = 'YearFilter Card Edit'
 	year_filter_card = get_object_or_404(YearFilter, pk=yf_id)
@@ -316,7 +316,7 @@ def cs_runid_csid_year_filter_edit(request, run_id, cs_id, card_id, yf_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
+@render_to('cards/runid_csid_card.html')
 def cs_runid_csid_collate_edit(request, run_id, cs_id, card_id, collate_id):
 	title = 'Collate Card Edit'
 	collate_card = get_object_or_404(Collate, pk=collate_id)
@@ -394,7 +394,7 @@ def cs_runid_csid_collate_edit(request, run_id, cs_id, card_id, collate_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
+@render_to('cards/runid_csid_card.html')
 def cs_runid_csid_preproc_edit(request, run_id, cs_id, card_id, preproc_id):
 	title = 'PreProc Card Edit'
 	preproc_card = get_object_or_404(PreProc, pk=preproc_id)
@@ -459,7 +459,7 @@ def cs_runid_csid_preproc_edit(request, run_id, cs_id, card_id, preproc_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
+@render_to('cards/runid_csid_card.html')
 def cs_runid_csid_mergecsv_edit(request, run_id, cs_id, card_id, mcsv_id):
 	title = 'MergeCSV Card Edit'
 	mergecsv_card = get_object_or_404(MergeCSV, pk=mcsv_id)
@@ -523,7 +523,7 @@ def cs_runid_csid_mergecsv_edit(request, run_id, cs_id, card_id, mcsv_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
+@render_to('cards/runid_csid_card.html')
 def cs_runid_csid_rftrain_edit(request, run_id, cs_id, card_id, rftrain_id):
 	title = 'RFTrain Card Edit'
 	rftrain_card = get_object_or_404(RFTrain, pk=rftrain_id)
@@ -586,7 +586,7 @@ def cs_runid_csid_rftrain_edit(request, run_id, cs_id, card_id, rftrain_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
+@render_to('cards/runid_csid_card.html')
 def cs_runid_csid_randomforest_edit(request, run_id, cs_id, card_id, rf_id):
 	title = 'RandomForest Card Edit'
 	randomforest_card = get_object_or_404(RandomForest, pk=rf_id)
@@ -650,7 +650,7 @@ def cs_runid_csid_randomforest_edit(request, run_id, cs_id, card_id, rf_id):
 
 
 @login_required
-@render_to('cards/new_runid_csid_card.html')
+@render_to('cards/runid_csid_card.html')
 def cs_runid_csid_calcstats_edit(request, run_id, cs_id, card_id, calcstats_id):
 	title = 'CalcStats Card Edit'
 	calcstats_card = get_object_or_404(CalcStats, pk=calcstats_id)

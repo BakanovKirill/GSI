@@ -800,16 +800,16 @@ def card_sequence_update(request, run_id, cs_id):
     form = None
 
     REVERCE_URL = {
-        'qrf': ['new_runid_csid_qrf', [run_id, cs_id]],
-        'rfscore': ['new_runid_csid_rfscore', [run_id, cs_id]],
-        'remap': ['new_runid_csid_remap', [run_id, cs_id]],
-        'yearfilter': ['new_runid_csid_year_filter', [run_id, cs_id]],
-        'collate': ['new_runid_csid_collate', [run_id, cs_id]],
-        'preproc': ['new_runid_csid_preproc', [run_id, cs_id]],
-        'mergecsv': ['new_runid_csid_mergecsv', [run_id, cs_id]],
-        'rftrain': ['new_runid_csid_rftrain', [run_id, cs_id]],
-        'randomforest': ['new_runid_csid_randomforest', [run_id, cs_id]],
-        'calcstats': ['new_runid_csid_calcstats', [run_id, cs_id]],
+        'qrf': ['runid_csid_qrf_add', [run_id, cs_id]],
+        'rfscore': ['runid_csid_rfscore_add', [run_id, cs_id]],
+        'remap': ['runid_csid_remap_add', [run_id, cs_id]],
+        'yearfilter': ['runid_csid_year_filter_add', [run_id, cs_id]],
+        'collate': ['runid_csid_collate_add', [run_id, cs_id]],
+        'preproc': ['runid_csid_preproc_add', [run_id, cs_id]],
+        'mergecsv': ['runid_csid_mergecsv_add', [run_id, cs_id]],
+        'rftrain': ['runid_csid_rftrain_add', [run_id, cs_id]],
+        'randomforest': ['runid_csid_randomforest_add', [run_id, cs_id]],
+        'calcstats': ['runid_csid_calcstats_add', [run_id, cs_id]],
         'cancel': ['card_sequence_update', [run_id, cs_id]]
     }
 

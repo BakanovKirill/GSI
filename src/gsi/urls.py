@@ -28,31 +28,23 @@ from django.views.generic.base import RedirectView
 urlpatterns = [
 	url(r'^admin/', include(admin.site.urls)),
 
-	# temporary blocking
-	# url(r'^$', 'gsi.views.blocking', name='block'),
-
-
 	# index
-	# url(r'^index/$', 'gsi.views.index', name='index'),
 	url(r'^$', 'gsi.views.index', name='index'),
 
-
 	# upload file
-	# url(r'^upload-file/$', UploadStaticDataView.as_view(), name='upload_file'),
 	url(r'^upload-file/$', 'gsi.views.upload_file', name='upload_file'),
-
 
 	# run base
 	url(r'^run/setup/$', 'gsi.views.run_setup', name='run_setup'),
 	url(r'^run/new/$', 'gsi.views.new_run', name='new_run'),
-	url(r'^run/(?P<run_id>\d+)/$', 'gsi.views.run_update',
-		name='run_update'),
+	url(r'^run/(?P<run_id>\d+)/$', 'gsi.views.run_update', name='run_update'),
 
 	# run base view results
 	url(r'^run/(?P<run_id>\d+)/view-results/$', 'gsi.views.view_results', name='view_results'),
 
 	# run base view folder results
-	url(r'^run/(?P<run_id>\d+)/view-results/(?P<prev_dir>[%\w]+)/(?P<dir>\w+)/$', 'gsi.views.view_results_folder', name='view_results_folder'),
+	url(r'^run/(?P<run_id>\d+)/view-results/(?P<prev_dir>[%\w]+)/(?P<dir>\w+)/$', 'gsi.views.view_results_folder',
+		name='view_results_folder'),
 
 	# submit a run
 	url(r'^run/submit/$', 'gsi.views.submit_run', name='submit_run'),
@@ -88,10 +80,8 @@ urlpatterns = [
 	url(r'^run/environment-groups/$', 'gsi.views.environment_groups', name='environment_groups'),
 
 	# environment groups edit
-	url(r'^run/environment-group/add/$', 'gsi.views.environment_group_add',
-		name='environment_group_add'),
-	url(r'^run/environment-group/(?P<env_id>\d+)/$', 'gsi.views.environment_group_edit',
-		name='environment_group_edit'),
+	url(r'^run/environment-group/add/$', 'gsi.views.environment_group_add', name='environment_group_add'),
+	url(r'^run/environment-group/(?P<env_id>\d+)/$', 'gsi.views.environment_group_edit', name='environment_group_edit'),
 
 	# areas
 	url(r'^areas/list/$', 'gsi.views.areas', name='areas'),
@@ -154,37 +144,17 @@ urlpatterns = [
 
 
 	# card sequence for new run base
-	url(r'^run/card-sequence/add/$', 'gsi.views.run_new_card_sequence_add',
-		name='run_new_card_sequence_add'),
-	url(r'^run/card-sequence/(?P<cs_id>\d+)/$', 'gsi.views.run_new_card_sequence_update',
-		name='run_new_card_sequence_update'),
-	url(r'^run/card-sequence/list/$', 'gsi.views.run_new_card_sequence_list',
-		name='run_new_card_sequence_list'),
+	url(r'^run/card-sequence/add/$', 'gsi.views.run_new_card_sequence_add', name='run_new_card_sequence_add'),
+	url(r'^run/card-sequence/(?P<cs_id>\d+)/$', 'gsi.views.run_new_card_sequence_update', name='run_new_card_sequence_update'),
+	url(r'^run/card-sequence/list/$', 'gsi.views.run_new_card_sequence_list', name='run_new_card_sequence_list'),
 
-	url(r'^run/(?P<run_id>\d+)/card-sequence/add/$', 'gsi.views.add_card_sequence',
-		name='add_card_sequence'),
-	url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/$', 'gsi.views.card_sequence_update',
-		name='card_sequence_update'),
+	url(r'^run/(?P<run_id>\d+)/card-sequence/add/$', 'gsi.views.add_card_sequence', name='add_card_sequence'),
+	url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/$', 'gsi.views.card_sequence_update', name='card_sequence_update'),
 
-	url(r'^run/(?P<run_id>\d+)/card-sequence/setup/$', 'gsi.views.card_sequence',
-		name='card_sequence'),
-
-	# # processing card
-	# url(r'^run/card-sequence/processing-card/add$',
-	# 	'cards.views.proces_card_new_run', name='proces_card_new_run'),
-	#
-	# url(r'^run/(?P<run_id>\d+)/card-sequence/processing-card/add$',
-	# 	'cards.views.proces_card_runid', name='proces_card_runid'),
-	#
-	# url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/processing-card/$',
-	# 	'cards.views.proces_card_runid_csid', name='proces_card_runid_csid'),
+	url(r'^run/(?P<run_id>\d+)/card-sequence/setup/$', 'gsi.views.card_sequence', name='card_sequence'),
 
 	# ----- CARDS -------------------------------------------------------------
 
-	# card item edit for card sequence // runID->csID->card_item
-
-	# url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/card-item/(?P<card_item_id>\d+)/$',
-	#	 'gsi.views.card_item_update', name='card_item_update'),
 	url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/(?P<card_id>\d+)/qrf/(?P<qrf_id>\d+)/$',
 		'gsi.views_cs_card_runid_csid.cs_runid_csid_qrf_edit', name='cs_runid_csid_qrf_edit'),
 
@@ -416,7 +386,7 @@ urlpatterns = [
 
 
 	# api
-	url(r'^step/(?P<step_id>\d+)/$', 'api.views.update_step', name='update_step'),
+	# url(r'^step/(?P<step_id>\d+)/$', 'api.views.update_step', name='update_step'),
 	# url(r'^run/(?P<run_id>\d+\.\d+\.\d+\.\d+\.\d+)/$', 'api.views.update_run',
 	#	 name='update_run'),
 	url(r'^run/(?P<run_id>\w+\.\w+\.\w+\.\w+\.\w+)/$', 'api.views.update_run',

@@ -302,7 +302,16 @@ Cards models
 Cards views
 ------------------
 
+views.py
+~~~~~~~~~~~~~~~~~~
+
 .. automodule:: cards.views
+    :members:
+
+views_card_runid_csid.py
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: cards.views_card_runid_csid
     :members:
 
 
