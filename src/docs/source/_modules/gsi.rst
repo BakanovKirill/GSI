@@ -286,6 +286,9 @@ Project structure
 Api package
 =================
 
+Api.views
+------------------
+
 .. automodule:: api.views
     :members:
 
@@ -293,25 +296,25 @@ Api package
 Cards aplication
 =================
 
-models
+Cards.models
 ------------------
 
 .. automodule:: cards.models
     :members:
 
-views
+Cards.views
 ------------------
 
 .. automodule:: cards.views
     :members:
 
-views_card_runid_csid
+Cards.views_card_runid_csid
 ----------------------------
 
 .. automodule:: cards.views_card_runid_csid
     :members:
 
-cards_forms
+Cards.cards_forms
 ----------------------------
 
 **This module contains methods for creating and editing card form.**
@@ -319,7 +322,7 @@ cards_forms
 .. automodule:: cards.cards_forms
     :members:
 
-card_update_create
+Cards.card_update_create
 ----------------------------
 
 **This module contains methods to refresh the data in the cards after you create and edit.**
@@ -331,13 +334,13 @@ card_update_create
 Gsi aplication
 ===============
 
-Gsi models
+Gsi.models
 ------------------
 
 .. automodule:: gsi.models
     :members:
 
-Gsi views
+Gsi.views
 ------------------
 
 .. automodule:: gsi.views
