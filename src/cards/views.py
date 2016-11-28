@@ -1,18 +1,12 @@
 # -*- coding: utf-8 -*-
 from annoying.decorators import render_to
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.utils.decorators import method_decorator
-from django.conf import settings
-
-# from cards.models import QRF, RFScore
-from cards.cards_forms import *
 
 
 def processing_card_menu(request, rev_url, args=False):
-    """The function to receive a response depending on the type of card.
+    """**The function to receive a response depending on the type of card.**
 
     :Arguments:
         **request:** The request is sent to the server when processing the page
@@ -94,7 +88,7 @@ def processing_card_menu(request, rev_url, args=False):
 @login_required
 @render_to('cards/processing_card_new_run.html')
 def proces_card_new_run(request):
-    """View at the creation of new cards.
+    """**View at the creation of new cards.**
 
     :When choosing a new card in "processing_card_menu" function transferred dictionary "rev_url" values:
         {<button_a_new_card>: <url_to_create_a_new_card>}

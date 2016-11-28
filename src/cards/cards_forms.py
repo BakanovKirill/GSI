@@ -2,17 +2,13 @@
 from django import forms
 
 from core.validator_gsi import validate_order
-from cards.models import (QRF, RFScore, Remap,
-                          YearFilter, Collate, PreProc,
-                          MergeCSV, RFTrain, RandomForest, CalcStats,
-                          FILTER_OUT, PERIOD)
-from gsi.models import (Area, YearGroup, TileType,
-                        Satellite, InputDataDirectory, ListTestFiles,)
+from cards.models import (QRF, RFScore, Remap, YearFilter, Collate, PreProc,
+                          MergeCSV, RFTrain, RandomForest, CalcStats, FILTER_OUT, PERIOD)
+from gsi.models import (Area, YearGroup, TileType, Satellite, InputDataDirectory, ListTestFiles,)
 
 
 class QRFForm(forms.ModelForm):
-
-    """ form for editing QRF Card """
+    """**Form for editing QRF Card.**"""
 
     def __init__(self, *args, **kwargs):
         super(QRFForm, self).__init__(*args, **kwargs)
@@ -61,7 +57,8 @@ class QRFForm(forms.ModelForm):
 
 
 class RFScoreForm(forms.ModelForm):
-    """ form for editing RFScore Card """
+    """**form for editing RFScore Card.**"""
+
     def __init__(self, *args, **kwargs):
         super(RFScoreForm, self).__init__(*args, **kwargs)
 
@@ -135,7 +132,8 @@ class RFScoreForm(forms.ModelForm):
 
 
 class RemapForm(forms.ModelForm):
-    """ form for editing Remap Card """
+    """**Form for editing Remap Card.**"""
+
     def __init__(self, *args, **kwargs):
         super(RemapForm, self).__init__(*args, **kwargs)
 
@@ -270,7 +268,8 @@ class RemapForm(forms.ModelForm):
 
 
 class YearFilterForm(forms.ModelForm):
-    """ form for editing YearFilter Card """
+    """**Form for editing YearFilter Card.**"""
+
     def __init__(self, *args, **kwargs):
         super(YearFilterForm, self).__init__(*args, **kwargs)
 
@@ -349,7 +348,7 @@ class YearFilterForm(forms.ModelForm):
 
 
 class CollateForm(forms.ModelForm):
-    """ form for editing Collate Card """
+    """**Form for editing Collate Card.**"""
     def __init__(self, *args, **kwargs):
         super(CollateForm, self).__init__(*args, **kwargs)
 
@@ -420,7 +419,7 @@ class CollateForm(forms.ModelForm):
 
 
 class PreProcForm(forms.ModelForm):
-    """ form for editing PreProc Card """
+    """**Form for editing PreProc Card.**"""
     def __init__(self, *args, **kwargs):
         super(PreProcForm, self).__init__(*args, **kwargs)
 
@@ -474,7 +473,7 @@ class PreProcForm(forms.ModelForm):
 
 
 class MergeCSVForm(forms.ModelForm):
-    """ form for editing MergeCSV Card """
+    """**Form for editing MergeCSV Card.**"""
     def __init__(self, *args, **kwargs):
         super(MergeCSVForm, self).__init__(*args, **kwargs)
 
@@ -506,7 +505,7 @@ class MergeCSVForm(forms.ModelForm):
 
 
 class RFTrainForm(forms.ModelForm):
-    """ form for editing RFTrain Card """
+    """**Form for editing RFTrain Card.**"""
     def __init__(self, *args, **kwargs):
         super(RFTrainForm, self).__init__(*args, **kwargs)
 
@@ -597,7 +596,7 @@ class RFTrainForm(forms.ModelForm):
 
 
 class RandomForestForm(forms.ModelForm):
-    """ form for editing RandomForest Card """
+    """**Form for editing RandomForest Card.**"""
     def __init__(self, *args, **kwargs):
         super(RandomForestForm, self).__init__(*args, **kwargs)
 
@@ -651,7 +650,7 @@ class RandomForestForm(forms.ModelForm):
 
 
 class CalcStatsForm(forms.ModelForm):
-    """ form for editing CalcStats Card """
+    """**Form for editing CalcStats Card.**"""
 
     def __init__(self, *args, **kwargs):
         super(CalcStatsForm, self).__init__(*args, **kwargs)

@@ -18,7 +18,7 @@ from cards.models import CardItem
 def is_finished(run_id, card_id, cur_counter, last, run_parallel):
     """Function to determine the last card in a running list of cards.
 
-    Arguments:
+    :Arguments:
         * *run_id*: run id
         * *card_id*: card id
         * *cur_counter*: the current cards position in the running list of cards
@@ -47,7 +47,7 @@ def is_finished(run_id, card_id, cur_counter, last, run_parallel):
 def set_state_fail(obj, state):
     """Set a card execution status if it does not 'fail'.
 
-    Arguments:
+    :Arguments:
         * *obj*: card object
         * *state*: the current status of the card
 
@@ -64,7 +64,7 @@ def update_run(request, run_id):
 
     The function receives the request and the card data. If the launched the card is last, the process stops.
 
-    Arguments:
+    :Arguments:
         * *request*: request
         * *run_id*: card details. Presented as a string: <run_id>.<card_sequence_id>.<order_card_item_id>.<current_position>.<the_last_card_number>
 

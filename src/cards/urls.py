@@ -7,6 +7,8 @@ from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
+	"""**Cards URLs.**"""
+
     # the url for the new processing card
 	url(r'^run/card-sequence/processing-card/add$',
 		'cards.views.proces_card_new_run', name='proces_card_new_run'),

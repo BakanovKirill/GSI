@@ -62,7 +62,7 @@ REVERSE_URL = {
 @login_required
 @render_to('cards/runid_csid_card.html')
 def runid_csid_qrf_add(request, run_id, cs_id):
-	"""View for to create a new QRF card.
+	"""**View for to create a new QRF card.**
 
 	:Arguments:
 
@@ -113,7 +113,7 @@ def runid_csid_qrf_add(request, run_id, cs_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def runid_csid_qrf_edit(request, run_id, cs_id, qrf_id):
-	"""View for to edit the QRF card.
+	"""**View for to edit the QRF card.**
 
 	:Arguments:
 
@@ -160,7 +160,7 @@ def runid_csid_qrf_edit(request, run_id, cs_id, qrf_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def runid_csid_rfscore_add(request, run_id, cs_id):
-	"""View for to create a new RFScore card.
+	"""**View for to create a new RFScore card.**
 
 	:Arguments:
 
@@ -211,7 +211,7 @@ def runid_csid_rfscore_add(request, run_id, cs_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def runid_csid_rfscore_edit(request, run_id, cs_id, rfscore_id):
-	"""View for to edit the RFScore card.
+	"""**View for to edit the RFScore card.**
 
 	:Arguments:
 
@@ -258,7 +258,7 @@ def runid_csid_rfscore_edit(request, run_id, cs_id, rfscore_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def runid_csid_remap_add(request, run_id, cs_id):
-	"""View for to create a new Remap card.
+	"""**View for to create a new Remap card.**
 
 	:Arguments:
 
@@ -309,7 +309,7 @@ def runid_csid_remap_add(request, run_id, cs_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def runid_csid_remap_edit(request, run_id, cs_id, remap_id):
-	"""View for to edit the Remap card.
+	"""**View for to edit the Remap card.**
 
 	:Arguments:
 
@@ -356,7 +356,7 @@ def runid_csid_remap_edit(request, run_id, cs_id, remap_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def runid_csid_year_filter_add(request, run_id, cs_id):
-	""""View for to create a new YearFilter card.
+	"""**View for to create a new YearFilter card.**
 
 	:Arguments:
 
@@ -407,7 +407,7 @@ def runid_csid_year_filter_add(request, run_id, cs_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def runid_csid_year_filter_edit(request, run_id, cs_id, yf_id):
-	"""View for to edit the YearFilter card.
+	"""**View for to edit the YearFilter card.**
 
 	:Arguments:
 
@@ -454,7 +454,7 @@ def runid_csid_year_filter_edit(request, run_id, cs_id, yf_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def runid_csid_collate_add(request, run_id, cs_id):
-	""""View for to create a new Collate card.
+	"""**View for to create a new Collate card.**
 
 	:Arguments:
 
@@ -511,7 +511,7 @@ def runid_csid_collate_add(request, run_id, cs_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def runid_csid_collate_edit(request, run_id, cs_id, collate_id):
-	"""View for to edit the Collate card.
+	"""**View for to edit the Collate card.**
 
 	:Arguments:
 
@@ -572,7 +572,7 @@ def runid_csid_collate_edit(request, run_id, cs_id, collate_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def runid_csid_preproc_add(request, run_id, cs_id):
-	""""View for to create a new PreProc card.
+	"""**View for to create a new PreProc card.**
 
 	:Arguments:
 
@@ -623,7 +623,7 @@ def runid_csid_preproc_add(request, run_id, cs_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def runid_csid_preproc_edit(request, run_id, cs_id, preproc_id):
-	"""View for to edit the PreProc card.
+	"""**View for to edit the PreProc card.**
 
 	:Arguments:
 
@@ -671,7 +671,7 @@ def runid_csid_preproc_edit(request, run_id, cs_id, preproc_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def runid_csid_mergecsv_add(request, run_id, cs_id):
-	""""View for to create a new MergeCSV card.
+	"""**View for to create a new MergeCSV card.**
 
 	:Arguments:
 
@@ -722,7 +722,7 @@ def runid_csid_mergecsv_add(request, run_id, cs_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def runid_csid_mergecsv_edit(request, run_id, cs_id, mcsv_id):
-	"""View for to edit the MergeCSV card.
+	"""**View for to edit the MergeCSV card.**
 
 	:Arguments:
 
@@ -769,7 +769,7 @@ def runid_csid_mergecsv_edit(request, run_id, cs_id, mcsv_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def runid_csid_rftrain_add(request, run_id, cs_id):
-	""""View for to create a new RFTrain card.
+	"""**View for to create a new RFTrain card.**
 
 	:Arguments:
 
@@ -820,7 +820,7 @@ def runid_csid_rftrain_add(request, run_id, cs_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def runid_csid_rftrain_edit(request, run_id, cs_id, rftrain_id):
-	"""View for to edit the RFTrain card.
+	"""**View for to edit the RFTrain card.**
 
 	:Arguments:
 
@@ -867,7 +867,7 @@ def runid_csid_rftrain_edit(request, run_id, cs_id, rftrain_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def runid_csid_randomforest_add(request, run_id, cs_id):
-	""""View for to create a new RandomForest card.
+	"""**View for to create a new RandomForest card.**
 
 	:Arguments:
 
@@ -918,7 +918,7 @@ def runid_csid_randomforest_add(request, run_id, cs_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def runid_csid_randomforest_edit(request, run_id, cs_id, rf_id):
-	"""View for to edit the RandomForest card.
+	"""**View for to edit the RandomForest card.**
 
 	:Arguments:
 
@@ -965,7 +965,7 @@ def runid_csid_randomforest_edit(request, run_id, cs_id, rf_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def runid_csid_calcstats_add(request, run_id, cs_id):
-	""""View for to create a new CalcStats card.
+	"""**View for to create a new CalcStats card.**
 
 	:Arguments:
 
@@ -1016,7 +1016,7 @@ def runid_csid_calcstats_add(request, run_id, cs_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def runid_csid_calcstats_edit(request, run_id, cs_id, calcstats_id):
-	"""View for to edit the CalcStats card.
+	"""**View for to edit the CalcStats card.**
 
 	:Arguments:
 
