@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-from cards.models import (QRF, RFScore, Remap,
-                          YearFilter, Collate, PreProc,
-                          MergeCSV, RFTrain, RandomForest,
-                          CalcStats)
+from cards.models import (QRF, RFScore, Remap, YearFilter, Collate, PreProc,
+                          MergeCSV, RFTrain, RandomForest, CalcStats)
 from gsi.models import ListTestFiles
 
 

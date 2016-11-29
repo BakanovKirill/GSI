@@ -11,31 +11,61 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic.edit import FormView
 from django.contrib.contenttypes.models import ContentType
 
-from gsi.models import (Run, RunStep, Log, OrderedCardItem, HomeVariables,
-                        VariablesGroup, YearGroup, Year, Satellite,
+from gsi.settings import PATH_RUNS_SCRIPTS, CONFIGFILE_PATH, GOOGLE_MAP_ZOOM
+from gsi.models import (Run, RunStep, RunBase, Log, OrderedCardItem, HomeVariables,
+                        VariablesGroup, YearGroup, Year, Satellite, Area, CardSequence,
                         InputDataDirectory, SubCardItem, Resolution, Tile)
-from cards.card_update_create import *
-from cards.cards_forms import *
-from gsi.gsi_items_update_create import *
-from gsi.gsi_forms import *
-from core.utils import (make_run, get_dir_root_static_path,
-                        get_path_folder_run, slash_remove_from_path,
-                        get_files_dirs, create_sub_dir, get_copy_name,
-                        get_files, get_card_model)
+from gsi.gsi_forms import (RunForm, CardSequenceForm, CardSequenceCardForm, CardSequenceCreateForm, HomeVariablesForm,
+                            EnvironmentGroupsForm, AreasForm, YearGroupForm, SatelliteForm, UploadFileForm,
+                            InputDataDirectoryForm, ConfigFileForm, ResolutionForm, TileForm, YearForm)
+from gsi.gsi_items_update_create import (configfile_update_create, var_group_update_create, area_update_create,
+                                        yg_update_create, create_update_card_sequence, satellite_update_create,
+                                        data_dir_update_create, resolution_update_create, tile_update_create,
+                                        year_update_create)
+from cards.models import (QRF, RFScore, Remap, YearFilter, Collate, PreProc, CardItem,
+                          MergeCSV, RFTrain, RandomForest, CalcStats, FILTER_OUT, PERIOD)
+from cards.cards_forms import (QRFForm, RFScoreForm, RemapForm, YearFilterForm, CollateForm, PreProcForm,
+                                MergeCSVForm, RFTrainForm, RandomForestForm, CalcStatsForm)
+from cards.card_update_create import (qrf_update_create, rfscore_update_create, remap_update_create,
+                                    year_filter_update_create, collate_update_create, preproc_update_create,
+                                    mergecsv_update_create, rftrain_update_create, randomforest_update_create,
+                                    calcstats_update_create)
+from core.utils import (make_run, get_dir_root_static_path, get_path_folder_run, slash_remove_from_path,
+                        get_files_dirs, create_sub_dir, get_copy_name, get_files)
 from core.get_post import get_post
 from core.copy_card import create_copycard
-from log.logger import get_logs
-from gsi.settings import (PATH_RUNS_SCRIPTS, CONFIGFILE_PATH, GOOGLE_MAP_ZOOM)
 from core.paginations import paginations
+from log.logger import get_logs
 
 
 def handle_uploaded_file(f, path):
+    """**Upload file on the server.**
+
+    :Arguments:
+        * *f*: File name
+        * *path*: Path where to save the file
+
+    """
+
     with open(path, 'a') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
 
 
 def update_qrf_rftrain_card(cs, cs_cards):
+    """**Update the QRF and RFtrain cards.**
+
+    :Functions:
+        The method takes the CardSequence model object and list of cards of CardSequence object.
+        If the card QRF, it is written to the path of configfile CardSequence object.
+        If the card RFtrain, it is written the name of the configfile of the CardSequence object.
+
+    :Arguments:
+        * *cs*: The CardSequence object
+        * *cs_cards*: List of the cards from the CardSequence object
+
+    """
+
     from cards.models import QRF, RFTrain
 
     configfile = cs.configfile
@@ -55,35 +85,46 @@ def update_qrf_rftrain_card(cs, cs_cards):
             data_card.save()
 
 
-class UploadStaticDataView(FormView):
-    success_url = 'index.html'
-    form_class = UploadFileForm
-    template_name = 'gsi/upload_file.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(UploadStaticDataView, self).get_context_data(**kwargs)
-        title = 'Upload Test Data'
-        url_name = 'upload_file'
-        context.update({
-            'title': title,
-            'url_name': url_name,
-        })
-
-        return context
-
-    def form_valid(self, form):
-        home_var = HomeVariables.objects.all()[0]
-        file_name = str(self.request.FILES['test_data']).decode('utf-8')
-        path_test_data = os.path.join(home_var.RF_AUXDATA_DIR, file_name)
-        # type_file = str(request.FILES['test_data'].content_type).split('/')[0]
-        handle_uploaded_file(self.request.FILES['test_data'], path_test_data)
-        message = u'Test data "{0}" is loaded'.format(file_name)
-
-        return HttpResponseRedirect('%s?status_message=%s' %
-                                    (reverse('index'), message))
+# class UploadStaticDataView(FormView):
+#     success_url = 'index.html'
+#     form_class = UploadFileForm
+#     template_name = 'gsi/upload_file.html'
+#
+#     def get_context_data(self, **kwargs):
+#         context = super(UploadStaticDataView, self).get_context_data(**kwargs)
+#         title = 'Upload Test Data'
+#         url_name = 'upload_file'
+#         context.update({
+#             'title': title,
+#             'url_name': url_name,
+#         })
+#
+#         return context
+#
+#     def form_valid(self, form):
+#         home_var = HomeVariables.objects.all()[0]
+#         file_name = str(self.request.FILES['test_data']).decode('utf-8')
+#         path_test_data = os.path.join(home_var.RF_AUXDATA_DIR, file_name)
+#         # type_file = str(request.FILES['test_data'].content_type).split('/')[0]
+#         handle_uploaded_file(self.request.FILES['test_data'], path_test_data)
+#         message = u'Test data "{0}" is loaded'.format(file_name)
+#
+#         return HttpResponseRedirect('%s?status_message=%s' %
+#                                     (reverse('index'), message))
 
 
 def write_card_to_cs(card_sequence, query):
+    """**Update the QRF and RFtrain cards.**
+
+    :Functions:
+        Method writes an object CardSequence card objects.
+
+    :Arguments:
+        * *card_sequence*: The CardSequence object
+        * *query*: request POST
+
+    """
+
     dict_carditem_order = {}
     carditem_select = query.getlist('carditem_select')
     carditem_order = query.getlist('carditem_order')
@@ -98,7 +139,18 @@ def write_card_to_cs(card_sequence, query):
             order=int(carditem_order[n]), )
 
 
-def create_new_runbase(request, name):
+def copy_runbase(request, name):
+    """**Copy the RunBase object.**
+
+    :Functions:
+        The method creates a copy of an existing of the RunBase object.
+
+    :Arguments:
+        * *name*: The RunBase object name
+        * *request*: request
+
+    """
+
     new_rb = None
     rb = get_object_or_404(RunBase, name=name)
     rb_count = RunBase.objects.all().count()
@@ -111,9 +163,6 @@ def create_new_runbase(request, name):
         except ValueError:
             num = int(rb_count) + 1
             new_name_rb = '{0}*cp{1}'.format(new_name_rb, num)
-        # except TypeError:
-        # 	num_name = int(name_list[2:][0]) + 1
-        # 	new_name_rb = '{0}*cp{1}'.format(name, num_name)
 
     try:
         new_rb = RunBase.objects.create(
@@ -145,27 +194,29 @@ def create_new_runbase(request, name):
                 content_type=content_type,
                 object_id=new_copy_card.id)
 
-            # print 'new_copy_card ============================= ', new_copy_card
-            # name_ci = str(n.card_item)
-            # new_name_ci = '{0}*cp{1}'.format(name_ci, rb_count)
-            # print 'NAME content_type ============= ', str(n.card_item)
-            # print 'NAME NEW content_type ============= ', new_name_ci
-            # print 'content_type ============= ', n.card_item.content_type.model
-
-            # new_card_item = n.card_item
             CardSequence.cards.through.objects.create(
                 sequence=card_sequence,
                 card_item=card_item,
                 order=n.order, )
     except Exception, e:
-        print 'ERROR create_new_runbase ============== ', e
+        pass
 
     return new_rb
 
 
 def get_number_cards(rb, user):
+    """**Get the number of cards in the object RunBase.**
+
+    :Functions:
+        The method creates a copy of an existing of the CardSequence object.
+
+    :Arguments:
+        * *rb*: The RunBase object
+        * *user*: Current the user
+
+    """
+
     num_card = 0
-    # run = get_object_or_404(Run, run_base=rb, user=user)
     all_card = OrderedCardItem.objects.filter(sequence__runbase=rb.run_base)
 
     for card in all_card:
@@ -177,12 +228,16 @@ def get_number_cards(rb, user):
     return num_card
 
 
-# upload_static_data_view = user_passes_test(login_url='/', redirect_field_name='')(UploadStaticDataView.as_view())
-
-
 @user_passes_test(lambda u: u.is_superuser)
 @render_to('gsi/upload_file.html')
 def upload_file(request):
+    """**View for the "Upload Test Data" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
     title = 'Upload Test Data'
     url_name = 'upload_file'
 
@@ -191,6 +246,7 @@ def upload_file(request):
     except IndexError:
         home_var = ''
 
+    # Handling POST request
     if request.POST:
         form = UploadFileForm(request.POST, request.FILES)
 
@@ -205,20 +261,6 @@ def upload_file(request):
                 return HttpResponseRedirect(u'%s?status_message=%s' % (
                     reverse('upload_file'),
                     (u'Test data "{0}" is loaded'.format(file_name))))
-
-                # type_file = str(request.FILES['test_data'].content_type).split('/')[0]
-                # if type_file != 'image':
-                # 	handle_uploaded_file(request.FILES['test_data'], path_test_data)
-                # 	return HttpResponseRedirect(
-                # 			u'%s?status_message=%s' % (reverse('index'),
-                # 			(u'Test data "{0}" is loaded'.format(file_name)))
-                # 	)
-                # else:
-                # 	return HttpResponseRedirect(
-                # 			u'%s?status_message=%s' % (reverse('index'),
-                # 			(u'The file "{0}" can not be loaded. \
-                # 			To download using a text file format'.format(file_name)))
-                # 	)
             else:
                 return HttpResponseRedirect(u'%s?danger_message=%s' % (
                     reverse('index'), (u'Please fill the Home Variables.')))
@@ -236,7 +278,12 @@ def upload_file(request):
 @login_required
 @render_to('gsi/index.html')
 def index(request):
-    """View of the Main page."""
+    """**View for the Main page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
 
     title = 'Main Menu'
     url_name = 'home'
@@ -249,6 +296,7 @@ def index(request):
     except IndexError:
         home_var = ''
 
+    # Handling POST request
     if request.POST:
         form = UploadFileForm(request.POST, request.FILES)
 
@@ -281,11 +329,19 @@ def index(request):
 @login_required
 @render_to('gsi/run_setup.html')
 def run_setup(request):
+    """**View for the "Setup New Run" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
     title = 'Run Setup'
     run_bases = RunBase.objects.all().order_by('-date_modified')
     run_name = ''
     url_name = 'run_setup'
 
+    # Sorted by name, author, date_created, date_modified
     if request.method == "GET":
         order_by = request.GET.get('order_by', '')
         if order_by in ('name', 'author', 'date_created', 'date_modified'):
@@ -294,6 +350,7 @@ def run_setup(request):
             if request.GET.get('reverse', '') == '1':
                 run_bases = run_bases.reverse()
 
+    # Ajax when deleting objects
     if request.method == "POST" and request.is_ajax():
         data_post = request.POST
 
@@ -324,6 +381,7 @@ def run_setup(request):
             data = ''
             return HttpResponse(data)
 
+    # Handling POST request
     if request.method == "POST":
         data_post = request.POST
 
@@ -331,7 +389,7 @@ def run_setup(request):
             run_bases_current = get_object_or_404(
                 RunBase, pk=data_post.get('copy_btn'))
             run_name += '"' + run_bases_current.name + '"'
-            new_rb = create_new_runbase(request, run_bases_current.name)
+            new_rb = copy_runbase(request, run_bases_current.name)
 
             return HttpResponseRedirect(u'%s?status_message=%s' % (reverse(
                 'run_setup'
@@ -383,21 +441,27 @@ def run_setup(request):
 @login_required
 @render_to('gsi/new_run.html')
 def new_run(request):
+    """**View for the "New Run" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
     title = 'New Run'
     form = None
     cards_item = CardItem.objects.all()
 
+    # Handling POST request
     if request.method == "POST":
         form = RunForm(request.POST)
 
         if form.is_valid():
-            if not RunBase.objects.filter(
-                    name=form.cleaned_data["name"]).exists():
+            if not RunBase.objects.filter(name=form.cleaned_data["name"]).exists():
                 new_run_base = RunBase.objects.create(
                     name=form.cleaned_data["name"],
                     description=form.cleaned_data["description"],
                     purpose=form.cleaned_data["purpose"],
-                    # card_sequence=form.cleaned_data["card_sequence"],
                     directory_path=form.cleaned_data["directory_path"],
                     resolution=form.cleaned_data["resolution"],
                     author=request.user, )
@@ -420,10 +484,9 @@ def new_run(request):
                     if request.POST.get('carditem_select'):
                         write_card_to_cs(card_sequence, request.POST)
                     return HttpResponseRedirect(u'%s?status_message=%s' % (
-                        reverse(
-                            'run_update', args=[new_run_base.id]),
-                        (u"RunID {0} created successfully. You may edit it again below.".
-                         format(new_run_base.id))))
+                        reverse('run_update', args=[new_run_base.id]),
+                                (u"RunID {0} created successfully. You may edit it again below.".
+                                format(new_run_base.id))))
             else:
                 return HttpResponseRedirect(u'%s?warning_message=%s' % (
                     reverse('new_run'), (
@@ -440,11 +503,21 @@ def new_run(request):
 @login_required
 @render_to('gsi/run_update.html')
 def run_update(request, run_id):
+    """**View for the "Upload Test Data" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+        * *run_id:* The RunBase object ID
+
+    """
+
     run_base = get_object_or_404(RunBase, pk=run_id)
     title = 'Edit "{0}"'.format(run_base.name)
     form = None
     cur_run = None
 
+    # Handling POST request
     if request.method == "POST":
         form = RunForm(request.POST)
 
@@ -464,11 +537,9 @@ def run_update(request, run_id):
                         run_base.name = form.cleaned_data["name"]
                         run_base.description = form.cleaned_data["description"]
                         run_base.purpose = form.cleaned_data["purpose"]
-                        # run_base.card_sequence = form.cleaned_data["card_sequence"]
                         run_base.directory_path = form.cleaned_data[
                             "directory_path"]
                         run_base.resolution = form.cleaned_data["resolution"]
-                        # run_base.author = request.user
                         run_base.save()
 
                         path_dir = os.path.join(
@@ -482,11 +553,8 @@ def run_update(request, run_id):
                                     run_base.name))))
                     if request.POST.get('edit_run_details_button') is not None:
                         return HttpResponseRedirect(u'%s?info_message=%s' % (
-                            reverse(
-                                'card_sequence_update',
-                                args=[run_id, run_base.card_sequence.id]), (
-                                    u"Edit Card Sequence {0}".format(
-                                        run_base.card_sequence))))
+                            reverse('card_sequence_update', args=[run_id, run_base.card_sequence.id]), (
+                                    u"Edit Card Sequence {0}".format(run_base.card_sequence))))
                 else:
                     return HttpResponseRedirect(u'%s?status_message=%s' % (
                         reverse(
@@ -502,40 +570,19 @@ def run_update(request, run_id):
 
 
 @login_required
-@render_to('gsi/card_sequence.html')
-def card_sequence(request, run_id):
-    card_sequences = CardSequence.objects.all()
-    title = 'Card Sequences'
-    cs_name = ''
-
-    if request.method == "POST":
-        if request.POST.get('cs_select'):
-            for cs_id in request.POST.getlist('cs_select'):
-                cur_cs = get_object_or_404(CardSequence, pk=cs_id)
-                cs_name += '"' + cur_cs.name + '", '
-                cur_cs.delete()
-
-            return HttpResponseRedirect(u'%s?status_message=%s' % (reverse(
-                'card_sequence', args=[run_id]), (
-                    u'Card Sequence: {0} ==> deleted.'.format(cs_name))))
-        else:
-            return HttpResponseRedirect(u'%s?warning_message=%s' % (
-                reverse(
-                    'card_sequence', args=[run_id]),
-                (u"To delete, select Card Sequence or more Card Sequences.")))
-
-    data = {
-        'title': title,
-        'card_sequences': card_sequences,
-        'run_id': run_id,
-    }
-
-    return data
-
-
-@login_required
 @render_to('gsi/card_sequence_update.html')
 def card_sequence_update(request, run_id, cs_id):
+    """**View the CardSequence object for editing in the creation of the Run.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+	    * *run_id:* The RunBase object ID
+
+        * *cs_id:* The CardSequence object ID
+
+    """
+
     home_var = HomeVariables.objects.all()
     rf_auxdata_path = home_var[0].RF_AUXDATA_DIR
     files, error = get_files(rf_auxdata_path, '.cfg')
@@ -561,6 +608,7 @@ def card_sequence_update(request, run_id, cs_id):
         'cancel': ['card_sequence_update', [run_id, cs_id]]
     }
 
+    # Ajax when deleting objects
     if request.method == "POST" and request.is_ajax():
         data_post = request.POST
 
@@ -570,7 +618,6 @@ def card_sequence_update(request, run_id, cs_id):
             cs_id = data_post.getlist('run_id[]')
 
             for r in cs_id:
-                # cur_run = get_object_or_404(RunBase, pk=int(r))
                 cur_cs = get_object_or_404(
                     CardSequence.cards.through, pk=int(r))
                 data += '"' + str(cur_cs) + '", '
@@ -594,6 +641,7 @@ def card_sequence_update(request, run_id, cs_id):
             data = ''
             return HttpResponse(data)
 
+    # Handling POST request
     if request.method == "POST":
         data_post = request.POST
         data_configfile = data_post.get('configfile', '')
@@ -601,13 +649,12 @@ def card_sequence_update(request, run_id, cs_id):
         if data_post.get('new_card'):
             new_card = data_post.get('new_card')
             return HttpResponseRedirect(
-                reverse(
-                    REVERCE_URL[new_card][0], args=REVERCE_URL[new_card][1]))
+                reverse(REVERCE_URL[new_card][0], args=REVERCE_URL[new_card][1]))
         elif data_post.get('add_card_items_button') is not None:
             form = CardSequenceCreateForm(data_post, instance=card_sequence)
 
             if form.is_valid():
-                card_sequence = create_update_card_sequence(form, cs_id)
+                card_sequence = create_update_card_sequence(form, cs_id=cs_id)
 
                 return HttpResponseRedirect(u'%s?status_message=%s' % (reverse(
                     'card_sequence_update', args=[run_id, card_sequence.id]
@@ -649,12 +696,11 @@ def card_sequence_update(request, run_id, cs_id):
             form = CardSequenceCreateForm(data_post, instance=card_sequence)
 
             if form.is_valid():
-                card_sequence = create_update_card_sequence(form, cs_id)
+                card_sequence = create_update_card_sequence(form, cs_id=cs_id)
 
                 if data_post.get('cs_select'):
                     cs_name = ''
                     for cs_card_id in data_post.getlist('cs_select'):
-                        # import pdb;pdb.set_trace()
                         cur_cs = get_object_or_404(
                             CardSequence.cards.through, pk=cs_card_id)
                         cs_name += '"' + str(cur_cs.card_item) + '", '
@@ -663,7 +709,7 @@ def card_sequence_update(request, run_id, cs_id):
                     return HttpResponseRedirect(u'%s?status_message=%s' % (
                         reverse(
                             'card_sequence_update', args=[run_id, cs_id]),
-                        (u'Card Items: {0} ==> deleted.'.format(cs_name))))
+                        (u'Card Items: {0} deleted.'.format(cs_name))))
                 else:
                     return HttpResponseRedirect(u'%s?warning_message=%s' % (
                         reverse(
@@ -678,7 +724,7 @@ def card_sequence_update(request, run_id, cs_id):
             return HttpResponseRedirect(u'%s?status_message=%s' % (
                 reverse(
                     'card_sequence_update', args=[run_id, cs_id]),
-                (u'Card Item: {0} ==> deleted.'.format(cs_name))))
+                (u'Card Item: {0} deleted.'.format(cs_name))))
         elif data_post.get('cancel_button') is not None:
             return HttpResponseRedirect(u'%s?info_message=%s' % (reverse(
                 'run_update', args=[run_id]), (
@@ -702,60 +748,23 @@ def card_sequence_update(request, run_id, cs_id):
     return data
 
 
-# card item edit for card sequence
-@login_required
-@render_to('gsi/card_item_update.html')
-def card_item_update(request, run_id, cs_id, card_item_id):
-    card_sequence_card = get_object_or_404(
-        CardSequence.cards.through, pk=card_item_id)
-    title = 'Card ItemID {0}'.format(card_item_id)
-    form = None
-
-    if request.method == "POST":
-        if request.POST.get('save_button') is not None:
-            form = CardSequenceCardForm(
-                request.POST, instance=card_sequence_card)
-
-            if form.is_valid():
-                for card in CardItem.objects.filter(
-                        id=form.cleaned_data["card_item"].id):
-                    card_sequence_card.card_item = card
-                card_sequence_card.order = form.cleaned_data["order"]
-                card_sequence_card.save()
-
-                return HttpResponseRedirect(u'%s?status_message=%s' % (reverse(
-                    'card_sequence_update', args=[run_id, cs_id]), (
-                        u"Card Item {0} updated successfully".format(
-                            card_sequence_card.card_item))))
-        elif request.POST.get('cancel_button') is not None:
-            return HttpResponseRedirect(u'%s?info_message=%s' % (reverse(
-                'card_sequence_update', args=[run_id, cs_id]), (
-                    u"Card Item {0} updated canceled".format(
-                        card_sequence_card.card_item))))
-    else:
-        form = CardSequenceCardForm(instance=card_sequence_card)
-
-    data = {
-        'title': title,
-        'card_sequence_card': card_sequence_card,
-        'cs_id': cs_id,
-        'form': form,
-        'run_id': run_id,
-    }
-
-    return data
-
-
 # submit a run
 @login_required
 @render_to('gsi/submit_run.html')
 def submit_run(request):
-    # import pdb;pdb.set_trace()
+    """**View for the "Submit a Run" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
     run_bases = RunBase.objects.all().order_by('-date_modified')
     title = 'Submit a Run'
     name_runs = ''
     url_name = 'submit_run'
 
+    # Sorted by name, author, date_created, date_modified
     if request.method == "GET":
         order_by = request.GET.get('order_by', '')
         if order_by in ('name', 'author', 'date_created', 'date_modified'):
@@ -764,6 +773,7 @@ def submit_run(request):
             if request.GET.get('reverse', '') == '1':
                 run_bases = run_bases.reverse()
 
+    # Ajax when deleting objects
     if request.method == "POST" and request.is_ajax():
         data_post = request.POST
 
@@ -792,52 +802,10 @@ def submit_run(request):
             else:
                 data = u"For start choose Run"
                 return HttpResponse(data)
-
-            # if request.POST.get('execute_runs', ''):
-            # 	run_id = request.POST.get('execute_runs', '')
-            # 	# for run_id in id_runs:
-            # 	# 	rb = get_object_or_404(RunBase, pk=run_id)
-            # 	# 	# execute_run = make_run(rb, request.user)
-            # 	# 	name_runs += '"' + str(rb.name) + '", '
-            #
-            # 	rb = get_object_or_404(RunBase, pk=run_id)
-            # 	execute_run = make_run(rb, request.user)
-            #
-            # 	if not execute_run:
-            # 		return HttpResponseRedirect(u'%s?danger_message=%s' %
-            # 									(reverse('submit_run'),
-            # 									 (u'Unable to execute the Run. \
-            # 									 Please contact the administrator!')))
-            #
-            # 	now_date = datetime.now()
-            # 	now_date_formating = now_date.strftime("%d/%m/%Y")
-            # 	now_time = now_date.strftime("%H:%M")
-            #
-            # 	print 'execute_run'
-            #
-            # 	return HttpResponseRedirect(u'%s?status_message=%s' %
-            # 				(reverse('submit_run'),
-            # 				 (u'Run "{0}" has been submitted to back end and {1} on {2}'.
-            # 				  format(rb.name, now_time, now_date_formating)))
-            # 	)
-            # else:
-            # 	return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('submit_run'),
-            # 								 (u"For start choose Run(s)"))
-            # 	)
         except Exception, e:
-            print 'ERROR submit_run ====================== ', e
-            # ***********************************************************************
-            # write log file
-            path_file = '/home/gsi/LOGS/submit_run.log'
-            now = datetime.now()
-            log_submit_run_file = open(path_file, 'a')
-            log_submit_run_file.writelines('{0}\n'.format(now))
-            log_submit_run_file.writelines('ERROR = {0}:\n'.format(e))
-            log_submit_run_file.writelines('\n\n\n')
-            log_submit_run_file.close()
-            # ***********************************************************************
+            pass
 
-        # paginations
+    # paginations
     model_name = paginations(request, run_bases)
 
     data = {
@@ -850,41 +818,23 @@ def submit_run(request):
     return data
 
 
-# execute run
-@login_required
-@render_to('gsi/execute_run.html')
-def execute_runs(request, run_id):
-    title = 'Execute Run'
-    list_run_id = run_id.split('_')
-    name_runs = ''
-    messages = []
-
-    for run in list_run_id:
-        name_runs += '"' + str(
-            get_object_or_404(
-                Run, pk=int(run)).run_base.name) + '", '
-        messages.append(
-            'It has been assigned unique run ID: {0}.\nTo view progress of this run use \
-						the view progress option on the main menu.\n'.format(run))
-
-    data = {
-        'title': title,
-        'run_id': run_id,
-        'messages': messages,
-    }
-
-    return data
-
-
 # run progress
 @login_required
 @render_to('gsi/run_progress.html')
 def run_progress(request):
+    """**View for the "View Run Progress" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
     runs = Run.objects.all().order_by('-id')
     title = 'Run Progress'
     url_name = 'run_progress'
     run_name = ''
 
+    # Sorted by run_base, id, run_date, state, user
     if request.method == "GET":
         order_by = request.GET.get('order_by', '')
         if order_by in ('run_base', ):
@@ -899,6 +849,7 @@ def run_progress(request):
             if request.GET.get('reverse', '') == '1':
                 runs = runs.reverse()
 
+    # Ajax when deleting objects
     if request.method == "POST" and request.is_ajax():
         data_post = request.POST
 
@@ -920,6 +871,7 @@ def run_progress(request):
             data = ''
             return HttpResponse(data)
 
+    # Handling POST request
     if request.method == "POST":
         if request.POST.get('run_progress'):
             for run_id in request.POST.getlist('run_progress'):
@@ -962,6 +914,15 @@ def run_progress(request):
 @login_required
 @render_to('gsi/run_details.html')
 def run_details(request, run_id):
+    """**View the details executed of run of the cards.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+	    * *run_id:* The RunStep object ID
+
+    """
+
     sub_title = 'The View Log file select and hit view'
     runs_step = RunStep.objects.filter(parent_run=run_id)
     runs_step.order_by('card_item__order')
@@ -972,6 +933,7 @@ def run_details(request, run_id):
     else:
         title = 'No data to display'
 
+    # Sorted by id, name, order, start_date, state
     if request.method == "GET":
         order_by = request.GET.get('order_by', '')
         if order_by in ('card_item_id', ):
@@ -998,6 +960,7 @@ def run_details(request, run_id):
             if request.GET.get('reverse', '') == '1':
                 runs_step = runs_step.reverse()
 
+    # Handling POST request
     if request.method == "POST":
         if request.POST.get('details_file'):
             step = get_object_or_404(
@@ -1041,6 +1004,19 @@ def run_details(request, run_id):
 @login_required
 @render_to('gsi/view_log_file.html')
 def view_log_file(request, run_id, card_id, status):
+    """**View details of the files *.err and *.out  of the cards.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+	    * *run_id:* The RunStep object ID
+
+        * *card_id:* The Card object ID
+
+        * *status:* Status executed to work of the cards
+
+    """
+
     log_info = ''
     run = get_object_or_404(Run, pk=run_id)
     runs_step = RunStep.objects.filter(parent_run=run_id).first()
@@ -1068,11 +1044,9 @@ def view_log_file(request, run_id, card_id, status):
             for line in fd.readlines():
                 log_info += line + '<br />'
         except Exception, e:
-            print 'ERROR Out view_log_file: ', e
             return HttpResponseRedirect(u'%s?danger_message=%s' % (
-                reverse(
-                    'run_details', args=[run_id]),
-                (u'Log Out file "{0}" not found.'.format(card_name))))
+                reverse('run_details', args=[run_id]),
+                    (u'Log Out file "{0}" not found.'.format(card_name))))
     elif status == 'Error':
         try:
             card_name = 'runcard_{0}.err'.format(card_id)
@@ -1081,11 +1055,9 @@ def view_log_file(request, run_id, card_id, status):
             for line in fd.readlines():
                 log_info += line + '<br />'
         except Exception, e:
-            print 'ERROR Error view_log_file: ', e
             return HttpResponseRedirect(u'%s?danger_message=%s' % (
-                reverse(
-                    'run_details', args=[run_id]),
-                (u'Log Error file "{0}" not found.'.format(card_name))))
+                reverse('run_details', args=[run_id]),
+                    (u'Log Error file "{0}" not found.'.format(card_name))))
 
     data = {
         'title': title,
@@ -1101,8 +1073,22 @@ def view_log_file(request, run_id, card_id, status):
 @login_required
 @render_to('gsi/view_log_file_sub_card.html')
 def view_log_file_sub_card(request, run_id, card_id, count, status):
-    log_info = ''
+    """**View details of the files *.err and *.out  of the sub-cards.**
 
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+	    * *run_id:* The RunStep object ID
+
+        * *card_id:* The Card object ID
+
+        * *count:* The number of sub-cards
+
+        * *status:* Status executed to work of the cards
+
+    """
+
+    log_info = ''
     runs_step = RunStep.objects.filter(parent_run=run_id).first()
     run_step_card = RunStep.objects.filter(card_item__id=card_id).first()
 
@@ -1122,9 +1108,6 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
             name=log_name, log_file=log_name, log_file_path=log_path)
         run.log = log
         run.save()
-
-    # card_name = ''
-    # path_log_file = os.path.join(str(log_path), str(card_name))
 
     if status == 'Out':
         card_name = 'runcard_{0}_{1}.out'.format(card_id, count)
@@ -1167,6 +1150,17 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
 @login_required
 @render_to('gsi/sub_card_details.html')
 def sub_card_details(request, run_id, card_id):
+    """**View the details executed of run of the cards.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+	    * *run_id:* The RunStep object ID
+
+        * *card_id:* The CardItem object ID
+
+    """
+
     url_name = 'sub_card_details'
     sub_cards = SubCardItem.objects.filter(run_id=run_id, card_id=card_id)
     sub_cards.order_by('sub_cards.start_time')
@@ -1227,20 +1221,17 @@ def sub_card_details(request, run_id, card_id):
     return data
 
 
-# setup static data
-@login_required
-@render_to('gsi/static_data_setup.html')
-def static_data_setup(request):
-    title = 'Setup Static Data'
-    data = {'title': title, }
-
-    return data
-
-
 # setup home variable
 @login_required
 @render_to('gsi/home_variable_setup.html')
 def home_variable_setup(request):
+    """**View for the "Home Variables Setup" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
     title = 'Home Variables'
     form = None
     url_name = 'home_variable'
@@ -1251,6 +1242,7 @@ def home_variable_setup(request):
     except HomeVariables.DoesNotExist:
         variables = ''
 
+    # Handling POST request
     if request.method == "POST":
         form = HomeVariablesForm(request.POST)
 
@@ -1302,12 +1294,20 @@ def home_variable_setup(request):
 @login_required
 @render_to('gsi/environment_groups_list.html')
 def environment_groups(request):
+    """**View for the "Environment Groups" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
     title = 'Environment Groups'
     environments = VariablesGroup.objects.all()
     env_name = ''
     url_name = 'environment_groups'
     but_name = 'static_data'
 
+    # Sorted by name
     if request.method == "GET":
         order_by = request.GET.get('order_by', '')
 
@@ -1317,6 +1317,7 @@ def environment_groups(request):
             if request.GET.get('reverse', '') == '1':
                 environments = environments.reverse()
 
+    # Ajax when deleting objects
     if request.method == "POST" and request.is_ajax():
         data_post = request.POST
 
@@ -1346,6 +1347,7 @@ def environment_groups(request):
             data = ''
             return HttpResponse(data)
 
+    # Handling POST request
     if request.method == "POST":
         # if request.POST.get('delete_button'):
         if request.POST.get('env_select'):
@@ -1392,6 +1394,13 @@ def environment_groups(request):
 @login_required
 @render_to('gsi/static_data_item_edit.html')
 def environment_group_add(request):
+    """**View for the "Environment Group Add" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
     title = 'Environment Group Add'
     url_form = 'environment_group_add'
     template_name = 'gsi/_env_group_form.html'
@@ -1406,6 +1415,7 @@ def environment_group_add(request):
     url_name = 'environment_groups'
     but_name = 'static_data'
 
+    # Handling POST request
     if request.method == "POST":
         response = get_post(request, EnvironmentGroupsForm,
                             'Environment Group', reverse_url, func)
@@ -1433,6 +1443,15 @@ def environment_group_add(request):
 @login_required
 @render_to('gsi/static_data_item_edit.html')
 def environment_group_edit(request, env_id):
+    """**View for the "Environment Group "<name>" Edit" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+        * *env_id:* The VariablesGroup object ID
+
+    """
+
     env_item = get_object_or_404(VariablesGroup, pk=env_id)
     title = 'Environment Group "{0}" Edit'.format(env_item.name)
     url_form = 'environment_group_edit'
@@ -1448,8 +1467,8 @@ def environment_group_edit(request, env_id):
     url_name = 'environment_groups'
     but_name = 'static_data'
 
+    # Handling POST request
     if request.method == "POST":
-        # import pdb;pdb.set_trace()
         response = get_post(
             request,
             EnvironmentGroupsForm,
@@ -1482,12 +1501,20 @@ def environment_group_edit(request, env_id):
 @login_required
 @render_to('gsi/areas_list.html')
 def areas(request):
+    """**View for the "Areas" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
     title = 'Areas'
     areas = Area.objects.all()
     area_name = ''
     url_name = 'areas'
     but_name = 'static_data'
 
+    # Sorted by name
     if request.method == "GET":
         order_by = request.GET.get('order_by', '')
 
@@ -1497,6 +1524,7 @@ def areas(request):
             if request.GET.get('reverse', '') == '1':
                 areas = areas.reverse()
 
+    # Ajax when deleting objects
     if request.method == "POST" and request.is_ajax():
         data_post = request.POST
 
@@ -1526,6 +1554,7 @@ def areas(request):
             data = ''
             return HttpResponse(data)
 
+    # Handling POST request
     if request.method == "POST":
         # if request.POST.get('delete_button'):
         if request.POST.get('area_select'):
@@ -1570,6 +1599,13 @@ def areas(request):
 @login_required
 @render_to('gsi/static_data_item_edit.html')
 def area_add(request):
+    """**View for the "Area Add" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
     title = 'Area Add'
     url_form = 'area_add'
     template_name = 'gsi/_area_form.html'
@@ -1585,6 +1621,7 @@ def area_add(request):
     but_name = 'static_data'
     available_tiles = Tile.objects.all()
 
+    # Handling POST request
     if request.method == "POST":
         response = get_post(request, AreasForm, 'Area', reverse_url, func)
 
@@ -1612,6 +1649,15 @@ def area_add(request):
 @login_required
 @render_to('gsi/static_data_item_edit.html')
 def area_edit(request, area_id):
+    """**View for the "Area "<name>" Edit" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+        * *area_id:* The Area object ID
+
+    """
+
     area = get_object_or_404(Area, pk=area_id)
     title = 'Area Edit "%s"' % (area.name)
     url_form = 'area_edit'
@@ -1627,9 +1673,9 @@ def area_edit(request, area_id):
     url_name = 'areas'
     but_name = 'static_data'
     chosen_tiles = area.tiles.all()
-    available_tiles = Tile.objects.exclude(id__in=area.tiles.values_list(
-        'id', flat=True))
+    available_tiles = Tile.objects.exclude(id__in=area.tiles.values_list('id', flat=True))
 
+    # Handling POST request
     if request.method == "POST":
         response = get_post(
             request, AreasForm, 'Area', reverse_url, func, item_id=area_id)
@@ -1660,12 +1706,20 @@ def area_edit(request, area_id):
 @login_required
 @render_to('gsi/years_group_list.html')
 def years_group(request):
+    """**View for the "Years Groups" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
     title = 'Years Groups'
     years_groups = YearGroup.objects.all()
     yg_name = ''
     url_name = 'years_group'
     but_name = 'static_data'
 
+    # Sorted by name
     if request.method == "GET":
         order_by = request.GET.get('order_by', '')
 
@@ -1675,6 +1729,7 @@ def years_group(request):
             if request.GET.get('reverse', '') == '1':
                 years_groups = years_groups.reverse()
 
+    # Ajax when deleting objects
     if request.method == "POST" and request.is_ajax():
         data_post = request.POST
 
@@ -1704,8 +1759,8 @@ def years_group(request):
             data = ''
             return HttpResponse(data)
 
+    # Handling POST request
     if request.method == "POST":
-        # if request.POST.get('delete_button'):
         if request.POST.get('yg_select'):
             for yg_id in request.POST.getlist('yg_select'):
                 cur_yg = get_object_or_404(YearGroup, pk=yg_id)
@@ -1748,6 +1803,13 @@ def years_group(request):
 @login_required
 @render_to('gsi/static_data_item_edit.html')
 def years_group_add(request):
+    """**View for the "Years Group Add" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
     title = 'Years Groups Add'
     url_form = 'years_group_add'
     url_name = 'years_group'
@@ -1763,6 +1825,7 @@ def years_group_add(request):
     form = None
     available_years = Year.objects.all()
 
+    # Handling POST request
     if request.method == "POST":
         response = get_post(request, YearGroupForm, 'Year Group', reverse_url,
                             func)
@@ -1791,6 +1854,15 @@ def years_group_add(request):
 @login_required
 @render_to('gsi/static_data_item_edit.html')
 def years_group_edit(request, yg_id):
+    """**View for the "Years Group "<name>" Edit" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+        * *yg_id:* The YearGroup object ID
+
+    """
+
     years_group = get_object_or_404(YearGroup, pk=yg_id)
     title = 'YearGroup Edit "%s"' % (years_group.name)
     url_name = 'years_group'
@@ -1845,12 +1917,20 @@ def years_group_edit(request, yg_id):
 @login_required
 @render_to('gsi/satellite_list.html')
 def satellite(request):
+    """**View for the "Satellite" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
     title = 'Satellites'
     satellites = Satellite.objects.all()
     satellite_name = ''
     url_name = 'satellite'
     but_name = 'static_data'
 
+    # Sorted by name
     if request.method == "GET":
         order_by = request.GET.get('order_by', '')
 
@@ -1860,6 +1940,7 @@ def satellite(request):
             if request.GET.get('reverse', '') == '1':
                 satellites = satellites.reverse()
 
+    # Ajax when deleting objects
     if request.method == "POST" and request.is_ajax():
         data_post = request.POST
 
@@ -1889,8 +1970,8 @@ def satellite(request):
             data = ''
             return HttpResponse(data)
 
+    # Handling POST request
     if request.method == "POST":
-        # if request.POST.get('delete_button'):
         if request.POST.get('satellite_select'):
             for satellite_id in request.POST.getlist('satellite_select'):
                 cur_satellite = get_object_or_404(Satellite, pk=satellite_id)
@@ -1934,6 +2015,13 @@ def satellite(request):
 @login_required
 @render_to('gsi/static_data_item_edit.html')
 def satellite_add(request):
+    """**View for the "Satellites Add" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
     title = 'Satellites Add'
     url_form = 'satellite_add'
     url_name = 'satellite'
@@ -1949,6 +2037,7 @@ def satellite_add(request):
     form = None
     available_satellite = Satellite.objects.all()
 
+    # Handling POST request
     if request.method == "POST":
         response = get_post(request, SatelliteForm, 'Satellite', reverse_url,
                             func)
@@ -1977,6 +2066,15 @@ def satellite_add(request):
 @login_required
 @render_to('gsi/static_data_item_edit.html')
 def satellite_edit(request, satellite_id):
+    """**View for the "Satellite Edit '<name>' page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+        * *satellite_id:* The Satellite object ID
+
+    """
+
     satellite = get_object_or_404(Satellite, pk=satellite_id)
     title = 'Satellite Edit "%s"' % (satellite.name)
     url_name = 'satellite'
@@ -2025,6 +2123,13 @@ def satellite_edit(request, satellite_id):
 @login_required
 @render_to('gsi/input_data_dir_list.html')
 def input_data_dir_list(request):
+    """**View for the "Input Data Directory" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
     title = 'Input Data Directory'
     input_data_dirs = InputDataDirectory.objects.all()
     home_var = HomeVariables.objects.all()
@@ -2032,6 +2137,7 @@ def input_data_dir_list(request):
     url_name = 'input_data_dir_list'
     but_name = 'static_data'
 
+    # Sorted by name
     if request.method == "GET":
         order_by = request.GET.get('order_by', '')
 
@@ -2041,6 +2147,7 @@ def input_data_dir_list(request):
             if request.GET.get('reverse', '') == '1':
                 input_data_dirs = input_data_dirs.reverse()
 
+    # Ajax when deleting objects
     if request.method == "POST" and request.is_ajax():
         data_post = request.POST
 
@@ -2070,6 +2177,7 @@ def input_data_dir_list(request):
             data = ''
             return HttpResponse(data)
 
+    # Handling POST reques
     if request.method == "POST":
         # if request.POST.get('delete_button'):
         if request.POST.get('input_data_dirs_select'):
@@ -2125,6 +2233,13 @@ def input_data_dir_list(request):
 @login_required
 @render_to('gsi/static_data_item_edit.html')
 def input_data_dir_add(request):
+    """**View for the "Input Data Directory Add" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
     title = 'Input Data Directory Add'
     url_form = 'input_data_dir_add'
     url_name = 'input_data_dir_list'
@@ -2140,6 +2255,7 @@ def input_data_dir_add(request):
     form = None
     available_files = InputDataDirectory.objects.all()
 
+    # Handling POST request
     if request.method == "POST":
         response = get_post(request, InputDataDirectoryForm,
                             'Input Data Directory', reverse_url, func)
@@ -2168,6 +2284,15 @@ def input_data_dir_add(request):
 @login_required
 @render_to('gsi/static_data_item_edit.html')
 def input_data_dir_edit(request, dir_id):
+    """**View for the "Input Data Directory Edit "<name>"" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+        * *dir_id:* The InputDataDirectory object ID
+
+    """
+
     data_dir = get_object_or_404(InputDataDirectory, pk=dir_id)
     title = 'Input Data Directory Edit "%s"' % (data_dir.name)
     url_name = 'input_data_dir_list'
@@ -2183,6 +2308,7 @@ def input_data_dir_edit(request, dir_id):
     func = data_dir_update_create
     form = None
 
+    # Handling POST request
     if request.method == "POST":
         response = get_post(
             request,
@@ -2216,13 +2342,21 @@ def input_data_dir_edit(request, dir_id):
 @login_required
 @render_to('gsi/cards_list.html')
 def cards_list(request, *args, **kwargs):
-    title = 'Editing Cards'
+    """**View for the "Cards List" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
+    title = 'Cards List'
     cards_all = CardItem.objects.all()
     card_list = []
     cards_name = ''
     url_name = 'cards_list'
     but_name = 'static_data'
 
+    # Sorted by name
     if request.method == "GET":
         order_by = request.GET.get('order_by', '')
 
@@ -2232,6 +2366,7 @@ def cards_list(request, *args, **kwargs):
             if request.GET.get('reverse', '') == '1':
                 cards_all = cards_all.reverse()
 
+    # Ajax when deleting objects
     if request.method == "POST" and request.is_ajax():
         data_post = request.POST
 
@@ -2261,6 +2396,7 @@ def cards_list(request, *args, **kwargs):
             data = ''
             return HttpResponse(data)
 
+    # Handling POST request
     if request.method == "POST":
         if request.POST.get('card_select'):
             for card_id in request.POST.getlist('card_select'):
@@ -2270,17 +2406,13 @@ def cards_list(request, *args, **kwargs):
                     id=cur_card.content_type_id)
                 class_obj = content_type_card.get_object_for_this_type(
                     name=str(cur_card))
-                # print 'str(cur_card) =========================== ', str(cur_card)
                 cur_card.delete()
                 class_obj.delete()
 
             cards_name = cards_name[:-2]
 
-            # print 'cards_name ===================== ', cards_name
-
             return HttpResponseRedirect(u'%s?status_message=%s' % (
-                reverse('cards_list'),
-                (u'Cards: {0} ==> deleted.'.format(cards_name))))
+                reverse('cards_list'), (u'Cards: {0} ==> deleted.'.format(cards_name))))
         elif request.POST.get('delete_button'):
             cur_card = get_object_or_404(
                 CardItem, pk=request.POST.get('delete_button'))
@@ -2294,7 +2426,7 @@ def cards_list(request, *args, **kwargs):
 
             return HttpResponseRedirect(u'%s?status_message=%s' % (
                 reverse('cards_list'),
-                (u'Card: {0} ==> deleted.'.format(cards_name))))
+                (u'Card: {0} deleted.'.format(cards_name))))
         else:
             return HttpResponseRedirect(u'%s?warning_message=%s' % (
                 reverse('cards_list'),
@@ -2314,102 +2446,19 @@ def cards_list(request, *args, **kwargs):
     return data
 
 
-# Cards List
-@login_required
-@render_to('gsi/card_editions.html')
-def card_edit(request, card_id):
-    data_card = get_object_or_404(CardItem, pk=card_id)
-    title = 'Card Editing "%s"' % (data_card)
-    url_name = 'cards_list'
-    but_name = 'static_data'
-    url_form = 'card_edit'
-    card_model = data_card.content_type.model if data_card.content_type.model != 'yearfilter' else 'year_filter'
-    template_name = 'cards/_{0}_form.html'.format(card_model)
-    func_dict = {
-        'qrf': qrf_update_create,
-        'rfscore': rfscore_update_create,
-        'remap': remap_update_create,
-        'yearfilter': year_filter_update_create,
-        'collate': collate_update_create,
-        'preproc': preproc_update_create,
-        'mergecsv': mergecsv_update_create,
-        'rftrain': rftrain_update_create,
-        'randomforest': randomforest_update_create,
-    }
-
-    form_dict = {
-        'qrf': QRFForm,
-        'rfscore': RFScoreForm,
-        'remap': RemapForm,
-        'yearfilter': YearFilterForm,
-        'collate': CollateForm,
-        'preproc': PreProcForm,
-        'mergecsv': MergeCSVForm,
-        'rftrain': RFTrainForm,
-        'randomforest': RandomForestForm,
-    }
-
-    # print 'template_name ========================= ', template_name
-    # print 'card_model ========================= ', card_model
-    # print 'data_card ========================= ', data_card
-
-    content_type_name = ContentType.objects.get(
-        app_label="cards", model=data_card.content_type.model)
-    class_model = content_type_name.model_class()
-    card_name = content_type_name.get_object_for_this_type(name=data_card)
-    cur_card = get_object_or_404(class_model, pk=card_name.id)
-
-    # print 'card_name ========================== ', card_name
-    # print 'class_model ========================== ', class_model
-    # print 'content_type_name ========================== ', content_type_name
-    # print 'card_name ID ========================== ', card_name.id
-
-    # template_name = 'gsi/_input_data_dir_form.html'
-    reverse_url = {
-        'save_button': 'cards_list',
-        'save_and_another': 'input_data_dir_add',
-        'save_and_continue': 'cards_edit',
-        'cancel_button': 'cards_list'
-    }
-    func = func_dict[data_card.content_type.model]
-    card_form = form_dict[data_card.content_type.model]
-    form = None
-
-    if request.method == "POST":
-        response = get_post(
-            request,
-            card_form,
-            str(content_type_name),
-            reverse_url,
-            func,
-            item_id=card_name.id)
-
-        if isinstance(response, HttpResponseRedirect):
-            return response
-        else:
-            form = response
-    else:
-        form = card_form(instance=card_name)
-
-    data = {
-        'title': title,
-        'url_form': url_form,
-        'url_name': url_name,
-        'but_name': but_name,
-        'template_name': template_name,
-        'form': form,
-        'card_id': card_id,
-    }
-
-    return data
-
-
 # audit history
 @login_required
 @render_to('gsi/audit_history.html')
 def audit_history(request, run_id):
-    # Audit record for  MATT_COLLATE_TESTR_29th_Feb
-    # get_logs(element, element_id, limit=None, user=None)
+    """**View for the "Audit record for '<name>'" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+        * *run_id:* The RunBase object
+
+    """
+
     run_base = get_object_or_404(RunBase, pk=run_id)
     title = 'Audit record for "{0}"'.format(run_base.name)
     logs = []
@@ -2430,6 +2479,15 @@ def audit_history(request, run_id):
 @login_required
 @render_to('gsi/view_results.html')
 def view_results(request, run_id):
+    """**View for the "View results '<name>'" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+        * *run_id:* The RunBase object ID
+
+    """
+
     run_base = get_object_or_404(RunBase, pk=run_id)
     title = 'View results "{0}"'.format(run_base.name)
     dir_root = get_dir_root_static_path()
@@ -2465,6 +2523,19 @@ def view_results(request, run_id):
 @login_required
 @render_to('gsi/view_results_folder.html')
 def view_results_folder(request, run_id, prev_dir, dir):
+    """**View for the "View results '<name>'" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+        * *run_id:* The RunBase object ID
+
+        * *prev_dir:* The prev directory
+
+        * *dir:* The current directory
+
+    """
+
     run_base = get_object_or_404(RunBase, pk=run_id)
     title = 'View results "{0}"'.format(run_base.name)
     back_prev = ''
@@ -2474,11 +2545,9 @@ def view_results_folder(request, run_id, prev_dir, dir):
     resolution = run_base.resolution
     folder = run_base.directory_path
 
-    static_dir_root_path = str(dir_root['static_dir_root_path']) + '/' + str(
-        resolution) + '/' + str(folder)
+    static_dir_root_path = str(dir_root['static_dir_root_path']) + '/' + str(resolution) + '/' + str(folder)
     static_dir_root_path = slash_remove_from_path(static_dir_root_path)
-    static_dir_root = str(dir_root['static_dir_root']) + '/' + str(
-        resolution) + '/' + str(folder)
+    static_dir_root = str(dir_root['static_dir_root']) + '/' + str(resolution) + '/' + str(folder)
     static_dir_root = slash_remove_from_path(static_dir_root)
     static_dir_root_path_folder = static_dir_root_path
     static_dir_root_folder = static_dir_root
@@ -2498,25 +2567,21 @@ def view_results_folder(request, run_id, prev_dir, dir):
 
         # for new folder
         static_dir_root_path_folder += '/' + str(dir)
-        static_dir_root_path_folder = slash_remove_from_path(
-            static_dir_root_path_folder)
+        static_dir_root_path_folder = slash_remove_from_path(static_dir_root_path_folder)
         static_dir_root_folder += '/' + str(dir)
         static_dir_root_folder = slash_remove_from_path(static_dir_root_folder)
     else:
         # for new folder
         prev_dir = dir
         static_dir_root_path_folder = static_dir_root_path + '/' + str(dir)
-        static_dir_root_path_folder = slash_remove_from_path(
-            static_dir_root_path_folder)
+        static_dir_root_path_folder = slash_remove_from_path(static_dir_root_path_folder)
         static_dir_root_folder = static_dir_root + '/' + str(dir)
         static_dir_root_folder = slash_remove_from_path(static_dir_root_folder)
 
-    dirs, files, info_message = get_files_dirs(static_dir_root_folder,
-                                               static_dir_root_path_folder)
+    dirs, files, info_message = get_files_dirs(static_dir_root_folder, static_dir_root_path_folder)
 
     if info_message:
-        info_message = u'For run "{0}" there are no results to show.'.format(
-            run_base.name)
+        info_message = u'For run "{0}" there are no results to show.'.format(run_base.name)
 
     data = {
         'run_id': run_id,
@@ -2536,12 +2601,20 @@ def view_results_folder(request, run_id, prev_dir, dir):
 @login_required
 @render_to('gsi/resolution_list.html')
 def resolution(request):
+    """**View for the "Resolutions" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
     title = 'Resolutions'
     resolution = Resolution.objects.all()
     resolution_name = ''
     url_name = 'resolution'
     but_name = 'static_data'
 
+    # Sorted by name, value
     if request.method == "GET":
         order_by = request.GET.get('order_by', '')
 
@@ -2551,6 +2624,7 @@ def resolution(request):
             if request.GET.get('reverse', '') == '1':
                 resolution = resolution.reverse()
 
+    # Ajax when deleting objects
     if request.method == "POST" and request.is_ajax():
         data_post = request.POST
 
@@ -2581,8 +2655,8 @@ def resolution(request):
             data = ''
             return HttpResponse(data)
 
+    # Handling POST request
     if request.method == "POST":
-        # if request.POST.get('delete_button'):
         if request.POST.get('resolution_select'):
             for satellite_id in request.POST.getlist('resolution_select'):
                 cur_resolution = get_object_or_404(Resolution, pk=satellite_id)
@@ -2626,6 +2700,13 @@ def resolution(request):
 @login_required
 @render_to('gsi/static_data_item_edit.html')
 def resolution_add(request):
+    """**View for the 'Resolution Add' page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
     title = 'Resolution Add'
     url_form = 'resolution_add'
     url_name = 'resolution'
@@ -2641,6 +2722,7 @@ def resolution_add(request):
     form = None
     available_resolution = Resolution.objects.all()
 
+    # Handling POST request
     if request.method == "POST":
         response = get_post(request, ResolutionForm, 'Resolution', reverse_url,
                             func)
@@ -2669,6 +2751,15 @@ def resolution_add(request):
 @login_required
 @render_to('gsi/static_data_item_edit.html')
 def resolution_edit(request, resolution_id):
+    """**View for the "Resolution Edit '<name>'" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+        * *resolution_id:* The Resolution object ID
+
+    """
+
     resolution = get_object_or_404(Resolution, pk=resolution_id)
     title = 'Resolution Edit "%s"' % (resolution.name)
     url_name = 'resolution'
@@ -2684,6 +2775,7 @@ def resolution_edit(request, resolution_id):
     func = resolution_update_create
     form = None
 
+    # Handling POST request
     if request.method == "POST":
         response = get_post(
             request,
@@ -2717,12 +2809,20 @@ def resolution_edit(request, resolution_id):
 @login_required
 @render_to('gsi/tiles_list.html')
 def tiles(request):
+    """**View for the "Tiles" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
     title = 'Tiles'
     tile = Tile.objects.all()
     tile_name = ''
     url_name = 'tiles'
     but_name = 'static_data'
 
+    # Sorted by name
     if request.method == "GET":
         order_by = request.GET.get('order_by', '')
 
@@ -2732,6 +2832,7 @@ def tiles(request):
             if request.GET.get('reverse', '') == '1':
                 tile = tile.reverse()
 
+    # Ajax when deleting objects
     if request.method == "POST" and request.is_ajax():
         data_post = request.POST
 
@@ -2762,8 +2863,8 @@ def tiles(request):
             data = ''
             return HttpResponse(data)
 
+    # Handling POST request
     if request.method == "POST":
-        # if request.POST.get('delete_button'):
         if request.POST.get('tile_select'):
             for tile_id in request.POST.getlist('tile_select'):
                 cur_tile = get_object_or_404(Tile, pk=tile_id)
@@ -2807,6 +2908,13 @@ def tiles(request):
 @login_required
 @render_to('gsi/static_data_item_edit.html')
 def tile_add(request):
+    """**View for the "Tile Add" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
     title = 'Tile Add'
     url_form = 'tile_add'
     url_name = 'tiles'
@@ -2822,6 +2930,7 @@ def tile_add(request):
     form = None
     available_tiles = Tile.objects.all()
 
+    # Handling POST request
     if request.method == "POST":
         response = get_post(request, TileForm, 'Tile', reverse_url,
                             func)
@@ -2850,6 +2959,15 @@ def tile_add(request):
 @login_required
 @render_to('gsi/static_data_item_edit.html')
 def tile_edit(request, tile_id):
+    """**View for the "Tile Edit '<name>'" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+        * *tile_id:* The Tile object ID
+
+    """
+
     tile = get_object_or_404(Tile, pk=tile_id)
     title = 'Tile Edit "%s"' % (tile.name)
     url_name = 'tiles'
@@ -2865,6 +2983,7 @@ def tile_edit(request, tile_id):
     func = tile_update_create
     form = None
 
+    # Handling POST request
     if request.method == "POST":
         response = get_post(
             request,
@@ -2898,12 +3017,20 @@ def tile_edit(request, tile_id):
 @login_required
 @render_to('gsi/years_list.html')
 def years(request):
+    """**View for the "Years" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
     title = 'Years'
     years = Year.objects.all().order_by('name')
     year_name = ''
     url_name = 'years'
     but_name = 'static_data'
 
+    # Sorted by name
     if request.method == "GET":
         order_by = request.GET.get('order_by', '')
 
@@ -2913,6 +3040,7 @@ def years(request):
             if request.GET.get('reverse', '') == '1':
                 years = years.reverse()
 
+    # Ajax when deleting objects
     if request.method == "POST" and request.is_ajax():
         data_post = request.POST
 
@@ -2943,8 +3071,8 @@ def years(request):
             data = ''
             return HttpResponse(data)
 
+    # Handling POST request
     if request.method == "POST":
-        # if request.POST.get('delete_button'):
         if request.POST.get('year_select'):
             for year_id in request.POST.getlist('year_select'):
                 cur_year = get_object_or_404(Year, pk=year_id)
@@ -2988,6 +3116,13 @@ def years(request):
 @login_required
 @render_to('gsi/static_data_item_edit.html')
 def year_add(request):
+    """**View for the "Year Add" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
     title = 'Year Add'
     url_form = 'year_add'
     url_name = 'years'
@@ -3003,6 +3138,7 @@ def year_add(request):
     form = None
     available_years = Year.objects.all()
 
+    # Handling POST request
     if request.method == "POST":
         response = get_post(request, YearForm, 'Year', reverse_url,
                             func)
@@ -3031,6 +3167,15 @@ def year_add(request):
 @login_required
 @render_to('gsi/static_data_item_edit.html')
 def year_edit(request, year_id):
+    """**View for the "Year Edit '<name>'" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+        * *year_id:* The Year object ID
+
+    """
+
     year = get_object_or_404(Year, pk=year_id)
     title = 'Year Edit "%s"' % (year.name)
     url_name = 'years'
@@ -3046,6 +3191,7 @@ def year_edit(request, year_id):
     func = year_update_create
     form = None
 
+    # Handling POST request
     if request.method == "POST":
         response = get_post(
             request,
@@ -3079,12 +3225,25 @@ def year_edit(request, year_id):
 @login_required
 @render_to('gsi/customer_section.html')
 def customer_section(request):
+    """**View for the "Customer '<user>' section" page.**
+
+    :Functions:
+        When you load the page is loaded map with Google MAP. Initial coordinates: eLat = 0, eLng = 0.
+        Zoom map is variable GOOGLE_MAP_ZOOM, whose value is in the project settings.
+        Code view allows to change position when you enter values in the fields on the page "Enter Lat" and "Enter Log".
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
     customer = request.user
     title = 'Customer {0} section'.format(customer)
     url_name = 'customer_section'
     eLat = 0
     eLng = 0
 
+    # Handling POST request
     if request.method == "POST":
         data_request = request.POST
 

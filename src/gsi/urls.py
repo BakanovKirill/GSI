@@ -46,9 +46,6 @@ urlpatterns = [
 	# submit a run
 	url(r'^run/submit/$', 'gsi.views.submit_run', name='submit_run'),
 
-	# execute run
-	url(r'^run/execute/(?P<run_id>\w+)/$', 'gsi.views.execute_runs', name='execute_runs'),
-
 	# run progress
 	url(r'^run/progress/$', 'gsi.views.run_progress', name='run_progress'),
 
@@ -64,9 +61,6 @@ urlpatterns = [
 	# log view sub cards
 	url(r'^run/(?P<run_id>\d+)/card/(?P<card_id>\d+)/subcard/log/(?P<count>\d+)/(?P<status>\w+)/$',
 		'gsi.views.view_log_file_sub_card', name='view_log_file_sub_card'),
-
-	# setup static data
-	url(r'^run/static-data/setup/$', 'gsi.views.static_data_setup', name='static_data_setup'),
 
 	# setup home variable
 	url(r'^run/home-variable/setup/$', 'gsi.views.home_variable_setup', name='home_variable_setup'),
@@ -130,20 +124,15 @@ urlpatterns = [
 	url(r'^input-data-dir/add/$', 'gsi.views.input_data_dir_add', name='input_data_dir_add'),
 	url(r'^input-data-dir/(?P<dir_id>\d+)/$', 'gsi.views.input_data_dir_edit', name='input_data_dir_edit'),
 
-	# MENU editing cards
 	# cards list
 	url(r'^cards/list/$', 'gsi.views.cards_list', name='cards_list'),
-
-	# cards edit
-	url(r'^card/(?P<card_id>\d+)/$', 'gsi.views.card_edit', name='card_edit'),
 
 	# Customer section
 	url(r'^customer/$', 'gsi.views.customer_section', name='customer_section'),
 
 	# Card Sequence edit
 	url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/$', 'gsi.views.card_sequence_update', name='card_sequence_update'),
-	url(r'^run/(?P<run_id>\d+)/card-sequence/setup/$', 'gsi.views.card_sequence', name='card_sequence'),
-	
+
 
 	# CARDS edit in the Run -------------------------------------------------------------------------------------------
 	url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/(?P<card_id>\d+)/qrf/(?P<qrf_id>\d+)/$',

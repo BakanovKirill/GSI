@@ -1,0 +1,285 @@
+******************************************
+Project structure
+******************************************
+
+The project includes
+=====================
+
+* the package for work with API: **api**;
+* the three applications: **cards**, **gsi**, **log**;
+* the folder with auxiliary functions: **core**;
+* the folder with statics (styles, java script files, the image to the project): **static**;
+* the folder with templates: **template**;
+* the folder with custom tags: **tags**;
+
+-- *"__init__.py"*: the file for to initialize of the packages.
+
+-- *"urls.py"*: the file for the URLs of web pages.
+
+-- *"admin.py"*: the file to display models in the admin part of the project.
+
+-- *"migrations"*: the package migration of models. At each change in the tables creates a new migration.
+
+-- *"template"*: the folder for templates of web pages.
+
+-- *"static/css"*: the folder for styles of css.
+
+-- *"static/js"*: the folder for JavaScript files which used in the project.
+
+-- *"static/img"*: the folder for images which used in the project.
+
+Structure of folders
+========================
+
+    **api** - source code to work with api::
+
+    |── api
+    |     ├── __init__.py
+    |     └── views.py
+
+
+    **cards** - source code to work with cards application::
+
+    |── cards
+    |   ├── admin.py
+    |   ├── cards_forms.py
+    |   ├── card_update_create.py
+    |   ├── get_card_post.py
+    |   ├── __init__.py
+    |   ├── management
+    |   │   ├── commands
+    |   │   │   ├── fill_name_for_carditem_card.py
+    |   │   │   └── __init__.py
+    |   │   └── __init__.py
+    |   ├── migrations
+    |   │   ├── 0001_initial.py
+    |   │   ├── ...
+    |   │   ├── 0042_carditem_name.py
+    |   │   ├── __init__.py
+    |   ├── models.py
+    |   ├── urls.py
+    |   ├── views_card_run_csid.py
+    |   ├── views_card_runid_csid.py
+    |   ├── views_card_runid.py
+    |   ├── views_card_run.py
+    |   ├── views.py
+
+
+    **gsi** - source code to work with gsi application::
+
+    |── gsi
+    |   ├── admin.py
+    |   ├── gsi_forms.py
+    |   ├── gsi_items_update_create.py
+    |   ├── __init__.py
+    |   ├── migrations
+    |   │   ├── 0001_initial.py
+    |   │   ├── ...
+    |   │   ├── 0026_auto_20160909_0806.py
+    |   │   └── __init__.py
+    |   ├── models.py
+    |   ├── settings_local.py
+    |   ├── settings.py
+    |   ├── signals.py
+    |   ├── tests
+    |   │   ├── __init__.py
+    |   │   └── test_signals.py
+    |   ├── update_create.py
+    |   ├── urls.py
+    |   ├── views_cs_card_run_csid.py
+    |   ├── views_cs_card_runid_csid.py
+    |   ├── views.py
+    |   └── wsgi.py
+
+
+    **log** - source code to work with log application::
+
+    |── gsi
+    |   ├── admin.py
+    |   ├── __init__.py
+    |   ├── logger.py
+    |   ├── migrations
+    |   │   ├── 0001_initial.py
+    |   │   ├── 0002_logdebug.py
+    |   │   ├── 0003_remove_logdebug_user.py
+    |   │   └── __init__.py
+    |   ├── models.py
+    |   └── views.py
+
+
+    **core** - folder with auxiliary functions::
+
+    |── core
+    |   ├── copy_card.py
+    |   ├── get_post.py
+    |   ├── __init__.py
+    |   ├── multithreaded.py
+    |   ├── paginations.py
+    |   ├── utils.py
+    |   └── validator_gsi.py
+
+
+    **static** - folder with statics::
+
+    |── static
+    |   ├── css
+    |   │   ├── form_style.css
+    |   │   ├── jquery.fs.selecter.css
+    |   │   ├── main_reg.css
+    |   │   └── styles.css
+    |   ├── img
+    |   │   ├── account-circle.png
+    |   │   ├── anonim.png
+    |   │   ├── back-18.png
+    |   │   ├── background_log.jpg
+    |   │   ├── back-to-up-18.png
+    |   │   ├── chevron-double-right-18.png
+    |   │   ├── copy-18.png
+    |   │   ├── customer_section.png
+    |   │   ├── delete-18.png
+    |   │   ├── details_18.png
+    |   │   ├── download-18.png
+    |   │   ├── edit-18.png
+    |   │   ├── email_18.png
+    |   │   ├── eye_18.png
+    |   │   ├── file-18.png
+    |   │   ├── file-archive-18.png
+    |   │   ├── file-bin-18.png
+    |   │   ├── file-document-18.png
+    |   │   ├── file-image-18.png
+    |   │   ├── file-pdf-18.png
+    |   │   ├── file-word-18.png
+    |   │   ├── folder-18.png
+    |   │   ├── go-folder-18.png
+    |   │   ├── image-18.png
+    |   │   ├── logout.png
+    |   │   ├── menu-down-18.png
+    |   │   ├── order-18.png
+    |   │   ├── overview.png
+    |   │   ├── parallel-1-18.png
+    |   │   ├── parallel-2-18.png
+    |   │   ├── profile-18.png
+    |   │   ├── settings.png
+    |   │   ├── setup_new_run.png
+    |   │   ├── setup_static_data.png
+    |   │   ├── submit_a_run.png
+    |   │   ├── upload.png
+    |   │   └── view_run_progress.png
+    |   └── js
+    |       ├── jquery.fs.selecter.min.js
+    |       ├── modernizr.js
+    |       ├── registrations.js
+    |       ├── scripts_ajax.js
+    |       ├── scripts_google_maps.js
+    |       ├── scripts.js
+    |       └── upload_file.js
+
+
+    **template** - folder with templates::
+
+    |── template
+    |   ├── base.html
+    |   ├── base_registrations.html
+    |   ├── base_wiki.html
+    |   ├── cards
+    |   │   ├── _calcstats_form.html
+    |   │   ├── _collate_form.html
+    |   │   ├── _create_processing_card_form.html
+    |   │   ├── _mergecsv_form.html
+    |   │   ├── new_run_card.html
+    |   │   ├── new_run_csid_card.html
+    |   │   ├── new_runid_card.html
+    |   │   ├── new_runid_csid_card.html
+    |   │   ├── _preproc_form.html
+    |   │   ├── proces_card_sequence_cards.html
+    |   │   ├── processing_card_new_run.html
+    |   │   ├── _qrf_form.html
+    |   │   ├── _randomforest_form.html
+    |   │   ├── _remap_form.html
+    |   │   ├── _rfscore_form.html
+    |   │   ├── _rftrain_form.html
+    |   │   └── _year_filter_form.html
+    |   ├── gsi
+    |   │   ├── add_card_sequence.html
+    |   │   ├── _area_form.html
+    |   │   ├── areas_list.html
+    |   │   ├── audit_history.html
+    |   │   ├── blocking.html
+    |   │   ├── card_editions.html
+    |   │   ├── card_item_update.html
+    |   │   ├── _card_sequence_form.html
+    |   │   ├── card_sequence.html
+    |   │   ├── card_sequence_update.html
+    |   │   ├── cards_list.html
+    |   │   ├── _cs_calcstats_form.html
+    |   │   ├── _cs_collate_form.html
+    |   │   ├── _cs_mergecsv_form.html
+    |   │   ├── _cs_preproc_form.html
+    |   │   ├── _cs_qrf_form.html
+    |   │   ├── _cs_randomforest_form.html
+    |   │   ├── _cs_remap_form.html
+    |   │   ├── _cs_rfscore_form.html
+    |   │   ├── _cs_rftrain_form.html
+    |   │   ├── _cs_year_filter_form.html
+    |   │   ├── customer_section.html
+    |   │   ├── _env_group_form.html
+    |   │   ├── environment_groups_list.html
+    |   │   ├── execute_run.html
+    |   │   ├── gsi_map.html
+    |   │   ├── home_variable_setup.html
+    |   │   ├── index.html
+    |   │   ├── _input_data_dir_form.html
+    |   │   ├── input_data_dir_list.html
+    |   │   ├── _modal_new_card.html
+    |   │   ├── new_card_sequence.html
+    |   │   ├── new_run.html
+    |   │   ├── _ordered_card_items.html
+    |   │   ├── _resolution_form.html
+    |   │   ├── resolution_list.html
+    |   │   ├── run_details.html
+    |   │   ├── run_new_card_sequence_list.html
+    |   │   ├── run_progress.html
+    |   │   ├── run_setup.html
+    |   │   ├── run_update.html
+    |   │   ├── _satellite_form.html
+    |   │   ├── satellite_list.html
+    |   │   ├── static_data_item_edit.html
+    |   │   ├── static_data_setup.html
+    |   │   ├── sub_card_details.html
+    |   │   ├── submit_run.html
+    |   │   ├── _tile_form.html
+    |   │   ├── tiles_list.html
+    |   │   ├── upload_file.html
+    |   │   ├── view_log_file.html
+    |   │   ├── view_log_file_sub_card.html
+    |   │   ├── view_results_folder.html
+    |   │   ├── view_results.html
+    |   │   ├── _year_form.html
+    |   │   ├── _years_group_form.html
+    |   │   ├── years_group_list.html
+    |   │   └── years_list.html
+    |   ├── _modal_check_delete_items.html
+    |   ├── _modal_preload.html
+    |   ├── paginations.html
+    |   ├── registration
+    |   │   ├── login.html
+    |   │   ├── password_change_done.html
+    |   │   ├── password_change_form.html
+    |   │   ├── password_reset_complete.html
+    |   │   ├── password_reset_confirm.html
+    |   │   ├── password_reset_done.html
+    |   │   ├── password_reset_email.html
+    |   │   ├── password_reset_form.html
+    |   │   └── registration_form.html
+
+
+    **tags** - folder with custom tags::
+
+    |── tags
+    |  ├── __init__.py
+    |   ├── __init__.pyc
+    |   └── templatetags
+    |       ├── gsi_tags.py
+    |       ├── gsi_tags.pyc
+    |       ├── __init__.py
+    |       └── __init__.pyc

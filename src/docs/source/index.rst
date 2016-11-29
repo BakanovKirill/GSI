@@ -17,7 +17,11 @@ Contents:
    _general/2_designation_of_graphical_icons.rst
    _general/3_frontend.rst
    _general/4_backend.rst
+   _modules/structure.rst
+   _modules/api.rst
+   _modules/cards.rst
    _modules/gsi.rst
+
 
 Indices and tables
 ******************
