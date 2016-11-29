@@ -23,7 +23,7 @@ Cards.views_card_runid_csid
 Cards.cards_forms
 ============================
 
-**This module contains methods for creating and editing card form.**
+**This module contains methods for creating and editing card forms.**
 
 .. automodule:: cards.cards_forms
     :members:

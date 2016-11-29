@@ -157,7 +157,6 @@ urlpatterns = [
 		'gsi.views_card_runid_csid.cs_runid_csid_calcstats_edit', name='cs_runid_csid_calcstats_edit'),
 	# -----------------------------------------------------------------------------------------------------------------
 
-
 	# auth
 	url(r'^logout/$', auth_views.logout, kwargs={'next_page': 'index'},
 		name='auth_logout'),
