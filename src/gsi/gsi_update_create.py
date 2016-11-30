@@ -5,19 +5,30 @@ from gsi.models import (VariablesGroup, Area, Tile, Resolution,
 
 
 def configfile_update_create(pathname):
-	if not ConfigFile.objects.filter(pathname=pathname).exists():
-		configfile = ConfigFile.objects.create(
-			pathname=pathname,
-		)
-	else:
-		configfile = ConfigFile.objects.get(
-			pathname=pathname,
-		)
+    """**Updated ConfigFile model.**
 
-	return configfile
+    :Arguments:
+        * *pathname*: Path name
+
+    """
+
+    if not ConfigFile.objects.filter(pathname=pathname).exists():
+        configfile = ConfigFile.objects.create(pathname=pathname,)
+    else:
+        configfile = ConfigFile.objects.get(pathname=pathname,)
+
+    return configfile
 
 
 def var_group_update_create(form, item_id=None):
+    """**Updated VariablesGroup model.**
+
+    :Arguments:
+        * *form*: Object of the form
+        * *item_id*: ID of the object. Set when editing (the default=None when you create a card)
+
+    """
+
     if item_id:
         VariablesGroup.objects.filter(id=item_id).update(
             name=form.cleaned_data["name"],
@@ -34,7 +45,16 @@ def var_group_update_create(form, item_id=None):
 
 
 def area_update_create(form, multiple=None, item_id=None, delete=False):
-    # import pdb;pdb.set_trace()
+    """**Updated Area model.**
+
+    :Arguments:
+        * *form*: Object of the form
+        * *multiple*: Transmited a list of objects
+        * *item_id*: ID of the object. Set when editing (the default=None when you create a card)
+        * *delete*: Boolean value determine the remove objects or not
+
+    """
+
     if item_id:
         Area.objects.filter(id=item_id).update(
             name=form.cleaned_data["name"],
@@ -47,6 +67,7 @@ def area_update_create(form, multiple=None, item_id=None, delete=False):
 
     if multiple:
         list_id = multiple.split('_')
+
         for tile_id in list_id:
             if delete:
                 Area.tiles.through.objects.filter(
@@ -63,7 +84,16 @@ def area_update_create(form, multiple=None, item_id=None, delete=False):
 
 
 def yg_update_create(form, multiple=None, item_id=None, delete=False):
-    # import pdb;pdb.set_trace()
+    """**Updated YearGroup model.**
+
+    :Arguments:
+        * *form*: Object of the form
+        * *multiple*: Transmited a list of objects
+        * *item_id*: ID of the object. Set when editing (the default=None when you create a card)
+        * *delete*: Boolean value determine the remove objects or not
+
+    """
+
     if item_id:
         YearGroup.objects.filter(id=item_id).update(
             name=form.cleaned_data["name"],
@@ -92,7 +122,17 @@ def yg_update_create(form, multiple=None, item_id=None, delete=False):
 
 
 def create_update_card_sequence(form, configfile=None, cs_id=None):
-	if cs_id:
+    """**Updated CardSequence model.**
+
+    :Arguments:
+        * *form*: Object of the form
+        * *multiple*: Transmited a list of objects
+        * *item_id*: ID of the object. Set when editing (the default=None when you create a card)
+        * *delete*: Boolean value determine the remove objects or not
+
+    """
+
+    if cs_id:
 		card_sequence = CardSequence.objects.get(id=cs_id)
 		card_sequence.environment_override = form.cleaned_data["environment_override"]
 		card_sequence.environment_base = form.cleaned_data["environment_base"]
@@ -101,7 +141,7 @@ def create_update_card_sequence(form, configfile=None, cs_id=None):
 			configfile = configfile_update_create(configfile)
 			card_sequence.configfile = configfile
 		card_sequence.save()
-	else:
+    else:
 		card_sequence = CardSequence.objects.create(
 			environment_override=form.cleaned_data["environment_override"],
 			environment_base=form.cleaned_data["environment_base"],
@@ -112,28 +152,38 @@ def create_update_card_sequence(form, configfile=None, cs_id=None):
 			card_sequence.configfile = configfile
 		card_sequence.save()
 
-	if form.cleaned_data["card_item"]:
+    if form.cleaned_data["card_item"]:
 		CardSequence.cards.through.objects.create(
 			sequence=card_sequence,
 			card_item=form.cleaned_data["card_item"],
 			order=form.cleaned_data["order"],
 		)
 
-	return card_sequence
+    return card_sequence
 
 
 def satellite_update_create(form, multiple=None, item_id=None, delete=False):
-	if item_id:
+    """**Updated Satellite model.**
+
+    :Arguments:
+        * *form*: Object of the form
+        * *multiple*: Transmited a list of objects
+        * *item_id*: ID of the object. Set when editing (the default=None when you create a card)
+        * *delete*: Boolean value determine the remove objects or not
+
+    """
+
+    if item_id:
 		Satellite.objects.filter(id=item_id).update(
             name=form.cleaned_data["name"],
         )
 		result = Satellite.objects.get(id=item_id)
-	else:
+    else:
 		result = Satellite.objects.create(
             name=form.cleaned_data["name"],
         )
 
-	if multiple:
+    if multiple:
 		list_id = multiple.split('_')
 		for satellite_id in list_id:
 			if delete:
@@ -145,11 +195,18 @@ def satellite_update_create(form, multiple=None, item_id=None, delete=False):
                     pk=satellite_id
                 )
 
-	return result
+    return result
 
 
 def data_dir_update_create(form, item_id=None):
-    # import pdb;pdb.set_trace()
+    """**Updated InputDataDirectory model.**
+
+    :Arguments:
+        * *form*: Object of the form
+        * *item_id*: ID of the object. Set when editing (the default=None when you create a card)
+
+    """
+
     if item_id:
         InputDataDirectory.objects.filter(id=item_id).update(
             name=form.cleaned_data["name"],
@@ -164,6 +221,14 @@ def data_dir_update_create(form, item_id=None):
 
 
 def resolution_update_create(form, item_id=None):
+    """**Updated Resolution model.**
+
+    :Arguments:
+        * *form*: Object of the form
+        * *item_id*: ID of the object. Set when editing (the default=None when you create a card)
+
+    """
+
     if item_id:
         Resolution.objects.filter(id=item_id).update(
             name=form.cleaned_data["name"],
@@ -180,7 +245,14 @@ def resolution_update_create(form, item_id=None):
 
 
 def tile_update_create(form, item_id=None):
-    # import pdb;pdb.set_trace()
+    """**Updated Tile model.**
+
+    :Arguments:
+        * *form*: Object of the form
+        * *item_id*: ID of the object. Set when editing (the default=None when you create a card)
+
+    """
+
     if item_id:
         Tile.objects.filter(id=item_id).update(
             name=form.cleaned_data["name"],
@@ -195,7 +267,14 @@ def tile_update_create(form, item_id=None):
 
 
 def year_update_create(form, item_id=None):
-    # import pdb;pdb.set_trace()
+    """**Updated Year model.**
+
+    :Arguments:
+        * *form*: Object of the form
+        * *item_id*: ID of the object. Set when editing (the default=None when you create a card)
+
+    """
+
     if item_id:
         Year.objects.filter(id=item_id).update(
             name=form.cleaned_data["name"],

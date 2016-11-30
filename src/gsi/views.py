@@ -18,7 +18,7 @@ from gsi.models import (Run, RunStep, RunBase, Log, OrderedCardItem, HomeVariabl
 from gsi.gsi_forms import (RunForm, CardSequenceForm, CardSequenceCardForm, CardSequenceCreateForm, HomeVariablesForm,
                             EnvironmentGroupsForm, AreasForm, YearGroupForm, SatelliteForm, UploadFileForm,
                             InputDataDirectoryForm, ConfigFileForm, ResolutionForm, TileForm, YearForm)
-from gsi.gsi_items_update_create import (configfile_update_create, var_group_update_create, area_update_create,
+from gsi.gsi_update_create import (configfile_update_create, var_group_update_create, area_update_create,
                                         yg_update_create, create_update_card_sequence, satellite_update_create,
                                         data_dir_update_create, resolution_update_create, tile_update_create,
                                         year_update_create)
@@ -85,34 +85,6 @@ def update_qrf_rftrain_card(cs, cs_cards):
             data_card.save()
 
 
-# class UploadStaticDataView(FormView):
-#     success_url = 'index.html'
-#     form_class = UploadFileForm
-#     template_name = 'gsi/upload_file.html'
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(UploadStaticDataView, self).get_context_data(**kwargs)
-#         title = 'Upload Test Data'
-#         url_name = 'upload_file'
-#         context.update({
-#             'title': title,
-#             'url_name': url_name,
-#         })
-#
-#         return context
-#
-#     def form_valid(self, form):
-#         home_var = HomeVariables.objects.all()[0]
-#         file_name = str(self.request.FILES['test_data']).decode('utf-8')
-#         path_test_data = os.path.join(home_var.RF_AUXDATA_DIR, file_name)
-#         # type_file = str(request.FILES['test_data'].content_type).split('/')[0]
-#         handle_uploaded_file(self.request.FILES['test_data'], path_test_data)
-#         message = u'Test data "{0}" is loaded'.format(file_name)
-#
-#         return HttpResponseRedirect('%s?status_message=%s' %
-#                                     (reverse('index'), message))
-
-
 def write_card_to_cs(card_sequence, query):
     """**Update the QRF and RFtrain cards.**
 
@@ -147,7 +119,7 @@ def copy_runbase(request, name):
 
     :Arguments:
         * *name*: The RunBase object name
-        * *request*: request
+        * *request:* The request is sent to the server when processing the page
 
     """
 
@@ -1702,7 +1674,7 @@ def area_edit(request, area_id):
     return data
 
 
-# year group group
+# years_group
 @login_required
 @render_to('gsi/years_group_list.html')
 def years_group(request):
@@ -1882,6 +1854,7 @@ def years_group_edit(request, yg_id):
         id__in=years_group.years.values_list(
             'id', flat=True))
 
+    # Handling POST request
     if request.method == "POST":
         response = get_post(
             request,
@@ -2090,6 +2063,7 @@ def satellite_edit(request, satellite_id):
     func = satellite_update_create
     form = None
 
+    # Handling POST request
     if request.method == "POST":
         response = get_post(
             request,

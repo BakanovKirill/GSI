@@ -8,22 +8,36 @@ from  django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.utils.decorators import method_decorator
-from django.conf import settings
 
-from cards.cards_forms import *
-from cards.card_update_create import *
-# from .get_card_post import *
-from core.get_post import *
-from core.utils import update_list_files
 from gsi.models import CardSequence
-from cards.models import CardItem
 from gsi.gsi_forms import CardSequenceCardForm
+from cards.models import (QRF, RFScore, Remap, YearFilter, Collate, PreProc,
+                          MergeCSV, RFTrain, RandomForest, CalcStats, CardItem)
+from cards.cards_forms import (QRFForm, RFScoreForm, RemapForm, YearFilterForm, CollateForm,
+								PreProcForm, MergeCSVForm, RFTrainForm, RandomForestForm, CalcStatsForm)
+from cards.card_update_create import (qrf_update_create, rfscore_update_create, remap_update_create,
+										year_filter_update_create, collate_update_create, preproc_update_create,
+										mergecsv_update_create, rftrain_update_create, randomforest_update_create,
+										calcstats_update_create)
+from core.get_post import get_post
+from core.utils import update_list_files
 
 
 @login_required
 @render_to('cards/runid_csid_card.html')
 def cs_runid_csid_qrf_edit(request, run_id, cs_id, card_id, qrf_id):
+	"""**View for to edit QRF card of the CardSequence model.**
+
+	:Arguments:
+
+		* *request:* The request is sent to the server when processing the page
+		* *run_id*: ID of the RunBase
+		* *cs_id*: ID of the CardSequence
+		* *card_id*: ID of the card of the CardSequence model
+		* *qrf_id*: ID of the object of the CardItem model
+
+	"""
+
 	title = 'QRF Card Edit'
 	qrf_card = get_object_or_404(QRF, pk=qrf_id)
 	content_type = get_object_or_404(ContentType, app_label='cards', model='qrf')
@@ -36,18 +50,19 @@ def cs_runid_csid_qrf_edit(request, run_id, cs_id, card_id, qrf_id):
 		url_form = 'cs_runid_csid_qrf_edit'
 		template_name = 'gsi/_cs_qrf_form.html'
 		func = qrf_update_create
+
+		# add two forms
 		form_1 = CardSequenceCardForm(instance=card_sequence_card)
 		form_2 = QRFForm(instance=qrf_card)
 
+		# create a variable dictionary REVERSE_URL which keep: name of card, the button name and url forwarding
 		REVERSE_URL = {
-			'qrf': {'save_button': ['card_sequence_update'],
-					'save_and_continue': ['cs_runid_csid_qrf_edit'],
-	        		'cancel_button': ['card_sequence_update']},
+			'qrf': {'save_button': ['card_sequence_update', [run_id, cs_id]],
+					'save_and_continue': ['cs_runid_csid_qrf_edit', [run_id, cs_id, card_id]],
+	        		'cancel_button': ['card_sequence_update', [run_id, cs_id]]},
 		}
-		REVERSE_URL['qrf']['save_button'].append([run_id, cs_id])
-		REVERSE_URL['qrf']['save_and_continue'].append([run_id, cs_id, card_id])
-		REVERSE_URL['qrf']['cancel_button'].append([run_id, cs_id])
 
+		# Handling POST request
 		if request.method == "POST":
 			cs_form = [CardSequenceCardForm, card_sequence_card, card_item]
 			response = get_post(request, QRFForm, 'QRF Card', REVERSE_URL['qrf'],
@@ -88,6 +103,18 @@ def cs_runid_csid_qrf_edit(request, run_id, cs_id, card_id, qrf_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def cs_runid_csid_rfscore_edit(request, run_id, cs_id, card_id, rfscore_id):
+	"""**View for to edit RFScore card of the CardSequence model.**
+
+	:Arguments:
+
+		* *request:* The request is sent to the server when processing the page
+		* *run_id*: ID of the RunBase
+		* *cs_id*: ID of the CardSequence
+		* *card_id*: ID of the card of the CardSequence model
+		* *rfscore_id*: ID of the object of the CardItem model
+
+	"""
+
 	title = 'RFScore Card Edit'
 	rfscore_card = get_object_or_404(RFScore, pk=rfscore_id)
 	content_type = get_object_or_404(ContentType, app_label='cards', model='rfscore')
@@ -100,18 +127,19 @@ def cs_runid_csid_rfscore_edit(request, run_id, cs_id, card_id, rfscore_id):
 		url_form = 'cs_runid_csid_rfscore_edit'
 		template_name = 'gsi/_cs_rfscore_form.html'
 		func = rfscore_update_create
+
+		# add two forms
 		form_1 = CardSequenceCardForm(instance=card_sequence_card)
 		form_2 = RFScoreForm(instance=rfscore_card)
 
+		# create a variable dictionary REVERSE_URL which keep: name of card, the button name and url forwarding
 		REVERSE_URL = {
-			'rfscore': {'save_button': ['card_sequence_update'],
-						'save_and_continue': ['cs_runid_csid_rfscore_edit'],
-	            		'cancel_button': ['card_sequence_update']},
+			'rfscore': {'save_button': ['card_sequence_update', [run_id, cs_id]],
+						'save_and_continue': ['cs_runid_csid_rfscore_edit', [run_id, cs_id, card_id]],
+	            		'cancel_button': ['card_sequence_update', [run_id, cs_id]]},
 		}
-		REVERSE_URL['rfscore']['save_button'].append([run_id, cs_id])
-		REVERSE_URL['rfscore']['save_and_continue'].append([run_id, cs_id, card_id])
-		REVERSE_URL['rfscore']['cancel_button'].append([run_id, cs_id])
 
+		# Handling POST request
 		if request.method == "POST":
 			cs_form = [CardSequenceCardForm, card_sequence_card, card_item]
 			response = get_post(request, RFScoreForm, 'RFScore Card', REVERSE_URL['rfscore'],
@@ -152,6 +180,18 @@ def cs_runid_csid_rfscore_edit(request, run_id, cs_id, card_id, rfscore_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def cs_runid_csid_remap_edit(request, run_id, cs_id, card_id, remap_id):
+	"""**View for to edit Remap card of the CardSequence model.**
+
+	:Arguments:
+
+		* *request:* The request is sent to the server when processing the page
+		* *run_id*: ID of the RunBase
+		* *cs_id*: ID of the CardSequence
+		* *card_id*: ID of the card of the CardSequence model
+		* *remap_id*: ID of the object of the CardItem model
+
+	"""
+
 	title = 'Remap Card Edit'
 	remap_card = get_object_or_404(Remap, pk=remap_id)
 	content_type = get_object_or_404(ContentType, app_label='cards', model='remap')
@@ -164,18 +204,19 @@ def cs_runid_csid_remap_edit(request, run_id, cs_id, card_id, remap_id):
 		url_form = 'cs_runid_csid_remap_edit'
 		template_name = 'gsi/_cs_remap_form.html'
 		func = remap_update_create
+
+		# add two forms
 		form_1 = CardSequenceCardForm(instance=card_sequence_card)
 		form_2 = RemapForm(instance=remap_card)
 
+		# create a variable dictionary REVERSE_URL which keep: name of card, the button name and url forwarding
 		REVERSE_URL = {
-			'remap': {'save_button': ['card_sequence_update'],
-					  'save_and_continue': ['cs_runid_csid_remap_edit'],
-					  'cancel_button': ['card_sequence_update']},
+			'remap': {'save_button': ['card_sequence_update', [run_id, cs_id]],
+					  'save_and_continue': ['cs_runid_csid_remap_edit', [run_id, cs_id, card_id]],
+					  'cancel_button': ['card_sequence_update', [run_id, cs_id]]},
 		}
-		REVERSE_URL['remap']['save_button'].append([run_id, cs_id])
-		REVERSE_URL['remap']['save_and_continue'].append([run_id, cs_id, card_id])
-		REVERSE_URL['remap']['cancel_button'].append([run_id, cs_id])
 
+		# Handling POST request
 		if request.method == "POST":
 			cs_form = [CardSequenceCardForm, card_sequence_card, card_item]
 			response = get_post(request, RemapForm, 'Remap Card', REVERSE_URL['remap'],
@@ -216,6 +257,18 @@ def cs_runid_csid_remap_edit(request, run_id, cs_id, card_id, remap_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def cs_runid_csid_year_filter_edit(request, run_id, cs_id, card_id, yf_id):
+	"""**View for to edit YearFilter card of the CardSequence model.**
+
+	:Arguments:
+
+		* *request:* The request is sent to the server when processing the page
+		* *run_id*: ID of the RunBase
+		* *cs_id*: ID of the CardSequence
+		* *card_id*: ID of the card of the CardSequence model
+		* *yf_id*: ID of the object of the CardItem model
+
+	"""
+
 	title = 'YearFilter Card Edit'
 	year_filter_card = get_object_or_404(YearFilter, pk=yf_id)
 	content_type = get_object_or_404(ContentType, app_label='cards', model='yearfilter')
@@ -228,18 +281,18 @@ def cs_runid_csid_year_filter_edit(request, run_id, cs_id, card_id, yf_id):
 		url_form = 'cs_runid_csid_year_filter_edit'
 		template_name = 'gsi/_cs_year_filter_form.html'
 		func = year_filter_update_create
+
+		# add two forms
 		form_1 = CardSequenceCardForm(instance=card_sequence_card)
 		form_2 = YearFilterForm(instance=year_filter_card)
 
 		REVERSE_URL = {
-			'year_filter': {'save_button': ['card_sequence_update'],
-							'save_and_continue': ['cs_runid_csid_year_filter_edit'],
-	                		'cancel_button': ['card_sequence_update']},
+			'year_filter': {'save_button': ['card_sequence_update', [run_id, cs_id]],
+							'save_and_continue': ['cs_runid_csid_year_filter_edit', [run_id, cs_id, card_id]],
+	                		'cancel_button': ['card_sequence_update', [run_id, cs_id]]},
 		}
-		REVERSE_URL['year_filter']['save_button'].append([run_id, cs_id])
-		REVERSE_URL['year_filter']['save_and_continue'].append([run_id, cs_id, card_id])
-		REVERSE_URL['year_filter']['cancel_button'].append([run_id, cs_id])
 
+		# Handling POST request
 		if request.method == "POST":
 			cs_form = [CardSequenceCardForm, card_sequence_card, card_item]
 			response = get_post(request, YearFilterForm, 'YearFilter Card', REVERSE_URL['year_filter'],
@@ -280,11 +333,22 @@ def cs_runid_csid_year_filter_edit(request, run_id, cs_id, card_id, yf_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def cs_runid_csid_collate_edit(request, run_id, cs_id, card_id, collate_id):
+	"""**View for to edit Collate card of the CardSequence model.**
+
+	:Arguments:
+
+		* *request:* The request is sent to the server when processing the page
+		* *run_id*: ID of the RunBase
+		* *cs_id*: ID of the CardSequence
+		* *card_id*: ID of the card of the CardSequence model
+		* *collate_id*: ID of the object of the CardItem model
+
+	"""
+
 	title = 'Collate Card Edit'
 	collate_card = get_object_or_404(Collate, pk=collate_id)
 	content_type = get_object_or_404(ContentType, app_label='cards', model='collate')
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
-	# update_list_files(collate_card.input_data_directory)
 
 	available_files = ListTestFiles.objects.filter(
 			input_data_directory=collate_card.input_data_directory).exclude(
@@ -301,18 +365,19 @@ def cs_runid_csid_collate_edit(request, run_id, cs_id, card_id, collate_id):
 		url_form = 'cs_runid_csid_collate_edit'
 		template_name = 'gsi/_cs_collate_form.html'
 		func = collate_update_create
+
+		# add two forms
 		form_1 = CardSequenceCardForm(instance=card_sequence_card)
 		form_2 = CollateForm(instance=collate_card)
 
+		# create a variable dictionary REVERSE_URL which keep: name of card, the button name and url forwarding
 		REVERSE_URL = {
-			'collate': {'save_button': ['card_sequence_update'],
-						'save_and_continue': ['cs_runid_csid_collate_edit'],
-						'cancel_button': ['card_sequence_update']},
+			'collate': {'save_button': ['card_sequence_update', [run_id, cs_id]],
+						'save_and_continue': ['cs_runid_csid_collate_edit', [run_id, cs_id, card_id]],
+						'cancel_button': ['card_sequence_update', [run_id, cs_id]]},
 		}
-		REVERSE_URL['collate']['save_button'].append([run_id, cs_id])
-		REVERSE_URL['collate']['save_and_continue'].append([run_id, cs_id, card_id])
-		REVERSE_URL['collate']['cancel_button'].append([run_id, cs_id])
 
+		# Handling POST request
 		if request.method == "POST":
 			if request.POST.get('update_data') is not None:
 				update_list_files(collate_card.input_data_directory)
@@ -358,6 +423,18 @@ def cs_runid_csid_collate_edit(request, run_id, cs_id, card_id, collate_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def cs_runid_csid_preproc_edit(request, run_id, cs_id, card_id, preproc_id):
+	"""**View for to edit PreProc card of the CardSequence model.**
+
+	:Arguments:
+
+		* *request:* The request is sent to the server when processing the page
+		* *run_id*: ID of the RunBase
+		* *cs_id*: ID of the CardSequence
+		* *card_id*: ID of the card of the CardSequence model
+		* *preproc_id*: ID of the object of the CardItem model
+
+	"""
+
 	title = 'PreProc Card Edit'
 	preproc_card = get_object_or_404(PreProc, pk=preproc_id)
 	content_type = get_object_or_404(ContentType, app_label='cards', model='preproc')
@@ -370,18 +447,19 @@ def cs_runid_csid_preproc_edit(request, run_id, cs_id, card_id, preproc_id):
 		url_form = 'cs_runid_csid_preproc_edit'
 		template_name = 'gsi/_cs_preproc_form.html'
 		func = preproc_update_create
+
+		# add two forms
 		form_1 = CardSequenceCardForm(instance=card_sequence_card)
 		form_2 = PreProcForm(instance=preproc_card)
 
+		# create a variable dictionary REVERSE_URL which keep: name of card, the button name and url forwarding
 		REVERSE_URL = {
-			'preproc': {'save_button': ['card_sequence_update'],
-						'save_and_continue': ['cs_runid_csid_preproc_edit'],
-	            		'cancel_button': ['card_sequence_update']},
+			'preproc': {'save_button': ['card_sequence_update', [run_id, cs_id]],
+						'save_and_continue': ['cs_runid_csid_preproc_edit', [run_id, cs_id, card_id]],
+	            		'cancel_button': ['card_sequence_update', [run_id, cs_id]]},
 		}
-		REVERSE_URL['preproc']['save_button'].append([run_id, cs_id])
-		REVERSE_URL['preproc']['save_and_continue'].append([run_id, cs_id, card_id])
-		REVERSE_URL['preproc']['cancel_button'].append([run_id, cs_id])
 
+		# Handling POST request
 		if request.method == "POST":
 			cs_form = [CardSequenceCardForm, card_sequence_card, card_item]
 			response = get_post(request, PreProcForm, 'PreProc Card',
@@ -423,6 +501,18 @@ def cs_runid_csid_preproc_edit(request, run_id, cs_id, card_id, preproc_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def cs_runid_csid_mergecsv_edit(request, run_id, cs_id, card_id, mcsv_id):
+	"""**View for to edit MergeCSV card of the CardSequence model.**
+
+	:Arguments:
+
+		* *request:* The request is sent to the server when processing the page
+		* *run_id*: ID of the RunBase
+		* *cs_id*: ID of the CardSequence
+		* *card_id*: ID of the card of the CardSequence model
+		* *mcsv_id*: ID of the object of the CardItem model
+
+	"""
+
 	title = 'MergeCSV Card Edit'
 	mergecsv_card = get_object_or_404(MergeCSV, pk=mcsv_id)
 	content_type = get_object_or_404(ContentType, app_label='cards', model='mergecsv')
@@ -435,18 +525,19 @@ def cs_runid_csid_mergecsv_edit(request, run_id, cs_id, card_id, mcsv_id):
 		url_form = 'cs_runid_csid_mergecsv_edit'
 		template_name = 'gsi/_cs_mergecsv_form.html'
 		func = mergecsv_update_create
+
+		# add two forms
 		form_1 = CardSequenceCardForm(instance=card_sequence_card)
 		form_2 = MergeCSVForm(instance=mergecsv_card)
 
+		# create a variable dictionary REVERSE_URL which keep: name of card, the button name and url forwarding
 		REVERSE_URL = {
-			'mergecsv': {'save_button': ['card_sequence_update'],
-						 'save_and_continue': ['cs_runid_csid_mergecsv_edit'],
-						 'cancel_button': ['card_sequence_update']},
+			'mergecsv': {'save_button': ['card_sequence_update',[run_id, cs_id]],
+						 'save_and_continue': ['cs_runid_csid_mergecsv_edit', [run_id, cs_id, card_id, mcsv_id]],
+						 'cancel_button': ['card_sequence_update', [run_id, cs_id]]},
 		}
-		REVERSE_URL['mergecsv']['save_button'].append([run_id, cs_id])
-		REVERSE_URL['mergecsv']['save_and_continue'].append([run_id, cs_id, card_id, mcsv_id])
-		REVERSE_URL['mergecsv']['cancel_button'].append([run_id, cs_id])
 
+		# Handling POST request
 		if request.method == "POST":
 			cs_form = [CardSequenceCardForm, card_sequence_card, card_item]
 			response = get_post(request, MergeCSVForm, 'MergeCSV Card', REVERSE_URL['mergecsv'],
@@ -487,6 +578,18 @@ def cs_runid_csid_mergecsv_edit(request, run_id, cs_id, card_id, mcsv_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def cs_runid_csid_rftrain_edit(request, run_id, cs_id, card_id, rftrain_id):
+	"""**View for to edit RFTrain card of the CardSequence model.**
+
+	:Arguments:
+
+		* *request:* The request is sent to the server when processing the page
+		* *run_id*: ID of the RunBase
+		* *cs_id*: ID of the CardSequence
+		* *card_id*: ID of the card of the CardSequence model
+		* *rftrain_id*: ID of the object of the CardItem model
+
+	"""
+
 	title = 'RFTrain Card Edit'
 	rftrain_card = get_object_or_404(RFTrain, pk=rftrain_id)
 	content_type = get_object_or_404(ContentType, app_label='cards', model='rftrain')
@@ -499,18 +602,19 @@ def cs_runid_csid_rftrain_edit(request, run_id, cs_id, card_id, rftrain_id):
 		url_form = 'cs_runid_csid_rftrain_edit'
 		template_name = 'gsi/_cs_rftrain_form.html'
 		func = rftrain_update_create
+
+		# add two forms
 		form_1 = CardSequenceCardForm(instance=card_sequence_card)
 		form_2 = RFTrainForm(instance=rftrain_card)
 
+		# create a variable dictionary REVERSE_URL which keep: name of card, the button name and url forwarding
 		REVERSE_URL = {
-			'rftrain': {'save_button': ['card_sequence_update'],
-						'save_and_continue': ['cs_runid_csid_rftrain_edit'],
-						'cancel_button': ['card_sequence_update']},
+			'rftrain': {'save_button': ['card_sequence_update', [run_id, cs_id]],
+						'save_and_continue': ['cs_runid_csid_rftrain_edit', [run_id, cs_id, card_id]],
+						'cancel_button': ['card_sequence_update', [run_id, cs_id]]},
 		}
-		REVERSE_URL['rftrain']['save_button'].append([run_id, cs_id])
-		REVERSE_URL['rftrain']['save_and_continue'].append([run_id, cs_id, card_id])
-		REVERSE_URL['rftrain']['cancel_button'].append([run_id, cs_id])
 
+		# Handling POST request
 		if request.method == "POST":
 			cs_form = [CardSequenceCardForm, card_sequence_card, card_item]
 			response = get_post(request, RFTrainForm, 'RFTrain Card', REVERSE_URL['rftrain'],
@@ -550,6 +654,18 @@ def cs_runid_csid_rftrain_edit(request, run_id, cs_id, card_id, rftrain_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def cs_runid_csid_randomforest_edit(request, run_id, cs_id, card_id, rf_id):
+	"""**View for to edit RandomForest card of the CardSequence model.**
+
+	:Arguments:
+
+		* *request:* The request is sent to the server when processing the page
+		* *run_id*: ID of the RunBase
+		* *cs_id*: ID of the CardSequence
+		* *card_id*: ID of the card of the CardSequence model
+		* *rf_id*: ID of the object of the CardItem model
+
+	"""
+
 	title = 'RandomForest Card Edit'
 	randomforest_card = get_object_or_404(RandomForest, pk=rf_id)
 	content_type = get_object_or_404(ContentType, app_label='cards', model='randomforest')
@@ -558,22 +674,22 @@ def cs_runid_csid_randomforest_edit(request, run_id, cs_id, card_id, rf_id):
 	try:
 		card_item = get_object_or_404(CardItem, object_id=rf_id, content_type=content_type)
 		card_sequence_card = CardSequence.cards.through.objects.get(id=card_id)
-
 		url_form = 'cs_runid_csid_randomforest_edit'
 		template_name = 'gsi/_cs_randomforest_form.html'
 		func = randomforest_update_create
+
+		# add two forms
 		form_1 = CardSequenceCardForm(instance=card_sequence_card)
 		form_2 = RandomForestForm(instance=randomforest_card)
 
+		# create a variable dictionary REVERSE_URL which keep: name of card, the button name and url forwarding
 		REVERSE_URL = {
-			'randomforest': {'save_button': ['card_sequence_update'],
-							 'save_and_continue': ['cs_runid_csid_randomforest_edit'],
-							 'cancel_button': ['card_sequence_update']}
+			'randomforest': {'save_button': ['card_sequence_update', [run_id, cs_id]],
+							 'save_and_continue': ['cs_runid_csid_randomforest_edit', [run_id, cs_id, card_id]],
+							 'cancel_button': ['card_sequence_update', [run_id, cs_id]]}
 		}
-		REVERSE_URL['randomforest']['save_button'].append([run_id, cs_id])
-		REVERSE_URL['randomforest']['save_and_continue'].append([run_id, cs_id, card_id])
-		REVERSE_URL['randomforest']['cancel_button'].append([run_id, cs_id])
 
+		# Handling POST request
 		if request.method == "POST":
 			cs_form = [CardSequenceCardForm, card_sequence_card, card_item]
 			response = get_post(request, RandomForestForm, 'RandomForest Card', REVERSE_URL['randomforest'],
@@ -614,6 +730,18 @@ def cs_runid_csid_randomforest_edit(request, run_id, cs_id, card_id, rf_id):
 @login_required
 @render_to('cards/runid_csid_card.html')
 def cs_runid_csid_calcstats_edit(request, run_id, cs_id, card_id, calcstats_id):
+	"""**View for to edit CalcStats card of the CardSequence model.**
+
+	:Arguments:
+
+		* *request:* The request is sent to the server when processing the page
+		* *run_id*: ID of the RunBase
+		* *cs_id*: ID of the CardSequence
+		* *card_id*: ID of the card of the CardSequence model
+		* *calcstats_id*: ID of the object of the CardItem model
+
+	"""
+
 	title = 'CalcStats Card Edit'
 	calcstats_card = get_object_or_404(CalcStats, pk=calcstats_id)
 	content_type = get_object_or_404(ContentType, app_label='cards', model='calcstats')
@@ -622,22 +750,22 @@ def cs_runid_csid_calcstats_edit(request, run_id, cs_id, card_id, calcstats_id):
 	try:
 		card_item = get_object_or_404(CardItem, object_id=calcstats_id, content_type=content_type)
 		card_sequence_card = CardSequence.cards.through.objects.get(id=card_id)
-
 		url_form = 'cs_runid_csid_calcstats_edit'
 		template_name = 'gsi/_cs_calcstats_form.html'
 		func = calcstats_update_create
+
+		# add two forms
 		form_1 = CardSequenceCardForm(instance=card_sequence_card)
 		form_2 = CalcStatsForm(instance=calcstats_card)
 
+		# create a variable dictionary REVERSE_URL which keep: name of card, the button name and url forwarding
 		REVERSE_URL = {
-			'calcstats': {'save_button': ['card_sequence_update'],
-							 'save_and_continue': ['cs_runid_csid_calcstats_edit'],
-							 'cancel_button': ['card_sequence_update']}
+			'calcstats': {'save_button': ['card_sequence_update', [run_id, cs_id]],
+							 'save_and_continue': ['cs_runid_csid_calcstats_edit', [run_id, cs_id, card_id]],
+							 'cancel_button': ['card_sequence_update', [run_id, cs_id]]}
 		}
-		REVERSE_URL['calcstats']['save_button'].append([run_id, cs_id])
-		REVERSE_URL['calcstats']['save_and_continue'].append([run_id, cs_id, card_id])
-		REVERSE_URL['calcstats']['cancel_button'].append([run_id, cs_id])
 
+		# Handling POST request
 		if request.method == "POST":
 			cs_form = [CardSequenceCardForm, card_sequence_card, card_item]
 			response = get_post(request, CalcStatsForm, 'CalcStats Card', REVERSE_URL['calcstats'],
