@@ -21,6 +21,7 @@ Contents:
    _modules/api.rst
    _modules/cards.rst
    _modules/gsi.rst
+   _modules/log.rst
 
 
 Indices and tables
