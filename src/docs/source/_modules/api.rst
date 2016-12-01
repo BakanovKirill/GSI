@@ -2,6 +2,8 @@
 Api package
 ******************************************
 
+**Package for work with API.**
+
 Api.views
 =================
 

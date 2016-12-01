@@ -1,20 +1,35 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import get_object_or_404
 
-from cards.models import (QRF, RFScore, Remap,
-                          YearFilter, Collate, PreProc,
-                          MergeCSV, RFTrain, RandomForest,
-                          CalcStats)
+from cards.models import (QRF, RFScore, Remap, YearFilter, Collate, PreProc,
+                            MergeCSV, RFTrain, RandomForest, CalcStats)
 from core.utils import get_copy_name
 
 
 def create_copycard(card, card_type):
+    """**The method determines the type of cards which function to copy the run.**
+
+    :Arguments:
+        * *card*: The card name
+        * *card_type*: The card type
+
+    """
+
     copy_card_func = COPY_CARD[card_type]
     new_copy_card = copy_card_func(card)
+
     return new_copy_card
 
 
 def get_copy_name_card(name, model):
+    """**The method creates a new name for the copied card.**
+
+    :Arguments:
+        * *name*: The card name
+        * *model*: The Card model object
+
+    """
+
     card_count = model.objects.all().count()
     copy_name_card = get_copy_name(name)
     new_name_card = '{0}*cp{1}'.format(copy_name_card, card_count)
@@ -23,6 +38,13 @@ def get_copy_name_card(name, model):
 
 
 def qrf_copy(card):
+    """**The method copies the QRF card.**
+
+    :Arguments:
+        * *name*: The card name
+
+    """
+
     name = get_copy_name_card(card, QRF)
     cur_card = get_object_or_404(QRF, name=card)
     qrf_card = QRF.objects.create(
@@ -37,6 +59,13 @@ def qrf_copy(card):
 
 
 def rfscore_copy(card):
+    """**The method copies the RFScore card.**
+
+    :Arguments:
+        * *name*: The card name
+
+    """
+
     name = get_copy_name_card(card, RFScore)
     cur_card = get_object_or_404(RFScore, name=card)
     rfscore_card = RFScore.objects.create(
@@ -55,6 +84,13 @@ def rfscore_copy(card):
 
 
 def remap_copy(card):
+    """**The method copies the Remap card.**
+
+    :Arguments:
+        * *name*: The card name
+
+    """
+
     name = get_copy_name_card(card, Remap)
     cur_card = get_object_or_404(Remap, name=card)
     remap_card = Remap.objects.create(
@@ -83,6 +119,13 @@ def remap_copy(card):
 
 
 def yearfilter_copy(card):
+    """**The method copies the YearFilter card.**
+
+    :Arguments:
+        * *name*: The card name
+
+    """
+
     name = get_copy_name_card(card, YearFilter)
     cur_card = get_object_or_404(YearFilter, name=card)
     year_filter_card = YearFilter.objects.create(
@@ -102,6 +145,13 @@ def yearfilter_copy(card):
 
 
 def collate_copy(card):
+    """**The method copies the Collate card.**
+
+    :Arguments:
+        * *name*: The card name
+
+    """
+
     name = get_copy_name_card(card, Collate)
     cur_card = get_object_or_404(Collate, name=card)
     input_files = Collate.input_files.through.objects.filter(
@@ -128,6 +178,13 @@ def collate_copy(card):
 
 
 def preproc_copy(card):
+    """**The method copies the PreProc card.**
+
+    :Arguments:
+        * *name*: The card name
+
+    """
+
     name = get_copy_name_card(card, PreProc)
     cur_card = get_object_or_404(PreProc, name=card)
     preproc_card = PreProc.objects.create(
@@ -143,6 +200,13 @@ def preproc_copy(card):
 
 
 def mergecsv_copy(card):
+    """**The method copies the MergeCSV card.**
+
+    :Arguments:
+        * *name*: The card name
+
+    """
+
     name = get_copy_name_card(card, MergeCSV)
     cur_card = get_object_or_404(MergeCSV, name=card)
     mergecsv_card = MergeCSV.objects.create(
@@ -155,6 +219,13 @@ def mergecsv_copy(card):
 
 
 def rftrain_copy(card):
+    """**The method copies the RFTrain card.**
+
+    :Arguments:
+        * *name*: The card name
+
+    """
+
     name = get_copy_name_card(card, RFTrain)
     cur_card = get_object_or_404(RFTrain, name=card)
     rftrain_card = RFTrain.objects.create(
@@ -175,6 +246,13 @@ def rftrain_copy(card):
 
 
 def randomforest_copy(card):
+    """**The method copies the RandomForest card.**
+
+    :Arguments:
+        * *name*: The card name
+
+    """
+
     name = get_copy_name_card(card, RandomForest)
     cur_card = get_object_or_404(RandomForest, name=card)
     randomforest_card = RandomForest.objects.create(
@@ -191,6 +269,13 @@ def randomforest_copy(card):
 
 
 def calcstats_copy(card):
+    """**The method copies the CalcStats card.**
+
+    :Arguments:
+        * *name*: The card name
+
+    """
+
     name = get_copy_name_card(card, CalcStats)
     cur_card = get_object_or_404(CalcStats, name=card)
     calcstats_card = CalcStats.objects.create(
@@ -210,7 +295,7 @@ def calcstats_copy(card):
 
     return calcstats_card
 
-
+# Dictionary: {<map_name> <function_to_copy>}
 COPY_CARD = {
     'qrf': qrf_copy,
     'rfscore': rfscore_copy,

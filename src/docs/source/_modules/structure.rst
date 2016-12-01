@@ -5,12 +5,12 @@ Project structure
 The project includes
 =====================
 
-* the package for work with API: **api**;
-* the three applications: **cards**, **gsi**, **log**;
-* the folder with auxiliary functions: **core**;
-* the folder with statics (styles, java script files, the image to the project): **static**;
-* the folder with templates: **template**;
-* the folder with custom tags: **tags**;
+* package for work with API: **api**;
+* three applications: **cards**, **gsi**, **log**;
+* package with auxiliary functions: **core**;
+* folder with statics (styles, java script files, the image to the project): **static**;
+* folder with templates: **template**;
+* package with custom tags: **tags**;
 
 -- *"__init__.py"*: the file for to initialize of the packages.
 

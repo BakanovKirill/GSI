@@ -22,6 +22,7 @@ Contents:
    _modules/cards.rst
    _modules/gsi.rst
    _modules/log.rst
+   _modules/core.rst
 
 
 Indices and tables
