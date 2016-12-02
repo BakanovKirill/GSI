@@ -19,3 +19,11 @@ Core.get_post
 
 .. automodule:: core.get_post
     :members:
+
+Core.multithreaded
+====================
+
+**The module for multi-threaded processing cards.**
+
+.. automodule:: core.multithreaded
+    :members:
