@@ -441,22 +441,30 @@ def new_run(request):
                 path_dir = os.path.join(
                     str(new_run_base.resolution),
                     str(new_run_base.directory_path))
-                create_sub_dir(path_dir)
+                error_message = create_sub_dir(path_dir)
                 card_sequence = new_run_base.card_sequence
 
                 if request.POST.get('save_button') is not None:
                     if request.POST.get('carditem_select'):
                         write_card_to_cs(card_sequence, request.POST)
 
-                    return HttpResponseRedirect(u'%s?status_message=%s' % (
-                        reverse('run_setup'), (
-                            u"RunID {0} created successfully".format(
-                                new_run_base.id))))
+                    if error_message:
+                        return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('run_setup'),
+                                (u'''RunID {0} created successfully.
+                                But an error occurred while creating a sub-directory: "{1}"'''.format(new_run_base.id, error_message))))
+
+                    return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_setup'),
+                            (u"RunID {0} created successfully".format(new_run_base.id))))
                 if request.POST.get('save_update_button') is not None:
                     if request.POST.get('carditem_select'):
                         write_card_to_cs(card_sequence, request.POST)
-                    return HttpResponseRedirect(u'%s?status_message=%s' % (
-                        reverse('run_update', args=[new_run_base.id]),
+
+                    if error_message:
+                        return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('run_update', args=[new_run_base.id]),
+                                    (u'''RunID {0} created successfully. You may edit it again below.
+                                    But an error occurred while creating a sub-directory: "{1}"'''.format(new_run_base.id, error_message))))
+
+                    return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_update', args=[new_run_base.id]),
                                 (u"RunID {0} created successfully. You may edit it again below.".
                                 format(new_run_base.id))))
             else:
@@ -517,12 +525,15 @@ def run_update(request, run_id):
                         path_dir = os.path.join(
                             str(run_base.resolution),
                             str(run_base.directory_path))
-                        create_sub_dir(path_dir)
+                        error_message = create_sub_dir(path_dir)
 
-                        return HttpResponseRedirect(u'%s?status_message=%s' % (
-                            reverse('run_setup'), (
-                                u"Run {0} updated successfully".format(
-                                    run_base.name))))
+                        if error_message:
+                            return HttpResponseRedirect(u'%s?warning_message=%s' % (reverse('run_setup'),
+                                    (u'''Run {0} updated successfully.
+                                    But an error occurred while creating a sub-directory: "{1}"'''.format(run_base.name, error_message))))
+
+                        return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('run_setup'),
+                                (u"Run {0} updated successfully".format(run_base.name))))
                     if request.POST.get('edit_run_details_button') is not None:
                         return HttpResponseRedirect(u'%s?info_message=%s' % (
                             reverse('card_sequence_update', args=[run_id, run_base.card_sequence.id]), (

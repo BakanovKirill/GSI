@@ -43,3 +43,11 @@ Core.validator_gsi
 
 .. automodule:: core.validator_gsi
     :members:
+
+Core.utils
+====================
+
+**Package with additional functionality.**
+
+.. automodule:: core.utils
+    :members:

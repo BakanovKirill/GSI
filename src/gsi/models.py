@@ -64,11 +64,10 @@ class HomeVariables(SingletonModel):
             if not static_dir_root:
                 static_dir_root = path_dir_root.split('/')[-2:-1]
 
-            path_static = STATIC_DIR + '/' + static_dir_root[0]
-            path_collected_static = STATIC_ROOT + '/' + static_dir_root[0]
+            path_static = STATIC_DIR + '/' + static_dir_root
+            path_collected_static = STATIC_ROOT + '/' + static_dir_root
             path_static = slash_remove_from_path(path_static)
-            path_collected_static = slash_remove_from_path(
-                path_collected_static)
+            path_collected_static = slash_remove_from_path(path_collected_static)
             create_symlink(STATIC_DIR, path_dir_root, path_static)
             create_symlink(STATIC_ROOT, path_dir_root, path_collected_static)
 
