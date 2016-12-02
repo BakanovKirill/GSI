@@ -27,3 +27,11 @@ Core.multithreaded
 
 .. automodule:: core.multithreaded
     :members:
+
+Core.paginations
+====================
+
+**The package for the implementation of pagination.**
+
+.. automodule:: core.paginations
+    :members:

@@ -6,6 +6,14 @@ from gsi.settings import NUM_PAGINATIONS
 
 # paginations finction
 def paginations(request, model_name):
+	"""**The method generates a page-pagination.**
+
+    :Arguments:
+        * *request*: The request form the server
+        * *model_name*: The Model object
+
+    """
+
 	paginator = Paginator(model_name, NUM_PAGINATIONS)
 	page = request.GET.get('page')
 
