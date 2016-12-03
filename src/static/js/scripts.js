@@ -47,7 +47,6 @@ function invisibleDropMenu() {
 
 function invisibleSelect() {
   $("select").selecter();
-  //$("select").dropdown();
 }
 
 function changeColorError() {
@@ -141,23 +140,16 @@ function addRunCardItem(){
   var order = $("input#order_carditem").val();
   var id_str = new String(getRandomArbitary(1, 10000)).replace(/\./g, "");
   var indetificator = Number(id_str);
-  //alert('1 indetificator = '+indetificator);
-  //alert('Select VAL = '+select_val);
-  //alert('Select TXT = '+select);
-  //alert('Order VAL = '+order);
 
   $("tbody").append('<tr id="'+indetificator+'"></tr>');
   $("tbody > tr#"+indetificator).append('<td class="'+indetificator+'"><input type="checkbox" name="carditem_select" value="'+select_val+'" class="select_item" checked></td>');
   $("tbody > tr#"+indetificator).append('<td class="'+indetificator+'">'+select+'</td>');
   $("tbody > tr#"+indetificator).append('<td class="'+indetificator+'" name="carditem_order"><input type="text" class="center non-input" name="carditem_order" value="'+order+'" class="select_item"</td>');
   $("tbody > tr#"+indetificator).append('<td class="'+indetificator+'"><button class="btn del-btn check-cur-delete" type="button" name="del_current_btn" value="'+indetificator+'" onclick="deleteCurrentCardItem('+indetificator+')"><img src="/static/img/delete-18.png"/></button></td>');
-  //alert('2 indetificator = '+indetificator);
 }
 
 function deleteCurrentCardItem(item){
-  //alert('deleteCurrentCardItem = '+item);
   var name = new String(item);
-  //alert('TAG = '+$("tr#"+item));
 
   $("tr#"+item).detach();
   $("td."+item).detach();
@@ -179,7 +171,6 @@ function initSelectConfigFile(){
     var config_file = $('#id_configfile');
     $('div#select-files > div.selecter > div.selecter-options > span.selecter-item').click(function(event){
         var select = $(this).text();
-        // $(this).toggleClass("selecter-item selected");
         $(this).removeClass("selecter-item");
         $(this).addClass("selecter-item selected");
         $(this).attr("name", "select-file");

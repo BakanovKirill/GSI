@@ -9,7 +9,6 @@ body {
 
 /* background registrations */
 .reg-form {
-    /*background-color: white;*/
     z-index: 5;
 }
 
@@ -20,12 +19,6 @@ body {
     padding-right: 30px;
     padding-top: 10px;
     padding-bottom: 10px;
-    /*margin: 10px;*/
-    /*width: 550px;*/
-    /*height: 250px;*/
-    /*z-index: 1;*/
-    /*position: relative;*/
-    /*top: -250px;*/
 }
 
 /* alert */
@@ -103,13 +96,6 @@ body {
 .padding-rigth-0 {
     padding: 0px 0px 0px 15px;
 }
-
-
-/*.btn-block-50 {*/
-    /*padding-left: 0;*/
-    /*padding-right: 0;*/
-    /*width: 50%;*/
-/*}*/
 
 /* color */
 .red-color {
@@ -285,13 +271,11 @@ input:-webkit-autofill {
     max-height: 50px;
 }
 
-/**/
+/* dropbtn */
 
 .dropbtn {
     background-color: transparent;
     color: white;
-    /*padding: 15px;*/
-    /*margin-top: 15px;*/
     font-size: 24px;
     border: none;
     cursor: pointer;
@@ -306,10 +290,8 @@ input:-webkit-autofill {
 .dropdown-content {
     display: none;
     position: absolute;
-    /*background-color: #f9f9f9;*/
     min-width: 200px;
     width: 250px;
-    /*box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);*/
 }
 
 .dropdown-content a {
@@ -326,10 +308,6 @@ input:-webkit-autofill {
     background-image: none;
 }
 
-/*.dropdown:hover .dropdown-content {*/
-    /*!*display: block;*!*/
-/*}*/
-
 .dropdown:hover .dropbtn {
     background-color: transparent;
 }
@@ -345,11 +323,6 @@ input:-webkit-autofill {
   padding-left: 20px;
   display: none;
 }
-
-/*.sub-menu .title::before {*/
-  /*font-size: 80%;*/
-  /*color: green;*/
-/*}*/
 
 .icon-visible {
     color: black;
@@ -376,8 +349,6 @@ input:-webkit-autofill {
 .dropbtn-user {
     background-color: transparent;
     color: white;
-    /*padding: 15px;*/
-    /*margin-top: 15px;*/
     font-size: 18px;
     border: none;
     cursor: pointer;
