@@ -58,10 +58,7 @@ Structure of folders
     |   │   ├── __init__.py
     |   ├── models.py
     |   ├── urls.py
-    |   ├── views_card_run_csid.py
     |   ├── views_card_runid_csid.py
-    |   ├── views_card_runid.py
-    |   ├── views_card_run.py
     |   ├── views.py
 
 
@@ -70,7 +67,7 @@ Structure of folders
     |── gsi
     |   ├── admin.py
     |   ├── gsi_forms.py
-    |   ├── gsi_items_update_create.py
+    |   ├── gsi_update_create.py
     |   ├── __init__.py
     |   ├── migrations
     |   │   ├── 0001_initial.py
@@ -84,9 +81,7 @@ Structure of folders
     |   ├── tests
     |   │   ├── __init__.py
     |   │   └── test_signals.py
-    |   ├── update_create.py
     |   ├── urls.py
-    |   ├── views_cs_card_run_csid.py
     |   ├── views_cs_card_runid_csid.py
     |   ├── views.py
     |   └── wsgi.py
@@ -104,6 +99,7 @@ Structure of folders
     |   │   ├── 0003_remove_logdebug_user.py
     |   │   └── __init__.py
     |   ├── models.py
+    |   ├── tests.py
     |   └── views.py
 
 
@@ -140,6 +136,22 @@ Structure of folders
     |   │   ├── details_18.png
     |   │   ├── download-18.png
     |   │   ├── edit-18.png
+    |   │   ├── editor
+    |   │   │   ├── anchor.png
+    |   │   │   ├── bold.png
+    |   │   │   ├── border-image.png
+    |   │   │   ├── code.png
+    |   │   │   ├── header-3.png
+    |   │   │   ├── header-4.png
+    |   │   │   ├── image.png
+    |   │   │   ├── italic.png
+    |   │   │   ├── link.png
+    |   │   │   ├── ordered.png
+    |   │   │   ├── paragraph.png
+    |   │   │   ├── quote.png
+    |   │   │   ├── top.png
+    |   │   │   ├── underline.png
+    |   │   │   └── unordered.png
     |   │   ├── email_18.png
     |   │   ├── eye_18.png
     |   │   ├── file-18.png
@@ -165,14 +177,13 @@ Structure of folders
     |   │   ├── submit_a_run.png
     |   │   ├── upload.png
     |   │   └── view_run_progress.png
-    |   └── js
-    |       ├── jquery.fs.selecter.min.js
-    |       ├── modernizr.js
-    |       ├── registrations.js
-    |       ├── scripts_ajax.js
-    |       ├── scripts_google_maps.js
-    |       ├── scripts.js
-    |       └── upload_file.js
+    |   ├── js
+    |   │   ├── jquery.fs.selecter.min.js
+    |   │   ├── modernizr.js
+    |   │   ├── registrations.js
+    |   │   ├── scripts_ajax.js
+    |   │   ├── scripts_google_maps.js
+    |   │   └── scripts.js
 
 
     **template** - folder with templates::
@@ -186,25 +197,19 @@ Structure of folders
     |   │   ├── _collate_form.html
     |   │   ├── _create_processing_card_form.html
     |   │   ├── _mergecsv_form.html
-    |   │   ├── new_run_card.html
-    |   │   ├── new_run_csid_card.html
-    |   │   ├── new_runid_card.html
-    |   │   ├── new_runid_csid_card.html
     |   │   ├── _preproc_form.html
-    |   │   ├── proces_card_sequence_cards.html
     |   │   ├── processing_card_new_run.html
     |   │   ├── _qrf_form.html
     |   │   ├── _randomforest_form.html
     |   │   ├── _remap_form.html
     |   │   ├── _rfscore_form.html
     |   │   ├── _rftrain_form.html
+    |   │   ├── runid_csid_card.html
     |   │   └── _year_filter_form.html
     |   ├── gsi
-    |   │   ├── add_card_sequence.html
     |   │   ├── _area_form.html
     |   │   ├── areas_list.html
     |   │   ├── audit_history.html
-    |   │   ├── blocking.html
     |   │   ├── card_editions.html
     |   │   ├── card_item_update.html
     |   │   ├── _card_sequence_form.html
@@ -237,14 +242,12 @@ Structure of folders
     |   │   ├── _resolution_form.html
     |   │   ├── resolution_list.html
     |   │   ├── run_details.html
-    |   │   ├── run_new_card_sequence_list.html
     |   │   ├── run_progress.html
     |   │   ├── run_setup.html
     |   │   ├── run_update.html
     |   │   ├── _satellite_form.html
     |   │   ├── satellite_list.html
     |   │   ├── static_data_item_edit.html
-    |   │   ├── static_data_setup.html
     |   │   ├── sub_card_details.html
     |   │   ├── submit_run.html
     |   │   ├── _tile_form.html
@@ -280,6 +283,4 @@ Structure of folders
     |   ├── __init__.pyc
     |   └── templatetags
     |       ├── gsi_tags.py
-    |       ├── gsi_tags.pyc
-    |       ├── __init__.py
-    |       └── __init__.pyc
+    |       └── __init__.py
