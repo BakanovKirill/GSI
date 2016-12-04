@@ -399,4 +399,3 @@ Structure of folders
     |   |   |   ├── logger.html
     |   |   |   └── models.html
     |   |   ├── log.html
-    |   |   └── structure.html
