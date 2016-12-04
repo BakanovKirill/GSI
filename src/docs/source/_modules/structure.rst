@@ -398,4 +398,3 @@ Structure of folders
     |   |   ├── log
     |   |   |   ├── logger.html
     |   |   |   └── models.html
-    |   |   ├── log.html
