@@ -3123,4 +3123,4 @@ def customer_section(request):
         'GOOGLE_MAP_ZOOM': GOOGLE_MAP_ZOOM
     }
 
-return data
+    return data
