@@ -392,8 +392,4 @@ Structure of folders
     |   |   |   ├── signals.html
     |   |   |   ├── views_card_runid_csid.html
     |   |   |   └── views.html
-    |   |   ├── gsi.html
-    |   |   ├── index.html
-    |   |   ├── js.html
-    |   |   ├── log
-    |   |   |   ├── logger.html
+    
