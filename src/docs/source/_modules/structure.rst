@@ -364,7 +364,6 @@ Structure of folders
     |   |   ├── registration.png
     |   |   ├── run_progress.png
     |   |   └── select_card_item.png
-    |   | this select
     |   ├── index.html
     |   ├── _modules
     |   |   ├── api
