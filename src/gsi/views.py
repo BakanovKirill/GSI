@@ -1032,6 +1032,21 @@ def submit_run(request):
                 rb = get_object_or_404(RunBase, pk=run_id)
                 execute_run = make_run(rb, request.user)
 
+                print 'execute_run ======================== ', execute_run
+
+                # ***********************************************************************
+            	# write log debug make_run User
+            	now = datetime.now()
+            	log_file = '{0}\n'.format(now)
+            	log_file += 'Submit Run: {0}\n'.format(rb)
+            	log_file += 'Execute Run: {0}\n'.format(execute_run)
+            	log_debug = LogDebug.objects.create(
+            		name='Execute Run',
+            		log=log_file
+            	)
+            	# end write log debug make_run User
+            	# ***********************************************************************
+
                 if not execute_run:
                     data = u'Unable to execute the Run. Please contact the administrator!'
                     return HttpResponse(data)
