@@ -364,3 +364,38 @@ Structure of folders
     |   |   ├── registration.png
     |   |   ├── run_progress.png
     |   |   └── select_card_item.png
+    |   ├── index.html
+    |   ├── _modules
+    |   |   ├── api
+    |   |   |   └── views.html
+    |   |   ├── api.html
+    |   |   ├── cards
+    |   |   |   ├── cards_forms.html
+    |   |   |   ├── card_update_create.html
+    |   |   |   ├── models.html
+    |   |   |   ├── views_card_runid_csid.html
+    |   |   |   └── views.html
+    |   |   ├── cards.html
+    |   |   ├── core
+    |   |   |   ├── copy_card.html
+    |   |   |   ├── get_post.html
+    |   |   |   ├── multithreaded.html
+    |   |   |   ├── paginations.html
+    |   |   |   ├── utils.html
+    |   |   |   └── validator_gsi.html
+    |   |   ├── core.html
+    |   |   ├── gsi
+    |   |   |   ├── gsi_forms.html
+    |   |   |   ├── gsi_update_create.html
+    |   |   |   ├── models.html
+    |   |   |   ├── signals.html
+    |   |   |   ├── views_card_runid_csid.html
+    |   |   |   └── views.html
+    |   |   ├── gsi.html
+    |   |   ├── index.html
+    |   |   ├── js.html
+    |   |   ├── log
+    |   |   |   ├── logger.html
+    |   |   |   └── models.html
+    |   |   ├── log.html
+    |   |   └── structure.html
