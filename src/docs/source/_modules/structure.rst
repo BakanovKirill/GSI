@@ -396,4 +396,4 @@ Structure of folders
     |   |   ├── gsi.html
     |   |   ├── index.html
     |   |   ├── js.html
-    |   |   ├── log
+    |   |   |   ├── logger.html
