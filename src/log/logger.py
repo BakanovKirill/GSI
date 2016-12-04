@@ -3,8 +3,6 @@ from datetime import datetime
 
 from django.contrib.auth.models import User
 
-from log.models import Log
-
 
 def log_it(user, element, element_id, message):
 	"""**Message write to the log file.**
@@ -16,6 +14,8 @@ def log_it(user, element, element_id, message):
         * *message*: Message for the log file
 
 	"""
+
+	from log.models import Log
 
 	Log.objects.create(
 		user=user or User.objects.get(id=1),
@@ -36,6 +36,8 @@ def get_logs(element, element_id, limit=None, user=None):
 		* *user*: Object user
 
 	"""
+
+	from log.models import Log
 
 	logs = Log.objects.filter(element=element, element_id=element_id).order_by('-at')
 

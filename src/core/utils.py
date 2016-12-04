@@ -13,7 +13,6 @@ from django.utils.translation import ugettext_lazy as _
 
 from gsi.settings import EXECUTE_FE_COMMAND, PROCESS_NUM, STATIC_DIR, FE_SUBMIT, EXEC_RUNS
 from core.multithreaded import MultiprocessingCards
-from log.models import LogDebug
 
 
 class UnicodeNameMixin(object):
