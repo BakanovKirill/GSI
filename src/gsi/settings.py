@@ -56,15 +56,15 @@ INSTALLED_APPS = (
     'registration',
     'crispy_forms',
 
-    # 'ckeditor',
-    # 'ckeditor_uploader',
+    'ckeditor',
+    'ckeditor_uploader',
 
     'cards',
     'gsi',
     'log',
     'tags',
     # 'wiki',
-    # 'articles',
+    'articles',
 
 )
 

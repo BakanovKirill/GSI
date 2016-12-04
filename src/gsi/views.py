@@ -1041,7 +1041,7 @@ def submit_run(request):
             	log_file += 'Submit Run: {0}\n'.format(rb)
             	log_file += 'Execute Run: {0}\n'.format(execute_run)
             	log_debug = LogDebug.objects.create(
-            		name='Execute Run',
+            		name='SUBMIT Run',
             		log=log_file
             	)
             	# end write log debug make_run User
