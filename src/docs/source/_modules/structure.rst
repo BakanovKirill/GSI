@@ -395,5 +395,5 @@ Structure of folders
     |   | this select 2
     |   |   ├── gsi.html
     |   |   ├── index.html
-    |   |   ├── js.html
+    |   |   ├── log
     |   |   |   ├── logger.html
