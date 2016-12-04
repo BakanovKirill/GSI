@@ -60,7 +60,7 @@
                             {% for rb in run_bases %}
                                 <tr>
                                     <td><input type="radio" class="execute_runs" name="execute_runs" value="{{ rb.id }}"></td>
-                                    <td>{{ rb.name }}</td>
+                                    <td class="left">{{ rb.name }}</td>
                                     <td>{{ rb.author }}</td>
                                     <td>{{ rb.date_created|date:"d/m/Y" }}</td>
                                     <td>{{ rb.date_modified|date:"d/m/Y" }}</td>
