@@ -329,3 +329,38 @@ Structure of folders
     |   |   |   |   └── 3_3_creating_of_cards.html
     |   |   |   ├── 3_frontend.html
     |   |   |   └── 4_backend.html
+    |   ├── genindex.html
+    |   ├── _images
+    |   |   ├── card_01.png
+    |   |   ├── card_02.png
+    |   |   ├── card_03.png
+    |   |   ├── card_04.png
+    |   |   ├── copy.png
+    |   |   ├── delete.png
+    |   |   ├── details.png
+    |   |   ├── edit_area.png
+    |   |   ├── edit_eg.png
+    |   |   ├── edit.png
+    |   |   ├── edit_yg.png
+    |   |   ├── env_group.png
+    |   |   ├── fill_sr.png
+    |   |   ├── full_areas.png
+    |   |   ├── full_cards.png
+    |   |   ├── full_cs_polugon_markers.png
+    |   |   ├── full_idd.png
+    |   |   ├── full_resolutions.png
+    |   |   ├── full_satellites.png
+    |   |   ├── full_tiles.png
+    |   |   ├── full_utd.png
+    |   |   ├── full_years.png
+    |   |   ├── full_yg.png
+    |   |   ├── home_var.png
+    |   |   ├── login_full.png
+    |   |   ├── logs_current_progress.png
+    |   |   ├── new_run_1.png
+    |   |   ├── new_run.png
+    |   |   ├── overview.png
+    |   |   ├── pass_reset.png
+    |   |   ├── registration.png
+    |   |   ├── run_progress.png
+    |   |   └── select_card_item.png
