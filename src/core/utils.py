@@ -1592,4 +1592,4 @@ def get_executable(run, sequence, card, card_item):
 	if run_parallel:
 		return run_parallel, EXECUTABLE_DICT
 	else:
-return run_parallel, EXECUTABLE
+		return run_parallel, EXECUTABLE
