@@ -36,6 +36,8 @@ from core.copy_card import create_copycard
 from log.logger import get_logs
 from gsi.settings import (PATH_RUNS_SCRIPTS, CONFIGFILE_PATH, GOOGLE_MAP_ZOOM)
 from core.paginations import paginations
+from log.models import Log, LogDebug
+
 
 TITLES = {
     'home': ['Home', 'index'],
