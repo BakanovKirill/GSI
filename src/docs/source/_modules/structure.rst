@@ -36,8 +36,8 @@ Structure of folders
     **api** - source code to work with api::
 
     |── api
-    |     ├── __init__.py
-    |     └── views.py
+    |   ├── __init__.py
+    |   └── views.py
 
 
     **cards** - source code to work with cards application::
@@ -282,441 +282,442 @@ Structure of folders
 
     |── tags
     |  ├── __init__.py
-    |   ├── __init__.pyc
-    |   └── templatetags
-    |       ├── gsi_tags.py
-    |       └── __init__.py
+    |  ├── __init__.pyc
+    |  └── templatetags
+    |      ├── gsi_tags.py
+    |      └── __init__.py
 
 
-    **tags** - folder with custom tags::
+    **docs** - folder with technical documentations::
 
 
-│   ├── build
-│   ├── doctrees
-│   │   ├── environment.pickle
-│   │   ├── _general
-│   │   │   ├── _1_technologies
-│   │   │   │   ├── 1_1_backend.doctree
-│   │   │   │   └── 1_2_frontend.doctree
-│   │   │   ├── 1_used_technologies.doctree
-│   │   │   ├── 2_designation_of_graphical_icons.doctree
-│   │   │   ├── _3_frontend
-│   │   │   │   ├── 3_1_authorization.doctree
-│   │   │   │   ├── 3_2_sidebar.doctree
-│   │   │   │   └── 3_3_creating_of_cards.doctree
-│   │   │   ├── 3_frontend.doctree
-│   │   │   └── 4_backend.doctree
-│   │   ├── index.doctree
-│   │   └── _modules
-│   │       ├── api.doctree
-│   │       ├── cards.doctree
-│   │       ├── core.doctree
-│   │       ├── gsi.doctree
-│   │       ├── js.doctree
-│   │       ├── log.doctree
-│   │       └── structure.doctree
-│   ├── html
-│   │   ├── _general
-│   │   │   ├── _1_technologies
-│   │   │   │   ├── 1_1_backend.html
-│   │   │   │   └── 1_2_frontend.html
-│   │   │   ├── 1_used_technologies.html
-│   │   │   ├── 2_designation_of_graphical_icons.html
-│   │   │   ├── _3_frontend
-│   │   │   │   ├── 3_1_authorization.html
-│   │   │   │   ├── 3_2_sidebar.html
-│   │   │   │   └── 3_3_creating_of_cards.html
-│   │   │   ├── 3_frontend.html
-│   │   │   └── 4_backend.html
-│   │   ├── genindex.html
-│   │   ├── _images
-│   │   │   ├── card_01.png
-│   │   │   ├── card_02.png
-│   │   │   ├── card_03.png
-│   │   │   ├── card_04.png
-│   │   │   ├── copy.png
-│   │   │   ├── delete.png
-│   │   │   ├── details.png
-│   │   │   ├── edit_area.png
-│   │   │   ├── edit_eg.png
-│   │   │   ├── edit.png
-│   │   │   ├── edit_yg.png
-│   │   │   ├── env_group.png
-│   │   │   ├── fill_sr.png
-│   │   │   ├── full_areas.png
-│   │   │   ├── full_cards.png
-│   │   │   ├── full_cs_polugon_markers.png
-│   │   │   ├── full_idd.png
-│   │   │   ├── full_resolutions.png
-│   │   │   ├── full_satellites.png
-│   │   │   ├── full_tiles.png
-│   │   │   ├── full_utd.png
-│   │   │   ├── full_years.png
-│   │   │   ├── full_yg.png
-│   │   │   ├── home_var.png
-│   │   │   ├── login_full.png
-│   │   │   ├── logs_current_progress.png
-│   │   │   ├── new_run_1.png
-│   │   │   ├── new_run.png
-│   │   │   ├── overview.png
-│   │   │   ├── pass_reset.png
-│   │   │   ├── registration.png
-│   │   │   ├── run_progress.png
-│   │   │   └── select_card_item.png
-│   │   ├── index.html
-│   │   ├── _modules
-│   │   │   ├── api
-│   │   │   │   └── views.html
-│   │   │   ├── api.html
-│   │   │   ├── cards
-│   │   │   │   ├── cards_forms.html
-│   │   │   │   ├── card_update_create.html
-│   │   │   │   ├── models.html
-│   │   │   │   ├── views_card_runid_csid.html
-│   │   │   │   └── views.html
-│   │   │   ├── cards.html
-│   │   │   ├── core
-│   │   │   │   ├── copy_card.html
-│   │   │   │   ├── get_post.html
-│   │   │   │   ├── multithreaded.html
-│   │   │   │   ├── paginations.html
-│   │   │   │   ├── utils.html
-│   │   │   │   └── validator_gsi.html
-│   │   │   ├── core.html
-│   │   │   ├── gsi
-│   │   │   │   ├── gsi_forms.html
-│   │   │   │   ├── gsi_update_create.html
-│   │   │   │   ├── models.html
-│   │   │   │   ├── signals.html
-│   │   │   │   ├── views_card_runid_csid.html
-│   │   │   │   └── views.html
-│   │   │   ├── gsi.html
-│   │   │   ├── index.html
-│   │   │   ├── js.html
-│   │   │   ├── log
-│   │   │   │   ├── logger.html
-│   │   │   │   └── models.html
-│   │   │   ├── log.html
-│   │   │   └── structure.html
-│   │   ├── objects.inv
-│   │   ├── py-modindex.html
-│   │   ├── search.html
-│   │   ├── searchindex.js
-│   │   ├── _sources
-│   │   │   ├── _general
-│   │   │   │   ├── _1_technologies
-│   │   │   │   │   ├── 1_1_backend.txt
-│   │   │   │   │   └── 1_2_frontend.txt
-│   │   │   │   ├── 1_used_technologies.txt
-│   │   │   │   ├── 2_designation_of_graphical_icons.txt
-│   │   │   │   ├── _3_frontend
-│   │   │   │   │   ├── 3_1_authorization.txt
-│   │   │   │   │   ├── 3_2_sidebar.txt
-│   │   │   │   │   └── 3_3_creating_of_cards.txt
-│   │   │   │   ├── 3_frontend.txt
-│   │   │   │   └── 4_backend.txt
-│   │   │   ├── index.txt
-│   │   │   └── _modules
-│   │   │       ├── api.txt
-│   │   │       ├── cards.txt
-│   │   │       ├── core.txt
-│   │   │       ├── gsi.txt
-│   │   │       ├── js.txt
-│   │   │       ├── log.txt
-│   │   │       └── structure.txt
-│   │   └── _static
-│   │       ├── ajax-loader.gif
-│   │       ├── anonim.png
-│   │       ├── areas
-│   │       │   ├── edit_area.png
-│   │       │   └── full_areas.png
-│   │       ├── basic.css
-│   │       ├── card_create
-│   │       │   ├── card_01.png
-│   │       │   ├── card_02.png
-│   │       │   ├── card_03.png
-│   │       │   ├── card_04.png
-│   │       │   └── new_run
-│   │       │       ├── new_run_1.png
-│   │       │       └── select_card_item.png
-│   │       ├── cards
-│   │       │   └── full_cards.png
-│   │       ├── comment-bright.png
-│   │       ├── comment-close.png
-│   │       ├── comment.png
-│   │       ├── copy.png
-│   │       ├── customer_section
-│   │       │   ├── full_cs.png
-│   │       │   └── full_cs_polugon_markers.png
-│   │       ├── delete.png
-│   │       ├── details.png
-│   │       ├── doctools.js
-│   │       ├── down.png
-│   │       ├── down-pressed.png
-│   │       ├── edit.png
-│   │       ├── env_group
-│   │       │   ├── edit_eg_pic.png
-│   │       │   ├── edit_eg.png
-│   │       │   └── env_group.png
-│   │       ├── file.png
-│   │       ├── home_var
-│   │       │   └── home_var.png
-│   │       ├── input_data_directory
-│   │       │   └── full_idd.png
-│   │       ├── jquery-1.11.1.js
-│   │       ├── jquery.js
-│   │       ├── login
-│   │       │   ├── login_empty.png
-│   │       │   ├── login_full.png
-│   │       │   ├── pass_reset.png
-│   │       │   └── registration.png
-│   │       ├── minus.png
-│   │       ├── nature.css
-│   │       ├── overview
-│   │       │   └── overview.png
-│   │       ├── plus.png
-│   │       ├── pygments.css
-│   │       ├── resolutions
-│   │       │   └── full_resolutions.png
-│   │       ├── run_progress
-│   │       │   ├── logs_current_progress.png
-│   │       │   ├── pic_view_current_progress.png
-│   │       │   ├── run_progress.png
-│   │       │   └── view_current_progress.png
-│   │       ├── satellites
-│   │       │   └── full_satellites.png
-│   │       ├── searchtools.js
-│   │       ├── setup_new_run
-│   │       │   ├── new_run.png
-│   │       │   ├── n_run_copy.png
-│   │       │   └── n_run_edit.png
-│   │       ├── setup_static_data
-│   │       │   └── home_var
-│   │       │       └── full.png
-│   │       ├── submit_a_run
-│   │       │   └── fill_sr.png
-│   │       ├── tiles
-│   │       │   └── full_tiles.png
-│   │       ├── underscore-1.3.1.js
-│   │       ├── underscore.js
-│   │       ├── upload_test_data
-│   │       │   └── full_utd.png
-│   │       ├── up.png
-│   │       ├── up-pressed.png
-│   │       ├── websupport.js
-│   │       ├── years
-│   │       │   └── full_years.png
-│   │       └── years_group
-│   │           ├── edit_yg.png
-│   │           └── full_yg.png
-│   └── singlehtml
-│       ├── _images
-│       │   ├── card_01.png
-│       │   ├── card_02.png
-│       │   ├── card_03.png
-│       │   ├── card_04.png
-│       │   ├── copy.png
-│       │   ├── delete.png
-│       │   ├── details.png
-│       │   ├── edit_area.png
-│       │   ├── edit_eg.png
-│       │   ├── edit.png
-│       │   ├── edit_yg.png
-│       │   ├── env_group.png
-│       │   ├── fill_sr.png
-│       │   ├── full_areas.png
-│       │   ├── full_cards.png
-│       │   ├── full_cs_polugon_markers.png
-│       │   ├── full_idd.png
-│       │   ├── full_resolutions.png
-│       │   ├── full_satellites.png
-│       │   ├── full_tiles.png
-│       │   ├── full_utd.png
-│       │   ├── full_years.png
-│       │   ├── full_yg.png
-│       │   ├── home_var.png
-│       │   ├── login_full.png
-│       │   ├── logs_current_progress.png
-│       │   ├── new_run_1.png
-│       │   ├── new_run.png
-│       │   ├── overview.png
-│       │   ├── pass_reset.png
-│       │   ├── registration.png
-│       │   ├── run_progress.png
-│       │   └── select_card_item.png
-│       ├── index.html
-│       ├── objects.inv
-│       └── _static
-│           ├── ajax-loader.gif
-│           ├── anonim.png
-│           ├── areas
-│           │   ├── edit_area.png
-│           │   └── full_areas.png
-│           ├── basic.css
-│           ├── card_create
-│           │   ├── card_01.png
-│           │   ├── card_02.png
-│           │   ├── card_03.png
-│           │   ├── card_04.png
-│           │   └── new_run
-│           │       ├── new_run_1.png
-│           │       └── select_card_item.png
-│           ├── cards
-│           │   └── full_cards.png
-│           ├── comment-bright.png
-│           ├── comment-close.png
-│           ├── comment.png
-│           ├── copy.png
-│           ├── customer_section
-│           │   ├── full_cs.png
-│           │   └── full_cs_polugon_markers.png
-│           ├── delete.png
-│           ├── details.png
-│           ├── doctools.js
-│           ├── down.png
-│           ├── down-pressed.png
-│           ├── edit.png
-│           ├── env_group
-│           │   ├── edit_eg_pic.png
-│           │   ├── edit_eg.png
-│           │   └── env_group.png
-│           ├── file.png
-│           ├── home_var
-│           │   └── home_var.png
-│           ├── input_data_directory
-│           │   └── full_idd.png
-│           ├── jquery-1.11.1.js
-│           ├── jquery.js
-│           ├── login
-│           │   ├── login_empty.png
-│           │   ├── login_full.png
-│           │   ├── pass_reset.png
-│           │   └── registration.png
-│           ├── minus.png
-│           ├── nature.css
-│           ├── overview
-│           │   └── overview.png
-│           ├── plus.png
-│           ├── pygments.css
-│           ├── resolutions
-│           │   └── full_resolutions.png
-│           ├── run_progress
-│           │   ├── logs_current_progress.png
-│           │   ├── pic_view_current_progress.png
-│           │   ├── run_progress.png
-│           │   └── view_current_progress.png
-│           ├── satellites
-│           │   └── full_satellites.png
-│           ├── searchtools.js
-│           ├── setup_new_run
-│           │   ├── new_run.png
-│           │   ├── n_run_copy.png
-│           │   └── n_run_edit.png
-│           ├── setup_static_data
-│           │   └── home_var
-│           │       └── full.png
-│           ├── submit_a_run
-│           │   └── fill_sr.png
-│           ├── tiles
-│           │   └── full_tiles.png
-│           ├── underscore-1.3.1.js
-│           ├── underscore.js
-│           ├── upload_test_data
-│           │   └── full_utd.png
-│           ├── up.png
-│           ├── up-pressed.png
-│           ├── websupport.js
-│           ├── years
-│           │   └── full_years.png
-│           └── years_group
-│               ├── edit_yg.png
-│               └── full_yg.png
-├── Makefile
-├── reload.sh
-└── source
-    ├── conf.py
-    ├── _general
-    │   ├── _1_technologies
-    │   │   ├── 1_1_backend.rst
-    │   │   └── 1_2_frontend.rst
-    │   ├── 1_used_technologies.rst
-    │   ├── 2_designation_of_graphical_icons.rst
-    │   ├── _3_frontend
-    │   │   ├── 3_1_authorization.rst
-    │   │   ├── 3_2_sidebar.rst
-    │   │   └── 3_3_creating_of_cards.rst
-    │   ├── 3_frontend.rst
-    │   └── 4_backend.rst
-    ├── index.rst
-    ├── _modules
-    │   ├── api.rst
-    │   ├── cards.rst
-    │   ├── core.rst
-    │   ├── gsi.rst
-    │   ├── log.rst
-    │   └── structure.rst
-    ├── _static
-    │   ├── anonim.png
-    │   ├── areas
-    │   │   ├── edit_area.png
-    │   │   └── full_areas.png
-    │   ├── card_create
-    │   │   ├── card_01.png
-    │   │   ├── card_02.png
-    │   │   ├── card_03.png
-    │   │   ├── card_04.png
-    │   │   └── new_run
-    │   │       ├── new_run_1.png
-    │   │       └── select_card_item.png
-    │   ├── cards
-    │   │   └── full_cards.png
-    │   ├── copy.png
-    │   ├── customer_section
-    │   │   ├── full_cs.png
-    │   │   └── full_cs_polugon_markers.png
-    │   ├── delete.png
-    │   ├── details.png
-    │   ├── edit.png
-    │   ├── env_group
-    │   │   ├── edit_eg_pic.png
-    │   │   ├── edit_eg.png
-    │   │   └── env_group.png
-    │   ├── home_var
-    │   │   └── home_var.png
-    │   ├── input_data_directory
-    │   │   └── full_idd.png
-    │   ├── login
-    │   │   ├── login_empty.png
-    │   │   ├── login_full.png
-    │   │   ├── pass_reset.png
-    │   │   └── registration.png
-    │   ├── overview
-    │   │   └── overview.png
-    │   ├── resolutions
-    │   │   └── full_resolutions.png
-    │   ├── run_progress
-    │   │   ├── logs_current_progress.png
-    │   │   ├── pic_view_current_progress.png
-    │   │   ├── run_progress.png
-    │   │   └── view_current_progress.png
-    │   ├── satellites
-    │   │   └── full_satellites.png
-    │   ├── setup_new_run
-    │   │   ├── new_run.png
-    │   │   ├── n_run_copy.png
-    │   │   └── n_run_edit.png
-    │   ├── setup_static_data
-    │   │   └── home_var
-    │   │       └── full.png
-    │   ├── submit_a_run
-    │   │   └── fill_sr.png
-    │   ├── tiles
-    │   │   └── full_tiles.png
-    │   ├── upload_test_data
-    │   │   └── full_utd.png
-    │   ├── years
-    │   │   └── full_years.png
-    │   └── years_group
-    │       ├── edit_yg.png
-    │       └── full_yg.png
-    └── _templates
+    |── docs
+    |   ├── build
+    |   ├── doctrees
+    |   │   ├── environment.pickle
+    |   │   ├── _general
+    |   │   │   ├── _1_technologies
+    |   │   │   │   ├── 1_1_backend.doctree
+    |   │   │   │   └── 1_2_frontend.doctree
+    |   │   │   ├── 1_used_technologies.doctree
+    |   │   │   ├── 2_designation_of_graphical_icons.doctree
+    |   │   │   ├── _3_frontend
+    |   │   │   │   ├── 3_1_authorization.doctree
+    |   │   │   │   ├── 3_2_sidebar.doctree
+    |   │   │   │   └── 3_3_creating_of_cards.doctree
+    |   │   │   ├── 3_frontend.doctree
+    |   │   │   └── 4_backend.doctree
+    |   │   ├── index.doctree
+    |   │   └── _modules
+    |   │       ├── api.doctree
+    |   │       ├── cards.doctree
+    |   │       ├── core.doctree
+    |   │       ├── gsi.doctree
+    |   │       ├── js.doctree
+    |   │       ├── log.doctree
+    |   │       └── structure.doctree
+    |   ├── html
+    |   │   ├── _general
+    |   │   │   ├── _1_technologies
+    |   │   │   │   ├── 1_1_backend.html
+    |   │   │   │   └── 1_2_frontend.html
+    |   │   │   ├── 1_used_technologies.html
+    |   │   │   ├── 2_designation_of_graphical_icons.html
+    |   │   │   ├── _3_frontend
+    |   │   │   │   ├── 3_1_authorization.html
+    |   │   │   │   ├── 3_2_sidebar.html
+    |   │   │   │   └── 3_3_creating_of_cards.html
+    |   │   │   ├── 3_frontend.html
+    |   │   │   └── 4_backend.html
+    |   │   ├── genindex.html
+    |   │   ├── _images
+    |   │   │   ├── card_01.png
+    |   │   │   ├── card_02.png
+    |   │   │   ├── card_03.png
+    |   │   │   ├── card_04.png
+    |   │   │   ├── copy.png
+    |   │   │   ├── delete.png
+    |   │   │   ├── details.png
+    |   │   │   ├── edit_area.png
+    |   │   │   ├── edit_eg.png
+    |   │   │   ├── edit.png
+    |   │   │   ├── edit_yg.png
+    |   │   │   ├── env_group.png
+    |   │   │   ├── fill_sr.png
+    |   │   │   ├── full_areas.png
+    |   │   │   ├── full_cards.png
+    |   │   │   ├── full_cs_polugon_markers.png
+    |   │   │   ├── full_idd.png
+    |   │   │   ├── full_resolutions.png
+    |   │   │   ├── full_satellites.png
+    |   │   │   ├── full_tiles.png
+    |   │   │   ├── full_utd.png
+    |   │   │   ├── full_years.png
+    |   │   │   ├── full_yg.png
+    |   │   │   ├── home_var.png
+    |   │   │   ├── login_full.png
+    |   │   │   ├── logs_current_progress.png
+    |   │   │   ├── new_run_1.png
+    |   │   │   ├── new_run.png
+    |   │   │   ├── overview.png
+    |   │   │   ├── pass_reset.png
+    |   │   │   ├── registration.png
+    |   │   │   ├── run_progress.png
+    |   │   │   └── select_card_item.png
+    |   │   ├── index.html
+    |   │   ├── _modules
+    |   │   │   ├── api
+    |   │   │   │   └── views.html
+    |   │   │   ├── api.html
+    |   │   │   ├── cards
+    |   │   │   │   ├── cards_forms.html
+    |   │   │   │   ├── card_update_create.html
+    |   │   │   │   ├── models.html
+    |   │   │   │   ├── views_card_runid_csid.html
+    |   │   │   │   └── views.html
+    |   │   │   ├── cards.html
+    |   │   │   ├── core
+    |   │   │   │   ├── copy_card.html
+    |   │   │   │   ├── get_post.html
+    |   │   │   │   ├── multithreaded.html
+    |   │   │   │   ├── paginations.html
+    |   │   │   │   ├── utils.html
+    |   │   │   │   └── validator_gsi.html
+    |   │   │   ├── core.html
+    |   │   │   ├── gsi
+    |   │   │   │   ├── gsi_forms.html
+    |   │   │   │   ├── gsi_update_create.html
+    |   │   │   │   ├── models.html
+    |   │   │   │   ├── signals.html
+    |   │   │   │   ├── views_card_runid_csid.html
+    |   │   │   │   └── views.html
+    |   │   │   ├── gsi.html
+    |   │   │   ├── index.html
+    |   │   │   ├── js.html
+    |   │   │   ├── log
+    |   │   │   │   ├── logger.html
+    |   │   │   │   └── models.html
+    |   │   │   ├── log.html
+    |   │   │   └── structure.html
+    |   │   ├── objects.inv
+    |   │   ├── py-modindex.html
+    |   │   ├── search.html
+    |   │   ├── searchindex.js
+    |   │   ├── _sources
+    |   │   │   ├── _general
+    |   │   │   │   ├── _1_technologies
+    |   │   │   │   │   ├── 1_1_backend.txt
+    |   │   │   │   │   └── 1_2_frontend.txt
+    |   │   │   │   ├── 1_used_technologies.txt
+    |   │   │   │   ├── 2_designation_of_graphical_icons.txt
+    |   │   │   │   ├── _3_frontend
+    |   │   │   │   │   ├── 3_1_authorization.txt
+    |   │   │   │   │   ├── 3_2_sidebar.txt
+    |   │   │   │   │   └── 3_3_creating_of_cards.txt
+    |   │   │   │   ├── 3_frontend.txt
+    |   │   │   │   └── 4_backend.txt
+    |   │   │   ├── index.txt
+    |   │   │   └── _modules
+    |   │   │       ├── api.txt
+    |   │   │       ├── cards.txt
+    |   │   │       ├── core.txt
+    |   │   │       ├── gsi.txt
+    |   │   │       ├── js.txt
+    |   │   │       ├── log.txt
+    |   │   │       └── structure.txt
+    |   │   └── _static
+    |   │       ├── ajax-loader.gif
+    |   │       ├── anonim.png
+    |   │       ├── areas
+    |   │       |   ├── edit_area.png
+    |   │       |   └── full_areas.png
+    |   │       ├── basic.css
+    |   │       ├── card_create
+    |   │       |   ├── card_01.png
+    |   │       |   ├── card_02.png
+    |   │       |   ├── card_03.png
+    |   │       |   ├── card_04.png
+    |   │       |   └── new_run
+    |   │       |       ├── new_run_1.png
+    |   │       |       └── select_card_item.png
+    |   │       ├── cards
+    |   │       |   └── full_cards.png
+    |   │       ├── comment-bright.png
+    |   │       ├── comment-close.png
+    |   │       ├── comment.png
+    |   │       ├── copy.png
+    |   │       ├── customer_section
+    |   │       |   ├── full_cs.png
+    |   │       |   └── full_cs_polugon_markers.png
+    |   │       ├── delete.png
+    |   │       ├── details.png
+    |   │       ├── doctools.js
+    |   │       ├── down.png
+    |   │       ├── down-pressed.png
+    |   │       ├── edit.png
+    |   │       ├── env_group
+    |   │       |   ├── edit_eg_pic.png
+    |   │       |   ├── edit_eg.png
+    |   │       |   └── env_group.png
+    |   │       ├── file.png
+    |   │       ├── home_var
+    |   │       |   └── home_var.png
+    |   │       ├── input_data_directory
+    |   │       |   └── full_idd.png
+    |   │       ├── jquery-1.11.1.js
+    |   │       ├── jquery.js
+    |   │       ├── login
+    |   │       |   ├── login_empty.png
+    |   │       |   ├── login_full.png
+    |   │       |   ├── pass_reset.png
+    |   │       |   └── registration.png
+    |   │       ├── minus.png
+    |   │       ├── nature.css
+    |   │       ├── overview
+    |   │       |   └── overview.png
+    |   │       ├── plus.png
+    |   │       ├── pygments.css
+    |   │       ├── resolutions
+    |   │       |   └── full_resolutions.png
+    |   │       ├── run_progress
+    |   │       |   ├── logs_current_progress.png
+    |   │       |   ├── pic_view_current_progress.png
+    |   │       |   ├── run_progress.png
+    |   │       |   └── view_current_progress.png
+    |   │       ├── satellites
+    |   │       |   └── full_satellites.png
+    |   │       ├── searchtools.js
+    |   │       ├── setup_new_run
+    |   │       |   ├── new_run.png
+    |   │       |   ├── n_run_copy.png
+    |   │       |   └── n_run_edit.png
+    |   │       ├── setup_static_data
+    |   │       |   └── home_var
+    |   │       |       └── full.png
+    |   │       ├── submit_a_run
+    |   │       |   └── fill_sr.png
+    |   │       ├── tiles
+    |   │       |   └── full_tiles.png
+    |   │       ├── underscore-1.3.1.js
+    |   │       ├── underscore.js
+    |   │       ├── upload_test_data
+    |   │       |   └── full_utd.png
+    |   │       ├── up.png
+    |   │       ├── up-pressed.png
+    |   │       ├── websupport.js
+    |   │       ├── years
+    |   │       |   └── full_years.png
+    |   │       └── years_group
+    |   │           ├── edit_yg.png
+    |   │           └── full_yg.png
+    |   └── singlehtml
+    |       ├── _images
+    |       │   ├── card_01.png
+    |       │   ├── card_02.png
+    |       │   ├── card_03.png
+    |       │   ├── card_04.png
+    |       │   ├── copy.png
+    |       │   ├── delete.png
+    |       │   ├── details.png
+    |       │   ├── edit_area.png
+    |       │   ├── edit_eg.png
+    |       │   ├── edit.png
+    |       │   ├── edit_yg.png
+    |       │   ├── env_group.png
+    |       │   ├── fill_sr.png
+    |       │   ├── full_areas.png
+    |       │   ├── full_cards.png
+    |       │   ├── full_cs_polugon_markers.png
+    |       │   ├── full_idd.png
+    |       │   ├── full_resolutions.png
+    |       │   ├── full_satellites.png
+    |       │   ├── full_tiles.png
+    |       │   ├── full_utd.png
+    |       │   ├── full_years.png
+    |       │   ├── full_yg.png
+    |       │   ├── home_var.png
+    |       │   ├── login_full.png
+    |       │   ├── logs_current_progress.png
+    |       │   ├── new_run_1.png
+    |       │   ├── new_run.png
+    |       │   ├── overview.png
+    |       │   ├── pass_reset.png
+    |       │   ├── registration.png
+    |       │   ├── run_progress.png
+    |       │   └── select_card_item.png
+    |       ├── index.html
+    |       ├── objects.inv
+    |       └── _static
+    |           ├── ajax-loader.gif
+    |           ├── anonim.png
+    |           ├── areas
+    |           |   ├── edit_area.png
+    |           |   └── full_areas.png
+    |           ├── basic.css
+    |           ├── card_create
+    |           |   ├── card_01.png
+    |           |   ├── card_02.png
+    |           |   ├── card_03.png
+    |           |   ├── card_04.png
+    |           |   └── new_run
+    |           |       ├── new_run_1.png
+    |           |       └── select_card_item.png
+    |           ├── cards
+    |           |   └── full_cards.png
+    |           ├── comment-bright.png
+    |           ├── comment-close.png
+    |           ├── comment.png
+    |           ├── copy.png
+    |           ├── customer_section
+    |           |   ├── full_cs.png
+    |           |   └── full_cs_polugon_markers.png
+    |           ├── delete.png
+    |           ├── details.png
+    |           ├── doctools.js
+    |           ├── down.png
+    |           ├── down-pressed.png
+    |           ├── edit.png
+    |           ├── env_group
+    |           |   ├── edit_eg_pic.png
+    |           |   ├── edit_eg.png
+    |           |   └── env_group.png
+    |           ├── file.png
+    |           ├── home_var
+    |           |   └── home_var.png
+    |           ├── input_data_directory
+    |           |   └── full_idd.png
+    |           ├── jquery-1.11.1.js
+    |           ├── jquery.js
+    |           ├── login
+    |           |   ├── login_empty.png
+    |           |   ├── login_full.png
+    |           |   ├── pass_reset.png
+    |           |   └── registration.png
+    |           ├── minus.png
+    |           ├── nature.css
+    |           ├── overview
+    |           |   └── overview.png
+    |           ├── plus.png
+    |           ├── pygments.css
+    |           ├── resolutions
+    |           |   └── full_resolutions.png
+    |           ├── run_progress
+    |           |   ├── logs_current_progress.png
+    |           |   ├── pic_view_current_progress.png
+    |           |   ├── run_progress.png
+    |           |   └── view_current_progress.png
+    |           ├── satellites
+    |           |   └── full_satellites.png
+    |           ├── searchtools.js
+    |           ├── setup_new_run
+    |           |   ├── new_run.png
+    |           |   ├── n_run_copy.png
+    |           |   └── n_run_edit.png
+    |           ├── setup_static_data
+    |           |   └── home_var
+    |           |       └── full.png
+    |           ├── submit_a_run
+    |           |   └── fill_sr.png
+    |           ├── tiles
+    |           |   └── full_tiles.png
+    |           ├── underscore-1.3.1.js
+    |           ├── underscore.js
+    |           ├── upload_test_data
+    |           |   └── full_utd.png
+    |           ├── up.png
+    |           ├── up-pressed.png
+    |           ├── websupport.js
+    |           ├── years
+    |           |   └── full_years.png
+    |           └── years_group
+    |               ├── edit_yg.png
+    |               └── full_yg.png
+    |── Makefile
+    |── reload.sh
+    |── source
+    |   ├── conf.py
+    |   ├── _general
+    |   |   ├── _1_technologies
+    |   |   │   ├── 1_1_backend.rst
+    |   |   │   └── 1_2_frontend.rst
+    |   |   ├── 1_used_technologies.rst
+    |   |   ├── 2_designation_of_graphical_icons.rst
+    |   |   ├── _3_frontend
+    |   |   │   ├── 3_1_authorization.rst
+    |   |   │   ├── 3_2_sidebar.rst
+    |   |   │   └── 3_3_creating_of_cards.rst
+    |   |   ├── 3_frontend.rst
+    |   |   └── 4_backend.rst
+    |   ├── index.rst
+    |   ├── _modules
+    |   |   ├── api.rst
+    |   |   ├── cards.rst
+    |   |   ├── core.rst
+    |   |   ├── gsi.rst
+    |   |   ├── log.rst
+    |   |   └── structure.rst
+    |   ├── _static
+    |   |   ├── anonim.png
+    |   |   ├── areas
+    |   |   │   ├── edit_area.png
+    |   |   │   └── full_areas.png
+    |   |   ├── card_create
+    |   |   │   ├── card_01.png
+    |   |   │   ├── card_02.png
+    |   |   │   ├── card_03.png
+    |   |   │   ├── card_04.png
+    |   |   │   └── new_run
+    |   |   │       ├── new_run_1.png
+    |   |   │       └── select_card_item.png
+    |   |   ├── cards
+    |   |   │   └── full_cards.png
+    |   |   ├── copy.png
+    |   |   ├── customer_section
+    |   |   │   ├── full_cs.png
+    |   |   │   └── full_cs_polugon_markers.png
+    |   |   ├── delete.png
+    |   |   ├── details.png
+    |   |   ├── edit.png
+    |   |   ├── env_group
+    |   |   │   ├── edit_eg_pic.png
+    |   |   │   ├── edit_eg.png
+    |   |   │   └── env_group.png
+    |   |   ├── home_var
+    |   |   │   └── home_var.png
+    |   |   ├── input_data_directory
+    |   |   │   └── full_idd.png
+    |   |   ├── login
+    |   |   │   ├── login_empty.png
+    |   |   │   ├── login_full.png
+    |   |   │   ├── pass_reset.png
+    |   |   │   └── registration.png
+    |   |   ├── overview
+    |   |   │   └── overview.png
+    |   |   ├── resolutions
+    |   |   │   └── full_resolutions.png
+    |   |   ├── run_progress
+    |   |   │   ├── logs_current_progress.png
+    |   |   │   ├── pic_view_current_progress.png
+    |   |   │   ├── run_progress.png
+    |   |   │   └── view_current_progress.png
+    |   |   ├── satellites
+    |   |   │   └── full_satellites.png
+    |   |   ├── setup_new_run
+    |   |   │   ├── new_run.png
+    |   |   │   ├── n_run_copy.png
+    |   |   │   └── n_run_edit.png
+    |   |   ├── setup_static_data
+    |   |   │   └── home_var
+    |   |   │       └── full.png
+    |   |   ├── submit_a_run
+    |   |   │   └── fill_sr.png
+    |   |   ├── tiles
+    |   |   │   └── full_tiles.png
+    |   |   ├── upload_test_data
+    |   |   │   └── full_utd.png
+    |   |   ├── years
+    |   |   │   └── full_years.png
+    |   |   └── years_group
+    |   |       ├── edit_yg.png
+    |   |       └── full_yg.png
+    |   └── _templates
