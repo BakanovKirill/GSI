@@ -393,7 +393,4 @@ Structure of folders
     |   |   |   ├── views_card_runid_csid.html
     |   |   |   └── views.html
     |   | this select 2
-    |   |   ├── index.html
-    |   |   ├── js.html
-    |   |   ├── log
-    |   |   |   ├── logger.html
+    
