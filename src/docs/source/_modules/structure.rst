@@ -397,4 +397,3 @@ Structure of folders
     |   |   ├── js.html
     |   |   ├── log
     |   |   |   ├── logger.html
-    |   |   |   └── models.html
