@@ -317,3 +317,15 @@ Structure of folders
     |   │   │       ├── log.doctree
     |   │   │       └── structure.doctree
     |   ├── html
+    |   |   ├── _general
+    |   |   |   ├── _1_technologies
+    |   |   |   |   ├── 1_1_backend.html
+    |   |   |   |   └── 1_2_frontend.html
+    |   |   |   ├── 1_used_technologies.html
+    |   |   |   ├── 2_designation_of_graphical_icons.html
+    |   |   |   ├── _3_frontend
+    |   |   |   |   ├── 3_1_authorization.html
+    |   |   |   |   ├── 3_2_sidebar.html
+    |   |   |   |   └── 3_3_creating_of_cards.html
+    |   |   |   ├── 3_frontend.html
+    |   |   |   └── 4_backend.html
