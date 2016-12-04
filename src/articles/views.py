@@ -20,6 +20,7 @@ from articles.models import Article
 @login_required
 @render_to('articles/wiki_show.html')
 def wiki_show(request):
+    ''' View Wiki Show '''
     title = 'Wiki'
     articles = Article.objects.all()
 
@@ -32,6 +33,7 @@ def wiki_show(request):
 
 
 class ArticleUpdateForm(ModelForm):
+    ''' View ArticleUpdateForm '''
     class Meta:
         model = Article
         fields = ('title', 'content',)
@@ -65,9 +67,14 @@ class ArticleUpdateForm(ModelForm):
 
 
 class WikiUpdateView(UpdateView):
+    ''' View WikiUpdateView '''
+
     model = Article
     template_name = 'articles/wiki_edit.html'
     form_class = ArticleUpdateForm
+
+    def __init__(self, *args, **kwargs):
+        super(WikiUpdateView, self).__init__(*args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super(WikiUpdateView, self).get_form_kwargs()
@@ -101,6 +108,7 @@ class WikiUpdateView(UpdateView):
 @login_required
 @render_to('articles/wiki_edit.html')
 def wiki_edit(request, wiki_id):
+    ''' View wiki_edit '''
     title = 'Wiki Edit'
     url_name = 'wiki_edit'
     form = None

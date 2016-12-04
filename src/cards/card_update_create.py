@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
-from cards.models import (QRF, RFScore, Remap,
-                          YearFilter, Collate, PreProc,
-                          MergeCSV, RFTrain, RandomForest,
-                          CalcStats)
+from cards.models import (QRF, RFScore, Remap, YearFilter, Collate, PreProc,
+                          MergeCSV, RFTrain, RandomForest, CalcStats)
 from gsi.models import ListTestFiles
 
 
 def qrf_update_create(form, item_id=None):
+    """**Updated card QRF.**
+
+    :Arguments:
+        * *form*: Object of the form
+        * *item_id*: ID of the card. Set when editing (the default=None when you create a card)
+
+    """
+
     cur_card = None
     qrf_card = None
 
@@ -37,6 +43,14 @@ def qrf_update_create(form, item_id=None):
 
 
 def rfscore_update_create(form, item_id=None):
+    """**Updated card RFScore.**
+
+    :Arguments:
+        * *form*: Object of the form
+        * *item_id*: ID of the card. Set when editing (the default=None when you create a card)
+
+    """
+
     cur_card = None
     rfscore_card = None
 
@@ -75,6 +89,14 @@ def rfscore_update_create(form, item_id=None):
 
 
 def remap_update_create(form, item_id=None):
+    """**Updated card Remap.**
+
+    :Arguments:
+        * *form*: Object of the form
+        * *item_id*: ID of the card. Set when editing (the default=None when you create a card)
+
+    """
+
     cur_card = None
     remap_card = None
 
@@ -133,6 +155,14 @@ def remap_update_create(form, item_id=None):
 
 
 def year_filter_update_create(form, item_id=None):
+    """**Updated card YearFilter.**
+
+    :Arguments:
+        * *form*: Object of the form
+        * *item_id*: ID of the card. Set when editing (the default=None when you create a card)
+
+    """
+
     cur_card = None
     year_filter_card = None
 
@@ -173,6 +203,14 @@ def year_filter_update_create(form, item_id=None):
 
 
 def collate_update_create(form, item_id=None, multiple=None, delete=False):
+    """**Updated card Collate.**
+
+    :Arguments:
+        * *form*: Object of the form
+        * *item_id*: ID of the card. Set when editing (the default=None when you create a card)
+
+    """
+
     cur_card = None
     collate_card = None
 
@@ -227,6 +265,14 @@ def collate_update_create(form, item_id=None, multiple=None, delete=False):
 
 
 def preproc_update_create(form, item_id=None):
+    """**Updated card PreProc.**
+
+    :Arguments:
+        * *form*: Object of the form
+        * *item_id*: ID of the card. Set when editing (the default=None when you create a card)
+
+    """
+
     cur_card = None
     preproc_card = None
 
@@ -259,6 +305,14 @@ def preproc_update_create(form, item_id=None):
 
 
 def mergecsv_update_create(form, item_id=None):
+    """**Updated card MergeCSV.**
+
+    :Arguments:
+        * *form*: Object of the form
+        * *item_id*: ID of the card. Set when editing (the default=None when you create a card)
+
+    """
+
     cur_card = None
     mergecsv_card = None
 
@@ -285,6 +339,14 @@ def mergecsv_update_create(form, item_id=None):
 
 
 def rftrain_update_create(form, item_id=None):
+    """**Updated card RFTrain.**
+
+    :Arguments:
+        * *form*: Object of the form
+        * *item_id*: ID of the card. Set when editing (the default=None when you create a card)
+
+    """
+
     cur_card = None
     rftrain_card = None
 
@@ -327,6 +389,14 @@ def rftrain_update_create(form, item_id=None):
 
 
 def randomforest_update_create(form, item_id=None):
+    """**Updated card RandomForest.**
+
+    :Arguments:
+        * *form*: Object of the form
+        * *item_id*: ID of the card. Set when editing (the default=None when you create a card)
+
+    """
+
     cur_card = None
     randomforest_card = None
 
@@ -361,6 +431,14 @@ def randomforest_update_create(form, item_id=None):
 
 
 def calcstats_update_create(form, item_id=None):
+    """**Updated card CalcStats.**
+
+    :Arguments:
+        * *form*: Object of the form
+        * *item_id*: ID of the card. Set when editing (the default=None when you create a card)
+
+    """
+
     cur_card = None
     calcstats_card = None
     filter_out = form.cleaned_data["filter_out"]

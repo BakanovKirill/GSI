@@ -1,18 +1,28 @@
 # -*- coding: utf-8 -*-
 from annoying.decorators import render_to
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.utils.decorators import method_decorator
-from django.conf import settings
-
-# from cards.models import QRF, RFScore
-from cards.cards_forms import *
 
 
 def processing_card_menu(request, rev_url, args=False):
-    # import pdb;pdb.set_trace()
+    """**The function to receive a response depending on the type of card.**
+
+    :Arguments:
+        **request:** The request is sent to the server when processing the page
+
+        **rev_url:** Dictionary. It contains values for reverse after processing of form.
+
+            *rev_url[<name_card>][0]*: url for reverse,
+
+            If the element to edit, then the variable is its id:
+
+            *rev_url[<name_card>][1]*: id of element,
+
+        **args:** Boolean. If the value is True, then edit the element and contains id
+
+    """
+
     response = None
 
     if request.method == "POST":
@@ -78,6 +88,13 @@ def processing_card_menu(request, rev_url, args=False):
 @login_required
 @render_to('cards/processing_card_new_run.html')
 def proces_card_new_run(request):
+    """**View at the creation of new cards.**
+
+    :When choosing a new card in "processing_card_menu" function transferred dictionary "rev_url" values:
+        {<button_a_new_card>: <url_to_create_a_new_card>}
+
+    """
+
     title = 'Create New Processing Cards'
     rev_url = {
         'qrf_button': 'new_run_qrf',
@@ -96,90 +113,6 @@ def proces_card_new_run(request):
 
     data = {
         'title': title,
-    }
-
-    return data
-
-
-@login_required
-@render_to('cards/processing_card_new_run.html')
-def proces_card_runid(request, run_id):
-    title = 'Create New Processing Cards'
-    rev_url = {
-        'qrf_button': ['new_runid_qrf', [run_id]],
-        'rfscore_button': ['new_runid_rfscore', [run_id]],
-        'remap_button': ['new_runid_remap', [run_id]],
-        'year_filter_button': ['new_runid_year_filter', [run_id]],
-        'collate_button': ['new_runid_collate', [run_id]],
-        'preproc_button': ['new_runid_preproc', [run_id]],
-        'margecsv_button': ['new_runid_mergecsv', [run_id]],
-        'rftrain_button': ['new_runid_rftrain', [run_id]],
-        'cancel_button': ['add_card_sequence', [run_id]]
-    }
-
-    if request.method == "POST":
-        return processing_card_menu(request, rev_url, args=True)
-
-    data = {
-        'title': title,
-        'run_id': run_id,
-    }
-
-    return data
-
-
-@login_required
-@render_to('cards/processing_card_new_run.html')
-def proces_card_runid_csid(request, run_id, cs_id):
-    title = 'Create New Processing Cards'
-    rev_url = {
-        'qrf_button': ['new_runid_csid_qrf', [run_id, cs_id]],
-        'rfscore_button': ['new_runid_csid_rfscore', [run_id, cs_id]],
-        'remap_button': ['new_runid_csid_remap', [run_id, cs_id]],
-        'year_filter_button': ['new_runid_csid_year_filter', [run_id, cs_id]],
-        'collate_button': ['new_runid_csid_collate', [run_id, cs_id]],
-        'preproc_button': ['new_runid_csid_preproc', [run_id, cs_id]],
-        'margecsv_button': ['new_runid_csid_mergecsv', [run_id, cs_id]],
-        'rftrain_button': ['new_runid_csid_rftrain', [run_id, cs_id]],
-        'randomforest_button': ['new_runid_csid_randomforest', [run_id, cs_id]],
-        'calcstats_button': ['new_runid_csid_calcstats', [run_id, cs_id]],
-        'cancel_button': ['card_sequence_update', [run_id, cs_id]]
-    }
-
-    if request.method == "POST":
-        return processing_card_menu(request, rev_url, args=True)
-
-    data = {
-        'title': title,
-        'run_id': run_id,
-        'cs_id': cs_id,
-    }
-
-    return data
-
-
-@login_required
-@render_to('cards/processing_card_new_run.html')
-def proces_card_run_new_csid(request, cs_id):
-    title = 'Create New Processing Cards'
-    rev_url = {
-        'qrf_button': ['new_run_csid_qrf', [cs_id]],
-        'rfscore_button': ['new_run_csid_rfscore', [cs_id]],
-        'remap_button': ['new_run_csid_remap', [cs_id]],
-        'year_filter_button': ['new_run_csid_year_filter', [cs_id]],
-        'collate_button': ['new_run_csid_collate', [cs_id]],
-        'preproc_button': ['new_run_csid_preproc', [cs_id]],
-        'margecsv_button': ['new_run_csid_mergecsv', [cs_id]],
-        'rftrain_button': ['new_run_csid_rftrain', [cs_id]],
-        'cancel_button': ['run_new_card_sequence_update', [cs_id]]
-    }
-
-    if request.method == "POST":
-        return processing_card_menu(request, rev_url, args=True)
-
-    data = {
-        'title': title,
-        'cs_id': cs_id,
     }
 
     return data

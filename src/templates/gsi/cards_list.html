@@ -41,8 +41,7 @@
                                 <td><input type="checkbox" name="card_select" value="{{ card.id }}"></td>
                                 <td class="left">{{ card }}</td>
                                 <td class="left">{{ card.content_type.model|type }}</td>
-                                <td>
-                                    <!--<a href="{% url 'card_edit' card.id %}" name="card_edit" role="button"><img class="" src="{% static 'img/edit-18.png' %}"/></a>-->
+                                <td class="left">
                                     <button class="btn del-btn check-cur-delete" type="button" name="del_current_btn" value="{{ card.id }}"  data-toggle="tooltip" data-placement="top" title="Delete">
                                         <img src="{% static 'img/delete-18.png' %}"/>
                                     </button>

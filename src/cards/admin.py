@@ -57,10 +57,6 @@ class CardItemAdmin(admin.ModelAdmin):
         }),
     )
 
-    # autocomplete_lookup_fields = {
-    #     'contenttypes.models': [['content_type', 'object_id']],
-    # }
-
     list_display = ('name', 'content_type')
 
     def name(self, instance):

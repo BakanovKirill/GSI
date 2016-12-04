@@ -4,11 +4,33 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
 
-from gsi.models import Area
-from gsi.update_create import cs_cards_update
+
+def cs_cards_update(form, cs_card, card_item):
+    """**The method updates the value of the cards in CardSequence object.**
+
+    :Arguments:
+        * *form*: The form object
+        * *cs_card*: The OrderedCardItem object
+        * *card_item*: The Card object
+
+    """
+
+    cs_card.order = form.cleaned_data["order"]
+    cs_card.card_item = card_item
+    cs_card.save()
+
+    return cs_card
 
 
 def add_card_in_cardsequence(card, cs_id):
+    """**The method added the new Card object and its order in the CardSequence object.**
+
+    :Arguments:
+        * *card*: The Card object
+        * *cs_id*: The CardSequence object ID
+
+    """
+
     from gsi.models import CardSequence
     from cards.models import CardItem
 
@@ -36,13 +58,28 @@ def add_card_in_cardsequence(card, cs_id):
             card_item=card_item,
         )
     except Exception, e:
-        print 'ERROR ADD CARD in CS ======== ', e
+        pass
 
 
 def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=None, cs_form=False, cs_id=None):
+    """**The method processes the POST request and sends a response from the server.**
+
+    :Arguments:
+        * *request*: The request to the server
+        * *item_form*: The Card form
+        * *item*: The Card object
+        * *reverse_ulr*: The URL redirection
+        * *func*: The function to create or update Card
+        * *args*: Additional options: Run ID, CardSequence ID, Card ID
+        * *item_id*: The Card object ID (if the object is created the value default "None")
+        * *cs_form*: If an object is created or updated in CardSequence object, the value is "True". Default is "False"
+        * *cs_id*: If an object is created or updated in CardSequence object, the value is CardSequence object ID. Default is "None"
+
+    """
+
     response = None
 
-    # import pdb;pdb.set_trace()
+    # process the POST request by pressing a button "Save"
     if request.POST.get('save_button') is not None:
         form_1 = item_form(request.POST)
 
@@ -85,6 +122,7 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                 )
         else:
             return form_1
+    # process the POST request by pressing a button "Save and create another object"
     elif request.POST.get('save_and_another_button') is not None:
         form_1 = item_form(request.POST)
 
@@ -124,6 +162,7 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                 )
         else:
             return form_1
+    # process the POST request by pressing a button "Delete"
     elif request.POST.get('delete_button') is not None:
         form_1 = item_form(request.POST)
 
@@ -150,6 +189,7 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                     )
         else:
             return form_1
+    # process the POST request by pressing a button "Cancel"
     elif request.POST.get('cancel_button') is not None:
         if args:
             response = HttpResponseRedirect(
@@ -162,6 +202,7 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                     u'%s?status_message=%s' % (reverse(reverse_ulr['cancel_button']),
                     (u'The "{0}" created canceled'.format(item)))
             )
+    # process the POST request by pressing other buttons
     else:
         form_1 = item_form(request.POST)
 

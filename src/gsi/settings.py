@@ -63,9 +63,7 @@ INSTALLED_APPS = (
     'gsi',
     'log',
     'tags',
-    # 'wiki',
     'articles',
-
 )
 
 MIDDLEWARE_CLASSES = (

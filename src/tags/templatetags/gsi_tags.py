@@ -7,5 +7,5 @@ register = template.Library()
 
 @register.filter(name='type')
 def card_type(value):
-    """Get type for card"""
+    """Get type for the card."""
     return CARD_TYPE[value]

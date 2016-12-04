@@ -127,7 +127,7 @@
                                         <div id="subMenu">
                                             <ul>
                                                 <li class="li-sub-menu {% if url_name == 'home_variable' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                    <a href="{% url 'home_variable_setup' %}">Setup home variables</a>
+                                                    <a href="{% url 'home_variable_setup' %}">Home Variables Setup</a>
                                                 </li>
                                                 <li class="li-sub-menu {% if url_name == 'environment_groups' %}active-main-menu{% else %}li-menu{% endif %}">
                                                     <a href="{% url 'environment_groups' %}">Environment Groups</a>
@@ -136,7 +136,7 @@
                                                     <a href="{% url 'areas' %}">Areas</a>
                                                 </li>
                                                 <li class="li-sub-menu {% if url_name == 'years_group' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                    <a href="{% url 'years_group' %}">Year groups</a>
+                                                    <a href="{% url 'years_group' %}">Year Groups</a>
                                                 </li>
                                                 <li class="li-sub-menu {% if url_name == 'tiles' %}active-main-menu{% else %}li-menu{% endif %}">
                                                     <a href="{% url 'tiles' %}">Tiles</a>
@@ -305,9 +305,6 @@
     <script src="{% static 'js/modernizr.js' %}"></script>
     <script src="{% static 'js/jquery.fs.selecter.min.js' %}"></script>
 
-    <!--<script src="{% static 'js/core.js' %}"></script>-->
-    <!--<script src="{% static 'js/dropdown.js' %}"></script>-->
-
     <!-- Bootstrap JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
             integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
@@ -321,8 +318,6 @@
     <!-- custom scripts -->
     <script type="text/javascript" src="{% static 'js/scripts.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/scripts_ajax.js' %}"></script>
-    <!-- editor -->
-    <script type="text/javascript" src="{% static 'js/ed.js' %}"></script>
     <!--
     <script type="text/javascript" src="{% static 'js/scripts_google_maps.js' %}"></script>
     -->

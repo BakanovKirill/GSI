@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 
-from core.validator_gsi import *
+from core.validator_gsi import validate_order
 from cards.models import CardItem
 from gsi.models import (RunBase, Resolution, CardSequence, VariablesGroup,
                         HomeVariables, Tile, YearGroup, Year, Satellite,
@@ -9,7 +9,7 @@ from gsi.models import (RunBase, Resolution, CardSequence, VariablesGroup,
 
 
 class RunForm(forms.ModelForm):
-    """ form for editing RunBase """
+    """**Form for editing RunBase.**"""
 
     def __init__(self, *args, **kwargs):
         super(RunForm, self).__init__(*args, **kwargs)
@@ -18,11 +18,8 @@ class RunForm(forms.ModelForm):
 
     name = forms.CharField(
         widget=forms.TextInput(attrs={
-            # 'class': 'form-control border-bottom',
             'class': 'form-control',
             'placeholder': 'Name',
-            # 'onChange': 'reloadPage(this)',
-            # 'onChange': 'changeColorTyping(this)',
         }),
         label=u'Name', )
     description = forms.CharField(
@@ -30,7 +27,6 @@ class RunForm(forms.ModelForm):
             'rows': '5',
             'class': 'form-control border-bottom',
             'placeholder': 'Description',
-            # 'onChange': 'changeColorTyping()',
         }),
         required=False,
         label=u'Description')
@@ -39,7 +35,6 @@ class RunForm(forms.ModelForm):
             'rows': '5',
             'class': 'form-control border-bottom',
             'placeholder': 'Purpose of Run',
-            # 'onChange': 'changeColorTyping()',
         }),
         required=False,
         label=u'Purpose of Run')
@@ -47,17 +42,13 @@ class RunForm(forms.ModelForm):
         widget=forms.TextInput(attrs={
             'class': 'form-control border-bottom form-control input-form',
             'placeholder': 'Directory path',
-            # 'onChange': 'changeColorTyping()',
         }),
-        # required=False,
         label=u'Directory path',
         help_text=u'Directory path is the name of the directory \
             that result will be stored')
     resolution = forms.ModelChoiceField(
         widget=forms.Select(attrs={
             'class': 'form-control disabled',
-            # 'onChange': "document.getElementById('new-run').submit()",
-            # 'onChange': 'changeColorTyping()',
         }),
         queryset=Resolution.objects.all(),
         empty_label='Select',
@@ -66,7 +57,6 @@ class RunForm(forms.ModelForm):
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'placeholder': 'Card sequence',
-            # 'onChange': 'changeColorTyping()',
         }),
         required=False,
         label=u'Card sequence', )
@@ -84,7 +74,7 @@ class RunForm(forms.ModelForm):
 
 
 class CardSequenceForm(forms.ModelForm):
-    """ form for editing CardSecuence """
+    """**Form for editing CardSecuence.**"""
 
     def __init__(self, *args, **kwargs):
         super(CardSequenceForm, self).__init__(*args, **kwargs)
@@ -100,7 +90,6 @@ class CardSequenceForm(forms.ModelForm):
     environment_base = forms.ModelChoiceField(
         widget=forms.Select(attrs={'class': 'form-control'}),
         queryset=VariablesGroup.objects.all(),
-        # empty_label=None,
         required=False,
         label=u'Environment base', )
 
@@ -114,7 +103,7 @@ class CardSequenceForm(forms.ModelForm):
 
 
 class CardSequenceCardForm(forms.ModelForm):
-    """ form for editing CardSecuence """
+    """**Form for editing CardSecuence.**"""
 
     def __init__(self, *args, **kwargs):
         super(CardSequenceCardForm, self).__init__(*args, **kwargs)
@@ -123,9 +112,7 @@ class CardSequenceCardForm(forms.ModelForm):
         widget=forms.Select(
             attrs={'class': 'form-control disabled',
                    'type': "hidden"}),
-        # queryset=CardSequence.cards.through.objects.all(),
         queryset=CardItem.objects.all(),
-        # empty_label=None,
         label=u'Environment base', )
     order = forms.CharField(
         widget=forms.TextInput(attrs={
@@ -144,7 +131,7 @@ class CardSequenceCardForm(forms.ModelForm):
 
 
 class CardSequenceCreateForm(forms.ModelForm):
-    """ form for editing CardSecuence """
+    """**Form for editing CardSecuence.**"""
 
     def __init__(self, *args, **kwargs):
         super(CardSequenceCreateForm, self).__init__(*args, **kwargs)
@@ -154,10 +141,6 @@ class CardSequenceCreateForm(forms.ModelForm):
                 id__in=kwargs['instance'].cards.values_list(
                     'id', flat=True))
 
-    # name = forms.CharField(
-    #     widget=forms.TextInput(attrs={'class': 'form-control'}),
-    #     label=u'Name',
-    # )
     environment_override = forms.CharField(
         widget=forms.Textarea(attrs={'rows': '5',
                                      'class': 'form-control'}),
@@ -171,10 +154,7 @@ class CardSequenceCreateForm(forms.ModelForm):
         label=u'Environment base', )
     card_item = forms.ModelChoiceField(
         widget=forms.Select(attrs={'class': 'form-control'}),
-        # queryset=CardSequence.cards.through.objects.all(),
-        # queryset=CardSequence.objects.filter(),
         queryset=None,
-        # queryset=CardItem.objects.all(),
         empty_label='Select',
         required=False,
         label=u'Card items', )
@@ -183,14 +163,12 @@ class CardSequenceCreateForm(forms.ModelForm):
         initial=0,
         validators=[validate_order],
         error_messages={'required': 'Order must be a positive number'},
-        # empty_label=None,
         required=False,
         label=u'Ordered card items', )
 
     class Meta:
         model = CardSequence.cards.through
         fields = [
-            # 'name',
             'environment_base',
             'environment_override',
             'card_item',
@@ -199,7 +177,7 @@ class CardSequenceCreateForm(forms.ModelForm):
 
 
 class HomeVariablesForm(forms.ModelForm):
-    """ form for editing Home Variables """
+    """**Form for editing Home Variables.**"""
 
     SAT_TIF_DIR_ROOT = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
@@ -242,7 +220,7 @@ class HomeVariablesForm(forms.ModelForm):
 
 
 class EnvironmentGroupsForm(forms.ModelForm):
-    """ form for editing Environment Groups """
+    """**Form for editing Environment Groups.**"""
 
     def __init__(self, *args, **kwargs):
         super(EnvironmentGroupsForm, self).__init__(*args, **kwargs)
@@ -264,7 +242,7 @@ class EnvironmentGroupsForm(forms.ModelForm):
 
 
 class AreasForm(forms.ModelForm):
-    """ form for editing Areas """
+    """**Form for editing Areas.**"""
 
     def __init__(self, *args, **kwargs):
         super(AreasForm, self).__init__(*args, **kwargs)
@@ -277,7 +255,6 @@ class AreasForm(forms.ModelForm):
             attrs={'size': '10',
                    'class': 'form-control'}),
         queryset=Tile.objects.all(),
-        # empty_label=None,
         required=False,
         label=u'Tiles', )
 
@@ -290,7 +267,7 @@ class AreasForm(forms.ModelForm):
 
 
 class YearGroupForm(forms.ModelForm):
-    """ form for editing YearGroup """
+    """**Form for editing YearGroup.**"""
 
     def __init__(self, *args, **kwargs):
         super(YearGroupForm, self).__init__(*args, **kwargs)
@@ -315,7 +292,7 @@ class YearGroupForm(forms.ModelForm):
 
 
 class SatelliteForm(forms.ModelForm):
-    """ form for editing Satellite """
+    """**Form for editing Satellite.**"""
 
     def __init__(self, *args, **kwargs):
         super(SatelliteForm, self).__init__(*args, **kwargs)
@@ -340,7 +317,7 @@ class UploadFileForm(forms.Form):
 
 
 class InputDataDirectoryForm(forms.ModelForm):
-    """form for editing InputDataDirectory"""
+    """**Form for editing InputDataDirectory.**"""
 
     def __init__(self, *args, **kwargs):
         super(InputDataDirectoryForm, self).__init__(*args, **kwargs)
@@ -355,14 +332,14 @@ class InputDataDirectoryForm(forms.ModelForm):
 
 
 class ConfigFileForm(forms.ModelForm):
-    """form for editing ConfigFile"""
+    """**Form for editing ConfigFile.**"""
 
     def __init__(self, *args, **kwargs):
         super(ConfigFileForm, self).__init__(*args, **kwargs)
 
 
 class ResolutionForm(forms.ModelForm):
-    """form for editing Resolution"""
+    """**Form for editing Resolution.**"""
 
     def __init__(self, *args, **kwargs):
         super(ResolutionForm, self).__init__(*args, **kwargs)
@@ -383,7 +360,7 @@ class ResolutionForm(forms.ModelForm):
 
 
 class TileForm(forms.ModelForm):
-    """form for editing Tile"""
+    """**Form for editing Tile.**"""
 
     def __init__(self, *args, **kwargs):
         super(TileForm, self).__init__(*args, **kwargs)
@@ -398,7 +375,7 @@ class TileForm(forms.ModelForm):
 
 
 class YearForm(forms.ModelForm):
-    """form for editing Year"""
+    """**Form for editing Year.**"""
 
     def __init__(self, *args, **kwargs):
         super(YearForm, self).__init__(*args, **kwargs)
