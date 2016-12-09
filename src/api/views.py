@@ -27,17 +27,20 @@ def is_finished(run_id, card_id, cur_counter, last, run_parallel):
 
     """
 
+    # if the card is running in parallel
     if run_parallel:
+        # get all the sub-cards for the card
         sub_card_item = SubCardItem.objects.filter(
                 run_id=int(run_id),
                 card_id=int(card_id)
         ).values_list('state', flat=True)
 
-        is_finish = ('running' not in sub_card_item and 'pending' not in sub_card_item)
-
+        # if there is no "running" status and the "pending" in the list of sub-cards, the card is finished the Run
         if 'running' not in sub_card_item and 'pending' not in sub_card_item:
             return True
+    # if the card is running in successively
     else:
+        # if the current number of card coincides with the latter number, the card is finished the Run
         if cur_counter == last:
             return True
 
