@@ -1,15 +1,19 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 from subprocess import Popen
+import os
 
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.decorators import api_view
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 
-from core.utils import (validate_status, write_log,
-                        get_path_folder_run, execute_fe_command)
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+
+from core.utils import (validate_status, write_log, get_path_folder_run, execute_fe_command)
 from gsi.models import Run, RunStep, CardSequence, OrderedCardItem, SubCardItem
 from gsi.settings import EXECUTE_FE_COMMAND
 from cards.models import CardItem
@@ -62,6 +66,8 @@ def set_state_fail(obj, state):
 
 
 @api_view(['GET'])
+@authentication_classes((SessionAuthentication, BasicAuthentication))
+@permission_classes((IsAuthenticated,))
 def update_run(request, run_id):
     """Update the status of the card.
 
@@ -104,7 +110,6 @@ def update_run(request, run_id):
             except Exception, e:
                 pass
 
-            # for step in steps:
             # Go to the next step only on success state
             if state == 'fail':
                 params = []
@@ -222,7 +227,8 @@ def update_run(request, run_id):
                 run_state = set_state_fail(run, state)
                 step_state = set_state_fail(step, state)
         except Exception, e:
-            pass
+            data['status'] = False
+            data['message'] = str(e)
         except ObjectDoesNotExist as e:
             data['status'] = False
             data['message'] = str(e)
@@ -230,3 +236,58 @@ def update_run(request, run_id):
         return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
     return Response(data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@authentication_classes((SessionAuthentication, BasicAuthentication))
+@permission_classes((IsAuthenticated,))
+def api_gsi_maps(request):
+    """API to get ready card images."""
+
+    data = {}
+    # path_to_map_images = '/home/w23/mattgsi/gsi/MissionSource/Web_GeoChart'
+    path_to_map_images = '/home/gsi/Web_GeoChart/GSiMaps/png'
+    root_url_gsimap = 'http://indy41.epcc.ed.ac.uk/'
+    url_status = status.HTTP_200_OK
+
+    if request.GET:
+        data_get = request.GET
+
+        if data_get.get('param1', ''):
+            data['param 1'] = data_get.get('param1', '')
+        else:
+            data['message error param1'] = 'Invalid or missing the param1 in the request GET.'
+            url_status = status.HTTP_400_BAD_REQUEST
+
+        if data_get.get('param2', ''):
+            data['param 2'] = data_get.get('param2', '')
+        else:
+            data['message error param2'] = 'Invalid or missing the param2 in the request GET.'
+            url_status = status.HTTP_400_BAD_REQUEST
+
+        if data_get.get('param3', ''):
+            data['param 3'] = data_get.get('param3', '')
+        else:
+            data['message error param3'] = 'Invalid or missing the param3 in the request GET.'
+            url_status = status.HTTP_400_BAD_REQUEST
+
+        if url_status == status.HTTP_200_OK:
+            try:
+                root, dirs, files = os.walk(path_to_map_images).next()
+                data['results'] = []
+
+                for f in files:
+                    dict_tmp = {}
+                    file_without_ext = f.split('.png')[0]
+                    dict_tmp['file'] = f
+                    dict_tmp['url'] = root_url_gsimap + 'GSiMap.php?q=images/{0}'.format(file_without_ext)
+                    dict_tmp['description'] = 'a brief description of the map'
+                    data['results'].append(dict_tmp)
+            except Exception, e:
+                data['message error'] = 'No such file or directory: {0}'.format(path_to_map_images)
+                url_status = status.HTTP_500_INTERNAL_SERVER_ERROR
+    else:
+        data['message error'] = 'Invalid or missing request GET.'
+        url_status = status.HTTP_400_BAD_REQUEST
+
+    return Response(data, status=url_status)

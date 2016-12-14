@@ -39,7 +39,9 @@ def validate_status(status):
     """
 
 	from gsi.models import STATES
+
 	states = [st[0] for st in STATES]
+	
 	if not status or status not in states:
 		return {
 			'status': False,

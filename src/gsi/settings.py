@@ -128,6 +128,16 @@ ENABLE_DEBUG_TOOLBAR = False
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# REST_FRAMEWORK
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        # 'rest_framework.permissions.IsAdminUser',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'PAGINATE_BY': 10
+}
+
 # home folder for new cripts
 SCRIPTS_HOME = '/lustre/w23/mattgsi/'
 
