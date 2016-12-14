@@ -287,7 +287,7 @@ def api_gsi_maps(request):
                 data['message error'] = 'No such file or directory: {0}'.format(path_to_map_images)
                 url_status = status.HTTP_500_INTERNAL_SERVER_ERROR
     else:
-        data['message error'] = 'Invalid or missing request GET.'
+        data['message error'] = 'Invalid or missing the parameters for request GET.'
         url_status = status.HTTP_400_BAD_REQUEST
 
     return Response(data, status=url_status)
