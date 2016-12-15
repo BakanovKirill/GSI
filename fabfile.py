@@ -16,6 +16,11 @@ def pull_changes_on_remotes():
         run("git pull")
 
 
+def clean_pyc():
+	with cd(REMOTE_CODE_DIR):
+		run('find . -name "*.pyc" -delete', shell=False)
+
+
 def restart():
     with cd(REMOTE_CODE_DIR):
         sudo("service supervisor restart")
@@ -72,4 +77,5 @@ def update_dev_db():
 def deploy():
     push_local_changes()
     pull_changes_on_remotes()
+    clean_pyc()
     restart()
