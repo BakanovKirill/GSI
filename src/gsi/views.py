@@ -40,6 +40,7 @@ from log.logger import get_logs
 
 def handle_uploaded_file(f, path):
     """**Upload file on the server.**
+
     :Arguments:
         * *f*: File name
         * *path*: Path where to save the file
@@ -52,10 +53,12 @@ def handle_uploaded_file(f, path):
 
 def update_qrf_rftrain_card(cs, cs_cards):
     """**Update the QRF and RFtrain cards.**
+
     :Functions:
         The method takes the CardSequence model object and list of cards of CardSequence object.
         If the card QRF, it is written to the path of configfile CardSequence object.
         If the card RFtrain, it is written the name of the configfile of the CardSequence object.
+
     :Arguments:
         * *cs*: The CardSequence object
         * *cs_cards*: List of the cards from the CardSequence object
@@ -82,8 +85,10 @@ def update_qrf_rftrain_card(cs, cs_cards):
 
 def write_card_to_cs(card_sequence, query):
     """**Update the QRF and RFtrain cards.**
+
     :Functions:
         Method writes an object CardSequence card objects.
+
     :Arguments:
         * *card_sequence*: The CardSequence object
         * *query*: request POST
@@ -105,8 +110,10 @@ def write_card_to_cs(card_sequence, query):
 
 def copy_runbase(request, name):
     """**Copy the RunBase object.**
+
     :Functions:
         The method creates a copy of an existing of the RunBase object.
+
     :Arguments:
         * *name*: The RunBase object name
         * *request:* The request is sent to the server when processing the page
@@ -167,8 +174,10 @@ def copy_runbase(request, name):
 
 def get_number_cards(rb, user):
     """**Get the number of cards in the object RunBase.**
+
     :Functions:
         The method creates a copy of an existing of the CardSequence object.
+
     :Arguments:
         * *rb*: The RunBase object
         * *user*: Current the user
@@ -190,6 +199,7 @@ def get_number_cards(rb, user):
 @render_to('gsi/upload_file.html')
 def upload_file(request):
     """**View for the "Upload Test Data" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
@@ -235,6 +245,7 @@ def upload_file(request):
 @render_to('gsi/index.html')
 def index(request):
     """**View for the Main page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
@@ -284,6 +295,7 @@ def index(request):
 @render_to('gsi/run_setup.html')
 def run_setup(request):
     """**View for the "Setup New Run" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
@@ -394,6 +406,7 @@ def run_setup(request):
 @render_to('gsi/new_run.html')
 def new_run(request):
     """**View for the "New Run" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
@@ -462,6 +475,7 @@ def new_run(request):
 @render_to('gsi/run_update.html')
 def run_update(request, run_id):
     """**View for the "Upload Test Data" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
         * *run_id:* The RunBase object ID
@@ -531,6 +545,7 @@ def run_update(request, run_id):
 @render_to('gsi/card_sequence_update.html')
 def card_sequence_update(request, run_id, cs_id):
     """**View the CardSequence object for editing in the creation of the Run.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
 	    * *run_id:* The RunBase object ID
@@ -707,6 +722,7 @@ def card_sequence_update(request, run_id, cs_id):
 @render_to('gsi/submit_run.html')
 def submit_run(request):
     """**View for the "Submit a Run" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
@@ -775,6 +791,7 @@ def submit_run(request):
 @render_to('gsi/run_progress.html')
 def run_progress(request):
     """**View for the "View Run Progress" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
@@ -865,6 +882,7 @@ def run_progress(request):
 @render_to('gsi/run_details.html')
 def run_details(request, run_id):
     """**View the details executed of run of the cards.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
 	    * *run_id:* The RunStep object ID
@@ -952,6 +970,7 @@ def run_details(request, run_id):
 @render_to('gsi/view_log_file.html')
 def view_log_file(request, run_id, card_id, status):
     """**View details of the files *.err and *.out  of the cards.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
 	    * *run_id:* The RunStep object ID
@@ -1016,6 +1035,7 @@ def view_log_file(request, run_id, card_id, status):
 @render_to('gsi/view_log_file_sub_card.html')
 def view_log_file_sub_card(request, run_id, card_id, count, status):
     """**View details of the files *.err and *.out  of the sub-cards.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
 	    * *run_id:* The RunStep object ID
@@ -1087,6 +1107,7 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
 @render_to('gsi/sub_card_details.html')
 def sub_card_details(request, run_id, card_id):
     """**View the details executed of run of the cards.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
 	    * *run_id:* The RunStep object ID
@@ -1158,6 +1179,7 @@ def sub_card_details(request, run_id, card_id):
 @render_to('gsi/home_variable_setup.html')
 def home_variable_setup(request):
     """**View for the "Home Variables Setup" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
@@ -1225,6 +1247,7 @@ def home_variable_setup(request):
 @render_to('gsi/environment_groups_list.html')
 def environment_groups(request):
     """**View for the "Environment Groups" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
@@ -1323,6 +1346,7 @@ def environment_groups(request):
 @render_to('gsi/static_data_item_edit.html')
 def environment_group_add(request):
     """**View for the "Environment Group Add" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
@@ -1370,6 +1394,7 @@ def environment_group_add(request):
 @render_to('gsi/static_data_item_edit.html')
 def environment_group_edit(request, env_id):
     """**View for the "Environment Group "<name>" Edit" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
         * *env_id:* The VariablesGroup object ID
@@ -1425,6 +1450,7 @@ def environment_group_edit(request, env_id):
 @render_to('gsi/areas_list.html')
 def areas(request):
     """**View for the "Areas" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
@@ -1521,8 +1547,10 @@ def areas(request):
 @render_to('gsi/static_data_item_edit.html')
 def area_add(request):
     """**View for the "Area Add" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
+
     """
 
     title = 'Area Add'
@@ -1569,6 +1597,7 @@ def area_add(request):
 @render_to('gsi/static_data_item_edit.html')
 def area_edit(request, area_id):
     """**View for the "Area "<name>" Edit" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
         * *area_id:* The Area object ID
@@ -1623,6 +1652,7 @@ def area_edit(request, area_id):
 @render_to('gsi/years_group_list.html')
 def years_group(request):
     """**View for the "Years Groups" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
@@ -1718,6 +1748,7 @@ def years_group(request):
 @render_to('gsi/static_data_item_edit.html')
 def years_group_add(request):
     """**View for the "Years Group Add" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
@@ -1767,6 +1798,7 @@ def years_group_add(request):
 @render_to('gsi/static_data_item_edit.html')
 def years_group_edit(request, yg_id):
     """**View for the "Years Group "<name>" Edit" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
         * *yg_id:* The YearGroup object ID
@@ -1828,6 +1860,7 @@ def years_group_edit(request, yg_id):
 @render_to('gsi/satellite_list.html')
 def satellite(request):
     """**View for the "Satellite" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
@@ -1924,6 +1957,7 @@ def satellite(request):
 @render_to('gsi/static_data_item_edit.html')
 def satellite_add(request):
     """**View for the "Satellites Add" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
@@ -1973,6 +2007,7 @@ def satellite_add(request):
 @render_to('gsi/static_data_item_edit.html')
 def satellite_edit(request, satellite_id):
     """**View for the "Satellite Edit '<name>' page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
         * *satellite_id:* The Satellite object ID
@@ -2028,6 +2063,7 @@ def satellite_edit(request, satellite_id):
 @render_to('gsi/input_data_dir_list.html')
 def input_data_dir_list(request):
     """**View for the "Input Data Directory" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
@@ -2136,6 +2172,7 @@ def input_data_dir_list(request):
 @render_to('gsi/static_data_item_edit.html')
 def input_data_dir_add(request):
     """**View for the "Input Data Directory Add" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
@@ -2185,6 +2222,7 @@ def input_data_dir_add(request):
 @render_to('gsi/static_data_item_edit.html')
 def input_data_dir_edit(request, dir_id):
     """**View for the "Input Data Directory Edit "<name>"" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
         * *dir_id:* The InputDataDirectory object ID
@@ -2240,6 +2278,7 @@ def input_data_dir_edit(request, dir_id):
 @render_to('gsi/cards_list.html')
 def cards_list(request, *args, **kwargs):
     """**View for the "Cards List" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
@@ -2346,6 +2385,7 @@ def cards_list(request, *args, **kwargs):
 @render_to('gsi/audit_history.html')
 def audit_history(request, run_id):
     """**View for the "Audit record for '<name>'" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
         * *run_id:* The RunBase object
@@ -2372,6 +2412,7 @@ def audit_history(request, run_id):
 @render_to('gsi/view_results.html')
 def view_results(request, run_id):
     """**View for the "View results '<name>'" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
         * *run_id:* The RunBase object ID
@@ -2413,6 +2454,7 @@ def view_results(request, run_id):
 @render_to('gsi/view_results_folder.html')
 def view_results_folder(request, run_id, prev_dir, dir):
     """**View for the "View results '<name>'" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
         * *run_id:* The RunBase object ID
@@ -2486,6 +2528,7 @@ def view_results_folder(request, run_id, prev_dir, dir):
 @render_to('gsi/resolution_list.html')
 def resolution(request):
     """**View for the "Resolutions" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
@@ -2583,6 +2626,7 @@ def resolution(request):
 @render_to('gsi/static_data_item_edit.html')
 def resolution_add(request):
     """**View for the 'Resolution Add' page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
@@ -2632,6 +2676,7 @@ def resolution_add(request):
 @render_to('gsi/static_data_item_edit.html')
 def resolution_edit(request, resolution_id):
     """**View for the "Resolution Edit '<name>'" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
         * *resolution_id:* The Resolution object ID
@@ -2687,6 +2732,7 @@ def resolution_edit(request, resolution_id):
 @render_to('gsi/tiles_list.html')
 def tiles(request):
     """**View for the "Tiles" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
@@ -2784,6 +2830,7 @@ def tiles(request):
 @render_to('gsi/static_data_item_edit.html')
 def tile_add(request):
     """**View for the "Tile Add" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
@@ -2833,6 +2880,7 @@ def tile_add(request):
 @render_to('gsi/static_data_item_edit.html')
 def tile_edit(request, tile_id):
     """**View for the "Tile Edit '<name>'" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
         * *tile_id:* The Tile object ID
@@ -2888,6 +2936,7 @@ def tile_edit(request, tile_id):
 @render_to('gsi/years_list.html')
 def years(request):
     """**View for the "Years" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
@@ -2985,6 +3034,7 @@ def years(request):
 @render_to('gsi/static_data_item_edit.html')
 def year_add(request):
     """**View for the "Year Add" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
@@ -3034,6 +3084,7 @@ def year_add(request):
 @render_to('gsi/static_data_item_edit.html')
 def year_edit(request, year_id):
     """**View for the "Year Edit '<name>'" page.**
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
         * *year_id:* The Year object ID
@@ -3089,10 +3140,12 @@ def year_edit(request, year_id):
 @render_to('gsi/customer_section.html')
 def customer_section(request):
     """**View for the "Customer '<user>' section" page.**
+
     :Functions:
         When you load the page is loaded map with Google MAP. Initial coordinates: eLat = 0, eLng = 0.
         Zoom map is variable GOOGLE_MAP_ZOOM, whose value is in the project settings.
         Code view allows to change position when you enter values in the fields on the page "Enter Lat" and "Enter Log".
+        
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """

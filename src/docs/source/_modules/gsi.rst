@@ -43,3 +43,11 @@ Gsi.signals
 
 .. automodule:: gsi.signals
     :members:
+
+Gsi.tests
+=======================
+
+**This module contains the tests for the gsi app.**
+
+.. automodule:: gsi.tests.test_signals
+    :members:

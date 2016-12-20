@@ -14,3 +14,4 @@ python-magic==0.4.11
 django-extensions
 django-crispy-forms==1.4.0
 django-ckeditor==5.1.1
+coverage==4.2

@@ -90,9 +90,11 @@ def update_run(request, run_id):
     name_sub_card = '{0}_{1}'.format(order_card_item_id, cur_counter)
     finished = False
 
+    # if the status is valid
     if data['status']:
         state = data['status']
 
+        # get the data of Run
         try:
             run = Run.objects.get(id=run_card_id)
             sequence = CardSequence.objects.get(id=card_sequence_id)
@@ -103,6 +105,8 @@ def update_run(request, run_id):
             cur_state = step.state
             run_parallel = False
 
+            # if the run is parallel
+            # get name of sub-card
             try:
                 if card.run_parallel:
                     run_parallel = True
@@ -110,7 +114,7 @@ def update_run(request, run_id):
             except Exception, e:
                 pass
 
-            # Go to the next step only on success state
+            # check the status and perform card processing
             if state == 'fail':
                 params = []
 
@@ -245,7 +249,6 @@ def api_gsi_maps(request):
     """API to get ready card images."""
 
     data = {}
-    # path_to_map_images = '/home/w23/mattgsi/gsi/MissionSource/Web_GeoChart'
     path_to_map_images = '/home/gsi/Web_GeoChart/GSiMaps/png'
     root_url_gsimap = 'http://indy41.epcc.ed.ac.uk/'
     url_status = status.HTTP_200_OK

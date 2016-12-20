@@ -3,6 +3,8 @@ from django.test import TestCase
 from ..models import Tile, Area
 
 class GsiSignalsTests(TestCase):
+    """Tests the signals for the gsi app."""
+
     def setUp(self):
         tile_1 = Tile.objects.create(name='tile_1')
         tile_2 = Tile.objects.create(name='tile_2')
@@ -14,7 +16,7 @@ class GsiSignalsTests(TestCase):
         area_1.tiles.add(tile_3)
 
     def test_added_update_area_for_each_tile(self):
-        '''test signal added_update_area_for_each_tile'''
+        """The test signal that adds a new tile to the Area model when creating the new tiles"""
 
         self.assertEqual(3, Tile.objects.all().count())
         self.assertEqual(4, Area.objects.all().count())
@@ -29,7 +31,7 @@ class GsiSignalsTests(TestCase):
         self.assertEqual(tile, area.tiles.get())
 
     def test_remove_empty_area_by_removing_tile(self):
-        '''test signal remove_empty_area_by_removing_tile'''
+        """The test signal that removes the object Area if removing all the tiles from the object Area"""
 
         self.assertEqual(3, Tile.objects.all().count())
         self.assertEqual(4, Area.objects.all().count())
@@ -49,4 +51,3 @@ class GsiSignalsTests(TestCase):
         tile2.delete()
         self.assertEqual(3, Tile.objects.all().count())
         self.assertEqual(4, Area.objects.all().count())
-
