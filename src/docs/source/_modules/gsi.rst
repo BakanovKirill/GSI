@@ -51,3 +51,6 @@ Gsi.tests
 
 .. automodule:: gsi.tests.test_signals
     :members:
+
+.. automodule:: gsi.tests.test_models
+    :members:

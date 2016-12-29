@@ -48,12 +48,6 @@ mkmigr_article:
 migrate_article:
 	$(MANAGE) migrate articles
 
-test_gsi:
-	$(MANAGE) test gsi
-
-test_cards:
-	$(MANAGE) test cards
-
 deploy:
 	fab deploy
 
@@ -78,3 +72,12 @@ fill_name:
 
 update_dev_db:
 	fab update_dev_db
+
+docs:
+	fab docs
+
+test_gsi:
+	fab test_gsi
+
+test_cards:
+	fab test_cards

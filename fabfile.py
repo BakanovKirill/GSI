@@ -1,5 +1,7 @@
 # coding: utf-8
 from fabric.api import *
+import webbrowser
+import os
 
 from fab_local import GSI_APP_SERVER, REMOTE_CODE_DIR, ENV_PASS
 
@@ -72,6 +74,44 @@ def update_dev_db():
         local("tar zxvf latest.sql.tgz")
         local("psql gsi < latest.sql")
         local("rm latest.sql latest.sql.tgz")
+
+
+def test_html():
+    cur_dir = os.curdir
+    full_path_cur_dir = os.path.abspath(os.curdir)
+    path_to_cover_html = os.path.join(full_path_cur_dir, 'htmlcov')
+    full_path_to_index = path_to_cover_html + '/index.html'
+
+    local("coverage html")
+    webbrowser.open(full_path_to_index)
+
+
+def test_gsi():
+    local("coverage run --source=gsi.tests bin/django test gsi.tests -v 2")
+    test_html()
+
+
+def test_cards():
+    local("coverage run --source=cards.tests bin/django test cards.tests -v 2")
+    test_html()
+
+
+def create_docs():
+    cur_dir = os.curdir
+    full_path_cur_dir = os.path.abspath(os.curdir)
+    path_to_docs_html = os.path.join(full_path_cur_dir, 'src/docs')
+
+    with lcd(path_to_docs_html):
+        local("make html")
+
+
+def docs():
+    cur_dir = os.curdir
+    full_path_cur_dir = os.path.abspath(os.curdir)
+    path_to_docs_html = os.path.join(full_path_cur_dir, 'src/docs/build/html')
+    full_path_to_index = path_to_docs_html + '/index.html'
+    create_docs()
+    webbrowser.open(full_path_to_index)
 
 
 def deploy():

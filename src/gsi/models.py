@@ -231,8 +231,7 @@ class Resolution(UnicodeNameMixin, models.Model):
 
     name = models.CharField(
         max_length=50,
-        help_text=_(
-            'This will be a short display of the value, i.e. 1KM, 250M'))
+        help_text=_('This will be a short display of the value, i.e. 1KM, 250M'))
     value = models.CharField(
         max_length=20,
         help_text=_('Value in meters, e.g 1000 for 1KM display name'))
@@ -254,7 +253,7 @@ class OrderedCardItem(models.Model):
     """**Model for the Ordered Card Items.**
 
     :Functions:
-        The OrderedCardItem model is designed for relational communication the objects of models of cards with objects CardSequence model
+        The OrderedCardItem is an intermediary model for designed relational communication the objects of cards models with objects CardSequence model
 
     :Fields:
 

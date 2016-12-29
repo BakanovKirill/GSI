@@ -7,8 +7,15 @@ from core.utils import (make_run, update_root_list_files, update_list_dirs, upda
 from .models import (HomeVariables, VariablesGroup, Tile, Area, YearGroup,
                      Year, CardSequence, RunBase, RunStep, Run,
                      Resolution, Log, TileType, Satellite, InputDataDirectory,
-                     ListTestFiles, SubCardItem)
+                     ListTestFiles, SubCardItem, ConfigFile)
 from solo.admin import SingletonModelAdmin
+
+
+admin.site.register(Resolution, admin.ModelAdmin)
+admin.site.register(Log, admin.ModelAdmin)
+admin.site.register(TileType, admin.ModelAdmin)
+admin.site.register(Satellite, admin.ModelAdmin)
+admin.site.register(ConfigFile, admin.ModelAdmin)
 
 
 class AreaAdmin(admin.ModelAdmin):
@@ -68,10 +75,6 @@ class RunStepAdmin(admin.ModelAdmin):
 admin.site.register(RunBase, RunBaseAdmin)
 admin.site.register(Run, RunAdmin)
 admin.site.register(RunStep, RunStepAdmin)
-admin.site.register(Resolution, admin.ModelAdmin)
-admin.site.register(Log, admin.ModelAdmin)
-admin.site.register(TileType, admin.ModelAdmin)
-admin.site.register(Satellite, admin.ModelAdmin)
 
 
 class InputDataDirectoryAdmin(admin.ModelAdmin):

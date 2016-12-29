@@ -6,6 +6,8 @@ class GsiSignalsTests(TestCase):
     """Tests the signals for the gsi app."""
 
     def setUp(self):
+        """We set the initial data."""
+        
         tile_1 = Tile.objects.create(name='tile_1')
         tile_2 = Tile.objects.create(name='tile_2')
         tile_3 = Tile.objects.create(name='tile_3')

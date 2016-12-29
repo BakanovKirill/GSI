@@ -508,7 +508,8 @@ class CardItem(models.Model):
         models.Q(app_label='cards', model='rfscore') |
         models.Q(app_label='cards', model='qrf') |
         models.Q(app_label='cards', model='randomforest') |
-        models.Q(app_label='cards', model='calcstats')
+        models.Q(app_label='cards', model='calcstats') |
+        models.Q(app_label='cards', model='csv')
     )
 
     name = models.CharField(max_length=200, null=True, blank=True)

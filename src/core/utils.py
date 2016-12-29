@@ -41,7 +41,7 @@ def validate_status(status):
 	from gsi.models import STATES
 
 	states = [st[0] for st in STATES]
-	
+
 	if not status or status not in states:
 		return {
 			'status': False,
@@ -270,10 +270,13 @@ def create_new_folder(dir):
 
 	from gsi.models import HomeVariables as Home
 
-	home_var = Home.objects.all()
-	full_path = os.path.join(home_var[0].RF_AUXDATA_DIR, dir)
-
 	try:
+		home_var = Home.objects.all()
+
+		if home_var[0].RF_AUXDATA_DIR:
+			full_path = os.path.join(home_var[0].RF_AUXDATA_DIR, dir)
+		else:
+			full_path = '/' + dir
 		os.makedirs(full_path)
 	except OSError, e:
 		print '*** FOLDER EXIST ***: ', e
