@@ -244,7 +244,6 @@ def create_sub_dir(path):
 	"""**Method to create directorys: Results, Scores, Trees.**"""
 	from gsi.models import HomeVariables
 
-
 	error_message = ''
 
 	try:

@@ -1,8 +1,10 @@
 from datetime import datetime
+import os
 
 from django.test import TestCase
 from django.db import IntegrityError
 from django.contrib.contenttypes.models import ContentType
+from django.core.files import File
 
 from gsi.models import (HomeVariables, VariablesGroup, Tile, Area, Year, YearGroup, Satellite, InputDataDirectory,
                         ListTestFiles, Resolution, TileType, OrderedCardItem, ConfigFile, CardSequence, Log)
@@ -273,24 +275,20 @@ class ModelsTestCase(TestCase):
         """Testing start of the Log model."""
 
         log_all = Log.objects.all()
-        # card_item_all = CardItem.objects.all()
-        #
-        # self.assertEqual(1, card_item_all.count())
-        # self.assertEqual(1, cardsequence_all.count())
-        # self.assertTrue(CardSequence.objects.get(name='CS155'))
-        #
-        # cardsequence = CardSequence.objects.get(name='CS155')
-        # variables_group = VariablesGroup.objects.get(name='1km_override')
-        # card_item = CardItem.objects.get(name='QRF')
-        # configfile = ConfigFile.objects.get(pathname='AUZ_SOC_2.cfg')
-        #
-        # cardsequence.environment_base = variables_group
-        # cardsequence.environment_override = 'This text field'
-        # cardsequence.cards.add(card_item)
-        # cardsequence.configfile = configfile
-        # cardsequence.save()
-        #
-        # cardsequence_all = CardSequence.objects.all()
-        #
-        # self.assertEqual(1, cardsequence_all.count())
-        # self.assertTrue(CardSequence.objects.get(name='CS155'))
+
+        self.assertEqual(1, log_all.count())
+        self.assertTrue(Log.objects.get(name='1255_670.log'))
+
+        file_dir = os.path.abspath(os.curdir)
+        full_file_path = os.path.join(file_dir, 'src/gsi/tests/1255_670.log')
+
+        log = Log.objects.get(name='1255_670.log')
+
+        self.assertFalse(log.log_file)
+
+        log_file = open(full_file_path, 'rb')
+        log_file = File(log_file)
+        log.log_file = log_file
+        log.save()
+
+        self.assertTrue(log.log_file)
