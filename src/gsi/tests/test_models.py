@@ -5,17 +5,22 @@ from django.test import TestCase
 from django.db import IntegrityError
 from django.contrib.contenttypes.models import ContentType
 from django.core.files import File
+from django.contrib.auth.models import User
 
 from gsi.models import (HomeVariables, VariablesGroup, Tile, Area, Year, YearGroup, Satellite, InputDataDirectory,
-                        ListTestFiles, Resolution, TileType, OrderedCardItem, ConfigFile, CardSequence, Log)
+                        ListTestFiles, Resolution, TileType, OrderedCardItem, ConfigFile, CardSequence, Log, RunBase)
 from cards.models import CardItem, QRF
 
 
 class ModelsTestCase(TestCase):
     """The test the GSI models"""
 
+    fixtures = ['users_data.json']
+
     def setUp(self):
         """We set the initial data."""
+
+        current_user = User.objects.get(username='admin')
 
         home_variables = HomeVariables.objects.create(
             SAT_TIF_DIR_ROOT='/lustre/w23/mattgsi/satdata/sat_tif/250m',
@@ -70,6 +75,17 @@ class ModelsTestCase(TestCase):
         log = Log.objects.create(
                 name='1255_670.log',
                 log_file_path='/lustre/w23/mattgsi/scripts/runs/R_1255/LOGS')
+
+        # When you create the object RonBase creates the object CardSequence
+        runbase = RunBase.objects.create(
+                    name='Crop_Batch_1_sugarcane',
+                    author=current_user,
+                    description='Remap sugarcane',
+                    purpose='global images of sugarcane',
+                    directory_path='Crop_Batch_1',
+                    resolution=resolution,
+                    card_sequence=cardsequence
+                )
 
     def test_homevariable_model(self):
         """Testing start HomeVariables model.
@@ -250,7 +266,8 @@ class ModelsTestCase(TestCase):
 
         # Check what created an object of the CardItem model
         self.assertEqual(1, card_item_all.count())
-        self.assertEqual(1, cardsequence_all.count())
+        # You should get two objects CardSequence
+        self.assertEqual(2, cardsequence_all.count())
         self.assertTrue(CardSequence.objects.get(name='CS155'))
 
         cardsequence = CardSequence.objects.get(name='CS155')
@@ -268,7 +285,8 @@ class ModelsTestCase(TestCase):
 
         cardsequence_all = CardSequence.objects.all()
 
-        self.assertEqual(1, cardsequence_all.count())
+        # You should get two objects CardSequence
+        self.assertEqual(2, cardsequence_all.count())
         self.assertTrue(OrderedCardItem.objects.get(card_item=card_item, sequence=cardsequence))
 
     def test_log_model(self):
@@ -292,3 +310,19 @@ class ModelsTestCase(TestCase):
         log.save()
 
         self.assertTrue(log.log_file)
+
+    def test_runbase_model(self):
+        """Testing start of the TileType model."""
+
+        runbase_all = RunBase.objects.all()
+        current_user = User.objects.get(username='admin')
+
+        self.assertEqual(1, runbase_all.count())
+        self.assertTrue(RunBase.objects.get(name='Crop_Batch_1_sugarcane'))
+
+        runbase = RunBase.objects.get(name='Crop_Batch_1_sugarcane')
+
+        self.assertEqual('admin', runbase.author.username)
+        self.assertTrue(runbase.author)
+        self.assertTrue(runbase.date_created)
+        self.assertTrue(runbase.date_modified)
