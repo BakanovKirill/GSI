@@ -115,6 +115,7 @@ def docs():
 
 
 def deploy():
+    clean_pyc()
     push_local_changes()
     pull_changes_on_remotes()
     clean_pyc()

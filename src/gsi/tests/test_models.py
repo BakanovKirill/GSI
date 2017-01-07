@@ -15,12 +15,10 @@ from cards.models import CardItem, QRF
 class ModelsTestCase(TestCase):
     """The test the GSI models"""
 
-    fixtures = ['users_data.json']
-
     def setUp(self):
         """We set the initial data."""
 
-        current_user = User.objects.get(username='admin')
+        current_user = User.objects.create(username='admin')
 
         home_variables = HomeVariables.objects.create(
             SAT_TIF_DIR_ROOT='/lustre/w23/mattgsi/satdata/sat_tif/250m',
