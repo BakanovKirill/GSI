@@ -78,14 +78,6 @@ class WikiUpdateView(UpdateView):
 
     def get_form_kwargs(self):
         kwargs = super(WikiUpdateView, self).get_form_kwargs()
-        # print 'kwargs ========================== ', kwargs['instance'].id
-        # print 'kwargs ========================== ', kwargs
-        # kwargs.update({
-        #     'initial': {'article': 1}
-        # })
-        #
-        # print 'kwargs ========================== ', kwargs
-
         return kwargs
 
     def get_success_url(self):
@@ -116,8 +108,6 @@ def wiki_edit(request, wiki_id):
     if request.method == "POST":
         data_post = request.POST
         form = WikiForm(data_post)
-
-        print 'POST 1 ============ ', data_post
 
     data = {'title': title,}
 
