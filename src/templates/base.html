@@ -156,6 +156,12 @@
                                                 <li class="li-sub-menu {% if url_name == 'cards_list' %}active-main-menu{% else %}li-menu{% endif %}">
                                                     <a href="{% url 'cards_list' %}">Cards</a>
                                                 </li>
+                                                <li class="li-sub-menu {% if url_name == 'categorys' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                    <a href="{% url 'categorys_list' %}">Categorys for the Mapping</a>
+                                                </li>
+                                                <li class="li-sub-menu {% if url_name == 'shelf_data' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                    <a href="{% url 'shelf_data_list' %}">Shelf Data</a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -166,19 +172,19 @@
                                             UPLOAD TEST DATA
                                         </a>
                                     </li>
+
+                                    <li class="li-menu">
+                                        <a href="http://gsi.readthedocs.io/en/latest/" target="_blank">
+                                            <img class="right-indent-10" src="{% static 'img/wiki-18.png' %}">
+                                            WIKI
+                                        </a>
+                                    </li>
                                 {% endif %}
 
                                 <li class="{% if url_name == 'customer_section' %}active-main-menu{% else %}li-menu{% endif %}">
                                     <a href="{% url 'customer_section' %}">
                                         <img class="right-indent-10" src="{% static 'img/customer_section.png' %}">
                                         CUSTOMER SECTION
-                                    </a>
-                                </li>
-
-                                <li class="li-menu">
-                                    <a href="http://gsi.readthedocs.io/en/latest/" target="_blank">
-                                        <img class="right-indent-10" src="{% static 'img/wiki-18.png' %}">
-                                        WIKI
                                     </a>
                                 </li>
                             </ul>

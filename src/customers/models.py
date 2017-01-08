@@ -14,7 +14,7 @@ class Category(models.Model):
         return u"{0}".format(self.name)
 
 
-class InfoPanelMapping(models.Model):
+class ShelfData(models.Model):
     category = models.ForeignKey('Category')
     attribute_name = models.CharField(max_length=100, blank=True, null=True)
     root_filename = models.CharField(max_length=100, blank=True, null=True)
@@ -22,7 +22,7 @@ class InfoPanelMapping(models.Model):
     description = models.TextField(blank=True, null=True)
 
     class Meta:
-        verbose_name_plural = 'Info Panel Mappings'
+        verbose_name_plural = 'Shelf Data'
 
     def __unicode__(self):
         return u"{0}".format(self.attribute_name)

@@ -1,0 +1,27 @@
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.name.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form.name.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-10">
+        {% if not form.name.errors %}
+            {{ form.name }}
+        {% else %}
+            <span class="field-error">{{ form.name }}</span>
+            <b class="error-form">{{ form.name.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-50">
+    <div class="col-md-2 col-md-offset-4">
+        <button type="submit" name="cancel_button" class="btn btn-default btn-block">Cancel</button>
+    </div>
+    <div class="col-md-4">
+        <button type="submit" name="save_and_another_button" class="btn btn-primary btn-block">Save and another</button>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" name="save_button" class="btn btn-primary btn-block">Save</button>
+    </div>
+</div>

@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-""" urls.py """
-from django.conf import settings
+"""Cards app urls.py"""
+
 from django.conf.urls import include, url
-from django.contrib import admin
-from django.contrib.auth import views as auth_views
+# from django.conf import settings
+# from django.contrib import admin
+# from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [

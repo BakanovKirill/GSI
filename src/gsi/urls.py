@@ -189,6 +189,7 @@ urlpatterns = [
 urlpatterns += [
 	url(r'^wiki/', include('articles.urls')),
 	url(r'^cards/', include('cards.urls')),
+	url(r'^customer/', include('customers.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
