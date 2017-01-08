@@ -61,6 +61,7 @@ INSTALLED_APPS = (
 
     'cards',
     'gsi',
+    'customers',
     'log',
     'tags',
     'articles',

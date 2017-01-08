@@ -5,9 +5,8 @@ from django import forms
 from django.db.models import Q
 from django.utils.translation import \
     ugettext_lazy as _  # Always aware of translations to other languages in the future -> wrap all texts into _()
-from .models import (RFScore, QRF, Collate, YearFilter,
-                     Remap, PreProc, MergeCSV, RFTrain,
-                     CardItem, OrderedCardItem, RandomForest, CalcStats)
+from .models import (RFScore, QRF, Collate, YearFilter, Remap, PreProc, MergeCSV, RFTrain,
+                    CardItem, OrderedCardItem, RandomForest, CalcStats)
 from gsi.models import ListTestFiles
 from core.utils import update_root_list_files
 

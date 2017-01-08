@@ -48,6 +48,12 @@ mkmigr_article:
 migrate_article:
 	$(MANAGE) migrate articles
 
+mkmigr_customers:
+	$(MANAGE) makemigrations customers
+
+migrate_customers:
+	$(MANAGE) migrate customers
+
 deploy:
 	fab deploy
 
