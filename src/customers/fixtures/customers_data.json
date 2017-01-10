@@ -1,0 +1,210 @@
+[
+    {
+        "fields": {
+            "name": "LAND COVER"
+        },
+        "model": "customers.category",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "name": "STRUCTURE"
+        },
+        "model": "customers.category",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "name": "BIOMASS"
+        },
+        "model": "customers.category",
+        "pk": 3
+    },
+    {
+        "fields": {
+            "category": 1,
+            "units": "%",
+            "attribute_name": "Non-vegetated proportion",
+            "root_filename": "LandCover_NonVeg",
+            "description": "% of non-vegetated polygons. Total cover of trees, shrubs, herbs and bryoids covers is less than 5% of the polygon area"
+        },
+        "model": "customers.shelfdata",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "category": 1,
+            "units": "%",
+            "attribute_name": "Vegetated treed  proportion",
+            "root_filename": "LandCover_VegNonTreed",
+            "description": "% of vegetated treed polygons. At least 10% of the polygon area, by crown cover, consists of tree species of any size "
+        },
+        "model": "customers.shelfdata",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "category": 1,
+            "units": "%",
+            "attribute_name": "Vegetated non-treed proportion",
+            "root_filename": "LandCover_VegTreed",
+            "description": "% of vegetated non-treed polygons"
+        },
+        "model": "customers.shelfdata",
+        "pk": 3
+    },
+    {
+        "fields": {
+            "category": 2,
+            "units": "years",
+            "attribute_name": "Site age",
+            "root_filename": "Structure_Stand_Age",
+            "description": "Mean age of the leading species of polygons"
+        },
+        "model": "customers.shelfdata",
+        "pk": 4
+    },
+    {
+        "fields": {
+            "category": 2,
+            "units": "m",
+            "attribute_name": "Site height",
+            "root_filename": "Structure_Stand_Height",
+            "description": "Mean height of the leading species in the polygons"
+        },
+        "model": "customers.shelfdata",
+        "pk": 5
+    },
+    {
+        "fields": {
+            "category": 2,
+            "units": "%",
+            "attribute_name": "Crown closure",
+            "root_filename": "Structure_Stand_CrownClosure",
+            "description": "Mean crown closure of polygons: % of ground area covered by the vertical projection of tree crown areas in the polygon"
+        },
+        "model": "customers.shelfdata",
+        "pk": 6
+    },
+    {
+        "fields": {
+            "category": 2,
+            "units": "m3/ha",
+            "attribute_name": "Merchantable volume",
+            "root_filename": "Structure_Volume_Merch",
+            "description": "Mean merchantable volume of polygons (from provincial agencies)"
+        },
+        "model": "customers.shelfdata",
+        "pk": 7
+    },
+    {
+        "fields": {
+            "category": 2,
+            "units": "m3/ha",
+            "attribute_name": "Total Volume",
+            "root_filename": "Structure_Volume_Total",
+            "description": "Mean total volume of polygons. Total volume includes all trees > 1.3m  with volume inside bark of the main stem, including stump and top as well as dead and decayed wood. Derived from model."
+        },
+        "model": "customers.shelfdata",
+        "pk": 8
+    },
+    {
+        "fields": {
+            "category": 3,
+            "units": "tonnes/ha",
+            "attribute_name": "Total live above ground biomass",
+            "root_filename": "Biomass_TotalLiveAG",
+            "description": "Mean total live above-ground dry biomass of polygons. Includes all trees > 1.3m with bark, main stem, stump and top. Derived from models."
+        },
+        "model": "customers.shelfdata",
+        "pk": 9
+    },
+    {
+        "fields": {
+            "category": 3,
+            "units": "tonnes/ha",
+            "attribute_name": "Branch biomass",
+            "root_filename": "Biomass_Branch",
+            "description": "Mean branch biomass component of polygons"
+        },
+        "model": "customers.shelfdata",
+        "pk": 10
+    },
+    {
+        "fields": {
+            "category": 3,
+            "units": "tonnes/ha",
+            "attribute_name": "Foliage biomass",
+            "root_filename": "Biomass_Foliage",
+            "description": "Mean foliage biomass component of polygons"
+        },
+        "model": "customers.shelfdata",
+        "pk": 11
+    },
+    {
+        "fields": {
+            "category": 3,
+            "units": "tonnes/ha",
+            "attribute_name": "Stem bark biomass",
+            "root_filename": "Biomass_StemBark",
+            "description": "Mean stem bark biomass component of polygons"
+        },
+        "model": "customers.shelfdata",
+        "pk": 12
+    },
+    {
+        "fields": {
+            "category": 3,
+            "units": "tonnes/ha",
+            "attribute_name": "Stem wood biomass",
+            "root_filename": "Biomass_StemWood",
+            "description": "Mean stem wood biomass component of polygons"
+        },
+        "model": "customers.shelfdata",
+        "pk": 13
+    },
+    {
+        "fields": {
+            "category": 3,
+            "units": "tonnes/ha",
+            "attribute_name": "Total dead biomass",
+            "root_filename": "Biomass_TotalDead",
+            "description": "Mean total dead standing biomass of polygons"
+        },
+        "model": "customers.shelfdata",
+        "pk": 14
+    },
+    {
+        "fields": {
+            "category": 3,
+            "units": "%",
+            "attribute_name": "Hardwood",
+            "root_filename": "Species_Hardwood",
+            "description": "% species composition of hardwood"
+        },
+        "model": "customers.shelfdata",
+        "pk": 15
+    },
+    {
+        "fields": {
+            "category": 3,
+            "units": "%",
+            "attribute_name": "Softwood",
+            "root_filename": "Species_Softwood",
+            "description": "% species composition of softwood"
+        },
+        "model": "customers.shelfdata",
+        "pk": 16
+    },
+    {
+        "fields": {
+            "category": 3,
+            "units": "%",
+            "attribute_name": "Shrub",
+            "root_filename": "Species_Shrub",
+            "description": "% species composition of shrub"
+        },
+        "model": "customers.shelfdata",
+        "pk": 17
+    }
+]
