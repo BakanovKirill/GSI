@@ -17,7 +17,7 @@ from customers.customers_forms import CategoryForm, ShelfDataForm
 # categorys list
 @user_passes_test(lambda u: u.is_superuser)
 @render_to('customers/categorys_list.html')
-def categorys_list(request):
+def categorys(request):
     """**View all categories in Shelf Data.**
 
     :Arguments:
@@ -126,10 +126,10 @@ def category_add(request):
     url_form = 'category_add'
     template_name = 'customers/_category_form.html'
     reverse_url = {
-        'save_button': 'categorys_list',
+        'save_button': 'categorys',
         'save_and_another': 'category_add',
         'save_and_continue': 'category_edit',
-        'cancel_button': 'categorys_list'
+        'cancel_button': 'categorys'
     }
     func = category_update_create
     form = None
@@ -177,10 +177,10 @@ def category_edit(request, category_id):
     url_form = 'category_edit'
     template_name = 'customers/_category_form.html'
     reverse_url = {
-        'save_button': 'categorys_list',
+        'save_button': 'categorys',
         'save_and_another': 'category_add',
         'save_and_continue': 'category_edit',
-        'cancel_button': 'categorys_list'
+        'cancel_button': 'categorys'
     }
     func = category_update_create
     form = None
@@ -220,7 +220,7 @@ def category_edit(request, category_id):
 # categorys list
 @user_passes_test(lambda u: u.is_superuser)
 @render_to('customers/shelf_data_list.html')
-def shelf_data_list(request):
+def shelf_data(request):
     """**View all Shelf Data.**
 
     :Arguments:
@@ -234,7 +234,7 @@ def shelf_data_list(request):
     shelf_data = ShelfData.objects.all()
     shelf_data_name = ''
 
-    # Sorted by name
+    # Sorted
     if request.method == "GET":
         order_by = request.GET.get('order_by', '')
 
@@ -255,7 +255,7 @@ def shelf_data_list(request):
 
             for r in run_id:
                 cur_run = get_object_or_404(ShelfData, pk=int(r))
-                data += '"' + cur_run.name + '", '
+                data += '"' + str(cur_run) + '", '
 
             data = data[:-2]
             data = '<b>' + data + '</b>'
@@ -267,7 +267,7 @@ def shelf_data_list(request):
             message = u'Are you sure you want to remove this objects:'
             run_id = data_post['cur_run_id']
             cur_run = get_object_or_404(ShelfData, pk=int(run_id))
-            data = '<b>"' + cur_run.name + '"</b>'
+            data = '<b>"' + str(cur_run) + '"</b>'
             data = '{0} {1}?'.format(message, data)
 
             return HttpResponse(data)
@@ -329,10 +329,10 @@ def shelf_data_add(request):
     url_form = 'shelf_data_add'
     template_name = 'customers/_shelf_data_form.html'
     reverse_url = {
-        'save_button': 'shelf_data_list',
+        'save_button': 'shelf_data',
         'save_and_another': 'shelf_data_add',
         'save_and_continue': 'shelf_data_edit',
-        'cancel_button': 'shelf_data_list'
+        'cancel_button': 'shelf_data'
     }
     func = shelf_data_update_create
     form = None
@@ -380,10 +380,10 @@ def shelf_data_edit(request, shelf_data_id):
     url_form = 'shelf_data_edit'
     template_name = 'customers/_shelf_data_form.html'
     reverse_url = {
-        'save_button': 'shelf_data_list',
+        'save_button': 'shelf_data',
         'save_and_another': 'shelf_data_add',
         'save_and_continue': 'shelf_data_edit',
-        'cancel_button': 'shelf_data_list'
+        'cancel_button': 'shelf_data'
     }
     func = shelf_data_update_create
     form = None

@@ -113,12 +113,12 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                 response = HttpResponseRedirect(
                     u'%s?status_message=%s' % (reverse(reverse_ulr['save_button'][0],
                                                        args=reverse_ulr['save_button'][1]),
-                    (u'The {0} "{1}" was edited.'.format(item, obj.name)))
+                    (u'The {0} "{1}" was edited.'.format(item, obj)))
                 )
             else:
                 response = HttpResponseRedirect(
                     u'%s?status_message=%s' % (reverse(reverse_ulr['save_button']),
-                    (u'The {0} "{1}" created successfully.'.format(item, obj.name)))
+                    (u'The {0} "{1}" created successfully.'.format(item, obj)))
                 )
         else:
             return form_1
@@ -152,13 +152,13 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                         u'%s?status_message=%s' % (reverse(reverse_ulr['save_and_another'][0],
                                                            args=reverse_ulr['save_and_another'][1]),
                         (u'The {0} "{1}" was added successfully. \
-                        You may add another {2} below'.format(item, obj.name, item)))
+                        You may add another {2} below'.format(item, obj, item)))
                 )
             else:
                 response = HttpResponseRedirect(
                         u'%s?status_message=%s' % (reverse(reverse_ulr['save_and_another']),
                         (u'The {0} "{1}" was added successfully. \
-                        You may add another {2} below'.format(item, obj.name, item)))
+                        You may add another {2} below'.format(item, obj, item)))
                 )
         else:
             return form_1
@@ -179,13 +179,13 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                     response = HttpResponseRedirect(
                             u'%s?status_message=%s' % (reverse(reverse_ulr['save_and_continue'][0],
                                                                args=reverse_ulr['save_and_continue'][1]+[obj.id]),
-                            (u'The {0} "{1}" was deleted successfully.'.format(item, obj.name)))
+                            (u'The {0} "{1}" was deleted successfully.'.format(item, obj)))
                     )
                 else:
                     response = HttpResponseRedirect(
                             u'%s?status_message=%s' % (reverse(reverse_ulr['save_and_continue'],
                                                                args=[obj.id]),
-                            (u'The {0} "{1}" was deleted successfully.'.format(item, obj.name)))
+                            (u'The {0} "{1}" was deleted successfully.'.format(item, obj)))
                     )
         else:
             return form_1
@@ -240,14 +240,14 @@ def get_post(request, item_form, item, reverse_ulr, func, args=False, item_id=No
                         u'%s?status_message=%s' % (reverse(reverse_ulr['save_and_continue'][0],
                                                            args=reverse_ulr['save_and_continue'][1]+[obj.id]),
                         (u'The {0} "{1}" will be saved. \
-                        You can continue editing.'.format(item, obj.name)))
+                        You can continue editing.'.format(item, obj)))
                 )
             else:
                 response = HttpResponseRedirect(
                         u'%s?status_message=%s' % (reverse(reverse_ulr['save_and_continue'],
                                                            args=[obj.id]),
                         (u'The {0} "{1}" will be saved. \
-                        You can continue editing.'.format(item, obj.name)))
+                        You can continue editing.'.format(item, obj)))
                 )
         else:
             return form_1

@@ -1,0 +1,91 @@
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.category.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form.category.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-10">
+        {% if not form.category.errors %}
+            {{ form.category }}
+        {% else %}
+            <span class="field-error">{{ form.category }}</span>
+            <b class="error-form">{{ form.category.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.attribute_name.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.attribute_name.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-10">
+        {% if not form.attribute_name.errors %}
+            {{ form.attribute_name }}
+        {% else %}
+            <span class="field-error">{{ form.attribute_name }}</span>
+            <b class="error-form">{{ form.attribute_name.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.root_filename.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.root_filename.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-10">
+        {% if not form.root_filename.errors %}
+            {{ form.root_filename }}
+        {% else %}
+            <span class="field-error">{{ form.root_filename }}</span>
+            <b class="error-form">{{ form.root_filename.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.units.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.units.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-10">
+        {% if not form.units.errors %}
+            {{ form.units }}
+        {% else %}
+            <span class="field-error">{{ form.units }}</span>
+            <b class="error-form">{{ form.units.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.description.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.description.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-10">
+        {% if not form.description.errors %}
+            {{ form.description }}
+        {% else %}
+            <span class="field-error">{{ form.description }}</span>
+            <b class="error-form">{{ form.description.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-50">
+    <div class="col-md-2 col-md-offset-4">
+        <button type="submit" name="cancel_button" class="btn btn-default btn-block">Cancel</button>
+    </div>
+    <div class="col-md-4">
+        <button type="submit" name="save_and_another_button" class="btn btn-primary btn-block">Save and another</button>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" name="save_button" class="btn btn-primary btn-block">Save</button>
+    </div>
+</div>
