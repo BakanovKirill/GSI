@@ -581,7 +581,7 @@ def data_set_add(request):
                     except StopIteration:
                         return HttpResponseRedirect(
                             u'%s?danger_message=%s' % (reverse('data_set_add'),
-                            (u'The directory "{0}" does not exist!'.format(form.cleaned_data['results_directory'])))
+                            (u'The directory "{0}" does not exist!'.format(results_directory)))
                         )
         else:
             response = get_post(request, DataSetForm, 'DataSet', reverse_url, func)
@@ -681,7 +681,7 @@ def data_set_edit(request, data_set_id):
                     except StopIteration:
                         return HttpResponseRedirect(
                             u'%s?danger_message=%s' % (reverse('data_set_edit', args=[data_set_id]),
-                            (u'The directory "{0}" does not exist!'.format(form.cleaned_data['results_directory'])))
+                            (u'The directory "{0}" does not exist!'.format(results_directory)))
                         )
         else:
             response = get_post(request, DataSetForm, 'DataSet', reverse_url, func, item_id=data_set_id)
