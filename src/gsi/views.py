@@ -206,6 +206,7 @@ def upload_file(request):
 
     title = 'Upload Test Data'
     url_name = 'upload_file'
+    but_name = 'info_panel'
 
     try:
         home_var = HomeVariables.objects.all()[0]
@@ -236,7 +237,7 @@ def upload_file(request):
                     form['test_data'].errors.as_text()))))
     else:
         form = UploadFileForm()
-    data = {'title': title, 'form': form, 'url_name': url_name}
+    data = {'title': title, 'form': form, 'url_name': url_name, 'but_name': but_name,}
 
     return data
 
@@ -3145,7 +3146,7 @@ def customer_section(request):
         When you load the page is loaded map with Google MAP. Initial coordinates: eLat = 0, eLng = 0.
         Zoom map is variable GOOGLE_MAP_ZOOM, whose value is in the project settings.
         Code view allows to change position when you enter values in the fields on the page "Enter Lat" and "Enter Log".
-        
+
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
