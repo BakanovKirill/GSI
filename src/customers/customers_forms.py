@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 
-from customers.models import (Category, ShelfData)
+from customers.models import (Category, ShelfData, DataSet)
 
 
 class CategoryForm(forms.ModelForm):
@@ -56,3 +56,46 @@ class ShelfDataForm(forms.ModelForm):
     class Meta:
         model = ShelfData
         fields = ['category', 'attribute_name', 'root_filename', 'units', 'description']
+
+
+class DataSetForm(forms.ModelForm):
+    """**Form for editing DataSet.**"""
+
+    def __init__(self, *args, **kwargs):
+        super(DataSetForm, self).__init__(*args, **kwargs)
+
+        if self.instance.shelf_data:
+            self.fields['root_filename'].initial = self.instance.shelf_data.root_filename
+            self.fields['attribute_name'].initial = self.instance.shelf_data.attribute_name
+        else:
+            self.fields['root_filename'].initial = ''
+            self.fields['attribute_name'].initial = ''
+
+    name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label=u'Name')
+    description = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=False,
+        label=u'Description')
+    results_directory = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=False,
+        help_text='Enter only the project folder. For example: "WagnerB1/Scores_All"',
+        label=u'Results Directory')
+    root_filename = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+        }),
+        required=False,
+        label=u'Root Filename', )
+    attribute_name = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+        }),
+        required=False,
+        label=u'Attribute Name', )
+
+    class Meta:
+        model = DataSet
+        fields = ['name', 'description', 'results_directory']

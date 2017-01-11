@@ -35,10 +35,14 @@ class DataSet(models.Model):
     shelf_data = models.ForeignKey('ShelfData', blank=True, null=True)
 
     def get_root_filename(self):
-        return self.shelf_data.root_filename
+        if self.shelf_data:
+            return self.shelf_data.root_filename
+        return
 
     def get_attribute_name(self):
-        return self.shelf_data.attribute_name
+        if self.shelf_data:
+            return self.shelf_data.attribute_name
+        return
 
     class Meta:
         verbose_name_plural = 'DataSets'

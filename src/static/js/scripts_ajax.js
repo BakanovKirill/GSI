@@ -141,7 +141,6 @@ function initPrelod(){
     });
 }
 
-
 function initEditWikiForm(form, modal) {
     // close modal window on Cancel button click
     form.find('input[name="cancel_button"]').click(function(event){
@@ -178,7 +177,6 @@ function initEditWikiForm(form, modal) {
     });
 }
 
-
 function initUploadFile(){
     $('#btnPicture').click(function(event){
         var values = [];
@@ -189,10 +187,41 @@ function initUploadFile(){
     });
 }
 
+function initAddOverrideMaping() {
+    $('#add_override_maping_button').click(function(event){
+        var shelf_data_id = $('input[name="shelf_data_select"]:checked').val();
+        var form_url = $('#static_data').attr('action');
+
+        $.ajax({
+            url: form_url,
+            type: 'POST',
+            'async': true,
+            'dataType': 'text',
+            data: {
+                'shelf_data_id': shelf_data_id,
+                'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+            },
+            'error': function(xhr, status, error){
+                var message = 'An unexpected error occurred. Try later.';
+            },
+            'success': function(data, status, xhr){
+                data_list = data.split('$$$')
+                var root_filename = $('#id_root_filename');
+                var attribute_name = $('#id_attribute_name');
+
+                $(root_filename).val(data_list[0]);
+                $(attribute_name).val(data_list[1]);
+            },
+        });
+        return false;
+    });
+}
+
 
 $(document).ready(function(){
     initCheckDeleteItems();
     initCheckCurDeleteItems();
     initPrelod();
     initUploadFile();
+    initAddOverrideMaping();
 });

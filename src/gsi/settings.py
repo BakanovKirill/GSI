@@ -260,6 +260,9 @@ PATH_RUNS_SCRIPTS = '/lustre/w23/mattgsi/scripts/runs'
 PROCESS_NUM = 10
 CONFIGFILE_PATH = '$RF_AUXDATA_DIR/'
 
+# results_directory
+RESULTS_DIRECTORY = '/lustre/w23/mattgsi/satdata/RF/Projects/'
+
 # number paginations
 NUM_PAGINATIONS = 7
 

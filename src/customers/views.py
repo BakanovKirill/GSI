@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """Views for the customers app."""
+import os
+
 from django.shortcuts import render
 from annoying.decorators import render_to
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -9,9 +11,10 @@ from django.shortcuts import get_object_or_404
 
 from customers.models import Category, ShelfData, DataSet
 from core.paginations import paginations
-from customers.customers_update_create import category_update_create, shelf_data_update_create
+from customers.customers_update_create import category_update_create, shelf_data_update_create, data_set_update_create
 from core.get_post import get_post
-from customers.customers_forms import CategoryForm, ShelfDataForm
+from customers.customers_forms import CategoryForm, ShelfDataForm, DataSetForm
+from gsi.settings import RESULTS_DIRECTORY
 
 
 # categorys list
@@ -26,7 +29,7 @@ def categorys(request):
 
     title = 'The categorys for the Shelf Data'
     url_name = 'categorys'
-    but_name = 'static_data'
+    but_name = 'info_panel'
 
     categorys = Category.objects.all()
     category_name = ''
@@ -134,7 +137,7 @@ def category_add(request):
     func = category_update_create
     form = None
     url_name = 'categorys'
-    but_name = 'static_data'
+    but_name = 'info_panel'
     available_tiles = Category.objects.all()
 
     # Handling POST request
@@ -185,7 +188,7 @@ def category_edit(request, category_id):
     func = category_update_create
     form = None
     url_name = 'categorys'
-    but_name = 'static_data'
+    but_name = 'info_panel'
 
     # Handling POST request
     if request.method == "POST":
@@ -229,7 +232,7 @@ def shelf_data(request):
 
     title = 'The Shelf Data'
     url_name = 'shelf_data'
-    but_name = 'static_data'
+    but_name = 'info_panel'
 
     shelf_data = ShelfData.objects.all()
     shelf_data_name = ''
@@ -337,7 +340,7 @@ def shelf_data_add(request):
     func = shelf_data_update_create
     form = None
     url_name = 'shelf_data'
-    but_name = 'static_data'
+    but_name = 'info_panel'
     available_tiles = ShelfData.objects.all()
 
     # Handling POST request
@@ -388,7 +391,7 @@ def shelf_data_edit(request, shelf_data_id):
     func = shelf_data_update_create
     form = None
     url_name = 'shelf_data'
-    but_name = 'static_data'
+    but_name = 'info_panel'
 
     # Handling POST request
     if request.method == "POST":
@@ -424,15 +427,15 @@ def shelf_data_edit(request, shelf_data_id):
 @user_passes_test(lambda u: u.is_superuser)
 @render_to('customers/dataset_list.html')
 def data_sets(request):
-    """**View all categories in Data Set.**
+    """**View all the DataSets.**
 
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
 
-    title = 'The DataSets'
+    title = 'DataSets Definition'
     url_name = 'data_sets'
-    but_name = 'static_data'
+    but_name = 'info_panel'
 
     data_sets = DataSet.objects.all()
     data_set_name = ''
@@ -441,11 +444,11 @@ def data_sets(request):
     if request.method == "GET":
         order_by = request.GET.get('order_by', '')
 
-        if order_by in ('name', ):
-            categorys = categorys.order_by(order_by)
+        if order_by in ('name', 'description', 'results_directory', 'shelf_data__attribute_name', 'shelf_data__root_filename'):
+            data_sets = data_sets.order_by(order_by)
 
             if request.GET.get('reverse', '') == '1':
-                categorys = categorys.reverse()
+                data_sets = data_sets.reverse()
 
     # Ajax when deleting objects
     if request.method == "POST" and request.is_ajax():
@@ -457,7 +460,7 @@ def data_sets(request):
             run_id = data_post.getlist('run_id[]')
 
             for r in run_id:
-                cur_run = get_object_or_404(Category, pk=int(r))
+                cur_run = get_object_or_404(DataSet, pk=int(r))
                 data += '"' + cur_run.name + '", '
 
             data = data[:-2]
@@ -469,7 +472,7 @@ def data_sets(request):
         if 'cur_run_id' in data_post:
             message = u'Are you sure you want to remove this objects:'
             run_id = data_post['cur_run_id']
-            cur_run = get_object_or_404(Category, pk=int(run_id))
+            cur_run = get_object_or_404(DataSet, pk=int(run_id))
             data = '<b>"' + cur_run.name + '"</b>'
             data = '{0} {1}?'.format(message, data)
 
@@ -481,37 +484,216 @@ def data_sets(request):
     # Handling POST request
     if request.method == "POST":
         # if request.POST.get('delete_button'):
-        if request.POST.get('category_select'):
-            for category_id in request.POST.getlist('category_select'):
-                cur_category = get_object_or_404(Category, pk=category_id)
-                category_name += '"' + cur_category.name + '", '
-                cur_category.delete()
+        if request.POST.get('dataset_select'):
+            for data_set_id in request.POST.getlist('dataset_select'):
+                cur_data_set = get_object_or_404(DataSet, pk=data_set_id)
+                data_set_name += '"' + cur_data_set.name + '", '
+                cur_data_set.delete()
 
-            category_ids = '_'.join(request.POST.getlist('env_select'))
+            data_set_ids = '_'.join(request.POST.getlist('env_select'))
 
             return HttpResponseRedirect(u'%s?status_message=%s' % (
-                reverse('categorys_list'),
-                (u'Categorys: {0} deleted.'.format(category_name))))
+                reverse('data_sets'),
+                (u'DataSets: {0} deleted.'.format(data_set_name))))
         elif request.POST.get('delete_button'):
-            cur_category = get_object_or_404(Category, pk=request.POST.get('delete_button'))
-            category_name += '"' + cur_category.name + '", '
-            cur_category.delete()
+            cur_data_set = get_object_or_404(DataSet, pk=request.POST.get('delete_button'))
+            data_set_name += '"' + cur_data_set.name + '", '
+            cur_data_set.delete()
 
             return HttpResponseRedirect(u'%s?status_message=%s' % (
-                reverse('categorys_list'), (u'Categorys: {0} deleted.'.format(category_name))))
+                reverse('data_sets'), (u'DataSets: {0} deleted.'.format(data_set_name))))
         else:
             return HttpResponseRedirect(u'%s?warning_message=%s' % (
-                reverse('categorys_list'), (u"To delete, select Category or more Categorys.")))
+                reverse('data_sets'), (u"To delete, select DataSet or more DataSets.")))
 
     # paginations
-    model_name = paginations(request, categorys)
+    model_name = paginations(request, data_sets)
 
     data = {
         'title': title,
-        'categorys': model_name,
+        'data_sets': model_name,
         'model_name': model_name,
         'url_name': url_name,
         'but_name': but_name,
+    }
+
+    return data
+
+
+# shelf data add
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def data_set_add(request):
+    """**View for the "DataSet Add" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
+    title = 'DataSet Add'
+    url_form = 'data_set_add'
+    template_name = 'customers/_data_set_form.html'
+    reverse_url = {
+        'save_button': 'data_sets',
+        'save_and_another': 'data_set_add',
+        'save_and_continue': 'data_set_edit',
+        'cancel_button': 'data_sets'
+    }
+    func = data_set_update_create
+    form = None
+    shelf_data = ShelfData.objects.all()
+    url_name = 'data_sets'
+    but_name = 'info_panel'
+    dirs_list = []
+
+    # Ajax when insert the root_filename and the attribute_name
+    if request.method == "POST" and request.is_ajax():
+        data_post = request.POST
+
+        if 'shelf_data_id' in data_post:
+            shelf_data_id = data_post['shelf_data_id']
+            shelf_data = get_object_or_404(ShelfData, pk=int(shelf_data_id))
+            root_filename = shelf_data.root_filename
+            attribute_name = shelf_data.attribute_name
+            data = root_filename + '$$$' + attribute_name
+
+            return HttpResponse(data)
+        else:
+            data = ''
+            return HttpResponse(data)
+
+
+    # Handling POST request
+    if request.method == "POST":
+        if request.POST.get('update_button') is not None:
+            form = DataSetForm(request.POST)
+
+            if form.is_valid():
+                if form.cleaned_data['results_directory']:
+                    results_directory = RESULTS_DIRECTORY + form.cleaned_data['results_directory']
+                    root, dirs, files = os.walk(results_directory).next()
+
+                    for sd in shelf_data:
+                        if str(sd.root_filename) in dirs:
+                            dirs_list.append(sd)
+        else:
+            response = get_post(request, DataSetForm, 'DataSet', reverse_url, func)
+
+            if isinstance(response, HttpResponseRedirect):
+                return response
+            else:
+                form = response
+    else:
+        form = DataSetForm()
+
+    data = {
+        'title': title,
+        'url_form': url_form,
+        'template_name': template_name,
+        'form': form,
+        'url_name': url_name,
+        'but_name': but_name,
+        'dirs_list': dirs_list,
+    }
+
+    return data
+
+
+# shelf data edit
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def data_set_edit(request, data_set_id):
+    """**View for the "DataSets "<name>" Edit" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+        * *category_id:* The ShelfData object ID
+    """
+
+    data_set = get_object_or_404(DataSet, pk=data_set_id)
+    title = 'DataSet Edit "%s"' % (data_set.name)
+    url_form = 'data_set_edit'
+    template_name = 'customers/_data_set_form.html'
+    reverse_url = {
+        'save_button': 'data_sets',
+        'save_and_another': 'data_set_add',
+        'save_and_continue': 'data_set_edit',
+        'cancel_button': 'data_sets'
+    }
+    func = data_set_update_create
+    form = None
+    shelf_data = ShelfData.objects.all()
+    url_name = 'data_sets'
+    but_name = 'info_panel'
+    dirs_list = []
+
+    # Get the results_directorys list
+    try:
+        results_directory = RESULTS_DIRECTORY + data_set.results_directory
+        root, dirs, files = os.walk(results_directory).next()
+
+        for sd in shelf_data:
+            if str(sd.root_filename) in dirs:
+                dirs_list.append(sd)
+    except Exception:
+        pass
+
+    # Ajax when insert the root_filename and the attribute_name
+    if request.method == "POST" and request.is_ajax():
+        data_post = request.POST
+
+        if 'shelf_data_id' in data_post:
+            shelf_data_id = data_post['shelf_data_id']
+            shelf_data = get_object_or_404(ShelfData, pk=int(shelf_data_id))
+            root_filename = shelf_data.root_filename
+            attribute_name = shelf_data.attribute_name
+            data = root_filename + '$$$' + attribute_name
+
+            return HttpResponse(data)
+        else:
+            data = ''
+            return HttpResponse(data)
+
+    # Handling POST request
+    if request.method == "POST":
+        # Update the results_directorys list
+        if request.POST.get('update_button') is not None:
+            form = DataSetForm(request.POST)
+            dirs_list = []
+
+            if form.is_valid():
+                if form.cleaned_data['results_directory']:
+                    results_directory = RESULTS_DIRECTORY + form.cleaned_data['results_directory']
+
+                    try:
+                        root, dirs, files = os.walk(results_directory).next()
+
+                        for sd in shelf_data:
+                            if str(sd.root_filename) in dirs:
+                                dirs_list.append(sd)
+                    except Exception:
+                        pass
+        else:
+            response = get_post(request, DataSetForm, 'DataSet', reverse_url, func, item_id=data_set_id)
+
+            if isinstance(response, HttpResponseRedirect):
+                return response
+            else:
+                form = response
+    else:
+        form = DataSetForm(instance=data_set)
+
+    data = {
+        'title': title,
+        'url_form': url_form,
+        'url_name': url_name,
+        'but_name': but_name,
+        'template_name': template_name,
+        'form': form,
+        'item_id': data_set_id,
+        'data_set': data_set,
+        'dirs_list': dirs_list,
     }
 
     return data
