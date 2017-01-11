@@ -25,4 +25,11 @@ urlpatterns = [
 	url(r'^dataset/add$', 'customers.views.data_set_add', name='data_set_add'),
 	# the url for the data_set edit
 	url(r'^dataset/(?P<data_set_id>\d+)/edit$', 'customers.views.data_set_edit', name='data_set_edit'),
+
+	# the url for the customers_access list
+	url(r'^customer-access/show$', 'customers.views.customer_access', name='customer_access'),
+	# the url for the customer_access add
+	url(r'^customer-access/add$', 'customers.views.customer_access_add', name='customer_access_add'),
+	# the url for the customer_access edit
+	url(r'^customer-access/(?P<customer_access_id>\d+)/edit$', 'customers.views.customer_access_edit', name='customer_access_edit'),
 ]

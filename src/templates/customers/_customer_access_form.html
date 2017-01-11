@@ -1,0 +1,88 @@
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.user.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form.user.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-10">
+        {% if not form.user.errors %}
+            {{ form.user }}
+        {% else %}
+            <span class="field-error">{{ form.user }}</span>
+            <b class="error-form">{{ form.user.errors }}</b>
+        {% endif %}
+
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.data_set.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.data_set.label }}</label>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="form-group {% if form.data_set.errors %}has-error{% endif %}">
+            <p class="margin-top-8 margin-left-12">Available DataSets</p>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="form-group {% if form.data_set.errors %}has-error{% endif %}">
+            <p class="margin-top-8 margin-left-12">Chosen DataSets</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-5 col-md-offset-2">
+        <select multiple class="form-control" name="available" size="10">
+            {% for data_set in available_data_set %}
+                <option value="{{ data_set.id }}">{{ data_set }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-5">
+        {% if form.data_set.errors %}
+            <b class="error-form">{{ form.data_set.errors }}</b>
+        {% endif %}
+        <select multiple class="form-control" name="chosen" size="10">
+            {% for data_set in chosen_data_set %}
+                <option value="{{ data_set.id }}">{{ data_set }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-5 col-md-offset-2">
+        <button type="submit" name="add_button" class="btn btn-success margin-top-20 float-right">
+            Add
+        </button>
+    </div>
+
+    <div class="col-md-5">
+        <button type="submit" name="delete_button" class="btn btn-danger margin-top-20 float-right">
+            Delete
+        </button>
+    </div>
+</div>
+
+<div class="row margin-top-50">
+    <div class="col-md-2">
+        <button type="submit" name="cancel_button" class="btn btn-default btn-block">Cancel</button>
+    </div>
+    <div class="col-md-4">
+        <button type="submit" name="save_and_another_button" class="btn btn-primary btn-block">Save and another</button>
+    </div>
+    <div class="col-md-4">
+        <button type="submit" name="save_and_continue_editing_button" class="btn btn-primary btn-block">
+            Save and continue editing
+        </button>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" name="save_button" class="btn btn-primary btn-block">Save</button>
+    </div>
+</div>

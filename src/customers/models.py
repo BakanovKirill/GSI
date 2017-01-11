@@ -46,3 +46,20 @@ class DataSet(models.Model):
 
     class Meta:
         verbose_name_plural = 'DataSets'
+
+    def __unicode__(self):
+        return u"{0}".format(self.name)
+
+
+class CustomerAccess(models.Model):
+    user = models.ForeignKey(User, verbose_name='Customer Name')
+    data_set = models.ManyToManyField(DataSet, related_name='customer_access', verbose_name='DataSets')
+
+    def get_data_sets(self):
+        return '; '.join([p.name for p in self.data_set.all()])
+
+    class Meta:
+        verbose_name_plural = 'Customer Access'
+
+    def __unicode__(self):
+        return u"{0}".format(self.user.username)

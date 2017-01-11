@@ -9,11 +9,12 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 
-from customers.models import Category, ShelfData, DataSet
+from customers.models import Category, ShelfData, DataSet, CustomerAccess
 from core.paginations import paginations
-from customers.customers_update_create import category_update_create, shelf_data_update_create, data_set_update_create
+from customers.customers_update_create import (category_update_create, shelf_data_update_create,
+                                                data_set_update_create, customer_access_update_create)
 from core.get_post import get_post
-from customers.customers_forms import CategoryForm, ShelfDataForm, DataSetForm
+from customers.customers_forms import CategoryForm, ShelfDataForm, DataSetForm, CustomerAccessForm
 from gsi.settings import RESULTS_DIRECTORY
 
 
@@ -138,7 +139,6 @@ def category_add(request):
     form = None
     url_name = 'categorys'
     but_name = 'info_panel'
-    available_tiles = Category.objects.all()
 
     # Handling POST request
     if request.method == "POST":
@@ -378,7 +378,7 @@ def shelf_data_edit(request, shelf_data_id):
         * *category_id:* The ShelfData object ID
     """
 
-    shelf_data = get_object_or_404(ShelfData, pk=category_id)
+    shelf_data = get_object_or_404(ShelfData, pk=shelf_data_id)
     title = 'Category Edit "%s"' % (shelf_data.attribute_name)
     url_form = 'shelf_data_edit'
     template_name = 'customers/_shelf_data_form.html'
@@ -694,6 +694,208 @@ def data_set_edit(request, data_set_id):
         'item_id': data_set_id,
         'data_set': data_set,
         'dirs_list': dirs_list,
+    }
+
+    return data
+
+
+# customers access list
+@user_passes_test(lambda u: u.is_superuser)
+@render_to('customers/customer_access_list.html')
+def customer_access(request):
+    """**View the Customer Access.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+    """
+
+    title = 'Customer Access'
+    url_name = 'customer_access'
+    but_name = 'info_panel'
+
+    customers_access = CustomerAccess.objects.all()
+    customer_access_name = ''
+
+    # Sorted by customer name
+    if request.method == "GET":
+        order_by = request.GET.get('order_by', '')
+
+        if order_by in ('user', ):
+            customers_access = customers_access.order_by(order_by)
+
+            if request.GET.get('reverse', '') == '1':
+                customers_access = customers_access.reverse()
+
+    # Ajax when deleting objects
+    if request.method == "POST" and request.is_ajax():
+        data_post = request.POST
+
+        if 'run_id[]' in data_post:
+            data = ''
+            message = u'Are you sure you want to remove these objects:'
+            run_id = data_post.getlist('run_id[]')
+
+            for r in run_id:
+                cur_run = get_object_or_404(CustomerAccess, pk=int(r))
+                data += '"{0}", '.format(cur_run)
+
+            data = data[:-2]
+            data = '<b>' + data + '</b>'
+            data = '{0} {1}?'.format(message, data)
+
+            return HttpResponse(data)
+
+        if 'cur_run_id' in data_post:
+            message = u'Are you sure you want to remove this objects:'
+            run_id = data_post['cur_run_id']
+            cur_run = get_object_or_404(CustomerAccess, pk=int(run_id))
+            data = '<b>"{0}"</b>'.format(cur_run)
+            data = '{0} {1}?'.format(message, data)
+
+            return HttpResponse(data)
+        else:
+            data = ''
+            return HttpResponse(data)
+
+    # Handling POST request
+    if request.method == "POST":
+        # if request.POST.get('delete_button'):
+        if request.POST.get('customer_access_select'):
+            for customer_access_id in request.POST.getlist('customer_access_select'):
+                cur_customer_access = get_object_or_404(CustomerAccess, pk=customer_access_id)
+                customer_access_name += '"{0}", '.format(cur_customer_access)
+                cur_customer_access.delete()
+
+            customer_access_ids = '_'.join(request.POST.getlist('env_select'))
+
+            return HttpResponseRedirect(u'%s?status_message=%s' % (
+                reverse('customer_access'),
+                (u'Customers Access: {0} deleted.'.format(customer_access_name))))
+        elif request.POST.get('delete_button'):
+            cur_customer_access = get_object_or_404(CustomerAccess, pk=request.POST.get('delete_button'))
+            customer_access_name += '"{0}", '.format(cur_customer_access)
+            cur_customer_access.delete()
+
+            return HttpResponseRedirect(u'%s?status_message=%s' % (
+                reverse('customer_access'), (u'Customers Access: {0} deleted.'.format(customer_access_name))))
+        else:
+            return HttpResponseRedirect(u'%s?warning_message=%s' % (
+                reverse('customer_access'), (u"To delete, select Customer Access or more Customers Access.")))
+
+    # paginations
+    model_name = paginations(request, customers_access)
+
+    data = {
+        'title': title,
+        'customers_access': model_name,
+        'model_name': model_name,
+        'url_name': url_name,
+        'but_name': but_name,
+    }
+
+    return data
+
+
+# customer access add
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def customer_access_add(request):
+    """**View for the "Customer Access Add" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
+    title = 'Customer Access Add'
+    url_form = 'customer_access_add'
+    template_name = 'customers/_customer_access_form.html'
+    reverse_url = {
+        'save_button': 'customer_access',
+        'save_and_another': 'customer_access_add',
+        'save_and_continue': 'customer_access_edit',
+        'cancel_button': 'customer_access'
+    }
+    func = customer_access_update_create
+    form = None
+    url_name = 'customer_access'
+    but_name = 'info_panel'
+    available_data_set = DataSet.objects.all()
+
+    # Handling POST request
+    if request.method == "POST":
+        response = get_post(request, CustomerAccessForm, 'Customer Access', reverse_url, func)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
+    else:
+        form = CustomerAccessForm()
+
+    data = {
+        'title': title,
+        'url_form': url_form,
+        'template_name': template_name,
+        'form': form,
+        'available_data_set': available_data_set,
+        'url_name': url_name,
+        'but_name': but_name,
+    }
+
+    return data
+
+
+# customer access edit
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def customer_access_edit(request, customer_access_id):
+    """**View for the "Customer Access "<name>" Edit" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+        * *customer_access_id:* The CustomerAccess object ID
+    """
+
+    customer_access = get_object_or_404(CustomerAccess, pk=customer_access_id)
+    title = 'Customer Access Edit "%s"' % (customer_access)
+    url_form = 'customer_access_edit'
+    template_name = 'customers/_customer_access_form.html'
+    reverse_url = {
+        'save_button': 'customer_access',
+        'save_and_another': 'customer_access_add',
+        'save_and_continue': 'customer_access_edit',
+        'cancel_button': 'customer_access'
+    }
+    func = customer_access_update_create
+    form = None
+    url_name = 'customer_access'
+    but_name = 'info_panel'
+    chosen_data_set = customer_access.data_set.all()
+    available_data_set = DataSet.objects.exclude(id__in=customer_access.data_set.values_list('id', flat=True))
+
+    # Handling POST request
+    if request.method == "POST":
+        response = get_post(
+            request, CustomerAccessForm, 'Customer Access', reverse_url, func, item_id=customer_access_id)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
+    else:
+        form = CustomerAccessForm(instance=customer_access)
+
+    data = {
+        'title': title,
+        'url_form': url_form,
+        'template_name': template_name,
+        'form': form,
+        'item_id': customer_access_id,
+        'available_data_set': available_data_set,
+        'chosen_data_set': chosen_data_set,
+        'url_name': url_name,
+        'but_name': but_name,
     }
 
     return data

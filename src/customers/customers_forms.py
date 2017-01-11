@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from django import forms
+from django.contrib.auth.models import User
 
-from customers.models import (Category, ShelfData, DataSet)
+from customers.models import Category, ShelfData, DataSet, CustomerAccess
 
 
 class CategoryForm(forms.ModelForm):
@@ -99,3 +100,32 @@ class DataSetForm(forms.ModelForm):
     class Meta:
         model = DataSet
         fields = ['name', 'description', 'results_directory']
+
+
+class CustomerAccessForm(forms.ModelForm):
+    """**Form for editing CustomerAccess.**"""
+
+    def __init__(self, *args, **kwargs):
+        super(CustomerAccessForm, self).__init__(*args, **kwargs)
+
+    user = forms.ModelChoiceField(
+        widget=forms.Select(attrs={
+            'class': 'form-control disabled',
+        }),
+        queryset=User.objects.all(),
+        empty_label='Select',
+        label=u'Customer Name', )
+    data_set = forms.ModelMultipleChoiceField(
+        widget=forms.SelectMultiple(
+            attrs={'size': '10',
+                   'class': 'form-control'}),
+        queryset=DataSet.objects.all(),
+        required=False,
+        label=u'DataSets', )
+
+    class Meta:
+        model = CustomerAccess
+        fields = [
+            'user',
+            'data_set',
+        ]

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from customers.models import (Category, ShelfData, DataSet)
+from customers.models import Category, ShelfData, DataSet, CustomerAccess
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -32,6 +32,19 @@ class DataSetAdmin(admin.ModelAdmin):
     get_root_filename.short_description = 'Root Filename'
 
 
+class CustomerAccessAdmin(admin.ModelAdmin):
+    list_display = ('user', 'get_data_set',)
+    search_fields = ['user',]
+    list_filter = ('user',)
+    filter_horizontal = ('data_set',)
+
+    def get_data_set(self, obj):
+        return "\n".join([p.name for p in obj.data_set.all()])
+
+    get_data_set.short_description = 'DataSets'
+
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(ShelfData, ShelfDataAdmin)
 admin.site.register(DataSet, DataSetAdmin)
+admin.site.register(CustomerAccess, CustomerAccessAdmin)

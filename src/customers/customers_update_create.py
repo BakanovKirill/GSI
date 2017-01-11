@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from gsi.settings import RESULTS_DIRECTORY
-from customers.models import (Category, ShelfData, DataSet)
+from customers.models import (Category, ShelfData, DataSet, CustomerAccess)
 
 
 def category_update_create(form, item_id=None):
@@ -90,3 +90,42 @@ def data_set_update_create(form, item_id=None):
             pass
 
     return data_set
+
+
+def customer_access_update_create(form, multiple=None, item_id=None, delete=False):
+    """**Updated CustomerAccess model.**
+
+    :Arguments:
+        * *form*: Object of the form
+        * *multiple*: Transmited a list of objects
+        * *item_id*: ID of the object. Set when editing (the default=None when you create a card)
+        * *delete*: Boolean value determine the remove objects or not
+
+    """
+
+    if item_id:
+        CustomerAccess.objects.filter(id=item_id).update(
+            user=form.cleaned_data["user"],
+        )
+        result = CustomerAccess.objects.get(id=item_id)
+    else:
+        result = CustomerAccess.objects.create(
+            user=form.cleaned_data["user"],
+        )
+
+    if multiple:
+        list_id = multiple.split('_')
+
+        for data_set_id in list_id:
+            if delete:
+                CustomerAccess.data_set.through.objects.filter(
+                    customeraccess_id=result.id,
+                    dataset_id=data_set_id
+                ).delete()
+            else:
+                CustomerAccess.data_set.through.objects.create(
+                    customeraccess_id=result.id,
+                    dataset_id=data_set_id
+                )
+
+    return result
