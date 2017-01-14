@@ -15,7 +15,7 @@ from customers.customers_update_create import (category_update_create, shelf_dat
                                                 data_set_update_create, customer_access_update_create)
 from core.get_post import get_post
 from customers.customers_forms import CategoryForm, ShelfDataForm, DataSetForm, CustomerAccessForm
-from gsi.settings import RESULTS_DIRECTORY
+from gsi.settings import RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM
 
 
 # categorys list
@@ -35,7 +35,7 @@ def categorys(request):
     categorys = Category.objects.all()
     category_name = ''
 
-    # Sorted by name
+    # Sorted by
     if request.method == "GET":
         order_by = request.GET.get('order_by', '')
 
@@ -78,14 +78,11 @@ def categorys(request):
 
     # Handling POST request
     if request.method == "POST":
-        # if request.POST.get('delete_button'):
         if request.POST.get('category_select'):
             for category_id in request.POST.getlist('category_select'):
                 cur_category = get_object_or_404(Category, pk=category_id)
                 category_name += '"' + cur_category.name + '", '
                 cur_category.delete()
-
-            category_ids = '_'.join(request.POST.getlist('env_select'))
 
             return HttpResponseRedirect(u'%s?status_message=%s' % (
                 reverse('categorys_list'),
@@ -280,14 +277,11 @@ def shelf_data(request):
 
     # Handling POST request
     if request.method == "POST":
-        # if request.POST.get('delete_button'):
         if request.POST.get('shelf_data_select'):
             for shelf_data_id in request.POST.getlist('shelf_data_select'):
                 cur_shelf_data = get_object_or_404(ShelfData, pk=shelf_data_id)
                 shelf_data_name += '"' + cur_shelf_data.attribute_name + '", '
                 cur_shelf_data.delete()
-
-            shelf_data_ids = '_'.join(request.POST.getlist('env_select'))
 
             return HttpResponseRedirect(u'%s?status_message=%s' % (
                 reverse('shelf_data_list'),
@@ -375,7 +369,7 @@ def shelf_data_edit(request, shelf_data_id):
 
     :Arguments:
         * *request:* The request is sent to the server when processing the page
-        * *category_id:* The ShelfData object ID
+        * *shelf_data_id:* The ShelfData object ID
     """
 
     shelf_data = get_object_or_404(ShelfData, pk=shelf_data_id)
@@ -483,14 +477,11 @@ def data_sets(request):
 
     # Handling POST request
     if request.method == "POST":
-        # if request.POST.get('delete_button'):
         if request.POST.get('dataset_select'):
             for data_set_id in request.POST.getlist('dataset_select'):
                 cur_data_set = get_object_or_404(DataSet, pk=data_set_id)
                 data_set_name += '"' + cur_data_set.name + '", '
                 cur_data_set.delete()
-
-            data_set_ids = '_'.join(request.POST.getlist('env_select'))
 
             return HttpResponseRedirect(u'%s?status_message=%s' % (
                 reverse('data_sets'),
@@ -614,7 +605,7 @@ def data_set_edit(request, data_set_id):
 
     :Arguments:
         * *request:* The request is sent to the server when processing the page
-        * *category_id:* The ShelfData object ID
+        * *data_set_id:* The ShelfData object ID
     """
 
     data_set = get_object_or_404(DataSet, pk=data_set_id)
@@ -768,14 +759,11 @@ def customer_access(request):
 
     # Handling POST request
     if request.method == "POST":
-        # if request.POST.get('delete_button'):
         if request.POST.get('customer_access_select'):
             for customer_access_id in request.POST.getlist('customer_access_select'):
                 cur_customer_access = get_object_or_404(CustomerAccess, pk=customer_access_id)
                 customer_access_name += '"{0}", '.format(cur_customer_access)
                 cur_customer_access.delete()
-
-            customer_access_ids = '_'.join(request.POST.getlist('env_select'))
 
             return HttpResponseRedirect(u'%s?status_message=%s' % (
                 reverse('customer_access'),
@@ -905,6 +893,52 @@ def customer_access_edit(request, customer_access_id):
         'chosen_data_set': chosen_data_set,
         'url_name': url_name,
         'but_name': but_name,
+    }
+
+    return data
+
+
+# view Customer Section
+@login_required
+@render_to('customers/customer_section.html')
+def customer_section(request, user_id):
+    """**View for the "Customer '<user>' section" page.**
+
+    :Functions:
+        When you load the page is loaded map with Google MAP. Initial coordinates: eLat = 0, eLng = 0.
+        Zoom map is variable GOOGLE_MAP_ZOOM, whose value is in the project settings.
+        Code view allows to change position when you enter values in the fields on the page "Enter Lat" and "Enter Log".
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+        * *user_id:* The User ID
+    """
+
+    customer = request.user
+    title = 'Customer {0} section'.format(customer)
+    url_name = 'customer_section'
+    eLat = 0
+    eLng = 0
+
+    # Handling POST request
+    if request.method == "POST":
+        data_request = request.POST
+
+        if data_request.get('eLat', ''):
+            eLat = data_request.get('eLat', '')
+
+        if data_request.get('eLng', ''):
+            eLng = data_request.get('eLng', '')
+
+
+    data = {
+        'title': title,
+        'user_id': user_id,
+        'customer': customer,
+        'url_name': url_name,
+        'eLat': eLat,
+        'eLng': eLng,
+        'GOOGLE_MAP_ZOOM': GOOGLE_MAP_ZOOM
     }
 
     return data

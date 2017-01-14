@@ -209,7 +209,7 @@
                                 {% endif %}
 
                                 <li class="{% if url_name == 'customer_section' %}active-main-menu{% else %}li-menu{% endif %}">
-                                    <a href="{% url 'customer_section' %}">
+                                    <a href="{% url 'customer_section' request.user.id %}">
                                         <img class="right-indent-10" src="{% static 'img/customer_section.png' %}">
                                         CUSTOMER SECTION
                                     </a>

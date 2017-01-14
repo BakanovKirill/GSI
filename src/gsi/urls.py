@@ -29,7 +29,7 @@ urlpatterns = [
 	url(r'^$', 'gsi.views.index', name='index'),
 
 	# upload file
-	url(r'^upload-file/$', 'gsi.views.upload_file', name='upload_file'),
+	url(r'^customer/upload-file/$', 'gsi.views.upload_file', name='upload_file'),
 
 	# run base
 	url(r'^run/setup/$', 'gsi.views.run_setup', name='run_setup'),
@@ -128,7 +128,7 @@ urlpatterns = [
 	url(r'^cards/list/$', 'gsi.views.cards_list', name='cards_list'),
 
 	# Customer section
-	url(r'^customer/$', 'gsi.views.customer_section', name='customer_section'),
+	# url(r'^customer/$', 'gsi.views.customer_section', name='customer_section'),
 
 	# Card Sequence edit
 	url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/$', 'gsi.views.card_sequence_update', name='card_sequence_update'),

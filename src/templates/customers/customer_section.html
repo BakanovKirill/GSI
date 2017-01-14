@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block title %}{{ title }}{% endblock title %}
+
+{% block content %}
+    <form class="form-modal" action="{% url 'customer_section' user_id %}" method="post" enctype="multipart/form-data"
+          role="form" class="form-horizontal">
+        {% csrf_token %}
+
+        <div class="row">
+            <div class="col-md-4">
+                <b>Enter Lat:</b> <input class="form-control" type="text" name="eLat" id="e_Lat" value="{{ eLat }}"/><br />
+            </div>
+            <div class="col-md-4">
+                <b>Enter Log:</b> <input class="form-control" type="text" name="eLng" id="e_Lng" value="{{ eLng }}"/><br />
+            </div>
+            <div class="col-md-4 margin-top-20">
+                <button type="submit" class="btn btn-primary">Display the selected location on the map</button>
+            </div>
+        </div>
+
+        <div class="row margin-top-15">
+            <div class="col-md-3">
+                <button onclick="drawPoligon();" type="button" class="btn btn-success btn-block">Draw the Poligon</button>
+            </div>
+            <div class="col-md-3">
+                <button onclick="togglePlygonOverlays();" type="button" class="btn btn-primary btn-block">Show the Polugon On/Off</button>
+            </div>
+            <div class="col-md-3">
+                <button onclick="removePoligon();" type="button" class="btn btn-danger btn-block">Delete the Poligon</button>
+            </div>
+            <div class="col-md-3">
+                <button onclick="removeMarkers();" type="button" class="btn btn-danger btn-block">Delete the Markers</button>
+            </div>
+        </div>
+
+        <div class="row margin-top-15">
+            <div class="col-md-3 margin-top-8">
+                <b>Lat:</b> <input class="form-control" type="text" id="latitude" placeholder="latitude">
+            </div>
+            <div class="col-md-3 margin-top-8">
+                <b>Lon:</b> <input class="form-control" type="text" id="longitude" placeholder="longitude">
+            </div>
+            <div class="col-md-2 right margin-top-40">
+                Transparency:
+            </div>
+            <div class="col-md-3 left margin-top-40">
+                <input type="range" id="one" min="0" max="100" onchange="setOpacity(this.value);"/>
+            </div>
+            <div class="col-md-1 left margin-top-40"><span id="uno" value="75"></span> %</div>
+        </div>
+
+        <div class="row margin-top-15">
+            <div class="col-md-12">
+                <div id="map"></div>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        var map;
+        var coord = [];
+        var markers = [];
+        var polygons = [];
+        var start_area = {lat: {{ eLat }}, lng: {{ eLng }} };
+        var cur_marker;
+        var selectPolygon;
+        var polugonVisible;
+        var mapTypesArr = [];
+
+        var MY_MAPTYPE_ID = 'mystyle';
+
+        var mapobj = {
+			name: "OSM",
+			wms: "osm",
+			minzoom: 18,
+			maxzoom: 0,
+			url: "http://tile.openstreetmap.org/",
+			copy:"<a href=\"http://www.openstreetmap.org\" target=\"_blank\">Open Street Map</a>",
+			visible:true
+		};
+		mapTypesArr.push(mapobj);
+		var mapobj = {
+			name: "OSM Cycle",
+			wms: "osm",
+			minzoom: 18,
+			maxzoom: 0,
+			url: "http://b.tile.opencyclemap.org/cycle/",
+			copy:"<a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">Cycle OSM</a>",
+			visible:true
+		};
+		mapTypesArr.push(mapobj);
+		var mapobj = {
+			name: "Relief",
+			wms: "",
+			minzoom: 18,
+			maxzoom: 0,
+			url: "",
+			copy:"<a href=\"http://www.maps-for-free.com/html/about.html\" target=\"_blank\">maps-for-free</a>",
+			visible:true
+		};
+		mapTypesArr.push(mapobj);
+		var mapobj = {
+			name: "Demis",
+			wms: "wms",
+			minzoom: 13,
+			maxzoom: 1,
+			url: "http://www2.demis.nl/wms/wms.ashx?Service=WMS&WMS=BlueMarble&Version=1.1.0&Request=GetMap&Layers=Earth Image,Borders,Coastlines&Format=image/jpeg",
+			copy:"WMS demo by Demis",
+			visible:true
+		};
+		mapTypesArr.push(mapobj);
+		var mapobj = {
+			name: "ROADMAP",
+			wms: "",
+			minzoom: 13,
+			maxzoom: 10,
+			url: "",
+			copy:"",
+			visible:true
+		};
+		mapTypesArr.push(mapobj);
+		var mapobj = {
+			name: "SATELLITE",
+			wms: "",
+			minzoom: 13,
+			maxzoom: 10,
+			url: "",
+			copy:"",
+			visible:true
+		};
+		mapTypesArr.push(mapobj);
+		var mapobj = {
+			name: "HYBRID",
+			wms: "",
+			minzoom: 13,
+			maxzoom: 10,
+			url: "",
+			copy:"",
+			visible:true
+		};
+		mapTypesArr.push(mapobj);
+		var mapobj = {
+			name: "TERRAIN",
+			wms: "",
+			minzoom: 13,
+			maxzoom: 10,
+			url: "",
+			copy:"",
+			visible:true
+		};
+		mapTypesArr.push(mapobj);
+
+        function initMap() {
+            var my_styles =  [
+                  {
+                    featureType: "road.highway",
+                    elementType: "geometry",
+                    stylers: [
+                        { visibility: "on" },
+                        { hue: "#ff0000" }
+                    ]
+                  },
+                  {
+                      featureType: "water",
+                      elementType: "geometry",
+                      stylers: [
+                          { visibility: "on" },
+                          { hue: "#0800ff" },
+                          { lightness: -41 }
+                    ]
+                }
+            ];
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: {{ GOOGLE_MAP_ZOOM }},
+                center: start_area,
+                mapTypeControl: true,
+                mapTypeControlOptions: {
+                    style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+                    mapTypeIds: [
+                        google.maps.MapTypeId.ROADMAP,
+                        google.maps.MapTypeId.TERRAIN,
+                        google.maps.MapTypeId.SATELLITE,
+                        google.maps.MapTypeId.HYBRID,
+                        MY_MAPTYPE_ID
+                    ]
+                },
+                // mapTypeId: MY_MAPTYPE_ID
+            });
+
+            var styledMapOptions = {
+                name: "Road & Water"
+              };
+
+            var jayzMapType = new google.maps.StyledMapType(my_styles, styledMapOptions);
+
+            map.mapTypes.set(MY_MAPTYPE_ID, jayzMapType);
+            // map.setMapTypeId(google.maps.MapTypeId.HYBRID);
+
+            cur_marker = new google.maps.Marker({
+                position: {
+                    'lat':   {{ eLat }},
+                    'lng': {{ eLng }}
+                },
+                map: map
+            });
+
+            map.addListener('click', function(e) {
+                placeMarkerAndPanTo(e.latLng.lat(), e.latLng.lng());
+            });
+        }
+
+        function placeMarkerAndPanTo(lat1, lng1) {
+            var dict = {
+                'lat':   lat1,
+                'lng': lng1
+            }
+            coord.push(dict);
+
+            var marker = new google.maps.Marker({
+                position: dict,
+                map: map
+            });
+            //marker.setMap(map);
+            //map.panTo(marker);
+            markers.push(marker);
+        }
+
+        // Removes the poligon from the map, but keeps them in the array.
+        function removePoligon() {
+            if (polygons) {
+                for (i in polygons) {
+                    polygons[i].setMap(null);
+                }
+            }
+            coord = [];
+            polugonVisible = false;
+        }
+
+        // Removes the markers from the map, but keeps them in the array.
+        function removeMarkers() {
+            // selectPolygon.fillOpacity = 1.0;
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setMap(null);
+            }
+        }
+
+        function drawPoligon() {
+            // Construct the polygon.
+            selectPolygon = new google.maps.Polygon({
+                paths: coord,
+                //strokeColor: '#FF0000',
+                //strokeOpacity: 0.8,
+                strokeWeight: 1,
+                fillColor: '#FF0000',
+                fillOpacity: 0.3,
+                //editable: true
+            });
+            selectPolygon.setMap(map);
+            polygons.push(selectPolygon);
+            polugonVisible = true;
+
+            // selectPolygon.fillOpacity = 1.0;
+
+            // Add a listener for the click event.
+            selectPolygon.addListener('click', showInfoWindow);
+            infoWindow = new google.maps.InfoWindow;
+
+            // Add a listener for the mousemove event.
+            selectPolygon.addListener('mousemove', showCoordinates);
+
+            infoWindow = new google.maps.InfoWindow;
+        }
+
+        function showCoordinates(event) {
+            var lat = event.latLng.lat();
+        	var lon = event.latLng.lng();
+
+            document.getElementById('latitude').value = lat.toFixed(6);
+            document.getElementById('longitude').value = lon.toFixed(6);
+        }
+
+        function showInfoWindow(event) {
+            var lat = event.latLng.lat();
+        	var lon = event.latLng.lng();
+
+            var contentString = '<b>GSi Polygon</b><br>' +
+                'Location:<br>LAT: ' + lat.toFixed(6) + ', LNG:' + lon.toFixed(6) + '<br>';
+
+            // Replace the info window's content and position.
+            infoWindow.setContent(contentString);
+            infoWindow.setPosition(event.latLng);
+
+            infoWindow.open(map);
+        }
+
+        function togglePlygonOverlays() {
+            if (polugonVisible) {
+                selectPolygon.setMap(null);
+                polugonVisible = false;
+            } else {
+                selectPolygon.setMap(map);
+                polugonVisible = true;
+            }
+        }
+
+
+    </script>
+
+    <script type="text/javascript" async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4HosogGf9o2-Cnef_SiUR6jZYVszGkGY&signed_in=true&callback=initMap"></script>
+{% endblock content %}

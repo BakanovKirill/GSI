@@ -1308,7 +1308,6 @@ def environment_groups(request):
                 env_name += '"' + str(cur_env.name) + '", '
                 cur_env.delete()
 
-            envs_ids = '_'.join(request.POST.getlist('env_select'))
             env_name = env_name[:-2]
 
             return HttpResponseRedirect(u'%s?status_message=%s' % (
@@ -1510,8 +1509,6 @@ def areas(request):
                 cur_area = get_object_or_404(Area, pk=area_id)
                 area_name += '"' + cur_area.name + '", '
                 cur_area.delete()
-
-            area_ids = '_'.join(request.POST.getlist('env_select'))
 
             return HttpResponseRedirect(u'%s?status_message=%s' % (
                 reverse('areas'),
