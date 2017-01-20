@@ -262,6 +262,7 @@ CONFIGFILE_PATH = '$RF_AUXDATA_DIR/'
 
 # results_directory
 RESULTS_DIRECTORY = '/lustre/w23/mattgsi/satdata/RF/Projects/'
+POLYGONS_DIRECTORY = '/lustre/w23/mattgsi/satdata/RF/Polygons/kml/'
 
 # number paginations
 NUM_PAGINATIONS = 7
@@ -270,7 +271,7 @@ NUM_PAGINATIONS = 7
 EXEC_RUNS = 2000
 
 # Google maps
-GOOGLE_MAP_ZOOM = 15
+GOOGLE_MAP_ZOOM = 6
 
 # Card Type
 CARD_TYPE = {

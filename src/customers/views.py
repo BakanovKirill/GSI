@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Views for the customers app."""
 import os
+from osgeo import gdal
+# import gdal
 
 from django.shortcuts import render
 from annoying.decorators import render_to
@@ -8,6 +10,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
 
 from customers.models import Category, ShelfData, DataSet, CustomerAccess
 from core.paginations import paginations
@@ -15,14 +18,14 @@ from customers.customers_update_create import (category_update_create, shelf_dat
                                                 data_set_update_create, customer_access_update_create)
 from core.get_post import get_post
 from customers.customers_forms import CategoryForm, ShelfDataForm, DataSetForm, CustomerAccessForm
-from gsi.settings import RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM
+from gsi.settings import RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM, POLYGONS_DIRECTORY
 
 
 # categorys list
 @user_passes_test(lambda u: u.is_superuser)
 @render_to('customers/categorys_list.html')
 def categorys(request):
-    """**View all categories in Shelf Data.**
+    """**View all categories for the Shelf Data.**
 
     :Arguments:
         * *request:* The request is sent to the server when processing the page
@@ -914,31 +917,131 @@ def customer_section(request, user_id):
         * *user_id:* The User ID
     """
 
-    customer = request.user
+    customer = get_object_or_404(User, pk=user_id)
+    customer_access = get_object_or_404(CustomerAccess, user=customer)
+    shelf_data = ShelfData.objects.all()
+    data_set = None
+    statistics = None
     title = 'Customer {0} section'.format(customer)
     url_name = 'customer_section'
-    eLat = 0
-    eLng = 0
+    data_set_id = 0
+    data_sets = {}
+    dirs_list = []
+    polygons_list = []
+    data_sets_current = CustomerAccess.data_set.through.objects.filter(
+        customeraccess_id=customer_access.id).order_by('dataset_id')
+
+    eLat = 89.9000000
+    eLng = 48.7630000
+
+    # del request.session['select_data_set']
+
+    try:
+        root, dirs, files = os.walk(POLYGONS_DIRECTORY).next()
+
+        for f in files:
+            polygons_list.append(f.split('.kml')[0])
+    except Exception, e:
+        return HttpResponseRedirect(
+            u'%s?danger_message=%s' % (reverse('data_set_edit', args=[data_set_id]),
+            (u'The directory "{0}" does not exist!'.format(POLYGONS_DIRECTORY)))
+        )
+
+    if request.session.get('select_data_set', False):
+        data_set_id = request.session['select_data_set']
+        data_set = get_object_or_404(DataSet, pk=data_set_id)
+        data_set_id = int(data_set_id)
+
+        # Get the results_directorys list
+        try:
+            results_directory = RESULTS_DIRECTORY + data_set.results_directory
+            root, dirs, files = os.walk(results_directory).next()
+
+            for sd in shelf_data:
+                if str(sd.root_filename) in dirs:
+                    dirs_list.append(sd)
+        except Exception, e:
+            return HttpResponseRedirect(
+                u'%s?danger_message=%s' % (reverse('data_set_edit', args=[data_set_id]),
+                (u'The directory "{0}" does not exist!'.format(results_directory)))
+            )
+    elif request.session.get('select_data_set', True):
+        request.session['select_data_set'] = data_sets_current[0].dataset_id
+        request.session.set_expiry(172800)
+
+    for n in data_sets_current:
+        ds = get_object_or_404(DataSet, pk=n.dataset_id)
+        data_sets[ds] = n.dataset_id
+
+    # Ajax when deleting objects
+    if request.method == "POST" and request.is_ajax():
+        data_post = request.POST
+
+        # print 'data_post ========================== ', data_post
+
+        if 'datasets_id' in data_post:
+            data_set_id = data_post.get('datasets_id', '')
+
+            if data_set_id:
+                request.session['select_data_set'] = data_set_id
+            status = 'success'
+
+            return HttpResponse(status)
+
+        if 'multiple' in data_post:
+            message = u'Are you sure you want to remove this objects:'
+            run_id = data_post['cur_run_id']
+            cur_run = get_object_or_404(CustomerAccess, pk=int(run_id))
+            data = '<b>"{0}"</b>'.format(cur_run)
+            data = '{0} {1}?'.format(message, data)
+
+            return HttpResponse(data)
+        # else:
+        #     data = ''
+        #     return HttpResponse(data)
 
     # Handling POST request
     if request.method == "POST":
-        data_request = request.POST
+        data_post = request.POST
 
-        if data_request.get('eLat', ''):
-            eLat = data_request.get('eLat', '')
+        data_set_id = data_post.get('datasets_id', '')
 
-        if data_request.get('eLng', ''):
-            eLng = data_request.get('eLng', '')
+        if data_post.get('eLat', ''):
+            eLat = data_post.get('eLat', '')
 
+        if data_post.get('eLng', ''):
+            eLng = data_post.get('eLng', '')
+
+    import subprocess
+    input_f = '/home/greg/Elance_com/KeyUA/GSI/UI/images/TPA_10_aws_v3.Site1.tif'
+    output_f = '/home/greg/Elance_com/KeyUA/GSI/UI/output.vrt'
+    # subprocess.call(["gdalbuildvrt", "-te", "xmin", "ymin", "xmax", "ymax", output_f, input_f])
+
+    imagefile= input_f
+    p = subprocess.Popen(["gdalinfo", "%s"%imagefile], stdout=subprocess.PIPE)
+    out,err= p.communicate()
+    ul = out[out.find("Upper Left")+15:out.find("Upper Left")+38]
+    lr = out[out.find("Lower Right")+15:out.find("Lower Right")+38]
+
+    print 'ul ============================================== ', ul
+    print 'lr ============================================== ', lr
+
+    eLng, eLat = ul.split(', ')
 
     data = {
         'title': title,
         'user_id': user_id,
         'customer': customer,
+        'data_sets': data_sets,
         'url_name': url_name,
+        'data_set_id': data_set_id,
+        'data_set': data_set,
+        'dirs_list': dirs_list,
+        'polygons_list': polygons_list,
+
         'eLat': eLat,
         'eLng': eLng,
-        'GOOGLE_MAP_ZOOM': GOOGLE_MAP_ZOOM
+        'GOOGLE_MAP_ZOOM': GOOGLE_MAP_ZOOM,
     }
 
     return data

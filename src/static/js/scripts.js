@@ -199,18 +199,19 @@ function initAddFormatingTextarrea(){
 
 
 $(document).ready(function(){
-  //selectAll();
-  onOffSubMenuSetupStaticData();
-  onOffSubMenuUploadTestData();
-  invisibleDropMenu();
-  onOffSubMenuUser();
-  invisibleSelect();
-  changeColorError();
-  changeColorSuccess();
-  colorBlackSelect();
-  statusPeriod();
-  initTooltipBootstrap();
-  initCreateCard();
-  initSelectConfigFile();
-  initAddFormatingTextarrea();
+    //selectAll();
+    onOffSubMenuSetupStaticData();
+    onOffSubMenuUploadTestData();
+    invisibleDropMenu();
+    onOffSubMenuUser();
+    invisibleSelect();
+    changeColorError();
+    changeColorSuccess();
+    colorBlackSelect();
+    statusPeriod();
+    initTooltipBootstrap();
+    initCreateCard();
+    initSelectConfigFile();
+    initAddFormatingTextarrea();
+    // showCheckboxes();
 });

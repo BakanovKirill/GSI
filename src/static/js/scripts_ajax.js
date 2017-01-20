@@ -217,6 +217,136 @@ function initAddOverrideMaping() {
     });
 }
 
+function getCheckboxValues() {
+    var list = null;
+    list = $('.checkboxes_root_filenames :checkbox:checked');
+
+    alert(list.length);
+
+	return list;
+}
+
+function showDataSets(obj) {
+    // var select_dataset = document.getElementById("mydataset");
+    // var select_option = select_dataset.options[select_dataset.selectedIndex];
+    // var datasets_id = select_option.value;
+
+    var select_dataset = $("#mydataset option:selected");
+    var datasets_id = $(obj).val();
+    var form_url = $('#customer_section').attr('action');
+
+    $.ajax({
+        url: form_url,
+        type: 'POST',
+        'async': true,
+        'dataType': 'text',
+        data: {
+            'datasets_id': datasets_id,
+            'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+        },
+        'error': function(xhr, status, error){
+            alert('status: '+status);
+            alert('error: '+error);
+            var message = 'An unexpected error occurred. Try later.';
+        },
+        'success': function(data, status, xhr){
+            // alert($(select_dataset).val());
+            // alert('datasets_id: '+datasets_id);
+
+            // alert('data: '+data);
+            // alert('status: '+status);
+            // $.cookie('select_dataset', $(select_option).val());
+
+            // Cookies.set('select_dataset', $(datasets_id), { expires: 1 });
+            //
+            // if(!localStorage.mySettings) {
+            //     localStorage.mySettings = select_dataset;
+            //     alert("Значение установлено");
+            // } else {
+            //     alert("Значение равно: " + localStorage.mySettings);
+            //     select_dataset = localStorage.mySettings;
+            // }
+            //
+            setTimeout(function(){location.reload(true);}, 500);
+
+            // $('option#'+datasets_id).attr('selected', true);
+
+            // $(name).val() = Cookies.get('select_dataset');
+
+            //
+            // alert('select_dataset: '+Cookies.get('select_dataset'));
+            //
+            // $(select_dataset).val(Cookies.get('select_dataset'));
+
+            // $(select_option).attr('selected', true);
+
+            // $(select_option).removeClass("selecter-item");
+            // $(select_option).addClass("selecter-item selected");
+
+        },
+    });
+    return false;
+
+    // alert(datasets_id);
+    // alert(form_url);
+}
+
+function showStatistic(obj) {
+    // alert('showStatistic: '+$(obj).val());
+    // var select_dataset = document.getElementById("mydataset");
+    // var select_option = select_dataset.options[select_dataset.selectedIndex];
+    // var datasets_id = select_option.value;
+
+    // var label_statistics = $("#label_statistics");
+    // var statistics = $("#statistics");
+    // var multiple_root_filenames = $(obj).val() || [];
+
+    var selected = 0;
+    var selected2 = '';
+
+    $(obj).change(function() {
+        $('#dirs_list option:selected').each(function(){
+            selected++;
+            $('#result2').text(this.text);
+        });
+        $('#result').text(selected);
+        // $('#result2').text(selected);
+    });
+
+    // $('#dirs_list option:selected').each(function() {
+    //     selected++;
+    // });
+    // // alert('selected: '+selected);
+    //
+    // $('#result').text(selected);
+
+    if (selected) {
+        $("#label_statistics").removeClass("disabled");
+        $("#statistics").removeClass("disabled");
+    } else {
+        // $("#label_statistics").removeClass("col-md-2 right");
+        $("#label_statistics").addClass("disabled");
+        // $("#statistics").removeClass("col-md-4");
+        $("#statistics").addClass("disabled");
+    }
+
+
+
+    // $("#label_statistics").removeClass("col-md-2 right disabled");
+    // $("#label_statistics").addClass("col-md-2 right");
+    // $("#statistics").removeClass("col-md-4 disabled");
+    // $("#statistics").addClass("col-md-4");
+    // $(this).addClass("col-md-2 right");
+
+    // $('#label_statistics').prop('disabled', false);
+    // $('#statistics').prop('disabled', false);
+    // $(label_statistics).attr('disabled', false);
+    // $(statistics).attr('disabled', false);
+
+
+    // alert('multiple_root_filenames: '+multiple_root_filenames);
+}
+
 
 $(document).ready(function(){
     initCheckDeleteItems();

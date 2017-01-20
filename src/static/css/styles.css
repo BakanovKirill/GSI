@@ -93,8 +93,16 @@ input, textarea {
     margin-top: 15px;
 }
 
+.margin-top-015 {
+    margin-top: -15px;
+}
+
 .margin-top-20 {
     margin-top: 20px;
+}
+
+.margin-top-020 {
+    margin-top: -20px;
 }
 
 .margin-top-25 {
@@ -579,4 +587,81 @@ hr {
 
 #cke_id_content {
     width: 770px !important;
+}
+
+/* ***** user select ****************************************** */
+.multiselect {
+    width: 200px;
+}
+
+.selectBox {
+    position: relative;
+}
+
+.selectBox select {
+    width: 100%;
+    font-weight: bold;
+}
+
+.overSelect {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.checkboxes {
+    display: none;
+    border: 1px #dadada solid;
+}
+
+.checkboxes label {
+    display: block;
+}
+
+.checkboxes label:hover {
+    background-color: #66afe9;
+}
+
+.select-border-bottom-grey {
+    border-bottom: 2px solid #ccc;
+}
+
+.select-color-grey {
+    color: #999;
+}
+
+input[type="checkbox"]:checked + span {
+  color:  #265a88;
+}
+
+.display-show {
+    display: true;
+}
+
+.gsi-logo {
+    padding: 5px;
+    z-index: 0;
+    position: absolute;
+    left: 76px;
+    bottom: 0px;
+    margin-bottom: 4%;
+}
+
+.placeholder {
+    background-color: #fff !important;
+}
+
+.padding-left-5 {
+    padding-left: 5px !important;
+}
+
+.padding-right-5 {
+    padding-right: 5px !important;
+}
+
+.padding-lr-5 {
+    padding-right: 5px !important;
+    padding-left: 5px !important;
 }

@@ -4,58 +4,144 @@
 {% block title %}{{ title }}{% endblock title %}
 
 {% block content %}
-    <form class="form-modal" action="{% url 'customer_section' user_id %}" method="post" enctype="multipart/form-data"
+    <form class="form-modal" id="customer_section" action="{% url 'customer_section' user_id %}" method="post" enctype="multipart/form-data"
           role="form" class="form-horizontal">
         {% csrf_token %}
 
-        <div class="row">
-            <div class="col-md-4">
-                <b>Enter Lat:</b> <input class="form-control" type="text" name="eLat" id="e_Lat" value="{{ eLat }}"/><br />
+        <!-- Info Menu -->
+        <div class="row margin-top-25">
+            <div class="col-md-3">
+                <select name="select" id="mydataset" onchange="showDataSets(this)">
+                    {% for key, val in data_sets.items %}
+                        <option id="{{ val }}" name="{{ key }}" value="{{ val }}" {% if data_set_id == val %}selected="selected"{% endif %}>{{ key }}</option>
+                    {% endfor %}
+                </select>
             </div>
-            <div class="col-md-4">
-                <b>Enter Log:</b> <input class="form-control" type="text" name="eLng" id="e_Lng" value="{{ eLng }}"/><br />
-            </div>
-            <div class="col-md-4 margin-top-20">
-                <button type="submit" class="btn btn-primary">Display the selected location on the map</button>
+
+            {% if dirs_list %}
+                <div class="col-md-3">
+                    <div class="multiselect select-border-bottom-grey" id="select_root_filenames">
+                        <div class="selectBox" onclick="showRootFilenames()">
+                            <p class="select-color-grey left">
+                                <span>Root-Filenames</span>&nbsp; <span class="right"><i class="fa fa-caret-down select-color-grey right" aria-hidden="true"></i></span>
+                            </p>
+                            <div class="overSelect"></div>
+                        </div>
+                        <div id="checkboxes_root_filenames" class="checkboxes">
+                            {% for dl in dirs_list%}
+                                <label for="{{ dl.id }}" class="left">
+                                    <label><input type="checkbox" id="{{ dl.id }}" class="checkboxes_root_filenames" value="{{ dl.id }}" {% if data_set_id == val %}checked="checked"{% endif %}/> <span>{{ dl }}</span></label>
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="multiselect select-border-bottom-grey" id="select_statistics">
+                        <div class="selectBox" onclick="showStatistics()">
+                            <p class="select-color-grey left">
+                                <span>Statistics</span>&nbsp; <span class="right"><i class="fa fa-caret-down select-color-grey right" aria-hidden="true"></i></span>
+                            </p>
+                            <div class="overSelect"></div>
+                        </div>
+                        <div id="checkboxes_statistics" class="checkboxes">
+                            <label for="max" class="left">
+                                <label><input type="checkbox" id="max" value="mean_ConditionalMax"/> <span>mean_ConditionalMax</span></label>
+                            </label>
+                            <label for="mean" class="left">
+                                <label><input type="checkbox" id="mean" value="mean_ConditionalMean"/> <span>mean_ConditionalMean</span></label>
+                            </label>
+                            <label for="median" class="left">
+                                <label><input type="checkbox" id="median" value="mean_ConditionalMedian"/> <span>mean_ConditionalMedian</span></label>
+                            </label>
+                            <label for="min" class="left">
+                                <label><input type="checkbox" id="min" value="mean_ConditionalMin"/> <span>mean_ConditionalMin</span>/</label>
+                            </label>
+                            <label for="qurtile" class="left">
+                                <label><input type="checkbox" id="qurtile" value="mean_LowerQurtile"/> <span>mean_LowerQurtile</span></label>
+                            </label>
+                            <label for="quantile" class="left">
+                                <label><input type="checkbox" id="quantile" value="mean_Quantile"/> <span>mean_Quantile</span></label>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="col-md-3">
+                <div class="multiselect select-border-bottom-grey" id="select_polygons">
+                    <div class="selectBox" onclick="showPolygons()">
+                        <p class="select-color-grey left">
+                            <span>Polygons</span>&nbsp; <span class="right"><i class="fa fa-caret-down select-color-grey right" aria-hidden="true"></i></span>
+                        </p>
+                        <div class="overSelect"></div>
+                    </div>
+                    <div id="checkboxes_polygons" class="checkboxes">
+                        {% for polygon in polygons_list%}
+                            <label for="{{ polygon }}" class="left">
+                                <label><input type="checkbox" id="{{ polygon }}" class="checkboxes_root_filenames" value="{{ polygon }}" {% if data_set_id == val %}checked="checked"{% endif %}/> <span>{{ polygon }}</span></label>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
+        <!-- End Info Menu -->
 
-        <div class="row margin-top-15">
-            <div class="col-md-3">
-                <button onclick="drawPoligon();" type="button" class="btn btn-success btn-block">Draw the Poligon</button>
+        <!-- Draw Menu -->
+        <div class="row margin-top-35">
+            <div class="col-md-3 col-md-offset-4 center">
+                <button type="button" onclick="removePoligon();"><img src="{% static 'img/map-marker-off.png' %}" alt="hand" title="Remove Poligon"></i></button>
+                <button type="button" onclick="drawPoligon();"><img src="{% static 'img/vector-polygon.png' %}" alt="vector polygon" title="Draw a Poligon"></button>
+                <button type="button" onclick="togglePlygonOverlays();"><img src="{% static 'img/eye-off.png' %}" alt="hide/show" title="Hide/Show a Poligon"></button>
             </div>
-            <div class="col-md-3">
-                <button onclick="togglePlygonOverlays();" type="button" class="btn btn-primary btn-block">Show the Polugon On/Off</button>
+
+
+            <div class="col-md-2 left margin-top-5 padding-lr-5">
+                <input type="range" id="one" min="0" max="100" onchange="setOpacity(this.value);" alt="transparency" title="Transparency"/>
             </div>
-            <div class="col-md-3">
-                <button onclick="removePoligon();" type="button" class="btn btn-danger btn-block">Delete the Poligon</button>
-            </div>
-            <div class="col-md-3">
-                <button onclick="removeMarkers();" type="button" class="btn btn-danger btn-block">Delete the Markers</button>
+            <div class="col-md-2 left padding-lr-5">
+                (transparency)
             </div>
         </div>
+        <!-- End Draw Menu -->
 
-        <div class="row margin-top-15">
-            <div class="col-md-3 margin-top-8">
-                <b>Lat:</b> <input class="form-control" type="text" id="latitude" placeholder="latitude">
-            </div>
-            <div class="col-md-3 margin-top-8">
-                <b>Lon:</b> <input class="form-control" type="text" id="longitude" placeholder="longitude">
-            </div>
-            <div class="col-md-2 right margin-top-40">
-                Transparency:
-            </div>
-            <div class="col-md-3 left margin-top-40">
-                <input type="range" id="one" min="0" max="100" onchange="setOpacity(this.value);"/>
-            </div>
-            <div class="col-md-1 left margin-top-40"><span id="uno" value="75"></span> %</div>
-        </div>
-
-        <div class="row margin-top-15">
+        <!-- Google map -->
+        <div class="row margin-top-35">
             <div class="col-md-12">
                 <div id="map"></div>
             </div>
         </div>
+        <!-- End Google map -->
+
+        <!-- GSi LOGO -->
+        <div class="row margin-top-35">
+            <div class="col-md-12">
+                <div class="gsi-logo">
+                    <a href="http://www.surfaceintelligence.com/" Target="_blank"><img src="{% static 'img/GSIlogo.png' %}" style="cursor: pointer;"></a>
+                </div>
+            </div>
+        </div>
+        <!-- End GSi LOGO -->
+
+        <!-- GSi Info Data -->
+        <div class="row">
+            <div class="col-md-1 right padding-lr-5">Lat:</div>
+            <div class="col-md-3 margin-top-015 padding-left-5 padding-lr-5">
+                <input class="form-control placeholder" type="text" id="latitude" readonly>
+            </div>
+            <div class="col-md-1 right padding-lr-5">Lon:</div>
+            <div class="col-md-3 margin-top-015 padding-left-5">
+                <input class="form-control placeholder" type="text" id="longitude" readonly>
+            </div>
+
+            <div class="col-md-3 margin-top-015 padding-lr-5">
+                <input class="form-control placeholder" type="text" id="next" placeholder="data">
+            </div>
+            <div class="col-md-1 left padding-lr-5">Next:</div>
+        </div>
+        <!-- End GSi Info Data -->
     </form>
 
     <script>
@@ -237,6 +323,9 @@
             }
             coord = [];
             polugonVisible = false;
+
+            // Removes the markers
+            removeMarkers();
         }
 
         // Removes the markers from the map, but keeps them in the array.
