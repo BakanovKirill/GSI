@@ -136,6 +136,18 @@
             </div>
         </div>
         <!-- End Google map -->
+
+        <!-- GSi Info Data -->
+        <div class="row">
+            <div class="col-md-4 col-md-offset-8 margin-top-25 padding-lr-5">
+                <select name="select" id="show_arrea" onchange="showSelectArea(this)">
+                    {% for png in fpng_list %}
+                        <option id="{{ png }}" name="{{ png }}" value="{{ png }}">{{ png }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <!-- End GSi Info Data -->
     </form>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4HosogGf9o2-Cnef_SiUR6jZYVszGkGY&signed_in=true"></script>

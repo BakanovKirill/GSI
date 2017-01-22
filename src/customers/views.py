@@ -24,7 +24,7 @@ from customers.customers_update_create import (category_update_create, shelf_dat
 from core.get_post import get_post
 from core.paginations import paginations
 from gsi.settings import (RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM, POLYGONS_DIRECTORY,
-                        DAFAULT_LAT, DAFAULT_LON, PNG_PATH, BASE_DIR)
+                        DAFAULT_LAT, DAFAULT_LON, PNG_PATH, BASE_DIR, TIF_PATH)
 
 
 # categorys list
@@ -933,7 +933,7 @@ def customer_section(request, user_id):
     scheme = '{0}://'.format(request.scheme)
     absolute_png_url = os.path.join(scheme, request.get_host(), PNG_PATH)
     absolute_path_png = os.path.join(BASE_DIR, PNG_PATH)
-    absolute_tif_folder = '/home/greg/Elance_com/KeyUA/GSI/UI/images'
+    absolute_tif_folder = os.path.join(BASE_DIR, TIF_PATH)
 
     absolute_url_png_file = ''
     absolute_path_tif_file = ''

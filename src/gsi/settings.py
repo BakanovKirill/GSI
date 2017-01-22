@@ -56,8 +56,8 @@ INSTALLED_APPS = (
     'registration',
     'crispy_forms',
 
-    'ckeditor',
-    'ckeditor_uploader',
+    # 'ckeditor',
+    # 'ckeditor_uploader',
 
     'cards',
     'gsi',
@@ -275,6 +275,7 @@ GOOGLE_MAP_ZOOM = 11
 DAFAULT_LAT = 63.817957
 DAFAULT_LON = -151.147061
 PNG_PATH = 'media/png'
+TIF_PATH = 'media/tif'
 
 # Card Type
 CARD_TYPE = {
