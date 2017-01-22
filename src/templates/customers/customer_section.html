@@ -47,22 +47,22 @@
                         </div>
                         <div id="checkboxes_statistics" class="checkboxes">
                             <label for="max" class="left">
-                                <label><input type="checkbox" id="max" value="mean_ConditionalMax"/> <span>mean_ConditionalMax</span></label>
+                                <label><input type="checkbox" id="max" value="mean_ConditionalMax" onclick="addChoice(this);"> <span>mean_ConditionalMax</span></label>
                             </label>
                             <label for="mean" class="left">
-                                <label><input type="checkbox" id="mean" value="mean_ConditionalMean"/> <span>mean_ConditionalMean</span></label>
+                                <label><input type="checkbox" id="mean" value="mean_ConditionalMean" onclick="addChoice(this);"> <span>mean_ConditionalMean</span></label>
                             </label>
                             <label for="median" class="left">
-                                <label><input type="checkbox" id="median" value="mean_ConditionalMedian"/> <span>mean_ConditionalMedian</span></label>
+                                <label><input type="checkbox" id="median" value="mean_ConditionalMedian" onclick="addChoice(this);"> <span>mean_ConditionalMedian</span></label>
                             </label>
                             <label for="min" class="left">
-                                <label><input type="checkbox" id="min" value="mean_ConditionalMin"/> <span>mean_ConditionalMin</span>/</label>
+                                <label><input type="checkbox" id="min" value="mean_ConditionalMin" onclick="addChoice(this);"> <span>mean_ConditionalMin</span></label>
                             </label>
                             <label for="qurtile" class="left">
-                                <label><input type="checkbox" id="qurtile" value="mean_LowerQurtile"/> <span>mean_LowerQurtile</span></label>
+                                <label><input type="checkbox" id="qurtile" value="mean_LowerQurtile" onclick="addChoice(this);"> <span>mean_LowerQurtile</span></label>
                             </label>
                             <label for="quantile" class="left">
-                                <label><input type="checkbox" id="quantile" value="mean_Quantile"/> <span>mean_Quantile</span></label>
+                                <label><input type="checkbox" id="quantile" value="mean_Quantile" onclick="addChoice(this);"> <span>mean_Quantile</span></label>
                             </label>
                         </div>
                     </div>
@@ -89,20 +89,19 @@
         </div>
         <!-- End Info Menu -->
 
+        {# vector-square #}
+
         <!-- Draw Menu -->
         <div class="row margin-top-35">
-            <div class="col-md-3 col-md-offset-4 center">
-                <button type="button" onclick="removePoligon();"><img src="{% static 'img/map-marker-off.png' %}" alt="hand" title="Remove Poligon"></i></button>
-                <button type="button" onclick="drawPoligon();"><img src="{% static 'img/vector-polygon.png' %}" alt="vector polygon" title="Draw a Poligon"></button>
-                <button type="button" onclick="togglePlygonOverlays();"><img src="{% static 'img/eye-off.png' %}" alt="hide/show" title="Hide/Show a Poligon"></button>
+            <div class="col-md-4 col-md-offset-2 right">
+                <button type="button" onclick="appliedMarkers();" class="btn-draw"><img src="{% static 'img/map-marker-plus.png' %}" alt="hand" title="Applied Markers" class="area-draw"></button>
+                <button type="button" onclick="drawPoligon();" class="btn-draw"><img src="{% static 'img/vector-polygon.png' %}" alt="vector polygon" title="Draw a Poligon" class="area-draw"></button>
+                <button type="button" onclick="removePoligon();" class="btn-draw"><img src="{% static 'img/map-marker-off.png' %}" alt="hand" title="Remove Poligon" class="area-draw"></button>
+                <button type="button" onclick="togglePlygonOverlays();" class="btn-draw"><img src="{% static 'img/eye-off.png' %}" alt="hide/show" title="Hide/Show a Poligon" class="area-draw"></button>
             </div>
 
-
-            <div class="col-md-2 left margin-top-5 padding-lr-5">
-                <input type="range" id="one" min="0" max="100" onchange="setOpacity(this.value);" alt="transparency" title="Transparency"/>
-            </div>
-            <div class="col-md-2 left padding-lr-5">
-                (transparency)
+            <div class="col-md-3 left margin-top-8 padding-lr-5">
+                <input type="range" id="opacity" min="0" max="100" oninput="setOpacity();" alt="transparency" title="Transparency" value="100"/>
             </div>
         </div>
         <!-- End Draw Menu -->
@@ -110,50 +109,56 @@
         <!-- Google map -->
         <div class="row margin-top-35">
             <div class="col-md-12">
+                <!-- [START region_toolbar] -->
+                <!-- Add an input button to initiate the toggle method on the overlay. -->
+                <div id="floating-panel">
+                    <input type="button" class="btn btn-default" value="Toggle visibility" onclick="overlay.toggle();"></input>
+                    <input type="button" class="btn btn-default" value="Toggle DOM attachment" onclick="overlay.toggleDOM();"></input>
+                </div>
+                <!-- [END region_toolbar] -->
+
                 <div id="map"></div>
+
+                <!-- GSi LOGO -->
+                <div id="gsi-logo">
+                    <a href="http://www.surfaceintelligence.com/" Target="_blank"><img src="{% static 'img/GSIlogo.png' %}" style="cursor: pointer;"></a>
+                </div>
+                <!-- End GSi LOGO -->
+
+                <!-- GSi Coordinates -->
+                <div id="lat-panel">
+                    <input class="form-control placeholder" type="text" id="latitude" readonly>
+                </div>
+                <div id="lng-panel">
+                    <input class="form-control placeholder" type="text" id="longitude" readonly>
+                </div>
+                <!-- GSi Coordinates -->
             </div>
         </div>
         <!-- End Google map -->
-
-        <!-- GSi LOGO -->
-        <div class="row margin-top-35">
-            <div class="col-md-12">
-                <div class="gsi-logo">
-                    <a href="http://www.surfaceintelligence.com/" Target="_blank"><img src="{% static 'img/GSIlogo.png' %}" style="cursor: pointer;"></a>
-                </div>
-            </div>
-        </div>
-        <!-- End GSi LOGO -->
-
-        <!-- GSi Info Data -->
-        <div class="row">
-            <div class="col-md-1 right padding-lr-5">Lat:</div>
-            <div class="col-md-3 margin-top-015 padding-left-5 padding-lr-5">
-                <input class="form-control placeholder" type="text" id="latitude" readonly>
-            </div>
-            <div class="col-md-1 right padding-lr-5">Lon:</div>
-            <div class="col-md-3 margin-top-015 padding-left-5">
-                <input class="form-control placeholder" type="text" id="longitude" readonly>
-            </div>
-
-            <div class="col-md-3 margin-top-015 padding-lr-5">
-                <input class="form-control placeholder" type="text" id="next" placeholder="data">
-            </div>
-            <div class="col-md-1 left padding-lr-5">Next:</div>
-        </div>
-        <!-- End GSi Info Data -->
     </form>
 
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4HosogGf9o2-Cnef_SiUR6jZYVszGkGY&signed_in=true"></script>
     <script>
+        var overlay;
+        USGSOverlay.prototype = new google.maps.OverlayView();
+
         var map;
+        var center_map = {lat: {{ cLat }}, lng: {{ cLng }}};
+
         var coord = [];
+        var coord_area = [];
         var markers = [];
         var polygons = [];
-        var start_area = {lat: {{ eLat }}, lng: {{ eLng }} };
-        var cur_marker;
         var selectPolygon;
-        var polugonVisible;
+        var selectArea;
+        var polygonVisible;
         var mapTypesArr = [];
+
+        // alert('eLat_1: '+{{ eLat_1 }});
+        // alert('eLng_1: '+{{ eLng_1 }});
+        // alert('eLat_2: '+{{ eLat_2 }});
+        // alert('eLng_2: '+{{ eLng_2 }});
 
         var MY_MAPTYPE_ID = 'mystyle';
 
@@ -261,7 +266,7 @@
 
             map = new google.maps.Map(document.getElementById('map'), {
                 zoom: {{ GOOGLE_MAP_ZOOM }},
-                center: start_area,
+                center: center_map,
                 mapTypeControl: true,
                 mapTypeControlOptions: {
                     style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
@@ -273,30 +278,186 @@
                         MY_MAPTYPE_ID
                     ]
                 },
-                // mapTypeId: MY_MAPTYPE_ID
             });
 
-            var styledMapOptions = {
-                name: "Road & Water"
-              };
-
+            var styledMapOptions = {name: "Road & Water"};
             var jayzMapType = new google.maps.StyledMapType(my_styles, styledMapOptions);
 
             map.mapTypes.set(MY_MAPTYPE_ID, jayzMapType);
             // map.setMapTypeId(google.maps.MapTypeId.HYBRID);
+            //
 
-            cur_marker = new google.maps.Marker({
-                position: {
-                    'lat':   {{ eLat }},
-                    'lng': {{ eLng }}
-                },
-                map: map
-            });
+            // map.addListener('click', function(e) {
+            //     placeMarkerAndPanTo(e.latLng.lat(), e.latLng.lng());
+            // });
 
-            map.addListener('click', function(e) {
-                placeMarkerAndPanTo(e.latLng.lat(), e.latLng.lng());
-            });
+            // var center_marker = new google.maps.Marker({
+            //     position: {
+            //         'lat': {{ cLat }},
+            //         'lng': {{ cLng }}
+            //     },
+            //     map: map
+            // });
+
+            // var min_marker = new google.maps.Marker({
+            //     position: {
+            //         'lat': {{ eLat_1 }},
+            //         'lng': {{ eLng_1 }}
+            //     },
+            //     map: map
+            // });
+
+            // var max_marker = new google.maps.Marker({
+            //     position: {
+            //         'lat': {{ eLat_2 }},
+            //         'lng': {{ eLng_2 }}
+            //     },
+            //     map: map
+            // });
+
+            var bounds = new google.maps.LatLngBounds(
+                new google.maps.LatLng({{ eLat_1 }}, {{ eLng_1 }}),
+                new google.maps.LatLng({{ eLat_2 }}, {{ eLng_2 }}));
+
+            // The source to image overlay
+            var srcImage = '{{ absolute_url_png_file }}';
+            overlay = new USGSOverlay(bounds, srcImage, map);
+
+            // Show the lat and lng under the mouse cursor.
+            // latitude, longitude
+
+            // placeMarkerAndPanTo({{ eLat_1 }}, {{ eLng_1 }});
+            // placeMarkerAndPanTo({{ eLat_2 }}, {{ eLng_2 }});
+
+            // Add a listener for the click event.
+            map.addListener('click', showInfoWindow);
+            infoWindow = new google.maps.InfoWindow;
+
+            // Add a listener for the mousemove event.
+            map.addListener('mousemove', showCoordinates);
+
+            // infoWindow = new google.maps.InfoWindow;
+
+            // var latDiv = document.getElementById('latitude');
+            // var lngDiv = document.getElementById('longitude');
+            //
+            // map.controls[google.maps.ControlPosition.TOP_CENTER].push(latDiv);
+            // map.controls[google.maps.ControlPosition.TOP_CENTER].push(lngDiv);
+            // map.addListener('mousemove', function(event) {
+            //     latDiv.textContent =
+            //         'lat: ' + Math.round(event.latLng.lat());
+            //     }
+            // );
+            // map.addListener('mousemove', function(event) {
+            //     lngDiv.textContent =
+            //         'lng: ' + Math.round(event.latLng.lng());
+            //     }
+            // );
+
         }
+
+        /** @constructor */
+        function USGSOverlay(bounds, image, map) {
+            // Now initialize all properties.
+            this.bounds_ = bounds;
+            this.image_ = image;
+            this.map_ = map;
+
+            // Define a property to hold the image's div. We'll
+            // actually create this div upon receipt of the onAdd()
+            // method so we'll leave it null for now.
+            this.div_ = null;
+
+            // Explicitly call setMap on this overlay
+            this.setMap(map);
+        }
+
+        /**
+         * onAdd is called when the map's panes are ready and the overlay has been
+         * added to the map.
+         */
+        USGSOverlay.prototype.onAdd = function() {
+            var div = document.createElement('div');
+            div.style.border = 'none';
+            div.style.borderWidth = '0px';
+            div.style.position = 'absolute';
+
+            // Create the img element and attach it to the div.
+            var img = document.createElement('img');
+            img.src = this.image_;
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.id = 'on_add';
+            div.appendChild(img);
+
+            this.div_ = div;
+
+            // Add the element to the "overlayImage" pane.
+            var panes = this.getPanes();
+            panes.overlayImage.appendChild(this.div_);
+        };
+
+        USGSOverlay.prototype.draw = function() {
+            // We use the south-west and north-east
+            // coordinates of the overlay to peg it to the correct position and size.
+            // To do this, we need to retrieve the projection from the overlay.
+            var overlayProjection = this.getProjection();
+
+            // Retrieve the south-west and north-east coordinates of this overlay
+            // in LatLngs and convert them to pixel coordinates.
+            // We'll use these coordinates to resize the div.
+            var sw = overlayProjection.fromLatLngToDivPixel(this.bounds_.getSouthWest());
+            var ne = overlayProjection.fromLatLngToDivPixel(this.bounds_.getNorthEast());
+
+            // Resize the image's div to fit the indicated dimensions.
+            var div = this.div_;
+            div.style.left = sw.x + 'px';
+            div.style.top = ne.y + 'px';
+            div.style.width = (ne.x - sw.x) + 'px';
+            div.style.height = (sw.y - ne.y) + 'px';
+        };
+
+        USGSOverlay.prototype.onRemove = function() {
+            this.div_.parentNode.removeChild(this.div_);
+        };
+
+        // [START region_hideshow]
+        // Set the visibility to 'hidden' or 'visible'.
+        USGSOverlay.prototype.hide = function() {
+            if (this.div_) {
+                // The visibility property must be a string enclosed in quotes.
+                this.div_.style.visibility = 'hidden';
+            }
+        };
+
+        USGSOverlay.prototype.show = function() {
+            if (this.div_) {
+                this.div_.style.visibility = 'visible';
+            }
+        };
+
+        USGSOverlay.prototype.toggle = function() {
+            if (this.div_) {
+                if (this.div_.style.visibility === 'hidden') {
+                    this.show();
+                } else {
+                    this.hide();
+                }
+            }
+        };
+
+        // Detach the map from the DOM via toggleDOM().
+        // Note that if we later reattach the map, it will be visible again,
+        // because the containing <div> is recreated in the overlay's onAdd() method.
+        USGSOverlay.prototype.toggleDOM = function() {
+            if (this.getMap()) {
+                // Note: setMap(null) calls OverlayView.onRemove()
+                this.setMap(null);
+            } else {
+                this.setMap(this.map_);
+            }
+        };
+        // [END region_hideshow]
 
         function placeMarkerAndPanTo(lat1, lng1) {
             var dict = {
@@ -314,6 +475,13 @@
             markers.push(marker);
         }
 
+        // applied markers on the map.
+        function appliedMarkers() {
+            map.addListener('click', function(e) {
+                placeMarkerAndPanTo(e.latLng.lat(), e.latLng.lng());
+            });
+        }
+
         // Removes the poligon from the map, but keeps them in the array.
         function removePoligon() {
             if (polygons) {
@@ -322,7 +490,7 @@
                 }
             }
             coord = [];
-            polugonVisible = false;
+            polygonVisible = false;
 
             // Removes the markers
             removeMarkers();
@@ -349,7 +517,7 @@
             });
             selectPolygon.setMap(map);
             polygons.push(selectPolygon);
-            polugonVisible = true;
+            polygonVisible = true;
 
             // selectPolygon.fillOpacity = 1.0;
 
@@ -359,16 +527,22 @@
 
             // Add a listener for the mousemove event.
             selectPolygon.addListener('mousemove', showCoordinates);
-
             infoWindow = new google.maps.InfoWindow;
+
+            // markers.addListener('click', showInfoWindow);
+            // infoWindow = new google.maps.InfoWindow;
+            //
+            // // marker.addListener('click', function() {
+            // //     infowindow.open(map, marker);
+            // // });
         }
 
         function showCoordinates(event) {
             var lat = event.latLng.lat();
         	var lon = event.latLng.lng();
 
-            document.getElementById('latitude').value = lat.toFixed(6);
-            document.getElementById('longitude').value = lon.toFixed(6);
+            document.getElementById('latitude').value = 'Lat: ' + lat.toFixed(6);
+            document.getElementById('longitude').value = 'Lng: ' + lon.toFixed(6);
         }
 
         function showInfoWindow(event) {
@@ -386,18 +560,15 @@
         }
 
         function togglePlygonOverlays() {
-            if (polugonVisible) {
+            if (polygonVisible) {
                 selectPolygon.setMap(null);
-                polugonVisible = false;
+                polygonVisible = false;
             } else {
                 selectPolygon.setMap(map);
-                polugonVisible = true;
+                polygonVisible = true;
             }
         }
 
-
+        google.maps.event.addDomListener(window, 'load', initMap);
     </script>
-
-    <script type="text/javascript" async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4HosogGf9o2-Cnef_SiUR6jZYVszGkGY&signed_in=true&callback=initMap"></script>
 {% endblock content %}

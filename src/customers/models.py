@@ -63,3 +63,17 @@ class CustomerAccess(models.Model):
 
     def __unicode__(self):
         return u"{0}".format(self.user.username)
+
+
+# class SelectedArea(models.Model):
+#     user = models.ForeignKey(User, verbose_name='User', blank=True, null=True)
+#     project = models.CharField(max_length=150, blank=True, null=True)
+#     attribute_name = models.CharField(max_length=150, blank=True, null=True)
+#     statistics = models.CharField(max_length=150, blank=True, null=True)
+#     polygon = models.CharField(max_length=150, blank=True, null=True)
+#
+#     class Meta:
+#         verbose_name_plural = 'Selected Area'
+#
+#     def __unicode__(self):
+#         return u"{0}_{1}_{2}".format(self.statistics)

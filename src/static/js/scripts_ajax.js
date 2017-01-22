@@ -227,10 +227,6 @@ function getCheckboxValues() {
 }
 
 function showDataSets(obj) {
-    // var select_dataset = document.getElementById("mydataset");
-    // var select_option = select_dataset.options[select_dataset.selectedIndex];
-    // var datasets_id = select_option.value;
-
     var select_dataset = $("#mydataset option:selected");
     var datasets_id = $(obj).val();
     var form_url = $('#customer_section').attr('action');
@@ -345,6 +341,67 @@ function showStatistic(obj) {
 
 
     // alert('multiple_root_filenames: '+multiple_root_filenames);
+}
+
+function showSelectArea(elem) {
+    var select_area = $("#show_arrea option:selected");
+    var area_name = $(elem).val();
+    var form_url = $('#customer_section').attr('action');
+
+    $.ajax({
+        url: form_url,
+        type: 'POST',
+        'async': true,
+        'dataType': 'text',
+        data: {
+            'area_name': area_name,
+            'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+        },
+        'error': function(xhr, status, error){
+            alert(status);
+            alert(error);
+            var message = 'An unexpected error occurred. Try later.';
+        },
+        'success': function(data, status, xhr){
+            // alert($(select_dataset).val());
+            // alert('datasets_id: '+datasets_id);
+
+            // alert('data: '+data);
+            // alert('status: '+status);
+            // $.cookie('select_dataset', $(select_option).val());
+
+            // Cookies.set('select_dataset', $(datasets_id), { expires: 1 });
+            //
+            // if(!localStorage.mySettings) {
+            //     localStorage.mySettings = select_dataset;
+            //     alert("Значение установлено");
+            // } else {
+            //     alert("Значение равно: " + localStorage.mySettings);
+            //     select_dataset = localStorage.mySettings;
+            // }
+            //
+            setTimeout(function(){location.reload(true);}, 500);
+
+            // $('option#'+datasets_id).attr('selected', true);
+
+            // $(name).val() = Cookies.get('select_dataset');
+
+            //
+            // alert('select_dataset: '+Cookies.get('select_dataset'));
+            //
+            // $(select_dataset).val(Cookies.get('select_dataset'));
+
+            // $(select_option).attr('selected', true);
+
+            // $(select_option).removeClass("selecter-item");
+            // $(select_option).addClass("selecter-item selected");
+
+        },
+    });
+    return false;
+
+    // alert(datasets_id);
+    // alert(form_url);
 }
 
 

@@ -571,7 +571,7 @@ li.active-main-menu, li.active-main-menu a:hover, li.li-menu > a:hover, .title:h
 
 #map {
     width: 860px;
-    height: 600px;
+    height: 700px;
 }
 
 hr {
@@ -664,4 +664,67 @@ input[type="checkbox"]:checked + span {
 .padding-lr-5 {
     padding-right: 5px !important;
     padding-left: 5px !important;
+}
+
+/* goggle map menu */
+.area-draw {
+    align-self: center;
+    align-items: center;
+    text-align: center;
+    margin-left: -10px;
+}
+
+.btn-draw {
+    width: 10px;
+}
+
+#floating-panel {
+  position: absolute;
+  top: 10px;
+  left: 15%;
+  z-index: 5;
+  background-color: #fff;
+  padding: 2px;
+  /*border: 1px solid #999;*/
+  text-align: center;
+  line-height: 30px;
+  padding-left: 10px;
+}
+
+#gsi-logo {
+  position: absolute;
+  bottom: 10px;
+  left: 10%;
+  z-index: 5;
+  background-color: #fff;
+  padding: 5px;
+  text-align: center;
+  line-height: 30px;
+  padding-left: 10px;
+}
+
+#lat-panel {
+  position: absolute;
+  bottom: 10px;
+  left: 25%;
+  z-index: 5;
+  background-color: #fff;
+  padding: 2px;
+  text-align: left;;
+  line-height: 10px;
+  padding-left: 10px;
+  width: 150px;
+}
+
+#lng-panel {
+  position: absolute;
+  bottom: 10px;
+  left: 45%;
+  z-index: 5;
+  background-color: #fff;
+  padding: 2px;
+  text-align: left;;
+  line-height: 10px;
+  padding-left: 10px;
+  width: 150px;
 }

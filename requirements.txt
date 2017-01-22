@@ -15,3 +15,4 @@ django-extensions
 django-crispy-forms==1.4.0
 django-ckeditor==5.1.1
 coverage==4.2
+pygdal==2.1.0.3
