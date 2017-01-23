@@ -935,6 +935,8 @@ def customer_section(request, user_id):
     absolute_path_png = os.path.join(BASE_DIR, PNG_PATH)
     absolute_tif_folder = os.path.join(BASE_DIR, TIF_PATH)
 
+    select_area = ''
+
     absolute_url_png_file = ''
     absolute_path_tif_file = ''
 
@@ -979,17 +981,18 @@ def customer_section(request, user_id):
             (u'The directory "{0}" does not exist!'.format(absolute_path_png)))
         )
 
-    # path to a GeoTIFF files
-    absolute_url_png_file = get_file_filepath(fpng_list[0], 'png', absolute_png_url)
-    absolute_path_tif_file = get_file_filepath(fpng_list[0], 'tif', absolute_tif_folder)
+
     # fpng = '{0}.png'.format(fpng_list[0])
     # ftif = '{0}.tif'.format(fpng_list[0])
     # absolute_uri_png_file = os.path.join(absolute_uri_png_folder, fpng)
     # absolute_uri_tif_file = os.path.join(absolute_uri_png_folder, ftif)
 
 
-    print 'absolute_url_png_file =========================== ', absolute_url_png_file
-    print 'absolute_path_tif_file =========================== ', absolute_path_tif_file
+    # print 'absolute_url_png_file =========================== ', absolute_url_png_file
+    # print '00 absolute_tif_folder =========================== ', absolute_tif_folder
+    #
+    # print '00-1 request.session[png] =========================== ', request.session.get('png', False)
+    # print '00-2 request.session[png] =========================== ', request.session.get('png', True)
 
     # get the list polygons for the show on the custom section
     try:
@@ -1021,17 +1024,34 @@ def customer_section(request, user_id):
                 u'%s?danger_message=%s' % (reverse('data_set_edit', args=[data_set_id]),
                 (u'The directory "{0}" does not exist!'.format(results_directory)))
             )
-    elif request.session.get('eLat', False):
-        eLat = request.session['eLat']
-    elif request.session.get('eLng', False):
-        eLng = request.session['eLng']
-    elif request.session.get('select_data_set', True):
+    else:
         request.session['select_data_set'] = data_sets_current[0].dataset_id
         request.session.set_expiry(172800)
-    elif request.session.get('eLng', True):
-        eLng = DAFAULT_LON
-    elif request.session.get('eLat', True):
+
+    if request.session.get('eLat', False):
+        eLat = request.session['eLat']
+    else:
         eLng = DAFAULT_LAT
+        request.session.set_expiry(172800)
+
+    if request.session.get('eLng', False):
+        eLng = request.session['eLng']
+    else:
+        eLng = DAFAULT_LON
+        request.session.set_expiry(172800)
+
+    if request.session.get('png', False):
+        absolute_url_png_file = get_file_filepath(request.session['png'], 'png', absolute_png_url)
+        absolute_path_tif_file = get_file_filepath(request.session['png'], 'tif', absolute_tif_folder)
+        select_area = request.session['png']
+    else:
+        if fpng_list[0]:
+            # path to a GeoTIFF files
+            absolute_url_png_file = get_file_filepath(fpng_list[0], 'png', absolute_png_url)
+            absolute_path_tif_file = get_file_filepath(fpng_list[0], 'tif', absolute_tif_folder)
+            request.session['png'] = fpng_list[0]
+            select_area = fpng_list[0]
+            request.session.set_expiry(172800)
 
     for n in data_sets_current:
         ds = get_object_or_404(DataSet, pk=n.dataset_id)
@@ -1063,16 +1083,22 @@ def customer_section(request, user_id):
 
         if 'area_name' in data_post:
             area_name = data_post.get('area_name', '')
+            request.session['png'] = area_name
 
-            # path to a GeoTIFF files
-            absolute_url_png_file = get_file_filepath(area_name, 'png', absolute_png_url)
-            absolute_path_tif_file = get_file_filepath(area_name, 'tif', absolute_tif_folder)
+            # print '3 request.session[png] =========================== ', request.session['png']
+
+            # print 'area_name ========================= ', area_name
+            # print 'request.session png ========================= ', request.session['png']
+            #
+            # # path to a GeoTIFF files
+            # absolute_url_png_file = get_file_filepath(area_name, 'png', absolute_png_url)
+            # absolute_path_tif_file = get_file_filepath(area_name, 'tif', absolute_tif_folder)
 
             status = 'success'
 
 
-            print 'absolute_url_png_file =========================== ', absolute_url_png_file
-            print 'absolute_path_tif_file =========================== ', absolute_path_tif_file
+            # print 'absolute_url_png_file =========================== ', absolute_url_png_file
+            # print 'absolute_path_tif_file =========================== ', absolute_path_tif_file
 
             return HttpResponse(status)
 
@@ -1116,6 +1142,8 @@ def customer_section(request, user_id):
 
     # media/png/
 
+    # print '!! absolute_path_tif_file  =========================== \n', absolute_path_tif_file
+
     # get the lat/lon values for a GeoTIFF files
     try:
         ds = gdal.Open(absolute_path_tif_file)
@@ -1136,16 +1164,16 @@ def customer_section(request, user_id):
         eLat_2 = maxy
         eLng_2 = maxx
 
-        print 'width ======================== ', width
-        print 'height ======================== ', height
-        print '--------------------------------------------------------------------'
-        print 'centerx ======================== ', centerx
-        print 'centery ======================== ', centery
-        print '--------------------------------------------------------------------'
-        print 'minx ======================== ', minx
-        print 'miny ======================== ', miny
-        print 'maxx ======================== ', maxx
-        print 'maxy ======================== ', maxy
+        # print 'width ======================== ', width
+        # print 'height ======================== ', height
+        # print '--------------------------------------------------------------------'
+        # print 'centerx ======================== ', centerx
+        # print 'centery ======================== ', centery
+        # print '--------------------------------------------------------------------'
+        # print 'minx ======================== ', minx
+        # print 'miny ======================== ', miny
+        # print 'maxx ======================== ', maxx
+        # print 'maxy ======================== ', maxy
     except AttributeError:
         pass
 
@@ -1195,7 +1223,8 @@ def customer_section(request, user_id):
     # print 'eLat_2 ============================================== ', eLat_2
     # print 'eLat_2_conv ============================================== ', eLat_2_conv
 
-    print '!! absolute_url_png_file =========================== ', absolute_url_png_file
+    # print '!! absolute_url_png_file =========================== ', absolute_url_png_file
+    # print '!! select_area ========================= ', select_area
 
     data = {
         'title': title,
@@ -1208,6 +1237,7 @@ def customer_section(request, user_id):
         'dirs_list': dirs_list,
         'polygons_list': polygons_list,
         'fpng_list': fpng_list,
+        'select_area': select_area,
 
         'absolute_url_png_file': absolute_url_png_file,
 

@@ -142,7 +142,7 @@
             <div class="col-md-4 col-md-offset-8 margin-top-25 padding-lr-5">
                 <select name="select" id="show_arrea" onchange="showSelectArea(this)">
                     {% for png in fpng_list %}
-                        <option id="{{ png }}" name="{{ png }}" value="{{ png }}">{{ png }}</option>
+                        <option id="{{ png }}" name="{{ png }}" value="{{ png }}" {% if select_area == png %}selected="selected"{% endif %}>{{ png }}</option>
                     {% endfor %}
                 </select>
             </div>
