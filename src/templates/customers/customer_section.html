@@ -18,56 +18,54 @@
                 </select>
             </div>
 
-            {% if dirs_list %}
-                <div class="col-md-3">
-                    <div class="multiselect select-border-bottom-grey" id="select_root_filenames">
-                        <div class="selectBox" onclick="showRootFilenames()">
-                            <p class="select-color-grey left">
-                                <span>Root-Filenames</span>&nbsp; <span class="right"><i class="fa fa-caret-down select-color-grey right" aria-hidden="true"></i></span>
-                            </p>
-                            <div class="overSelect"></div>
-                        </div>
-                        <div id="checkboxes_root_filenames" class="checkboxes">
-                            {% for dl in dirs_list%}
-                                <label for="{{ dl.id }}" class="left">
-                                    <label><input type="checkbox" id="{{ dl.id }}" class="checkboxes_root_filenames" value="{{ dl.id }}" {% if data_set_id == val %}checked="checked"{% endif %}/> <span>{{ dl }}</span></label>
-                                </label>
-                            {% endfor %}
-                        </div>
+            <div class="col-md-3">
+                <div class="multiselect select-border-bottom-grey" id="select_root_filenames">
+                    <div class="selectBox" onclick="showRootFilenames()">
+                        <p class="select-color-grey left">
+                            <span>Root-Filenames</span>&nbsp; <span class="right"><i class="fa fa-caret-down select-color-grey right" aria-hidden="true"></i></span>
+                        </p>
+                        <div class="overSelect"></div>
+                    </div>
+                    <div id="checkboxes_root_filenames" class="checkboxes">
+                        {% for dl in dirs_list%}
+                            <label for="{{ dl.id }}" class="left">
+                                <label><input type="checkbox" id="{{ dl.id }}" class="checkboxes_root_filenames" value="{{ dl.id }}" {% if data_set_id == val %}checked="checked"{% endif %}/> <span>{{ dl }}</span></label>
+                            </label>
+                        {% endfor %}
                     </div>
                 </div>
+            </div>
 
-                <div class="col-md-3">
-                    <div class="multiselect select-border-bottom-grey" id="select_statistics">
-                        <div class="selectBox" onclick="showStatistics()">
-                            <p class="select-color-grey left">
-                                <span>Statistics</span>&nbsp; <span class="right"><i class="fa fa-caret-down select-color-grey right" aria-hidden="true"></i></span>
-                            </p>
-                            <div class="overSelect"></div>
-                        </div>
-                        <div id="checkboxes_statistics" class="checkboxes">
-                            <label for="max" class="left">
-                                <label><input type="checkbox" id="max" value="mean_ConditionalMax" onclick="addChoice(this);"> <span>mean_ConditionalMax</span></label>
-                            </label>
-                            <label for="mean" class="left">
-                                <label><input type="checkbox" id="mean" value="mean_ConditionalMean" onclick="addChoice(this);"> <span>mean_ConditionalMean</span></label>
-                            </label>
-                            <label for="median" class="left">
-                                <label><input type="checkbox" id="median" value="mean_ConditionalMedian" onclick="addChoice(this);"> <span>mean_ConditionalMedian</span></label>
-                            </label>
-                            <label for="min" class="left">
-                                <label><input type="checkbox" id="min" value="mean_ConditionalMin" onclick="addChoice(this);"> <span>mean_ConditionalMin</span></label>
-                            </label>
-                            <label for="qurtile" class="left">
-                                <label><input type="checkbox" id="qurtile" value="mean_LowerQurtile" onclick="addChoice(this);"> <span>mean_LowerQurtile</span></label>
-                            </label>
-                            <label for="quantile" class="left">
-                                <label><input type="checkbox" id="quantile" value="mean_Quantile" onclick="addChoice(this);"> <span>mean_Quantile</span></label>
-                            </label>
-                        </div>
+            <div class="col-md-3">
+                <div class="multiselect select-border-bottom-grey" id="select_statistics">
+                    <div class="selectBox" onclick="showStatistics()">
+                        <p class="select-color-grey left">
+                            <span>Statistics</span>&nbsp; <span class="right"><i class="fa fa-caret-down select-color-grey right" aria-hidden="true"></i></span>
+                        </p>
+                        <div class="overSelect"></div>
+                    </div>
+                    <div id="checkboxes_statistics" class="checkboxes">
+                        <label for="max" class="left">
+                            <label><input type="checkbox" id="max" value="mean_ConditionalMax" onclick="addChoice(this);"> <span>mean_ConditionalMax</span></label>
+                        </label>
+                        <label for="mean" class="left">
+                            <label><input type="checkbox" id="mean" value="mean_ConditionalMean" onclick="addChoice(this);"> <span>mean_ConditionalMean</span></label>
+                        </label>
+                        <label for="median" class="left">
+                            <label><input type="checkbox" id="median" value="mean_ConditionalMedian" onclick="addChoice(this);"> <span>mean_ConditionalMedian</span></label>
+                        </label>
+                        <label for="min" class="left">
+                            <label><input type="checkbox" id="min" value="mean_ConditionalMin" onclick="addChoice(this);"> <span>mean_ConditionalMin</span></label>
+                        </label>
+                        <label for="qurtile" class="left">
+                            <label><input type="checkbox" id="qurtile" value="mean_LowerQurtile" onclick="addChoice(this);"> <span>mean_LowerQurtile</span></label>
+                        </label>
+                        <label for="quantile" class="left">
+                            <label><input type="checkbox" id="quantile" value="mean_Quantile" onclick="addChoice(this);"> <span>mean_Quantile</span></label>
+                        </label>
                     </div>
                 </div>
-            {% endif %}
+            </div>
 
             <div class="col-md-3">
                 <div class="multiselect select-border-bottom-grey" id="select_polygons">
