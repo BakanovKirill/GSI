@@ -87,3 +87,6 @@ test_gsi:
 
 test_cards:
 	fab test_cards
+
+req:
+	fab requirements

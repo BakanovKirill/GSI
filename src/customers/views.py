@@ -1045,7 +1045,7 @@ def customer_section(request, user_id):
         absolute_path_tif_file = get_file_filepath(request.session['png'], 'tif', absolute_tif_folder)
         select_area = request.session['png']
     else:
-        if fpng_list[0]:
+        if fpng_list:
             # path to a GeoTIFF files
             absolute_url_png_file = get_file_filepath(fpng_list[0], 'png', absolute_png_url)
             absolute_path_tif_file = get_file_filepath(fpng_list[0], 'tif', absolute_tif_folder)
