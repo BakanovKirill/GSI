@@ -262,6 +262,9 @@ def index(request):
     except IndexError:
         home_var = ''
 
+    if not request.user.is_superuser:
+        return HttpResponseRedirect('/customer/section')
+
     # Handling POST request
     if request.POST:
         form = UploadFileForm(request.POST, request.FILES)

@@ -89,7 +89,7 @@
                         <!-- Start Main Menu Left Sidebar -->
                         <div class="col-md-3 li-menu dropdown-left-0 left" id="dropdownMenu">
                             <ul class="nav nav-pills nav-stacked">
-                                {% if user.is_superuser %}
+                                {% if user.is_superuser and url_name != 'customer_section' %}
                                     <li class="{% if url_name == 'home' %}active-main-menu{% else %}li-menu{% endif %}">
                                         <a href="{% url 'index' %}">
                                             <img class="right-indent-10" src="{% static 'img/overview.png' %}">
@@ -201,21 +201,63 @@
                                     </div>
                                     <!-- end sub setup static data menu -->
 
+                                    <!-- Customer Section Menu-->
+                                    <li class="{% if url_name == 'customer_section' %}active-main-menu{% else %}li-menu{% endif %}">
+                                        <a href="{% url 'customer_section' %}">
+                                            <img class="right-indent-10" src="{% static 'img/customer_section.png' %}">
+                                            CUSTOMER SECTION
+                                        </a>
+                                    </li>
+
                                     <li class="li-menu">
                                         <a href="http://gsi.readthedocs.io/en/latest/" target="_blank">
                                             <img class="right-indent-10" src="{% static 'img/wiki-18.png' %}">
                                             WIKI
                                         </a>
                                     </li>
-                                {% endif %}
+                                </ul>
+                            {% elif url_name == 'customer_section' %}
+                                <form class="form-modal" id="customer_section" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data"
+                                          role="form" class="form-horizontal">
+                                    {% csrf_token %}
 
-                                <li class="{% if url_name == 'customer_section' %}active-main-menu{% else %}li-menu{% endif %}">
-                                    <a href="{% url 'customer_section' request.user.id %}">
-                                        <img class="right-indent-10" src="{% static 'img/customer_section.png' %}">
-                                        CUSTOMER SECTION
-                                    </a>
-                                </li>
-                            </ul>
+                                    <label class="control-label margin-top-25">Datasets:</label>
+                                    <select class="form-control margin-top-15" name="select" id="mydataset" onchange="showDataSets(this)">
+                                        {% for key, val in data_sets.items %}
+                                            <option id="{{ val }}" name="{{ key }}" value="{{ val }}" {% if data_set_id == val %}selected="selected"{% endif %}>{{ key }}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                    <h4 class="margin-top-40"><b>Info Panel</b></h4>
+
+                                    {% if data_sets %}
+                                        <label class="control-label margin-top-25">Root-Filenames:</label>
+                                        <select class="form-control margin-top-10" name="root_filenames" multiple size="8">
+                                            {% for dl in dirs_list%}
+                                                <option value="{{ dl.id }}">{{ dl }}</option>
+                                            {% endfor %}
+                                        </select>
+
+                                        <label class="control-label margin-top-25">Statistics:</label>
+                                        <select class="form-control margin-top-10" name="root_filenames" multiple size="6">
+                                            <option value="mean_ConditionalMax">mean_ConditionalMax</option>
+                                            <option value="mean_ConditionalMean">mean_ConditionalMean</option>
+                                            <option value="mean_ConditionalMedian">mean_ConditionalMedian</option>
+                                            <option value="mean_ConditionalMin">mean_ConditionalMin</option>
+                                            <option value="mean_LowerQurtile">mean_LowerQurtile</option>
+                                            <option value="mean_Quantile">mean_Quantile</option>
+                                        </select>
+                                    {% endif %}
+
+                                    <label class="control-label margin-top-25">Polygons:</label>
+                                    <select class="form-control margin-top-10" name="root_filenames" multiple size="8">
+                                        {% for polygon in polygons_list%}
+                                            <option value="{{ polygon }}">{{ polygon }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </form>
+                            {% endif %}
+
                         </div>
                         <!-- End Main Menu Left Sidebar -->
 

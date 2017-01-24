@@ -4,581 +4,504 @@
 {% block title %}{{ title }}{% endblock title %}
 
 {% block content %}
-    <form class="form-modal" id="customer_section" action="{% url 'customer_section' user_id %}" method="post" enctype="multipart/form-data"
-          role="form" class="form-horizontal">
-        {% csrf_token %}
+    {% if error_message %}
+        <h3>{{ error_message }}</a></h3>
+    {% else %}
+        <form class="form-modal" id="customer_section" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data"
+              role="form" class="form-horizontal">
+            {% csrf_token %}
 
-        <!-- Info Menu -->
-        <div class="row margin-top-25">
-            <div class="col-md-3">
-                <select name="select" id="mydataset" onchange="showDataSets(this)">
-                    {% for key, val in data_sets.items %}
-                        <option id="{{ val }}" name="{{ key }}" value="{{ val }}" {% if data_set_id == val %}selected="selected"{% endif %}>{{ key }}</option>
-                    {% endfor %}
-                </select>
+            <!-- Draw Menu -->
+            <div class="row margin-top-35">
+                <div class="col-md-4 col-md-offset-2 right">
+                    <button type="button" onclick="appliedMarkers();" class="btn-draw"><img src="{% static 'img/map-marker-plus.png' %}" alt="hand" title="Applied Markers" class="area-draw"></button>
+                    <button type="button" onclick="drawPoligon();" class="btn-draw"><img src="{% static 'img/vector-polygon.png' %}" alt="vector polygon" title="Draw a Poligon" class="area-draw"></button>
+                    <button type="button" onclick="removePoligon();" class="btn-draw"><img src="{% static 'img/map-marker-off.png' %}" alt="hand" title="Remove Poligon" class="area-draw"></button>
+                    <button type="button" onclick="togglePlygonOverlays();" class="btn-draw"><img src="{% static 'img/eye-off.png' %}" alt="hide/show" title="Hide/Show a Poligon" class="area-draw"></button>
+                </div>
+
+                <div class="col-md-3 left margin-top-8 padding-lr-5">
+                    <input type="range" id="opacity" min="0" max="100" oninput="setOpacity();" alt="transparency" title="Transparency" value="100"/>
+                </div>
             </div>
+            <!-- End Draw Menu -->
 
-            <div class="col-md-3">
-                <div class="multiselect select-border-bottom-grey" id="select_root_filenames">
-                    <div class="selectBox" onclick="showRootFilenames()">
-                        <p class="select-color-grey left">
-                            <span>Root-Filenames</span>&nbsp; <span class="right"><i class="fa fa-caret-down select-color-grey right" aria-hidden="true"></i></span>
-                        </p>
-                        <div class="overSelect"></div>
+            <!-- Google map -->
+            <div class="row margin-top-35">
+                <div class="col-md-12">
+                    <!-- [START region_toolbar] -->
+                    <!-- Add an input button to initiate the toggle method on the overlay. -->
+                    <div id="floating-panel">
+                        <input type="button" class="btn btn-default" value="Toggle visibility" onclick="overlay.toggle();"></input>
+                        <input type="button" class="btn btn-default" value="Toggle DOM attachment" onclick="overlay.toggleDOM();"></input>
                     </div>
-                    <div id="checkboxes_root_filenames" class="checkboxes">
-                        {% for dl in dirs_list%}
-                            <label for="{{ dl.id }}" class="left">
-                                <label><input type="checkbox" id="{{ dl.id }}" class="checkboxes_root_filenames" value="{{ dl.id }}" {% if data_set_id == val %}checked="checked"{% endif %}/> <span>{{ dl }}</span></label>
-                            </label>
+                    <!-- [END region_toolbar] -->
+
+                    <div id="map"></div>
+
+                    <!-- GSi LOGO -->
+                    <div id="gsi-logo">
+                        <a href="http://www.surfaceintelligence.com/" Target="_blank"><img src="{% static 'img/GSIlogo.png' %}" style="cursor: pointer;"></a>
+                    </div>
+                    <!-- End GSi LOGO -->
+
+                    <!-- GSi Coordinates -->
+                    <div id="lat-panel">
+                        <input class="form-control placeholder" type="text" id="latitude" readonly>
+                    </div>
+                    <div id="lng-panel">
+                        <input class="form-control placeholder" type="text" id="longitude" readonly>
+                    </div>
+                    <!-- GSi Coordinates -->
+                </div>
+            </div>
+            <!-- End Google map -->
+
+            <!-- GSi Info Data -->
+            <div class="row">
+                <div class="col-md-4 col-md-offset-8 margin-top-25 padding-lr-5">
+                    <select class="form-control" name="select" id="show_arrea" onchange="showSelectArea(this)">
+                        {% for png in fpng_list %}
+                            <option id="{{ png }}" name="{{ png }}" value="{{ png }}" {% if select_area == png %}selected="selected"{% endif %}>{{ png }}</option>
                         {% endfor %}
-                    </div>
+                    </select>
                 </div>
             </div>
+            <!-- End GSi Info Data -->
+        </form>
 
-            <div class="col-md-3">
-                <div class="multiselect select-border-bottom-grey" id="select_statistics">
-                    <div class="selectBox" onclick="showStatistics()">
-                        <p class="select-color-grey left">
-                            <span>Statistics</span>&nbsp; <span class="right"><i class="fa fa-caret-down select-color-grey right" aria-hidden="true"></i></span>
-                        </p>
-                        <div class="overSelect"></div>
-                    </div>
-                    <div id="checkboxes_statistics" class="checkboxes">
-                        <label for="max" class="left">
-                            <label><input type="checkbox" id="max" value="mean_ConditionalMax" onclick="addChoice(this);"> <span>mean_ConditionalMax</span></label>
-                        </label>
-                        <label for="mean" class="left">
-                            <label><input type="checkbox" id="mean" value="mean_ConditionalMean" onclick="addChoice(this);"> <span>mean_ConditionalMean</span></label>
-                        </label>
-                        <label for="median" class="left">
-                            <label><input type="checkbox" id="median" value="mean_ConditionalMedian" onclick="addChoice(this);"> <span>mean_ConditionalMedian</span></label>
-                        </label>
-                        <label for="min" class="left">
-                            <label><input type="checkbox" id="min" value="mean_ConditionalMin" onclick="addChoice(this);"> <span>mean_ConditionalMin</span></label>
-                        </label>
-                        <label for="qurtile" class="left">
-                            <label><input type="checkbox" id="qurtile" value="mean_LowerQurtile" onclick="addChoice(this);"> <span>mean_LowerQurtile</span></label>
-                        </label>
-                        <label for="quantile" class="left">
-                            <label><input type="checkbox" id="quantile" value="mean_Quantile" onclick="addChoice(this);"> <span>mean_Quantile</span></label>
-                        </label>
-                    </div>
-                </div>
-            </div>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4HosogGf9o2-Cnef_SiUR6jZYVszGkGY&signed_in=true"></script>
+        <script>
+            var overlay;
+            USGSOverlay.prototype = new google.maps.OverlayView();
 
-            <div class="col-md-3">
-                <div class="multiselect select-border-bottom-grey" id="select_polygons">
-                    <div class="selectBox" onclick="showPolygons()">
-                        <p class="select-color-grey left">
-                            <span>Polygons</span>&nbsp; <span class="right"><i class="fa fa-caret-down select-color-grey right" aria-hidden="true"></i></span>
-                        </p>
-                        <div class="overSelect"></div>
-                    </div>
-                    <div id="checkboxes_polygons" class="checkboxes">
-                        {% for polygon in polygons_list%}
-                            <label for="{{ polygon }}" class="left">
-                                <label><input type="checkbox" id="{{ polygon }}" class="checkboxes_root_filenames" value="{{ polygon }}" {% if data_set_id == val %}checked="checked"{% endif %}/> <span>{{ polygon }}</span></label>
-                            </label>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- End Info Menu -->
+            var map;
+            var center_map = {lat: {{ cLat }}, lng: {{ cLng }}};
 
-        {# vector-square #}
+            var coord = [];
+            var coord_area = [];
+            var markers = [];
+            var polygons = [];
+            var selectPolygon;
+            var selectArea;
+            var polygonVisible;
+            var mapTypesArr = [];
 
-        <!-- Draw Menu -->
-        <div class="row margin-top-35">
-            <div class="col-md-4 col-md-offset-2 right">
-                <button type="button" onclick="appliedMarkers();" class="btn-draw"><img src="{% static 'img/map-marker-plus.png' %}" alt="hand" title="Applied Markers" class="area-draw"></button>
-                <button type="button" onclick="drawPoligon();" class="btn-draw"><img src="{% static 'img/vector-polygon.png' %}" alt="vector polygon" title="Draw a Poligon" class="area-draw"></button>
-                <button type="button" onclick="removePoligon();" class="btn-draw"><img src="{% static 'img/map-marker-off.png' %}" alt="hand" title="Remove Poligon" class="area-draw"></button>
-                <button type="button" onclick="togglePlygonOverlays();" class="btn-draw"><img src="{% static 'img/eye-off.png' %}" alt="hide/show" title="Hide/Show a Poligon" class="area-draw"></button>
-            </div>
+            // alert('eLat_1: '+{{ eLat_1 }});
+            // alert('eLng_1: '+{{ eLng_1 }});
+            // alert('eLat_2: '+{{ eLat_2 }});
+            // alert('eLng_2: '+{{ eLng_2 }});
 
-            <div class="col-md-3 left margin-top-8 padding-lr-5">
-                <input type="range" id="opacity" min="0" max="100" oninput="setOpacity();" alt="transparency" title="Transparency" value="100"/>
-            </div>
-        </div>
-        <!-- End Draw Menu -->
+            var MY_MAPTYPE_ID = 'mystyle';
 
-        <!-- Google map -->
-        <div class="row margin-top-35">
-            <div class="col-md-12">
-                <!-- [START region_toolbar] -->
-                <!-- Add an input button to initiate the toggle method on the overlay. -->
-                <div id="floating-panel">
-                    <input type="button" class="btn btn-default" value="Toggle visibility" onclick="overlay.toggle();"></input>
-                    <input type="button" class="btn btn-default" value="Toggle DOM attachment" onclick="overlay.toggleDOM();"></input>
-                </div>
-                <!-- [END region_toolbar] -->
+            var mapobj = {
+    			name: "OSM",
+    			wms: "osm",
+    			minzoom: 18,
+    			maxzoom: 0,
+    			url: "http://tile.openstreetmap.org/",
+    			copy:"<a href=\"http://www.openstreetmap.org\" target=\"_blank\">Open Street Map</a>",
+    			visible:true
+    		};
+    		mapTypesArr.push(mapobj);
+    		var mapobj = {
+    			name: "OSM Cycle",
+    			wms: "osm",
+    			minzoom: 18,
+    			maxzoom: 0,
+    			url: "http://b.tile.opencyclemap.org/cycle/",
+    			copy:"<a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">Cycle OSM</a>",
+    			visible:true
+    		};
+    		mapTypesArr.push(mapobj);
+    		var mapobj = {
+    			name: "Relief",
+    			wms: "",
+    			minzoom: 18,
+    			maxzoom: 0,
+    			url: "",
+    			copy:"<a href=\"http://www.maps-for-free.com/html/about.html\" target=\"_blank\">maps-for-free</a>",
+    			visible:true
+    		};
+    		mapTypesArr.push(mapobj);
+    		var mapobj = {
+    			name: "Demis",
+    			wms: "wms",
+    			minzoom: 13,
+    			maxzoom: 1,
+    			url: "http://www2.demis.nl/wms/wms.ashx?Service=WMS&WMS=BlueMarble&Version=1.1.0&Request=GetMap&Layers=Earth Image,Borders,Coastlines&Format=image/jpeg",
+    			copy:"WMS demo by Demis",
+    			visible:true
+    		};
+    		mapTypesArr.push(mapobj);
+    		var mapobj = {
+    			name: "ROADMAP",
+    			wms: "",
+    			minzoom: 13,
+    			maxzoom: 10,
+    			url: "",
+    			copy:"",
+    			visible:true
+    		};
+    		mapTypesArr.push(mapobj);
+    		var mapobj = {
+    			name: "SATELLITE",
+    			wms: "",
+    			minzoom: 13,
+    			maxzoom: 10,
+    			url: "",
+    			copy:"",
+    			visible:true
+    		};
+    		mapTypesArr.push(mapobj);
+    		var mapobj = {
+    			name: "HYBRID",
+    			wms: "",
+    			minzoom: 13,
+    			maxzoom: 10,
+    			url: "",
+    			copy:"",
+    			visible:true
+    		};
+    		mapTypesArr.push(mapobj);
+    		var mapobj = {
+    			name: "TERRAIN",
+    			wms: "",
+    			minzoom: 13,
+    			maxzoom: 10,
+    			url: "",
+    			copy:"",
+    			visible:true
+    		};
+    		mapTypesArr.push(mapobj);
 
-                <div id="map"></div>
+            function initMap() {
+                var my_styles =  [
+                      {
+                        featureType: "road.highway",
+                        elementType: "geometry",
+                        stylers: [
+                            { visibility: "on" },
+                            { hue: "#ff0000" }
+                        ]
+                      },
+                      {
+                          featureType: "water",
+                          elementType: "geometry",
+                          stylers: [
+                              { visibility: "on" },
+                              { hue: "#0800ff" },
+                              { lightness: -41 }
+                        ]
+                    }
+                ];
 
-                <!-- GSi LOGO -->
-                <div id="gsi-logo">
-                    <a href="http://www.surfaceintelligence.com/" Target="_blank"><img src="{% static 'img/GSIlogo.png' %}" style="cursor: pointer;"></a>
-                </div>
-                <!-- End GSi LOGO -->
+                map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: {{ GOOGLE_MAP_ZOOM }},
+                    center: center_map,
+                    mapTypeControl: true,
+                    mapTypeControlOptions: {
+                        style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+                        mapTypeIds: [
+                            google.maps.MapTypeId.ROADMAP,
+                            google.maps.MapTypeId.TERRAIN,
+                            google.maps.MapTypeId.SATELLITE,
+                            google.maps.MapTypeId.HYBRID,
+                            MY_MAPTYPE_ID
+                        ]
+                    },
+                });
 
-                <!-- GSi Coordinates -->
-                <div id="lat-panel">
-                    <input class="form-control placeholder" type="text" id="latitude" readonly>
-                </div>
-                <div id="lng-panel">
-                    <input class="form-control placeholder" type="text" id="longitude" readonly>
-                </div>
-                <!-- GSi Coordinates -->
-            </div>
-        </div>
-        <!-- End Google map -->
+                var styledMapOptions = {name: "Road & Water"};
+                var jayzMapType = new google.maps.StyledMapType(my_styles, styledMapOptions);
 
-        <!-- GSi Info Data -->
-        <div class="row">
-            <div class="col-md-4 col-md-offset-8 margin-top-25 padding-lr-5">
-                <select name="select" id="show_arrea" onchange="showSelectArea(this)">
-                    {% for png in fpng_list %}
-                        <option id="{{ png }}" name="{{ png }}" value="{{ png }}" {% if select_area == png %}selected="selected"{% endif %}>{{ png }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </div>
-        <!-- End GSi Info Data -->
-    </form>
+                map.mapTypes.set(MY_MAPTYPE_ID, jayzMapType);
+                // map.setMapTypeId(google.maps.MapTypeId.HYBRID);
+                //
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4HosogGf9o2-Cnef_SiUR6jZYVszGkGY&signed_in=true"></script>
-    <script>
-        var overlay;
-        USGSOverlay.prototype = new google.maps.OverlayView();
+                // map.addListener('click', function(e) {
+                //     placeMarkerAndPanTo(e.latLng.lat(), e.latLng.lng());
+                // });
 
-        var map;
-        var center_map = {lat: {{ cLat }}, lng: {{ cLng }}};
+                // var center_marker = new google.maps.Marker({
+                //     position: {
+                //         'lat': {{ cLat }},
+                //         'lng': {{ cLng }}
+                //     },
+                //     map: map
+                // });
 
-        var coord = [];
-        var coord_area = [];
-        var markers = [];
-        var polygons = [];
-        var selectPolygon;
-        var selectArea;
-        var polygonVisible;
-        var mapTypesArr = [];
+                // var min_marker = new google.maps.Marker({
+                //     position: {
+                //         'lat': {{ eLat_1 }},
+                //         'lng': {{ eLng_1 }}
+                //     },
+                //     map: map
+                // });
 
-        // alert('eLat_1: '+{{ eLat_1 }});
-        // alert('eLng_1: '+{{ eLng_1 }});
-        // alert('eLat_2: '+{{ eLat_2 }});
-        // alert('eLng_2: '+{{ eLng_2 }});
+                // var max_marker = new google.maps.Marker({
+                //     position: {
+                //         'lat': {{ eLat_2 }},
+                //         'lng': {{ eLng_2 }}
+                //     },
+                //     map: map
+                // });
 
-        var MY_MAPTYPE_ID = 'mystyle';
+                var bounds = new google.maps.LatLngBounds(
+                    new google.maps.LatLng({{ eLat_1 }}, {{ eLng_1 }}),
+                    new google.maps.LatLng({{ eLat_2 }}, {{ eLng_2 }}));
 
-        var mapobj = {
-			name: "OSM",
-			wms: "osm",
-			minzoom: 18,
-			maxzoom: 0,
-			url: "http://tile.openstreetmap.org/",
-			copy:"<a href=\"http://www.openstreetmap.org\" target=\"_blank\">Open Street Map</a>",
-			visible:true
-		};
-		mapTypesArr.push(mapobj);
-		var mapobj = {
-			name: "OSM Cycle",
-			wms: "osm",
-			minzoom: 18,
-			maxzoom: 0,
-			url: "http://b.tile.opencyclemap.org/cycle/",
-			copy:"<a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">Cycle OSM</a>",
-			visible:true
-		};
-		mapTypesArr.push(mapobj);
-		var mapobj = {
-			name: "Relief",
-			wms: "",
-			minzoom: 18,
-			maxzoom: 0,
-			url: "",
-			copy:"<a href=\"http://www.maps-for-free.com/html/about.html\" target=\"_blank\">maps-for-free</a>",
-			visible:true
-		};
-		mapTypesArr.push(mapobj);
-		var mapobj = {
-			name: "Demis",
-			wms: "wms",
-			minzoom: 13,
-			maxzoom: 1,
-			url: "http://www2.demis.nl/wms/wms.ashx?Service=WMS&WMS=BlueMarble&Version=1.1.0&Request=GetMap&Layers=Earth Image,Borders,Coastlines&Format=image/jpeg",
-			copy:"WMS demo by Demis",
-			visible:true
-		};
-		mapTypesArr.push(mapobj);
-		var mapobj = {
-			name: "ROADMAP",
-			wms: "",
-			minzoom: 13,
-			maxzoom: 10,
-			url: "",
-			copy:"",
-			visible:true
-		};
-		mapTypesArr.push(mapobj);
-		var mapobj = {
-			name: "SATELLITE",
-			wms: "",
-			minzoom: 13,
-			maxzoom: 10,
-			url: "",
-			copy:"",
-			visible:true
-		};
-		mapTypesArr.push(mapobj);
-		var mapobj = {
-			name: "HYBRID",
-			wms: "",
-			minzoom: 13,
-			maxzoom: 10,
-			url: "",
-			copy:"",
-			visible:true
-		};
-		mapTypesArr.push(mapobj);
-		var mapobj = {
-			name: "TERRAIN",
-			wms: "",
-			minzoom: 13,
-			maxzoom: 10,
-			url: "",
-			copy:"",
-			visible:true
-		};
-		mapTypesArr.push(mapobj);
+                // The source to image overlay
+                var srcImage = '{{ absolute_url_png_file }}';
+                overlay = new USGSOverlay(bounds, srcImage, map);
 
-        function initMap() {
-            var my_styles =  [
-                  {
-                    featureType: "road.highway",
-                    elementType: "geometry",
-                    stylers: [
-                        { visibility: "on" },
-                        { hue: "#ff0000" }
-                    ]
-                  },
-                  {
-                      featureType: "water",
-                      elementType: "geometry",
-                      stylers: [
-                          { visibility: "on" },
-                          { hue: "#0800ff" },
-                          { lightness: -41 }
-                    ]
+                // Show the lat and lng under the mouse cursor.
+                // latitude, longitude
+
+                // placeMarkerAndPanTo({{ eLat_1 }}, {{ eLng_1 }});
+                // placeMarkerAndPanTo({{ eLat_2 }}, {{ eLng_2 }});
+
+                // Add a listener for the click event.
+                map.addListener('click', showInfoWindow);
+                infoWindow = new google.maps.InfoWindow;
+
+                // Add a listener for the mousemove event.
+                map.addListener('mousemove', showCoordinates);
+
+                // infoWindow = new google.maps.InfoWindow;
+
+                // var latDiv = document.getElementById('latitude');
+                // var lngDiv = document.getElementById('longitude');
+                //
+                // map.controls[google.maps.ControlPosition.TOP_CENTER].push(latDiv);
+                // map.controls[google.maps.ControlPosition.TOP_CENTER].push(lngDiv);
+                // map.addListener('mousemove', function(event) {
+                //     latDiv.textContent =
+                //         'lat: ' + Math.round(event.latLng.lat());
+                //     }
+                // );
+                // map.addListener('mousemove', function(event) {
+                //     lngDiv.textContent =
+                //         'lng: ' + Math.round(event.latLng.lng());
+                //     }
+                // );
+
+            }
+
+            /** @constructor */
+            function USGSOverlay(bounds, image, map) {
+                // Now initialize all properties.
+                this.bounds_ = bounds;
+                this.image_ = image;
+                this.map_ = map;
+
+                // Define a property to hold the image's div. We'll
+                // actually create this div upon receipt of the onAdd()
+                // method so we'll leave it null for now.
+                this.div_ = null;
+
+                // Explicitly call setMap on this overlay
+                this.setMap(map);
+            }
+
+            /**
+             * onAdd is called when the map's panes are ready and the overlay has been
+             * added to the map.
+             */
+            USGSOverlay.prototype.onAdd = function() {
+                var div = document.createElement('div');
+                div.style.border = 'none';
+                div.style.borderWidth = '0px';
+                div.style.position = 'absolute';
+
+                // Create the img element and attach it to the div.
+                var img = document.createElement('img');
+                img.src = this.image_;
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.id = 'on_add';
+                div.appendChild(img);
+
+                this.div_ = div;
+
+                // Add the element to the "overlayImage" pane.
+                var panes = this.getPanes();
+                panes.overlayImage.appendChild(this.div_);
+            };
+
+            USGSOverlay.prototype.draw = function() {
+                // We use the south-west and north-east
+                // coordinates of the overlay to peg it to the correct position and size.
+                // To do this, we need to retrieve the projection from the overlay.
+                var overlayProjection = this.getProjection();
+
+                // Retrieve the south-west and north-east coordinates of this overlay
+                // in LatLngs and convert them to pixel coordinates.
+                // We'll use these coordinates to resize the div.
+                var sw = overlayProjection.fromLatLngToDivPixel(this.bounds_.getSouthWest());
+                var ne = overlayProjection.fromLatLngToDivPixel(this.bounds_.getNorthEast());
+
+                // Resize the image's div to fit the indicated dimensions.
+                var div = this.div_;
+                div.style.left = sw.x + 'px';
+                div.style.top = ne.y + 'px';
+                div.style.width = (ne.x - sw.x) + 'px';
+                div.style.height = (sw.y - ne.y) + 'px';
+            };
+
+            USGSOverlay.prototype.onRemove = function() {
+                this.div_.parentNode.removeChild(this.div_);
+            };
+
+            // [START region_hideshow]
+            // Set the visibility to 'hidden' or 'visible'.
+            USGSOverlay.prototype.hide = function() {
+                if (this.div_) {
+                    // The visibility property must be a string enclosed in quotes.
+                    this.div_.style.visibility = 'hidden';
                 }
-            ];
+            };
 
-            map = new google.maps.Map(document.getElementById('map'), {
-                zoom: {{ GOOGLE_MAP_ZOOM }},
-                center: center_map,
-                mapTypeControl: true,
-                mapTypeControlOptions: {
-                    style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-                    mapTypeIds: [
-                        google.maps.MapTypeId.ROADMAP,
-                        google.maps.MapTypeId.TERRAIN,
-                        google.maps.MapTypeId.SATELLITE,
-                        google.maps.MapTypeId.HYBRID,
-                        MY_MAPTYPE_ID
-                    ]
-                },
-            });
+            USGSOverlay.prototype.show = function() {
+                if (this.div_) {
+                    this.div_.style.visibility = 'visible';
+                }
+            };
 
-            var styledMapOptions = {name: "Road & Water"};
-            var jayzMapType = new google.maps.StyledMapType(my_styles, styledMapOptions);
+            USGSOverlay.prototype.toggle = function() {
+                if (this.div_) {
+                    if (this.div_.style.visibility === 'hidden') {
+                        this.show();
+                    } else {
+                        this.hide();
+                    }
+                }
+            };
 
-            map.mapTypes.set(MY_MAPTYPE_ID, jayzMapType);
-            // map.setMapTypeId(google.maps.MapTypeId.HYBRID);
-            //
-
-            // map.addListener('click', function(e) {
-            //     placeMarkerAndPanTo(e.latLng.lat(), e.latLng.lng());
-            // });
-
-            // var center_marker = new google.maps.Marker({
-            //     position: {
-            //         'lat': {{ cLat }},
-            //         'lng': {{ cLng }}
-            //     },
-            //     map: map
-            // });
-
-            // var min_marker = new google.maps.Marker({
-            //     position: {
-            //         'lat': {{ eLat_1 }},
-            //         'lng': {{ eLng_1 }}
-            //     },
-            //     map: map
-            // });
-
-            // var max_marker = new google.maps.Marker({
-            //     position: {
-            //         'lat': {{ eLat_2 }},
-            //         'lng': {{ eLng_2 }}
-            //     },
-            //     map: map
-            // });
-
-            var bounds = new google.maps.LatLngBounds(
-                new google.maps.LatLng({{ eLat_1 }}, {{ eLng_1 }}),
-                new google.maps.LatLng({{ eLat_2 }}, {{ eLng_2 }}));
-
-            // The source to image overlay
-            var srcImage = '{{ absolute_url_png_file }}';
-            overlay = new USGSOverlay(bounds, srcImage, map);
-
-            // Show the lat and lng under the mouse cursor.
-            // latitude, longitude
-
-            // placeMarkerAndPanTo({{ eLat_1 }}, {{ eLng_1 }});
-            // placeMarkerAndPanTo({{ eLat_2 }}, {{ eLng_2 }});
-
-            // Add a listener for the click event.
-            map.addListener('click', showInfoWindow);
-            infoWindow = new google.maps.InfoWindow;
-
-            // Add a listener for the mousemove event.
-            map.addListener('mousemove', showCoordinates);
-
-            // infoWindow = new google.maps.InfoWindow;
-
-            // var latDiv = document.getElementById('latitude');
-            // var lngDiv = document.getElementById('longitude');
-            //
-            // map.controls[google.maps.ControlPosition.TOP_CENTER].push(latDiv);
-            // map.controls[google.maps.ControlPosition.TOP_CENTER].push(lngDiv);
-            // map.addListener('mousemove', function(event) {
-            //     latDiv.textContent =
-            //         'lat: ' + Math.round(event.latLng.lat());
-            //     }
-            // );
-            // map.addListener('mousemove', function(event) {
-            //     lngDiv.textContent =
-            //         'lng: ' + Math.round(event.latLng.lng());
-            //     }
-            // );
-
-        }
-
-        /** @constructor */
-        function USGSOverlay(bounds, image, map) {
-            // Now initialize all properties.
-            this.bounds_ = bounds;
-            this.image_ = image;
-            this.map_ = map;
-
-            // Define a property to hold the image's div. We'll
-            // actually create this div upon receipt of the onAdd()
-            // method so we'll leave it null for now.
-            this.div_ = null;
-
-            // Explicitly call setMap on this overlay
-            this.setMap(map);
-        }
-
-        /**
-         * onAdd is called when the map's panes are ready and the overlay has been
-         * added to the map.
-         */
-        USGSOverlay.prototype.onAdd = function() {
-            var div = document.createElement('div');
-            div.style.border = 'none';
-            div.style.borderWidth = '0px';
-            div.style.position = 'absolute';
-
-            // Create the img element and attach it to the div.
-            var img = document.createElement('img');
-            img.src = this.image_;
-            img.style.width = '100%';
-            img.style.height = '100%';
-            img.id = 'on_add';
-            div.appendChild(img);
-
-            this.div_ = div;
-
-            // Add the element to the "overlayImage" pane.
-            var panes = this.getPanes();
-            panes.overlayImage.appendChild(this.div_);
-        };
-
-        USGSOverlay.prototype.draw = function() {
-            // We use the south-west and north-east
-            // coordinates of the overlay to peg it to the correct position and size.
-            // To do this, we need to retrieve the projection from the overlay.
-            var overlayProjection = this.getProjection();
-
-            // Retrieve the south-west and north-east coordinates of this overlay
-            // in LatLngs and convert them to pixel coordinates.
-            // We'll use these coordinates to resize the div.
-            var sw = overlayProjection.fromLatLngToDivPixel(this.bounds_.getSouthWest());
-            var ne = overlayProjection.fromLatLngToDivPixel(this.bounds_.getNorthEast());
-
-            // Resize the image's div to fit the indicated dimensions.
-            var div = this.div_;
-            div.style.left = sw.x + 'px';
-            div.style.top = ne.y + 'px';
-            div.style.width = (ne.x - sw.x) + 'px';
-            div.style.height = (sw.y - ne.y) + 'px';
-        };
-
-        USGSOverlay.prototype.onRemove = function() {
-            this.div_.parentNode.removeChild(this.div_);
-        };
-
-        // [START region_hideshow]
-        // Set the visibility to 'hidden' or 'visible'.
-        USGSOverlay.prototype.hide = function() {
-            if (this.div_) {
-                // The visibility property must be a string enclosed in quotes.
-                this.div_.style.visibility = 'hidden';
-            }
-        };
-
-        USGSOverlay.prototype.show = function() {
-            if (this.div_) {
-                this.div_.style.visibility = 'visible';
-            }
-        };
-
-        USGSOverlay.prototype.toggle = function() {
-            if (this.div_) {
-                if (this.div_.style.visibility === 'hidden') {
-                    this.show();
+            // Detach the map from the DOM via toggleDOM().
+            // Note that if we later reattach the map, it will be visible again,
+            // because the containing <div> is recreated in the overlay's onAdd() method.
+            USGSOverlay.prototype.toggleDOM = function() {
+                if (this.getMap()) {
+                    // Note: setMap(null) calls OverlayView.onRemove()
+                    this.setMap(null);
                 } else {
-                    this.hide();
+                    this.setMap(this.map_);
                 }
-            }
-        };
+            };
+            // [END region_hideshow]
 
-        // Detach the map from the DOM via toggleDOM().
-        // Note that if we later reattach the map, it will be visible again,
-        // because the containing <div> is recreated in the overlay's onAdd() method.
-        USGSOverlay.prototype.toggleDOM = function() {
-            if (this.getMap()) {
-                // Note: setMap(null) calls OverlayView.onRemove()
-                this.setMap(null);
-            } else {
-                this.setMap(this.map_);
-            }
-        };
-        // [END region_hideshow]
-
-        function placeMarkerAndPanTo(lat1, lng1) {
-            var dict = {
-                'lat':   lat1,
-                'lng': lng1
-            }
-            coord.push(dict);
-
-            var marker = new google.maps.Marker({
-                position: dict,
-                map: map
-            });
-            //marker.setMap(map);
-            //map.panTo(marker);
-            markers.push(marker);
-        }
-
-        // applied markers on the map.
-        function appliedMarkers() {
-            map.addListener('click', function(e) {
-                placeMarkerAndPanTo(e.latLng.lat(), e.latLng.lng());
-            });
-        }
-
-        // Removes the poligon from the map, but keeps them in the array.
-        function removePoligon() {
-            if (polygons) {
-                for (i in polygons) {
-                    polygons[i].setMap(null);
+            function placeMarkerAndPanTo(lat1, lng1) {
+                var dict = {
+                    'lat':   lat1,
+                    'lng': lng1
                 }
+                coord.push(dict);
+
+                var marker = new google.maps.Marker({
+                    position: dict,
+                    map: map
+                });
+                //marker.setMap(map);
+                //map.panTo(marker);
+                markers.push(marker);
             }
-            coord = [];
-            polygonVisible = false;
 
-            // Removes the markers
-            removeMarkers();
-        }
-
-        // Removes the markers from the map, but keeps them in the array.
-        function removeMarkers() {
-            // selectPolygon.fillOpacity = 1.0;
-            for (var i = 0; i < markers.length; i++) {
-                markers[i].setMap(null);
+            // applied markers on the map.
+            function appliedMarkers() {
+                map.addListener('click', function(e) {
+                    placeMarkerAndPanTo(e.latLng.lat(), e.latLng.lng());
+                });
             }
-        }
 
-        function drawPoligon() {
-            // Construct the polygon.
-            selectPolygon = new google.maps.Polygon({
-                paths: coord,
-                //strokeColor: '#FF0000',
-                //strokeOpacity: 0.8,
-                strokeWeight: 1,
-                fillColor: '#FF0000',
-                fillOpacity: 0.3,
-                //editable: true
-            });
-            selectPolygon.setMap(map);
-            polygons.push(selectPolygon);
-            polygonVisible = true;
-
-            // selectPolygon.fillOpacity = 1.0;
-
-            // Add a listener for the click event.
-            selectPolygon.addListener('click', showInfoWindow);
-            infoWindow = new google.maps.InfoWindow;
-
-            // Add a listener for the mousemove event.
-            selectPolygon.addListener('mousemove', showCoordinates);
-            infoWindow = new google.maps.InfoWindow;
-
-            // markers.addListener('click', showInfoWindow);
-            // infoWindow = new google.maps.InfoWindow;
-            //
-            // // marker.addListener('click', function() {
-            // //     infowindow.open(map, marker);
-            // // });
-        }
-
-        function showCoordinates(event) {
-            var lat = event.latLng.lat();
-        	var lon = event.latLng.lng();
-
-            document.getElementById('latitude').value = 'Lat: ' + lat.toFixed(6);
-            document.getElementById('longitude').value = 'Lng: ' + lon.toFixed(6);
-        }
-
-        function showInfoWindow(event) {
-            var lat = event.latLng.lat();
-        	var lon = event.latLng.lng();
-
-            var contentString = '<b>GSi Polygon</b><br>' +
-                'Location:<br>LAT: ' + lat.toFixed(6) + ', LNG:' + lon.toFixed(6) + '<br>';
-
-            // Replace the info window's content and position.
-            infoWindow.setContent(contentString);
-            infoWindow.setPosition(event.latLng);
-
-            infoWindow.open(map);
-        }
-
-        function togglePlygonOverlays() {
-            if (polygonVisible) {
-                selectPolygon.setMap(null);
+            // Removes the poligon from the map, but keeps them in the array.
+            function removePoligon() {
+                if (polygons) {
+                    for (i in polygons) {
+                        polygons[i].setMap(null);
+                    }
+                }
+                coord = [];
                 polygonVisible = false;
-            } else {
-                selectPolygon.setMap(map);
-                polygonVisible = true;
-            }
-        }
 
-        google.maps.event.addDomListener(window, 'load', initMap);
-    </script>
+                // Removes the markers
+                removeMarkers();
+            }
+
+            // Removes the markers from the map, but keeps them in the array.
+            function removeMarkers() {
+                // selectPolygon.fillOpacity = 1.0;
+                for (var i = 0; i < markers.length; i++) {
+                    markers[i].setMap(null);
+                }
+            }
+
+            function drawPoligon() {
+                // Construct the polygon.
+                selectPolygon = new google.maps.Polygon({
+                    paths: coord,
+                    //strokeColor: '#FF0000',
+                    //strokeOpacity: 0.8,
+                    strokeWeight: 1,
+                    fillColor: '#FF0000',
+                    fillOpacity: 0.3,
+                    //editable: true
+                });
+                selectPolygon.setMap(map);
+                polygons.push(selectPolygon);
+                polygonVisible = true;
+
+                // selectPolygon.fillOpacity = 1.0;
+
+                // Add a listener for the click event.
+                selectPolygon.addListener('click', showInfoWindow);
+                infoWindow = new google.maps.InfoWindow;
+
+                // Add a listener for the mousemove event.
+                selectPolygon.addListener('mousemove', showCoordinates);
+                infoWindow = new google.maps.InfoWindow;
+
+                // markers.addListener('click', showInfoWindow);
+                // infoWindow = new google.maps.InfoWindow;
+                //
+                // // marker.addListener('click', function() {
+                // //     infowindow.open(map, marker);
+                // // });
+            }
+
+            function showCoordinates(event) {
+                var lat = event.latLng.lat();
+            	var lon = event.latLng.lng();
+
+                document.getElementById('latitude').value = 'Lat: ' + lat.toFixed(6);
+                document.getElementById('longitude').value = 'Lng: ' + lon.toFixed(6);
+            }
+
+            function showInfoWindow(event) {
+                var lat = event.latLng.lat();
+            	var lon = event.latLng.lng();
+
+                var contentString = '<b>GSi Polygon</b><br>' +
+                    'Location:<br>LAT: ' + lat.toFixed(6) + ', LNG:' + lon.toFixed(6) + '<br>';
+
+                // Replace the info window's content and position.
+                infoWindow.setContent(contentString);
+                infoWindow.setPosition(event.latLng);
+
+                infoWindow.open(map);
+            }
+
+            function togglePlygonOverlays() {
+                if (polygonVisible) {
+                    selectPolygon.setMap(null);
+                    polygonVisible = false;
+                } else {
+                    selectPolygon.setMap(map);
+                    polygonVisible = true;
+                }
+            }
+
+            google.maps.event.addDomListener(window, 'load', initMap);
+        </script>
+    {% endif %}
 {% endblock content %}

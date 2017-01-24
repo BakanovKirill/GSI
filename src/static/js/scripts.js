@@ -1,14 +1,16 @@
 // dropdawn menu Setup Static Data
 function onOffSubMenuSetupStaticData() {
-  var menuElem = document.getElementById('sweeties');
-  var titleElem = document.getElementById('title');
+    var menuElem = document.getElementById('sweeties');
+    var titleElem = document.getElementById('title');
 
-  titleElem.onclick = function() {
-    $('#icon_static').toggleClass("fa-chevron-right", "fa-chevron-down");
-    $('#icon_static').toggleClass("fa-chevron-down", "fa-chevron-right");
-    $('#sweeties').toggleClass("sub-menu-visible", "sub-menu-no-visible");
-    $('#sweeties').toggleClass("sub-menu-no-visible", "sub-menu-visible");
-  };
+    if (titleElem) {
+        titleElem.onclick = function() {
+            $('#icon_static').toggleClass("fa-chevron-right", "fa-chevron-down");
+            $('#icon_static').toggleClass("fa-chevron-down", "fa-chevron-right");
+            $('#sweeties').toggleClass("sub-menu-visible", "sub-menu-no-visible");
+            $('#sweeties').toggleClass("sub-menu-no-visible", "sub-menu-visible");
+        };
+    }
 }
 
 // dropdawn menu Upload Test Data
@@ -16,12 +18,14 @@ function onOffSubMenuUploadTestData() {
   var menuElem = document.getElementById('sweeties2');
   var titleElem = document.getElementById('title2');
 
-  titleElem.onclick = function() {
-    $('#icon_static2').toggleClass("fa-chevron-right", "fa-chevron-down");
-    $('#icon_static2').toggleClass("fa-chevron-down", "fa-chevron-right");
-    $('#sweeties2').toggleClass("sub-menu-visible", "sub-menu-no-visible");
-    $('#sweeties2').toggleClass("sub-menu-no-visible", "sub-menu-visible");
-  };
+  if (titleElem) {
+    titleElem.onclick = function() {
+        $('#icon_static2').toggleClass("fa-chevron-right", "fa-chevron-down");
+        $('#icon_static2').toggleClass("fa-chevron-down", "fa-chevron-right");
+        $('#sweeties2').toggleClass("sub-menu-visible", "sub-menu-no-visible");
+        $('#sweeties2').toggleClass("sub-menu-no-visible", "sub-menu-visible");
+    };
+  }
 }
 
 function onOffSubMenuUser() {
