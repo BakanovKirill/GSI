@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
-from gsi.models import CardSequence
+from gsi.models import CardSequence, ListTestFiles
 from gsi.gsi_forms import CardSequenceCardForm
 from cards.models import (QRF, RFScore, Remap, YearFilter, Collate, PreProc,
                           MergeCSV, RFTrain, RandomForest, CalcStats, CardItem)
