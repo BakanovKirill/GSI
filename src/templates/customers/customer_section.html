@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% load static from staticfiles %}
 
-{% block title %}{{ title }}{% endblock title %}
+{% block title_customer %}{{ title }}{% endblock title_customer %}
 
-{% block content %}
+{% block content_customer %}
     {% if error_message %}
         <h3>{{ error_message }}</a></h3>
     {% else %}
@@ -504,4 +504,4 @@
             google.maps.event.addDomListener(window, 'load', initMap);
         </script>
     {% endif %}
-{% endblock content %}
+{% endblock content_customer %}

@@ -954,6 +954,12 @@ def customer_section(request):
     polygons_list = []
     fpng_list = []
 
+    # Handling POST request
+    if request.method == "POST":
+        data_post = request.method
+
+        print 'data_post ============================= ', data_post
+
     try:
         customer_access = get_object_or_404(CustomerAccess, user=customer)
         data_sets_current = CustomerAccess.data_set.through.objects.filter(

@@ -1,0 +1,44 @@
+<!-- Start Authorization -->
+{% block status_message_auth %}{% endblock status_message_auth %}
+<!-- End Authorization -->
+
+<!-- Start Request -->
+{% block status_message_request %}
+    {% if request.GET.status_message or status_message %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ request.GET.status_message }}
+            {{ status_message }}
+        </div>
+    {% endif %}
+    {% if request.GET.info_message or info_message %}
+        <div class="alert alert-info alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ request.GET.info_message }}
+            {{ info_message }}
+        </div>
+    {% endif %}
+    {% if request.GET.warning_message or warning_message %}
+        <div class="alert alert-warning alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ request.GET.warning_message }}
+            {{ warning_message }}
+        </div>
+    {% endif %}
+    {% if request.GET.danger_message or danger_message %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ request.GET.danger_message }}
+            {{ danger_message }}
+        </div>
+    {% endif %}
+{% endblock status_message_request %}
+<!-- End Request -->

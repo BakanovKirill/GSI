@@ -36,7 +36,7 @@
 
 <body onload='initMap()'>
     <!-- Start Container -->
-    <div class="container">
+    <div class="container-fluid">
         {% if user.is_authenticated %}
             <!-- Start Body -->
             <div class="row">
@@ -87,226 +87,140 @@
 
                     <div class="row">
                         <!-- Start Main Menu Left Sidebar -->
+                        {% if user.is_superuser and url_name != 'customer_section' %}
                         <div class="col-md-3 li-menu dropdown-left-0 left" id="dropdownMenu">
                             <ul class="nav nav-pills nav-stacked">
-                                {% if user.is_superuser and url_name != 'customer_section' %}
-                                    <li class="{% if url_name == 'home' %}active-main-menu{% else %}li-menu{% endif %}">
-                                        <a href="{% url 'index' %}">
-                                            <img class="right-indent-10" src="{% static 'img/overview.png' %}">
-                                            OVERVIEW
-                                        </a>
-                                    </li>
-                                    <li class="{% if url_name == 'run_setup' %}active-main-menu{% else %}li-menu{% endif %}">
-                                        <a href="{% url 'run_setup' %}">
-                                            <img class="right-indent-10" src="{% static 'img/setup_new_run.png' %}">
-                                            SETUP NEW RUN
-                                        </a>
-                                    </li>
-                                    <li class="{% if url_name == 'submit_run' %}active-main-menu{% else %}li-menu{% endif %}">
-                                        <a href="{% url 'submit_run' %}">
-                                            <img class="right-indent-10" src="{% static 'img/submit_a_run.png' %}">
-                                            SUBMIT A RUN
-                                        </a>
-                                    </li>
-                                    <li class="{% if url_name == 'run_progress' %}active-main-menu{% else %}li-menu{% endif %}">
-                                        <a href="{% url 'run_progress' %}">
-                                            <img class="right-indent-10" src="{% static 'img/view_run_progress.png' %}">
-                                            VIEW RUN PROGRESS
-                                        </a>
-                                    </li>
+                                <li class="{% if url_name == 'home' %}active-main-menu{% else %}li-menu{% endif %}">
+                                    <a href="{% url 'index' %}">
+                                        <img class="right-indent-10" src="{% static 'img/overview.png' %}">
+                                        OVERVIEW
+                                    </a>
+                                </li>
+                                <li class="{% if url_name == 'run_setup' %}active-main-menu{% else %}li-menu{% endif %}">
+                                    <a href="{% url 'run_setup' %}">
+                                        <img class="right-indent-10" src="{% static 'img/setup_new_run.png' %}">
+                                        SETUP NEW RUN
+                                    </a>
+                                </li>
+                                <li class="{% if url_name == 'submit_run' %}active-main-menu{% else %}li-menu{% endif %}">
+                                    <a href="{% url 'submit_run' %}">
+                                        <img class="right-indent-10" src="{% static 'img/submit_a_run.png' %}">
+                                        SUBMIT A RUN
+                                    </a>
+                                </li>
+                                <li class="{% if url_name == 'run_progress' %}active-main-menu{% else %}li-menu{% endif %}">
+                                    <a href="{% url 'run_progress' %}">
+                                        <img class="right-indent-10" src="{% static 'img/view_run_progress.png' %}">
+                                        VIEW RUN PROGRESS
+                                    </a>
+                                </li>
 
-                                    <!-- sub setup static data menu -->
-                                    <div id="sweeties" class="{% if but_name == 'static_data' %}sub-menu-visible{% else %}sub-menu-no-visible{% endif %}">
-                                        <button class="title {% if but_name == 'static_data' %}active-static-data{% endif %}" id="title" onclick="showSubMenuStaticData()">
-                                            <img class="right-indent-10" src="{% static 'img/setup_static_data.png' %}">
-                                            SETUP STATIC DATA
-                                            <i id="icon_static" class="fa {% if but_name == 'static_data' %}fa-chevron-down{% else %}fa-chevron-right{% endif %} icon-visible"></i>
-                                            <!--<i class="fa fa-chevron-right icon-visible"></i>-->
-                                            <!--<i class="fa fa-chevron-down icon-visible" style="display: none"></i>-->
-                                        </button>
-                                        <div id="subMenu">
-                                            <ul>
-                                                <li class="li-sub-menu {% if url_name == 'home_variable' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                    <a href="{% url 'home_variable_setup' %}">Home Variables Setup</a>
-                                                </li>
-                                                <li class="li-sub-menu {% if url_name == 'environment_groups' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                    <a href="{% url 'environment_groups' %}">Environment Groups</a>
-                                                </li>
-                                                <li class="li-sub-menu {% if url_name == 'areas' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                    <a href="{% url 'areas' %}">Areas</a>
-                                                </li>
-                                                <li class="li-sub-menu {% if url_name == 'years_group' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                    <a href="{% url 'years_group' %}">Year Groups</a>
-                                                </li>
-                                                <li class="li-sub-menu {% if url_name == 'tiles' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                    <a href="{% url 'tiles' %}">Tiles</a>
-                                                </li>
-                                                <li class="li-sub-menu {% if url_name == 'years' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                    <a href="{% url 'years' %}">Years</a>
-                                                </li>
-                                                <li class="li-sub-menu {% if url_name == 'resolution' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                    <a href="{% url 'resolution' %}">Resolution</a>
-                                                </li>
-                                                <li class="li-sub-menu {% if url_name == 'satellite' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                    <a href="{% url 'satellite' %}">Satellites</a>
-                                                </li>
-                                                <li class="li-sub-menu {% if url_name == 'input_data_dir_list' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                    <a href="{% url 'input_data_dir_list' %}">Input Data Directory</a>
-                                                </li>
-                                                <li class="li-sub-menu {% if url_name == 'cards_list' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                    <a href="{% url 'cards_list' %}">Cards</a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                <!-- sub setup static data menu -->
+                                <div id="sweeties" class="{% if but_name == 'static_data' %}sub-menu-visible{% else %}sub-menu-no-visible{% endif %}">
+                                    <button class="title {% if but_name == 'static_data' %}active-static-data{% endif %}" id="title" onclick="showSubMenuStaticData()">
+                                        <img class="right-indent-10" src="{% static 'img/setup_static_data.png' %}">
+                                        SETUP STATIC DATA
+                                        <i id="icon_static" class="fa {% if but_name == 'static_data' %}fa-chevron-down{% else %}fa-chevron-right{% endif %} icon-visible"></i>
+                                        <!--<i class="fa fa-chevron-right icon-visible"></i>-->
+                                        <!--<i class="fa fa-chevron-down icon-visible" style="display: none"></i>-->
+                                    </button>
+                                    <div id="subMenu">
+                                        <ul>
+                                            <li class="li-sub-menu {% if url_name == 'home_variable' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                <a href="{% url 'home_variable_setup' %}">Home Variables Setup</a>
+                                            </li>
+                                            <li class="li-sub-menu {% if url_name == 'environment_groups' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                <a href="{% url 'environment_groups' %}">Environment Groups</a>
+                                            </li>
+                                            <li class="li-sub-menu {% if url_name == 'areas' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                <a href="{% url 'areas' %}">Areas</a>
+                                            </li>
+                                            <li class="li-sub-menu {% if url_name == 'years_group' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                <a href="{% url 'years_group' %}">Year Groups</a>
+                                            </li>
+                                            <li class="li-sub-menu {% if url_name == 'tiles' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                <a href="{% url 'tiles' %}">Tiles</a>
+                                            </li>
+                                            <li class="li-sub-menu {% if url_name == 'years' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                <a href="{% url 'years' %}">Years</a>
+                                            </li>
+                                            <li class="li-sub-menu {% if url_name == 'resolution' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                <a href="{% url 'resolution' %}">Resolution</a>
+                                            </li>
+                                            <li class="li-sub-menu {% if url_name == 'satellite' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                <a href="{% url 'satellite' %}">Satellites</a>
+                                            </li>
+                                            <li class="li-sub-menu {% if url_name == 'input_data_dir_list' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                <a href="{% url 'input_data_dir_list' %}">Input Data Directory</a>
+                                            </li>
+                                            <li class="li-sub-menu {% if url_name == 'cards_list' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                <a href="{% url 'cards_list' %}">Cards</a>
+                                            </li>
+                                        </ul>
                                     </div>
-                                    <!-- end sub setup static data menu -->
+                                </div>
+                                <!-- end sub setup static data menu -->
 
-                                    <!-- DataSets menu -->
-                                    <!-- <li class="{% if url_name == 'upload_file' %}active-main-menu{% else %}li-menu{% endif %}">
-                                        <a href="{% url 'upload_file' %}" id="upload_file">
-                                            <img class="right-indent-10" src="{% static 'img/upload.png' %}">
-                                            UPLOAD TEST DATA
-                                        </a>
-                                    </li> -->
-                                    <!-- end DataSets menu -->
+                                <!-- DataSets menu -->
+                                <!-- <li class="{% if url_name == 'upload_file' %}active-main-menu{% else %}li-menu{% endif %}">
+                                    <a href="{% url 'upload_file' %}" id="upload_file">
+                                        <img class="right-indent-10" src="{% static 'img/upload.png' %}">
+                                        UPLOAD TEST DATA
+                                    </a>
+                                </li> -->
+                                <!-- end DataSets menu -->
 
-                                    <!-- sub setup static data menu -->
-                                    <div id="sweeties2" class="{% if but_name == 'info_panel' %}sub-menu-visible{% else %}sub-menu-no-visible{% endif %}">
-                                        <button class="title {% if but_name == 'info_panel' %}active-static-data{% endif %}" id="title2" onclick="onOffSubMenuUploadTestData()">
-                                            <img class="right-indent-10" src="{% static 'img/setup_static_data.png' %}">
-                                            INFO PANEL MAPPING
-                                            <i id="icon_static2" class="fa {% if but_name == 'info_panel' %}fa-chevron-down{% else %}fa-chevron-right{% endif %} icon-visible"></i>
-                                            <!--<i class="fa fa-chevron-right icon-visible"></i>-->
-                                            <!--<i class="fa fa-chevron-down icon-visible" style="display: none"></i>-->
-                                        </button>
-                                        <div id="subMenu">
-                                            <ul>
-                                                <li class="li-sub-menu {% if url_name == 'upload_file' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                    <a href="{% url 'upload_file' %}">Upload Test Data</a>
-                                                </li>
-                                                <li class="li-sub-menu {% if url_name == 'data_sets' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                    <a href="{% url 'data_sets' %}">DataSet Definition</a>
-                                                </li>
-                                                <li class="li-sub-menu {% if url_name == 'customer_access' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                    <a href="{% url 'customer_access' %}">Customer Access</a>
-                                                </li>
-                                                <li class="li-sub-menu {% if url_name == 'shelf_data' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                    <a href="{% url 'shelf_data' %}">Shelf Data</a>
-                                                </li>
-                                                <li class="li-sub-menu {% if url_name == 'categorys' %}active-main-menu{% else %}li-menu{% endif %}">
-                                                    <a href="{% url 'categorys' %}">Categorys for the Shelf Data</a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                <!-- sub setup static data menu -->
+                                <div id="sweeties2" class="{% if but_name == 'info_panel' %}sub-menu-visible{% else %}sub-menu-no-visible{% endif %}">
+                                    <button class="title {% if but_name == 'info_panel' %}active-static-data{% endif %}" id="title2" onclick="onOffSubMenuUploadTestData()">
+                                        <img class="right-indent-10" src="{% static 'img/setup_static_data.png' %}">
+                                        INFO PANEL MAPPING
+                                        <i id="icon_static2" class="fa {% if but_name == 'info_panel' %}fa-chevron-down{% else %}fa-chevron-right{% endif %} icon-visible"></i>
+                                        <!--<i class="fa fa-chevron-right icon-visible"></i>-->
+                                        <!--<i class="fa fa-chevron-down icon-visible" style="display: none"></i>-->
+                                    </button>
+                                    <div id="subMenu">
+                                        <ul>
+                                            <li class="li-sub-menu {% if url_name == 'upload_file' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                <a href="{% url 'upload_file' %}">Upload Test Data</a>
+                                            </li>
+                                            <li class="li-sub-menu {% if url_name == 'data_sets' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                <a href="{% url 'data_sets' %}">DataSet Definition</a>
+                                            </li>
+                                            <li class="li-sub-menu {% if url_name == 'customer_access' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                <a href="{% url 'customer_access' %}">Customer Access</a>
+                                            </li>
+                                            <li class="li-sub-menu {% if url_name == 'shelf_data' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                <a href="{% url 'shelf_data' %}">Shelf Data</a>
+                                            </li>
+                                            <li class="li-sub-menu {% if url_name == 'categorys' %}active-main-menu{% else %}li-menu{% endif %}">
+                                                <a href="{% url 'categorys' %}">Categorys for the Shelf Data</a>
+                                            </li>
+                                        </ul>
                                     </div>
-                                    <!-- end sub setup static data menu -->
+                                </div>
+                                <!-- end sub setup static data menu -->
 
-                                    <!-- Customer Section Menu-->
-                                    <li class="{% if url_name == 'customer_section' %}active-main-menu{% else %}li-menu{% endif %}">
-                                        <a href="{% url 'customer_section' %}">
-                                            <img class="right-indent-10" src="{% static 'img/customer_section.png' %}">
-                                            CUSTOMER SECTION
-                                        </a>
-                                    </li>
+                                <!-- Customer Section Menu-->
+                                <li class="{% if url_name == 'customer_section' %}active-main-menu{% else %}li-menu{% endif %}">
+                                    <a href="{% url 'customer_section' %}">
+                                        <img class="right-indent-10" src="{% static 'img/customer_section.png' %}">
+                                        CUSTOMER SECTION
+                                    </a>
+                                </li>
 
-                                    <li class="li-menu">
-                                        <a href="http://gsi.readthedocs.io/en/latest/" target="_blank">
-                                            <img class="right-indent-10" src="{% static 'img/wiki-18.png' %}">
-                                            WIKI
-                                        </a>
-                                    </li>
-                                </ul>
-                            {% elif url_name == 'customer_section' %}
-                                <form class="form-modal" id="customer_section" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data"
-                                          role="form" class="form-horizontal">
-                                    {% csrf_token %}
-
-                                    <label class="control-label margin-top-25">Datasets:</label>
-                                    <select class="form-control margin-top-15" name="select" id="mydataset" onchange="showDataSets(this)">
-                                        {% for key, val in data_sets.items %}
-                                            <option id="{{ val }}" name="{{ key }}" value="{{ val }}" {% if data_set_id == val %}selected="selected"{% endif %}>{{ key }}</option>
-                                        {% endfor %}
-                                    </select>
-
-                                    <h4 class="margin-top-40"><b>Info Panel</b></h4>
-
-                                    {% if data_sets %}
-                                        <label class="control-label margin-top-25">Root-Filenames:</label>
-                                        <select class="form-control margin-top-10" name="root_filenames" multiple size="8">
-                                            {% for dl in dirs_list%}
-                                                <option value="{{ dl.id }}">{{ dl }}</option>
-                                            {% endfor %}
-                                        </select>
-
-                                        <label class="control-label margin-top-25">Statistics:</label>
-                                        <select class="form-control margin-top-10" name="root_filenames" multiple size="6">
-                                            <option value="mean_ConditionalMax">mean_ConditionalMax</option>
-                                            <option value="mean_ConditionalMean">mean_ConditionalMean</option>
-                                            <option value="mean_ConditionalMedian">mean_ConditionalMedian</option>
-                                            <option value="mean_ConditionalMin">mean_ConditionalMin</option>
-                                            <option value="mean_LowerQurtile">mean_LowerQurtile</option>
-                                            <option value="mean_Quantile">mean_Quantile</option>
-                                        </select>
-                                    {% endif %}
-
-                                    <label class="control-label margin-top-25">Polygons:</label>
-                                    <select class="form-control margin-top-10" name="root_filenames" multiple size="8">
-                                        {% for polygon in polygons_list%}
-                                            <option value="{{ polygon }}">{{ polygon }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </form>
-                            {% endif %}
-
+                                <li class="li-menu">
+                                    <a href="http://gsi.readthedocs.io/en/latest/" target="_blank">
+                                        <img class="right-indent-10" src="{% static 'img/wiki-18.png' %}">
+                                        WIKI
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
-                        <!-- End Main Menu Left Sidebar -->
 
                         <!-- Start Status Messages -->
                         <div class="col-md-9">
-                            <!-- Start Authorization -->
-                            {% block status_message_auth %}{% endblock status_message_auth %}
-                            <!-- End Authorization -->
-
-                            <!-- Start Request -->
-                            {% block status_message_request %}
-                                {% if request.GET.status_message or status_message %}
-                                    <div class="alert alert-success alert-dismissible" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                        {{ request.GET.status_message }}
-                                        {{ status_message }}
-                                    </div>
-                                {% endif %}
-                                {% if request.GET.info_message or info_message %}
-                                    <div class="alert alert-info alert-dismissible" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                        {{ request.GET.info_message }}
-                                        {{ info_message }}
-                                    </div>
-                                {% endif %}
-                                {% if request.GET.warning_message or warning_message %}
-                                    <div class="alert alert-warning alert-dismissible" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                        {{ request.GET.warning_message }}
-                                        {{ warning_message }}
-                                    </div>
-                                {% endif %}
-                                {% if request.GET.danger_message or danger_message %}
-                                    <div class="alert alert-danger alert-dismissible" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                        {{ request.GET.danger_message }}
-                                        {{ danger_message }}
-                                    </div>
-                                {% endif %}
-                            {% endblock status_message_request %}
-                            <!-- End Request -->
+                            {% include '_base_message.html' %}
                         </div>
                         <!-- End Status Messages -->
 
@@ -318,6 +232,82 @@
                             {% block content %}{% endblock content %}
                         </div>
                         <!-- End Content -->
+
+                        <!-- Left Sidebar for the Customer Section -->
+                        <form class="form-modal" id="customer_section_left" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data" role="form" class="form-horizontal">
+                            {% csrf_token %}
+
+
+                        {% elif url_name == 'customer_section' %}
+                        <form class="form-modal" id="customer_section_left" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data" role="form" class="form-horizontal">
+                            {% csrf_token %}
+                            <div class="col-md-2 li-menu dropdown-left-0 left" id="dropdownMenu">
+                                <label class="control-label margin-top-25">Datasets:</label>
+                                <select class="form-control margin-top-15" name="select" id="mydataset" onchange="showDataSets(this)">
+                                    {% for key, val in data_sets.items %}
+                                        <option id="{{ val }}" name="{{ key }}" value="{{ val }}" {% if data_set_id == val %}selected="selected"{% endif %}>{{ key }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </form>
+                        <!-- END Left Sidebar for the Customer Section -->
+
+                        <!-- Start Status Messages -->
+                        <div class="col-md-8">
+                            {% include '_base_message.html' %}
+                        </div>
+                        <!-- End Status Messages -->
+
+                        <!-- Start Content -->
+                        <div class="col-md-8" id="content-column">
+                            <!-- Title -->
+                            <h2>{% block title_customer %}{% endblock title_customer %}</h2>
+                            <!-- End Title -->
+                            {% block content_customer %}{% endblock content_customer %}
+                        </div>
+                        <!-- End Content -->
+
+
+                        <!-- Right Sidebar for the Customer Section -->
+                        <form class="form-modal" id="customer_section_right" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data" role="form" class="form-horizontal">
+                                {% csrf_token %}
+
+                            <div class="col-md-2 li-menu dropdown-left-0 left" id="dropdownMenu">
+                                <h4 class="margin-top-40 background-fill-grey"><b>Info Panel</b></h4>
+
+                                {% if data_sets %}
+                                    <select class="form-control margin-top-10" name="root_filenames" multiple size="8">
+                                        {% for dl in dirs_list%}
+                                            <option value="{{ dl.id }}">{{ dl }}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                    <label class="control-label margin-top-25">Statistics:</label>
+                                    <select class="form-control margin-top-10" name="statistics" multiple size="6">
+                                        <option value="mean_ConditionalMax">mean_ConditionalMax</option>
+                                        <option value="mean_ConditionalMean">mean_ConditionalMean</option>
+                                        <option value="mean_ConditionalMedian">mean_ConditionalMedian</option>
+                                        <option value="mean_ConditionalMin">mean_ConditionalMin</option>
+                                        <option value="mean_LowerQurtile">mean_LowerQurtile</option>
+                                        <option value="mean_Quantile">mean_Quantile</option>
+                                    </select>
+                                {% endif %}
+
+                                <label class="control-label margin-top-25">Polygons:</label>
+                                <select class="form-control margin-top-10" name="polygons" multiple size="8">
+                                    {% for polygon in polygons_list%}
+                                        <option value="{{ polygon }}">{{ polygon }}</option>
+                                    {% endfor %}
+                                </select>
+
+                                <button type="submit" name="add-list-view" class="btn btn-primary btn-block margin-top-35">
+                                    Add to list view
+                                </button>
+                            </div>
+                        </form>
+                        {% endif %}
+
+                        </form>
                     </div>
 
                     <!-- Start Contact Form -->
