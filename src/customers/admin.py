@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from customers.models import Category, ShelfData, DataSet, CustomerAccess
+from customers.models import Category, ShelfData, DataSet, CustomerAccess, CustomerInfoPanel
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -44,7 +44,14 @@ class CustomerAccessAdmin(admin.ModelAdmin):
     get_data_set.short_description = 'DataSets'
 
 
+class CustomerInfoPanelAdmin(admin.ModelAdmin):
+    list_display = ('user', 'data_set', 'attribute_name', 'statisctic', 'tif_path', 'png_path',)
+    search_fields = ['user', 'data_set']
+    list_filter = ('user', 'data_set')
+
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(ShelfData, ShelfDataAdmin)
 admin.site.register(DataSet, DataSetAdmin)
 admin.site.register(CustomerAccess, CustomerAccessAdmin)
+admin.site.register(CustomerInfoPanel, CustomerInfoPanelAdmin)

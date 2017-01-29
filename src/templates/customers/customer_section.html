@@ -28,7 +28,7 @@
 
             <!-- Google map -->
             <div class="row margin-top-35">
-                <div class="col-md-12">
+                <div class="col-md-12 margin-010">
                     <!-- [START region_toolbar] -->
                     <!-- Add an input button to initiate the toggle method on the overlay. -->
                     <div id="floating-panel">
@@ -37,7 +37,9 @@
                     </div>
                     <!-- [END region_toolbar] -->
 
-                    <div id="map"></div>
+                    <!-- GSi MAP -->
+                    <!-- <div id="map"></div> -->
+                    <!-- END GSi MAP -->
 
                     <!-- GSi LOGO -->
                     <div id="gsi-logo">
@@ -59,11 +61,15 @@
 
             <!-- GSi Info Data -->
             <div class="row">
-                <div class="col-md-4 col-md-offset-8 margin-top-25 padding-lr-5">
-                    <select class="form-control" name="select" id="show_arrea" onchange="showSelectArea(this)">
-                        {% for png in fpng_list %}
-                            <option id="{{ png }}" name="{{ png }}" value="{{ png }}" {% if select_area == png %}selected="selected"{% endif %}>{{ png }}</option>
-                        {% endfor %}
+                <div class="col-md-6 col-md-offset-6 margin-top-25 padding-lr-5">
+                    <select class="form-control" name="select_file_area" id="show_file_arrea" onchange="showSelectArea({{ show_file }})">
+                        {% if files_infopanel %}
+                            {% for file in files_infopanel %}
+                                <option id="{{ file }}" name="{{ file }}" value="{{ file }}">{{ file }}</option>
+                            {% endfor %}
+                        {% else %}
+                            <option id="none_file" name="none_file" value="none_file">No chosen files</option>
+                        {% endif %}
                     </select>
                 </div>
             </div>

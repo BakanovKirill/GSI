@@ -65,15 +65,20 @@ class CustomerAccess(models.Model):
         return u"{0}".format(self.user.username)
 
 
-# class SelectedArea(models.Model):
-#     user = models.ForeignKey(User, verbose_name='User', blank=True, null=True)
-#     project = models.CharField(max_length=150, blank=True, null=True)
-#     attribute_name = models.CharField(max_length=150, blank=True, null=True)
-#     statistics = models.CharField(max_length=150, blank=True, null=True)
-#     polygon = models.CharField(max_length=150, blank=True, null=True)
-#
-#     class Meta:
-#         verbose_name_plural = 'Selected Area'
-#
-#     def __unicode__(self):
-#         return u"{0}_{1}_{2}".format(self.statistics)
+class CustomerInfoPanel(models.Model):
+    user = models.ForeignKey(User, verbose_name='User', blank=True, null=True)
+    data_set = models.ForeignKey('DataSet', blank=True, null=True)
+    attribute_name = models.CharField(max_length=150, blank=True, null=True)
+    statisctic = models.CharField(max_length=150, blank=True, null=True)
+    # polygon = models.CharField(max_length=150, blank=True, null=True)
+
+    file_area_name = models.CharField(max_length=150, blank=True, null=True)
+    tif_path = models.CharField(max_length=150, blank=True, null=True)
+    png_path = models.CharField(max_length=150, blank=True, null=True)
+    url_png = models.CharField(max_length=150, blank=True, null=True)
+
+    class Meta:
+        verbose_name_plural = 'Customer Info Panel'
+
+    def __unicode__(self):
+        return u"{0}_{1}".format(self.user, self.data_set)

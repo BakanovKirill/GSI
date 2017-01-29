@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 """Views for the customers app."""
-import os
+import os, numpy
 import subprocess
 from PIL import Image
 from subprocess import check_call, Popen, PIPE
 from osgeo import osr, gdal
+
 # import Image, ImageDraw
 # from osgeo import gdal
 # import gdal
@@ -17,14 +18,14 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 
-from customers.models import Category, ShelfData, DataSet, CustomerAccess
+from customers.models import Category, ShelfData, DataSet, CustomerAccess, CustomerInfoPanel
 from customers.customers_forms import CategoryForm, ShelfDataForm, DataSetForm, CustomerAccessForm
 from customers.customers_update_create import (category_update_create, shelf_data_update_create,
                                                 data_set_update_create, customer_access_update_create)
 from core.get_post import get_post
 from core.paginations import paginations
-from gsi.settings import (RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM, POLYGONS_DIRECTORY,
-                        DAFAULT_LAT, DAFAULT_LON, PNG_PATH, BASE_DIR, TIF_PATH)
+from gsi.settings import (BASE_DIR, RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM, POLYGONS_DIRECTORY,
+                        DAFAULT_LAT, DAFAULT_LON, PNG_DIRECTORY, PNG_PATH, PROJECTS_PATH)
 
 
 # categorys list
@@ -907,12 +908,95 @@ def customer_access_edit(request, customer_access_id):
     return data
 
 
-def get_file_filepath(f, ext, path):
-    farea = '{0}.{1}'.format(f, ext)
-    fpath = os.path.join(path, farea)
+def get_file_filepath(f, path_tif, path_png):
+    ext_png = '{0}.png'
+    ext_tif = '{0}.tif'
 
-    return fpath
+    full_path_tif = os.path.join(path_tif, ext_tif)
+    full_path_png = os.path.join(path_png, ext_png)
 
+    return full_path_tif, full_path_png
+
+
+def check_current_dataset(request, data_post):
+    data_set_id = data_post.get('datasets_id', '')
+    request.session['select_data_set'] = data_set_id
+    data_set = DataSet.objects.get(pk=data_set_id)
+
+    # print 'data_set_id ==================================', data_set_id
+
+    if not CustomerInfoPanel.objects.filter(user=request.user, data_set=data_set).exists():
+        info_panel = CustomerInfoPanel.objects.filter(user=request.user).delete()
+
+# **********************************************************************
+# if request.session.get('select_data_set', False):
+#     data_set_id = request.session['select_data_set']
+#     data_set = DataSet.objects.get(pk=data_set_id) # get_object_or_404(DataSet, pk=data_set_id)
+#     data_set_id = int(data_set_id)
+#
+#     # Get the results_directorys list
+#     try:
+#         project_directory = os.path.join(PROJECTS_PATH, data_set.results_directory)
+#         root, dirs, files = os.walk(project_directory).next()
+#
+#         print 'project_directory =========================== ', project_directory
+#
+#         for sd in shelf_data:
+#             if str(sd.root_filename) in dirs:
+#                 dirs_list.append(sd)
+#
+#         print 'dirs_list =========================== ', dirs_list
+#     except Exception, e:
+#         return HttpResponseRedirect(
+#             u'%s?danger_message=%s' % (reverse('data_set_edit', args=[data_set_id]),
+#             (u'The directory "{0}" does not exist!'.format(results_directory)))
+#         )
+# else:
+#     request.session['select_data_set'] = data_sets_current[0].dataset_id
+#     request.session.set_expiry(172800)
+# **********************************************************************
+
+#     # Ajax when deleting objects
+#     if request.method == "POST" and request.is_ajax():
+#         data_post = request.POST
+#
+#         # print 'data_post ========================== ', data_post
+#
+#         if 'datasets_id' in data_post:
+#             data_set_id = data_post.get('datasets_id', '')
+#
+#             if data_set_id:
+#                 request.session['select_data_set'] = data_set_id
+#             status = 'success'
+#
+#             return HttpResponse(status)
+#
+#         if 'multiple' in data_post:
+#             message = u'Are you sure you want to remove this objects:'
+#             run_id = data_post['cur_run_id']
+#             cur_run = get_object_or_404(CustomerAccess, pk=int(run_id))
+#             data = '<b>"{0}"</b>'.format(cur_run)
+#             data = '{0} {1}?'.format(message, data)
+#
+#             return HttpResponse(data)
+#
+#         if 'area_name' in data_post:
+#             area_name = data_post.get('area_name', '')
+#             request.session['png'] = area_name
+#             status = 'success'
+#
+#             return HttpResponse(status)
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+ATTRIBUTE_NAMES = [
+    'mean_ConditionalMax',
+    'mean_ConditionalMean',
+    'mean_ConditionalMedian',
+    'mean_ConditionalMin',
+    'mean_LowerQurtile',
+    'mean_Quantile'
+]
 
 # view Customer Section
 @login_required
@@ -929,90 +1013,384 @@ def customer_section(request):
         * *request:* The request is sent to the server when processing the page
     """
 
+    # PNG_DIRECTORY = 'media/png'
+    # PNG_PATH = os.path.join(BASE_DIR, PNG_DIRECTORY)
+    # PROJECTS_PATH = '/lustre/w23/mattgsi/satdata/RF/Projects'
+
     customer = request.user
-    shelf_data = ShelfData.objects.all()
+    shelf_data_all = ShelfData.objects.all()
+    customer_info_panel = CustomerInfoPanel.objects.filter(user=request.user)
     title = 'Customer {0} section'.format(customer)
     url_name = 'customer_section'
 
-    scheme = '{0}://'.format(request.scheme)
-    absolute_png_url = os.path.join(scheme, request.get_host(), PNG_PATH)
-    absolute_path_png = os.path.join(BASE_DIR, PNG_PATH)
-    absolute_tif_folder = os.path.join(BASE_DIR, TIF_PATH)
+    project_directory = ''
+    info_panel = None
+    data_set = None
+    data_sets = []
+    dirs_list = []
+    dirs_infopanel = []
+    files_infopanel = []
+    statisctics_infopanel = []
+    attribute_name_ip = {}
+    data_set_id = 0
+    show_file = ''
 
-    select_area = ''
+    # default GEOTIFF coordinates
+    cLng = DAFAULT_LON
+    cLat = DAFAULT_LAT
+    eLat_1 = 0
+    eLng_1 = 0
+    eLat_2 = 0
+    eLng_2 = 0
+
+    scheme = '{0}://'.format(request.scheme)
+    absolute_png_url = os.path.join(scheme, request.get_host(), PNG_DIRECTORY)
+
+    # Get the User DataSets
+    try:
+        customer_access = CustomerAccess.objects.get(user=customer)
+        data_sets_current = CustomerAccess.data_set.through.objects.filter(
+                        customeraccess_id=customer_access.id).order_by('dataset_id')
+
+        for n in data_sets_current:
+            try:
+                ds = DataSet.objects.get(pk=n.dataset_id)
+                data_sets.append(ds)
+            except Exception:
+                pass
+    except Exception, e:
+        print 'ERROR ==================== ', e
+        error_message = 'You have no one DataSet for view. Please contact to the admin.'
+        data = {
+            'title': title,
+            'customer': customer,
+            'url_name': url_name,
+            'error_message': error_message
+        }
+
+        return data
+
+    # Get select data_set sessions
+    if request.session.get('select_data_set', False):
+        data_set_id = request.session['select_data_set']
+        data_set_id = int(data_set_id)
+    else:
+        CustomerInfoPanel.objects.filter(user=request.user).delete()
+        if data_sets:
+            request.session['select_data_set'] = data_sets[0].id
+        else:
+            if customer_info_panel:
+                request.session['select_data_set'] = customer_info_panel[0].data_set.id
+            else:
+                request.session['select_data_set'] = data_set_id
+        request.session.set_expiry(172800)
+
+    # Get select image area sessions
+    if request.session.get('file_info_panel', False):
+        show_file = request.session['file_info_panel']
+    else:
+        if customer_info_panel:
+            show_file = customer_info_panel[0].file_area_name
+        else:
+            show_file = customer_info_panel[0].file_area_name
+        request.session.set_expiry(172800)
+
+    # AJAX clear selection
+    if request.is_ajax():
+        data_get = request.GET
+
+        # When user celect a new DataSet, the previous celected DataSet to remove
+        if 'datasets_id' in data_get:
+            check_current_dataset(request, data_get)
+        status = 'success'
+
+        if 'remove_all_selected_items' in data_get:
+            CustomerInfoPanel.objects.filter(user=request.user).delete()
+        status = 'success'
+
+        return HttpResponse(status)
+
+    # Get data for the Info Panel
+    try:
+        data_set = DataSet.objects.get(pk=data_set_id)
+    except Exception, e:
+        print 'Exception 01 ========================= ', e
+        # print 'Exception 01 data_set ========================= ', request.session['select_data_set']
+        if data_sets:
+            data_set = data_sets[0]
+            data_set_id = int(data_set.id)
+
+    # Get the results_directory list
+    try:
+        project_directory = os.path.join(PROJECTS_PATH, data_set.results_directory)
+        root, dirs, files = os.walk(project_directory).next()
+
+        for sd in shelf_data_all:
+            if str(sd.root_filename) in dirs:
+                dirs_list.append(sd)
+    except Exception, e:
+        print 'Exception 02 ========================= ', e
+        return HttpResponseRedirect(
+            u'%s?danger_message=%s' % (reverse('customer_section'),
+            (u'The directory "{0}" does not exist!'.format(project_directory)))
+        )
+
+    # Handling POST request
+    if request.method == "POST":
+        data_post = request.POST
+        dirs = []
+
+        if 'add-list-view' in data_post:
+            if 'root_filenames[]' in data_post and 'statistics[]' in data_post:
+                info_panel = CustomerInfoPanel.objects.filter(user=request.user).delete()
+                dirs = data_post.getlist('root_filenames[]')
+                statistics = data_post.getlist('statistics[]')
+                data_set = DataSet.objects.get(pk=data_set_id)
+                results_directory = data_set.results_directory
+                project_name = results_directory.split('/')[0]
+
+                for dr in dirs:
+                    shelf_data = ShelfData.objects.get(pk=dr)
+                    attribute_name = shelf_data.attribute_name
+
+                    for st in statistics:
+                        file_area_name = '{0}_{1}.{2}'.format(st, shelf_data.root_filename, project_name)
+                        tif = '{0}.tif'.format(file_area_name)
+                        png = '{0}.png'.format(file_area_name)
+                        tif_path = os.path.join(PROJECTS_PATH, data_set.results_directory, shelf_data.root_filename, tif)
+                        png_path = os.path.join(PNG_PATH, png)
+                        url_png = '{0}/{1}'.format(absolute_png_url, png)
+                        info_panel = CustomerInfoPanel.objects.create(
+                                        user=request.user,
+                                        data_set=data_set,
+                                        attribute_name=attribute_name,
+                                        statisctic=st,
+                                        file_area_name=file_area_name,
+                                        tif_path=tif_path,
+                                        png_path=png_path,
+                                        url_png=url_png)
+                        info_panel.save()
+            elif 'root_filenames[]' in data_post and not 'statistics[]' in data_post:
+                info_panel = CustomerInfoPanel.objects.filter(user=request.user).delete()
+                dirs = data_post.getlist('root_filenames[]')
+
+                data_set = DataSet.objects.get(pk=data_set_id)
+                results_directory = data_set.results_directory
+                project_name = results_directory.split('/')[0]
+
+                for dr in dirs:
+                    shelf_data = ShelfData.objects.get(pk=dr)
+                    attribute_name = shelf_data.attribute_name
+
+                    for st in ATTRIBUTE_NAMES:
+                        file_area_name = '{0}_{1}.{2}'.format(st, shelf_data.root_filename, project_name)
+                        tif = '{0}.tif'.format(file_area_name)
+                        png = '{0}.png'.format(file_area_name)
+                        tif_path = os.path.join(PROJECTS_PATH, data_set.results_directory, shelf_data.root_filename, tif)
+                        png_path = os.path.join(PNG_PATH, png)
+                        url_png = '{0}/{1}'.format(absolute_png_url, png)
+                        info_panel = CustomerInfoPanel.objects.create(
+                                        user=request.user,
+                                        data_set=data_set,
+                                        attribute_name=attribute_name,
+                                        statisctic=st,
+                                        file_area_name=file_area_name,
+                                        tif_path=tif_path,
+                                        png_path=png_path,
+                                        url_png=url_png)
+                        info_panel.save()
+            elif not 'root_filenames[]' in data_post and 'statistics[]' in data_post:
+                info_panel = CustomerInfoPanel.objects.filter(user=request.user).delete()
+                statistics = data_post.getlist('statistics[]')
+                data_set = DataSet.objects.get(pk=data_set_id)
+                results_directory = data_set.results_directory
+                project_name = results_directory.split('/')[0]
+
+                for dr in dirs_list:
+                    attribute_name = dr.attribute_name
+
+                    for st in statistics:
+                        file_area_name = '{0}_{1}.{2}'.format(st, dr.root_filename, project_name)
+                        tif = '{0}.tif'.format(file_area_name)
+                        png = '{0}.png'.format(file_area_name)
+                        tif_path = os.path.join(PROJECTS_PATH, data_set.results_directory, dr.root_filename, tif)
+                        png_path = os.path.join(PNG_PATH, png)
+                        url_png = '{0}/{1}'.format(absolute_png_url, png)
+                        info_panel = CustomerInfoPanel.objects.create(
+                                        user=request.user,
+                                        data_set=data_set,
+                                        attribute_name=attribute_name,
+                                        statisctic=st,
+                                        file_area_name=file_area_name,
+                                        tif_path=tif_path,
+                                        png_path=png_path,
+                                        url_png=url_png)
+                        info_panel.save()
+            elif not 'root_filenames[]' in data_post and not 'statistics[]' in data_post:
+                info_panel = CustomerInfoPanel.objects.filter(user=request.user).delete()
+                data_set = DataSet.objects.get(pk=data_set_id)
+                results_directory = data_set.results_directory
+                project_name = results_directory.split('/')[0]
+
+                for dr in dirs_list:
+                    attribute_name = dr.attribute_name
+
+                    for st in ATTRIBUTE_NAMES:
+                        file_area_name = '{0}_{1}.{2}'.format(st, dr.root_filename, project_name)
+                        tif = '{0}.tif'.format(file_area_name)
+                        png = '{0}.png'.format(file_area_name)
+                        tif_path = os.path.join(PROJECTS_PATH, data_set.results_directory, dr.root_filename, tif)
+                        png_path = os.path.join(PNG_PATH, png)
+                        url_png = '{0}/{1}'.format(absolute_png_url, png)
+                        info_panel = CustomerInfoPanel.objects.create(
+                                        user=request.user,
+                                        data_set=data_set,
+                                        attribute_name=attribute_name,
+                                        statisctic=st,
+                                        file_area_name=file_area_name,
+                                        tif_path=tif_path,
+                                        png_path=png_path,
+                                        url_png=url_png)
+                        info_panel.save()
+
+    # Get selected data for the InfoPanel display
+    if data_set:
+        customer_info_panel = CustomerInfoPanel.objects.filter(user=request.user)
+
+        if customer_info_panel:
+            file_area = customer_info_panel.values_list('file_area_name', flat=True)
+            attribute_name = customer_info_panel.values_list('attribute_name', flat=True)
+            statisctics = customer_info_panel.values_list('statisctic', flat=True)
+
+            if file_area[0]:
+                files_infopanel = [n for n in file_area]
+
+            if attribute_name[0] and dirs_list:
+                # attribute_name_ip
+                dirs_infopanel = [n for n in attribute_name]
+
+            if statisctics[0]:
+                statisctics_infopanel = [n for n in statisctics]
+
+
+
+
+
+
+    # # Get select data_set sessions
+    # if request.session.get('select_data_set', False):
+    #     data_set_id = request.session['select_data_set']
+    #     data_set_id = int(data_set_id)
+    # else:
+    #     if data_sets:
+    #         request.session['select_data_set'] = data_sets[0].id
+    #     else:
+    #         request.session['select_data_set'] = data_set_id
+    #     request.session.set_expiry(172800)
+    #
+    # # Get select image area sessions
+    # if request.session.get('file_info_panel', False):
+    #     show_file = request.session['file_info_panel']
+    # else:
+    #     if files_infopanel:
+    #         show_file = files_infopanel[0]
+    #         request.session.set_expiry(172800)
+    # print 'dirs_infopanel ================================== ', dirs_infopanel
+    # print 'statisctics_infopanel ================================== ', statisctics_infopanel
+    data = {
+        'title': title,
+        'customer': customer,
+        'url_name': url_name,
+
+        'info_panel': info_panel,
+
+        'data_set_id': data_set_id,
+        'data_sets': data_sets,
+        'dirs_list': dirs_list,
+        'files_infopanel': files_infopanel,
+        'dirs_infopanel': dirs_infopanel,
+        'statisctics_infopanel': statisctics_infopanel,
+        'show_file': show_file,
+
+        'cLng': cLng,
+        'cLat': cLat,
+        'eLat_1': eLat_1,
+        'eLng_1': eLng_1,
+        'eLat_2': eLat_2,
+        'eLng_2': eLng_2,
+        'GOOGLE_MAP_ZOOM': GOOGLE_MAP_ZOOM,
+    }
+
+    return data
+
+
+# view Customer Section
+@login_required
+@render_to('customers/customer_section.html')
+def customer_section_22(request):
+    """**View for the "Customer '<user>' section" page.**
+
+    :Functions:
+        When you load the page is loaded map with Google MAP. Initial coordinates: eLat = 0, eLng = 0.
+        Zoom map is variable GOOGLE_MAP_ZOOM, whose value is in the project settings.
+        Code view allows to change position when you enter values in the fields on the page "Enter Lat" and "Enter Log".
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+    """
+
+    # PNG_DIRECTORY = 'media/png'
+    # PNG_PATH = os.path.join(BASE_DIR, PNG_DIRECTORY)
+    # PROJECTS_PATH = '/lustre/w23/mattgsi/satdata/RF/Projects'
+
+    customer = request.user
+    shelf_data_all = ShelfData.objects.all()
+    title = 'Customer {0} section'.format(customer)
+    url_name = 'customer_section'
+
+    customer_access = get_object_or_404(CustomerAccess, user=customer)
+    data_sets = CustomerAccess.data_set.through.objects.filter(
+                            customeraccess_id=customer_access.id).order_by('dataset_id')
+
+    scheme = '{0}://'.format(request.scheme)
+    absolute_png_url = os.path.join(scheme, request.get_host(), PNG_DIRECTORY)
+    # absolute_path_png = os.path.join(BASE_DIR, PNG_PATH)
+    # absolute_tif_folder = os.path.join(BASE_DIR, PROJECTS_PATH)
 
     absolute_url_png_file = ''
-    absolute_path_tif_file = ''
+    full_path_tif_file = ''
+    select_area = ''
 
-    png_file = ''
-    tif_file = ''
+    # png_file = ''
+    # tif_file = ''
+
     data_set = None
     statistics = None
     data_set_id = 0
-    data_sets = {}
+
     dirs_list = []
     polygons_list = []
     fpng_list = []
 
-    # Handling POST request
-    if request.method == "POST":
-        data_post = request.method
-
-        print 'data_post ============================= ', data_post
-
+    # Get site sessions
     try:
-        customer_access = get_object_or_404(CustomerAccess, user=customer)
-        data_sets_current = CustomerAccess.data_set.through.objects.filter(
-            customeraccess_id=customer_access.id).order_by('dataset_id')
-
-        # default GEOTIFF coordinates
-        cLng = 0
-        cLat = 0
-        eLat_1 = 0
-        eLng_1 = 0
-        eLat_2 = 0
-        eLng_2 = 0
-
-        # delete the 'select_data_set' session
-        # del request.session['select_data_set']
-
-        # get the list files for the show on the custom section
-        try:
-            root, dirs, files = os.walk(absolute_path_png).next()
-
-            for f in files:
-                fpng_list.append(f.split('.png')[0])
-        except Exception, e:
-            return HttpResponseRedirect(
-                u'%s?danger_message=%s' % (reverse('data_set_edit', args=[data_set_id]),
-                (u'The directory "{0}" does not exist!'.format(absolute_path_png)))
-            )
-
-        # get the list polygons for the show on the custom section
-        try:
-            root, dirs, files = os.walk(POLYGONS_DIRECTORY).next()
-
-            for f in files:
-                polygons_list.append(f.split('.kml')[0])
-        except Exception, e:
-            return HttpResponseRedirect(
-                u'%s?danger_message=%s' % (reverse('data_set_edit', args=[data_set_id]),
-                (u'The directory "{0}" does not exist!'.format(POLYGONS_DIRECTORY)))
-            )
-
         if request.session.get('select_data_set', False):
             data_set_id = request.session['select_data_set']
-            data_set = get_object_or_404(DataSet, pk=data_set_id)
+            data_set = DataSet.objects.get(pk=data_set_id) # get_object_or_404(DataSet, pk=data_set_id)
             data_set_id = int(data_set_id)
 
             # Get the results_directorys list
             try:
-                results_directory = RESULTS_DIRECTORY + data_set.results_directory
-                root, dirs, files = os.walk(results_directory).next()
+                project_directory = os.path.join(PROJECTS_PATH, data_set.results_directory)
+                root, dirs, files = os.walk(project_directory).next()
+
+                print 'project_directory =========================== ', project_directory
 
                 for sd in shelf_data:
                     if str(sd.root_filename) in dirs:
                         dirs_list.append(sd)
+
+                print 'dirs_list =========================== ', dirs_list
             except Exception, e:
                 return HttpResponseRedirect(
                     u'%s?danger_message=%s' % (reverse('data_set_edit', args=[data_set_id]),
@@ -1021,118 +1399,6 @@ def customer_section(request):
         else:
             request.session['select_data_set'] = data_sets_current[0].dataset_id
             request.session.set_expiry(172800)
-
-        if request.session.get('eLat', False):
-            eLat = request.session['eLat']
-        else:
-            eLng = DAFAULT_LAT
-            request.session.set_expiry(172800)
-
-        if request.session.get('eLng', False):
-            eLng = request.session['eLng']
-        else:
-            eLng = DAFAULT_LON
-            request.session.set_expiry(172800)
-
-        if request.session.get('png', False):
-            absolute_url_png_file = get_file_filepath(request.session['png'], 'png', absolute_png_url)
-            absolute_path_tif_file = get_file_filepath(request.session['png'], 'tif', absolute_tif_folder)
-            select_area = request.session['png']
-        else:
-            if fpng_list:
-                # path to a GeoTIFF files
-                absolute_url_png_file = get_file_filepath(fpng_list[0], 'png', absolute_png_url)
-                absolute_path_tif_file = get_file_filepath(fpng_list[0], 'tif', absolute_tif_folder)
-                request.session['png'] = fpng_list[0]
-                select_area = fpng_list[0]
-                request.session.set_expiry(172800)
-
-        for n in data_sets_current:
-            ds = get_object_or_404(DataSet, pk=n.dataset_id)
-            data_sets[ds] = n.dataset_id
-
-        # Ajax when deleting objects
-        if request.method == "POST" and request.is_ajax():
-            data_post = request.POST
-
-            # print 'data_post ========================== ', data_post
-
-            if 'datasets_id' in data_post:
-                data_set_id = data_post.get('datasets_id', '')
-
-                if data_set_id:
-                    request.session['select_data_set'] = data_set_id
-                status = 'success'
-
-                return HttpResponse(status)
-
-            if 'multiple' in data_post:
-                message = u'Are you sure you want to remove this objects:'
-                run_id = data_post['cur_run_id']
-                cur_run = get_object_or_404(CustomerAccess, pk=int(run_id))
-                data = '<b>"{0}"</b>'.format(cur_run)
-                data = '{0} {1}?'.format(message, data)
-
-                return HttpResponse(data)
-
-            if 'area_name' in data_post:
-                area_name = data_post.get('area_name', '')
-                request.session['png'] = area_name
-                status = 'success'
-
-                return HttpResponse(status)
-
-
-        # path to a GeoTIFF files
-        # file_tif = '/home/greg/Elance_com/KeyUA/GSI/UI/images/BA_10_aws_v3.Site1.tif'
-        # file_png = '/home/greg/Elance_com/KeyUA/GSI/UI/images/BA_10_aws_v3.Site1.png'
-
-        # Convert tif to png
-        # # **** 1
-        # check_call(('cat {0} | convert - {1}').format(file_tif, file_png), shell=True)
-        #
-        # # ***** 2
-        # proc = Popen(['cat', file_tif], stdout=PIPE)
-        #
-        # p2 = Popen(['convert', '-', file_png],stdin=proc.stdout)
-        #
-        # out,err = proc.communicate()
-
-        # get the lat/lon values for a GeoTIFF files
-        # ulx, uly is the upper left corner, lrx, lry is the lower right corner
-        # src = gdal.Open(file_tif)
-        # ulx, xres, xskew, uly, yskew, yres = src.GetGeoTransform()
-        # lrx = ulx + (src.RasterXSize * xres)
-        # lry = uly + (src.RasterYSize * yres)
-        #
-        # print 'lrx ======================== ', lrx
-        # print 'lry ======================== ', lry
-
-        # media/png/
-
-        # print '!! absolute_path_tif_file  =========================== \n', absolute_path_tif_file
-
-        # get the lat/lon values for a GeoTIFF files
-        try:
-            ds = gdal.Open(absolute_path_tif_file)
-            width = ds.RasterXSize
-            height = ds.RasterYSize
-            gt = ds.GetGeoTransform()
-            minx = gt[0]
-            miny = gt[3] + width*gt[4] + height*gt[5]
-            maxx = gt[0] + width*gt[1] + height*gt[2]
-            maxy = gt[3]
-            centery = (maxy + miny) / 2
-            centerx = (maxx + minx) / 2
-
-            cLng = centerx
-            cLat = centery
-            eLat_1 = miny
-            eLng_1 = minx
-            eLat_2 = maxy
-            eLng_2 = maxx
-        except AttributeError:
-            pass
     except Exception:
         error_message = 'You have no one DataSet for view. Please contact to the admin.'
         data = {
@@ -1144,28 +1410,234 @@ def customer_section(request):
 
         return data
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # # Handling POST request
+    # if request.method == "POST":
+    #     data_post = request.method
+    #
+    #     print 'data_post ============================= ', data_post
+    #     # DAFAULT_LAT, DAFAULT_LO
+    #
+    # try:
+    #     customer_access = get_object_or_404(CustomerAccess, user=customer)
+    #     data_sets_current = CustomerAccess.data_set.through.objects.filter(
+    #         customeraccess_id=customer_access.id).order_by('dataset_id')
+    #
+    #     # default GEOTIFF coordinates
+    #     cLng = DAFAULT_LON
+    #     cLat = DAFAULT_LAT
+    #     eLat_1 = 0
+    #     eLng_1 = 0
+    #     eLat_2 = 0
+    #     eLng_2 = 0
+    #
+    #     # delete the a session
+    #     # del request.session['png']
+    #
+    #     # get the list files for the show on the custom section
+    #     try:
+    #         root, dirs, files = os.walk(absolute_path_png).next()
+    #
+    #         for f in files:
+    #             fpng_list.append(f.split('.png')[0])
+    #     except Exception, e:
+    #         return HttpResponseRedirect(
+    #             u'%s?danger_message=%s' % (reverse('data_set_edit', args=[data_set_id]),
+    #             (u'The directory "{0}" does not exist!'.format(absolute_path_png)))
+    #         )
+    #
+    #     # get the list polygons for the show on the custom section
+    #     try:
+    #         root, dirs, files = os.walk(POLYGONS_DIRECTORY).next()
+    #
+    #         for f in files:
+    #             polygons_list.append(f.split('.kml')[0])
+    #     except Exception, e:
+    #         return HttpResponseRedirect(
+    #             u'%s?danger_message=%s' % (reverse('data_set_edit', args=[data_set_id]),
+    #             (u'The directory "{0}" does not exist!'.format(POLYGONS_DIRECTORY)))
+    #         )
+    #
+    #
+    #
+    #     if request.session.get('eLat', False):
+    #         eLat = request.session['eLat']
+    #     else:
+    #         eLng = DAFAULT_LAT
+    #         request.session.set_expiry(172800)
+    #
+    #     if request.session.get('eLng', False):
+    #         eLng = request.session['eLng']
+    #     else:
+    #         eLng = DAFAULT_LON
+    #         request.session.set_expiry(172800)
+    #
+    #     if request.session.get('png', False):
+    #         absolute_url_png_file = get_file_filepath(request.session['png'], 'png', absolute_png_url)
+    #         full_path_tif_file = get_file_filepath(request.session['png'], 'tif', absolute_tif_folder)
+    #         select_area = request.session['png']
+    #     else:
+    #         if fpng_list:
+    #             # path to a GeoTIFF files
+    #             absolute_url_png_file = get_file_filepath(fpng_list[0], 'png', absolute_png_url)
+    #             full_path_tif_file = get_file_filepath(fpng_list[0], 'tif', absolute_tif_folder)
+    #             request.session['png'] = fpng_list[0]
+    #             select_area = fpng_list[0]
+    #             request.session.set_expiry(172800)
+    #
+    #     for n in data_sets_current:
+    #         ds = get_object_or_404(DataSet, pk=n.dataset_id)
+    #         data_sets[ds] = n.dataset_id
+    #
+    #     # Ajax when deleting objects
+    #     if request.method == "POST" and request.is_ajax():
+    #         data_post = request.POST
+    #
+    #         # print 'data_post ========================== ', data_post
+    #
+    #         if 'datasets_id' in data_post:
+    #             data_set_id = data_post.get('datasets_id', '')
+    #
+    #             if data_set_id:
+    #                 request.session['select_data_set'] = data_set_id
+    #             status = 'success'
+    #
+    #             return HttpResponse(status)
+    #
+    #         if 'multiple' in data_post:
+    #             message = u'Are you sure you want to remove this objects:'
+    #             run_id = data_post['cur_run_id']
+    #             cur_run = get_object_or_404(CustomerAccess, pk=int(run_id))
+    #             data = '<b>"{0}"</b>'.format(cur_run)
+    #             data = '{0} {1}?'.format(message, data)
+    #
+    #             return HttpResponse(data)
+    #
+    #         if 'area_name' in data_post:
+    #             area_name = data_post.get('area_name', '')
+    #             request.session['png'] = area_name
+    #             status = 'success'
+    #
+    #             return HttpResponse(status)
+    #
+    #
+    #     # path to a GeoTIFF files
+    #     file_tif = '/home/greg/Elance_com/KeyUA/GSI/UI/images/CubicTotal_10_aws_v3.Site1.tif'
+    #     file_png = '/home/greg/Elance_com/KeyUA/GSI/UI/images/CubicTotal_10_aws_v3.Site201.png'
+    #
+    #     # Convert tif to png
+    #     # # **** 1
+    #     # check_call(('cat {0} | convert - {1}').format(file_tif, file_png), shell=True)
+    #     #
+    #     # # ***** 2
+    #     proc = Popen(['cat', file_tif], stdout=PIPE)
+    #     p2 = Popen(['convert', '-', file_png],stdin=proc.stdout)
+    #     #
+    #     # out,err = proc.communicate()
+    #
+    #     # # ***** 3
+    #     # gdal_translate HYP_50M_SR_W.tif HYP_50M_SR_W.png
+    #     # gdal_translate -of JPEG -co QUALITY=40 HYP_50M_SR_W.tif HYP_50M_SR_W.jpg
+    #     # check_call(('gdal_translate {0} {1}').format(file_tif, file_png), shell=True)
+    #     # check_call(('gdal_translate -of JPEG -co QUALITY={0} {1}').format(file_tif, file_png), shell=True)
+    #
+    #
+    #     # # ***** 4
+    #     # output_file = file_png
+    #     # output_file_root = os.path.splitext(output_file)[0]
+    #     # output_file_ext = os.path.splitext(output_file)[1]
+    #     # output_file_tmp = output_file_root + ".tmp"
+    #     #
+    #     # # Create tmp gtif
+    #     # driver = gdal.GetDriverByName("GTiff")
+    #     # dst_ds = driver.Create(output_file_tmp, 512, 512, 1, gdal.GDT_Byte )
+    #     # raster = numpy.zeros( (512, 512) )
+    #     # dst_ds.GetRasterBand(1).WriteArray(raster)
+    #     #
+    #     # # Create jpeg or rename tmp file
+    #     # if (cmp(output_file_ext.lower(),"jpg" ) == 0 or cmp(output_file_ext.lower(),"jpeg") == 0):
+    #     #     jpg_driver = gdal.GetDriverByName("PNG")
+    #     #     jpg_driver.CreateCopy( output_file, dst_ds, 0 )
+    #     #     os.remove(output_file_tmp)
+    #     # else:
+    #     #     os.rename(output_file_tmp, output_file)
+    #
+    #
+    #
+    #
+    #
+    #     # get the lat/lon values for a GeoTIFF files
+    #     try:
+    #         ds = gdal.Open(full_path_tif_file)
+    #         width = ds.RasterXSize
+    #         height = ds.RasterYSize
+    #         gt = ds.GetGeoTransform()
+    #         minx = gt[0]
+    #         miny = gt[3] + width*gt[4] + height*gt[5]
+    #         maxx = gt[0] + width*gt[1] + height*gt[2]
+    #         maxy = gt[3]
+    #         centery = (maxy + miny) / 2
+    #         centerx = (maxx + minx) / 2
+    #
+    #         cLng = centerx
+    #         cLat = centery
+    #         eLat_1 = miny
+    #         eLng_1 = minx
+    #         eLat_2 = maxy
+    #         eLng_2 = maxx
+    #     except AttributeError:
+    #         pass
+    # except Exception:
+    #     error_message = 'You have no one DataSet for view. Please contact to the admin.'
+    #     data = {
+    #         'title': title,
+    #         'customer': customer,
+    #         'url_name': url_name,
+    #         'error_message': error_message
+    #     }
+    #
+    #     return data
+    #
+
+    print 'dirs_list 2 =========================== ', dirs_list
     data = {
         'title': title,
         'customer': customer,
         'data_sets': data_sets,
         'url_name': url_name,
-        'data_set_id': data_set_id,
-        'data_set': data_set,
+        # 'data_set_id': data_set_id,
+        # 'data_set': data_set,
         'dirs_list': dirs_list,
-        'polygons_list': polygons_list,
-        'fpng_list': fpng_list,
-        'select_area': select_area,
-        'error_message': '',
-
-        'absolute_url_png_file': absolute_url_png_file,
-
-        'cLng': cLng,
-        'cLat': cLat,
-        'eLat_1': eLat_1,
-        'eLng_1': eLng_1,
-        'eLat_2': eLat_2,
-        'eLng_2': eLng_2,
-        'GOOGLE_MAP_ZOOM': GOOGLE_MAP_ZOOM,
+        # 'polygons_list': polygons_list,
+        # 'fpng_list': fpng_list,
+        # 'select_area': select_area,
+        # 'error_message': '',
+        #
+        # 'absolute_url_png_file': absolute_url_png_file,
+        #
+        # 'cLng': cLng,
+        # 'cLat': cLat,
+        # 'eLat_1': eLat_1,
+        # 'eLng_1': eLng_1,
+        # 'eLat_2': eLat_2,
+        # 'eLng_2': eLng_2,
+        # 'GOOGLE_MAP_ZOOM': GOOGLE_MAP_ZOOM,
     }
 
     return data

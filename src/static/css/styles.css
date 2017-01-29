@@ -68,7 +68,7 @@ input, textarea {
 }
 
 .left {
-    text-align: left;
+    text-align: left !important;
 }
 
 /* alignment */
@@ -82,67 +82,71 @@ input, textarea {
 }
 
 .margin-top-4 {
-    margin-top: 4px;
+    margin-top: 4px !important;
 }
 
 .margin-top-8 {
-    margin-top: 8px;
+    margin-top: 8px !important;
 }
 
 .margin-top-15 {
-    margin-top: 15px;
+    margin-top: 15px !important;
 }
 
 .margin-top-015 {
-    margin-top: -15px;
+    margin-top: -15px !important;
 }
 
 .margin-top-20 {
-    margin-top: 20px;
+    margin-top: 20px !important;
 }
 
 .margin-top-020 {
-    margin-top: -20px;
+    margin-top: -20px !important;
 }
 
 .margin-top-25 {
-    margin-top: 25px;
+    margin-top: 25px !important;
 }
 
 .margin-top-30 {
-    margin-top: 30px;
+    margin-top: 30px !important;
 }
 
 .margin-top-35 {
-    margin-top: 35px;
+    margin-top: 35px !important;
 }
 
 .margin-top-40 {
-    margin-top: 40px;
+    margin-top: 40px !important;
 }
 
 .margin-top-50 {
-    margin-top: 50px;
+    margin-top: 50px !important;
 }
 
 .margin-top-040 {
-    margin-top: -40px;
+    margin-top: -40px !important;
 }
 
 .margin-bottom-50 {
-    margin-bottom: 50px;
+    margin-bottom: 50px !important;
 }
 
 .margin-bottom-4 {
-    margin-bottom: 4px;
+    margin-bottom: 4px !important;
 }
 
 .margin-left-12 {
-    margin-left: 20px;
+    margin-left: 20px !important;
 }
 
 .margin-left-10 {
-    margin-left: 10px;
+    margin-left: 10px !important;
+}
+
+.margin-010 {
+    margin-left: -10px !important;
 }
 
 .padding-0 {
@@ -709,7 +713,7 @@ input[type="checkbox"]:checked + span {
   position: absolute;
   bottom: 10px;
   left: 25%;
-  z-index: 5;
+  z-index: 3;
   background-color: #fff;
   padding: 2px;
   text-align: left;;
@@ -722,7 +726,7 @@ input[type="checkbox"]:checked + span {
   position: absolute;
   bottom: 10px;
   left: 45%;
-  z-index: 5;
+  z-index: 3;
   background-color: #fff;
   padding: 2px;
   text-align: left;;
@@ -738,4 +742,9 @@ input[type="checkbox"]:checked + span {
     /*padding-top: 8px;*/
     /*padding-bottom: 8px;*/
     /*padding-left: 5px;*/
+}
+
+.button-link {
+    margin: -12px;
+    text-align: left;
 }

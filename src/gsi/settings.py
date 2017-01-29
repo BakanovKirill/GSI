@@ -260,10 +260,6 @@ PATH_RUNS_SCRIPTS = '/lustre/w23/mattgsi/scripts/runs'
 PROCESS_NUM = 10
 CONFIGFILE_PATH = '$RF_AUXDATA_DIR/'
 
-# results_directory
-RESULTS_DIRECTORY = '/lustre/w23/mattgsi/satdata/RF/Projects/'
-POLYGONS_DIRECTORY = '/lustre/w23/mattgsi/satdata/RF/Polygons/kml/'
-
 # number paginations
 NUM_PAGINATIONS = 7
 
@@ -274,8 +270,13 @@ EXEC_RUNS = 2000
 GOOGLE_MAP_ZOOM = 11
 DAFAULT_LAT = 63.817957
 DAFAULT_LON = -151.147061
-PNG_PATH = 'media/png'
-TIF_PATH = 'media/tif'
+# results_directory
+RESULTS_DIRECTORY = '/lustre/w23/mattgsi/satdata/RF/Projects/'
+POLYGONS_DIRECTORY = '/lustre/w23/mattgsi/satdata/RF/Polygons/kml/'
+# tif and png files path and folders
+PNG_DIRECTORY = 'media/png'
+PNG_PATH = os.path.join(BASE_DIR, PNG_DIRECTORY)
+PROJECTS_PATH = '/lustre/w23/mattgsi/satdata/RF/Projects'
 
 # Card Type
 CARD_TYPE = {
