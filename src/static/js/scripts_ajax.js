@@ -231,8 +231,6 @@ function showDataSets(obj) {
     var datasets_id = $(select_dataset).val();
     var form_url = $('#customer_section').attr('action');
 
-    // alert('obj: '+obj);
-    // alert('datasets_id: '+datasets_id);
     $.ajax({
         url: form_url,
         type: 'GET',
@@ -252,66 +250,24 @@ function showDataSets(obj) {
                 // setTimeout(function(){location.reload(true);}, 500);
                 window.location.href = form_url;
             }
-
-
-            // alert($(select_dataset).val());
-            // alert('datasets_id: '+datasets_id);
-
-            // alert('data: '+data);
-            // alert('status: '+status);
-            // $.cookie('select_dataset', $(select_option).val());
-
-            // Cookies.set('select_dataset', $(datasets_id), { expires: 1 });
-            //
-            // if(!localStorage.mySettings) {
-            //     localStorage.mySettings = select_dataset;
-            //     alert("Значение установлено");
-            // } else {
-            //     alert("Значение равно: " + localStorage.mySettings);
-            //     select_dataset = localStorage.mySettings;
-            // }
-            //
-
-
-            // $('option#'+datasets_id).attr('selected', true);
-
-            // $(name).val() = Cookies.get('select_dataset');
-
-            //
-            // alert('select_dataset: '+Cookies.get('select_dataset'));
-            //
-            // $(select_dataset).val(Cookies.get('select_dataset'));
-
-            // $(select_option).attr('selected', true);
-
-            // $(select_option).removeClass("selecter-item");
-            // $(select_option).addClass("selecter-item selected");
-
         },
     });
     return false;
-
-
-    // alert(datasets_id);
-    // alert(form_url);
 }
 
-function showSelectArea(elem) {
+function showFileSelectArea(elem) {
     var select_area = $("#show_file_arrea option:selected");
-    var area_name = $(elem).val();
+    var show_file_arrea = $(select_area).val();
     var form_url = $('#customer_section').attr('action');
 
-    // alert('elem: '+elem);
-    // alert('area_name: '+area_name);
-
-    if (elem != area_name) {
+    if (elem != show_file_arrea) {
         $.ajax({
             url: form_url,
-            type: 'POST',
+            type: 'GET',
             'async': true,
             'dataType': 'text',
             data: {
-                'area_name': area_name,
+                'show_file_arrea': show_file_arrea,
                 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
             },
             'error': function(xhr, status, error){
@@ -320,39 +276,10 @@ function showSelectArea(elem) {
                 var message = 'An unexpected error occurred. Try later.';
             },
             'success': function(data, status, xhr){
-                // alert($(select_dataset).val());
-                // alert('datasets_id: '+datasets_id);
-
-                // alert('data: '+data);
-                // alert('status: '+status);
-                // $.cookie('select_dataset', $(select_option).val());
-
-                // Cookies.set('select_dataset', $(datasets_id), { expires: 1 });
-                //
-                // if(!localStorage.mySettings) {
-                //     localStorage.mySettings = select_dataset;
-                //     alert("Значение установлено");
-                // } else {
-                //     alert("Значение равно: " + localStorage.mySettings);
-                //     select_dataset = localStorage.mySettings;
-                // }
-                //
-                setTimeout(function(){location.reload(true);}, 500);
-
-                // $('option#'+datasets_id).attr('selected', true);
-
-                // $(name).val() = Cookies.get('select_dataset');
-
-                //
-                // alert('select_dataset: '+Cookies.get('select_dataset'));
-                //
-                // $(select_dataset).val(Cookies.get('select_dataset'));
-
-                // $(select_option).attr('selected', true);
-
-                // $(select_option).removeClass("selecter-item");
-                // $(select_option).addClass("selecter-item selected");
-
+                if (elem != show_file_arrea) {
+                    // setTimeout(function(){location.reload(true);}, 500);
+                    window.location.href = form_url;
+                }
             },
         });
         return false;

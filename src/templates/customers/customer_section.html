@@ -38,7 +38,7 @@
                     <!-- [END region_toolbar] -->
 
                     <!-- GSi MAP -->
-                    <!-- <div id="map"></div> -->
+                    <div id="map"></div>
                     <!-- END GSi MAP -->
 
                     <!-- GSi LOGO -->
@@ -62,10 +62,10 @@
             <!-- GSi Info Data -->
             <div class="row">
                 <div class="col-md-6 col-md-offset-6 margin-top-25 padding-lr-5">
-                    <select class="form-control" name="select_file_area" id="show_file_arrea" onchange="showSelectArea({{ show_file }})">
+                    <select class="form-control" name="select_file_area" id="show_file_arrea" onchange="showFileSelectArea('{{ show_file }}')">
                         {% if files_infopanel %}
                             {% for file in files_infopanel %}
-                                <option id="{{ file }}" name="{{ file }}" value="{{ file }}">{{ file }}</option>
+                                <option id="{{ file }}" name="{{ file }}" value="{{ file }}" {% if file == show_file %}selected="selected"{% endif %}>{{ file }}</option>
                             {% endfor %}
                         {% else %}
                             <option id="none_file" name="none_file" value="none_file">No chosen files</option>
