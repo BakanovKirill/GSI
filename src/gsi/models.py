@@ -190,7 +190,7 @@ class InputDataDirectory(UnicodeNameMixin, models.Model):
         except IntegrityError, e:
             pass
         update_root_list_files()
-        update_list_dirs()
+        # update_list_dirs()
 
 
 class ListTestFiles(UnicodeNameMixin, models.Model):
