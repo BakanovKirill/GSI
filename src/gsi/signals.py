@@ -66,7 +66,7 @@ def log_it_run(sender, instance, **kwargs):
         log_it(instance.user, 'Run', instance.run_base.id, message)
 
 
-@receiver(post_save, sender=InputDataDirectory)
-def mkdir(sender, instance, **kwargs):
-    """**When created new InputDataDirectory object then creating new directory with name new_object.name .**"""
-    update_list_files(instance)
+# @receiver(post_save, sender=InputDataDirectory)
+# def mkdir(sender, instance, **kwargs):
+#     """**When created new InputDataDirectory object then creating new directory with name new_object.name .**"""
+#     update_list_files(instance)
