@@ -31,7 +31,7 @@ from cards.card_update_create import (qrf_update_create, rfscore_update_create, 
                                     mergecsv_update_create, rftrain_update_create, randomforest_update_create,
                                     calcstats_update_create)
 from core.utils import (make_run, get_dir_root_static_path, get_path_folder_run, slash_remove_from_path,
-                        get_files_dirs, create_sub_dir, get_copy_name, get_files)
+                        get_files_dirs, create_sub_dir, get_copy_name, get_files, update_list_dirs)
 from core.get_post import get_post
 from core.copy_card import create_copycard
 from core.paginations import paginations
@@ -557,8 +557,6 @@ def card_sequence_update(request, run_id, cs_id):
     """
 
     home_var = HomeVariables.objects.all()
-    rf_auxdata_path = home_var[0].RF_AUXDATA_DIR
-    files, error = get_files(rf_auxdata_path, '.cfg')
     card_sequence = get_object_or_404(CardSequence, pk=cs_id)
     card_sequence_cards = CardSequence.cards.through.objects.filter(
         sequence_id=cs_id)
@@ -566,6 +564,16 @@ def card_sequence_update(request, run_id, cs_id):
     url_process_card = 'proces_card_sequence_card_edit'
     cs_configfile = card_sequence.configfile
     form = None
+
+    try:
+        rf_auxdata_path = home_var[0].RF_AUXDATA_DIR
+        files, error = get_files(rf_auxdata_path, '.cfg')
+    except Exception, e:
+        print 'card_sequence_update Exception =============================== ', e
+        return HttpResponseRedirect(
+            u'%s?danger_message=%s' % (reverse('card_sequence_update', args=[run_id, cs_id]),
+            (u'The directory "{0}" does not exist.'.format(rf_auxdata_path)))
+        )
 
     REVERCE_URL = {
         'qrf': ['runid_csid_qrf_add', [run_id, cs_id]],
@@ -2075,6 +2083,7 @@ def input_data_dir_list(request):
     input_data_dir_name = ''
     url_name = 'input_data_dir_list'
     but_name = 'static_data'
+    update_list_dirs()
 
     # Sorted by name
     if request.method == "GET":
@@ -2191,7 +2200,6 @@ def input_data_dir_add(request):
     }
     func = data_dir_update_create
     form = None
-    available_files = InputDataDirectory.objects.all()
 
     # Handling POST request
     if request.method == "POST":
@@ -2210,7 +2218,6 @@ def input_data_dir_add(request):
         'url_form': url_form,
         'template_name': template_name,
         'form': form,
-        'available_files': available_files,
         'url_name': url_name,
         'but_name': but_name,
     }

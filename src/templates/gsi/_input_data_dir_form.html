@@ -11,14 +11,17 @@
             <span class="field-error">{{ form.name }}</span>
             <b class="error-form">{{ form.name.errors }}</b>
         {% endif %}
+        <span class="help-block">
+            {{ form.name.help_text }}
+        </span>
     </div>
 </div>
 
 <div class="row margin-top-50">
-    <div class="col-md-2">
+    <div class="col-md-2 col-md-offset-6">
         <button type="submit" name="cancel_button" class="btn btn-default btn-block">Cancel</button>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-2">
         <button type="submit" name="save_and_another_button" class="btn btn-primary btn-block">Save and another</button>
     </div>
     <!--<div class="col-md-4">-->
@@ -26,7 +29,7 @@
             <!--Save and continue editing-->
         <!--</button>-->
     <!--</div>-->
-    <div class="col-md-2 col-md-offset-4">
+    <div class="col-md-2">
         <button type="submit" name="save_button" class="btn btn-primary btn-block">Save</button>
     </div>
 </div>

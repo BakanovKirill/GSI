@@ -397,7 +397,7 @@ class RunBase(UnicodeNameMixin, models.Model):
 
     def save(self, *args, **kwargs):
         """The method 'save' records the modified date when the object was changed"""
-        
+
         self.date_modified = datetime.now()
         return super(RunBase, self).save(*args, **kwargs)
 

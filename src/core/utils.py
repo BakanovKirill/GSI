@@ -382,14 +382,15 @@ def update_list_dirs():
 	all_dirs = InputDataDirectory.objects.all()
 
 	try:
-		for dir in all_dirs:
-			dir_path = os.path.join(root_path, dir.name)
+		for dr in all_dirs:
+			dir_path = os.path.join(root_path, dr.name)
 
 			if not os.path.exists(dir_path):
-				ListTestFiles.objects.filter(input_data_directory=dir).delete()
-				InputDataDirectory.objects.filter(name=dir.name).delete()
+				dr.full_path = dir_path
+				dr.save()
+				create_new_folder(dr.name)
 	except OSError, e:
-		pass
+		return
 
 
 def get_path_folder_run(run):

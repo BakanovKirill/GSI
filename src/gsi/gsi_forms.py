@@ -324,7 +324,8 @@ class InputDataDirectoryForm(forms.ModelForm):
 
     name = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
-        label=u'Name', )
+        label=u'Path',
+        help_text=u"Enter path to an Input Data Directory")
 
     class Meta:
         model = InputDataDirectory
