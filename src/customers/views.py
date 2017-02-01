@@ -1036,8 +1036,7 @@ def customer_section(request):
             request.session['file_info_panel'] = customer_info_panel[0].file_area_name
             show_file = request.session['file_info_panel']
         else:
-            request.session['file_info_panel'] = customer_info_panel[0].file_area_name
-            show_file = request.session['file_info_panel']
+            request.session['file_info_panel'] = show_file
         request.session.set_expiry(172800)
 
     # AJAX clear selection
