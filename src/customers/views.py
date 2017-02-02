@@ -933,7 +933,7 @@ ATTRIBUTE_NAMES = [
     'mean_ConditionalMean',
     'mean_ConditionalMedian',
     'mean_ConditionalMin',
-    'mean_LowerQurtile',
+    'mean_LowerQuartile',
     'mean_Quantile'
 ]
 
