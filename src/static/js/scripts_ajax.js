@@ -260,7 +260,10 @@ function showFileSelectArea(elem) {
     var show_file_arrea = $(select_area).val();
     var form_url = $('#customer_section').attr('action');
 
-    if (elem != show_file_arrea) {
+    // alert(elem != show_file_arrea);
+    // alert(show_file_arrea);
+
+    if (elem != show_file_arrea || show_file_arrea != 'none_file') {
         $.ajax({
             url: form_url,
             type: 'GET',
@@ -271,9 +274,10 @@ function showFileSelectArea(elem) {
                 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
             },
             'error': function(xhr, status, error){
-                alert(status);
-                alert(error);
+                // alert(status);
+                // alert(error);
                 var message = 'An unexpected error occurred. Try later.';
+                alert(message);
             },
             'success': function(data, status, xhr){
                 if (elem != show_file_arrea) {

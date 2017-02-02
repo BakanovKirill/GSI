@@ -963,6 +963,8 @@ def customer_section(request):
     customer_info_panel = CustomerInfoPanel.objects.filter(user=request.user)
     title = 'Customer {0} section'.format(customer)
     url_name = 'customer_section'
+    warning_message = ''
+    error = False
 
     project_directory = ''
     info_panel = None
@@ -1077,10 +1079,12 @@ def customer_section(request):
                 dirs_list.append(sd)
     except Exception, e:
         print 'Exception 02 ========================= ', e
-        return HttpResponseRedirect(
-            u'%s?danger_message=%s' % (reverse('customer_section'),
-            (u'The directory "{0}" does not exist!'.format(project_directory)))
-        )
+        warning_message = u'The directory "{0}" does not exist!'.format(project_directory)
+        error = True
+        # return HttpResponseRedirect(
+        #     u'%s?danger_message=%s' % (reverse('customer_section'),
+        #     (u'The directory "{0}" does not exist!'.format(project_directory)))
+        # )
 
     # Handling POST request
     if request.method == "POST":
@@ -1147,6 +1151,7 @@ def customer_section(request):
                                         url_png=url_png)
                         info_panel.save()
             elif not 'root_filenames[]' in data_post and 'statistics[]' in data_post:
+                print 'NOT root_filenames ====================================='
                 info_panel = CustomerInfoPanel.objects.filter(user=request.user).delete()
                 statistics = data_post.getlist('statistics[]')
                 data_set = DataSet.objects.get(pk=data_set_id)
@@ -1263,15 +1268,18 @@ def customer_section(request):
                         print 'GDAL AttributeError =============================== ', e
                 except CustomerInfoPanel.DoesNotExist, e:
                     print 'CustomerInfoPanel.DoesNotExist =============================== ', e
-                    return HttpResponseRedirect(
-                        u'%s?danger_message=%s' % (reverse('customer_section'),
-                        (u'The file "{0}" does not exist. Perhaps the data is outdated. Please refresh the page and try again.'.format(show_file)))
-                    )
+                    warning_message = u'The file "{0}" does not exist. Perhaps the data is outdated. Please refresh the page and try again.'.format(show_file)
+                    # return HttpResponseRedirect(
+                    #     u'%s?danger_message=%s' % (reverse('customer_section'),
+                    #     (u'The file "{0}" does not exist. Perhaps the data is outdated. Please refresh the page and try again.'.format(show_file)))
+                    # )
 
     data = {
         'title': title,
         'customer': customer,
         'url_name': url_name,
+        'warning_message': warning_message,
+        'error': error,
 
         'info_panel': info_panel,
 

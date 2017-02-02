@@ -278,6 +278,7 @@
                                     {% endfor %}
                                 </select>
 
+                                {% if not error %}
                                 <label class="control-label margin-top-25">Statistics:</label>
                                 <select class="form-control margin-top-10 disable" name="statistics[]" multiple size="6">
                                     <option value="mean_ConditionalMax" {% if 'mean_ConditionalMax' in statisctics_infopanel %}selected="selected"{% endif %}>mean_ConditionalMax</option>
@@ -287,6 +288,7 @@
                                     <option value="mean_LowerQurtile" {% if 'mean_LowerQurtile' in statisctics_infopanel %}selected="selected"{% endif %}>mean_LowerQurtile</option>
                                     <option value="mean_Quantile" {% if 'mean_Quantile' in statisctics_infopanel %}selected="selected"{% endif %}>mean_Quantile</option>
                                 </select>
+                                {% endif %}
 
                                 <label class="control-label margin-top-25">Polygons:</label>
                                 <select class="form-control margin-top-10" name="polygons[]" multiple size="8">
