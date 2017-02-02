@@ -1213,6 +1213,7 @@ def customer_section(request):
             file_area = customer_info_panel.values_list('file_area_name', flat=True)
             attribute_name = customer_info_panel.values_list('attribute_name', flat=True)
             statisctics = customer_info_panel.values_list('statisctic', flat=True)
+            files_area_name = customer_info_panel.values_list('file_area_name', flat=True)
 
             if file_area[0]:
                 files_infopanel = [n for n in file_area]
@@ -1223,6 +1224,9 @@ def customer_section(request):
 
             if statisctics[0]:
                 statisctics_infopanel = [n for n in statisctics]
+
+            if files_area_name[0]:
+                show_file = files_area_name[0]
 
         if show_file:
             if CustomerInfoPanel.objects.filter(
