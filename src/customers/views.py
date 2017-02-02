@@ -908,14 +908,13 @@ def customer_access_edit(request, customer_access_id):
     return data
 
 
-# def get_file_filepath(f, path_tif, path_png):
-#     ext_png = '{0}.png'
-#     ext_tif = '{0}.tif'
-#
-#     full_path_tif = os.path.join(path_tif, ext_tif)
-#     full_path_png = os.path.join(path_png, ext_png)
-#
-#     return full_path_tif, full_path_png
+def remove_file_png(file_path):
+    # Get the png file for the delete
+    try:
+        if os.path.exists(file_path):
+            os.remove(file_path)
+    except Exception, e:
+        print 'Exception remove file png ========================= ', e
 
 
 def check_current_dataset(request, data_post):
@@ -964,7 +963,7 @@ def customer_section(request):
     title = 'Customer {0} section'.format(customer)
     url_name = 'customer_section'
     warning_message = ''
-    error = False
+    # error = False
 
     project_directory = ''
     info_panel = None
@@ -1044,12 +1043,19 @@ def customer_section(request):
     # AJAX clear selection
     if request.is_ajax():
         data_get = request.GET
+        cip = CustomerInfoPanel.objects.filter(user=request.user)
 
         # When user celect a new DataSet, the previous celected DataSet to remove
         if 'datasets_id' in data_get:
+            for ip in cip:
+                remove_file_png(ip.png_path)
+
             check_current_dataset(request, data_get)
 
         if 'remove_all_selected_items' in data_get:
+            for ip in cip:
+                remove_file_png(ip.png_path)
+
             CustomerInfoPanel.objects.filter(user=request.user).delete()
 
         if 'show_file_arrea' in data_get:
@@ -1080,7 +1086,7 @@ def customer_section(request):
     except Exception, e:
         print 'Exception 02 ========================= ', e
         warning_message = u'The directory "{0}" does not exist!'.format(project_directory)
-        error = True
+        # error = True
         # return HttpResponseRedirect(
         #     u'%s?danger_message=%s' % (reverse('customer_section'),
         #     (u'The directory "{0}" does not exist!'.format(project_directory)))
@@ -1151,7 +1157,6 @@ def customer_section(request):
                                         url_png=url_png)
                         info_panel.save()
             elif not 'root_filenames[]' in data_post and 'statistics[]' in data_post:
-                print 'NOT root_filenames ====================================='
                 info_panel = CustomerInfoPanel.objects.filter(user=request.user).delete()
                 statistics = data_post.getlist('statistics[]')
                 data_set = DataSet.objects.get(pk=data_set_id)
@@ -1225,8 +1230,7 @@ def customer_section(request):
             if statisctics[0]:
                 statisctics_infopanel = [n for n in statisctics]
 
-            if files_area_name[0]:
-                show_file = files_area_name[0]
+            # print 'show_file ================================= ', show_file
 
         if show_file:
             if CustomerInfoPanel.objects.filter(
@@ -1242,9 +1246,13 @@ def customer_section(request):
 
                     # Convert tif to png
                     try:
-                        # check_call(('cat {0} | convert - {1}').format(file_tif, file_png), shell=True)
-                        proc = Popen(['cat', file_tif], stdout=PIPE)
-                        p2 = Popen(['convert', '-', file_png],stdin=proc.stdout)
+                        if os.path.exists(file_tif):
+                            # check_call(('cat {0} | convert - {1}').format(file_tif, file_png), shell=True)
+                            proc = Popen(['cat', file_tif], stdout=PIPE)
+                            p2 = Popen(['convert', '-', file_png],stdin=proc.stdout)
+                        else:
+                            warning_message = u'The images "{0}" does not exist!'.format(
+                                                    customer_info_panel_file.file_area_name)
                     except Exception, e:
                         print 'Popen Exception =============================== ', e
 
@@ -1283,7 +1291,7 @@ def customer_section(request):
         'customer': customer,
         'url_name': url_name,
         'warning_message': warning_message,
-        'error': error,
+        # 'error': error,
 
         'info_panel': info_panel,
 
