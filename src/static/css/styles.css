@@ -680,8 +680,8 @@ input[type="checkbox"]:checked + span {
     margin-left: -10px;
 }
 
-.btn-draw {
-    width: 10px;
+.img-draw {
+    align-items: center;
 }
 
 #floating-panel {
