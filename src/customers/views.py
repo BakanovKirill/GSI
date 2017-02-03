@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Views for the customers app."""
 import os, numpy
+import os.path, time
 import subprocess
 from PIL import Image
 from subprocess import check_call, Popen, PIPE
@@ -928,6 +929,20 @@ def check_current_dataset(request, data_post):
         info_panel = CustomerInfoPanel.objects.filter(user=request.user).delete()
 
 
+def check_date_files(file_tif, file_png):
+    try:
+        f_tif = os.path.getmtime(file_tif)
+        f_png = os.path.getmtime(file_png)
+
+        if f_tif > f_png:
+            return True
+    except Exception, e:
+        print 'Exception check_date_files ========================= ', e
+        return True
+
+    return False
+
+
 ATTRIBUTE_NAMES = [
     'mean_ConditionalMax',
     'mean_ConditionalMean',
@@ -1246,13 +1261,16 @@ def customer_section(request):
 
                     # Convert tif to png
                     try:
-                        if os.path.exists(file_tif):
-                            # check_call(('cat {0} | convert - {1}').format(file_tif, file_png), shell=True)
-                            proc = Popen(['cat', file_tif], stdout=PIPE)
-                            p2 = Popen(['convert', '-', file_png],stdin=proc.stdout)
-                        else:
-                            warning_message = u'The images "{0}" does not exist!'.format(
-                                                    customer_info_panel_file.file_area_name)
+                        check_date = check_date_files(file_tif, file_png)
+                        
+                        if check_date:
+                            if os.path.exists(file_tif):
+                                # check_call(('cat {0} | convert - {1}').format(file_tif, file_png), shell=True)
+                                proc = Popen(['cat', file_tif], stdout=PIPE)
+                                p2 = Popen(['convert', '-', file_png],stdin=proc.stdout)
+                            else:
+                                warning_message = u'The images "{0}" does not exist!'.format(
+                                                        customer_info_panel_file.file_area_name)
                     except Exception, e:
                         print 'Popen Exception =============================== ', e
 
