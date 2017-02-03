@@ -221,7 +221,7 @@ function getCheckboxValues() {
     var list = null;
     list = $('.checkboxes_root_filenames :checkbox:checked');
 
-    alert(list.length);
+    // alert(list.length);
 
 	return list;
 }

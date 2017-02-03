@@ -9,6 +9,12 @@ function onOffSubMenuSetupStaticData() {
             $('#icon_static').toggleClass("fa-chevron-down", "fa-chevron-right");
             $('#sweeties').toggleClass("sub-menu-visible", "sub-menu-no-visible");
             $('#sweeties').toggleClass("sub-menu-no-visible", "sub-menu-visible");
+
+            $('#icon_static2').removeClass("fa-chevron-down");
+            $('#sweeties2').removeClass("sub-menu-visible");
+
+            $('#icon_static2').addClass("fa-chevron-right");
+            $('#sweeties2').addClass("sub-menu-no-visible");
         };
     }
 }
@@ -24,6 +30,12 @@ function onOffSubMenuUploadTestData() {
         $('#icon_static2').toggleClass("fa-chevron-down", "fa-chevron-right");
         $('#sweeties2').toggleClass("sub-menu-visible", "sub-menu-no-visible");
         $('#sweeties2').toggleClass("sub-menu-no-visible", "sub-menu-visible");
+
+        $('#icon_static').removeClass("fa-chevron-down");
+        $('#sweeties').removeClass("sub-menu-visible");
+
+        $('#icon_static').addClass("fa-chevron-right");
+        $('#sweeties').addClass("sub-menu-no-visible");
     };
   }
 }

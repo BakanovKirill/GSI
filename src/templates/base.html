@@ -117,7 +117,7 @@
 
                                 <!-- sub setup static data menu -->
                                 <div id="sweeties" class="{% if but_name == 'static_data' %}sub-menu-visible{% else %}sub-menu-no-visible{% endif %}">
-                                    <button class="title {% if but_name == 'static_data' %}active-static-data{% endif %}" id="title" onclick="showSubMenuStaticData()">
+                                    <button class="title {% if but_name == 'static_data' %}active-static-data{% endif %}" id="title">
                                         <img class="right-indent-10" src="{% static 'img/setup_static_data.png' %}">
                                         SETUP STATIC DATA
                                         <i id="icon_static" class="fa {% if but_name == 'static_data' %}fa-chevron-down{% else %}fa-chevron-right{% endif %} icon-visible"></i>
@@ -172,7 +172,7 @@
 
                                 <!-- sub setup static data menu -->
                                 <div id="sweeties2" class="{% if but_name == 'info_panel' %}sub-menu-visible{% else %}sub-menu-no-visible{% endif %}">
-                                    <button class="title {% if but_name == 'info_panel' %}active-static-data{% endif %}" id="title2" onclick="onOffSubMenuUploadTestData()">
+                                    <button class="title {% if but_name == 'info_panel' %}active-static-data{% endif %}" id="title2">
                                         <img class="right-indent-10" src="{% static 'img/setup_static_data.png' %}">
                                         INFO PANEL MAPPING
                                         <i id="icon_static2" class="fa {% if but_name == 'info_panel' %}fa-chevron-down{% else %}fa-chevron-right{% endif %} icon-visible"></i>
