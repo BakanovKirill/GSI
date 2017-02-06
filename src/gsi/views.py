@@ -2132,12 +2132,18 @@ def input_data_dir_list(request):
             for dir_id in request.POST.getlist('input_data_dirs_select'):
                 cur_dir = get_object_or_404(InputDataDirectory, pk=dir_id)
                 input_data_dir_name += '"' + cur_dir.name + '", '
-                cur_dir.delete()
+                collate_cards = Collate.objects.filter(input_data_directory=cur_dir)
 
-                dir_path = os.path.join(home_var[0].RF_AUXDATA_DIR,
-                                        cur_dir.name)
+                for col_card in collate_cards:
+                    col_card.input_data_directory = None
+                    col_card.save()
+
+                dir_path = os.path.join(home_var[0].RF_AUXDATA_DIR, cur_dir.name)
+
                 if os.path.exists(dir_path):
                     shutil.rmtree(dir_path)
+
+                cur_dir.delete()
 
             input_data_dir_name = input_data_dir_name[:-2]
 
@@ -2149,10 +2155,17 @@ def input_data_dir_list(request):
             cur_dir = get_object_or_404(
                 InputDataDirectory, pk=request.POST.get('delete_button'))
             input_data_dir_name += '"' + cur_dir.name + '"'
-            cur_dir.delete()
             dir_path = os.path.join(home_var[0].RF_AUXDATA_DIR, cur_dir.name)
+            collate_cards = Collate.objects.filter(input_data_directory=cur_dir)
+
+            for col_card in collate_cards:
+                col_card.input_data_directory = None
+                col_card.save()
+
             if os.path.exists(dir_path):
                 shutil.rmtree(dir_path)
+
+            cur_dir.delete()
 
             return HttpResponseRedirect(u'%s?status_message=%s' % (
                 reverse('input_data_dir_list'), (

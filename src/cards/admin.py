@@ -38,6 +38,7 @@ class CollateAdminForm(forms.ModelForm):
 
 class CollateAdmin(admin.ModelAdmin):
     form = CollateAdminForm
+    list_display = ('area', 'input_data_directory', 'mode', 'output_tile_subdir',)
     filter_horizontal = ('input_files',)
     actions = ('update_list_files',)
 

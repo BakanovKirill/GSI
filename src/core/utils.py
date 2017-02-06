@@ -346,6 +346,8 @@ def update_list_files(obj_dir):
 	home_var = Home.objects.all()
 	root_path = home_var[0].RF_AUXDATA_DIR
 
+	ListTestFiles.objects.filter(input_data_directory=None).delete()
+
 	if obj_dir is not None:
 		full_dir_path = os.path.join(obj_dir.full_path)
 	else:
@@ -354,6 +356,7 @@ def update_list_files(obj_dir):
 	try:
 		root, dirs, files = os.walk(full_dir_path).next()
 		tif_files = filter(lambda x: x.endswith('.tif'), files)
+
 		files_exclude = ListTestFiles.objects.filter(input_data_directory=obj_dir).exclude(name__in=tif_files).delete()
 		files_include = ListTestFiles.objects.filter(input_data_directory=obj_dir).values_list('name')
 
@@ -367,8 +370,10 @@ def update_list_files(obj_dir):
 				obj.date_modified = datetime.fromtimestamp(os.path.getmtime(file_path))
 				obj.save()
 	except StopIteration, e:
+		print 'UPDATE LIST StopIteration =========================== ', e
 		pass
 	except OSError, e:
+		print 'UPDATE LIST OSError =========================== ', e
 		pass
 
 
@@ -384,12 +389,19 @@ def update_list_dirs():
 	try:
 		for dr in all_dirs:
 			dir_path = os.path.join(root_path, dr.name)
+			obj_full_path = dr.full_path
 
-			if not os.path.exists(dir_path):
+			if not os.path.exists(obj_full_path):
 				dr.full_path = dir_path
 				dr.save()
-				create_new_folder(dr.name)
+				# if not os.path.exists(dir_path):
+				# 	dr.delete()
+				# else:
+				# 	dr.full_path = dir_path
+				# 	dr.save()
+					# create_new_folder(dr.name)
 	except OSError, e:
+		print 'update_list_dirs ERROR ========================= ', e
 		return
 
 

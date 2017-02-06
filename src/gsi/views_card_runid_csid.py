@@ -350,9 +350,12 @@ def cs_runid_csid_collate_edit(request, run_id, cs_id, card_id, collate_id):
 	content_type = get_object_or_404(ContentType, app_label='cards', model='collate')
 	card_sequence = get_object_or_404(CardSequence, pk=cs_id)
 
+	update_list_files(collate_card.input_data_directory)
+	input_files_list = collate_card.input_files.values_list('id', flat=True)
+
 	available_files = ListTestFiles.objects.filter(
 			input_data_directory=collate_card.input_data_directory).exclude(
-			id__in=collate_card.input_files.values_list('id', flat=True))
+			id__in=input_files_list)
 	chosen_files = collate_card.input_files.filter(input_data_directory=collate_card.input_data_directory)
 
 	available_files = available_files.order_by('name')
