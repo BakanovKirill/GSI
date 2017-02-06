@@ -2266,13 +2266,8 @@ def input_data_dir_edit(request, dir_id):
 
     # Handling POST request
     if request.method == "POST":
-        response = get_post(
-            request,
-            InputDataDirectoryForm,
-            'Input Data Directory',
-            reverse_url,
-            func,
-            item_id=dir_id)
+        response = get_post(request, InputDataDirectoryForm, 'Input Data Directory',
+                            reverse_url, func, item_id=dir_id)
 
         if isinstance(response, HttpResponseRedirect):
             return response

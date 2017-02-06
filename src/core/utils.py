@@ -389,11 +389,15 @@ def update_list_dirs():
 	try:
 		for dr in all_dirs:
 			dir_path = os.path.join(root_path, dr.name)
-			obj_full_path = dr.full_path
+			# obj_full_path = dr.full_path
 
-			if not os.path.exists(obj_full_path):
+			if dir_path != dr.full_path:
 				dr.full_path = dir_path
 				dr.save()
+
+			# if not os.path.exists(obj_full_path):
+			# 	dr.full_path = dir_path
+			# 	dr.save()
 				# if not os.path.exists(dir_path):
 				# 	dr.delete()
 				# else:
