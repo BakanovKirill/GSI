@@ -26,6 +26,22 @@
             </div>
             <!-- End Draw Menu -->
 
+            <!-- GSi Info Data -->
+            <div class="row">
+                <div class="col-md-6 col-md-offset-6 margin-top-25 padding-lr-5">
+                    <select class="form-control" name="select_file_area" id="show_file_arrea" onchange="showFileSelectArea('{{ show_file }}')">
+                        {% if files_infopanel %}
+                            {% for file in files_infopanel %}
+                                <option id="{{ file }}" name="{{ file }}" value="{{ file }}" {% if file == show_file %}selected="selected"{% endif %}>{{ file }}</option>
+                            {% endfor %}
+                        {% else %}
+                            <option id="none_file" name="none_file" value="none_file">No chosen files</option>
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
+            <!-- End GSi Info Data -->
+
             <!-- Google map -->
             <div class="row margin-top-35">
                 <div class="col-md-12 margin-010">
@@ -59,21 +75,6 @@
             </div>
             <!-- End Google map -->
 
-            <!-- GSi Info Data -->
-            <div class="row">
-                <div class="col-md-6 col-md-offset-6 margin-top-25 padding-lr-5">
-                    <select class="form-control" name="select_file_area" id="show_file_arrea" onchange="showFileSelectArea('{{ show_file }}')">
-                        {% if files_infopanel %}
-                            {% for file in files_infopanel %}
-                                <option id="{{ file }}" name="{{ file }}" value="{{ file }}" {% if file == show_file %}selected="selected"{% endif %}>{{ file }}</option>
-                            {% endfor %}
-                        {% else %}
-                            <option id="none_file" name="none_file" value="none_file">No chosen files</option>
-                        {% endif %}
-                    </select>
-                </div>
-            </div>
-            <!-- End GSi Info Data -->
         </form>
 
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4HosogGf9o2-Cnef_SiUR6jZYVszGkGY&signed_in=true"></script>
