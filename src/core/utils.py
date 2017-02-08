@@ -11,7 +11,7 @@ import multiprocessing
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
-from gsi.settings import EXECUTE_FE_COMMAND, PROCESS_NUM, STATIC_DIR, FE_SUBMIT, EXEC_RUNS
+from gsi.settings import EXECUTE_FE_COMMAND, PROCESS_NUM, STATIC_DIR, FE_SUBMIT, EXEC_RUNS, PATH_RUNS_SCRIPTS
 from core.multithreaded import MultiprocessingCards
 
 
@@ -414,12 +414,17 @@ def get_path_folder_run(run):
 	from gsi.models import HomeVariables as Home
 
 	home_var = Home.objects.all()
+	path = {}
 
-	# home dir scripts
-	GSI_HOME = settings.SCRIPTS_HOME
-	path_runs_logs = GSI_HOME + 'scripts/runs/R_{0}/LOGS'.format(run.id)
+	# # home dir scripts
+	# GSI_HOME = settings.SCRIPTS_HOME
+	# path_runs_logs = GSI_HOME + 'scripts/runs/R_{0}/LOGS'.format(run.id)
 
-	return path_runs_logs
+	# path to scripts for runs and runs log
+	path['path_runs'] = PATH_RUNS_SCRIPTS + '/R_{0}/'.format(run.id)
+	path['path_runs_logs'] = PATH_RUNS_SCRIPTS + '/R_{0}/LOGS'.format(run.id)
+
+	return path
 
 
 def copy_file(src, dest, card_name):
@@ -543,6 +548,7 @@ def make_run(run_base, user):
 				first_script['run'].state = 'running'
 				first_script['run'].save()
 		except Exception, e:
+			print 'Exception make_run ==================================== ', e
 			pass
 
 		# record in the log model of gsi app path to script
@@ -616,7 +622,7 @@ def create_scripts(run, sequence, card, step):
 		EXECUTABLE = ''
 		run_parallel = False
 
-	# path to scripts for runs and steps
+	# path to scripts for runs and runs log
 	path_runs = GSI_HOME + 'scripts/runs/R_{0}/'.format(run.id)
 	path_runs_logs = GSI_HOME + 'scripts/runs/R_{0}/LOGS'.format(run.id)
 
@@ -625,6 +631,7 @@ def create_scripts(run, sequence, card, step):
 		os.makedirs(path_runs)
 		os.makedirs(path_runs_logs)
 	except OSError, e:
+		print 'Exception OSError ==================================== ', e
 		pass
 	finally:
 		try:

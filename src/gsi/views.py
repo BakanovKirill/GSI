@@ -569,7 +569,6 @@ def card_sequence_update(request, run_id, cs_id):
         rf_auxdata_path = home_var[0].RF_AUXDATA_DIR
         files, error = get_files(rf_auxdata_path, '.cfg')
     except Exception, e:
-        print 'card_sequence_update Exception =============================== ', e
         return HttpResponseRedirect(
             u'%s?danger_message=%s' % (reverse('card_sequence_update', args=[run_id, cs_id]),
             (u'The directory "{0}" does not exist.'.format(rf_auxdata_path)))
@@ -783,6 +782,7 @@ def submit_run(request):
                 data = u"For start choose Run"
                 return HttpResponse(data)
         except Exception, e:
+            print 'Exception submit_run ==================================== ', e
             pass
 
     # paginations
@@ -1003,7 +1003,7 @@ def view_log_file(request, run_id, card_id, status):
         log_path = log.log_file_path
     except Exception:
         log_name = '{}_{}.log'.format(run.id, run_step_card.card_item.id)
-        log_path = get_path_folder_run(run)
+        log_path = get_path_folder_run(run)['path_runs_logs']
         log = Log.objects.create(
             name=log_name, log_file=log_name, log_file_path=log_path)
         run.log = log
@@ -1071,7 +1071,7 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
         log_path = log.log_file_path
     except Exception:
         log_name = '{}_{}.log'.format(run.id, run_step_card.card_item.id)
-        log_path = get_path_folder_run(run)
+        log_path = get_path_folder_run(run)['path_runs_logs']
         log = Log.objects.create(
             name=log_name, log_file=log_name, log_file_path=log_path)
         run.log = log
@@ -1085,11 +1085,10 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
             for line in fd.readlines():
                 log_info += line + '<br />'
         except Exception, e:
-            print 'ERROR Out view_log_file_sub_card: ', e
             return HttpResponseRedirect(u'%s?danger_message=%s' % (
-                reverse(
-                    'sub_card_details', args=[run_id, card_id]),
-                (u'Log Out file "{0}" not found.'.format(card_name))))
+                    reverse('sub_card_details', args=[run_id, card_id]),
+                            (u'Log Out file "{0}" not found.'.format(card_name)))
+                )
     elif status == 'Error':
         card_name = 'runcard_{0}_{1}.err'.format(card_id, count)
         path_log_file = os.path.join(str(log_path), str(card_name))
@@ -1098,11 +1097,10 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
             for line in fd.readlines():
                 log_info += line + '<br />'
         except Exception, e:
-            print 'ERROR Error view_log_file_sub_card: ', e
             return HttpResponseRedirect(u'%s?danger_message=%s' % (
-                reverse(
-                    'sub_card_details', args=[run_id, card_id]),
-                (u'Log Error file "{0}" not found.'.format(card_name))))
+                    reverse('sub_card_details', args=[run_id, card_id]),
+                    (u'Log Error file "{0}" not found.'.format(card_name)))
+                )
 
     data = {
         'title': title,

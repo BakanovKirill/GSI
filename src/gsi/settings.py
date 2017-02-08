@@ -140,9 +140,6 @@ REST_FRAMEWORK = {
     'PAGINATE_BY': 10
 }
 
-# home folder for new cripts
-SCRIPTS_HOME = '/lustre/w23/mattgsi/'
-
 # settings for django-registration-redux
 REGISTRATION_OPEN = True
 LOGIN_URL = 'users:auth_login'
@@ -253,6 +250,10 @@ LOGGING = {
         },
     }
 }
+
+# home folder for new cripts
+# SCRIPTS_HOME = '/lustre/w23/mattgsi/'
+SCRIPTS_HOME = '/lustre/home/i214/mattgsi/indy0-lustre/mattgsi/'
 
 EXECUTE_FE_COMMAND = '/home/gsi/gsi_files/bin/execute_FE_command'
 FE_SUBMIT = '/home/w23/mattgsi/bin/fe_submit'

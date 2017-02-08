@@ -195,7 +195,7 @@ def update_run(request, run_id):
                             )
 
                     log_name = '{0}_{1}.log'.format(value_list[0], value_list[2])
-                    path_log = get_path_folder_run(run)
+                    path_log = get_path_folder_run(run)['path_runs_logs']
                     write_log(log_name, run, path_log)
 
                 # this end
