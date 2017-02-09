@@ -1260,14 +1260,43 @@ def customer_section(request):
                     url_png = customer_info_panel_file.url_png
 
                     # Convert tif to png
+
+                    # Set file vars
+                    # # output_file = "out.jpg"
+                    # # output_file_root = os.path.splitext(output_file)[0]
+                    # output_file_ext = 'png'
+                    # output_file_tmp = customer_info_panel_file.file_area_name + ".tmp"
+                    #
+                    # # Create tmp gtif
+                    # driver = gdal.GetDriverByName("GTiff")
+                    # dst_ds = driver.Create(output_file_tmp, 512, 512, 1, gdal.GDT_Byte )
+                    # raster = numpy.zeros( (512, 512) )
+                    # dst_ds.GetRasterBand(1).WriteArray(raster)
+                    #
+                    # # Create jpeg or rename tmp file
+                    # if (cmp(output_file_ext.lower(),"png" ) == 0):
+                    #     jpg_driver = gdal.GetDriverByName("PNG")
+                    #     jpg_driver.CreateCopy( file_png, dst_ds, 0 )
+                    #     os.remove(output_file_tmp)
+                    # else:
+                    #     os.rename(output_file_tmp, file_png)
+
                     try:
                         check_date = check_date_files(file_tif, file_png)
-                        
+
                         if check_date:
                             if os.path.exists(file_tif):
                                 # check_call(('cat {0} | convert - {1}').format(file_tif, file_png), shell=True)
+                                ##
                                 proc = Popen(['cat', file_tif], stdout=PIPE)
-                                p2 = Popen(['convert', '-', file_png],stdin=proc.stdout)
+                                p2 = Popen(['convert', '-', file_png], stdin=proc.stdout)
+
+                                while not os.path.exists(file_png):
+                                    pass
+                                    # print 'while os.path.exists(file_png) =============================================='
+
+                                ## gdal_translate -of JPEG -scale -co worldfile=yes input.tiff output.jpg
+                                # check_call(('gdal_translate -of JPEG -scale -co worldfile=yes {0} {1}').format(file_tif, file_png), shell=True)
                             else:
                                 warning_message = u'The images "{0}" does not exist!'.format(
                                                         customer_info_panel_file.file_area_name)
