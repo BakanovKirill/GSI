@@ -252,13 +252,15 @@ LOGGING = {
 }
 
 # home folder for new cripts
+# /lustre/home/i214/mattgsi/indy0-lustre/mattgsi/scripts/runs
+# /lustre/home/i214/indy0-lustre/mattgsi/scripts/runs
 # SCRIPTS_HOME = '/lustre/w23/mattgsi/'
-SCRIPTS_HOME = '/lustre/home/i214/mattgsi/indy0-lustre/mattgsi/'
+SCRIPTS_HOME = '/lustre/home/i214/indy0-lustre/mattgsi/'
 
 EXECUTE_FE_COMMAND = '/home/gsi/gsi_files/bin/execute_FE_command'
 FE_SUBMIT = '/home/w23/mattgsi/bin/fe_submit'
 # PATH_RUNS_SCRIPTS = '/lustre/w23/mattgsi/scripts/runs'
-PATH_RUNS_SCRIPTS = '/lustre/home/i214/mattgsi/indy0-lustre/mattgsi/scripts/runs'
+PATH_RUNS_SCRIPTS = '/lustre/home/i214/indy0-lustre/mattgsi/scripts/runs'
 PROCESS_NUM = 10
 CONFIGFILE_PATH = '$RF_AUXDATA_DIR/'
 
