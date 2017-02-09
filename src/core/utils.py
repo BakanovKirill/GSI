@@ -623,8 +623,11 @@ def create_scripts(run, sequence, card, step):
 		run_parallel = False
 
 	# path to scripts for runs and runs log
-	path_runs = GSI_HOME + 'scripts/runs/R_{0}/'.format(run.id)
-	path_runs_logs = GSI_HOME + 'scripts/runs/R_{0}/LOGS'.format(run.id)
+	path_runs = get_path_folder_run(run)['path_runs']
+	path_runs_logs = get_path_folder_run(run)['path_runs_logs']
+
+	# path_runs = GSI_HOME + 'scripts/runs/R_{0}/'.format(run.id)
+	# path_runs_logs = GSI_HOME + 'scripts/runs/R_{0}/LOGS'.format(run.id)
 
 	# <USER_DATA_DIR_ROOT>/<resolution>
 	try:
