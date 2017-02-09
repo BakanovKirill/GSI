@@ -274,7 +274,7 @@ function showFileSelectArea(elem) {
             alert(message);
         },
         'success': function(data, status, xhr){
-            if (elem != show_file_arrea || show_file_arrea != 'none_file') {
+            if (elem != show_file_arrea && show_file_arrea != 'none_file') {
                 // setTimeout(function(){location.reload(true);}, 500);
                 window.location.href = form_url;
             }

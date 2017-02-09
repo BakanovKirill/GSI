@@ -1225,6 +1225,15 @@ def customer_section(request):
                                         url_png=url_png)
                         info_panel.save()
 
+            if CustomerInfoPanel.objects.filter(user=request.user).exists():
+                try:
+                    customer_info_panel = CustomerInfoPanel.objects.filter(user=request.user)
+                    request.session['file_info_panel'] = customer_info_panel[0].file_area_name
+                    show_file = customer_info_panel[0].file_area_name
+                except Exception, e:
+                    print 'CustomerInfoPanel Exception ======================== ', e
+                    pass
+
     # Get selected data for the InfoPanel display
     if data_set:
         customer_info_panel = CustomerInfoPanel.objects.filter(user=request.user)
@@ -1245,7 +1254,7 @@ def customer_section(request):
             if statisctics[0]:
                 statisctics_infopanel = [n for n in statisctics]
 
-            # print 'show_file ================================= ', show_file
+        print 'show_file ================================= ', show_file
 
         if show_file:
             if CustomerInfoPanel.objects.filter(
