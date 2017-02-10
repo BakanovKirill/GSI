@@ -1349,8 +1349,6 @@ def get_executable(run, sequence, card, card_item):
 		run_parallel = is_run_parallel(data_card)
 		all_num = len(area_tiles)
 
-		f_collate.writelines('files_list == {0}\n\n'.format(files_list))
-
 		for f in files_list:
 			f_collate.writelines('f in files_list == {0}\n\n'.format(f))
 			file_obj = ListTestFiles.objects.get(id=f.listtestfiles_id)
