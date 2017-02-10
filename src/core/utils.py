@@ -1352,10 +1352,12 @@ def get_executable(run, sequence, card, card_item):
 		f_collate.writelines('files_list == {0}\n\n'.format(files_list))
 
 		for f in files_list:
+			f_collate.writelines('f in files_list == {0}\n\n'.format(f))
 			file_obj = ListTestFiles.objects.get(id=f.listtestfiles_id)
 			f_name = file_obj.name.split('.')
 			f_subdir = os.path.join(data_card.output_tile_subdir, f_name[0])
-			file_obj_path = os.path.join(data_card.input_data_directory, file_obj.name)
+			# file_obj_path = os.path.join(data_card.input_data_directory, file_obj.name)
+			file_obj_path = data_card.input_data_directory + '/' + file_obj.name
 			temp = [file_obj.name, f_subdir]
 			files.append(temp)
 
