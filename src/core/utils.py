@@ -1359,8 +1359,8 @@ def get_executable(run, sequence, card, card_item):
 			# file_obj_path = os.path.join(data_card.input_data_directory, file_obj.name)
 
 			f_collate.writelines('files == {0}\n\n'.format(files))
-			
-			file_obj_path = data_card.input_data_directory + '/' + file_obj.name
+
+			file_obj_path = str(data_card.input_data_directory) + '/' + str(file_obj.name)
 			temp = [file_obj.name, f_subdir]
 			files.append(temp)
 
