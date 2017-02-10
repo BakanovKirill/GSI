@@ -1350,7 +1350,6 @@ def get_executable(run, sequence, card, card_item):
 		all_num = len(area_tiles)
 
 		for f in files_list:
-			f_collate.writelines('f in files_list == {0}\n\n'.format(f))
 			file_obj = ListTestFiles.objects.get(id=f.listtestfiles_id)
 			f_name = file_obj.name.split('.')
 			f_subdir = os.path.join(data_card.output_tile_subdir, f_name[0])
