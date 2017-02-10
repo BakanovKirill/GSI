@@ -1331,14 +1331,10 @@ def get_executable(run, sequence, card, card_item):
 		# u'Collate <Tile> [<Mode>] [<InpFile>] [<OutDirFile>] [<InpScale>]'
 		from gsi.models import HomeVariables as Home
 
+		####################### write log file
 		log_file = '/home/gsi/LOGS/collate.log'
-
 		f_collate = open(log_file, 'w+')
-
-
-
-
-
+		#######################
 
 		home_var = Home.objects.all()
 		root_path = home_var[0].RF_AUXDATA_DIR
@@ -1355,16 +1351,15 @@ def get_executable(run, sequence, card, card_item):
 			f_subdir = os.path.join(data_card.output_tile_subdir, f_name[0])
 			# file_obj_path = os.path.join(data_card.input_data_directory, file_obj.name)
 
-			f_collate.writelines('RUN ID == {0}\n\n'.format(run.id))
-
 			file_obj_path = str(data_card.input_data_directory) + '/' + str(file_obj.name)
 			# temp = [file_obj.name, f_subdir]
 			temp = [file_obj_path, f_subdir]
 			files.append(temp)
 
+			#######################
+			f_collate.writelines('RUN ID == {0}\n\n'.format(run.id))
 			f_collate.writelines('file_obj_path == {0}\n\n'.format(file_obj_path))
-
-
+			#######################
 		if files:
 			all_num *= len(files)
 
