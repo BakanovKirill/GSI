@@ -1358,10 +1358,11 @@ def get_executable(run, sequence, card, card_item):
 			f_subdir = os.path.join(data_card.output_tile_subdir, f_name[0])
 			# file_obj_path = os.path.join(data_card.input_data_directory, file_obj.name)
 
-			f_collate.writelines('files == {0}\n\n'.format(files))
+			f_collate.writelines('RUN ID == {0}\n\n'.format(run.id))
 
 			file_obj_path = str(data_card.input_data_directory) + '/' + str(file_obj.name)
-			temp = [file_obj.name, f_subdir]
+			# temp = [file_obj.name, f_subdir]
+			temp = [file_obj_path, f_subdir]
 			files.append(temp)
 
 			f_collate.writelines('file_obj_path == {0}\n\n'.format(file_obj_path))
