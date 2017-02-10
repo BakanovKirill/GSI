@@ -260,7 +260,7 @@ LOGGING = {
 SCRIPTS_HOME = '/lustre/home/i214/indy0-lustre/mattgsi/'
 
 EXECUTE_FE_COMMAND = '/lustre/home/i214/indy0-home/mattgsi/bin/execute_FE_commmand'
-FE_SUBMIT = '/lustre/home/i214/indy0-home/mattgsi/bin/fe_submit'
+FE_SUBMIT = '/lustre/home/i214/indy0-home/mattgsi/bin/nfe_submit'
 # PATH_RUNS_SCRIPTS = '/lustre/w23/mattgsi/scripts/runs'
 PATH_RUNS_SCRIPTS = '/lustre/home/i214/indy0-lustre/mattgsi/scripts/runs'
 PROCESS_NUM = 10

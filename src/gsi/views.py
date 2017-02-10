@@ -940,8 +940,7 @@ def run_details(request, run_id):
     # Handling POST request
     if request.method == "POST":
         if request.POST.get('details_file'):
-            step = get_object_or_404(
-                RunStep, pk=request.POST.get('details_file'))
+            step = get_object_or_404(RunStep, pk=request.POST.get('details_file'))
 
             if request.POST.get('out_button', ''):
                 return HttpResponseRedirect(u'%s?status_message=%s' % (
