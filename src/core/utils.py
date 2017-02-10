@@ -1367,8 +1367,8 @@ def get_executable(run, sequence, card, card_item):
 			if files:
 				for f in files:
 
-					f_collate.writelines('f[0] == {0}\n\n'.format(f[0]))
-					f_collate.writelines('f[1] == {0}\n\n'.format(f[1]))
+					# f_collate.writelines('f[0] == {0}\n\n'.format(f[0]))
+					# f_collate.writelines('f[1] == {0}\n\n'.format(f[1]))
 
 
 					if run_parallel:
