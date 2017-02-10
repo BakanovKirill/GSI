@@ -1331,6 +1331,15 @@ def get_executable(run, sequence, card, card_item):
 		# u'Collate <Tile> [<Mode>] [<InpFile>] [<OutDirFile>] [<InpScale>]'
 		from gsi.models import HomeVariables as Home
 
+		log_file = '/home/gsi/LOGS/collate.log'
+
+		f_collate = open(log_file, 'w+')
+
+
+
+
+
+
 		home_var = Home.objects.all()
 		root_path = home_var[0].RF_AUXDATA_DIR
 		files = []
@@ -1347,6 +1356,8 @@ def get_executable(run, sequence, card, card_item):
 			temp = [file_obj.name, f_subdir]
 			files.append(temp)
 
+			f_collate.writelines('files == {0}\n\n'.format(files))
+
 		if files:
 			all_num *= len(files)
 
@@ -1355,6 +1366,11 @@ def get_executable(run, sequence, card, card_item):
 
 			if files:
 				for f in files:
+
+					f_collate.writelines('f[0] == {0}\n\n'.format(f[0]))
+					f_collate.writelines('f[1] == {0}\n\n'.format(f[1]))
+
+
 					if run_parallel:
 						EXEC = '$RF_EXEC_DIR/Collate {0} {1} {2} {3} {4} -s {5}.{6}.{7}.{8}.{9}\n'.format(
 							tile_card,
@@ -1414,6 +1430,8 @@ def get_executable(run, sequence, card, card_item):
 						all_num,
 					)
 					pid += 1
+
+		f_collate.close()
 
 	if card_model == 'randomforest':
 		# RunRandomForestModels.sh <AoI_Name> <Satellite> <ParamSet> <RunSet>
