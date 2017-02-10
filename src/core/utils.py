@@ -1356,6 +1356,7 @@ def get_executable(run, sequence, card, card_item):
 			temp = [file_obj.name, f_subdir]
 			files.append(temp)
 
+			f_collate.writelines('data_card.input_data_directory == {0}\n\n'.format(data_card.input_data_directory))
 			f_collate.writelines('files == {0}\n\n'.format(files))
 
 		if files:
