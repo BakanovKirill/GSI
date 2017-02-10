@@ -1359,6 +1359,7 @@ def get_executable(run, sequence, card, card_item):
 
 			f_collate.writelines('file_obj_path == {0}\n\n'.format(file_obj_path))
 			f_collate.writelines('files == {0}\n\n'.format(files))
+		f_collate.close()
 
 		if files:
 			all_num *= len(files)
@@ -1433,7 +1434,7 @@ def get_executable(run, sequence, card, card_item):
 					)
 					pid += 1
 
-		f_collate.close()
+		# f_collate.close()
 
 	if card_model == 'randomforest':
 		# RunRandomForestModels.sh <AoI_Name> <Satellite> <ParamSet> <RunSet>
