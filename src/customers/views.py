@@ -1254,7 +1254,7 @@ def customer_section(request):
             if statisctics[0]:
                 statisctics_infopanel = [n for n in statisctics]
 
-        print 'show_file ================================= ', show_file
+        # print 'show_file ================================= ', show_file
 
         if show_file:
             if CustomerInfoPanel.objects.filter(
