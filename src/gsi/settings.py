@@ -171,8 +171,8 @@ DEFAULT_FROM_EMAIL = 'noreply@exemple.com'
 EMAIL_BACKEND = 'smtp.backend'
 
 # Logging settings for django projects
-MAIN_FILE = os.path.join(BASE_DIR, "core/main.log")
-MAIN_DEBUG_FILE = os.path.join(BASE_DIR, "core/main_debug.log")
+MAIN_FILE = os.path.join(BASE_DIR, "/home/gsi/logs/main.log")
+MAIN_DEBUG_FILE = os.path.join(BASE_DIR, "/home/gsi/logs/main_debug.log")
 
 # # Time Format
 # TIME_FORMAT = (
@@ -211,7 +211,7 @@ LOGGING = {
             'formatter': 'main_formatter',
         },
         'production_file': {
-            'level': 'INFO',
+            'level': 'ERROR',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': MAIN_FILE,
             'maxBytes': 1024 * 1024 * 5,  # 5 MB
@@ -220,7 +220,7 @@ LOGGING = {
             'filters': ['require_debug_false'],
         },
         'debug_file': {
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': MAIN_DEBUG_FILE,
             'maxBytes': 1024 * 1024 * 5,  # 5 MB
