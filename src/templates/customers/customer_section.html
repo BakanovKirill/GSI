@@ -267,8 +267,8 @@
                 // placeMarkerAndPanTo({{ eLat_2 }}, {{ eLng_2 }});
 
                 // Add a listener for the click event.
-                map.addListener('click', showInfoWindow);
-                infoWindow = new google.maps.InfoWindow;
+                // map.addListener('click', showInfoWindow);
+                // infoWindow = new google.maps.InfoWindow;
 
                 // Add a listener for the mousemove event.
                 map.addListener('mousemove', showCoordinates);
@@ -397,6 +397,8 @@
             // [END region_hideshow]
 
             function placeMarkerAndPanTo(lat1, lng1) {
+                var image = "{% static 'img/circle-12.png' %}";
+                
                 var dict = {
                     'lat':   lat1,
                     'lng': lng1
@@ -405,7 +407,8 @@
 
                 var marker = new google.maps.Marker({
                     position: dict,
-                    map: map
+                    map: map,
+                    icon: image
                 });
                 //marker.setMap(map);
                 //map.panTo(marker);
