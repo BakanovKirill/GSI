@@ -430,6 +430,7 @@
                     }
                 }
                 coord = [];
+                polygons = [];
                 polygonVisible = false;
 
                 // Removes the markers
@@ -468,6 +469,15 @@
                 // Add a listener for the mousemove event.
                 selectPolygon.addListener('mousemove', showCoordinates);
                 infoWindow = new google.maps.InfoWindow;
+                
+                coord = [];
+                
+                // !!!!!!!!!!!!!!!!!!! **************************************************************
+                // Add a listener for the click event
+                // google.maps.event.addListener(map, 'click', function(event) {
+                //     addLatLngToPoly(event.latLng, poly);
+                // });
+                // **************************************************************
 
                 // markers.addListener('click', showInfoWindow);
                 // infoWindow = new google.maps.InfoWindow;
@@ -501,11 +511,19 @@
 
             function togglePlygonOverlays() {
                 if (polygonVisible) {
-                    selectPolygon.setMap(null);
-                    polygonVisible = false;
+                    if (polygons) {
+                        for (i in polygons) {
+                            polygons[i].setMap(null);
+                            polygonVisible = false;
+                        }
+                    }
                 } else {
-                    selectPolygon.setMap(map);
-                    polygonVisible = true;
+                    if (polygons) {
+                        for (i in polygons) {
+                            polygons[i].setMap(map);
+                            polygonVisible = true;
+                        }
+                    }
                 }
             }
 

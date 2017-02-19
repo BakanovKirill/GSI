@@ -1079,6 +1079,7 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
     if status == 'Out':
         card_name = 'runcard_{0}_{1}.out'.format(card_id, count)
         path_log_file = os.path.join(str(log_path), str(card_name))
+        # print 'path_log_file ======================= ', path_log_file
         try:
             fd = open(path_log_file, 'r')
             for line in fd.readlines():
@@ -1154,10 +1155,9 @@ def sub_card_details(request, run_id, card_id):
             elif request.POST.get('out_button', ''):
                 log_err = request.POST.get('details_file')
                 count = log_err.split('_')[1]
-                return HttpResponseRedirect(u'%s?status_message=%s' % (reverse(
-                    'view_log_file_sub_card',
-                    args=[run_id, card_id, count, 'Out']), (
-                        u'Log Out file for the Card "{0}".'.format(
+                return HttpResponseRedirect(u'%s?status_message=%s' % (
+                    reverse('view_log_file_sub_card', args=[run_id, card_id, count, 'Out']),
+                    (u'Log Out file for the Card "{0}".'.format(
                             run_step_card.card_item))))
         else:
             return HttpResponseRedirect(u'%s?warning_message=%s' % (
