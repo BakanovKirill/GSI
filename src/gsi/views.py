@@ -1058,6 +1058,11 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
         * *count:* The number of sub-cards
         * *status:* Status executed to work of the cards
     """
+    
+    ####################### write log file
+    log_file = '/home/gsi/LOGS/log_execute.log'
+    log_execute = open(log_file, 'w+')
+    #######################
 
     log_info = ''
     runs_step = RunStep.objects.filter(parent_run=run_id).first()
@@ -1084,6 +1089,7 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
         card_name = 'runcard_{0}_{1}.out'.format(card_id, count)
         path_log_file = os.path.join(str(log_path), str(card_name))
         # print 'path_log_file ======================= ', path_log_file
+        log_execute.write('path_log_file: {0}'.format(path_log_file))
         try:
             fd = open(path_log_file, 'r')
             for line in fd.readlines():
@@ -1105,6 +1111,8 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
                     reverse('sub_card_details', args=[run_id, card_id]),
                     (u'Log Error file "{0}" not found.'.format(card_name)))
                 )
+                
+    log_execute.close()
 
     data = {
         'title': title,
