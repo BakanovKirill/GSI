@@ -177,7 +177,7 @@ urlpatterns = [
 	#	 name='update_run'),
 
 	# api for the execute runs
-	url(r'^run/(?P<run_id>\w+\.\w+\.\w+\.\w+)/$', 'api.views.update_run', name='update_run'),
+	url(r'^run/(?P<run_id>\w+\.\w+\.\w+\.\w+\.\w)/$', 'api.views.update_run', name='update_run'),
 	# api for the gsi
 	url(r'^api/gsi-maps', 'api.views.api_gsi_maps', name='api_gsi_maps'),
 	url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
