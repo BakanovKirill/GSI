@@ -1000,6 +1000,7 @@ def view_log_file(request, run_id, card_id, status):
 
     title = 'Log {0} file for the Card Item "{1}"'.format(status, run)
     sub_title = 'The View Log file select and hit view'
+    active_url = 'run_progress'
 
     try:
         log = get_object_or_404(Log, pk=run.log.id)
@@ -1040,6 +1041,7 @@ def view_log_file(request, run_id, card_id, status):
         'run_id': run_id,
         'card_id': card_id,
         'log_info': log_info,
+        'active_url': active_url,
     }
 
     return data
@@ -1071,6 +1073,7 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
     title = 'Log {0} file for the Sub Card "{1}"'.format(
         status, run_step_card.card_item)
     sub_title = 'The View Log file select and hit view'
+    active_url = 'run_progress'
 
     run = get_object_or_404(Run, pk=run_id)
 
@@ -1119,6 +1122,7 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
         'run_id': run_id,
         'card_id': card_id,
         'log_info': log_info,
+        'active_url': active_url,
     }
 
     return data
