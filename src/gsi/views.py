@@ -811,6 +811,7 @@ def run_progress(request):
     runs = Run.objects.all().order_by('-id')
     title = 'Run Progress'
     url_name = 'run_progress'
+    active_url = 'run_progress'
     run_name = ''
 
     # Sorted by run_base, id, run_date, state, user
@@ -883,6 +884,7 @@ def run_progress(request):
         'title': title,
         'runs': model_name,
         'url_name': url_name,
+        'active_url': active_url,
         'model_name': model_name,
     }
 
@@ -904,6 +906,7 @@ def run_details(request, run_id):
     runs_step = RunStep.objects.filter(parent_run=run_id)
     runs_step.order_by('card_item__order')
     url_name = 'run_details'
+    active_url = 'run_progress'
 
     if runs_step:
         title = 'Run "{0}" Details'.format(runs_step[0].parent_run)
@@ -970,6 +973,7 @@ def run_details(request, run_id):
         'runs_step': model_name,
         'model_name': model_name,
         'url_name': url_name,
+        'active_url': active_url,
         'obj_id': run_id,
     }
 
@@ -1124,13 +1128,14 @@ def sub_card_details(request, run_id, card_id):
         * *card_id:* The CardItem object ID
     """
 
-    url_name = 'sub_card_details'
     sub_cards = SubCardItem.objects.filter(run_id=run_id, card_id=card_id)
     sub_cards.order_by('sub_cards.start_time')
     # runs_step = RunStep.objects.filter(parent_run=run_id).first()
     run_step_card = RunStep.objects.filter(card_item__id=card_id).first()
     title = 'Sub Cards of Card "{0}" Details'.format(run_step_card.card_item)
     sub_title = 'The View Log file select and hit view'
+    url_name = 'sub_card_details'
+    active_url = 'run_progress'
 
     if request.method == "GET":
         order_by = request.GET.get('order_by', '')
@@ -1177,6 +1182,7 @@ def sub_card_details(request, run_id, card_id):
         'card_name': run_step_card.card_item,
         'model_name': model_name,
         'url_name': url_name,
+        'active_url': active_url,
         'obj_id': run_id,
     }
 

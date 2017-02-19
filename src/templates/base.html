@@ -108,7 +108,7 @@
                                         SUBMIT A RUN
                                     </a>
                                 </li>
-                                <li class="{% if url_name == 'run_progress' %}active-main-menu{% else %}li-menu{% endif %}">
+                                <li class="{% if active_url == 'run_progress' %}active-main-menu{% else %}li-menu{% endif %}">
                                     <a href="{% url 'run_progress' %}">
                                         <img class="right-indent-10" src="{% static 'img/view_run_progress.png' %}">
                                         VIEW RUN PROGRESS
