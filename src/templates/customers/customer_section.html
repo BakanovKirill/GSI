@@ -91,6 +91,7 @@
             var selectArea;
             var polygonVisible;
             var mapTypesArr = [];
+            var infowindow = new google.maps.InfoWindow();
 
             // alert('eLat_1: '+{{ eLat_1 }});
             // alert('eLng_1: '+{{ eLng_1 }});
@@ -472,6 +473,18 @@
                 
                 coord = [];
                 
+                // info window
+                // var contentString = 'Area Information<br><table><tr><td width="150">Attribute</td><td width="60">Area</td><td width="60">Mean</td><td width="60">Stdev</td><td width="60">Min</td width="60"><td>Max</td></tr>';
+                //
+                // selectPolygon.addListener('mousemove', showInfoWindowPolygon(contentString));
+                // showInfoWindowPolygon(contentString);
+                    
+                    
+                // var infowindow = new google.maps.InfoWindow({content: contentString});
+                // infowindow.open(map);
+                        
+                // tilesloaded
+                
                 // !!!!!!!!!!!!!!!!!!! **************************************************************
                 // Add a listener for the click event
                 // google.maps.event.addListener(map, 'click', function(event) {
@@ -504,6 +517,18 @@
 
                 // Replace the info window's content and position.
                 infoWindow.setContent(contentString);
+                infoWindow.setPosition(event.latLng);
+
+                infoWindow.open(map);
+            }
+            
+            function showInfoWindowPolygon(event, msg) {
+                alert('MSG: '+msg);
+                var lat = event.latLng.lat();
+            	var lon = event.latLng.lng();
+
+                // Replace the info window's content and position.
+                infoWindow.setContent(msg);
                 infoWindow.setPosition(event.latLng);
 
                 infoWindow.open(map);

@@ -1105,7 +1105,6 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
     elif status == 'Error':
         card_name = 'runcard_{0}_{1}.err'.format(card_id, count)
         path_log_file = os.path.join(str(log_path), str(card_name))
-        os.chmod(path_log_file, 0777)
         try:
             fd = open(path_log_file, 'r')
             for line in fd.readlines():
