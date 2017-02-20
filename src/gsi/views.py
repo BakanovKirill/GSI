@@ -1018,6 +1018,7 @@ def view_log_file(request, run_id, card_id, status):
         try:
             card_name = 'runcard_{0}.out'.format(card_id)
             path_log_file = os.path.join(str(log_path), str(card_name))
+            os.chmod(path_log_file, 0777)
             fd = open(path_log_file, 'r')
             for line in fd.readlines():
                 log_info += line + '<br />'
@@ -1029,6 +1030,7 @@ def view_log_file(request, run_id, card_id, status):
         try:
             card_name = 'runcard_{0}.err'.format(card_id)
             path_log_file = os.path.join(str(log_path), str(card_name))
+            os.chmod(path_log_file, 0777)
             fd = open(path_log_file, 'r')
             for line in fd.readlines():
                 log_info += line + '<br />'
@@ -1084,7 +1086,6 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
     except Exception:
         log_name = '{}_{}.log'.format(run.id, run_step_card.card_item.id)
         log_path = get_path_folder_run(run)['path_runs_logs']
-        os.chmod(log_path, 0777)
         log = Log.objects.create(
             name=log_name, log_file=log_name, log_file_path=log_path)
         run.log = log
@@ -1093,6 +1094,7 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
     if status == 'Out':
         card_name = 'runcard_{0}_{1}.out'.format(card_id, count)
         path_log_file = os.path.join(str(log_path), str(card_name))
+        os.chmod(path_log_file, 0777)
         try:
             fd = open(path_log_file, 'r')
             for line in fd.readlines():
@@ -1105,6 +1107,7 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
     elif status == 'Error':
         card_name = 'runcard_{0}_{1}.err'.format(card_id, count)
         path_log_file = os.path.join(str(log_path), str(card_name))
+        os.chmod(path_log_file, 0777)
         try:
             fd = open(path_log_file, 'r')
             for line in fd.readlines():
