@@ -1008,6 +1008,7 @@ def view_log_file(request, run_id, card_id, status):
     except Exception:
         log_name = '{}_{}.log'.format(run.id, run_step_card.card_item.id)
         log_path = get_path_folder_run(run)['path_runs_logs']
+        os.chmod(log_path, 0777)
         log = Log.objects.create(
             name=log_name, log_file=log_name, log_file_path=log_path)
         run.log = log
@@ -1083,6 +1084,7 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
     except Exception:
         log_name = '{}_{}.log'.format(run.id, run_step_card.card_item.id)
         log_path = get_path_folder_run(run)['path_runs_logs']
+        os.chmod(log_path, 0777)
         log = Log.objects.create(
             name=log_name, log_file=log_name, log_file_path=log_path)
         run.log = log
