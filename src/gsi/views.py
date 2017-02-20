@@ -1018,7 +1018,6 @@ def view_log_file(request, run_id, card_id, status):
         try:
             card_name = 'runcard_{0}.out'.format(card_id)
             path_log_file = os.path.join(str(log_path), str(card_name))
-            os.chmod(path_log_file, 0777)
             fd = open(path_log_file, 'r')
             for line in fd.readlines():
                 log_info += line + '<br />'
@@ -1094,7 +1093,6 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
     if status == 'Out':
         card_name = 'runcard_{0}_{1}.out'.format(card_id, count)
         path_log_file = os.path.join(str(log_path), str(card_name))
-        os.chmod(path_log_file, 0777)
         try:
             fd = open(path_log_file, 'r')
             for line in fd.readlines():
