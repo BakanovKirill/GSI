@@ -563,6 +563,11 @@ def create_scripts(run, sequence, card, step):
 	"""**The method for create a scripts at startup RunBase object for the each cards.**"""
 
 	from gsi.models import HomeVariables as Home
+	
+	####################### write log file
+    log_file = '/home/gsi/LOGS/create_scripts.log'
+    log_create_scripts = open(log_file, 'w+')
+    #######################
 
 	card_model = None
 	message_error = None
@@ -635,6 +640,7 @@ def create_scripts(run, sequence, card, step):
 		os.makedirs(path_runs_logs)
 	except OSError, e:
 		print 'Exception OSError ==================================== ', e
+		log_create_scripts.write('OSError 1: {0}'.format(e))
 		pass
 	finally:
 		try:
@@ -705,7 +711,10 @@ def create_scripts(run, sequence, card, step):
 				fd.close()
 		except OSError, e:
 			pass
+			log_create_scripts.write('OSError 2: {0}'.format(e))
 			return False
+			
+	log_create_scripts.close()
 
 	return {
 		'script_path': script_path,
