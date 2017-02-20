@@ -1371,6 +1371,9 @@ def get_executable(run, sequence, card, card_item):
 
 			#######################
 			f_collate.writelines('RUN ID == {0}\n\n'.format(run.id))
+			f_collate.writelines('file == {0}\n\n'.format(f))
+			f_collate.writelines('file ID == {0}\n\n'.format(f.listtestfiles_id))
+			f_collate.writelines('file_obj == {0}\n\n'.format(file_obj))
 			f_collate.writelines('file_obj_path == {0}\n\n'.format(file_obj_path))
 			#######################
 		if files:
