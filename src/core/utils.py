@@ -1356,6 +1356,7 @@ def get_executable(run, sequence, card, card_item):
 		
 		#######################
 		f_collate.writelines('DATA CARD == {0}\n\n'.format(data_card))
+		f_collate.writelines('files_list == {0}\n\n'.format(files_list))
 		#######################
 
 		for f in files_list:
