@@ -566,7 +566,7 @@ def create_scripts(run, sequence, card, step):
 	
 	####################### write log file
 	log_file = '/home/gsi/LOGS/create_scripts.log'
-	log_create_scripts = open(log_file, 'w+')
+	log_create_scripts = open(log_file, 'a+')
 	#######################
 
 	card_model = None
@@ -1342,7 +1342,7 @@ def get_executable(run, sequence, card, card_item):
 
 		####################### write log file
 		log_file = '/home/gsi/LOGS/collate.log'
-		f_collate = open(log_file, 'w+')
+		f_collate = open(log_file, 'a+')
 		#######################
 
 		home_var = Home.objects.all()
@@ -1353,6 +1353,10 @@ def get_executable(run, sequence, card, card_item):
 		files_list = Collate.input_files.through.objects.filter(collate=data_card)
 		run_parallel = is_run_parallel(data_card)
 		all_num = len(area_tiles)
+		
+		#######################
+		f_collate.writelines('DATA CARD == {0}\n\n'.format(data_card))
+		#######################
 
 		for f in files_list:
 			file_obj = ListTestFiles.objects.get(id=f.listtestfiles_id)
@@ -1368,7 +1372,6 @@ def get_executable(run, sequence, card, card_item):
 			#######################
 			f_collate.writelines('RUN ID == {0}\n\n'.format(run.id))
 			f_collate.writelines('file_obj_path == {0}\n\n'.format(file_obj_path))
-			f_collate.writelines('data_card.input_scale_factor == {0}\n\n'.format(data_card.input_scale_factor))
 			#######################
 		if files:
 			all_num *= len(files)
