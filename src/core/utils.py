@@ -18,10 +18,10 @@ from core.multithreaded import MultiprocessingCards
 class UnicodeNameMixin(object):
 	"""**Class inheritance for other classes of models.**
 
-    :Functions:
-        When inheriting displays the model name
+	:Functions:
+		When inheriting displays the model name
 
-    """
+	"""
 
 	def __unicode__(self):
 		return _(u"%s") % self.name
@@ -36,7 +36,7 @@ def validate_status(status):
 	:Arguments:
 		* *status*: Current status
 
-    """
+	"""
 
 	from gsi.models import STATES
 
@@ -60,7 +60,7 @@ def get_copy_name(name):
 	:Arguments:
 		* *name*: Card name
 
-    """
+	"""
 
 	if '*cp' in name:
 		return name.split('*cp')[0]
@@ -565,9 +565,9 @@ def create_scripts(run, sequence, card, step):
 	from gsi.models import HomeVariables as Home
 	
 	####################### write log file
-    log_file = '/home/gsi/LOGS/create_scripts.log'
-    log_create_scripts = open(log_file, 'w+')
-    #######################
+	log_file = '/home/gsi/LOGS/create_scripts.log'
+	log_create_scripts = open(log_file, 'w+')
+	#######################
 
 	card_model = None
 	message_error = None
