@@ -640,7 +640,7 @@ def create_scripts(run, sequence, card, step):
 		os.makedirs(path_runs_logs)
 	except OSError, e:
 		print 'Exception OSError ==================================== ', e
-		log_create_scripts.write('OSError 1: {0}'.format(e))
+		log_create_scripts.writelines('OSError 1: {0}'.format(e))
 		pass
 	finally:
 		try:
@@ -711,7 +711,7 @@ def create_scripts(run, sequence, card, step):
 				fd.close()
 		except OSError, e:
 			pass
-			log_create_scripts.write('OSError 2: {0}'.format(e))
+			log_create_scripts.writelines('OSError 2: {0}'.format(e))
 			return False
 			
 	log_create_scripts.close()
@@ -1368,6 +1368,7 @@ def get_executable(run, sequence, card, card_item):
 			#######################
 			f_collate.writelines('RUN ID == {0}\n\n'.format(run.id))
 			f_collate.writelines('file_obj_path == {0}\n\n'.format(file_obj_path))
+			f_collate.writelines('data_card.input_scale_factor == {0}\n\n'.format(data_card.input_scale_factor))
 			#######################
 		if files:
 			all_num *= len(files)
