@@ -836,6 +836,29 @@ def create_sub_card_item(name, run_id, card_id):
 		)
 	except Exception, e:
 		pass
+		
+		
+def check_exist_collate_files(path, collate_card):
+	from cards.models import Collate
+	from gsi.models import ListTestFiles
+	
+	f_list = []
+	try:
+		files_list = Collate.input_files.through.objects.filter(collate=collate_card)
+		
+		for f in files_list:
+			file_obj = ListTestFiles.objects.get(id=f.listtestfiles_id)
+			file_obj_path = str(path) + '/' + str(collate_card.input_data_directory) + '/' + str(file_obj.name)
+			
+			if not os.path.exists(file_obj_path):
+				f.delete()
+			else:
+				f_list.append(f)
+	except Exception, e:
+		print 'E check_exist_collate_files ============================ ', e
+		pass
+	
+	return f_list
 
 
 def get_executable(run, sequence, card, card_item):
@@ -1350,7 +1373,8 @@ def get_executable(run, sequence, card, card_item):
 		files = []
 		data_card = Collate.objects.get(name=card.card_item.content_object)
 		area_tiles = get_area_tiles(data_card.area)
-		files_list = Collate.input_files.through.objects.filter(collate=data_card)
+		# files_list = Collate.input_files.through.objects.filter(collate=data_card)
+		files_list = check_exist_collate_files(root_path, data_card)
 		run_parallel = is_run_parallel(data_card)
 		all_num = len(area_tiles)
 		
