@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2">
+<Document><name>My Polygon</name>
+<Placemark><name>NAME1</name>
+<Polygon>
+<tessellate>1</tessellate>
+<altitudeMode>clampToGround</altitudeMode>
+<outerBoundaryIs><LinearRing><coordinates>
+-89.79846954345703,48.75788628816399,0.0
+-89.79846954345703,48.754151656656255,0.0
+-89.8048210144043,48.754151656656255,0.0
+-89.8048210144043,48.75788628816399,0.0
+-89.79846954345703,48.75788628816399,0.0
+-89.79846954345703,48.757886288163990.0
+</coordinates></LinearRing></outerBoundaryIs>
+</Polygon></Placemark></Document></kml>

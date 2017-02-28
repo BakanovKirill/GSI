@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2">
+<Document><name>UserDefined</name>
+<Placemark><name>NEWNAME</name>
+<description>MMnewtest_2.WagnerB1</description>
+<Polygon>
+<tessellate>1</tessellate>
+<altitudeMode>clampToGround</altitudeMode>
+<outerBoundaryIs><LinearRing><coordinates>
+-89.77184486388751,48.74387432817324,0.0
+-89.77029991149493,48.744553511633576,0.0
+-89.77098655700274,48.74557226961429,0.0
+-89.7696990966756,48.74676079449038,0.0
+-89.76978492736407,48.747383343921626,0.0
+-89.77356147765704,48.74636462265492,0.0
+-89.77484893798419,48.74449691336245,0.0
+-89.77304649352618,48.74466670798461,0.0
+-89.77184486388751,48.743874328173240.0
+</coordinates></LinearRing></outerBoundaryIs>
+</Polygon></Placemark></Document></kml>
