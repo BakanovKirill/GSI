@@ -1,3 +1,27 @@
+@font-face {
+   font-family: Nirmala;
+   src: url(../ufonts/NirmalaS.ttf);
+   font-style: normal;
+   font-weight: lighter;
+}
+
+@font-face {
+   font-family: Nirmala;
+   src: url(../ufonts/NirmalaB.ttf);
+   font-style: normal;
+   font-weight: bold;
+}
+
+@font-face {
+    font-family: Nirmala;
+    src: url(../ufonts/Nirmala.ttf);
+    font-style: normal;
+    font-weight: normal;
+   }
+
+body {font-family: Nirmala;}
+/*body {font-family: "Nirmala",Helvetica,Arial,sans-serif;}*/
+
 th {
     text-align: center;
 }
