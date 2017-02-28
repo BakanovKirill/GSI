@@ -988,9 +988,9 @@ def customer_section(request):
     dirs_infopanel = []
     files_infopanel = []
     statisctics_infopanel = []
-    attribute_name_ip = {}
     data_set_id = 0
     show_file = ''
+    file_tif = ''
 
     # default GEOTIFF coordinates
     cLng = DAFAULT_LON
@@ -1248,7 +1248,6 @@ def customer_section(request):
                 files_infopanel = [n for n in file_area]
 
             if attribute_name[0] and dirs_list:
-                # attribute_name_ip
                 dirs_infopanel = [n for n in attribute_name]
 
             if statisctics[0]:
@@ -1261,9 +1260,9 @@ def customer_section(request):
                     user=request.user, data_set=data_set, file_area_name=show_file).exists():
                 try:
                     customer_info_panel_file = CustomerInfoPanel.objects.get(
-                                                    user=request.user,
-                                                    data_set=data_set,
-                                                    file_area_name=show_file)
+                                                user=request.user,
+                                                data_set=data_set,
+                                                file_area_name=show_file)
                     file_tif = customer_info_panel_file.tif_path
                     file_png = customer_info_panel_file.png_path
                     url_png = customer_info_panel_file.url_png
@@ -1307,8 +1306,8 @@ def customer_section(request):
                                 ## gdal_translate -of JPEG -scale -co worldfile=yes input.tiff output.jpg
                                 # check_call(('gdal_translate -of JPEG -scale -co worldfile=yes {0} {1}').format(file_tif, file_png), shell=True)
                             else:
-                                warning_message = u'The images "{0}" does not exist!'.format(
-                                                        customer_info_panel_file.file_area_name)
+                                warning_message = u'The images "{0}" does not exist!'.\
+                                                    format(customer_info_panel_file.file_area_name)
                     except Exception, e:
                         print 'Popen Exception =============================== ', e
 
@@ -1342,6 +1341,11 @@ def customer_section(request):
                     #     (u'The file "{0}" does not exist. Perhaps the data is outdated. Please refresh the page and try again.'.format(show_file)))
                     # )
 
+    if show_file:
+        file_tif = show_file + '.tif'
+
+    print 'file_tif =================== ', file_tif
+
     data = {
         'title': title,
         'customer': customer,
@@ -1358,6 +1362,7 @@ def customer_section(request):
         'dirs_infopanel': dirs_infopanel,
         'statisctics_infopanel': statisctics_infopanel,
         'show_file': show_file,
+        'file_tif': file_tif,
 
         'cLng': cLng,
         'cLat': cLat,

@@ -42,6 +42,9 @@ CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_IMAGE_BACKEND = "pillow"
 CKEDITOR_JQUERY_URL = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'
 
+
+PHP_CGI = '/usr/bin/php-cgi'
+
 # Application definition
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -55,6 +58,7 @@ INSTALLED_APPS = (
     'solo',
     'registration',
     'crispy_forms',
+    'django_php',
 
     'ckeditor',
     'ckeditor_uploader',
