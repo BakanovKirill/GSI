@@ -19,7 +19,7 @@
     font-weight: normal;
    }
 
-body {font-family: Nirmala;}
+body {font-family: Nirmala !important;}
 /*body {font-family: "Nirmala",Helvetica,Arial,sans-serif;}*/
 
 th {
