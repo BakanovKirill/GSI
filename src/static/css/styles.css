@@ -3,6 +3,7 @@
    src: url(../ufonts/NirmalaS.ttf);
    font-style: normal;
    font-weight: lighter;
+   color: #7f3f98;
 }
 
 @font-face {
@@ -10,6 +11,7 @@
    src: url(../ufonts/NirmalaB.ttf);
    font-style: normal;
    font-weight: bold;
+   color: #7f3f98;
 }
 
 @font-face {
@@ -19,8 +21,15 @@
     font-weight: normal;
    }
 
-body {font-family: Nirmala !important;}
-/*body {font-family: "Nirmala",Helvetica,Arial,sans-serif;}*/
+body {
+    font-family: Nirmala !important;
+    color: #7f3f98;
+}
+
+.btn-success {
+    background-color: #8bc53f !important;
+    background-image: none !important;
+}
 
 th {
     text-align: center;

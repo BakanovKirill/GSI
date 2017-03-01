@@ -29,15 +29,6 @@
 <body>
     <!-- Start Container -->
     <div class="container">
-        <!-- Start Header -->
-        <div class="row" id="header">
-            <div class="col-md-12 center">
-                <!-- Title -->
-
-                <!-- End Title -->
-            </div>
-        </div>
-        <!-- End Header -->
 
         <!-- Start Status Message Authorization -->
         <div class="row">
@@ -52,17 +43,13 @@
             <div class="col-md-12 reg-form">
                 {% block content %}{% endblock content %}
             </div>
-            <!--<div class="col-md-4 col-md-offset-4 background-white">-->
-                <!--&lt;!&ndash;<p class="disabled">1</p>&ndash;&gt;-->
-                <!--<input type="hidden"/>-->
-            <!--</div>-->
         </div>
         <!-- End Content -->
 
         <!-- Start Footer -->
         <div class="row" id="footer">
             <div class="col-md-12 center margin-top-50 margin-bottom-50 font-11">
-                &copy; 2015 GSI Web Site
+                &copy; {{ CURRENT_YEAR }} GSi Web Site
             </div>
         </div>
         <!-- End Footer -->
