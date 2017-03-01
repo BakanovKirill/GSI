@@ -188,5 +188,5 @@ a:focus, a:hover {
 /* no yelow autofill for google chrome */
 input {outline: none;}
 input:-webkit-autofill {
-    -webkit-box-shadow: inset 0 0 0 50px #7f3f98 !important; /* background color */
+    -webkit-box-shadow: inset 0 0 0 50px white !important; /* background color */
 }
