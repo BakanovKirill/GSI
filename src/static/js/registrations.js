@@ -50,34 +50,34 @@ function setFocus() {
 //   }
 // }
 
-// function addClassEmailField() {
-//   $("input#id_email").addClass("border-bottom form-control padding-0");
-//   $("input#id_email").attr("placeholder", "Enter your email");
-//
-//   $('input#id_email').on('input', function(){ visibleEmailTopInput() });
-//   $('input#id_email').on('keyup', function(){ visibleEmailTopInput() });
-// }
+function addClassEmailField() {
+  // $("input#id_email").addClass("border-bottom form-control padding-0");
+  $("input#id_email").attr("placeholder", "Enter your email address below");
 
-// function addClassPasswordField() {
-//   $("input#id_new_password1").addClass("border-bottom form-control padding-0 form-password");
-//   $("input#id_new_password1").attr("placeholder", "Password");
-//
-//   $('input#id_new_password1').on('input', function(){ visiblePasswordTopInput()() });
-//   $('input#id_new_password1').on('keyup', function(){ visiblePasswordTopInput() });
-//
-//
-//   $("input#id_new_password2").addClass("border-bottom form-control padding-0 input-form");
-//   $("input#id_new_password2").attr("placeholder", "Confirm password");
-//
-//   $('input#id_new_password2').on('input', function(){ visibleRePasswordTopInput()() });
-//   $('input#id_new_password2').on('keyup', function(){ visibleRePasswordTopInput() });
-// }
+  $('input#id_email').on('input', function(){ visibleEmailTopInput() });
+  $('input#id_email').on('keyup', function(){ visibleEmailTopInput() });
+}
+
+function addClassPasswordField() {
+  // $("input#id_new_password1").addClass("border-bottom form-control padding-0 form-password");
+  $("input#id_new_password1").attr("placeholder", "New password");
+  
+  $('input#id_new_password1').on('input', function(){ visiblePasswordTopInput()() });
+  $('input#id_new_password1').on('keyup', function(){ visiblePasswordTopInput() });
+
+
+  // $("input#id_new_password2").addClass("border-bottom form-control padding-0 input-form");
+  $("input#id_new_password2").attr("placeholder", "Confirm password");
+
+  $('input#id_new_password2').on('input', function(){ visibleRePasswordTopInput()() });
+  $('input#id_new_password2').on('keyup', function(){ visibleRePasswordTopInput() });
+}
 
 
 $(document).ready(function(){
   if ($("input").is("#username") == true) {
     setFocus();
   }
-  // addClassEmailField();
-  // addClassPasswordField();
+  addClassEmailField();
+  addClassPasswordField();
 });

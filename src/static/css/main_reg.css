@@ -53,6 +53,13 @@ a:focus, a:hover {
     text-decoration: none !important;
 }
 
+/* input field for the reset password */
+#id_email, #id_new_password1, #id_new_password2 {
+    min-width: 100% !important;
+    border: 1px solid #7f3f98 !important;
+    padding-left: 10px;
+    height: 34px;
+}
 
 /* background registrations */
 .reg-form {
@@ -189,4 +196,11 @@ a:focus, a:hover {
 input {outline: none;}
 input:-webkit-autofill {
     -webkit-box-shadow: inset 0 0 0 50px white !important; /* background color */
+    -webkit-text-fill-color: #7f3f98 !important;
+    color: #7f3f98 !important;
+}
+
+/* form-control */
+.form-control {
+    color: #7f3f98 !important;
 }
