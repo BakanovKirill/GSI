@@ -101,6 +101,7 @@ a:focus, a:hover {
     border-width: 1px;
     border-color: #7f3f98 !important;
     border-radius: 0px !important;
+    color: white !important;
 }
 
 .btn-success {
@@ -109,6 +110,7 @@ a:focus, a:hover {
     border-width: 1px;
     border-color: #8bc53f !important;
     border-radius: 0px !important;
+    color: white !important;
 }
 
 .btn-default {
@@ -655,6 +657,12 @@ li.active-main-menu, li.active-main-menu a:hover, li.li-menu > a:hover, .title:h
     padding: 6px 12px;
     position: relative;
     text-decoration: none;
+}
+
+.pagination>.active>a {
+    background-color: #7f3f98;
+    border-color: #7f3f98;
+    color: white !important;
 }
 
 .pagination-black > li > a:hover {
