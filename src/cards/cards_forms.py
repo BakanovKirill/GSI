@@ -73,13 +73,13 @@ class RFScoreForm(forms.ModelForm):
         label=u'Name',
     )
     area = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": 'form-control disabled'}),
+        widget=forms.Select(attrs={"class": 'form-control'}),
         queryset=Area.objects.all(),
         empty_label='Select',
         label=u'Area',
     )
     year_group = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": 'form-control disabled'}),
+        widget=forms.Select(attrs={"class": 'form-control'}),
         queryset=YearGroup.objects.all(),
         empty_label='Select',
         label=u'Year group',
@@ -148,7 +148,7 @@ class RemapForm(forms.ModelForm):
         label=u'Name',
     )
     year_group = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": 'form-control disabled'}),
+        widget=forms.Select(attrs={"class": 'form-control'}),
         queryset=YearGroup.objects.all(),
         empty_label='Select',
         required=False,
@@ -284,7 +284,7 @@ class YearFilterForm(forms.ModelForm):
         label=u'Name',
     )
     area = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": 'form-control disabled'}),
+        widget=forms.Select(attrs={"class": 'form-control'}),
         queryset=Area.objects.all(),
         empty_label='Select',
         label=u'Area',
@@ -353,6 +353,7 @@ class CollateForm(forms.ModelForm):
         super(CollateForm, self).__init__(*args, **kwargs)
 
     run_parallel = forms.BooleanField(
+        # widget=forms.CheckboxInput(attrs={'checked data-toggle': "toggle", 'data-size': "mini"}),
         initial=False,
         required=False,
         label=u'Run parallel',
@@ -363,7 +364,7 @@ class CollateForm(forms.ModelForm):
         label=u'Name',
     )
     area = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": 'form-control disabled'}),
+        widget=forms.Select(attrs={"class": 'form-control', 'onchange': "this.className=this.value"}),
         queryset=Area.objects.all(),
         empty_label='Select',
         label=u'Area',
@@ -387,7 +388,7 @@ class CollateForm(forms.ModelForm):
         label=u'Input scale factor',
     )
     input_data_directory = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": 'form-control disabled',
+        widget=forms.Select(attrs={"class": 'form-control',
                                    "onchange": 'this.form.submit()'}),
         queryset=InputDataDirectory.objects.all(),
         empty_label='Select',
@@ -397,7 +398,7 @@ class CollateForm(forms.ModelForm):
     input_files = forms.ModelMultipleChoiceField(
         widget=forms.SelectMultiple(
             attrs={'size': '10',
-                   'class': 'form-control disabled'}
+                   'class': 'form-control'}
         ),
         queryset=ListTestFiles.objects.all(),
         required=False,
@@ -434,7 +435,7 @@ class PreProcForm(forms.ModelForm):
         label=u'Name',
     )
     area = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": 'form-control disabled'}),
+        widget=forms.Select(attrs={"class": 'form-control'}),
         queryset=Area.objects.all(),
         required=False,
         empty_label='Select',
@@ -447,7 +448,7 @@ class PreProcForm(forms.ModelForm):
         label=u'Mode',
     )
     year_group = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": 'form-control disabled'}),
+        widget=forms.Select(attrs={"class": 'form-control'}),
         queryset=YearGroup.objects.all(),
         required=False,
         empty_label='Select',
@@ -520,7 +521,7 @@ class RFTrainForm(forms.ModelForm):
         label=u'Name',
     )
     tile_type = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": 'form-control disabled'}),
+        widget=forms.Select(attrs={"class": 'form-control'}),
         queryset=TileType.objects.all(),
         empty_label='Select',
         label=u'Tile type',
@@ -611,7 +612,7 @@ class RandomForestForm(forms.ModelForm):
         label=u'AoI Name',
     )
     satellite = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": 'form-control disabled'}),
+        widget=forms.Select(attrs={"class": 'form-control'}),
         queryset=Satellite.objects.all(),
         empty_label='Select',
         label=u'Satellite',
@@ -656,7 +657,7 @@ class CalcStatsForm(forms.ModelForm):
         super(CalcStatsForm, self).__init__(*args, **kwargs)
 
         filter_out = forms.ModelChoiceField(
-            widget=forms.Select(attrs={'class': 'form-control  disabled'}),
+            widget=forms.Select(attrs={'class': 'form-control'}),
             queryset=FILTER_OUT,
             empty_label='Select',
             required=False,
@@ -679,14 +680,14 @@ class CalcStatsForm(forms.ModelForm):
         label=u'Output Tile Subdir',
     )
     area = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": 'form-control disabled'}),
+        widget=forms.Select(attrs={"class": 'form-control'}),
         queryset=Area.objects.all(),
         required=False,
         empty_label='Select',
         label=u'Area',
     )
     year_group = forms.ModelChoiceField(
-        widget=forms.Select(attrs={"class": 'form-control disabled'}),
+        widget=forms.Select(attrs={"class": 'form-control'}),
         queryset=YearGroup.objects.all(),
         empty_label='Select',
         required=False,
@@ -695,7 +696,7 @@ class CalcStatsForm(forms.ModelForm):
     period = forms.CharField(
         widget=forms.Select(
                 attrs={
-                    "class": 'form-control disabled',
+                    "class": 'form-control',
                     "onchange": 'visibleDoy()'
                 },
                 choices=PERIOD
@@ -713,7 +714,7 @@ class CalcStatsForm(forms.ModelForm):
     )
     filter_out = forms.CharField(
         widget=forms.Select(
-                attrs={'class': 'form-control  disabled'},
+                attrs={'class': 'form-control'},
                 choices=FILTER_OUT
         ),
         required=False,
@@ -733,7 +734,7 @@ class CalcStatsForm(forms.ModelForm):
     )
     doy_variable = forms.CharField(
         widget=forms.TextInput(
-                attrs={'class': 'form-control doy disabled'}
+                attrs={'class': 'form-control doy'}
         ),
         max_length=200,
         required=False,

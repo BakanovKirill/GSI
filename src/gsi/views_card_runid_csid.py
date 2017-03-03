@@ -382,6 +382,7 @@ def cs_runid_csid_collate_edit(request, run_id, cs_id, card_id, collate_id):
 
 		# Handling POST request
 		if request.method == "POST":
+			print 'POST =================== ', request.POST
 			if request.POST.get('update_data') is not None:
 				update_list_files(collate_card.input_data_directory)
 

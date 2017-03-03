@@ -48,7 +48,7 @@ class RunForm(forms.ModelForm):
             that result will be stored')
     resolution = forms.ModelChoiceField(
         widget=forms.Select(attrs={
-            'class': 'form-control disabled',
+            'class': 'form-control',
         }),
         queryset=Resolution.objects.all(),
         empty_label='Select',
@@ -110,7 +110,7 @@ class CardSequenceCardForm(forms.ModelForm):
 
     card_item = forms.ModelChoiceField(
         widget=forms.Select(
-            attrs={'class': 'form-control disabled',
+            attrs={'class': 'form-control',
                    'type': "hidden"}),
         queryset=CardItem.objects.all(),
         label=u'Environment base', )

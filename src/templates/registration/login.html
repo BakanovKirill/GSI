@@ -22,12 +22,7 @@
     <form action="{% url 'users:auth_login' %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="next" value="{% url 'index' %}" />
-        
-        <div class="row col-md-4 margin-top-100 left">
-            <img src="{% static 'img/GSIlogo-big.png' %}"/>
-        </div>
-
-        <div class="row col-md-4 background-white margin-left-30 center">
+        <div class="row col-md-6 background-white center">
             <h2 class="left"><b>Login</b></h2>
 
             <div class="row margin-top-25">

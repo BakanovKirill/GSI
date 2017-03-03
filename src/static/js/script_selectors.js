@@ -84,6 +84,9 @@ function setOpacity() {
     opacity = document.getElementById("opacity").value;
     img = document.getElementById("on_add");
     img.style.opacity = opacity / 100;
+    
+    var slider_value = $("#slider_value");
+    $(slider_value).text('Transparency: '+opacity+' %');
 
     // alert('setOpacity: '+opacity);
 }

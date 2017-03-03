@@ -75,9 +75,9 @@ function invisibleDropMenu() {
   }
 }
 
-function invisibleSelect() {
-  $("select").selecter();
-}
+// function invisibleSelect() {
+//   $("select").selecter();
+// }
 
 function changeColorError() {
   if ( $('span').is('.field-error') ) {
@@ -116,15 +116,13 @@ function colorBlackSelect() {
 
 function selectAllAvialable() {
   $('#select-available-files option').each(function(){
-    $('div.available div.multiple select option').attr("selected", "selected");
-    $('div.available div.multiple div.selecter-options span.selecter-item').attr("class", "selecter-item selected");
+    $(this).attr("selected", "selected");
   });
 }
 
 function selectAllChosen() {
   $('#select-chosen-files option').each(function(){
-    $('div.chosen div.multiple select option').attr("selected", "selected");
-    $('div.chosen div.multiple div.selecter-options span.selecter-item').attr("class", "selecter-item selected");
+    $(this).attr("selected", "selected");
   });
 }
 
@@ -213,6 +211,25 @@ function initAddFormatingTextarrea(){
     $("#div_id_content > div.controls").addClass("textarea");
 }
 
+function greyColorSelect() {
+    var select_option = $("select.form-control option");
+    var select_selected = $("select.form-control :selected");
+    var select = $("select.form-control");
+    
+    $(select_selected).each(function(){
+        if (this.text == 'Select') {
+            // alert('Select: '+this.text);
+            $(select).addClass('font-color-grey');
+        }
+    });
+    
+    $(select_option).each(function(){
+        if (this.text == 'Select') {
+            $(this).addClass('font-color-grey');
+        }
+    });
+}
+
 
 $(document).ready(function(){
     //selectAll();
@@ -220,7 +237,7 @@ $(document).ready(function(){
     onOffSubMenuUploadTestData();
     invisibleDropMenu();
     onOffSubMenuUser();
-    invisibleSelect();
+    // invisibleSelect();
     changeColorError();
     changeColorSuccess();
     colorBlackSelect();
@@ -229,5 +246,6 @@ $(document).ready(function(){
     initCreateCard();
     initSelectConfigFile();
     initAddFormatingTextarrea();
+    greyColorSelect();
     // showCheckboxes();
 });
