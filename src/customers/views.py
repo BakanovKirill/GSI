@@ -1111,6 +1111,8 @@ def customer_section(request):
     if request.method == "POST":
         data_post = request.POST
         dirs = []
+        
+        print 'POST ============================== ', data_post
 
         if 'add-list-view' in data_post:
             if 'root_filenames[]' in data_post and 'statistics[]' in data_post:
@@ -1344,7 +1346,7 @@ def customer_section(request):
     if show_file:
         file_tif = show_file + '.tif'
 
-    print 'file_tif =================== ', file_tif
+    # print 'file_tif =================== ', file_tif
 
     data = {
         'title': title,

@@ -81,12 +81,12 @@ function hideElem(cont, checkb){
 }
 
 function setOpacity() {
-    opacity = document.getElementById("opacity").value;
-    img = document.getElementById("on_add");
+    var opacity = document.getElementById("opacity").value;
+    var img = document.getElementById("on_add");
     img.style.opacity = opacity / 100;
     
     var slider_value = $("#slider_value");
-    $(slider_value).text('Transparency: '+opacity+' %');
+    $(slider_value).text('Visibility: '+opacity+' %');
 
     // alert('setOpacity: '+opacity);
 }
