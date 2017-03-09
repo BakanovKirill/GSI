@@ -332,9 +332,15 @@ function setPolygon(obj) {
                 var message = 'An unexpected error occurred. Try later.';
             },
             'success': function(data, status, xhr){
-                // alert('URI: '+data);
-                var uri_kml = data;
-                var kml = new google.maps.KmlLayer(uri_kml);
+                // alert('DATA: '+data);
+                // var data_status = JSON.parse(data);
+                // alert('URL: '+data_status.url);
+                // alert('status: '+data_status.status);
+                // if (data_status.status == 'reload') {
+                //     window.location.href = form_url;
+                // }
+                // var uri_kml = data_status.url;
+                var kml = new google.maps.KmlLayer(data);
                 kml.setMap(map);
             },
         });

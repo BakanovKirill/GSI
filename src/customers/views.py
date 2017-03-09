@@ -1096,17 +1096,17 @@ def customer_section(request):
             request.session['file_info_panel'] = data_get.get('show_file_arrea', '')
             
         if 'polygon' in data_get:
-            for ip in cip:
-                remove_file_png(ip.png_path)
-
-            CustomerInfoPanel.objects.filter(user=request.user).delete()
+            # for ip in cip:
+            #     remove_file_png(ip.png_path)
+            #
+            # CustomerInfoPanel.objects.filter(user=request.user).delete()
             
             polygon = data_get.get('polygon', '')
             data = os.path.join(absolute_kml_url, polygon)
 
         status = 'success'
 
-        return HttpResponse(data, status)
+        return HttpResponse(data)
 
     # Get data for the Info Panel
     try:
