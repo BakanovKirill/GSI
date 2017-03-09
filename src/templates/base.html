@@ -296,15 +296,6 @@
                                             </select>
                                         {% endif %}
                                         
-                                        {% if polygons_list %}
-                                            <label class="control-label margin-top-25">Polygons:</label>
-                                            <select class="form-control margin-top-10" name="polygons[]" multiple size="8">
-                                                {% for polygon in polygons_list%}
-                                                    <option value="{{ polygon }}">{{ polygon }}</option>
-                                                {% endfor %}
-                                            </select>
-                                        {% endif %}
-                                        
                                         <div class="margin-top-20 button-link">
                                             <a name="remove-selected-items" onclick="removeSelectedItems()" href="">
                                                 Remove the all selected items
@@ -316,6 +307,13 @@
                                                 Add to list view
                                             </button>
                                         </div>
+                                        
+                                        {% if polygons_list %}
+                                            <label class="control-label margin-top-25">Polygons:</label><br />
+                                            {% for polygon in polygons_list%}
+                                                <input type="radio" name="polygon" value="{{ polygon }}.kml" onchange="setPolygon(this);"> {{ polygon }}<br>
+                                            {% endfor %}
+                                        {% endif %}
                                     </div>
                                 </form>
                             {% endif %}

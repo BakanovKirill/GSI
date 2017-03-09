@@ -19,6 +19,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 
+from gsi.settings import STATIC_DIR
 from customers.models import Category, ShelfData, DataSet, CustomerAccess, CustomerInfoPanel
 from customers.customers_forms import CategoryForm, ShelfDataForm, DataSetForm, CustomerAccessForm
 from customers.customers_update_create import (category_update_create, shelf_data_update_create,
@@ -26,7 +27,7 @@ from customers.customers_update_create import (category_update_create, shelf_dat
 from core.get_post import get_post
 from core.paginations import paginations
 from gsi.settings import (BASE_DIR, RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM, POLYGONS_DIRECTORY,
-                        DAFAULT_LAT, DAFAULT_LON, PNG_DIRECTORY, PNG_PATH, PROJECTS_PATH)
+                        DAFAULT_LAT, DAFAULT_LON, PNG_DIRECTORY, PNG_PATH, PROJECTS_PATH, KML_DIRECTORY, KML_PATH)
 
 
 # categorys list
@@ -977,6 +978,7 @@ def customer_section(request):
     customer_info_panel = CustomerInfoPanel.objects.filter(user=request.user)
     title = 'Customer {0} section'.format(customer)
     url_name = 'customer_section'
+    polygons_path = os.path.join(STATIC_DIR, 'kml')
     warning_message = ''
     # error = False
 
@@ -988,10 +990,12 @@ def customer_section(request):
     dirs_infopanel = []
     files_infopanel = []
     statisctics_infopanel = []
+    polygons_list = []
     data_set_id = 0
     show_file = ''
     file_tif = ''
-
+    polygon = ''
+    
     # default GEOTIFF coordinates
     cLng = DAFAULT_LON
     cLat = DAFAULT_LAT
@@ -1004,6 +1008,20 @@ def customer_section(request):
 
     scheme = '{0}://'.format(request.scheme)
     absolute_png_url = os.path.join(scheme, request.get_host(), PNG_DIRECTORY)
+    absolute_kml_url = os.path.join(scheme, request.get_host(), KML_DIRECTORY)
+    
+    # Get the polygons list
+    try:
+        root, dirs, files = os.walk(polygons_path).next()
+
+        for f in files:
+            file_extension = os.path.splitext(f)
+            
+            if file_extension[1] == '.kml':
+                polygons_list.append(file_extension[0])
+    except Exception, e:
+        print 'Exception 02 ========================= ', e
+        warning_message = u'The polygon directory "{0}" does not exist!'.format(polygons_path)
 
     # Get the User DataSets
     try:
@@ -1057,6 +1075,7 @@ def customer_section(request):
 
     # AJAX clear selection
     if request.is_ajax():
+        data = ''
         data_get = request.GET
         cip = CustomerInfoPanel.objects.filter(user=request.user)
 
@@ -1075,10 +1094,16 @@ def customer_section(request):
 
         if 'show_file_arrea' in data_get:
             request.session['file_info_panel'] = data_get.get('show_file_arrea', '')
+            
+        if 'polygon' in data_get:
+            polygon = data_get.get('polygon', '')
+            data = os.path.join(absolute_kml_url, polygon)
+            print 'polygon ========================== ', polygon
+            print 'data ========================== ', data
 
         status = 'success'
 
-        return HttpResponse(status)
+        return HttpResponse(data, status)
 
     # Get data for the Info Panel
     try:
@@ -1365,6 +1390,8 @@ def customer_section(request):
         'statisctics_infopanel': statisctics_infopanel,
         'show_file': show_file,
         'file_tif': file_tif,
+        'polygons_list': polygons_list,
+        'absolute_kml_url': absolute_kml_url,
 
         'cLng': cLng,
         'cLat': cLat,

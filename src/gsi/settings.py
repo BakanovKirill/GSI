@@ -288,6 +288,10 @@ PNG_DIRECTORY = 'media/png'
 PNG_PATH = os.path.join(BASE_DIR, PNG_DIRECTORY)
 PROJECTS_PATH = '/lustre/w23/mattgsi/satdata/RF/Projects'
 
+# KML files
+KML_DIRECTORY = 'static/kml'
+KML_PATH = os.path.join(BASE_DIR, KML_DIRECTORY)
+
 # Card Type
 CARD_TYPE = {
     'rftrain': 'RFTrain',

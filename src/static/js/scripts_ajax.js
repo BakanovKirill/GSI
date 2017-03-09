@@ -311,6 +311,38 @@ function removeSelectedItems() {
     return false;
 }
 
+function setPolygon(obj) {
+    // alert(obj.checked);
+    var checked = obj.checked;
+    var form_url = $('#customer_section').attr('action');
+    
+    if (checked) {
+        $.ajax({
+            url: form_url,
+            type: 'GET',
+            'async': true,
+            'dataType': 'text',
+            data: {
+                'polygon': obj.value,
+                'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+            },
+            'error': function(xhr, status, error){
+                // alert('status 1: '+status);
+                // alert('error: '+error);
+                var message = 'An unexpected error occurred. Try later.';
+            },
+            'success': function(data, status, xhr){
+                // alert('URI: '+data);
+                var uri_kml = data;
+                var kml = new google.maps.KmlLayer(uri_kml);
+                kml.setMap(map);
+            },
+        });
+    }
+    
+    return false;
+}
+
 
 $(document).ready(function(){
     initCheckDeleteItems();
