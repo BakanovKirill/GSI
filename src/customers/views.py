@@ -1096,10 +1096,13 @@ def customer_section(request):
             request.session['file_info_panel'] = data_get.get('show_file_arrea', '')
             
         if 'polygon' in data_get:
+            for ip in cip:
+                remove_file_png(ip.png_path)
+
+            CustomerInfoPanel.objects.filter(user=request.user).delete()
+            
             polygon = data_get.get('polygon', '')
             data = os.path.join(absolute_kml_url, polygon)
-            print 'polygon ========================== ', polygon
-            print 'data ========================== ', data
 
         status = 'success'
 
@@ -1137,8 +1140,6 @@ def customer_section(request):
         data_post = request.POST
         dirs = []
         
-        print 'POST ============================== ', data_post
-
         if 'add-list-view' in data_post:
             if 'root_filenames[]' in data_post and 'statistics[]' in data_post:
                 info_panel = CustomerInfoPanel.objects.filter(user=request.user).delete()
