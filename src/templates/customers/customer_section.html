@@ -241,12 +241,13 @@
 				// map.setMapTypeId(google.maps.MapTypeId.HYBRID);
 				//
 				
-				// START KML *********************************************************************************
+				// START KML *************************************************************************************************************
+				
 				// Set KML file
 				// var kml = new google.maps.KmlLayer("https://developers.google.com/kml/documentation/KML_Samples.kml");
 				// kml.setMap(map);
 				
-				// Need add GE API
+				// Need add GE API *******************************************************************************************************
 				// Set KML file and create info marker
 				// var link = ge.createLink('');
 				// link.setHref("https://developers.google.com/kml/documentation/KML_Samples.kml");
@@ -254,9 +255,10 @@
 				// ge.getFeatures().
 				// appendChild(networkLink);
 				
-				// Set KML file and create link for download
+				// Set KML file and create link for download *****************************************************************************
 				// google.earth.fetchKml(ge, "https://developers.google.com/kml/documentation/KML_Samples.kml", getKML);
-				// END KML *********************************************************************************
+				
+				// END KML ****************************************************************************************************************
 
 				// var min_marker = new google.maps.Marker({
 				//     position: {
@@ -315,11 +317,11 @@
 
 			}
 			
-			function getKML(kmlObject){
-				if (kmlObject) {
-					ge.getFeatures().appendChild(kmlObject);
-				}
-			}
+			// function getKML(kmlObject){
+			// 	if (kmlObject) {
+			// 		ge.getFeatures().appendChild(kmlObject);
+			// 	}
+			// }
 
 			/** @constructor */
 			function USGSOverlay(bounds, image, map) {
@@ -530,17 +532,8 @@
 
 				// info window
 				var contentString = text;
-				// var contentString = '<b>Area Information</b><br><br>' + 'Area=<input type="text" name="file_info" size="40" value="' + area + ' sq.m"><br>';
-				// contentString += 'Mean=<input type="text" name="file_info" size="40" value="' + '29' + '"><br>';
-				// contentString += 'Min=<input type="text" name="file_info" size="40" value="' + '2' + '"><br>';
-				// contentString += 'Max=<input type="text" name="file_info" size="40" value="' + '142' + '"><br><br>';
-				
-				// var contentString = '<b>Area Information</b><br><br>' + 'Area=<input type="text" name="file_info" size="40" value="' + area + '">' + ' sq.m,<br>Mean=29,<br>Min=2,<br>Max=142<br><br>';
 				contentString += '<input type="text" class="margin-top-15" placeholder="Enter file name" name="file_name" size="40"><br>'
-				
 				contentString += '<button type="submit" class="margin-top-15" name="download_file" class="btn btn-success btn-block" value="out_log">Download the file locally</button>';
-				
-				// document.write('<a href="data:text/plain;charset=utf-8,%EF%BB%BF' + encodeURIComponent(text) + '" download="text.txt">text.txt</a>')
 				
 				infowindow = new google.maps.InfoWindow({content: contentString, position: center_pol});
 				infowindow.open(map);

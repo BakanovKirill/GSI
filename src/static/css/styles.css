@@ -428,6 +428,10 @@ input:-webkit-autofill {
     text-align: left;
 }
 
+#titleUser {
+    color: #80d0f4;
+}
+
 .brand-logo:hover {
     color: #80d0f4 !important;
 }
