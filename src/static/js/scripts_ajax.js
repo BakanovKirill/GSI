@@ -349,6 +349,41 @@ function setPolygon(obj) {
     return false;
 }
 
+function sendDataToServer(obj) {
+    // var send_data = JSON.parse(obj);
+    // var send_data = JSON.parse(data);
+    var form_url = $('#customer_section').attr('action');
+    
+    // alert('SEND DATA: '+obj);
+    
+    $.ajax({
+        url: form_url,
+        type: 'GET',
+        'async': true,
+        'dataType': 'text',
+        data: {
+            'send_data': obj,
+            'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+        },
+        'error': function(xhr, status, error){
+            // alert('error: '+error);
+            var message = 'An unexpected error occurred. Try later.';
+        },
+        'success': function(data, status, xhr){
+            // alert('Success!');
+            // var data_status = JSON.parse(data);
+            // alert('URL: '+data_status.url);
+            // alert('status: '+data_status.status);
+            // if (data_status.status == 'reload') {
+            //     window.location.href = form_url;
+            // }
+            // var uri_kml = data_status.url;
+            // var kml = new google.maps.KmlLayer(data);
+            // kml.setMap(map);
+        },
+    });
+}
+
 
 $(document).ready(function(){
     initCheckDeleteItems();

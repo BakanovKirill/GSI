@@ -19,14 +19,13 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 
-from gsi.settings import STATIC_DIR
 from customers.models import Category, ShelfData, DataSet, CustomerAccess, CustomerInfoPanel
 from customers.customers_forms import CategoryForm, ShelfDataForm, DataSetForm, CustomerAccessForm
 from customers.customers_update_create import (category_update_create, shelf_data_update_create,
                                                 data_set_update_create, customer_access_update_create)
 from core.get_post import get_post
 from core.paginations import paginations
-from gsi.settings import (BASE_DIR, RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM, POLYGONS_DIRECTORY,
+from gsi.settings import (BASE_DIR, RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM, POLYGONS_DIRECTORY, MEDIA_ROOT,
                         DAFAULT_LAT, DAFAULT_LON, PNG_DIRECTORY, PNG_PATH, PROJECTS_PATH, KML_DIRECTORY, KML_PATH)
 
 
@@ -978,7 +977,7 @@ def customer_section(request):
     customer_info_panel = CustomerInfoPanel.objects.filter(user=request.user)
     title = 'Customer {0} section'.format(customer)
     url_name = 'customer_section'
-    polygons_path = os.path.join(STATIC_DIR, 'kml')
+    polygons_path = os.path.join(MEDIA_ROOT, 'kml')
     warning_message = ''
     # error = False
 
@@ -995,6 +994,12 @@ def customer_section(request):
     show_file = ''
     file_tif = ''
     polygon = ''
+    remove = False
+    
+    # if remove:
+    coord = []
+    
+    print 'coord 11 ======================== ', coord
     
     # default GEOTIFF coordinates
     cLng = DAFAULT_LON
@@ -1075,9 +1080,23 @@ def customer_section(request):
 
     # AJAX clear selection
     if request.is_ajax():
+        print 'is_ajax ======================== '
         data = ''
         data_get = request.GET
         cip = CustomerInfoPanel.objects.filter(user=request.user)
+        
+        # coord.append()
+        
+        # JSONdata = data_get['']
+        # dict_data = simplejson.JSONDecoder().decode( JSONdata )
+        
+        for n in data_get.items():
+            tmp = {}
+            tmp[n[0]] = n[1]
+            coord.append(tmp)
+            # print 'N ======================== ', n
+        print 'coord ======================== ', coord
+        
 
         # When user celect a new DataSet, the previous celected DataSet to remove
         if 'datasets_id' in data_get:
@@ -1103,6 +1122,11 @@ def customer_section(request):
             
             polygon = data_get.get('polygon', '')
             data = os.path.join(absolute_kml_url, polygon)
+            
+        if 'send_data'in data_get:
+            print 'send_data ======================== '
+            send_data = data_get.get('send_data', '')
+            print 'send_data ======================== ', send_data
 
         status = 'success'
 
