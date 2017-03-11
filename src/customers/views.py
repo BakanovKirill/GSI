@@ -1008,7 +1008,8 @@ def customer_section(request):
                            (18.350467,-34.048388),(18.347171,-34.040177)]
     pol.style.linestyle.color = simplekml.Color.green
     pol.style.linestyle.width = 5
-    pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.green)
+    # simplekml.Color.rgb(0, 0, 255)
+    pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.rgb(0, 0, 255))
     kml_path = os.path.join(polygons_path, 'Polygon_Styling.kml')
     kml.save(kml_path)
     
