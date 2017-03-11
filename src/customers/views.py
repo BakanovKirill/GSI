@@ -1001,12 +1001,16 @@ def customer_section(request):
     coord = []
     
     kml = simplekml.Kml()
-    ls = kml.newlinestring(name='A LineString')
-    ls.coords = [(18.333868,-34.038274,10.0), (18.370618,-34.034421,10.0)]
-    ls.extrude = 1
-    ls.altitudemode = simplekml.AltitudeMode.relativetoground
+    pol = kml.newpolygon(name='A Polygon')
+    pol.outerboundaryis = [(18.333868,-34.038274), (18.370618,-34.034421),
+                           (18.350616,-34.051677),(18.333868,-34.038274)]
+    # pol.innerboundaryis = [(18.347171,-34.040177), (18.355741,-34.039730),
+    #                        (18.350467,-34.048388),(18.347171,-34.040177)]
+    pol.style.linestyle.color = simplekml.Color.red
+    pol.style.linestyle.width = 25
+    pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.blue)
 
-    kml_path = os.path.join(KML_PATH, 'LinearRing_2.kml')
+    kml_path = os.path.join(KML_PATH, 'LinearRing_3.kml')
     kml.save(kml_path)
     
     
