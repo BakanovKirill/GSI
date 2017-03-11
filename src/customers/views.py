@@ -1000,6 +1000,14 @@ def customer_section(request):
     # if remove:
     coord = []
     
+    kml = simplekml.Kml()
+    pol = kml.newpolygon()
+    print pol.outerboundaryis # Shows that the outer boundary of a polygon is a linear ring
+    pol.outerboundaryis.coords = [(0.0,0.0), (1.0,1.0), (2.0,2.0)]
+
+    kml_path = os.path.join(KML_PATH, 'LinearRing_1.kml')
+    kml.save(kml_path)
+    
     
     
     # kml = simplekml.Kml()
