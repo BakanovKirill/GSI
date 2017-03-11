@@ -354,8 +354,21 @@ function sendDataToServer(obj) {
     // var send_data = JSON.parse(obj);
     // var send_data = JSON.parse(data);
     var form_url = $('#customer_section').attr('action');
+    var obj_list = []
+    var count = 0;
     
-    // alert('SEND DATA: '+obj);
+    alert('SEND DATA: '+obj);
+    
+    for(n in obj) {
+        // alert('!!!! N: '+n);
+        var temp = []
+        for(k in obj[n]) {
+            // alert('K: '+k);
+            // alert('OBJ: '+obj[n][k]);
+            temp.push(obj[n][k]);
+        }
+        obj_list.push(temp);
+    }
     
     $.ajax({
         url: form_url,
@@ -363,7 +376,7 @@ function sendDataToServer(obj) {
         'async': true,
         'dataType': 'text',
         data: {
-            'send_data': obj,
+            'send_data': obj_list,
             'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
         },
         'error': function(xhr, status, error){

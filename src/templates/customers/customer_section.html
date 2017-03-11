@@ -515,6 +515,7 @@
 				selectPolygon.setMap(map);
 				polygons.push(selectPolygon);
 				polygonVisible = true;
+				sendDataToServer(coord);
 				
 				// alert('selectPolygon 1: '+selectPolygon'[strokeColor]');
 				// alert('selectPolygon strokeColor: '+selectPolygon.strokeColor);
@@ -570,7 +571,7 @@
 				//     '<a href="data:text/plain;charset=utf-8,%EF%BB%BF' + encodeURIComponent(text) + '" download="text.txt">text.txt</a>'
 				// )
 				
-				alert('text2: '+coord);
+				// alert('text2: '+coord);
 
 				var contentString = text;
 				contentString += '<input type="text" class="margin-top-15" placeholder="Enter file name" name="file_name" size="40"><br>'
