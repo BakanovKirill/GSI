@@ -1001,22 +1001,21 @@ def customer_section(request):
     # if remove:
     coord = []
     
-    kml = simplekml.Kml()
-    pol = kml.newpolygon()
-    print 'kml POL ======================', pol.outerboundaryis # Shows that the outer boundary of a polygon is a linear ring
-    pol.outerboundaryis.coords = [(0.0,0.0), (1.0,1.0), (2.0,2.0)]
-    
     # kml = simplekml.Kml()
-    # pol = kml.newpolygon(name='A Polygon')
-    # pol.outerboundaryis = [[18.333868,-34.038274], [18.370618,-34.034421],
-    #                        [18.350616,-34.051677],[18.333868,-34.038274]]
+    # pol = kml.newpolygon()
+    # pol.outerboundaryis.coords = [(0.0,0.0), (1.0,1.0), (2.0,2.0)]
+    
+    kml = simplekml.Kml()
+    pol = kml.newpolygon(name='A Polygon')
+    pol.outerboundaryis = [[18.333868,-34.038274], [18.370618,-34.034421],
+                           [18.350616,-34.051677],[18.333868,-34.038274]]
     # # pol.innerboundaryis = [(18.347171,-34.040177), (18.355741,-34.039730),
     # #                        (18.350467,-34.048388),(18.347171,-34.040177)]
     pol.style.linestyle.color = simplekml.Color.hex('#8bc53f')
-    # pol.style.linestyle.width = 6
+    pol.style.linestyle.width = 2
     pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.green)
 
-    kml_path = os.path.join(KML_PATH, 'LinearRing_3.kml')
+    kml_path = os.path.join(KML_PATH, 'LinearRing_33.kml')
     kml.save(kml_path)
     
     
