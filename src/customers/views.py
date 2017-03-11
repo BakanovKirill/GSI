@@ -1009,7 +1009,7 @@ def customer_section(request):
     pol.style.linestyle.color = simplekml.Color.green
     pol.style.linestyle.width = 5
     pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.green)
-    kml.save("/data/work/virtualenvs/gsi/GSI/src/media/kml/Polygon Styling.kml")
+    kml.save("/data/work/virtualenvs/gsi/GSI/src/media/kml/Polygon_Styling.kml")
     
     print 'coord 11 ======================== ', coord
     
