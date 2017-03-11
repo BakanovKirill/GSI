@@ -1012,7 +1012,7 @@ def customer_section(request):
     # # pol.innerboundaryis = [(18.347171,-34.040177), (18.355741,-34.039730),
     # #                        (18.350467,-34.048388),(18.347171,-34.040177)]
     pol.style.linestyle.color = simplekml.Color.hex('#8bc53f')
-    pol.style.linestyle.width = 2
+    pol.style.linestyle.width = 9
     pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.green)
 
     kml_path = os.path.join(KML_PATH, 'LinearRing_33.kml')
