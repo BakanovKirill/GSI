@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2">
+    <Document id="feat_7">
+        <Style id="stylesel_1">
+            <LineStyle id="substyle_1">
+                <colorMode>normal</colorMode>
+                <width>25</width>
+            </LineStyle>
+        </Style>
+        <Placemark id="feat_8">
+            <name>A Polygon 2</name>
+            <styleUrl>#stylesel_1</styleUrl>
+            <Polygon id="geom_5">
+                <outerBoundaryIs>
+                    <LinearRing id="geom_7">
+                        <coordinates>18.333868,-34.038274,0.0 18.370618,-34.034421,0.0 18.350616,-34.051677,0.0 18.333868,-34.038274,0.0</coordinates>
+                    </LinearRing>
+                </outerBoundaryIs>
+                <innerBoundaryIs>
+                    <LinearRing id="geom_8">
+                        <coordinates>18.347171,-34.040177,0.0 18.355741,-34.03973,0.0 18.350467,-34.048388,0.0 18.347171,-34.040177,0.0</coordinates>
+                    </LinearRing>
+                </innerBoundaryIs>
+            </Polygon>
+        </Placemark>
+    </Document>
+</kml>

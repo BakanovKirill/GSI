@@ -332,7 +332,7 @@ function setPolygon(obj) {
                 var message = 'An unexpected error occurred. Try later.';
             },
             'success': function(data, status, xhr){
-                // alert('DATA: '+data);
+                alert('DATA: '+data);
                 // var data_status = JSON.parse(data);
                 // alert('URL: '+data_status.url);
                 // alert('status: '+data_status.status);

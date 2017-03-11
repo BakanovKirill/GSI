@@ -1009,7 +1009,7 @@ def customer_section(request):
     # pol.style.linestyle.color = simplekml.Color.hex('036ce3')
     pol.style.linestyle.width = 25
     # pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.red)
-    kml_path = os.path.join(polygons_path, 'Polygon_Styling.kml')
+    kml_path = os.path.join(KML_PATH, 'Polygon_Styling.kml')
     kml.save(kml_path)
     
     print 'coord 11 ======================== ', coord
@@ -1103,12 +1103,12 @@ def customer_section(request):
         # JSONdata = data_get['']
         # dict_data = simplejson.JSONDecoder().decode( JSONdata )
         
-        for n in data_get.items():
-            tmp = {}
-            tmp[n[0]] = n[1]
-            coord.append(tmp)
-            # print 'N ======================== ', n
-        print 'coord ======================== ', coord
+        # for n in data_get.items():
+        #     tmp = {}
+        #     tmp[n[0]] = n[1]
+        #     coord.append(tmp)
+        #     # print 'N ======================== ', n
+        # print 'coord ======================== ', coord
         
 
         # When user celect a new DataSet, the previous celected DataSet to remove
