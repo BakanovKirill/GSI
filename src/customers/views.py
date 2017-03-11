@@ -6,7 +6,7 @@ import subprocess
 from PIL import Image
 from subprocess import check_call, Popen, PIPE
 from osgeo import osr, gdal
-import simplekml
+from simplekml import Kml
 
 # import Image, ImageDraw
 # from osgeo import gdal
@@ -1001,7 +1001,7 @@ def customer_section(request):
     # if remove:
     coord = []
     
-    kml = simplekml.Kml()
+    kml = Kml()
     pol = kml.newpolygon()
     print 'kml POL ======================', pol.outerboundaryis # Shows that the outer boundary of a polygon is a linear ring
     pol.outerboundaryis.coords = [(0.0,0.0), (1.0,1.0), (2.0,2.0)]
@@ -1012,9 +1012,9 @@ def customer_section(request):
     #                        [18.350616,-34.051677],[18.333868,-34.038274]]
     # # pol.innerboundaryis = [(18.347171,-34.040177), (18.355741,-34.039730),
     # #                        (18.350467,-34.048388),(18.347171,-34.040177)]
-    # pol.style.linestyle.color = simplekml.Color.hex('8bc53f')
+    pol.style.linestyle.color = simplekml.Color.hex('#8bc53f')
     # pol.style.linestyle.width = 6
-    # pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.blue)
+    pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.green)
 
     kml_path = os.path.join(KML_PATH, 'LinearRing_3.kml')
     kml.save(kml_path)
@@ -1221,7 +1221,6 @@ def customer_section(request):
             
             kml = simplekml.Kml()
             pol = kml.newpolygon()
-            print pol.outerboundaryis # Shows that the outer boundary of a polygon is a linear ring
             pol.outerboundaryis.coords = [(0.0,0.0), (1.0,1.0), (2.0,2.0)]
 
             kml_path = os.path.join(KML_PATH, 'LinearRing.kml')
