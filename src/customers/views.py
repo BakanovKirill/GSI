@@ -1159,7 +1159,8 @@ def customer_section(request):
             print 'send_data ======================== ', send_data
             
             kml = simplekml.Kml()
-            pol = kml.newpolygon(name='A Polygon')
+            # pol = kml.newpolygon(name='A Polygon')
+            pol = kml.newpolygon()
             pol.outerboundaryis.coords = coord
             # pol.innerboundaryis = coord
             kml_path = os.path.join(KML_PATH, 'LinearRing.kml')
