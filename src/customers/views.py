@@ -1002,8 +1002,8 @@ def customer_section(request):
     
     kml = simplekml.Kml()
     pol = kml.newpolygon(name='A Polygon')
-    pol.outerboundaryis = [(18.333868,-34.038274), (18.370618,-34.034421),
-                           (18.350616,-34.051677),(18.333868,-34.038274)]
+    pol.outerboundaryis = [[18.333868,-34.038274], [18.370618,-34.034421],
+                           [18.350616,-34.051677],[18.333868,-34.038274]]
     # pol.innerboundaryis = [(18.347171,-34.040177), (18.355741,-34.039730),
     #                        (18.350467,-34.048388),(18.347171,-34.040177)]
     pol.style.linestyle.color = simplekml.Color.red
@@ -1138,6 +1138,9 @@ def customer_section(request):
                 print 'N ======================== ', n
                 print 'N 0 ======================== ', n[0]
                 print 'N 1 ======================== ', n[1]
+                
+        for mk in coord:
+            print 'MK ====================== ', mk
         print 'coord ======================== ', coord
         
 
