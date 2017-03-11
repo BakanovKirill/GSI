@@ -1006,10 +1006,10 @@ def customer_section(request):
                            (18.350616,-34.051677),(18.333868,-34.038274)]
     pol.innerboundaryis = [(18.347171,-34.040177), (18.355741,-34.039730),
                            (18.350467,-34.048388),(18.347171,-34.040177)]
-    pol.style.linestyle.color = simplekml.Color.green
+    pol.style.linestyle.color = simplekml.Color.rgb(0, 0, 255)
     pol.style.linestyle.width = 5
     # simplekml.Color.rgb(0, 0, 255)
-    pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.rgb(0, 0, 255))
+    pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.green)
     kml_path = os.path.join(polygons_path, 'Polygon_Styling.kml')
     kml.save(kml_path)
     
