@@ -357,7 +357,7 @@ function sendDataToServer(obj) {
     var obj_list = []
     var count = 0;
     
-    // alert('SEND DATA: '+obj);
+    alert('SEND DATA: '+obj);
     
     for(n in obj) {
         // alert('!!!! N: '+n);
@@ -370,7 +370,7 @@ function sendDataToServer(obj) {
         obj_list.push(temp);
     }
     
-    // alert('obj_list: '+obj_list);
+    alert('obj_list: '+obj_list);
     
     $.ajax({
         url: form_url,
@@ -394,7 +394,7 @@ function sendDataToServer(obj) {
             //     window.location.href = form_url;
             // }
             // var uri_kml = data_status.url;
-            window.location.href = form_url;
+            // window.location.href = form_url;
             url_kml = data;
             var kml = new google.maps.KmlLayer(data);
             kml.setMap(map);
