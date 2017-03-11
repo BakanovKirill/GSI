@@ -1001,11 +1001,12 @@ def customer_section(request):
     coord = []
     
     kml = simplekml.Kml()
-    pol = kml.newpolygon()
-    print pol.outerboundaryis # Shows that the outer boundary of a polygon is a linear ring
-    pol.outerboundaryis.coords = [(0.0,0.0), (1.0,1.0), (2.0,2.0)]
+    ls = kml.newlinestring(name='A LineString')
+    ls.coords = [(18.333868,-34.038274,10.0), (18.370618,-34.034421,10.0)]
+    ls.extrude = 1
+    ls.altitudemode = simplekml.AltitudeMode.relativetoground
 
-    kml_path = os.path.join(KML_PATH, 'LinearRing_1.kml')
+    kml_path = os.path.join(KML_PATH, 'LinearRing_2.kml')
     kml.save(kml_path)
     
     
