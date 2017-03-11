@@ -6,7 +6,7 @@ import subprocess
 from PIL import Image
 from subprocess import check_call, Popen, PIPE
 from osgeo import osr, gdal
-from simplekml import Kml
+import simplekml
 
 # import Image, ImageDraw
 # from osgeo import gdal
@@ -1001,7 +1001,7 @@ def customer_section(request):
     # if remove:
     coord = []
     
-    kml = Kml()
+    kml = simplekml.Kml()
     pol = kml.newpolygon()
     print 'kml POL ======================', pol.outerboundaryis # Shows that the outer boundary of a polygon is a linear ring
     pol.outerboundaryis.coords = [(0.0,0.0), (1.0,1.0), (2.0,2.0)]
