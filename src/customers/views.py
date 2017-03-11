@@ -995,6 +995,7 @@ def customer_section(request):
     show_file = ''
     file_tif = ''
     polygon = ''
+    kml_path_show = ''
     # remove = False
     
     # if remove:
@@ -1142,10 +1143,11 @@ def customer_section(request):
             kml.save(kml_path)
             
             data = kml_path
+            kml_path_show = kml_path
             
             status = 'success'
 
-            return HttpResponse(data)
+            # return HttpResponse(data)
         
         
     if request.is_ajax():
@@ -1509,6 +1511,7 @@ def customer_section(request):
         'file_tif': file_tif,
         'polygons_list': polygons_list,
         'absolute_kml_url': absolute_kml_url,
+        'kml_path_show': kml_path_show,
 
         'cLng': cLng,
         'cLat': cLat,
