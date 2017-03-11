@@ -370,9 +370,11 @@ function sendDataToServer(obj) {
         obj_list.push(temp);
     }
     
+    alert('obj_list: '+obj_list);
+    
     $.ajax({
         url: form_url,
-        type: 'GET',
+        type: 'POST',
         'async': true,
         'dataType': 'text',
         data: {
@@ -392,8 +394,8 @@ function sendDataToServer(obj) {
             //     window.location.href = form_url;
             // }
             // var uri_kml = data_status.url;
-            // var kml = new google.maps.KmlLayer(data);
-            // kml.setMap(map);
+            var kml = new google.maps.KmlLayer(data);
+            kml.setMap(map);
         },
     });
 }
