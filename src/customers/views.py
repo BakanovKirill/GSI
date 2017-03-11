@@ -1154,15 +1154,21 @@ def customer_section(request):
             data = os.path.join(absolute_kml_url, polygon)
             
         if 'send_data[0][]'in data_get:
-            print 'send_data ======================== '
-            send_data = data_get.get('send_data', '')
-            print 'send_data ======================== ', send_data
+            # print 'send_data ======================== '
+            # send_data = data_get.get('send_data', '')
+            # print 'send_data ======================== ', send_data
+            #
+            # kml = simplekml.Kml()
+            # # pol = kml.newpolygon(name='A Polygon')
+            # pol = kml.newpolygon()
+            # pol.outerboundaryis.coords = coord
+            # pol.innerboundaryis = coord
             
             kml = simplekml.Kml()
-            # pol = kml.newpolygon(name='A Polygon')
             pol = kml.newpolygon()
-            pol.outerboundaryis.coords = coord
-            # pol.innerboundaryis = coord
+            print pol.outerboundaryis # Shows that the outer boundary of a polygon is a linear ring
+            pol.outerboundaryis.coords = [(0.0,0.0), (1.0,1.0), (2.0,2.0)]
+
             kml_path = os.path.join(KML_PATH, 'LinearRing.kml')
             kml.save(kml_path)
 
