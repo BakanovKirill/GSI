@@ -3,9 +3,9 @@
     <Document id="feat_7">
         <Style id="stylesel_1">
             <LineStyle id="substyle_2">
-                <color>ffff0000</color>
+                <color>ffe36c03</color>
                 <colorMode>normal</colorMode>
-                <width>5</width>
+                <width>25</width>
             </LineStyle>
             <PolyStyle id="substyle_3">
                 <color>640000ff</color>
