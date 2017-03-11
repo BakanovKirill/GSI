@@ -1161,6 +1161,7 @@ def customer_section(request):
             kml = simplekml.Kml()
             pol = kml.newpolygon(name='A Polygon')
             pol.outerboundaryis = coord
+            pol.innerboundaryis = coord
             kml_path = os.path.join(KML_PATH, 'Polygon_new_test.kml')
             kml.save(kml_path)
 
