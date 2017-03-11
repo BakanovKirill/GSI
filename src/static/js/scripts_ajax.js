@@ -395,10 +395,10 @@ function sendDataToServer(obj) {
             // }
             // var uri_kml = data_status.url;
             // window.location.href = form_url;
-            url_kml = data;
-            var kml = new google.maps.KmlLayer(data);
-            kml.setMap(map);
-            return data;
+            // url_kml = data;
+            // var kml = new google.maps.KmlLayer(data);
+            // kml.setMap(map);
+            // return data;
         },
     });
 }
