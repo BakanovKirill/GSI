@@ -246,8 +246,11 @@
 				// START KML *************************************************************************************************************
 				
 				// Set KML file
-				var kml = new google.maps.KmlLayer("https://developers.google.com/kml/documentation/KML_Samples.kml");
+				var url_kml = "https://developers.google.com/kml/documentation/KML_Samples.kml";
+				var kml = new google.maps.KmlLayer(url_kml);
 				kml.setMap(map);
+				
+				// alert('url_kml: '+url_kml);
 				
 				// Need add GE API *******************************************************************************************************
 				// Set KML file and create info marker
@@ -517,7 +520,9 @@
 				selectPolygon.setMap(map);
 				polygons.push(selectPolygon);
 				polygonVisible = true;
-				sendDataToServer(coord);
+				var uri_kml = sendDataToServer(coord);
+				var kml = new google.maps.KmlLayer(data);
+	            kml.setMap(map);
 				
 				// alert('selectPolygon 1: '+selectPolygon'[strokeColor]');
 				// alert('selectPolygon strokeColor: '+selectPolygon.strokeColor);
@@ -566,7 +571,7 @@
 				var center_pol = polygonCenter(selectPolygon);
 				coord = [];
 				
-				alert('text1: '+coord);
+				// alert('text1: '+coord);
 				
 				var area = google.maps.geometry.spherical.computeArea(selectPolygon.getPath().getArray());
 				var text = '<b>Area Information</b><br><br>Area=' + area + ' sq.m,<br>Mean=29,<br>Min=2,<br>Max=142<br>';
@@ -577,7 +582,7 @@
 				//     '<a href="data:text/plain;charset=utf-8,%EF%BB%BF' + encodeURIComponent(text) + '" download="text.txt">text.txt</a>'
 				// )
 				
-				alert('text2: '+coord);
+				// alert('text2: '+coord);
 
 				var contentString = text;
 				contentString += '<input type="text" class="margin-top-15" placeholder="Enter file name" name="file_name" size="40"><br>'
