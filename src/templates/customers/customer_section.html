@@ -561,8 +561,8 @@
 				var center_pol = polygonCenter(selectPolygon);
 				coord = [];
 				
-				var area = google.maps.geometry.spherical.computeArea(selectPolygon.getPath().getArray());
-				var text = '<b>Area Information</b><br><br>Area=' + area + ' sq.m,<br>Mean=29,<br>Min=2,<br>Max=142<br>';
+				// var area = google.maps.geometry.spherical.computeArea(selectPolygon.getPath().getArray());
+				// var text = '<b>Area Information</b><br><br>Area=' + area + ' sq.m,<br>Mean=29,<br>Min=2,<br>Max=142<br>';
 
 				// info window
 				
@@ -572,16 +572,17 @@
 				
 				// alert('text2: '+coord);
 
-				var contentString = text;
-				contentString += '<input type="text" class="margin-top-15" placeholder="Enter file name" name="file_name" size="40"><br>'
-				contentString += '<button type="submit" class="margin-top-15" name="download_file" class="btn btn-success btn-block" value="out_log">Download the file locally</button>'
+				// var contentString = text;
+				// contentString += '<input type="text" class="margin-top-15" placeholder="Enter file name" name="file_name" size="40"><br>'
+				// contentString += '<button type="submit" class="margin-top-15" name="download_file" class="btn btn-success btn-block" value="out_log">Download the file locally</button>'
+				
 				// contentString += 'document.write(<a href="data:text/plain;charset=utf-8,%EF%BB%BF' + encodeURIComponent(text2) + '" class="btn btn-default btn-lg active" role="button" download="text2.txt">Download the file locally</a>)';
 				
 				// <a href="#" class="btn btn-default btn-lg active" role="button">Download the file locally</a>
 				// <button type="submit" class="margin-top-15" name="download_file" class="btn btn-success btn-block" value="out_log">Download the file locally</button>
 				
-				infowindow = new google.maps.InfoWindow({content: contentString, position: center_pol});
-				infowindow.open(map);
+				// infowindow = new google.maps.InfoWindow({content: contentString, position: center_pol});
+				// infowindow.open(map);
 			}
 
 			function showCoordinates(event) {
