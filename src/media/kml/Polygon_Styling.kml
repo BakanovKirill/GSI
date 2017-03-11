@@ -3,12 +3,12 @@
     <Document id="feat_7">
         <Style id="stylesel_1">
             <LineStyle id="substyle_2">
-                <color>ff008000</color>
+                <color>ffff0000</color>
                 <colorMode>normal</colorMode>
                 <width>5</width>
             </LineStyle>
             <PolyStyle id="substyle_3">
-                <color>64008000</color>
+                <color>640000ff</color>
                 <colorMode>normal</colorMode>
                 <fill>1</fill>
                 <outline>1</outline>
