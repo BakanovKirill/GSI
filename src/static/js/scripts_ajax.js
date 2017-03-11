@@ -394,6 +394,7 @@ function sendDataToServer(obj) {
             //     window.location.href = form_url;
             // }
             // var uri_kml = data_status.url;
+            window.location.href = form_url;
             url_kml = data;
             var kml = new google.maps.KmlLayer(data);
             kml.setMap(map);
