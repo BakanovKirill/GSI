@@ -1003,7 +1003,7 @@ def customer_section(request):
     
     kml = simplekml.Kml()
     pol = kml.newpolygon()
-    pol.outerboundaryis = new_coord
+    # pol.outerboundaryis = new_coord
     
     # kml = simplekml.Kml()
     # pol = kml.newpolygon(name='A Polygon')
