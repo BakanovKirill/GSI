@@ -510,6 +510,8 @@
   			}
 
 			function drawPoligon() {
+				var show_coord = coord;
+				
 				// Construct the polygon.
 				selectPolygon = new google.maps.Polygon({
 					paths: coord,
@@ -523,7 +525,9 @@
 				selectPolygon.setMap(map);
 				polygons.push(selectPolygon);
 				polygonVisible = true;
-				var uri_kml = sendDataToServer(coord);
+				sendDataToServer(show_coord);
+				
+				// var uri_kml = sendDataToServer(coord);
 				
 				// var kml = new google.maps.KmlLayer(data);
 	            // kml.setMap(map);
@@ -589,6 +593,8 @@
 				// alert('text2: '+coord);
 
 				var contentString = text;
+				contentString += '<p>' + show_coord + '</p>';
+				
 				contentString += '<input type="text" class="margin-top-15" placeholder="Enter file name" name="file_name" size="40"><br>'
 				contentString += '<button type="submit" class="margin-top-15" name="download_file" class="btn btn-success btn-block" value="out_log">Download the file locally</button>'
 				

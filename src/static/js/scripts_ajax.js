@@ -346,9 +346,8 @@ function setPolygon(obj) {
                 kml.setMap(map);
             },
         });
+        return false;
     }
-    
-    return false;
 }
 
 function sendDataToServer(obj) {
