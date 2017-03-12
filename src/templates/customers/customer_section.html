@@ -260,16 +260,6 @@
 				
 				// alert('url_kml: '+url_kml);
 				
-				// Need add GE API *******************************************************************************************************
-				// Set KML file and create info marker
-				// var link = ge.createLink('');
-				// link.setHref("http://www.i-programmer.info/maps/demo1.kml");
-				// var networkLink = ge.createNetworkLink(''); networkLink.set(link, true, true);
-				// ge.getFeatures().appendChild(networkLink);
-				
-				// Set KML file and create link for download *****************************************************************************
-				// google.earth.fetchKml(ge, "https://developers.google.com/kml/documentation/KML_Samples.kml", getKML);
-				
 				// END KML ****************************************************************************************************************
 
 				// var min_marker = new google.maps.Marker({
@@ -303,8 +293,8 @@
 				// placeMarkerAndPanTo({{ eLat_2 }}, {{ eLng_2 }});
 
 				// Add a listener for the click event.
-				map.addListener('click', showInfoWindow);
-				infoWindow = new google.maps.InfoWindow;
+				// map.addListener('click', showInfoWindow);
+				// infoWindow = new google.maps.InfoWindow;
 
 				// Add a listener for the mousemove event.
 				map.addListener('mousemove', showCoordinates);
@@ -533,18 +523,6 @@
 				// Add a listener for the mousemove event.
 				selectPolygon.addListener('mousemove', showCoordinates);
 				infoWindow = new google.maps.InfoWindow;
-				
-				// var count = 0;
-				
-				// for(k in coord) {
-				// 	for(v in coord[k]) {
-				// 		alert('K: ' + v);
-				// 		alert('V: ' +coord[k][v]);
-				// 	}
-				// }
-				// var text2 = coord;
-				
-				
 				
 				var center_pol = polygonCenter(selectPolygon);
 				coord = [];

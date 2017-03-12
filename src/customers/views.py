@@ -998,52 +998,6 @@ def customer_section(request):
     coord = []
     kml_path_show = ''
     
-    # new_coord = [[66.473823,-153.02490], [65.141496,-155.17822],
-    #             [65.490184,-158.73779], [66.613761,-157.61718]]
-    #
-    # kml = simplekml.Kml()
-    # pol = kml.newpolygon()
-    # pol.outerboundaryis = new_coord
-    # # pol.outerboundaryis = [[66.47382313863474,-153.0249022319913], [65.14149683019514,-155.1782225444913],
-    # #                         [65.49018414733659,-158.7377928569913], [66.61376149318089,-157.6171873882413]]
-    #
-    # # kml = simplekml.Kml()
-    # # pol = kml.newpolygon(name='A Polygon')
-    # # pol.outerboundaryis = [[18.333868,-34.038274], [18.370618,-34.034421],
-    # #                         [18.350616,-34.051677],[18.333868,-34.038274]]
-    # # # # pol.innerboundaryis = [(18.347171,-34.040177), (18.355741,-34.039730),
-    # # # #                        (18.350467,-34.048388),(18.347171,-34.040177)]
-    # pol.style.linestyle.color = simplekml.Color.hex('#ffffff')
-    # pol.style.linestyle.width = 5
-    # pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex('#8bc53f'))
-    # #
-    # kml_path = os.path.join(KML_PATH, '100_START_WRITE.kml')
-    # kml.save(kml_path)
-    
-    
-    
-    # kml = simplekml.Kml()
-    # pol = kml.newpolygon(name='A Polygon')
-    # pol.outerboundaryis = [(18.333868,-34.038274), (18.370618,-34.034421),
-    #                        (18.350616,-34.051677),(18.333868,-34.038274)]
-    # pol.innerboundaryis = [(18.347171,-34.040177), (18.355741,-34.039730),
-    #                        (18.350467,-34.048388),(18.347171,-34.040177)]
-    # kml_path = os.path.join(KML_PATH, 'Polygon.kml')
-    # kml.save(kml_path)
-    #
-    # kml = simplekml.Kml()
-    # pol = kml.newpolygon(name='A Polygon 2')
-    # pol.outerboundaryis = [(18.333868,-34.038274), (18.370618,-34.034421),
-    #                        (18.350616,-34.051677),(18.333868,-34.038274)]
-    # pol.innerboundaryis = [(18.347171,-34.040177), (18.355741,-34.039730),
-    #                        (18.350467,-34.048388),(18.347171,-34.040177)]
-    # # pol.style.linestyle.color = simplekml.Color.hex('036ce3')
-    # pol.style.linestyle.width = 25
-    # # pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.red)
-    # kml_path = os.path.join(KML_PATH, 'Polygon_Styling.kml')
-    # kml.save(kml_path)
-    
-    
     # default GEOTIFF coordinates
     cLng = DAFAULT_LON
     cLat = DAFAULT_LAT
@@ -1124,104 +1078,34 @@ def customer_section(request):
     # AJAX clear selection
     if request.is_ajax() and request.method == "POST":
         data_post_ajax = request.POST
-        dirs = []
-    
-        print 'data_post_ajax ======================== ', data_post_ajax
     
         if 'send_data[0][]' in data_post_ajax:
-            # print 'send_data ======================== '
-            # send_data = data_get.get('send_data', '')
-            # print 'send_data ======================== ', send_data
-            #
-            
             for n in data_post_ajax.lists():
                 if n[0] != 'csrfmiddlewaretoken':
-                    # tmp = []
-                    # tmp.append = n[1]
                     coord.append(n[1])
-                    # print 'N ======================== ', n
-                    # print 'N 0 ======================== ', n[0]
-                    # print 'N 1 ======================== ', n[1]
-                    
-            # for mk in coord:
-            #     print 'MK ====================== ', mk
                 
-            print 'coord ======================== ', coord
+            # print 'coord ======================== ', coord
                         
-            coor_d = [
-                ['-152.7832030132413', '66.42993066375013'],
-                ['-153.4643553569913', '65.39887159286901'],
-                ['-157.8369139507413', '65.29805936383785'],
-                ['-157.7709959819913', '66.43871533193368']
-            ]
-            
-            # pol.outerboundaryis = [[66.47382313863474,-153.0249022319913], [65.14149683019514,-155.1782225444913],
-            #                         [65.49018414733659,-158.7377928569913], [66.61376149318089,-157.6171873882413]]
-            
-            
-            
-            
             kml = simplekml.Kml()
             pol = kml.newpolygon(name='My Experimental Polygon!')
-            # pol = kml.newpolygon()
             pol.outerboundaryis.coords = coord
-            print 'pol.outerboundaryis.coords ============================= ', pol.outerboundaryis.coords
-            # # pol.innerboundaryis = coord
             pol.style.linestyle.color = simplekml.Color.hex('#ffffff')
             pol.style.linestyle.width = 5
             pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex('#8bc53f'))
-            
-            
-    
-            # kml = simplekml.Kml()
-            # pol = kml.newpolygon()
-            # pol.outerboundaryis.coords = [(0.0,0.0), (1.0,1.0), (2.0,2.0)]
-            
-            kml_path = os.path.join(KML_PATH, '1_3.kml')
+            kml_path = os.path.join(KML_PATH, '2_0.kml')
             kml.save(kml_path)
-            
-            # f = open(kml_path, 'w')
-            # f.write(content)
-            # f.close
-            
-            # kml_url = os.path.join(polygons_path, 'New_Pol_Test.kml')
-    
-            # data = kml_url
-            # kml_path_show = kml_url
     
             status = 'success'
 
             return HttpResponse(status)
         
         
-    if request.is_ajax():
+    if request.is_ajax() and request.method != "POST":
         # print 'is_ajax ======================== '
         data = ''
         data_get = request.GET
         cip = CustomerInfoPanel.objects.filter(user=request.user)
         
-        # coord.append()
-        
-        # JSONdata = data_get['']
-        # dict_data = simplejson.JSONDecoder().decode( JSONdata )
-        
-        print 'data_get ======================== ', data_get
-        print 'data_get.lists ======================== ', data_get.lists()
-        
-        # for n in data_get.lists():
-        #     if n[0] != 'csrfmiddlewaretoken':
-        #         # tmp = []
-        #         # tmp.append = n[1]
-        #         coord.append(n[1])
-        #         print 'N ======================== ', n
-        #         print 'N 0 ======================== ', n[0]
-        #         print 'N 1 ======================== ', n[1]
-        #
-        # for mk in coord:
-        #     print 'MK ====================== ', mk
-        # print 'coord ======================== ', coord
-        
-
         # When user celect a new DataSet, the previous celected DataSet to remove
         if 'datasets_id' in data_get:
             for ip in cip:
@@ -1247,24 +1131,6 @@ def customer_section(request):
             polygon = data_get.get('polygon', '')
             data = os.path.join(absolute_kml_url, polygon)
             
-        # if 'send_data[0][]'in data_get:
-        #     # print 'send_data ======================== '
-        #     # send_data = data_get.get('send_data', '')
-        #     # print 'send_data ======================== ', send_data
-        #     #
-        #     # kml = simplekml.Kml()
-        #     # # pol = kml.newpolygon(name='A Polygon')
-        #     # pol = kml.newpolygon()
-        #     # pol.outerboundaryis.coords = coord
-        #     # pol.innerboundaryis = coord
-        #
-        #     kml = simplekml.Kml()
-        #     pol = kml.newpolygon()
-        #     pol.outerboundaryis.coords = [(0.0,0.0), (1.0,1.0), (2.0,2.0)]
-        #
-        #     kml_path = os.path.join(KML_PATH, 'LinearRing.kml')
-        #     kml.save(kml_path)
-
         status = 'success'
 
         return HttpResponse(data)
@@ -1300,30 +1166,6 @@ def customer_section(request):
     if request.method == "POST":
         data_post = request.POST
         dirs = []
-        
-        print 'data_post ======================== ', data_post
-        
-        # if 'send_data[0][]'in data_post:
-        #     print 'data_post ======================== ', data_post
-        #     # send_data = data_get.get('send_data', '')
-        #     # print 'send_data ======================== ', send_data
-        #     #
-        #     # kml = simplekml.Kml()
-        #     # # pol = kml.newpolygon(name='A Polygon')
-        #     # pol = kml.newpolygon()
-        #     # pol.outerboundaryis.coords = coord
-        #     # pol.innerboundaryis = coord
-        #
-        #     kml = simplekml.Kml()
-        #     pol = kml.newpolygon()
-        #     print pol.outerboundaryis # Shows that the outer boundary of a polygon is a linear ring
-        #     pol.outerboundaryis.coords = [(0.0,0.0), (1.0,1.0), (2.0,2.0)]
-        #
-        #     kml_path = os.path.join(KML_PATH, 'LinearRing.kml')
-        #     kml.save(kml_path)
-        #
-        #     data = kml_path
-        #     kml_path_show = kml_path
         
         if 'add-list-view' in data_post:
             if 'root_filenames[]' in data_post and 'statistics[]' in data_post:

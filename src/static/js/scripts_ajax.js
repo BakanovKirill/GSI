@@ -332,7 +332,7 @@ function setPolygon(obj) {
                 var message = 'An unexpected error occurred. Try later.';
             },
             'success': function(data, status, xhr){
-                alert('DATA: '+data);
+                // alert('DATA: '+data);
                 // var data_status = JSON.parse(data);
                 // alert('URL: '+data_status.url);
                 // alert('status: '+data_status.status);
@@ -357,23 +357,15 @@ function sendDataToServer(obj) {
     var obj_list = []
     var count = 0;
     
-    // alert('SEND DATA: '+obj);
-    
     for(n in obj) {
-        // alert('!!!! N: '+n);
         var temp = [];
         var reverce_list = [];
         for(k in obj[n]) {
-            // alert('K: '+k);
-            // alert('OBJ: '+obj[n][k]);
-            // var reverce_list = obj[n][k].reverse();
             temp.push(obj[n][k]);
             var reverce_list = temp.reverse();
         }
         obj_list.push(reverce_list);
     }
-    
-    // alert('obj_list: '+obj_list);
     
     $.ajax({
         url: form_url,
@@ -389,19 +381,8 @@ function sendDataToServer(obj) {
             var message = 'An unexpected error occurred. Try later.';
         },
         'success': function(data, status, xhr){
-            alert('URL DATA: '+data);
-            // var data_status = JSON.parse(data);
-            // alert('URL: '+data_status.url);
-            // alert('status: '+data_status.status);
-            // if (data_status.status == 'reload') {
-            //     window.location.href = form_url;
-            // }
-            // var uri_kml = data_status.url;
-            // window.location.href = form_url;
-            // url_kml = data;
-            // var kml = new google.maps.KmlLayer(data);
-            // kml.setMap(map);
-            // return data;
+            // alert('URL DATA: '+data);
+            var obj_status = status;
         },
     });
 }
