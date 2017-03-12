@@ -1143,45 +1143,10 @@ def customer_section(request):
                     # print 'N 0 ======================== ', n[0]
                     # print 'N 1 ======================== ', n[1]
                     
-            for mk in coord:
-                print 'MK ====================== ', mk
+            # for mk in coord:
+            #     print 'MK ====================== ', mk
                 
             print 'coord ======================== ', coord
-            
-            # [[66.47382313863474,-153.0249022319913], [65.14149683019514,-155.1782225444913],
-            # [65.49018414733659,-158.7377928569913], [66.61376149318089,-157.6171873882413]]
-            
-            content = '''<?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://www.opengis.net/kml/2.2"> <Placemark>
- <name>My Polygon</name>
- <Polygon>
- <extrude>1</extrude>
- <altitudeMode>relativeToGround</altitudeMode>
- <outerBoundaryIs>
- <LinearRing>
- <coordinates>
- 66.47382313863474,-153.0249022319913
- 65.14149683019514,-155.1782225444913
- 65.49018414733659,-158.7377928569913
- 66.61376149318089,-157.6171873882413
- </coordinates>
- </LinearRing>
- </outerBoundaryIs>
- </Polygon>
- </Placemark> </kml>
-            '''
-            
-            # coor_d = [[-77.05788457660967,38.87253259892824,100],
-            #             [-77.05465973756702,38.87291016281703,100],
-            #             [-77.05315536854791,38.87053267794386,100],
-            #             [-77.05552622493516,38.868757801256,100],
-            #             [-77.05844056290393,38.86996206506943,100],
-            #             [-77.05788457660967,38.87253259892824,100]]
-            
-            # [[u'-152.7832030132413', u'66.42993066375013'],
-            # [u'-153.4643553569913', u'65.39887159286901'],
-            # [u'-157.8369139507413', u'65.29805936383785'],
-            # [u'-157.7709959819913', u'66.43871533193368']]
                         
             coor_d = [
                 ['-152.7832030132413', '66.42993066375013'],
@@ -1199,7 +1164,8 @@ def customer_section(request):
             kml = simplekml.Kml()
             pol = kml.newpolygon(name='My Experimental Polygon!')
             # pol = kml.newpolygon()
-            pol.outerboundaryis.coords = coor_d
+            pol.outerboundaryis.coords = coord
+            print 'pol.outerboundaryis.coords ============================= ', pol.outerboundaryis.coords
             # # pol.innerboundaryis = coord
             pol.style.linestyle.color = simplekml.Color.hex('#ffffff')
             pol.style.linestyle.width = 5
@@ -1211,7 +1177,7 @@ def customer_section(request):
             # pol = kml.newpolygon()
             # pol.outerboundaryis.coords = [(0.0,0.0), (1.0,1.0), (2.0,2.0)]
             
-            kml_path = os.path.join(KML_PATH, '0_13.kml')
+            kml_path = os.path.join(KML_PATH, '1_1.kml')
             kml.save(kml_path)
             
             # f = open(kml_path, 'w')
