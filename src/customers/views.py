@@ -1171,17 +1171,27 @@ def customer_section(request):
  </Placemark> </kml>
             '''
             
+            coor_d = [[-77.05788457660967,38.87253259892824,100],
+                        [-77.05465973756702,38.87291016281703,100],
+                        [-77.05315536854791,38.87053267794386,100],
+                        [-77.05552622493516,38.868757801256,100],
+                        [-77.05844056290393,38.86996206506943,100],
+                        [-77.05788457660967,38.87253259892824,100]]
+            
+            # pol.outerboundaryis = [[66.47382313863474,-153.0249022319913], [65.14149683019514,-155.1782225444913],
+            #                         [65.49018414733659,-158.7377928569913], [66.61376149318089,-157.6171873882413]]
             
             
             
-            # kml = simplekml.Kml()
-            # pol = kml.newpolygon(name='A New Polygon!')
-            # # pol = kml.newpolygon()
-            # pol.outerboundaryis.coords = coord
+            
+            kml = simplekml.Kml()
+            pol = kml.newpolygon(name='My Experimental Polygon!')
+            # pol = kml.newpolygon()
+            pol.outerboundaryis.coords = coor_d
             # # pol.innerboundaryis = coord
-            # pol.style.linestyle.color = simplekml.Color.hex('#ffffff')
-            # pol.style.linestyle.width = 5
-            # pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex('#8bc53f'))
+            pol.style.linestyle.color = simplekml.Color.hex('#ffffff')
+            pol.style.linestyle.width = 5
+            pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex('#8bc53f'))
             
             
     
@@ -1189,12 +1199,12 @@ def customer_section(request):
             # pol = kml.newpolygon()
             # pol.outerboundaryis.coords = [(0.0,0.0), (1.0,1.0), (2.0,2.0)]
             
-            kml_path = os.path.join(KML_PATH, '0_3.kml')
-            # kml.save(kml_path)
+            kml_path = os.path.join(KML_PATH, '0_6.kml')
+            kml.save(kml_path)
             
-            f = open(kml_path, 'w')
-            f.write(content)
-            f.close
+            # f = open(kml_path, 'w')
+            # f.write(content)
+            # f.close
             
             # kml_url = os.path.join(polygons_path, 'New_Pol_Test.kml')
     
