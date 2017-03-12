@@ -998,8 +998,8 @@ def customer_section(request):
     coord = []
     kml_path_show = ''
     
-    new_coord = [[66.473823, -153.02490], [65.141496, -155.17822],
-                [65.490184, -158.73779], [66.613761, -157.61718]]
+    new_coord = [[66.473823,-153.02490], [65.141496,-155.17822],
+                [65.490184,-158.73779], [66.613761,-157.61718]]
     
     kml = simplekml.Kml()
     pol = kml.newpolygon()
@@ -1017,7 +1017,7 @@ def customer_section(request):
     pol.style.linestyle.width = 5
     pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex('#8bc53f'))
     #
-    kml_path = os.path.join(KML_PATH, '40_START_WRITE.kml')
+    kml_path = os.path.join(KML_PATH, '100_START_WRITE.kml')
     kml.save(kml_path)
     
     
