@@ -370,7 +370,7 @@ function sendDataToServer(obj) {
             temp.push(obj[n][k]);
             var reverce_list = temp.reverse();
         }
-        obj_list.push(temp);
+        obj_list.push(reverce_list);
     }
     
     // alert('obj_list: '+obj_list);
