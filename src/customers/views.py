@@ -1087,7 +1087,7 @@ def customer_section(request):
             # print 'coord ======================== ', coord
                         
             kml = simplekml.Kml()
-            pol = kml.newpolygon(name='My Experimental Polygon!')
+            pol = kml.newpolygon(name='User Polygon')
             pol.outerboundaryis.coords = coord
             pol.style.linestyle.color = simplekml.Color.hex('#ffffff')
             pol.style.linestyle.width = 5

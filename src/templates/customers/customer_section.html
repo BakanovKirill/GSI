@@ -529,22 +529,29 @@
 				
 				// alert('text1: '+coord);
 				
-				var area = google.maps.geometry.spherical.computeArea(selectPolygon.getPath().getArray());
-				var text = '<b>Area Information</b><br><br>Area=' + area + ' sq.m,<br>Mean=29,<br>Min=2,<br>Max=142<br>';
-
 				// info window
+				var area = google.maps.geometry.spherical.computeArea(selectPolygon.getPath().getArray());
+				
+				var contentString = '<p class="left"><b>Area Information</b></p>';
+				contentString += '<p class="left">Area = ' + area + ' sq.m</p>';
+				contentString += '<p class="left">Mean = 29</p>';
+				contentString += '<p class="left">Min = 2</p>';
+				contentString += '<p class="left">Max = 142</p>';
+				
+				contentString += '<p class="left">COORDINATE:</p>';
+				
+				for(n in show_coord) {
+					contentString += '<p class="left">(Lat: ' + show_coord[n]['lat'] + '; Lng: ' + show_coord[n]['lng'] + ')</p>';
+			    }
+				
+				contentString += '<input type="text" class="margin-top-15" placeholder="Enter file name" name="file_name" size="40"><br>'
+				contentString += '<button type="submit" name="download_file" class="btn btn-success btn-block margin-top-15" value="out_log">Download the file locally</button>';
 				
 				// document.write(
 				//     '<a href="data:text/plain;charset=utf-8,%EF%BB%BF' + encodeURIComponent(text) + '" download="text.txt">text.txt</a>'
 				// )
 				
 				// alert('text2: '+coord);
-
-				var contentString = text;
-				contentString += '<p>' + show_coord + '</p>';
-				
-				contentString += '<input type="text" class="margin-top-15" placeholder="Enter file name" name="file_name" size="40"><br>'
-				contentString += '<button type="submit" class="margin-top-15" name="download_file" class="btn btn-success btn-block" value="out_log">Download the file locally</button>'
 				
 				// contentString += 'document.write(<a href="data:text/plain;charset=utf-8,%EF%BB%BF' + encodeURIComponent(text2) + '" class="btn btn-default btn-lg active" role="button" download="text2.txt">Download the file locally</a>)';
 				
