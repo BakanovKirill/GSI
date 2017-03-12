@@ -1015,7 +1015,7 @@ def customer_section(request):
     pol.style.linestyle.width = 5
     pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex('#8bc53f'))
     #
-    kml_path = os.path.join(KML_PATH, '4_START_WRITE.kml')
+    kml_path = os.path.join(KML_PATH, '5_START_WRITE.kml')
     kml.save(kml_path)
     
     
