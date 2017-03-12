@@ -1007,19 +1007,19 @@ def customer_section(request):
     
     kml = simplekml.Kml()
     pol = kml.newpolygon()
-    pol.outerboundaryis.coords = new_coord
+    # pol.outerboundaryis.coords = new_coord
     
     # kml = simplekml.Kml()
     # pol = kml.newpolygon(name='A Polygon')
-    # pol.outerboundaryis = [[18.333868,-34.038274], [18.370618,-34.034421],
-    #                        [18.350616,-34.051677],[18.333868,-34.038274]]
+    pol.outerboundaryis = [[18.333868,-34.038274], [18.370618,-34.034421],
+                           [18.350616,-34.051677],[18.333868,-34.038274]]
     # # # pol.innerboundaryis = [(18.347171,-34.040177), (18.355741,-34.039730),
     # # #                        (18.350467,-34.048388),(18.347171,-34.040177)]
     pol.style.linestyle.color = simplekml.Color.hex('#8bc53f')
     pol.style.linestyle.width = 9
     pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.green)
     #
-    kml_path = os.path.join(KML_PATH, '1_START_WRITE.kml')
+    kml_path = os.path.join(KML_PATH, '2_START_WRITE.kml')
     kml.save(kml_path)
     
     
