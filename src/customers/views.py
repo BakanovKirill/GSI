@@ -1041,7 +1041,6 @@ def customer_section(request):
     # kml_path = os.path.join(KML_PATH, 'Polygon_Styling.kml')
     # kml.save(kml_path)
     
-    print 'coord 11 ======================== ', coord
     
     # default GEOTIFF coordinates
     cLng = DAFAULT_LON
@@ -1133,7 +1132,7 @@ def customer_section(request):
             # print 'send_data ======================== ', send_data
             #
             
-            for n in data_get.lists():
+            for n in data_post_ajax.lists():
                 if n[0] != 'csrfmiddlewaretoken':
                     # tmp = []
                     # tmp.append = n[1]
@@ -1166,14 +1165,14 @@ def customer_section(request):
             kml_path = os.path.join(KML_PATH, 'New_Pol_Test.kml')
             kml.save(kml_path)
             
-            kml_url = os.path.join(polygons_path, 'New_Pol_Test.kml')
+            # kml_url = os.path.join(polygons_path, 'New_Pol_Test.kml')
     
-            data = kml_url
-            kml_path_show = kml_url
+            # data = kml_url
+            # kml_path_show = kml_url
     
             status = 'success'
 
-            return HttpResponse(data)
+            return HttpResponse(status)
         
         
     if request.is_ajax():
