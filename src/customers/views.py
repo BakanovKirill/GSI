@@ -1003,7 +1003,7 @@ def customer_section(request):
     
     kml = simplekml.Kml()
     pol = kml.newpolygon()
-    # pol.outerboundaryis = new_coord
+    pol.outerboundaryis = new_coord
     
     # kml = simplekml.Kml()
     # pol = kml.newpolygon(name='A Polygon')
@@ -1015,7 +1015,7 @@ def customer_section(request):
     pol.style.linestyle.width = 5
     pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex('#8bc53f'))
     #
-    kml_path = os.path.join(KML_PATH, '6_START_WRITE.kml')
+    kml_path = os.path.join(KML_PATH, '1_START_WRITE.kml')
     kml.save(kml_path)
     
     
