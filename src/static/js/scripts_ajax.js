@@ -341,8 +341,8 @@ function setPolygon(obj) {
                 // }
                 // var uri_kml = data_status.url;
                 var kml;
-                // kml = new google.maps.KmlLayer(data);
-                kml = new google.maps.KmlLayer('http://indy4.epcc.ed.ac.uk/media/kml/LinearRing.kml');
+                kml = new google.maps.KmlLayer(data);
+                // kml = new google.maps.KmlLayer('http://indy4.epcc.ed.ac.uk/media/kml/LinearRing.kml');
                 kml.setMap(map);
             },
         });
