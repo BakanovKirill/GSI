@@ -1128,7 +1128,7 @@ def customer_section(request):
     
         print 'data_post_ajax ======================== ', data_post_ajax
     
-        if 'send_data[0][]'in data_post_ajax:
+        if 'send_data[0][]' in data_post_ajax:
             # print 'send_data ======================== '
             # send_data = data_get.get('send_data', '')
             # print 'send_data ======================== ', send_data
@@ -1148,8 +1148,8 @@ def customer_section(request):
                 
             print 'coord ======================== ', coord
             
-            [[66.47382313863474,-153.0249022319913], [65.14149683019514,-155.1782225444913],
-            [65.49018414733659,-158.7377928569913], [66.61376149318089,-157.6171873882413]]
+            # [[66.47382313863474,-153.0249022319913], [65.14149683019514,-155.1782225444913],
+            # [65.49018414733659,-158.7377928569913], [66.61376149318089,-157.6171873882413]]
             
             content = '''<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2"> <Placemark>
@@ -1194,7 +1194,7 @@ def customer_section(request):
             kml = simplekml.Kml()
             pol = kml.newpolygon(name='My Experimental Polygon!')
             # pol = kml.newpolygon()
-            pol.outerboundaryis.coords = coor_d
+            pol.outerboundaryis.coords = coord
             # # pol.innerboundaryis = coord
             pol.style.linestyle.color = simplekml.Color.hex('#ffffff')
             pol.style.linestyle.width = 5
@@ -1206,7 +1206,7 @@ def customer_section(request):
             # pol = kml.newpolygon()
             # pol.outerboundaryis.coords = [(0.0,0.0), (1.0,1.0), (2.0,2.0)]
             
-            kml_path = os.path.join(KML_PATH, '0_9.kml')
+            kml_path = os.path.join(KML_PATH, '0_12.kml')
             kml.save(kml_path)
             
             # f = open(kml_path, 'w')

@@ -361,11 +361,14 @@ function sendDataToServer(obj) {
     
     for(n in obj) {
         // alert('!!!! N: '+n);
-        var temp = []
+        var temp = [];
+        var reverce_list = [];
         for(k in obj[n]) {
             // alert('K: '+k);
             // alert('OBJ: '+obj[n][k]);
+            // var reverce_list = obj[n][k].reverse();
             temp.push(obj[n][k]);
+            var reverce_list = temp.reverse();
         }
         obj_list.push(temp);
     }
