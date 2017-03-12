@@ -1132,6 +1132,22 @@ def customer_section(request):
             # send_data = data_get.get('send_data', '')
             # print 'send_data ======================== ', send_data
             #
+            
+            for n in data_get.lists():
+                if n[0] != 'csrfmiddlewaretoken':
+                    # tmp = []
+                    # tmp.append = n[1]
+                    coord.append(n[1])
+                    # print 'N ======================== ', n
+                    # print 'N 0 ======================== ', n[0]
+                    # print 'N 1 ======================== ', n[1]
+                    
+            for mk in coord:
+                print 'MK ====================== ', mk
+                
+            print 'coord ======================== ', coord
+            
+            
             kml = simplekml.Kml()
             pol = kml.newpolygon(name='A New Polygon!')
             # pol = kml.newpolygon()
@@ -1213,23 +1229,23 @@ def customer_section(request):
             polygon = data_get.get('polygon', '')
             data = os.path.join(absolute_kml_url, polygon)
             
-        if 'send_data[0][]'in data_get:
-            # print 'send_data ======================== '
-            # send_data = data_get.get('send_data', '')
-            # print 'send_data ======================== ', send_data
-            #
-            # kml = simplekml.Kml()
-            # # pol = kml.newpolygon(name='A Polygon')
-            # pol = kml.newpolygon()
-            # pol.outerboundaryis.coords = coord
-            # pol.innerboundaryis = coord
-            
-            kml = simplekml.Kml()
-            pol = kml.newpolygon()
-            pol.outerboundaryis.coords = [(0.0,0.0), (1.0,1.0), (2.0,2.0)]
-
-            kml_path = os.path.join(KML_PATH, 'LinearRing.kml')
-            kml.save(kml_path)
+        # if 'send_data[0][]'in data_get:
+        #     # print 'send_data ======================== '
+        #     # send_data = data_get.get('send_data', '')
+        #     # print 'send_data ======================== ', send_data
+        #     #
+        #     # kml = simplekml.Kml()
+        #     # # pol = kml.newpolygon(name='A Polygon')
+        #     # pol = kml.newpolygon()
+        #     # pol.outerboundaryis.coords = coord
+        #     # pol.innerboundaryis = coord
+        #
+        #     kml = simplekml.Kml()
+        #     pol = kml.newpolygon()
+        #     pol.outerboundaryis.coords = [(0.0,0.0), (1.0,1.0), (2.0,2.0)]
+        #
+        #     kml_path = os.path.join(KML_PATH, 'LinearRing.kml')
+        #     kml.save(kml_path)
 
         status = 'success'
 
