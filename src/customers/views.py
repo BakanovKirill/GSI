@@ -1153,7 +1153,7 @@ def customer_section(request):
             
             content = '''<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2"> <Placemark>
- <name>Пентагон</name>
+ <name>My Polygon</name>
  <Polygon>
  <extrude>1</extrude>
  <altitudeMode>relativeToGround</altitudeMode>
