@@ -995,11 +995,8 @@ def customer_section(request):
     show_file = ''
     file_tif = ''
     polygon = ''
-    kml_path_show = ''
-    # remove = False
-    
-    # if remove:
     coord = []
+    kml_path_show = ''
     
     # kml = simplekml.Kml()
     # pol = kml.newpolygon()
@@ -1189,18 +1186,18 @@ def customer_section(request):
         print 'data_get ======================== ', data_get
         print 'data_get.lists ======================== ', data_get.lists()
         
-        for n in data_get.lists():
-            if n[0] != 'csrfmiddlewaretoken':
-                # tmp = []
-                # tmp.append = n[1]
-                coord.append(n[1])
-                print 'N ======================== ', n
-                print 'N 0 ======================== ', n[0]
-                print 'N 1 ======================== ', n[1]
-                
-        for mk in coord:
-            print 'MK ====================== ', mk
-        print 'coord ======================== ', coord
+        # for n in data_get.lists():
+        #     if n[0] != 'csrfmiddlewaretoken':
+        #         # tmp = []
+        #         # tmp.append = n[1]
+        #         coord.append(n[1])
+        #         print 'N ======================== ', n
+        #         print 'N 0 ======================== ', n[0]
+        #         print 'N 1 ======================== ', n[1]
+        #
+        # for mk in coord:
+        #     print 'MK ====================== ', mk
+        # print 'coord ======================== ', coord
         
 
         # When user celect a new DataSet, the previous celected DataSet to remove

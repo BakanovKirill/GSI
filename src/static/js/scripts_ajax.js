@@ -357,7 +357,7 @@ function sendDataToServer(obj) {
     var obj_list = []
     var count = 0;
     
-    alert('SEND DATA: '+obj);
+    // alert('SEND DATA: '+obj);
     
     for(n in obj) {
         // alert('!!!! N: '+n);
@@ -370,7 +370,7 @@ function sendDataToServer(obj) {
         obj_list.push(temp);
     }
     
-    alert('obj_list: '+obj_list);
+    // alert('obj_list: '+obj_list);
     
     $.ajax({
         url: form_url,

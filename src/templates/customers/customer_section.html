@@ -324,11 +324,11 @@
 
 			}
 			
-			function getKML(kmlObject){
-				if (kmlObject) {
-					ge.getFeatures().appendChild(kmlObject);
-				}
-			}
+			// function getKML(kmlObject){
+			// 	if (kmlObject) {
+			// 		ge.getFeatures().appendChild(kmlObject);
+			// 	}
+			// }
 
 			/** @constructor */
 			function USGSOverlay(bounds, image, map) {
@@ -526,35 +526,6 @@
 				polygons.push(selectPolygon);
 				polygonVisible = true;
 				sendDataToServer(show_coord);
-				
-				// var uri_kml = sendDataToServer(coord);
-				
-				// var kml = new google.maps.KmlLayer(data);
-	            // kml.setMap(map);
-				
-				// alert('selectPolygon 1: '+selectPolygon'[strokeColor]');
-				// alert('selectPolygon strokeColor: '+selectPolygon.strokeColor);
-				// alert('selectPolygon paths: '+selectPolygon.paths);
-				
-				// var ttxxxtt = '<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2">'
-				// ttxxxtt += '<Document><name>UserDefined</name>';
-				// ttxxxtt += '<Placemark><name>NEWNAME</name>';
-				// ttxxxtt += '<description>MMnewtest_0.WagnerB1</description>';
-				// ttxxxtt += '<Polygon>';
-				// ttxxxtt += '<tessellate>1</tessellate>';
-				// ttxxxtt += '<altitudeMode>clampToGround</altitudeMode>';
-				// ttxxxtt += '<outerBoundaryIs><LinearRing><coordinates>';
-				// ttxxxtt += '-89.79416084289653,48.74868501326499,0.0';
-				// ttxxxtt += '-89.7935600280772,48.751401431979595,0.0';
-				// ttxxxtt += '-89.79047012329204,48.75026960869526,0.0';
-				// ttxxxtt += '-89.79141426086528,48.74857182596496,0.0';
-				// ttxxxtt += '-89.79416084289653,48.748685013264990.0';
-				// ttxxxtt += '</coordinates></LinearRing></outerBoundaryIs>';
-				// ttxxxtt += '</Polygon></Placemark></Document></kml>';
-
-				
-				// sendDataToServer(selectPolygon.strokeColor);
-				// sendDataToServer(ttxxxtt);
 				
 				// Add a listener for the click event.
 				selectPolygon.addListener('click', showInfoWindow);
