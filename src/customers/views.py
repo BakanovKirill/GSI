@@ -1132,17 +1132,18 @@ def customer_section(request):
             # send_data = data_get.get('send_data', '')
             # print 'send_data ======================== ', send_data
             #
-            # kml = simplekml.Kml()
-            # # pol = kml.newpolygon(name='A Polygon')
+            kml = simplekml.Kml()
+            pol = kml.newpolygon(name='A New Polygon!')
             # pol = kml.newpolygon()
-            # pol.outerboundaryis.coords = coord
+            pol.outerboundaryis.coords = coord
             # pol.innerboundaryis = coord
             
             
     
-            kml = simplekml.Kml()
-            pol = kml.newpolygon()
-            pol.outerboundaryis.coords = [(0.0,0.0), (1.0,1.0), (2.0,2.0)]
+            # kml = simplekml.Kml()
+            # pol = kml.newpolygon()
+            # pol.outerboundaryis.coords = [(0.0,0.0), (1.0,1.0), (2.0,2.0)]
+            
             kml_path = os.path.join(KML_PATH, 'New_Pol_Test.kml')
             kml.save(kml_path)
             
