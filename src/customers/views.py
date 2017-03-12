@@ -1160,10 +1160,10 @@ def customer_section(request):
  <outerBoundaryIs>
  <LinearRing>
  <coordinates>
- 66.47382313863474, -153.0249022319913
- 65.14149683019514, -155.1782225444913
- 65.49018414733659, -158.7377928569913
- 66.61376149318089, -157.6171873882413
+ 66.47382313863474,-153.0249022319913
+ 65.14149683019514,-155.1782225444913
+ 65.49018414733659,-158.7377928569913
+ 66.61376149318089,-157.6171873882413
  </coordinates>
  </LinearRing>
  </outerBoundaryIs>
@@ -1189,7 +1189,7 @@ def customer_section(request):
             # pol = kml.newpolygon()
             # pol.outerboundaryis.coords = [(0.0,0.0), (1.0,1.0), (2.0,2.0)]
             
-            kml_path = os.path.join(KML_PATH, '0_2.kml')
+            kml_path = os.path.join(KML_PATH, '0_3.kml')
             # kml.save(kml_path)
             
             f = open(kml_path, 'w')
