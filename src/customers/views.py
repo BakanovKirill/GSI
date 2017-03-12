@@ -1206,7 +1206,7 @@ def customer_section(request):
             # pol = kml.newpolygon()
             # pol.outerboundaryis.coords = [(0.0,0.0), (1.0,1.0), (2.0,2.0)]
             
-            kml_path = os.path.join(KML_PATH, '0_7.kml')
+            kml_path = os.path.join(KML_PATH, '0_8.kml')
             kml.save(kml_path)
             
             # f = open(kml_path, 'w')
