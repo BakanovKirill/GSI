@@ -998,9 +998,16 @@ def customer_section(request):
     coord = []
     kml_path_show = ''
     
-    # kml = simplekml.Kml()
-    # pol = kml.newpolygon()
-    # pol.outerboundaryis.coords = [(0.0,0.0), (1.0,1.0), (2.0,2.0)]
+    new_coord = [
+                    [u'66.47382313863474', u'-153.0249022319913'],
+                    [u'65.14149683019514', u'-155.1782225444913'],
+                    [u'65.49018414733659', u'-158.7377928569913'],
+                    [u'66.61376149318089', u'-157.6171873882413']
+                ]
+    
+    kml = simplekml.Kml()
+    pol = kml.newpolygon()
+    pol.outerboundaryis.coords = new_coord
     
     # kml = simplekml.Kml()
     # pol = kml.newpolygon(name='A Polygon')
@@ -1008,12 +1015,12 @@ def customer_section(request):
     #                        [18.350616,-34.051677],[18.333868,-34.038274]]
     # # # pol.innerboundaryis = [(18.347171,-34.040177), (18.355741,-34.039730),
     # # #                        (18.350467,-34.048388),(18.347171,-34.040177)]
-    # pol.style.linestyle.color = simplekml.Color.hex('#8bc53f')
-    # pol.style.linestyle.width = 9
-    # pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.green)
+    pol.style.linestyle.color = simplekml.Color.hex('#8bc53f')
+    pol.style.linestyle.width = 9
+    pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.green)
     #
-    # kml_path = os.path.join(KML_PATH, 'LinearRing_33.kml')
-    # kml.save(kml_path)
+    kml_path = os.path.join(KML_PATH, '!_START_WRITE.kml')
+    kml.save(kml_path)
     
     
     
