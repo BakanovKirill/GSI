@@ -1003,20 +1003,20 @@ def customer_section(request):
     
     kml = simplekml.Kml()
     pol = kml.newpolygon()
-    pol.outerboundaryis = [[66.47382313863474, -153.0249022319913], [65.14149683019514, -155.1782225444913],
-                            [65.49018414733659, -158.7377928569913], [66.61376149318089, -157.6171873882413]]
+    pol.outerboundaryis = [[66.47382313863474,-153.0249022319913], [65.14149683019514,-155.1782225444913],
+                            [65.49018414733659,-158.7377928569913], [66.61376149318089,-157.6171873882413]]
     
     # kml = simplekml.Kml()
     # pol = kml.newpolygon(name='A Polygon')
     # pol.outerboundaryis = [[18.333868,-34.038274], [18.370618,-34.034421],
-    #                        [18.350616,-34.051677],[18.333868,-34.038274]]
+    #                         [18.350616,-34.051677],[18.333868,-34.038274]]
     # # # pol.innerboundaryis = [(18.347171,-34.040177), (18.355741,-34.039730),
     # # #                        (18.350467,-34.048388),(18.347171,-34.040177)]
     pol.style.linestyle.color = simplekml.Color.hex('#ffffff')
     pol.style.linestyle.width = 5
     pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex('#8bc53f'))
     #
-    kml_path = os.path.join(KML_PATH, '3_START_WRITE.kml')
+    kml_path = os.path.join(KML_PATH, '2_START_WRITE.kml')
     kml.save(kml_path)
     
     
