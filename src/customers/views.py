@@ -980,7 +980,6 @@ def customer_section(request):
     url_name = 'customer_section'
     polygons_path = os.path.join(MEDIA_ROOT, 'kml')
     warning_message = ''
-    # error = False
 
     project_directory = ''
     info_panel = None
@@ -994,9 +993,8 @@ def customer_section(request):
     data_set_id = 0
     show_file = ''
     file_tif = ''
-    polygon = ''
+    # polygon = ''
     coord = []
-    kml_path_show = ''
     
     # default GEOTIFF coordinates
     cLng = DAFAULT_LON
@@ -1007,12 +1005,13 @@ def customer_section(request):
     eLng_2 = 0
     google_map_zoom = 6
     url_png = ''
-
+    
+    # The path to are PNG and KML folders
     scheme = '{0}://'.format(request.scheme)
     absolute_png_url = os.path.join(scheme, request.get_host(), PNG_DIRECTORY)
     absolute_kml_url = os.path.join(scheme, request.get_host(), KML_DIRECTORY)
     
-    # Get the polygons list
+    # Get the polygons list from media folder
     try:
         root, dirs, files = os.walk(polygons_path).next()
 
@@ -1075,7 +1074,7 @@ def customer_section(request):
             request.session['file_info_panel'] = show_file
         request.session.set_expiry(172800)
 
-    # AJAX clear selection
+    # get AJAX POST
     if request.is_ajax() and request.method == "POST":
         data_post_ajax = request.POST
     
@@ -1099,8 +1098,8 @@ def customer_section(request):
 
             return HttpResponse(status)
         
-        
-    if request.is_ajax() and request.method != "POST":
+    # get AJAX GET
+    if request.is_ajax() and request.method == "GET":
         # print 'is_ajax ======================== '
         data = ''
         data_get = request.GET
@@ -1420,7 +1419,6 @@ def customer_section(request):
         'file_tif': file_tif,
         'polygons_list': polygons_list,
         'absolute_kml_url': absolute_kml_url,
-        'kml_path_show': kml_path_show,
 
         'cLng': cLng,
         'cLat': cLat,
