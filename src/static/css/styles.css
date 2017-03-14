@@ -906,6 +906,19 @@ input[type="checkbox"]:checked + span {
   width: 150px;
 }
 
+#user-photo {
+    position: absolute;
+    bottom: 755px;
+    left: 45%;
+    z-index: 3;
+    /*background-color: #fff;*/
+    /*padding: 2px;*/
+    text-align: right;;
+    line-height: 10px;
+    padding-left: 440px;
+    /*width: 150px;*/
+}
+
 .background-fill-grey {
     background-color: #7f3f98;
     color: white;
