@@ -235,8 +235,6 @@ function setDataSetInfoPanel() {
     var info_dataset = $("span#info_dataset");
     var current_dataset = select_dataset.html();
     $(info_dataset).html(current_dataset);
-    
-    // alert('SELECT: '+current_dataset);
 }
 
 
