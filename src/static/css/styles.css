@@ -47,10 +47,20 @@ html, body {
     margin: 0 0 -100px 0;
     padding: 0;
 }
-.footer-push, .footer {
-    height: 100px;
+
+.footer-row {
+    margin-top: 100px;
+}
+
+.footer {
+    /*position: absolute;*/
+    text-align: center;
+    background-color: #7f3f98;
+    color: #66afe9;
+    height: 30px;
     margin: 0;
     padding: 0;
+    padding-top: 5px;
 }
 
 /* New style for the fileld for forms */
@@ -246,6 +256,10 @@ th {
     margin-bottom: 4px !important;
 }
 
+.margin-bottom-20 {
+    margin-bottom: 20px !important;
+}
+
 .margin-left-12 {
     margin-left: 20px !important;
 }
@@ -263,6 +277,10 @@ th {
     margin-top: -20px !important;
 }
 
+.margin-top-030 {
+    margin-top: -30px !important;
+}
+
 .margin-top-040 {
     margin-top: -40px !important;
 }
@@ -274,6 +292,10 @@ th {
 /* Paddings "+" */
 .padding-0 {
     padding: 0;
+}
+
+.padding-top-15 {
+    padding-top: 15px;
 }
 
 .padding-left-0 {
@@ -731,9 +753,11 @@ li.active-main-menu, li.active-main-menu a:hover, li.li-menu > a:hover, .title:h
 
 #map {
     /*width: 890px;*/
-    height: 800px;
+    height: 880px;
     float: left;
-    width: 102%;
+    width: 104%;
+    /*padding-left: -50px;*/
+    margin-left: -5px;
 }
 
 hr {
@@ -908,7 +932,7 @@ input[type="checkbox"]:checked + span {
 
 #user-photo {
     position: absolute;
-    bottom: 755px;
+    bottom: 830px;
     left: 45%;
     z-index: 3;
     /*background-color: #fff;*/
@@ -926,4 +950,58 @@ input[type="checkbox"]:checked + span {
     /*padding-top: 8px;*/
     /*padding-bottom: 8px;*/
     /*padding-left: 5px;*/
+}
+
+
+/* Style for the customer section */
+.col1 {
+    /*width:300px;*/
+    margin-top: -50px;
+    height: 980px;
+    float: left;
+    box-shadow: inset -5px 0 0 #7f3f98;
+}
+
+.col-map {
+    /*width:300px;*/
+    margin-top: -50px;
+    height: 980px;
+    float: right;
+    box-shadow: inset 5px 0 0 #7f3f98;
+}
+
+.main-menu-customer {
+    background-repeat: repeat-x;
+    border-color: #7f3f98;
+    background-image: none !important;
+    background-color: #66afe9 !important;
+    margin-right: -30px;
+    margin-left: -30px;
+    padding-left: 30px;
+    
+    border-bottom-width: 5px;
+    border-bottom-style: solid;
+    border-bottom-color: #7f3f98;
+}
+
+.purple {
+    color: #7f3f98;
+}
+
+.white {
+    color: white !important;
+}
+
+/* Nav Bar Brand */
+.my-navbar-brand {
+    min-width: 550px !important;
+    text-align: left !important;
+}
+
+.dataset-select {
+    max-width: 200px;
+}
+
+.label-dataset {
+    max-width: 50px;
 }

@@ -230,7 +230,7 @@ function showDataSets(obj) {
     var select_dataset = $("#mydataset option:selected");
     var datasets_id = $(select_dataset).val();
     var form_url = $('#customer_section').attr('action');
-
+    
     $.ajax({
         url: form_url,
         type: 'GET',

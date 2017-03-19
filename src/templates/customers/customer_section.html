@@ -2,8 +2,6 @@
 {% load static from staticfiles %}
 {% load php %}
 
-{% block title_customer %}{{ title }}{% endblock title_customer %}
-
 {% block content_customer %}
 	{% if error_message %}
 		<h3>{{ error_message }}</a></h3>
@@ -12,7 +10,7 @@
 		{% csrf_token %}
 
 			<!-- Draw Menu -->
-			<div class="row margin-top-35">
+			<div class="row margin-top-20 ">
 				<div class="col-md-4 right">
 					<button type="button" class="btn btn-default" onclick="appliedMarkers();"><img class="img-draw" src="{% static 'img/map-marker-plus.png' %}" alt="hand" title="Applied Markers" class="area-draw"></button>
 					<button type="button" class="btn btn-default" onclick="drawPoligon();"><img class="img-draw" src="{% static 'img/vector-polygon.png' %}" alt="vector polygon" title="Draw a Poligon" class="area-draw"></button>
@@ -49,7 +47,7 @@
 			<!-- End Draw Menu -->
 
 			<!-- Google map -->
-			<div class="row margin-top-35">
+			<div class="row margin-top-4">
 				<div class="col-md-12 margin-010">
 					<!-- [START region_toolbar] -->
 					<!-- Add an input button to initiate the toggle method on the overlay. -->

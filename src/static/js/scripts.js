@@ -230,6 +230,15 @@ function greyColorSelect() {
     });
 }
 
+function setDataSetInfoPanel() {
+    var select_dataset = $("#mydataset option:selected");
+    var info_dataset = $("span#info_dataset");
+    var current_dataset = select_dataset.html();
+    $(info_dataset).html(current_dataset);
+    
+    // alert('SELECT: '+current_dataset);
+}
+
 
 $(document).ready(function(){
     //selectAll();
@@ -247,5 +256,6 @@ $(document).ready(function(){
     initSelectConfigFile();
     initAddFormatingTextarrea();
     greyColorSelect();
+    setDataSetInfoPanel();
     // showCheckboxes();
 });

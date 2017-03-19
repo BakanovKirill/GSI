@@ -47,16 +47,16 @@
                     <!-- Start Top Menu -->
                     <div class="row">
                         <div class="col-md-12 center">
-                            <nav class="navbar navbar-static-top main-menu navbar-main-menu">
+                            <nav class="navbar navbar-static-top main-menu-customer navbar-main-menu">
                                 <div class="container-fluid">
-                                    <!-- Brand and toggle get grouped for better mobile display -->
-                                    <a class="dropbtn brand-logo navbar-brand" href="{% url 'index' %}">GSi</a>
-                                    <!-- End Brand and toggle get grouped for better mobile display -->
+                                    <!-- DataSets in the InfoPanel -->
+                                    <div class="navbar-brand white"><b class="purple">Dataset: </b><span id="info_dataset"></span></div>
+                                    <!-- End DataSets in the InfoPanel -->
 
                                     <div class="collapse navbar-collapse">
                                         <div class="dropdown user-profile" id="dropUser">
-                                            <button class="dropbtn-user dropdown-toggle" id="titleUser" onclick="showSubMenuUser()">
-                                                {{ request.user }}
+                                            <button class="dropbtn-user dropdown-toggle white" id="titleUser" onclick="showSubMenuUser()">
+                                                <b class="purple">User:</b> {{ request.user }}
                                                 <i class="fa fa-caret-right icon-visible-user"></i>
                                                 <i class="fa fa-caret-down icon-visible-user" style="display: none"></i>
                                             </button>
@@ -87,9 +87,9 @@
                         <form class="form-modal" id="customer_section_left" action="{% url 'customer_section' %}" method="get" enctype="multipart/form-data" role="form" class="form-horizontal">
                             {% csrf_token %}
 
-                            <div class="col-md-2 li-menu dropdown-left-0 left" id="dropdownMenu">
+                            <div class="col-md-2 li-menu dropdown-left-0 left col1" id="dropdownMenu">
                                 <label class="control-label margin-top-25">Datasets:</label>
-                                <select class="form-control margin-top-15" name="select" id="mydataset" onchange="showDataSets({{ data_set_id }})">
+                                <select class="form-control" name="select" id="mydataset" onchange="showDataSets({{ data_set_id }})">
                                     {% for ds in data_sets %}
                                         <option id="{{ ds.id }}" name="{{ ds }}" value="{{ ds.id }}" {% if data_set_id == ds.id %}selected="selected"{% endif %}>{{ ds }}</option>
                                     {% endfor %}
@@ -98,14 +98,15 @@
                         </form>
                         <!-- END Left Sidebar for the Customer Section -->
 
-                        <!-- Start Status Messages -->
-                        <div class="col-md-8">
-                            {% include '_base_message.html' %}
-                        </div>
-                        <!-- End Status Messages -->
+                        
+                        
 
                         <!-- Start Content -->
-                        <div class="col-md-8" id="content-column">
+                        <div class="col-md-8 margin-top-020" id="content-column">
+                            <!-- Start Status Messages -->
+                            {% include '_base_message.html' %}
+                            <!-- End Status Messages -->
+                            
                             <!-- Title -->
                             <h2>{% block title_customer %}{% endblock title_customer %}</h2>
                             <!-- End Title -->
@@ -115,11 +116,11 @@
 
 
                         <!-- Right Sidebar for the Customer Section -->
-                        {% if data_sets %}
-                            <form class="form-modal" id="customer_section_right" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data" role="form" class="form-horizontal">
-                                {% csrf_token %}
-
-                                <div class="col-md-2 li-menu dropdown-left-0 left" id="dropdownMenu">
+                        <form class="form-modal" id="customer_section_right" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data" role="form" class="form-horizontal">
+                            {% csrf_token %}
+                            
+                            <div class="col-md-2 li-menu dropdown-left-0 left col-map" id="dropdownMenu">
+                                {% if dirs_list %}
                                     <label class="control-label margin-top-25">Info Panel:</label>
                                     {# <h4 class="margin-top-40 background-fill-grey"><b>Info Panel</b></h4>#}
                                     <select class="form-control margin-top-10" name="root_filenames[]" multiple size="8">
@@ -127,19 +128,17 @@
                                             <option value="{{ dl.id }}" {% if dl.attribute_name in dirs_infopanel %}selected="selected"{% endif %}>{{ dl.attribute_name }}</option>
                                         {% endfor %}
                                     </select>
-
-                                    {% if dirs_list %}
-                                        <label class="control-label margin-top-25">Statistics:</label>
-                                        <select class="form-control margin-top-10 disable" name="statistics[]" multiple size="6">
-                                            <option value="mean_ConditionalMax" {% if 'mean_ConditionalMax' in statisctics_infopanel %}selected="selected"{% endif %}>mean_ConditionalMax</option>
-                                            <option value="mean_ConditionalMean" {% if 'mean_ConditionalMean' in statisctics_infopanel %}selected="selected"{% endif %}>mean_ConditionalMean</option>
-                                            <option value="mean_ConditionalMedian" {% if 'mean_ConditionalMedian' in statisctics_infopanel %}selected="selected"{% endif %}>mean_ConditionalMedian</option>
-                                            <option value="mean_ConditionalMin" {% if 'mean_ConditionalMin' in statisctics_infopanel %}selected="selected"{% endif %}>mean_ConditionalMin</option>
-                                            <option value="mean_LowerQuartile" {% if 'mean_LowerQuartile' in statisctics_infopanel %}selected="selected"{% endif %}>mean_LowerQuartile</option>
-                                            <option value="mean_Quantile" {% if 'mean_Quantile' in statisctics_infopanel %}selected="selected"{% endif %}>mean_Quantile</option>
-                                        </select>
-                                    {% endif %}
-                                    
+                                
+                                    <label class="control-label margin-top-25">Statistics:</label>
+                                    <select class="form-control margin-top-10 disable" name="statistics[]" multiple size="6">
+                                        <option value="mean_ConditionalMax" {% if 'mean_ConditionalMax' in statisctics_infopanel %}selected="selected"{% endif %}>mean_ConditionalMax</option>
+                                        <option value="mean_ConditionalMean" {% if 'mean_ConditionalMean' in statisctics_infopanel %}selected="selected"{% endif %}>mean_ConditionalMean</option>
+                                        <option value="mean_ConditionalMedian" {% if 'mean_ConditionalMedian' in statisctics_infopanel %}selected="selected"{% endif %}>mean_ConditionalMedian</option>
+                                        <option value="mean_ConditionalMin" {% if 'mean_ConditionalMin' in statisctics_infopanel %}selected="selected"{% endif %}>mean_ConditionalMin</option>
+                                        <option value="mean_LowerQuartile" {% if 'mean_LowerQuartile' in statisctics_infopanel %}selected="selected"{% endif %}>mean_LowerQuartile</option>
+                                        <option value="mean_Quantile" {% if 'mean_Quantile' in statisctics_infopanel %}selected="selected"{% endif %}>mean_Quantile</option>
+                                    </select>
+                                
                                     <div class="margin-top-20 button-link">
                                         <a name="remove-selected-items" onclick="removeSelectedItems()" href="">
                                             Remove the all selected items
@@ -151,29 +150,29 @@
                                             Add to list view
                                         </button>
                                     </div>
-                                    
-                                    {% if polygons_list %}
-                                        <label class="control-label margin-top-25">Area of Interest:</label><br />
-                                        {% for polygon in polygons_list%}
-                                            <input type="radio" name="polygon" value="{{ polygon }}.kml" onchange="setPolygon(this);"> {{ polygon }}<br>
-                                        {% endfor %}
-                                    {% endif %}
-                                </div>
-                            </form>
-                        {% endif %}
+                                {% endif %}
+                                
+                                {% if polygons_list %}
+                                    <label class="control-label margin-top-25">Area of Interest:</label><br />
+                                    {% for polygon in polygons_list%}
+                                        <input type="radio" name="polygon" value="{{ polygon }}.kml" onchange="setPolygon(this);"> {{ polygon }}<br>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </form>
                     </div>
                 </div>
                 
                 <!-- Start Bufer -->
-                <div class="footer-push"></div>
+                <!-- <div class="footer-push"></div> -->
                 <!-- End Bufer -->
             </div>
             
             <!-- Start Footer -->
-            <div class="row footer">
-                <footer class="col-md-12 center margin-top-50 margin-bottom-50 font-11">
-                    &copy; {{ CURRENT_YEAR }} GSi Web Site
-                </footer>
+            <div class="row footer-row">
+                <div class="col-md-12 footer">
+                    <span class="padding-top-15">&copy; {{ CURRENT_YEAR }} GSi Web Site</span>
+                </div>
             </div>
             <!-- End Footer -->
         {% endif %}
