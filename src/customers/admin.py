@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from customers.models import Category, ShelfData, DataSet, CustomerAccess, CustomerInfoPanel
+from customers.models import (Category, ShelfData, DataSet, CustomerAccess,
+                            CustomerInfoPanel, CustomerPolygons)
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -48,6 +49,12 @@ class CustomerInfoPanelAdmin(admin.ModelAdmin):
     list_display = ('user', 'data_set', 'attribute_name', 'statisctic', 'tif_path', 'png_path',)
     search_fields = ['user', 'data_set']
     list_filter = ('user', 'data_set')
+    
+    
+class CustomerPolygonsAdmin(admin.ModelAdmin):
+    list_display = ('user', 'name', 'kml_name',)
+    search_fields = ['user', 'name']
+    list_filter = ('user', 'name')
 
 
 admin.site.register(Category, CategoryAdmin)
@@ -55,3 +62,4 @@ admin.site.register(ShelfData, ShelfDataAdmin)
 admin.site.register(DataSet, DataSetAdmin)
 admin.site.register(CustomerAccess, CustomerAccessAdmin)
 admin.site.register(CustomerInfoPanel, CustomerInfoPanelAdmin)
+admin.site.register(CustomerPolygons, CustomerPolygonsAdmin)

@@ -20,7 +20,8 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 
-from customers.models import Category, ShelfData, DataSet, CustomerAccess, CustomerInfoPanel
+from customers.models import (Category, ShelfData, DataSet, CustomerAccess,
+                                CustomerInfoPanel, CustomerPolygons)
 from customers.customers_forms import CategoryForm, ShelfDataForm, DataSetForm, CustomerAccessForm
 from customers.customers_update_create import (category_update_create, shelf_data_update_create,
                                                 data_set_update_create, customer_access_update_create)
@@ -993,6 +994,8 @@ def customer_section(request):
     customer = request.user
     shelf_data_all = ShelfData.objects.all()
     customer_info_panel = CustomerInfoPanel.objects.filter(user=request.user)
+    customer_polygons = CustomerPolygons.objects.filter(user=request.user)
+    
     title = 'Customer {0} section'.format(customer)
     url_name = 'customer_section'
     polygons_path = os.path.join(MEDIA_ROOT, 'kml')
@@ -1006,7 +1009,7 @@ def customer_section(request):
     dirs_infopanel = []
     files_infopanel = []
     statisctics_infopanel = []
-    polygons_list = []
+    polygons = []
     data_set_id = 0
     show_file = ''
     file_tif = ''
@@ -1032,12 +1035,13 @@ def customer_section(request):
     # Get the polygons list from media folder
     try:
         root, dirs, files = os.walk(polygons_path).next()
-
-        for f in files:
-            file_extension = os.path.splitext(f)
-            
-            if file_extension[1] == '.kml':
-                polygons_list.append(file_extension[0])
+        
+        for pol in customer_polygons:
+            if pol.kml_name in files:
+                file_extension = os.path.splitext(pol.kml_name)
+                polygons.append(pol.name)
+            else:
+                pol.delete()
     except Exception, e:
         print 'Exception 02 ========================= ', e
         warning_message = u'The polygon directory "{0}" does not exist!'.format(polygons_path)
@@ -1121,7 +1125,11 @@ def customer_section(request):
             kml_path = os.path.join(KML_PATH, kml_filename)
             kml.save(kml_path)
             
-            # customer_info_panel
+            customer_pol = CustomerPolygons.objects.create(
+                                name=new_filename,
+                                kml_name=kml_filename,
+                                user=request.user
+                            )
     
             status = 'success'
 
@@ -1446,7 +1454,7 @@ def customer_section(request):
         'statisctics_infopanel': statisctics_infopanel,
         'show_file': show_file,
         'file_tif': file_tif,
-        'polygons_list': polygons_list,
+        'polygons': polygons,
         'absolute_kml_url': absolute_kml_url,
 
         'cLng': cLng,

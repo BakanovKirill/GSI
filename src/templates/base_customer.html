@@ -152,9 +152,9 @@
                                     </div>
                                 {% endif %}
                                 
-                                {% if polygons_list %}
+                                {% if polygons %}
                                     <label class="control-label margin-top-25">Area of Interest:</label><br />
-                                    {% for polygon in polygons_list%}
+                                    {% for polygon in polygons%}
                                         <input type="radio" name="polygon" value="{{ polygon }}.kml" onchange="setPolygon(this);"> {{ polygon }}<br>
                                     {% endfor %}
                                 {% endif %}

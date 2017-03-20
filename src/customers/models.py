@@ -70,7 +70,7 @@ class CustomerInfoPanel(models.Model):
     data_set = models.ForeignKey('DataSet', blank=True, null=True)
     attribute_name = models.CharField(max_length=150, blank=True, null=True)
     statisctic = models.CharField(max_length=150, blank=True, null=True)
-    polygon = models.CharField(max_length=150, blank=True, null=True)
+    # polygon = models.CharField(max_length=150, blank=True, null=True)
 
     file_area_name = models.CharField(max_length=150, blank=True, null=True)
     tif_path = models.CharField(max_length=150, blank=True, null=True)
@@ -82,3 +82,15 @@ class CustomerInfoPanel(models.Model):
 
     def __unicode__(self):
         return u"{0}_{1}".format(self.user, self.data_set)
+        
+        
+class CustomerPolygons(models.Model):
+    name = models.CharField(max_length=150, blank=True, null=True)
+    user = models.ForeignKey(User, verbose_name='User', blank=True, null=True)
+    kml_name = models.CharField(max_length=150, blank=True, null=True)
+
+    class Meta:
+        verbose_name_plural = 'Customer Polygons'
+
+    def __unicode__(self):
+        return u"{0}_{1}".format(self.user, self.name)
