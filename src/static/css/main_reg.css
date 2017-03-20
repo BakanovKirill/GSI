@@ -4,7 +4,7 @@
    src: url(../ufonts/NirmalaS.ttf);
    font-style: normal;
    font-weight: lighter;
-   color: #7f3f98;
+   color: #283890;
 }
 
 @font-face {
@@ -12,7 +12,7 @@
    src: url(../ufonts/NirmalaB.ttf);
    font-style: normal;
    font-weight: bold;
-   color: #7f3f98;
+   color: #283890;
 }
 
 @font-face {
@@ -30,7 +30,7 @@ body {
     -o-background-size: cover; /* Opera 9.6+ */
     background-size: cover;
     font-family: Nirmala !important;
-    color: #7f3f98;
+    color: #283890;
 }
 
 /* button styles */
@@ -43,13 +43,13 @@ body {
 
 /* link styles */
 a {
-    color: #7f3f98 !important;
-    border-bottom: 1px dotted #7f3f98 !important;
+    color: #283890 !important;
+    border-bottom: 1px dotted #283890 !important;
     /*text-decoration: underline;*/
 }
 
 a:focus, a:hover {
-    color: #7f3f98 !important;
+    color: #283890 !important;
     border-bottom: 0px !important;
     text-decoration: none !important;
 }
@@ -57,7 +57,7 @@ a:focus, a:hover {
 /* input field for the reset password */
 #id_email, #id_new_password1, #id_new_password2 {
     min-width: 100% !important;
-    border: 1px solid #7f3f98 !important;
+    border: 1px solid #283890 !important;
     padding-left: 10px;
     height: 34px;
 }
@@ -182,21 +182,21 @@ a:focus, a:hover {
 
 /* borders style */
 .border-bottom {
-    border: 1px solid #7f3f98 !important;
+    border: 1px solid #283890 !important;
     border-radius: 0px;
     box-shadow: 0 0px 0px rgba(0, 0, 0, 0) inset;
     padding-left: 10px;
 }
 
 .border-bottom:focus {
-    border-color: 2 solid #7f3f98;
+    border-color: 2 solid #283890;
     box-shadow: 0 0 0px rgba(100, 100, 100, 0.9) inset, 0 0 0px rgba(100, 100, 100, 0.5);
     /*border-bottom: 1px solid #66afe9;*/
 }
 
 /* forms log and signup */
 .form-password:focus {
-    border-color: 2 solid #7f3f98;
+    border-color: 2 solid #283890;
     box-shadow: 0 0 0px rgba(100, 100, 100, 0.9) inset, 0 0 0px rgba(100, 100, 100, 0.5);
     /*border-bottom: 1px solid #66afe9;*/
 }
@@ -205,11 +205,11 @@ a:focus, a:hover {
 input {outline: none;}
 input:-webkit-autofill {
     -webkit-box-shadow: inset 0 0 0 50px white !important; /* background color */
-    -webkit-text-fill-color: #7f3f98 !important;
-    color: #7f3f98 !important;
+    -webkit-text-fill-color: #283890 !important;
+    color: #283890 !important;
 }
 
 /* form-control */
 .form-control {
-    color: #7f3f98 !important;
+    color: #283890 !important;
 }
