@@ -954,6 +954,23 @@ ATTRIBUTE_NAMES = [
 ]
 
 
+def checkKmlFile(filename):
+    kml_filename = filename + '.kml'
+    file_path = os.path.join(KML_PATH, kml_filename)
+    
+    if os.path.exists(file_path):
+        for n in xrange(1000000):
+            fn = filename + '_' + str(n)
+            kml_filename = fn + '.kml'
+            file_path = os.path.join(KML_PATH, kml_filename)
+            
+            if not os.path.exists(file_path):
+                filename = fn
+                break
+                
+    return filename
+
+
 # view Customer Section
 @login_required
 @render_to('customers/customer_section.html')
@@ -972,7 +989,7 @@ def customer_section(request):
     # PNG_DIRECTORY = 'media/png'
     # PNG_PATH = os.path.join(BASE_DIR, PNG_DIRECTORY)
     # PROJECTS_PATH = '/lustre/w23/mattgsi/satdata/RF/Projects'
-
+    
     customer = request.user
     shelf_data_all = ShelfData.objects.all()
     customer_info_panel = CustomerInfoPanel.objects.filter(user=request.user)
@@ -995,6 +1012,7 @@ def customer_section(request):
     file_tif = ''
     # polygon = ''
     coord = []
+    name_dataset = ''
     
     # default GEOTIFF coordinates
     cLng = DAFAULT_LON
@@ -1062,7 +1080,9 @@ def customer_section(request):
             else:
                 request.session['select_data_set'] = data_set_id
         request.session.set_expiry(172800)
-
+        
+    name_dataset = get_object_or_404(DataSet, id=int(request.session['select_data_set'])).name
+    
     # Get select image area sessions
     if request.session.get('file_info_panel', False):
         show_file = request.session['file_info_panel']
@@ -1084,15 +1104,24 @@ def customer_section(request):
                     coord.append(n[1])
                 
             # print 'coord ======================== ', coord
-                        
+            
+            # Create KML file for the draw polygon
+            # filename = str(request.user) + '_' + str(name_dataset)
+            filename = str(request.user)
+            new_filename = checkKmlFile(filename)
+            
+            name_polygon = str(new_filename) + ' Polygon'
+            kml_filename = str(new_filename) + '.kml'
             kml = simplekml.Kml()
-            pol = kml.newpolygon(name='User Polygon')
+            pol = kml.newpolygon(name=name_polygon)
             pol.outerboundaryis.coords = coord
             pol.style.linestyle.color = simplekml.Color.hex('#ffffff')
             pol.style.linestyle.width = 5
             pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex('#8bc53f'))
-            kml_path = os.path.join(KML_PATH, '2_0.kml')
+            kml_path = os.path.join(KML_PATH, kml_filename)
             kml.save(kml_path)
+            
+            # customer_info_panel
     
             status = 'success'
 
