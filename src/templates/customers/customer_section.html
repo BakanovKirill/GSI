@@ -534,15 +534,20 @@
 				// alert('text1: '+coord);
 				
 				// info window
+				var average_distance = Math.pow(3,2);
 				var area_sq_m = google.maps.geometry.spherical.computeArea(selectPolygon.getPath().getArray());
 				var area_ha = area_sq_m / 10000;
-				var tree_count = 567;
-				var tree_count_per_area = tree_count / area_ha
+				var tree_count = area_sq_m / average_distance;
+				var tree_count_per_area = tree_count / area_ha;
+				
+				alert('average_distance = '+average_distance);
+				alert('tree_count = '+tree_count);
+				alert('tree_count_per_area = '+tree_count_per_area);
 				
 				var contentString = '<p class="left"><b>Area Information</b></p>';
-				contentString += '<p class="left">Total Area: ' + area_ha + ' ha</p>';
-				contentString += '<p class="left">Tree Count: ' + tree_count + ' (units)</p>';
-				contentString += '<p class="left">Tree Count per Hectare: ' + tree_count_per_area +'</p>';
+				contentString += '<p class="left">Total Area: ' + area_ha.toFixed(4) + ' ha</p>';
+				contentString += '<p class="left">Tree Count: ' + tree_count.toFixed(4) + ' (units)</p>';
+				contentString += '<p class="left">Tree Count per Hectare: ' + tree_count_per_area.toFixed(4) +'</p>';
 				// contentString += '<p class="left">Max = 142</p>';
 				
 				// contentString += '<p class="left">COORDINATE:</p>';
