@@ -28,7 +28,7 @@ class ShelfDataForm(forms.ModelForm):
 
     category = forms.ModelChoiceField(
         widget=forms.Select(attrs={
-            'class': 'form-control disabled',
+            'class': 'form-control',
         }),
         queryset=Category.objects.all(),
         empty_label='Select',
@@ -110,7 +110,7 @@ class CustomerAccessForm(forms.ModelForm):
 
     user = forms.ModelChoiceField(
         widget=forms.Select(attrs={
-            'class': 'form-control disabled',
+            'class': 'form-control',
         }),
         queryset=User.objects.all(),
         empty_label='Select',

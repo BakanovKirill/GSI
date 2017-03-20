@@ -509,13 +509,20 @@ li.li-menu > a, .title {
 
 li.active-main-menu > a {
     color: #7f3f98 !important;
+    /*background-color: #80d0f4 !important;*/
     background-color: #80d0f4 !important;
     border-radius: 0px !important;
 }
 
+li.active-main-menu a:hover, li.li-menu > a:hover, .li-sub-menu > a:hover, .title:hover {
+    background-color: #80d0f4 !important;
+    color: #7f3f98 !important;
+    text-decoration: none;
+}
+
 li.active-main-menu, li.active-main-menu a:hover, li.li-menu > a:hover, .title:hover, .li-sub-menu > a:hover {
     /*background-color: transparent;*/
-    background-color: #80d0f4 !important;
+    /*background-color: #80d0f4 !important;*/
     color: #7f3f98 !important;
     text-decoration: none;
 }
