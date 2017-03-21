@@ -31,7 +31,7 @@
 				</div>
 
 				<!-- GSi Info Data -->
-				<div class="col-md-6 padding-lr-5">
+				<div class="col-md-6">
 					<select class="form-control" name="select_file_area" id="show_file_arrea" onchange="showFileSelectArea('{{ show_file }}')">
 						{% if files_infopanel %}
 							{% for file in files_infopanel %}
@@ -48,7 +48,7 @@
 
 			<!-- Google map -->
 			<div class="row margin-top-4">
-				<div class="col-md-12 margin-010">
+				<div class="col-md-12 col-lg-12 margin-010" id="map-block">
 					<!-- [START region_toolbar] -->
 					<!-- Add an input button to initiate the toggle method on the overlay. -->
 					<div id="floating-panel">
@@ -81,6 +81,10 @@
 						<input class="form-control placeholder" type="text" id="longitude" readonly>
 					</div>
 					<!-- GSi Coordinates -->
+					
+					<div class="footer">
+	                    <span class="padding-top-15">&copy; {{ CURRENT_YEAR }} GSi Web Site</span>
+	                </div>
 				</div>
 			</div>
 			<!-- End Google map -->

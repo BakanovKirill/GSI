@@ -237,6 +237,41 @@ function setDataSetInfoPanel() {
     $(info_dataset).html(current_dataset);
 }
 
+function resizeScreen() {
+    var width = window.innerWidth;
+    var div_map = document.getElementById('map');
+    var col1 = document.getElementById('col1');
+    var col2 = document.getElementById('col2');
+    // var user_photo = document.getElementById('user-photo');
+    
+    
+    // alert('col1.style.height: '+col1.style.height);
+    // alert('Width = '+window.innerWidth + '. Height = '+window.innerHeight);
+    
+    if (width < '1355') {
+        div_map.style.width = "103%";
+        div_map.style.height = "750px";
+        col1.style.height = "870px";
+        col2.style.height = "870px";
+        // user-photo.style.left = "95%";
+    } else if (width >= '1355' && width <= '1800') {
+        div_map.style.width = "102%";
+        div_map.style.height = "960px";
+        col1.style.height = "1045px";
+        col2.style.height = "1045px";
+        // user-photo.style.left = "97%";
+    } else {
+        div_map.style.width = "101%";
+        div_map.style.height = "1200px";
+        col1.style.height = "1285px";
+        col2.style.height = "1285px";
+        // user-photo.style.padding-left = "99%";
+    }
+    
+    // div_map.style.width = "50%";
+    // div_map.style.height = "500px";
+}
+
 
 $(document).ready(function(){
     //selectAll();
@@ -255,5 +290,6 @@ $(document).ready(function(){
     initAddFormatingTextarrea();
     greyColorSelect();
     setDataSetInfoPanel();
+    resizeScreen();
     // showCheckboxes();
 });

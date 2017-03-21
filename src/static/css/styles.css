@@ -55,8 +55,9 @@ html, body {
 .footer {
     /*position: absolute;*/
     text-align: center;
-    background-color: #283890;
-    color: #66afe9;
+    /*background-color: #283890;*/
+    /*color: #66afe9;*/
+    color: #283890;
     height: 30px;
     margin: 0;
     padding: 0;
@@ -266,6 +267,10 @@ th {
 
 .margin-left-10 {
     margin-left: 10px !important;
+}
+
+.margin-right-10 {
+    margin-right: 10px !important;
 }
 
 /* Margins "-" */
@@ -753,35 +758,6 @@ li.active-main-menu, li.active-main-menu a:hover, li.li-menu > a:hover, .title:h
     background-color: transparent !important;
 }
 
-/* gsi iframe for gsi maps */
-.border-none {
-    border-width: 0;
-}
-
-#map {
-    /*width: 890px;*/
-    height: 880px;
-    float: left;
-    width: 104%;
-    /*padding-left: -50px;*/
-    margin-left: -5px;
-}
-
-hr {
-    border: none;
-    background-color: #9fa1a3;
-    color: #9fa1a3;
-    height: 1px;
-}
-
-.border-1 {
-    border: 1px solid #9fa1a3;
-}
-
-#cke_id_content {
-    width: 770px !important;
-}
-
 /* Select styles */
 .form-control {
     background: transparent !important;
@@ -870,7 +846,7 @@ input[type="checkbox"]:checked + span {
 }
 
 .padding-lr-5 {
-    padding-right: 5px !important;
+    padding-right: -10px !important;
     padding-left: 5px !important;
 }
 
@@ -889,37 +865,50 @@ input[type="checkbox"]:checked + span {
 #floating-panel {
   position: absolute;
   top: 10px;
-  left: 15%;
+  left: 150px;
   z-index: 5;
-  background-color: #fff;
+  /*background-color: #fff;*/
   padding: 2px;
   /*border: 1px solid #999;*/
   text-align: center;
-  line-height: 30px;
-  padding-left: 10px;
+  /*line-height: 30px;*/
+  /*padding-left: 10px;*/
+}
+
+#user-photo {
+    position: absolute;
+    float: right;
+    top: 10px;
+    left: 95%;
+    z-index: 5;
+    /*padding: 2px;*/
+    /*border: 1px solid #999;*/
+    /*text-align: center;*/
+    /*line-height: 30px;*/
+    /*padding-left: 10px;*/
 }
 
 #gsi-logo {
   position: absolute;
   bottom: 10px;
-  left: 10%;
+  left: 100px;
   z-index: 5;
-  background-color: #fff;
-  padding: 5px;
+  /*background-color: #fff;*/
+  /*padding: 5px;*/
   text-align: center;
-  line-height: 30px;
+  /*line-height: 30px;*/
   padding-left: 10px;
 }
 
 #lat-panel {
   position: absolute;
   bottom: 10px;
-  left: 25%;
+  left: 220px;
   z-index: 3;
-  background-color: #fff;
-  padding: 2px;
-  text-align: left;;
-  line-height: 10px;
+  /*background-color: #fff;*/
+  /*padding: 2px;*/
+  text-align: left;
+  /*line-height: 10px;*/
   padding-left: 10px;
   width: 150px;
 }
@@ -927,28 +916,30 @@ input[type="checkbox"]:checked + span {
 #lng-panel {
   position: absolute;
   bottom: 10px;
-  left: 45%;
+  left: 380px;
   z-index: 3;
-  background-color: #fff;
-  padding: 2px;
+  /*background-color: #fff;
+  padding: 2px;*/
   text-align: left;;
-  line-height: 10px;
+  /*line-height: 10px;*/
   padding-left: 10px;
   width: 150px;
 }
 
-#user-photo {
-    position: absolute;
-    bottom: 830px;
-    left: 45%;
-    z-index: 3;
+/*#user-photo {*/
+    /*position: absolute;*/
+    /*bottom: 1160px;*/
+    /*bottom: 96%;
+    left: 94%;
+    z-index: 3;*/
     /*background-color: #fff;*/
     /*padding: 2px;*/
-    text-align: right;;
-    line-height: 10px;
-    padding-left: 440px;
+    /*text-align: right;;
+    line-height: 10px;*/
+    /*padding-left: 440px;*/
+    /*padding-left: 94%;*/
     /*width: 150px;*/
-}
+/*}*/
 
 .background-fill-grey {
     background-color: #283890;
@@ -959,22 +950,65 @@ input[type="checkbox"]:checked + span {
     /*padding-left: 5px;*/
 }
 
-
-/* Style for the customer section */
-.col1 {
-    /*width:300px;*/
-    margin-top: -50px;
-    height: 980px;
-    float: left;
-    box-shadow: inset -5px 0 0 #283890;
+/* gsi iframe for gsi maps */
+.border-none {
+    border-width: 0;
 }
 
-.col-map {
+hr {
+    border: none;
+    background-color: #9fa1a3;
+    color: #9fa1a3;
+    height: 1px;
+}
+
+.border-1 {
+    border: 1px solid #9fa1a3;
+}
+
+#cke_id_content {
+    width: 770px !important;
+}
+
+#map {
+    /*width: 890px;*/
+    float: left;
+    height: 1200px;
+    /*max-height: 1200px;*/
+    width: 101%;
+    /*max-width: 101%;*/
+    margin: 0px;
+}
+
+#map-block {
+    border-color: #283890 #283890;
+}
+
+/* Style for the customer section */
+#col1 {
+    /*width:300px;*/
+    z-index: 10;
+    margin-top: -50px;
+    /*height: 1800px;*/
+    height: 1285px;
+    float: left;
+    /*box-shadow: inset -5px 0 0 #283890;*/
+    
+    -webkit-box-shadow: 6px 0px 0px 0px #283890;
+    -moz-box-shadow: 6px 0px 0px 0px #283890;
+    box-shadow: 6px 0px 0px 0px #283890;
+}
+
+#col2 {
     /*width:300px;*/
     margin-top: -50px;
-    height: 980px;
+    height: 1285px;
     float: right;
-    box-shadow: inset 5px 0 0 #283890;
+    /*box-shadow: inset 5px 0 0 #283890;*/
+    
+    -webkit-box-shadow: -6px 0px 0px 0px #283890;
+    -moz-box-shadow: -6px 0px 0px 0px #283890;
+    box-shadow: -6px 0px 0px 0px #283890;
 }
 
 .main-menu-customer {
@@ -1012,3 +1046,5 @@ input[type="checkbox"]:checked + span {
 .label-dataset {
     max-width: 50px;
 }
+
+/* Resize style for Google Map */

@@ -87,7 +87,7 @@
                         <form class="form-modal" id="customer_section_left" action="{% url 'customer_section' %}" method="get" enctype="multipart/form-data" role="form" class="form-horizontal">
                             {% csrf_token %}
 
-                            <div class="col-md-2 li-menu dropdown-left-0 left col1" id="dropdownMenu">
+                            <div class="col-md-2 li-menu dropdown-left-0 left" id="col1">
                                 <label class="control-label margin-top-25">Datasets:</label>
                                 <select class="form-control" name="select" id="mydataset" onchange="showDataSets({{ data_set_id }})">
                                     {% for ds in data_sets %}
@@ -119,7 +119,7 @@
                         <form class="form-modal" id="customer_section_right" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data" role="form" class="form-horizontal">
                             {% csrf_token %}
                             
-                            <div class="col-md-2 li-menu dropdown-left-0 left col-map" id="dropdownMenu">
+                            <div class="col-md-2 li-menu dropdown-left-0 left" id="col2">
                                 {% if dirs_list %}
                                     <label class="control-label margin-top-25">Info Panel:</label>
                                     {# <h4 class="margin-top-40 background-fill-grey"><b>Info Panel</b></h4>#}
@@ -169,11 +169,7 @@
             </div>
             
             <!-- Start Footer -->
-            <div class="row footer-row">
-                <div class="col-md-12 footer">
-                    <span class="padding-top-15">&copy; {{ CURRENT_YEAR }} GSi Web Site</span>
-                </div>
-            </div>
+            
             <!-- End Footer -->
         {% endif %}
         <!-- End Body -->
