@@ -21,11 +21,11 @@
 				<div class="col-md-2 left padding-lr-5">
 					<div class="row">
 						<div class="col-md-12">
-							<span id="slider_value">Visibility: 100%</span>
+							<span id="slider_value">Visibility: 50%</span>
 						</div>
 						
 						<div class="col-md-12">
-							<input type="range" id="opacity" min="0" max="100" oninput="setOpacity();" alt="transparency" title="Transparency" value="100"/>
+							<input type="range" id="opacity" min="0" max="100" oninput="setOpacity();" alt="transparency" title="Transparency" value="50"/>
 						</div>
 					</div>
 				</div>
@@ -103,7 +103,6 @@
 		<script src="http://www.google.com/jsapi"></script>
 		
 		<script>
-			// var overlay;
 			USGSOverlay.prototype = new google.maps.OverlayView();
 
 			var map;
@@ -120,10 +119,7 @@
 			var infowindow = new google.maps.InfoWindow();
 			// var kml_layer = new google.maps.KmlLayer();
 			
-			var cmarker_pol;
 			
-			// var center_marker;
-
 			// alert('eLat_1: '+{{ eLat_1 }});
 			// alert('eLng_1: '+{{ eLng_1 }});
 			// alert('eLat_2: '+{{ eLat_2 }});
@@ -358,6 +354,7 @@
 				img.src = this.image_;
 				img.style.width = '100%';
 				img.style.height = '100%';
+				img.style.opacity = '0.5';
 				img.id = 'on_add';
 				div.appendChild(img);
 

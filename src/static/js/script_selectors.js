@@ -91,23 +91,6 @@ function setOpacity() {
     // alert('setOpacity: '+opacity);
 }
 
-// function addChoice(elem) {
-//     alert('addChoice: '+$(elem).val());
-//     alert('addChoice: '+$('#show_arrea option:selected').val());
-//
-//     var choice_val = $(elem).val()
-//     // var choice = $("#show_arrea");
-//     $('div.selecter-options').append( $('<span class="selecter-item" data-value="'+choice_val+'">'+choice_val+'</span>') );
-//     $('#choice_p').html(choice_val);
-//     // $("select[id=show_arrea]").append('<option value="20">Добавить в самый конец Select</option>')
-//     // $('#show_arrea').append('<option value="20">Добавить в самый конец Select</option>');
-//     // $("#show_arrea").append('<option value="'+choice_val+'">'+choice_val+'</option>');
-// }
-//
-// function showSelectArea(elem) {
-//     // alert('addChoice: ');
-// }
-
 
 $(document).ready(function(){
     hideRootFilenames();
