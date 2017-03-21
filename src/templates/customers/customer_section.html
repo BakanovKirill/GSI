@@ -103,7 +103,7 @@
 		<script src="http://www.google.com/jsapi"></script>
 		
 		<script>
-			var overlay;
+			// var overlay;
 			USGSOverlay.prototype = new google.maps.OverlayView();
 
 			var map;
@@ -292,7 +292,7 @@
 
 				// The source to image overlay
 				var srcImage = '{{ absolute_url_png_file }}';
-				overlay = new USGSOverlay(bounds, srcImage, map);
+				var overlay = new USGSOverlay(bounds, srcImage, map);
 
 				// Show the lat and lng under the mouse cursor.
 				// latitude, longitude
