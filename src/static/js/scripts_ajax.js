@@ -352,6 +352,7 @@ function setPolygon(obj) {
 }
 
 function sendDataToServer(obj) {
+    alert('sendDataToServer');
     // var send_data = JSON.parse(obj);
     // var send_data = JSON.parse(data);
     var form_url = $('#customer_section').attr('action');
@@ -365,6 +366,7 @@ function sendDataToServer(obj) {
             temp.push(obj[n][k]);
             var reverce_list = temp.reverse();
         }
+        alert('reverce_list: '+reverce_list);
         obj_list.push(reverce_list);
     }
     

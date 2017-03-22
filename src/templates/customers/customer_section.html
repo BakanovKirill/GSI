@@ -521,6 +521,12 @@
 				polygonVisible = true;
 				sendDataToServer(show_coord);
 				
+				for (n in show_coord){
+					for (k in show_coord[n]){
+						alert('NK: '+show_coord[n][k]);
+					}
+				}
+				
 				// Add a listener for the click event.
 				selectPolygon.addListener('click', showInfoWindow);
 				infoWindow = new google.maps.InfoWindow;
@@ -557,8 +563,9 @@
 				// 	contentString += '<p class="left">(Lat: ' + show_coord[n]['lat'] + '; Lng: ' + show_coord[n]['lng'] + ')</p>';
 			    // }
 				
-				contentString += '<input type="text" class="margin-top-15" placeholder="Enter file name" name="file_name" size="40"><br>'
-				contentString += '<button type="submit" name="download_file" class="btn btn-success btn-block margin-top-15" value="out_log">Download the file locally</button>';
+				contentString += '<input type="text" class="margin-top-15" placeholder="Enter Area name" name="file_name" size="40"><br>'
+				contentString += '<button type="submit" name="download_file" class="btn btn-success btn-block margin-top-15" value="out_log">Save Area</button>';
+				contentString += '<button type="submit" name="download_file" class="btn btn-primary btn-block margin-top-15" value="out_log">Cancel</button>';
 				
 				// document.write(
 				//     '<a href="data:text/plain;charset=utf-8,%EF%BB%BF' + encodeURIComponent(text) + '" download="text.txt">text.txt</a>'
@@ -610,17 +617,17 @@
 				infoWindow.open(map);
 			}
 
-			function showInfoWindowPolygon(event, msg) {
-				alert('MSG: '+msg);
-				var lat = event.latLng.lat();
-				var lon = event.latLng.lng();
-
-				// Replace the info window's content and position.
-				infoWindow.setContent(msg);
-				infoWindow.setPosition(event.latLng);
-
-				infoWindow.open(map);
-			}
+			// function showInfoWindowPolygon(event, msg) {
+			// 	alert('MSG: '+msg);
+			// 	var lat = event.latLng.lat();
+			// 	var lon = event.latLng.lng();
+			//
+			// 	// Replace the info window's content and position.
+			// 	infoWindow.setContent(msg);
+			// 	infoWindow.setPosition(event.latLng);
+			//
+			// 	infoWindow.open(map);
+			// }
 
 			function togglePlygonOverlays() {
 				if (polygonVisible) {
