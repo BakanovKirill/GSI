@@ -1244,13 +1244,15 @@ def customer_section(request):
         data_post = request.POST
         dirs = []
         
-        print 'POST ============================= ', data_post
+        # print 'POST ============================= ', data_post
         
         if 'save_area' in data_post:
-            kml_filename = data_post.get('file_name', '')
+            area_name = data_post.get('file_name', '')
             total_area = data_post.get('total_area', '')
             count_hectare = data_post.get('count_hectare', '')
             tree_count = data_post.get('tree_count', '')
+            
+            area_name = area_name.replace(' ', '-')
             
             info_window = '''
             Area Information:
@@ -1263,7 +1265,7 @@ def customer_section(request):
             '''.format(total_area, tree_count, count_hectare)
             
             # Create KML file for the draw polygon
-            createKml(request.user, kml_filename, info_window)
+            createKml(request.user, area_name, info_window)
         
         if 'add-list-view' in data_post:
             if 'root_filenames[]' in data_post and 'statistics[]' in data_post:
