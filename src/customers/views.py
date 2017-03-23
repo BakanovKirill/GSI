@@ -1260,7 +1260,7 @@ def customer_section(request):
             area_name = area_name.replace(' ', '-')
             
             info_window = '''
-            <p class="left"><b>Area "{0}"</b></p>
+            <p id="title"><b>Area "{0}"</b></p>
             <p class="left">Total Area: {1} ha</p>
             <p class="left">Tree Count: {2} (units)</p>
             <p class="left">Tree Count per Hectare: {3}</p>
