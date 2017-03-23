@@ -1255,11 +1255,11 @@ def customer_section(request):
             area_name = area_name.replace(' ', '-')
             
             info_window = '''
-            Area Information:
+            <b>Area Information:</b>
 
-            Total Area: {0} ha
+            Total Area: {0} ha<br />
 
-            Tree Count: {1} (units)
+            Tree Count: {1} (units)\n
 
             Tree Count per Hectare: {2}
             '''.format(total_area, tree_count, count_hectare)
