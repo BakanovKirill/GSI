@@ -970,6 +970,25 @@ def checkKmlFile(filename):
                 break
                 
     return filename
+    
+    
+def createKml():
+    # Create KML file for the draw polygon
+    filename = str(request.user) + '_tmp'
+    # filename = str(request.user)
+    # new_filename = checkKmlFile(filename)
+    # new_filename = 'admin'
+    
+    name_polygon = str(filename) + ' Polygon'
+    kml_filename = str(filename) + '.kml'
+    kml = simplekml.Kml()
+    pol = kml.newpolygon(name=name_polygon)
+    pol.outerboundaryis.coords = coord
+    pol.style.linestyle.color = simplekml.Color.hex('#ffffff')
+    pol.style.linestyle.width = 5
+    pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex('#8bc53f'))
+    kml_path = os.path.join(KML_PATH, kml_filename)
+    kml.save(kml_path)
 
 
 # view Customer Section
@@ -1098,7 +1117,7 @@ def customer_section(request):
             request.session['file_info_panel'] = show_file
         request.session.set_expiry(172800)
 
-    # get AJAX POST
+    # get AJAX POST for KML files
     if request.is_ajax() and request.method == "POST":
         data_post_ajax = request.POST
     
@@ -1107,15 +1126,16 @@ def customer_section(request):
                 if n[0] != 'csrfmiddlewaretoken':
                     coord.append(n[1])
                 
-            # print 'coord ======================== ', coord
+            print 'coord ======================== ', coord
             
             # Create KML file for the draw polygon
-            # filename = str(request.user) + '_' + str(name_dataset)
-            filename = str(request.user)
-            new_filename = checkKmlFile(filename)
+            filename = str(request.user) + '_tmp'
+            # filename = str(request.user)
+            # new_filename = checkKmlFile(filename)
+            # new_filename = 'admin'
             
-            name_polygon = str(new_filename) + ' Polygon'
-            kml_filename = str(new_filename) + '.kml'
+            name_polygon = str(filename) + ' Polygon'
+            kml_filename = str(filename) + '.kml'
             kml = simplekml.Kml()
             pol = kml.newpolygon(name=name_polygon)
             pol.outerboundaryis.coords = coord
@@ -1125,12 +1145,6 @@ def customer_section(request):
             kml_path = os.path.join(KML_PATH, kml_filename)
             kml.save(kml_path)
             
-            customer_pol = CustomerPolygons.objects.create(
-                                name=new_filename,
-                                kml_name=kml_filename,
-                                user=request.user
-                            )
-    
             status = 'success'
 
             return HttpResponse(status)
@@ -1202,6 +1216,43 @@ def customer_section(request):
     if request.method == "POST":
         data_post = request.POST
         dirs = []
+        
+        # print 'POST ============================= ', data_post
+        
+        # <QueryDict: {u'file_name': [u'new_name'], u'total_area': [u'2397346.4479'], u'count_hectare': [u'1111.1111'], u'tree_count': [u'2663718275.4340'], u'select_file_area': [u'none_file'], u'save_area': [u'save_area'], u'csrfmiddlewaretoken': [u'm1GVWuM0ADYbmMooITv2b9MYeU5s0iJT']}>
+        
+        
+        
+        if 'save_area' in data_post:
+            file_name_area = data_post.get('file_name', '')
+            total_area = data_post.get('total_area', '')
+            count_hectare = data_post.get('count_hectare', '')
+            tree_count = data_post.get('tree_count', '')
+            
+            data_info = '''
+            <b>Area Information<b>
+
+            Total Area: {0} ha
+
+            Tree Count: {1} (units)
+
+            Tree Count per Hectare: {2}
+            '''
+            
+            kml = simplekml.Kml('/data/work/virtualenvs/gsi/GSI/src/media/kml/admin_tmp.kml')
+            
+            print 'KML ================ ', kml
+            
+            # customer_pol = CustomerPolygons.objects.create(
+            #                     name=new_filename,
+            #                     kml_name=kml_filename,
+            #                     user=request.user
+            #                 )
+            
+            print 'file_name_area ============================= ', file_name_area
+            print 'total_area ============================= ', total_area
+            print 'count_hectare ============================= ', count_hectare
+            print 'tree_count ============================= ', tree_count
         
         if 'add-list-view' in data_post:
             if 'root_filenames[]' in data_post and 'statistics[]' in data_post:

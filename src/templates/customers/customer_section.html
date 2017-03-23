@@ -523,7 +523,7 @@
 				
 				for (n in show_coord){
 					for (k in show_coord[n]){
-						alert('NK: '+show_coord[n][k]);
+						// alert('NK: '+show_coord[n][k]);
 					}
 				}
 				
@@ -547,36 +547,24 @@
 				var tree_count = area_sq_m / average_distance;
 				var tree_count_per_area = tree_count / area_ha;
 				
-				// alert('average_distance = '+average_distance);
-				// alert('tree_count = '+tree_count);
-				// alert('tree_count_per_area = '+tree_count_per_area);
-				
 				var contentString = '<p class="left"><b>Area Information</b></p>';
-				contentString += '<p class="left">Total Area: ' + area_ha.toFixed(4) + ' ha</p>';
-				contentString += '<p class="left">Tree Count: ' + tree_count.toFixed(4) + ' (units)</p>';
-				contentString += '<p class="left">Tree Count per Hectare: ' + tree_count_per_area.toFixed(4) +'</p>';
-				// contentString += '<p class="left">Max = 142</p>';
+				contentString += '<p class="left" name="total_area">Total Area: ' + area_ha.toFixed(4) + ' ha</p>';
+				contentString += '<input type="hidden" name="total_area" value="' + area_ha.toFixed(4) + '">'
+				
+				contentString += '<p class="left" name="tree_count">Tree Count: ' + tree_count.toFixed(4) + ' (units)</p>';
+				contentString += '<input type="hidden" name="tree_count" value="' + tree_count.toFixed(4) + '">'
+				
+				contentString += '<p class="left" name="count_hectare">Tree Count per Hectare: ' + tree_count_per_area.toFixed(4) +'</p>';
+				contentString += '<input type="hidden" name="count_hectare" value="' + tree_count_per_area.toFixed(4) + '">'
 				
 				// contentString += '<p class="left">COORDINATE:</p>';
-				
 				// for(n in show_coord) {
 				// 	contentString += '<p class="left">(Lat: ' + show_coord[n]['lat'] + '; Lng: ' + show_coord[n]['lng'] + ')</p>';
 			    // }
 				
-				contentString += '<input type="text" class="margin-top-15" placeholder="Enter Area name" name="file_name" size="40"><br>'
-				contentString += '<button type="submit" name="download_file" class="btn btn-success btn-block margin-top-15" value="out_log">Save Area</button>';
-				contentString += '<button type="submit" name="download_file" class="btn btn-primary btn-block margin-top-15" value="out_log">Cancel</button>';
-				
-				// document.write(
-				//     '<a href="data:text/plain;charset=utf-8,%EF%BB%BF' + encodeURIComponent(text) + '" download="text.txt">text.txt</a>'
-				// )
-				
-				// alert('text2: '+coord);
-				
-				// contentString += 'document.write(<a href="data:text/plain;charset=utf-8,%EF%BB%BF' + encodeURIComponent(text2) + '" class="btn btn-default btn-lg active" role="button" download="text2.txt">Download the file locally</a>)';
-				
-				// <a href="#" class="btn btn-default btn-lg active" role="button">Download the file locally</a>
-				// <button type="submit" class="margin-top-15" name="download_file" class="btn btn-success btn-block" value="out_log">Download the file locally</button>
+				contentString += '<input type="text" class="margin-top-15" placeholder="Enter Area name" name="file_name" size="30"><br>'
+				contentString += '<button type="submit" name="save_area" class="btn btn-success btn-block margin-top-15" value="save_area">Save Area</button>';
+				contentString += '<button type="button" name="cancel_download_file" class="btn btn-primary btn-block margin-top-15" value="cancel_download_file">Cancel</button>';
 				
 				infowindow = new google.maps.InfoWindow({content: contentString, position: center_pol});
 				infowindow.open(map);
