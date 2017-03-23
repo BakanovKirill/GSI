@@ -7,6 +7,7 @@ from PIL import Image
 from subprocess import check_call, Popen, PIPE
 from osgeo import osr, gdal
 import simplekml
+import pickle
 
 # import Image, ImageDraw
 # from osgeo import gdal
@@ -972,23 +973,61 @@ def checkKmlFile(filename):
     return filename
     
     
-def createKml():
-    # Create KML file for the draw polygon
-    filename = str(request.user) + '_tmp'
-    # filename = str(request.user)
-    # new_filename = checkKmlFile(filename)
-    # new_filename = 'admin'
+def getIndex(stroke):
+    index = stroke.split('[')
+    index = index[1].split(']')
+    index = int(index[0])
     
-    name_polygon = str(filename) + ' Polygon'
+    return index
+    
+    
+def getGeoCoord(filename):
+    coord = []
+    f = open(filename)
+    
+    for line in f.readlines():
+        line = line.rstrip('\n')
+        line = line.split(',')
+        tmp = [float(line[0]), float(line[1])]
+        coord.append(tmp)
+        
+    return coord
+    
+    
+def addPolygonToDB(name, kml_name, user):
+    if CustomerPolygons.objects.filter(name=name).exists():
+        CustomerPolygons.objects.filter(name=name).update(
+            name=name,
+            kml_name=kml_name,
+            user=user
+        )
+    else:
+        customer_pol = CustomerPolygons.objects.create(
+                            name=name,
+                            kml_name=kml_name,
+                            user=user
+                        )
+    
+    
+def createKml(user, filename, info_window):
+    # Create KML file for the draw polygon
     kml_filename = str(filename) + '.kml'
+    tmp_file = str(user) + '_tmp.txt'
+    tmp_path = os.path.join(KML_PATH, tmp_file)
+    coord = getGeoCoord(tmp_path)
+    
+    print 'coord ========================== ', coord
+    
     kml = simplekml.Kml()
-    pol = kml.newpolygon(name=name_polygon)
+    pol = kml.newpolygon(name=info_window)
     pol.outerboundaryis.coords = coord
     pol.style.linestyle.color = simplekml.Color.hex('#ffffff')
     pol.style.linestyle.width = 5
     pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex('#8bc53f'))
     kml_path = os.path.join(KML_PATH, kml_filename)
     kml.save(kml_path)
+    
+    addPolygonToDB(filename, kml_filename, user)
 
 
 # view Customer Section
@@ -1033,7 +1072,7 @@ def customer_section(request):
     show_file = ''
     file_tif = ''
     # polygon = ''
-    coord = []
+    # coord = []
     name_dataset = ''
     
     # default GEOTIFF coordinates
@@ -1050,20 +1089,6 @@ def customer_section(request):
     scheme = '{0}://'.format(request.scheme)
     absolute_png_url = os.path.join(scheme, request.get_host(), PNG_DIRECTORY)
     absolute_kml_url = os.path.join(scheme, request.get_host(), KML_DIRECTORY)
-    
-    # Get the polygons list from media folder
-    try:
-        root, dirs, files = os.walk(polygons_path).next()
-        
-        for pol in customer_polygons:
-            if pol.kml_name in files:
-                file_extension = os.path.splitext(pol.kml_name)
-                polygons.append(pol.name)
-            else:
-                pol.delete()
-    except Exception, e:
-        print 'Exception 02 ========================= ', e
-        warning_message = u'The polygon directory "{0}" does not exist!'.format(polygons_path)
 
     # Get the User DataSets
     try:
@@ -1120,30 +1145,33 @@ def customer_section(request):
     # get AJAX POST for KML files
     if request.is_ajax() and request.method == "POST":
         data_post_ajax = request.POST
+        
+        # print 'data_post_ajax ===================== ', data_post_ajax
     
         if 'send_data[0][]' in data_post_ajax:
+            tmp_file = str(request.user) + '_tmp.txt'
+            file_path = os.path.join(KML_PATH, tmp_file)
+            myfile = open(file_path, "w")
+            
+            list_size = len(data_post_ajax.lists()) - 1
+            coord = []*list_size
+            tmp = {}
+            coord_dict = {}
+            
             for n in data_post_ajax.lists():
                 if n[0] != 'csrfmiddlewaretoken':
-                    coord.append(n[1])
+                    index = getIndex(n[0])
+                    tmp[index] = n[1]
+
+            for k in sorted(tmp.keys()):
+                coord_dict[k] = tmp[k]
                 
-            print 'coord ======================== ', coord
+            for n in coord_dict:
+                myfile.write(",".join(coord_dict[n]));
+                myfile.write("\n");
+            myfile.close()
             
-            # Create KML file for the draw polygon
-            filename = str(request.user) + '_tmp'
-            # filename = str(request.user)
-            # new_filename = checkKmlFile(filename)
-            # new_filename = 'admin'
-            
-            name_polygon = str(filename) + ' Polygon'
-            kml_filename = str(filename) + '.kml'
-            kml = simplekml.Kml()
-            pol = kml.newpolygon(name=name_polygon)
-            pol.outerboundaryis.coords = coord
-            pol.style.linestyle.color = simplekml.Color.hex('#ffffff')
-            pol.style.linestyle.width = 5
-            pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex('#8bc53f'))
-            kml_path = os.path.join(KML_PATH, kml_filename)
-            kml.save(kml_path)
+            # print 'coord ======================== ', coord
             
             status = 'success'
 
@@ -1151,7 +1179,6 @@ def customer_section(request):
         
     # get AJAX GET
     if request.is_ajax() and request.method == "GET":
-        # print 'is_ajax ======================== '
         data = ''
         data_get = request.GET
         cip = CustomerInfoPanel.objects.filter(user=request.user)
@@ -1217,42 +1244,26 @@ def customer_section(request):
         data_post = request.POST
         dirs = []
         
-        # print 'POST ============================= ', data_post
-        
-        # <QueryDict: {u'file_name': [u'new_name'], u'total_area': [u'2397346.4479'], u'count_hectare': [u'1111.1111'], u'tree_count': [u'2663718275.4340'], u'select_file_area': [u'none_file'], u'save_area': [u'save_area'], u'csrfmiddlewaretoken': [u'm1GVWuM0ADYbmMooITv2b9MYeU5s0iJT']}>
-        
-        
+        print 'POST ============================= ', data_post
         
         if 'save_area' in data_post:
-            file_name_area = data_post.get('file_name', '')
+            kml_filename = data_post.get('file_name', '')
             total_area = data_post.get('total_area', '')
             count_hectare = data_post.get('count_hectare', '')
             tree_count = data_post.get('tree_count', '')
             
-            data_info = '''
-            <b>Area Information<b>
+            info_window = '''
+            Area Information:
 
             Total Area: {0} ha
 
             Tree Count: {1} (units)
 
             Tree Count per Hectare: {2}
-            '''
+            '''.format(total_area, tree_count, count_hectare)
             
-            kml = simplekml.Kml('/data/work/virtualenvs/gsi/GSI/src/media/kml/admin_tmp.kml')
-            
-            print 'KML ================ ', kml
-            
-            # customer_pol = CustomerPolygons.objects.create(
-            #                     name=new_filename,
-            #                     kml_name=kml_filename,
-            #                     user=request.user
-            #                 )
-            
-            print 'file_name_area ============================= ', file_name_area
-            print 'total_area ============================= ', total_area
-            print 'count_hectare ============================= ', count_hectare
-            print 'tree_count ============================= ', tree_count
+            # Create KML file for the draw polygon
+            createKml(request.user, kml_filename, info_window)
         
         if 'add-list-view' in data_post:
             if 'root_filenames[]' in data_post and 'statistics[]' in data_post:
@@ -1485,6 +1496,20 @@ def customer_section(request):
 
     if show_file:
         file_tif = show_file + '.tif'
+        
+    # Get the polygons list from media folder
+    try:
+        root, dirs, files = os.walk(polygons_path).next()
+        
+        for pol in customer_polygons:
+            if pol.kml_name in files:
+                file_extension = os.path.splitext(pol.kml_name)
+                polygons.append(pol.name)
+            else:
+                pol.delete()
+    except Exception, e:
+        print 'Exception 02 ========================= ', e
+        warning_message = u'The polygon directory "{0}" does not exist!'.format(polygons_path)
 
     # print 'file_tif =================== ', file_tif
 
