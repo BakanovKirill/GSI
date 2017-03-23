@@ -1260,14 +1260,14 @@ def customer_section(request):
             area_name = area_name.replace(' ', '-')
             
             info_window = '''
-            <b>Area Information:</b>
+            <b>Area "{0}":</b><br />
 
-            Total Area: {0} ha<br />
+            Total Area: {1} ha<br />
 
-            Tree Count: {1} (units)\n
+            Tree Count: {2} (units)<br />
 
-            Tree Count per Hectare: {2}
-            '''.format(total_area, tree_count, count_hectare)
+            Tree Count per Hectare: {3}
+            '''.format(area_name, total_area, tree_count, count_hectare)
             
             # Create KML file for the draw polygon
             createKml(request.user, area_name, info_window)
