@@ -341,6 +341,8 @@ function setPolygon(obj) {
                 // }
                 // var uri_kml = data_status.url;
                 window.location.href = form_url;
+                
+                alert('DATA: '+data);
                 // var kml;
                 // kml = new google.maps.KmlLayer(data);
                 var kml = new google.maps.KmlLayer({url: data, map: map});
