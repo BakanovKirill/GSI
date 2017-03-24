@@ -88,6 +88,7 @@ class CustomerPolygons(models.Model):
     name = models.CharField(max_length=150, blank=True, null=True)
     user = models.ForeignKey(User, verbose_name='User', blank=True, null=True)
     kml_name = models.CharField(max_length=150, blank=True, null=True)
+    kml_path = models.CharField(max_length=150, blank=True, null=True)
 
     class Meta:
         verbose_name_plural = 'Customer Polygons'

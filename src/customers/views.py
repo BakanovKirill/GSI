@@ -994,18 +994,20 @@ def getGeoCoord(filename):
     return coord
     
     
-def addPolygonToDB(name, kml_name, user):
+def addPolygonToDB(name, kml_name, user, kml_path):
     if CustomerPolygons.objects.filter(name=name).exists():
         CustomerPolygons.objects.filter(name=name).update(
             name=name,
             kml_name=kml_name,
-            user=user
+            user=user,
+            kml_path=kml_path
         )
     else:
         customer_pol = CustomerPolygons.objects.create(
                             name=name,
                             kml_name=kml_name,
-                            user=user
+                            user=user,
+                            kml_path=kml_path
                         )
     
     
@@ -1032,7 +1034,7 @@ def createKml(user, filename, info_window):
     kml_path = os.path.join(KML_PATH, kml_filename)
     kml.save(kml_path)
     
-    addPolygonToDB(filename, kml_filename, user)
+    addPolygonToDB(filename, kml_filename, user, kml_path)
 
 
 # view Customer Section
@@ -1508,7 +1510,7 @@ def customer_section(request):
         for pol in customer_polygons:
             if pol.kml_name in files:
                 file_extension = os.path.splitext(pol.kml_name)
-                polygons.append(pol.name)
+                polygons.append(pol)
             else:
                 pol.delete()
     except Exception, e:

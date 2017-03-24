@@ -155,8 +155,14 @@
                                 {% if polygons %}
                                     <label class="control-label margin-top-25">Area of Interest:</label><br />
                                     {% for polygon in polygons%}
-                                        <input type="radio" name="polygon" value="{{ polygon }}.kml" onchange="setPolygon(this);"> {{ polygon }}<br>
+                                        <input type="radio" name="polygon" value="{{ polygon.kml_name }}" onchange="setPolygon(this);"><a href="{{ absolute_kml_url }}/{{ polygon.kml_name }}">{{ polygon.name }}</a><br>
                                     {% endfor %}
+                                    
+                                    <div class="margin-top-15">
+                                        <button type="submit" name="edit-areas" class="btn btn-success btn-block">
+                                            Edit Areas
+                                        </button>
+                                    </div>
                                 {% endif %}
                             </div>
                         </form>
