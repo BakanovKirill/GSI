@@ -340,9 +340,10 @@ function setPolygon(obj) {
                 //     window.location.href = form_url;
                 // }
                 // var uri_kml = data_status.url;
-                var kml;
+                window.location.href = form_url;
+                // var kml;
                 // kml = new google.maps.KmlLayer(data);
-                kml = new google.maps.KmlLayer({url: data, map: map});
+                var kml = new google.maps.KmlLayer({url: data, map: map});
                 // kml = new google.maps.KmlLayer('http://indy4.epcc.ed.ac.uk/media/kml/LinearRing.kml');
                 // kml.setMap(map);
             },
