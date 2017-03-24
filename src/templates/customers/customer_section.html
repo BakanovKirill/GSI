@@ -562,8 +562,8 @@
 				// 	contentString += '<p class="left">(Lat: ' + show_coord[n]['lat'] + '; Lng: ' + show_coord[n]['lng'] + ')</p>';
 			    // }
 				
-				contentString += '<input type="text" class="margin-top-15" placeholder="Enter Area name" name="file_name" size="30"><br>'
-				contentString += '<button type="submit" name="save_area" class="btn btn-success btn-block margin-top-15" value="save_area">Save Area</button>';
+				contentString += '<input type="text" id="input_area_name" class="margin-top-15" placeholder="Enter Area name" name="file_name" size="30" onkeyup="changeAreaName();"><br>'
+				contentString += '<button type="submit" name="save_area" class="btn btn-success btn-block margin-top-15" value="save_area" disabled id="save_area">Save Area</button>';
 				contentString += '<button type="button" name="cancel_download_file" class="btn btn-primary btn-block margin-top-15" value="cancel_download_file">Cancel</button>';
 				
 				infowindow = new google.maps.InfoWindow({content: contentString, position: center_pol});

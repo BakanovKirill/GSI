@@ -92,8 +92,20 @@ function setOpacity() {
 }
 
 
+function changeAreaName() {
+    // var input_area_name = document.getElementById('input_area_name');
+	// var save_area = document.getElementById('save_area');
+    
+    if ($('#input_area_name').val() != '')
+        $('#save_area').removeAttr('disabled');
+    else
+        $('#save_area').attr('disabled','disable');
+}
+
+
 $(document).ready(function(){
     hideRootFilenames();
     hideStatistics();
     hidePolygons();
+    changeAreaName();
 });
