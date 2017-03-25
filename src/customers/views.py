@@ -1142,7 +1142,7 @@ def customer_section(request):
                 request.session['select_data_set'] = customer_info_panel[0].data_set.id
             else:
                 request.session['select_data_set'] = data_set_id
-        request.session.set_expiry(172800)
+        # request.session.set_expiry(172800)
         
     name_dataset = get_object_or_404(DataSet, id=int(request.session['select_data_set'])).name
     
@@ -1155,7 +1155,7 @@ def customer_section(request):
             show_file = request.session['file_info_panel']
         else:
             request.session['file_info_panel'] = show_file
-        request.session.set_expiry(172800)
+        # request.session.set_expiry(172800)
 
     # get AJAX POST for KML files
     if request.is_ajax() and request.method == "POST":
