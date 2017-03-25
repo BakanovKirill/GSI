@@ -12,7 +12,7 @@
 			<!-- Draw Menu -->
 			<div class="row margin-top-20 ">
 				<div class="col-md-4 right">
-					<button type="button" class="btn btn-default" onclick="appliedMarkers();"><img class="img-draw" src="{% static 'img/map-marker-plus.png' %}" alt="hand" title="Applied Markers" class="area-draw"></button>
+					<button type="button" class="btn btn-default" onclick="appliedMarkers();"><img class="img-draw" id="ap_marker" src="{% static 'img/map-marker-plus.png' %}" alt="hand" title="Applied Markers" class="area-draw"></button>
 					<button type="button" class="btn btn-default" onclick="drawPoligon();"><img class="img-draw" src="{% static 'img/vector-polygon.png' %}" alt="vector polygon" title="Draw a Poligon" class="area-draw"></button>
 					<button type="button" class="btn btn-default" onclick="removePoligon();"><img class="img-draw" src="{% static 'img/map-marker-off.png' %}" alt="hand" title="Remove Poligon" class="area-draw"></button>
 					<button type="button" class="btn btn-default" onclick="togglePlygonOverlays();"><img class="img-draw" src="{% static 'img/eye-off.png' %}" alt="hide/show" title="Hide/Show a Poligon" class="area-draw"></button>
@@ -96,6 +96,16 @@
 			<!-- Modal Edit Area -->
 			{% include '_modal_edit_polygons.html' %}
 			<!-- End Modal Edit Area -->
+			
+			<!-- The Modal: You can not draw a polygon without selecting a dataset -->
+			<div id="myModal" class="modal">
+  				<!-- Modal content -->
+  				<div class="modal-content">
+    				<span class="close" id="close">&times;</span>
+					<p>It makes no sense to draw a polygon if the dataset is not selected.<br>Please select attribute from Info Panel before drawing Polygon.</p>
+  				</div>
+			</div>
+			<!-- End the Modal: You can not draw a polygon without selecting a dataset -->
 		</form>
 		
 
@@ -110,6 +120,27 @@
 	    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false"></script>
 		
 		<script src="http://www.google.com/jsapi"></script>
+		
+		<script>
+			// Get the modal
+			var modal = document.getElementById('myModal');
+
+			// Get the <span> element that closes the modal
+			// var span = document.getElementsByClassName("close")[0];
+			var span = document.getElementById("close");
+
+			// When the user clicks on <span> (x), close the modal
+			span.onclick = function() {
+				modal.style.display = "none";
+			}
+
+			// When the user clicks anywhere outside of the modal, close it
+			window.onclick = function(event) {
+				if (event.target == modal) {
+					modal.style.display = "none";
+				}
+			}
+		</script>
 		
 		<script>
 			USGSOverlay.prototype = new google.maps.OverlayView();
@@ -458,9 +489,26 @@
 
 			// applied markers on the map.
 			function appliedMarkers() {
-				map.addListener('click', function(e) {
-					placeMarkerAndPanTo(e.latLng.lat(), e.latLng.lng());
-				});
+				var select_infopanel = document.getElementById("show_file_arrea").value;
+				var img = document.getElementById("ap_marker");
+				
+				
+				// alert('select_infopanel: '+select_infopanel);
+				
+				if (select_infopanel != 'none_file') {
+					// alert('select_infopanel: NO: '+select_infopanel);
+					map.addListener('click', function(e) {
+						placeMarkerAndPanTo(e.latLng.lat(), e.latLng.lng());
+					});
+					img.src = "{% static 'img/map-marker-plus-purple.png' %}";
+				} else {
+					// Get the modal
+					var modal = document.getElementById('myModal');
+					
+					// When the user clicks on the button, open the modal
+					modal.style.display = "block";
+				}
+				
 			}
 
 			// Removes the poligon from the map, but keeps them in the array.
