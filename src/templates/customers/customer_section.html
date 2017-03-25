@@ -157,6 +157,9 @@
 			var polygonVisible;
 			var mapTypesArr = [];
 			var infowindow = new google.maps.InfoWindow();
+			
+			var units = '{{ units }}';
+			var attribute = '{{ attribute }}';
 			// var kml_layer = new google.maps.KmlLayer();
 			
 			
@@ -605,10 +608,10 @@
 				var tree_count_per_area = tree_count / area_ha;
 				
 				var contentString = '<p class="left"><b>Area Information</b></p>';
-				contentString += '<p class="left" name="total_area">Total Area: ' + area_ha.toFixed(4) + ' ha</p>';
+				contentString += '<p class="left">Total Area: ' + area_ha.toFixed(4) + ' ha</p>';
 				contentString += '<input type="hidden" name="total_area" value="' + area_ha.toFixed(4) + '">'
 				
-				contentString += '<p class="left" name="tree_count">Tree Count: ' + tree_count.toFixed(4) + ' (units)</p>';
+				contentString += '<p class="left">' + attribute + ': ' + tree_count.toFixed(4) + ' ' + units + '</p>';
 				contentString += '<input type="hidden" name="tree_count" value="' + tree_count.toFixed(4) + '">'
 				
 				contentString += '<p class="left" name="count_hectare">Tree Count per Hectare: ' + tree_count_per_area.toFixed(4) +'</p>';

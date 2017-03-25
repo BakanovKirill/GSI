@@ -1036,6 +1036,17 @@ def createKml(user, filename, info_window):
     kml.save(kml_path)
     
     addPolygonToDB(filename, kml_filename, user, kml_path)
+    
+    
+def getAttributeUnits(user, show_file):
+    cur_attribute = get_object_or_404(CustomerInfoPanel,
+                                    user=user,
+                                    file_area_name=show_file)
+    attribute_name = cur_attribute.attribute_name
+    sh_data = ShelfData.objects.filter(attribute_name=attribute_name)
+    units = sh_data[0].units
+    
+    return attribute_name, units
 
 
 # view Customer Section
@@ -1083,6 +1094,8 @@ def customer_section(request):
     # polygon = ''
     # coord = []
     name_dataset = ''
+    cur_attribute = ''
+    units = ''
     
     # default GEOTIFF coordinates
     cLng = DAFAULT_LON
@@ -1313,15 +1326,15 @@ def customer_section(request):
             total_area = data_post.get('total_area', '')
             count_hectare = data_post.get('count_hectare', '')
             tree_count = data_post.get('tree_count', '')
-            
             area_name = area_name.replace(' ', '-')
+            attribute, units = getAttributeUnits(request.user, show_file)
             
             info_window = '''
             <p><b>Area "{0}"</b></p>
             <p>Total Area: {1} ha</p>
-            <p>Tree Count: {2} (units)</p>
-            <p>Tree Count per Hectare: {3}</p>
-            '''.format(area_name, total_area, tree_count, count_hectare)
+            <p>{2}: {3} {4}</p>
+            <p>Tree Count per Hectare: {5}</p>
+            '''.format(area_name, total_area, attribute, tree_count, units, count_hectare)
             
             # Create KML file for the draw polygon
             createKml(request.user, area_name, info_window)
@@ -1558,6 +1571,8 @@ def customer_section(request):
     if show_file:
         file_tif = show_file + '.tif'
         
+        attribute, units = getAttributeUnits(request.user, show_file)
+        
     # Get the polygons list from media folder
     try:
         root, dirs, files = os.walk(polygons_path).next()
@@ -1592,6 +1607,8 @@ def customer_section(request):
         'file_tif': file_tif,
         'polygons': polygons,
         'absolute_kml_url': absolute_kml_url,
+        'attribute': attribute,
+        'units': units,
 
         'cLng': cLng,
         'cLat': cLat,
