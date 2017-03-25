@@ -155,14 +155,24 @@
                                 {% if polygons %}
                                     <label class="control-label margin-top-25">Area of Interest:</label><br />
                                     {% for polygon in polygons%}
-                                        <input type="radio" name="polygon" value="{{ polygon.kml_name }}" onchange="setPolygon(this);"><a href="{{ absolute_kml_url }}/{{ polygon.kml_name }}">{{ polygon.name }}</a><br>
+                                        <div class="row">
+                                            <div class="col-md-9">
+                                                <input type="radio" name="polygon" value="{{ polygon.kml_name }}" onchange="setPolygon(this);"><a href="{{ absolute_kml_url }}/{{ polygon.kml_name }}"> {{ polygon.name }}</a>
+                                            </div>
+                                                
+                                            <div class="col-md-1">
+                                                <button class="btn del-btn edit-area margin-top-07 left" type="button" name="save_area" value="{{ polygon.id }}" data-toggle="tooltip" data-placement="top" title="Edit">
+                                                    <img src="{% static 'img/edit-18.png' %}" class="margin-left-010"/>
+                                                </button>
+                                            </div>
+                                            
+                                            <div class="col-md-1">
+                                                <button class="btn del-btn check-cur-delete margin-top-07 right" type="button" name="del_current_btn" value="{{ polygon.kml_name }}" data-toggle="tooltip" data-placement="top" title="Delete">
+                                                    <img src="{% static 'img/delete-18.png' %}" class="margin-left-010"/>
+                                                </button>
+                                            </div>
+                                        </div>
                                     {% endfor %}
-                                    
-                                    <div class="margin-top-15">
-                                        <button type="submit" name="edit-areas" class="btn btn-success btn-block">
-                                            Edit Areas
-                                        </button>
-                                    </div>
                                 {% endif %}
                             </div>
                         </form>

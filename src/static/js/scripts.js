@@ -242,34 +242,55 @@ function resizeScreen() {
     var div_map = document.getElementById('map');
     var col1 = document.getElementById('col1');
     var col2 = document.getElementById('col2');
-    // var user_photo = document.getElementById('user-photo');
+    var get_status_message = getUrlVars()["status_message"];
     
-    
-    // alert('col1.style.height: '+col1.style.height);
+    // alert('GET: '+getUrlVars()["id"]);
     // alert('Width = '+window.innerWidth + '. Height = '+window.innerHeight);
     
-    if (width < '1355') {
-        div_map.style.width = "103%";
-        div_map.style.height = "750px";
-        col1.style.height = "870px";
-        col2.style.height = "870px";
-        // user-photo.style.left = "95%";
-    } else if (width >= '1355' && width <= '1800') {
-        div_map.style.width = "102%";
-        div_map.style.height = "960px";
-        col1.style.height = "1045px";
-        col2.style.height = "1045px";
-        // user-photo.style.left = "97%";
-    } else {
-        div_map.style.width = "101%";
-        div_map.style.height = "1200px";
-        col1.style.height = "1285px";
-        col2.style.height = "1285px";
-        // user-photo.style.padding-left = "99%";
+    if (div_map) {
+        if (width < '1355') {
+            div_map.style.width = "103%";
+            div_map.style.height = "750px";
+            
+            if (get_status_message) {
+                col1.style.height = "1030px";
+                col2.style.height = "1030px";
+            } else {
+                col1.style.height = "870px";
+                col2.style.height = "870px";
+            }
+        } else if (width >= '1355' && width <= '1800') {
+            div_map.style.width = "102%";
+            div_map.style.height = "960px";
+            
+            if (get_status_message) {
+                col1.style.height = "1105px";
+                col2.style.height = "1105px";
+            } else {
+                col1.style.height = "1045px";
+                col2.style.height = "1045px";
+            }
+        } else {
+            div_map.style.width = "101%";
+            div_map.style.height = "1200px";
+            
+            if (get_status_message) {
+                col1.style.height = "1345px";
+                col2.style.height = "1345px";
+            } else {
+                col1.style.height = "1285px";
+                col2.style.height = "1285px";
+            }
+        }
     }
-    
-    // div_map.style.width = "50%";
-    // div_map.style.height = "500px";
+}
+
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
 }
 
 

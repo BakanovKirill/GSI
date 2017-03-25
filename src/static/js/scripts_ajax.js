@@ -61,6 +61,7 @@ function initCheckCurDeleteItems() {
                 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
             },
             'error': function(xhr, status, error){
+                alert('ERROR: '+error);
                 var message = 'An unexpected error occurred. Try later.';
                 modal.find('.modal-body').html(message);
                 modal.modal('show');
@@ -393,6 +394,39 @@ function sendDataToServer(obj) {
     });
 }
 
+function initEditArea() {
+    $('button.edit-area').click(function(event){
+        // alert('initEditArea');
+        var modal = $('#modalEditArea');
+        var form_modal = $('.form-modal').attr('action');
+        var cur_area = $(this).val();
+        
+        // alert('cur_area: '+cur_area);
+        
+        $.ajax({
+            url: form_modal,
+            type: 'GET',
+            'async': true,
+            'dataType': 'text',
+            data: {
+                'cur_area': cur_area,
+                'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+            },
+            'error': function(xhr, status, error){
+                // alert('ERROR: '+error);
+                var message = 'An unexpected error occurred. Try later.';
+                modal.find('.modal-body').html(message);
+                modal.modal('show');
+            },
+            'success': function(data, status, xhr){
+                $('#areaName').val(data);
+                modal.modal('show');
+            },
+        });
+        return false;
+    });
+}
+
 
 $(document).ready(function(){
     initCheckDeleteItems();
@@ -400,4 +434,5 @@ $(document).ready(function(){
     initPrelod();
     initUploadFile();
     initAddOverrideMaping();
+    initEditArea();
 });

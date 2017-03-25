@@ -274,6 +274,10 @@ th {
 }
 
 /* Margins "-" */
+.margin-top-07 {
+    margin-top: -7px !important;
+}
+
 .margin-top-015 {
     margin-top: -15px !important;
 }
@@ -292,6 +296,14 @@ th {
 
 .margin-010 {
     margin-left: -10px !important;
+}
+
+.margin-left-010 {
+    margin-left: -10px !important;
+}
+
+.margin-left-05 {
+    margin-left: -5px !important;
 }
 
 /* Paddings "+" */

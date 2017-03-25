@@ -2,7 +2,8 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from customers.models import Category, ShelfData, DataSet, CustomerAccess
+from customers.models import (Category, ShelfData, DataSet,
+                            CustomerAccess, CustomerPolygons)
 
 
 class CategoryForm(forms.ModelForm):
@@ -129,3 +130,19 @@ class CustomerAccessForm(forms.ModelForm):
             'user',
             'data_set',
         ]
+        
+        
+class CustomerPolygonsForm(forms.ModelForm):
+    """**Form for editing Polygons.**"""
+
+    def __init__(self, *args, **kwargs):
+        super(CustomerPolygonsForm, self).__init__(*args, **kwargs)
+
+    name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter area name'}),
+        required=False,
+        label=u'Name')
+
+    class Meta:
+        model = CustomerPolygons
+        fields = ['name',]

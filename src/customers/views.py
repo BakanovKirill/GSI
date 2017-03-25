@@ -23,7 +23,8 @@ from django.contrib.auth.models import User
 
 from customers.models import (Category, ShelfData, DataSet, CustomerAccess,
                                 CustomerInfoPanel, CustomerPolygons)
-from customers.customers_forms import CategoryForm, ShelfDataForm, DataSetForm, CustomerAccessForm
+from customers.customers_forms import (CategoryForm, ShelfDataForm, DataSetForm,
+                                        CustomerAccessForm, CustomerPolygonsForm)
 from customers.customers_update_create import (category_update_create, shelf_data_update_create,
                                                 data_set_update_create, customer_access_update_create)
 from core.get_post import get_post
@@ -1018,7 +1019,7 @@ def createKml(user, filename, info_window):
     tmp_path = os.path.join(KML_PATH, tmp_file)
     coord = getGeoCoord(tmp_path)
     
-    print 'coord ========================== ', coord
+    # print 'coord ========================== ', coord
     
     kml = simplekml.Kml()
     pol = kml.newpolygon(name=filename)
@@ -1065,6 +1066,7 @@ def customer_section(request):
     url_name = 'customer_section'
     polygons_path = os.path.join(MEDIA_ROOT, 'kml')
     warning_message = ''
+    select_area = None
 
     project_directory = ''
     info_panel = None
@@ -1122,6 +1124,12 @@ def customer_section(request):
         return data
 
     # Get select data_set sessions
+    if request.session.get('select_area', False):
+        select_area = request.session['select_area']
+        select_area = int(select_area)
+    else:
+        request.session['select_area'] = 0
+    
     if request.session.get('select_data_set', False):
         data_set_id = request.session['select_data_set']
         data_set_id = int(data_set_id)
@@ -1183,12 +1191,24 @@ def customer_section(request):
             status = 'success'
 
             return HttpResponse(status)
+            
+        if 'cur_run_id' in data_post_ajax:
+            message = u'Are you sure you want to remove this objects:'
+            arrea = data_post_ajax['cur_run_id']
+            data = u'Are you sure you want to remove this objects: <b>"{0}"</b>?'.format(arrea)
+
+            return HttpResponse(data)
+        else:
+            data = ''
+            return HttpResponse(data)
         
     # get AJAX GET
     if request.is_ajax() and request.method == "GET":
         data = ''
         data_get = request.GET
         cip = CustomerInfoPanel.objects.filter(user=request.user)
+        
+        # print 'GET ====================== ', data_get
         
         # When user celect a new DataSet, the previous celected DataSet to remove
         if 'datasets_id' in data_get:
@@ -1214,6 +1234,11 @@ def customer_section(request):
             
             polygon = data_get.get('polygon', '')
             data = os.path.join(absolute_kml_url, polygon)
+            
+        if 'cur_area' in data_get:
+            request.session['select_area'] = data_get.get('cur_area', '')
+            select_area = get_object_or_404(CustomerPolygons, pk=request.session['select_area'])
+            data = select_area.name
             
         status = 'success'
 
@@ -1245,13 +1270,43 @@ def customer_section(request):
         #     u'%s?danger_message=%s' % (reverse('customer_section'),
         #     (u'The directory "{0}" does not exist!'.format(project_directory)))
         # )
-
+    
     # Handling POST request
     if request.method == "POST":
         data_post = request.POST
+        form = CustomerPolygonsForm(request.POST)
         dirs = []
         
         # print 'POST ============================= ', data_post
+        
+        if request.POST.get('delete_button'):
+            kml_file = data_post.get('delete_button')
+            cur_area = get_object_or_404(
+                CustomerPolygons, kml_name=kml_file)
+            os.remove(cur_area.kml_path)
+            cur_area.delete()
+        
+            return HttpResponseRedirect(u'%s' % (reverse('customer_section')))
+                    
+        if request.POST.get('area_name', ''):
+            area_id = request.session['select_area']
+            
+            if area_id:
+                old_area = CustomerPolygons.objects.get(pk=area_id)
+                new_area_name = data_post.get('area_name')
+                new_area_name = new_area_name.replace(' ', '-')
+                new_kml_name = str(new_area_name) + '.kml'
+                old_path = old_area.kml_path
+                new_path = os.path.join(KML_PATH, new_kml_name)
+                
+                os.rename(old_path, new_path)
+                
+                area = CustomerPolygons.objects.filter(pk=area_id).update(
+                            name = new_area_name,
+                            kml_name = new_kml_name,
+                            kml_path = new_path)
+                
+                return HttpResponseRedirect(u'%s' % (reverse('customer_section')))
         
         if 'save_area' in data_post:
             area_name = data_post.get('file_name', '')
@@ -1524,7 +1579,6 @@ def customer_section(request):
         'customer': customer,
         'url_name': url_name,
         'warning_message': warning_message,
-        # 'error': error,
 
         'info_panel': info_panel,
 

@@ -88,7 +88,16 @@
 				</div>
 			</div>
 			<!-- End Google map -->
+			
+			<!-- Modal Check Delete Items -->
+			{% include '_modal_check_delete_items.html' %}
+			<!-- End Modal Check Delete Items -->
+			
+			<!-- Modal Edit Area -->
+			{% include '_modal_edit_polygons.html' %}
+			<!-- End Modal Edit Area -->
 		</form>
+		
 
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqRnPthP9_pygDbSG34MDKiJpXQkHm2ws&signed_in=true"></script
 		<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyANOITZIFVq0CxUycWsprMslU0sk9ipK5Y&callback=initMap"
@@ -564,7 +573,7 @@
 				
 				contentString += '<input type="text" id="input_area_name" class="margin-top-15" placeholder="Enter Area name" name="file_name" size="30" onkeyup="changeAreaName();"><br>'
 				contentString += '<button type="submit" name="save_area" class="btn btn-success btn-block margin-top-15" value="save_area" disabled id="save_area">Save Area</button>';
-				contentString += '<button type="button" name="cancel_download_file" class="btn btn-primary btn-block margin-top-15" value="cancel_download_file">Cancel</button>';
+				contentString += '<button type="submit" name="cancel_download_file" class="btn btn-primary btn-block margin-top-15" value="cancel_download_file">Cancel</button>';
 				
 				infowindow = new google.maps.InfoWindow({content: contentString, position: center_pol});
 				infowindow.open(map);
