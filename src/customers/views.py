@@ -1039,12 +1039,18 @@ def createKml(user, filename, info_window):
     
     
 def getAttributeUnits(user, show_file):
-    cur_attribute = get_object_or_404(CustomerInfoPanel,
-                                    user=user,
-                                    file_area_name=show_file)
-    attribute_name = cur_attribute.attribute_name
-    sh_data = ShelfData.objects.filter(attribute_name=attribute_name)
-    units = sh_data[0].units
+    attribute_name = 'Tree Count'
+    units = '%'
+    
+    try:
+        cur_attribute = CustomerInfoPanel.objects.get(
+                            user=user,
+                            file_area_name=show_file)
+        attribute_name = cur_attribute.attribute_name
+        sh_data = ShelfData.objects.filter(attribute_name=attribute_name)
+        units = sh_data[0].units
+    except Exception:
+        pass
     
     return attribute_name, units
 
