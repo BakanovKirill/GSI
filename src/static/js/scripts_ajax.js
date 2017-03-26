@@ -25,7 +25,7 @@ function initCheckDeleteItems() {
             },
             'success': function(data, status, xhr){
                 if (!data){
-                    data = 'To delete, select Item or more Itemss.';
+                    data = 'To delete, select Item or more Items.';
                     modal.find('div.div-cancel').removeClass("col-sm-6");
                     modal.find('div.div-cancel').addClass("col-sm-4 col-sm-offset-4")
                     modal.find('.cancel-but').html('Ok');
