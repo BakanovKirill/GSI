@@ -1100,7 +1100,7 @@ def customer_section(request):
     # polygon = ''
     # coord = []
     name_dataset = ''
-    cur_attribute = ''
+    attribute = ''
     units = ''
     
     # default GEOTIFF coordinates
