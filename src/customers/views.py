@@ -1501,15 +1501,18 @@ def customer_section(request):
             attribute_name = customer_info_panel.values_list('attribute_name', flat=True)
             statisctics = customer_info_panel.values_list('statisctic', flat=True)
             files_area_name = customer_info_panel.values_list('file_area_name', flat=True)
-
-            if file_area[0]:
-                files_infopanel = [n for n in file_area]
-
-            if attribute_name[0] and dirs_list:
-                dirs_infopanel = [n for n in attribute_name]
-
-            if statisctics[0]:
-                statisctics_infopanel = [n for n in statisctics]
+            
+            if file_area:
+                if file_area[0]:
+                    files_infopanel = [n for n in file_area]
+            
+            if attribute_name:
+                if attribute_name[0] and dirs_list:
+                    dirs_infopanel = [n for n in attribute_name]
+                    
+            if statisctics:
+                if statisctics[0]:
+                    statisctics_infopanel = [n for n in statisctics]
 
         # print 'show_file ================================= ', show_file
 
@@ -1600,13 +1603,16 @@ def customer_section(request):
                     # )
 
     if show_file:
-        file_tif_path = CustomerInfoPanel.objects.get(
-                            user=request.user,
-                            data_set=data_set,
-                            file_area_name=show_file).tif_path
-        # file_tif_path = show_file + '.tif'
-        
-        attribute, units = getAttributeUnits(request.user, show_file)
+        try:
+            file_tif_path = CustomerInfoPanel.objects.get(
+                                user=request.user,
+                                data_set=data_set,
+                                file_area_name=show_file).tif_path
+            # file_tif_path = show_file + '.tif'
+            
+            attribute, units = getAttributeUnits(request.user, show_file)
+        except Exception:
+            pass
         
     # Get the polygons list from media folder
     try:
