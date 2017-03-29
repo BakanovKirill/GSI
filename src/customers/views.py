@@ -1259,6 +1259,7 @@ def customer_section(request):
             check_current_dataset(request, data_get)
 
         if 'remove_all_selected_items' in data_get:
+            request.session['file_info_panel'] = ''
             for ip in cip:
                 remove_file_png(ip.png_path)
 
