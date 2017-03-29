@@ -1121,7 +1121,7 @@ def customer_section(request):
     absolute_png_url = os.path.join(scheme, request.get_host(), PNG_DIRECTORY)
     absolute_kml_url = os.path.join(scheme, request.get_host(), KML_DIRECTORY)
     
-    request.session['file_info_panel'] = ''
+    # request.session['file_info_panel'] = ''
 
     # Get the User DataSets
     try:
