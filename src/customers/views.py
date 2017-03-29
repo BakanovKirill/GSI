@@ -1015,7 +1015,7 @@ def addPolygonToDB(name, kml_name, user, kml_path):
 def createKml(user, filename, info_window):
     # Create KML file for the draw polygon
     kml_filename = str(filename) + '.kml'
-    tmp_file = str(user) + '_tmp.txt'
+    tmp_file = str(user) + '_coord_tmp.txt'
     tmp_path = os.path.join(KML_PATH, tmp_file)
     coord = getGeoCoord(tmp_path)
     
