@@ -1102,6 +1102,7 @@ def customer_section(request):
     name_dataset = ''
     attribute = ''
     units = ''
+    file_tif_path = ''
     
     php_query = False
     
