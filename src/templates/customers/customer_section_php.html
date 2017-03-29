@@ -1,0 +1,11 @@
+{% load php %}
+
+{% block content_customer %}
+    <!-- Include PHP code -->
+    {% if file_tif_path %}
+        {% startphp %}
+            {% include 'php/getPolyAreaVal.php' %}
+        {% endphp %}
+    {% endif %}
+    <!-- END Include PHP code -->
+{% endblock content_customer %}

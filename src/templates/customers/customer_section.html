@@ -106,9 +106,12 @@
   				</div>
 			</div>
 			<!-- End the Modal: You can not draw a polygon without selecting a dataset -->
+			
+			<!-- The input field for the data Polygon -->
+			<p id="data_polygon" disable></p>
+			<input type="hidden" id="data_polygon" name="data_polygon" value="">
 		</form>
 		
-
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqRnPthP9_pygDbSG34MDKiJpXQkHm2ws&signed_in=true"></script
 		<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyANOITZIFVq0CxUycWsprMslU0sk9ipK5Y&callback=initMap"
   type="text/javascript"></script>
@@ -160,6 +163,7 @@
 			
 			var units = '{{ units }}';
 			var attribute = '{{ attribute }}';
+			var data_polygon;
 			
 			// var units = 'Tree';
 			// var attribute = 'UNITS';
@@ -566,10 +570,31 @@
 				
 			    return (new google.maps.LatLng(center_x, center_y));
   			}
-
+			
 			function drawPoligon() {
 				var show_coord = coord;
+				sendDataToServer(show_coord);
+				setTimeout(sendGetToServer, 500);
+			}
+			
+			function sendGetToServer() {
+				var x = new XMLHttpRequest();
+				x.open("GET", "/customer/php?tif_path="+'{{ file_tif_path }}', true);
+				x.send(null);
 				
+				setTimeout(getTmpCSV, 2000);
+			}
+			
+			function getTmpCSV() {
+				httpRequest = new XMLHttpRequest();
+				httpRequest.open("GET", "/media/temp_files/result.csv", true);
+				httpRequest.onreadystatechange = OnRequestStateChange;
+				httpRequest.send(null);
+				
+				setTimeout(getPoligon, 200);
+			}
+
+			function getPoligon() {
 				// Construct the polygon.
 				selectPolygon = new google.maps.Polygon({
 					paths: coord,
@@ -577,13 +602,13 @@
 					//strokeOpacity: 0.8,
 					strokeWeight: 5,
 					fillColor: '#8bc53f',
-					fillOpacity: 0.6,
+					fillOpacity: 0.5,
 					//editable: true
 				});
 				selectPolygon.setMap(map);
 				polygons.push(selectPolygon);
 				polygonVisible = true;
-				sendDataToServer(show_coord);
+				// sendDataToServer(show_coord);
 				
 				// for (n in show_coord){
 				// 	for (k in show_coord[n]){
@@ -605,21 +630,25 @@
 				// alert('text1: '+coord);
 				
 				// info window
-				var average_distance = Math.pow(3,2);
-				var area_sq_m = google.maps.geometry.spherical.computeArea(selectPolygon.getPath().getArray());
-				var area_ha = area_sq_m / 10000;
-				var tree_count = area_sq_m / average_distance;
-				var tree_count_per_area = tree_count / area_ha;
+				// var average_distance = Math.pow(3,2);
+				// var area_sq_m = google.maps.geometry.spherical.computeArea(selectPolygon.getPath().getArray());
+				// var area_ha = area_sq_m / 10000;
+				// var tree_count = area_sq_m / average_distance;
+				// var tree_count_per_area = tree_count / area_ha;
+				
+				// alert('result: '+data_polygon);
 				
 				var contentString = '<p class="left"><b>Area Information</b></p>';
-				contentString += '<p class="left">Total Area: ' + area_ha.toFixed(4) + ' ha</p>';
-				contentString += '<input type="hidden" name="total_area" value="' + area_ha.toFixed(4) + '">'
+				var list_data = data_polygon.split(',')
 				
-				contentString += '<p class="left">' + attribute + ': ' + tree_count.toFixed(4) + ' ' + units + '</p>';
-				contentString += '<input type="hidden" name="tree_count" value="' + tree_count.toFixed(4) + '">'
+				contentString += '<p class="left">Total Area: ' + list_data[0] + ' ha</p>';
+				contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
 				
-				contentString += '<p class="left" name="count_hectare">Tree Count per Hectare: ' + tree_count_per_area.toFixed(4) +'</p>';
-				contentString += '<input type="hidden" name="count_hectare" value="' + tree_count_per_area.toFixed(4) + '">'
+				contentString += '<p class="left">' + attribute + ': ' + list_data[1] + ' ' + units + '</p>';
+				contentString += '<input type="hidden" name="tree_count" value="' + list_data[1] + '">'
+				
+				contentString += '<p class="left" name="count_hectare">Tree Count per Hectare: ' + list_data[2] +'</p>';
+				contentString += '<input type="hidden" name="count_hectare" value="' + list_data[2] + '">'
 				
 				// contentString += '<p class="left">COORDINATE:</p>';
 				// for(n in show_coord) {
@@ -630,8 +659,22 @@
 				contentString += '<button type="submit" name="save_area" class="btn btn-success btn-block margin-top-15" value="save_area" disabled id="save_area">Save Area</button>';
 				contentString += '<button type="submit" name="cancel_download_file" class="btn btn-primary btn-block margin-top-15" value="cancel_download_file">Cancel</button>';
 				
+				// alert('result 2: '+data_polygon);
+				
 				infowindow = new google.maps.InfoWindow({content: contentString, position: center_pol});
 				infowindow.open(map);
+			}
+			
+			function OnRequestStateChange()
+			{
+				if (httpRequest.readyState != 4)
+  					return;
+				if (httpRequest.status != 200)
+  					return;
+				
+				data_polygon = httpRequest.responseText;
+				
+				// alert('VAL: '+data_polygon);
 			}
 
 			function showCoordinates(event) {
@@ -698,13 +741,7 @@
 					}
 				}
 			}
-
 			google.maps.event.addDomListener(window, 'load', initMap);
 		</script>
-		
-		{% if file_tif %}
-			{% startphp %}
-			{% endphp %}
-		{% endif %}
 	{% endif %}
 {% endblock content_customer %}

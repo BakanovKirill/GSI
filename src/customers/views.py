@@ -1103,6 +1103,8 @@ def customer_section(request):
     attribute = ''
     units = ''
     
+    php_query = False
+    
     # default GEOTIFF coordinates
     cLng = DAFAULT_LON
     cLat = DAFAULT_LAT
@@ -1183,14 +1185,19 @@ def customer_section(request):
         # print 'data_post_ajax ===================== ', data_post_ajax
     
         if 'send_data[0][]' in data_post_ajax:
-            tmp_file = str(request.user) + '_tmp.txt'
-            file_path = os.path.join(KML_PATH, tmp_file)
-            myfile = open(file_path, "w")
+            coord_tmp = str(request.user) + '_coord_tmp.txt'
+            php_tmp = str(request.user) + '_php_tmp.txt'
+            file_path_coord = os.path.join(KML_PATH, coord_tmp)
+            file_path_php = os.path.join(KML_PATH, php_tmp)
+            myfile_coord = open(file_path_coord, "w")
+            myfile_php = open(file_path_php, "w")
             
             list_size = len(data_post_ajax.lists()) - 1
             coord = []*list_size
             tmp = {}
             coord_dict = {}
+            lon = []
+            lat = []
             
             for n in data_post_ajax.lists():
                 if n[0] != 'csrfmiddlewaretoken':
@@ -1201,11 +1208,25 @@ def customer_section(request):
                 coord_dict[k] = tmp[k]
                 
             for n in coord_dict:
-                myfile.write(",".join(coord_dict[n]));
-                myfile.write("\n");
-            myfile.close()
+                myfile_coord.write(",".join(coord_dict[n]));
+                myfile_coord.write("\n");
+                
+            for n in coord_dict:
+                lon.append(coord_dict[n][0])
+                lat.append(coord_dict[n][1])
+                
+            lat_str = ','.join(lat)
+            lon_str = ','.join(lon)
             
-            # print 'coord ======================== ', coord
+            myfile_php.write(lat_str);
+            myfile_php.write("\n");
+            myfile_php.write(lon_str);
+            myfile_php.write("\n");
+            
+            myfile_coord.close()
+            myfile_php.close()
+            
+            print 'coord_dict ======================== ', coord_dict
             
             status = 'success'
 
@@ -1466,7 +1487,7 @@ def customer_section(request):
                 except Exception, e:
                     print 'CustomerInfoPanel Exception ======================== ', e
                     pass
-
+                    
     # Get selected data for the InfoPanel display
     if data_set:
         customer_info_panel = CustomerInfoPanel.objects.filter(user=request.user)
@@ -1575,7 +1596,11 @@ def customer_section(request):
                     # )
 
     if show_file:
-        file_tif = show_file + '.tif'
+        file_tif_path = CustomerInfoPanel.objects.get(
+                            user=request.user,
+                            data_set=data_set,
+                            file_area_name=show_file).tif_path
+        # file_tif_path = show_file + '.tif'
         
         attribute, units = getAttributeUnits(request.user, show_file)
         
@@ -1593,7 +1618,7 @@ def customer_section(request):
         print 'Exception 02 ========================= ', e
         warning_message = u'The polygon directory "{0}" does not exist!'.format(polygons_path)
 
-    # print 'file_tif =================== ', file_tif
+    # print 'file_tif_path =================== ', file_tif_path
 
     data = {
         'title': title,
@@ -1610,11 +1635,13 @@ def customer_section(request):
         'dirs_infopanel': dirs_infopanel,
         'statisctics_infopanel': statisctics_infopanel,
         'show_file': show_file,
-        'file_tif': file_tif,
+        'file_tif_path': file_tif_path,
         'polygons': polygons,
         'absolute_kml_url': absolute_kml_url,
         'attribute': attribute,
         'units': units,
+        
+        'php_query': php_query,
 
         'cLng': cLng,
         'cLat': cLat,
@@ -1627,6 +1654,54 @@ def customer_section(request):
     }
 
     return data
+    
+
+# customers access list
+@user_passes_test(lambda u: u.is_superuser)
+@render_to('customers/customer_section_php.html')
+def customer_section_php(request):
+    title = 'PHP page'
+    file_tif_path = ''
+    coord_list = []
+    latlist = ''
+    lonlist = ''
+    customer = request.user
+    php_file = '{0}_php_tmp.txt'.format(customer)
+    file_path_php = os.path.join(KML_PATH, php_file)
+    
+    # $latlist = '48.88672158743591,48.86956150482169,48.84019508397442';
+    # $lonlist = '-89.83619749546051,-89.57595884799957,-89.75036680698395';
+    
+    # Handling GET request
+    if request.method == "GET":
+        data_get = request.GET
+        
+        if data_get.get('tif_path'):
+            lat = '1,2,3'
+            file_tif_path = data_get.get('tif_path')
+            
+            
+            f_php_coord = open(file_path_php)
+            for line in f_php_coord.readlines():
+                coord_list.append(line.replace('\n',''))
+                
+            print 'coord_list ============================= ', coord_list
+            
+            latlist = coord_list[0]
+            lonlist = coord_list[1]
+            
+            print 'latlist =========================== ', latlist
+            print 'lonlist =========================== ', lonlist
+            
+    data = {
+        'title': title,
+        'file_tif_path': file_tif_path,
+        'latlist': latlist,
+        'lonlist': lonlist,
+    }
+
+    return data
+
 
 
 # # path to a GeoTIFF files

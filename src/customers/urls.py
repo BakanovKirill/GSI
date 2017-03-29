@@ -34,5 +34,8 @@ urlpatterns = [
 	url(r'^access/(?P<customer_access_id>\d+)/edit$', 'customers.views.customer_access_edit', name='customer_access_edit'),
 
 	# the Customer Section
-	url(r'^section$', 'customers.views.customer_section', name='customer_section'),
+	url(r'^section', 'customers.views.customer_section', name='customer_section'),
+	
+	# PHP url
+	url(r'^php', 'customers.views.customer_section_php', name='customer_section_php'),
 ]
