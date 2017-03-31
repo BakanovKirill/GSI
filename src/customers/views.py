@@ -1364,7 +1364,7 @@ def customer_section(request):
             <p><b>Area "{0}"</b></p>
             <p>Total Area: {1} ha</p>
             <p>{2}: {3} {4}</p>
-            <p>Tree Count per Hectare: {5}</p>
+            <p>Trees count in area: {5}</p>
             '''.format(area_name, total_area, attribute, tree_count, units, count_hectare)
             
             # Create KML file for the draw polygon
