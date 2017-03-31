@@ -156,7 +156,7 @@
                                     <label class="control-label margin-top-25">Area of Interest:</label><br />
                                     {% for polygon in polygons%}
                                         <div class="row">
-                                            <div class="col-md-9">
+                                            <div class="col-md-8">
                                                 <input type="radio" name="polygon" value="{{ polygon.kml_name }}" onchange="setPolygon(this);"><a href="{{ absolute_kml_url }}/{{ polygon.kml_name }}"> {{ polygon.name }}</a>
                                             </div>
                                                 
