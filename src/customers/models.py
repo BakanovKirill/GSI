@@ -16,10 +16,11 @@ class Category(models.Model):
 
 class ShelfData(models.Model):
     category = models.ForeignKey('Category')
-    attribute_name = models.CharField(max_length=100, blank=True, null=True, verbose_name='Attribute Name')
-    root_filename = models.CharField(max_length=100, blank=True, null=True, verbose_name='Root Filename')
+    attribute_name = models.CharField(max_length=100, blank=True, null=True, verbose_name='Attribute Names')
+    root_filename = models.CharField(max_length=100, blank=True, null=True, verbose_name='Root Filenames')
     units = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
+    show_totals = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = 'Shelf Data'

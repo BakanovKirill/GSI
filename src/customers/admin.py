@@ -9,7 +9,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class ShelfDataAdmin(admin.ModelAdmin):
-    list_display = ('category', 'attribute_name', 'root_filename', 'units',)
+    list_display = ('category', 'attribute_name', 'root_filename', 'units', 'show_totals',)
     search_fields = ['category', 'attribute_name', 'root_filename',]
     list_filter = ('category', 'attribute_name', 'root_filename',)
 
