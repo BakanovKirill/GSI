@@ -1373,7 +1373,7 @@ def customer_section(request):
             if show_totals and data_post.get('count_hectare', ''):
                 count_hectare = data_post.get('count_hectare', '')
                 info_window += '''
-                <p>Trees count in area: {0}</p>
+                <p>Area total: {0}</p>
                 '''.format(count_hectare)
             
             # Create KML file for the draw polygon
@@ -1638,18 +1638,21 @@ def customer_section(request):
         warning_message = u'The polygon directory "{0}" does not exist!'.format(polygons_path)
     
     if show_file:
-        #  data_set_id
-        # ds = DataSet.objects.get(id=data_set_id)
-        # cust_inf_panel = CustomerInfoPanel.objects.get(user=request.user, file_area_name=show_file)
-        
-        shelf_dt = ShelfData.objects.get(attribute_name=attribute, units=units)
-        show_totals = shelf_dt.show_totals
-        # print 'customer_info_panel.file_area_name =================== ', cust_inf_panel.file_area_name
-        # print 'customer_info_panel.data_set =================== ', cust_inf_panel.data_set
-        # print 'show_file =================== ', show_file
-        # print 'show_file =================== ', show_file
-        # print 'attribute =================== ', attribute
-        # print 'show_totals =================== ', shelf_dt.show_totals
+        try:
+            #  data_set_id
+            # ds = DataSet.objects.get(id=data_set_id)
+            # cust_inf_panel = CustomerInfoPanel.objects.get(user=request.user, file_area_name=show_file)
+            
+            shelf_dt = ShelfData.objects.get(attribute_name=attribute, units=units)
+            show_totals = shelf_dt.show_totals
+            # print 'customer_info_panel.file_area_name =================== ', cust_inf_panel.file_area_name
+            # print 'customer_info_panel.data_set =================== ', cust_inf_panel.data_set
+            # print 'show_file =================== ', show_file
+            # print 'show_file =================== ', show_file
+            # print 'attribute =================== ', attribute
+            # print 'show_totals =================== ', shelf_dt.show_totals
+        except ShelfData.DoesNotExist:
+            pass
     
     data = {
         'title': title,
