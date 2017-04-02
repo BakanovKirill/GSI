@@ -20,7 +20,7 @@ class ShelfData(models.Model):
     root_filename = models.CharField(max_length=100, blank=True, null=True, verbose_name='Root Filenames')
     units = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-    show_totals = models.BooleanField(default=False)
+    show_totals = models.BooleanField(default=True)
 
     class Meta:
         verbose_name_plural = 'Shelf Data'

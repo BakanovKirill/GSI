@@ -1103,6 +1103,7 @@ def customer_section(request):
     attribute = ''
     units = ''
     file_tif_path = ''
+    show_totals = ''
     
     php_query = False
     
@@ -1355,17 +1356,25 @@ def customer_section(request):
         if 'save_area' in data_post:
             area_name = data_post.get('file_name', '')
             total_area = data_post.get('total_area', '')
-            count_hectare = data_post.get('count_hectare', '')
+            
             tree_count = data_post.get('tree_count', '')
             area_name = area_name.replace(' ', '-')
             attribute, units = getAttributeUnits(request.user, show_file)
+            
+            shelf_dt = ShelfData.objects.get(attribute_name=attribute, units=units)
+            show_totals = shelf_dt.show_totals
             
             info_window = '''
             <p><b>Area "{0}"</b></p>
             <p>Total Area: {1} ha</p>
             <p>{2}: {3} {4}</p>
-            <p>Trees count in area: {5}</p>
-            '''.format(area_name, total_area, attribute, tree_count, units, count_hectare)
+            '''.format(area_name, total_area, attribute, tree_count, units)
+            
+            if show_totals and data_post.get('count_hectare', ''):
+                count_hectare = data_post.get('count_hectare', '')
+                info_window += '''
+                <p>Trees count in area: {0}</p>
+                '''.format(count_hectare)
             
             # Create KML file for the draw polygon
             createKml(request.user, area_name, info_window)
@@ -1627,14 +1636,27 @@ def customer_section(request):
     except Exception, e:
         print 'Exception 02 ========================= ', e
         warning_message = u'The polygon directory "{0}" does not exist!'.format(polygons_path)
-
-    # print 'file_tif_path =================== ', file_tif_path
-
+    
+    if show_file:
+        #  data_set_id
+        # ds = DataSet.objects.get(id=data_set_id)
+        # cust_inf_panel = CustomerInfoPanel.objects.get(user=request.user, file_area_name=show_file)
+        
+        shelf_dt = ShelfData.objects.get(attribute_name=attribute, units=units)
+        show_totals = shelf_dt.show_totals
+        # print 'customer_info_panel.file_area_name =================== ', cust_inf_panel.file_area_name
+        # print 'customer_info_panel.data_set =================== ', cust_inf_panel.data_set
+        # print 'show_file =================== ', show_file
+        # print 'show_file =================== ', show_file
+        # print 'attribute =================== ', attribute
+        # print 'show_totals =================== ', shelf_dt.show_totals
+    
     data = {
         'title': title,
         'customer': customer,
         'url_name': url_name,
         'warning_message': warning_message,
+        'customer_info_panel': customer_info_panel,
 
         'info_panel': info_panel,
 
@@ -1650,6 +1672,7 @@ def customer_section(request):
         'absolute_kml_url': absolute_kml_url,
         'attribute': attribute,
         'units': units,
+        'show_totals': show_totals,
         
         'php_query': php_query,
 

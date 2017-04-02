@@ -54,10 +54,16 @@ class ShelfDataForm(forms.ModelForm):
         }),
         required=False,
         label=u'Description')
+    show_totals = forms.BooleanField(
+        initial=False,
+        required=False,
+        label=u'Show Totals',
+    )
 
     class Meta:
         model = ShelfData
-        fields = ['category', 'attribute_name', 'root_filename', 'units', 'description']
+        fields = ['category', 'attribute_name', 'root_filename', 'units',
+                'description', 'show_totals']
 
 
 class DataSetForm(forms.ModelForm):

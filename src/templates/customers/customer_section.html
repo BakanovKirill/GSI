@@ -647,8 +647,12 @@
 				contentString += '<p class="left">' + attribute + ': ' + list_data[1] + ' ' + units + '</p>';
 				contentString += '<input type="hidden" name="tree_count" value="' + list_data[1] + '">'
 				
-				contentString += '<p class="left" name="count_hectare">Trees count in area: ' + list_data[2] +'</p>';
-				contentString += '<input type="hidden" name="count_hectare" value="' + list_data[2] + '">'
+				// show_totals
+				if ('{{ show_totals }}' == 'True') {
+					contentString += '<p class="left" name="count_hectare">Trees count in area: ' + list_data[2] +'</p>';
+					contentString += '<input type="hidden" name="count_hectare" value="' + list_data[2] + '">'
+				}
+				
 				
 				// contentString += '<p class="left">COORDINATE:</p>';
 				// for(n in show_coord) {

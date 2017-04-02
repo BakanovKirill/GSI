@@ -49,6 +49,9 @@
                             <th>
                                 Description
                             </th>
+                            <th>
+                                Show Totals
+                            </th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -62,6 +65,7 @@
                             <td>{{ sd.root_filename }}</td>
                             <td>{{ sd.units }}</td>
                             <td>{{ sd.description }}</td>
+                            <td>{{ sd.show_totals }}</td>
                             <td>
                                 <a href="{% url 'shelf_data_edit' sd.id %}" role="button" data-toggle="tooltip" data-placement="top" title="Edit">
                                     <img class="" src="{% static 'img/edit-18.png' %}"/>

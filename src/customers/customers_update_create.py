@@ -41,6 +41,7 @@ def shelf_data_update_create(form, item_id=None):
             root_filename=form.cleaned_data["root_filename"],
             units=form.cleaned_data["units"],
             description=form.cleaned_data["description"],
+            show_totals=form.cleaned_data["show_totals"],
         )
         shelf_data = ShelfData.objects.get(id=item_id)
     else:
@@ -50,6 +51,7 @@ def shelf_data_update_create(form, item_id=None):
             root_filename=form.cleaned_data["root_filename"],
             units=form.cleaned_data["units"],
             description=form.cleaned_data["description"],
+            show_totals=form.cleaned_data["show_totals"],
         )
 
     return shelf_data

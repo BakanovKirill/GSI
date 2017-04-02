@@ -78,6 +78,22 @@
     </div>
 </div>
 
+<div class="row margin-top-15 left">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.show_totals.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.show_totals.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-10 margin-top-6">
+        {% if not form.show_totals.errors %}
+            {{ form.show_totals }}
+        {% else %}
+            <span class="field-error">{{ form.show_totals }}</span>
+            <b class="error-form">{{ form.show_totals.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
 <div class="row margin-top-50">
     <div class="col-md-2 col-md-offset-4">
         <button type="submit" name="cancel_button" class="btn btn-default btn-block">Cancel</button>
