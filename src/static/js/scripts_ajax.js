@@ -356,6 +356,7 @@ function setPolygon(obj) {
 }
 
 function sendDataToServer(obj) {
+    // test();
     // alert('sendDataToServer');
     // var send_data = JSON.parse(obj);
     // var send_data = JSON.parse(data);

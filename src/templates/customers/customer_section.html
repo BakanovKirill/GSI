@@ -577,6 +577,10 @@
 				setTimeout(sendGetToServer, 500);
 			}
 			
+			function test() {
+				alert('TEST!');
+			}
+			
 			function sendGetToServer() {
 				var x = new XMLHttpRequest();
 				x.open("GET", "/customer/php?tif_path="+'{{ file_tif_path }}', true);
