@@ -1373,8 +1373,8 @@ def customer_section(request):
             if show_totals and data_post.get('count_hectare', ''):
                 count_hectare = data_post.get('count_hectare', '')
                 info_window += '''
-                <p>Area total: {0}</p>
-                '''.format(count_hectare)
+                <p>Area total: {0} {1}</p>
+                '''.format(count_hectare, units)
             
             # Create KML file for the draw polygon
             createKml(request.user, area_name, info_window)
