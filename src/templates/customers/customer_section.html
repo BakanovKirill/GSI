@@ -97,6 +97,10 @@
 			{% include '_modal_edit_polygons.html' %}
 			<!-- End Modal Edit Area -->
 			
+			<!-- Modal Edit Area -->
+			{% include '_modal_waiting.html' %}
+			<!-- End Modal Edit Area -->
+			
 			<!-- The Modal: You can not draw a polygon without selecting a dataset -->
 			<div id="myModal" class="modal-draw">
   				<!-- Modal content -->
@@ -574,11 +578,7 @@
 			function drawPoligon() {
 				var show_coord = coord;
 				sendDataToServer(show_coord);
-				setTimeout(sendGetToServer, 500);
-			}
-			
-			function test() {
-				alert('TEST!');
+				// setTimeout(sendGetToServer, 500);
 			}
 			
 			function sendGetToServer() {
@@ -586,7 +586,10 @@
 				x.open("GET", "/customer/php?tif_path="+'{{ file_tif_path }}', true);
 				x.send(null);
 				
-				setTimeout(getTmpCSV, 3000);
+				// alert('sendGetToServer -> deleteFile');
+				deleteFile();
+				
+				// setTimeout(getTmpCSV, 3000);
 			}
 			
 			function getTmpCSV() {
@@ -599,6 +602,8 @@
 			}
 
 			function getPoligon() {
+				var modal = $('#modalWaiting');
+			    modal.modal('hide');
 				// Construct the polygon.
 				selectPolygon = new google.maps.Polygon({
 					paths: coord,

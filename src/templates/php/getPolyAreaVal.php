@@ -6,9 +6,16 @@ $fileName = '{{ file_tif_path }}';
 $geo_tiff = new MMGeoTIFFReader("/");
 $res = $geo_tiff->getPolyAreaVal($latlist, $lonlist, $fileName);
 
-echo 'FRESULT: ' . $res . ";\n";
+//echo 'FRESULT: ' . $res . ";\n";
+
+// *****************************************************************
+
+// header("Location: http://127.0.0.1:8000/customer/php?set_data=123");
+
+// *****************************************************************
 
 
+  
 /**
 *  Returns pixval from GeoTIFF file given WGS84 latitude and Longitude
 */
@@ -611,7 +618,7 @@ public function GetPolygonForLine($pixelY,$polyMsg)
         fclose($meanFile);
         fclose($statsFile);
         fclose($resultFile);
-
+        
         return $msg;
     }
      

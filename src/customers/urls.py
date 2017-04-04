@@ -38,4 +38,7 @@ urlpatterns = [
 	
 	# PHP url
 	url(r'^php', 'customers.views.customer_section_php', name='customer_section_php'),
+	
+	# Delete url
+	url(r'^delete', 'customers.views.customer_delete_file', name='customer_delete_file'),
 ]

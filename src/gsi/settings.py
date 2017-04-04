@@ -292,6 +292,10 @@ PROJECTS_PATH = '/lustre/w23/mattgsi/satdata/RF/Projects'
 KML_DIRECTORY = 'media/kml'
 KML_PATH = os.path.join(BASE_DIR, KML_DIRECTORY)
 
+# Temporary dir
+TMP_DIRECTORY = 'media/temp_files'
+TMP_PATH = os.path.join(BASE_DIR, TMP_DIRECTORY)
+
 # Card Type
 CARD_TYPE = {
     'rftrain': 'RFTrain',

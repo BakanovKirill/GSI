@@ -29,7 +29,7 @@ from customers.customers_update_create import (category_update_create, shelf_dat
                                                 data_set_update_create, customer_access_update_create)
 from core.get_post import get_post
 from core.paginations import paginations
-from gsi.settings import (BASE_DIR, RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM, POLYGONS_DIRECTORY, MEDIA_ROOT,
+from gsi.settings import (BASE_DIR, RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM, POLYGONS_DIRECTORY, MEDIA_ROOT, TMP_PATH,
                         DAFAULT_LAT, DAFAULT_LON, PNG_DIRECTORY, PNG_PATH, PROJECTS_PATH, KML_DIRECTORY, KML_PATH)
 
 
@@ -1230,7 +1230,7 @@ def customer_section(request):
             myfile_coord.close()
             myfile_php.close()
             
-            print 'coord_dict ======================== ', coord_dict
+            # print 'coord_dict ======================== ', coord_dict
             
             status = 'success'
 
@@ -1252,7 +1252,7 @@ def customer_section(request):
         data_get = request.GET
         cip = CustomerInfoPanel.objects.filter(user=request.user)
         
-        # print 'GET ====================== ', data_get
+        print 'GET customer_section ====================== ', data_get
         
         # When user celect a new DataSet, the previous celected DataSet to remove
         if 'datasets_id' in data_get:
@@ -1692,7 +1692,7 @@ def customer_section(request):
     return data
     
 
-# customers access list
+# PHP calculations
 @user_passes_test(lambda u: u.is_superuser)
 @render_to('customers/customer_section_php.html')
 def customer_section_php(request):
@@ -1704,6 +1704,7 @@ def customer_section_php(request):
     customer = request.user
     php_file = '{0}_php_tmp.txt'.format(customer)
     file_path_php = os.path.join(KML_PATH, php_file)
+    tmp_file_path = os.path.join(TMP_PATH, 'result.csv')
     
     # $latlist = '48.88672158743591,48.86956150482169,48.84019508397442';
     # $lonlist = '-89.83619749546051,-89.57595884799957,-89.75036680698395';
@@ -1712,28 +1713,64 @@ def customer_section_php(request):
     if request.method == "GET":
         data_get = request.GET
         
+        # print 'data_get ============================= ', data_get
+        
         if data_get.get('tif_path'):
-            lat = '1,2,3'
             file_tif_path = data_get.get('tif_path')
+            
+            try:
+                os.remove(tmp_file_path)
+            except Exception:
+                pass
             
             
             f_php_coord = open(file_path_php)
             for line in f_php_coord.readlines():
                 coord_list.append(line.replace('\n',''))
                 
-            print 'coord_list ============================= ', coord_list
+            # print 'coord_list ============================= ', coord_list
             
             latlist = coord_list[0]
             lonlist = coord_list[1]
             
-            print 'latlist =========================== ', latlist
-            print 'lonlist =========================== ', lonlist
+            # print 'latlist =========================== ', latlist
+            # print 'lonlist =========================== ', lonlist
             
     data = {
         'title': title,
         'file_tif_path': file_tif_path,
         'latlist': latlist,
         'lonlist': lonlist,
+    }
+
+    return data
+    
+    
+# Delete TMP file
+@user_passes_test(lambda u: u.is_superuser)
+@render_to('customers/customer_delete_file.html')
+def customer_delete_file(request):
+    title = ''
+    customer = request.user
+    
+    if request.is_ajax() and request.method == "GET":
+        data = ''
+        data_get_ajax = request.GET
+        
+        # print 'data_get AJAX ============================= ', data_get_ajax
+        
+        if data_get_ajax.get('delete_file'):
+            tmp_file_path = os.path.join(TMP_PATH, 'result.csv')
+            while not os.path.exists(tmp_file_path):
+                print 'NO FILE ==================================='
+                pass
+            
+            # print 'FILE exists ==================================='
+        
+            return HttpResponse(data)
+        
+    data = {
+        'title': title,
     }
 
     return data

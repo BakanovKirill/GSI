@@ -356,13 +356,14 @@ function setPolygon(obj) {
 }
 
 function sendDataToServer(obj) {
-    // test();
     // alert('sendDataToServer');
     // var send_data = JSON.parse(obj);
     // var send_data = JSON.parse(data);
     var form_url = $('#customer_section').attr('action');
     var obj_list = []
     var count = 0;
+    var modal = $('#modalWaiting');
+    modal.modal('show');
     
     for(n in obj) {
         var temp = [];
@@ -387,10 +388,12 @@ function sendDataToServer(obj) {
         'error': function(xhr, status, error){
             // alert('error: '+error);
             var message = 'An unexpected error occurred. Try later.';
+            alert(message);
         },
         'success': function(data, status, xhr){
             // alert('URL DATA: '+data);
             var obj_status = status;
+            sendGetToServer();
         },
     });
 }
@@ -428,6 +431,38 @@ function initEditArea() {
     });
 }
 
+function deleteFile() {
+    
+    var form_url = $('#customer_section').attr('action');
+    var x = new XMLHttpRequest();
+    x.open("GET", "/customer/delete?delete_file=del", true);
+    x.send(null);
+    
+    // alert('DATA !!! '+form_url);
+    
+    $.ajax({
+        url: '/customer/delete',
+        type: 'GET',
+        'async': true,
+        'dataType': 'text',
+        data: {
+            'delete_file': 'delete',
+            'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+        },
+        'error': function(xhr, status, error){
+            // alert('error: '+error);
+            var message = 'An unexpected error occurred. Try later.';
+            alert(message);
+        },
+        'success': function(data, status, xhr){
+            // alert('deleteTMPFile!!!');
+            var obj_status = status;
+            getTmpCSV();
+        },
+    });
+    
+}
+
 
 $(document).ready(function(){
     initCheckDeleteItems();
@@ -436,4 +471,5 @@ $(document).ready(function(){
     initUploadFile();
     initAddOverrideMaping();
     initEditArea();
+    // deleteFile();
 });
