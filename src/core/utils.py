@@ -1364,8 +1364,8 @@ def get_executable(run, sequence, card, card_item):
 		from gsi.models import HomeVariables as Home
 
 		####################### write log file
-		log_file = '/home/gsi/LOGS/collate.log'
-		f_collate = open(log_file, 'a+')
+		# log_file = '/home/gsi/LOGS/collate.log'
+		# f_collate = open(log_file, 'a+')
 		#######################
 
 		home_var = Home.objects.all()
@@ -1379,8 +1379,8 @@ def get_executable(run, sequence, card, card_item):
 		all_num = len(area_tiles)
 		
 		#######################
-		f_collate.writelines('DATA CARD == {0}\n\n'.format(data_card))
-		f_collate.writelines('files_list == {0}\n\n'.format(files_list))
+		# f_collate.writelines('DATA CARD == {0}\n\n'.format(data_card))
+		# f_collate.writelines('files_list == {0}\n\n'.format(files_list))
 		#######################
 
 		for f in files_list:
@@ -1395,11 +1395,11 @@ def get_executable(run, sequence, card, card_item):
 			files.append(temp)
 
 			#######################
-			f_collate.writelines('RUN ID == {0}\n\n'.format(run.id))
-			f_collate.writelines('file == {0}\n\n'.format(f))
-			f_collate.writelines('file ID == {0}\n\n'.format(f.listtestfiles_id))
-			f_collate.writelines('file_obj == {0}\n\n'.format(file_obj))
-			f_collate.writelines('file_obj_path == {0}\n\n'.format(file_obj_path))
+			# f_collate.writelines('RUN ID == {0}\n\n'.format(run.id))
+			# f_collate.writelines('file == {0}\n\n'.format(f))
+			# f_collate.writelines('file ID == {0}\n\n'.format(f.listtestfiles_id))
+			# f_collate.writelines('file_obj == {0}\n\n'.format(file_obj))
+			# f_collate.writelines('file_obj_path == {0}\n\n'.format(file_obj_path))
 			#######################
 		if files:
 			all_num *= len(files)
@@ -1474,7 +1474,7 @@ def get_executable(run, sequence, card, card_item):
 					)
 					pid += 1
 
-		f_collate.close()
+		# f_collate.close()
 
 	if card_model == 'randomforest':
 		# RunRandomForestModels.sh <AoI_Name> <Satellite> <ParamSet> <RunSet>
