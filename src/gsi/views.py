@@ -1063,8 +1063,8 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
     """
     
     ####################### write log file
-    # log_file = '/home/gsi/LOGS/log_execute.log'
-    # log_execute = open(log_file, 'w+')
+    log_file = '/home/gsi/LOGS/log_execute.log'
+    log_execute = open(log_file, 'w+')
     #######################
 
     log_info = ''
@@ -1092,6 +1092,11 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
     if status == 'Out':
         card_name = 'runcard_{0}_{1}.out'.format(card_id, count)
         path_log_file = os.path.join(str(log_path), str(card_name))
+        
+        ############################################## write OUT log file
+        log_execute.write("OUT: {0}\n".format(path_log_file))
+        ##############################################
+        
         try:
             fd = open(path_log_file, 'r')
             for line in fd.readlines():
@@ -1104,6 +1109,11 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
     elif status == 'Error':
         card_name = 'runcard_{0}_{1}.err'.format(card_id, count)
         path_log_file = os.path.join(str(log_path), str(card_name))
+        
+        ############################################## write Error log file
+        log_execute.write("Error: {0}\n".format(path_log_file))
+        ##############################################
+        
         try:
             fd = open(path_log_file, 'r')
             for line in fd.readlines():
@@ -1115,7 +1125,7 @@ def view_log_file_sub_card(request, run_id, card_id, count, status):
                 )
     
     ####################### close log file
-    # log_execute.close()
+    log_execute.close()
     #######################
 
     data = {

@@ -257,6 +257,7 @@ LOGGING = {
 
 # home folder for new cripts
 # /lustre/home/i214/indy0-home/mattgsi/bin
+# /lustre/home/i214/indy0-lustre/mattgsi/scripts/runs/R_1321/
 
 # /lustre/home/i214/mattgsi/indy0-lustre/mattgsi/scripts/runs
 # /lustre/home/i214/indy0-lustre/mattgsi/scripts/runs
