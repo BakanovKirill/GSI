@@ -559,6 +559,12 @@ def make_run(run_base, user):
 		log_name = '{0}_{1}.log'.format(run.id, first_script['card'].id)
 		path_log = first_script['path_runs_logs']
 		write_log(log_name, run, path_log, file_message_error)
+		
+		####################### write log file
+		log_file = '/home/gsi/LOGS/make_run.log'
+		log_make_run = open(log_file, 'w+')
+		log_make_run.close()
+		#######################
 
 	return {'run': run, 'step': step, 'error': message_error}
 
@@ -744,9 +750,9 @@ def write_log(log_name, run, path_log, message):
 	run.save()
 	
 	# log_file = '/home/gsi/LOGS/create_scripts.log'
-	new_log_file = open(path_log, 'w+')
-	new_log_file.write(message)
-	new_log_file.close()
+	# new_log_file = open(path_log, 'w+')
+	# new_log_file.write(message)
+	# new_log_file.close()
 
 
 def get_years(name):
