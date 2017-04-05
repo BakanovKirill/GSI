@@ -563,6 +563,7 @@ def make_run(run_base, user):
 		####################### write log file
 		log_file = '/home/gsi/LOGS/make_run.log'
 		log_make_run = open(log_file, 'w+')
+		log_make_run.write(file_message_error)
 		log_make_run.close()
 		#######################
 
