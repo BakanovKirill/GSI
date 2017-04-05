@@ -474,6 +474,7 @@ def make_run(run_base, user):
 	first_script = {}
 	path_test_data = ''
 	message_error = None
+	file_message_error = ''
 
 	run = Run.objects.create(run_base=run_base, user=user)
 	home_var = Home.objects.all()
@@ -489,6 +490,7 @@ def make_run(run_base, user):
 		try:
 			os.makedirs(path_test_data, 0777)
 		except OSError, e:
+			file_message_error += e + '\n'
 			pass
 	except Exception, e:
 		pass
@@ -504,6 +506,7 @@ def make_run(run_base, user):
 
 		if script['error']:
 			message_error = script['error']
+			file_message_error += message_error + '\n'
 
 		# if variable script is empty than remove the Run object
 		if not script:
@@ -549,12 +552,13 @@ def make_run(run_base, user):
 				first_script['run'].save()
 		except Exception, e:
 			print 'Exception make_run ==================================== ', e
+			file_message_error += 'Exception make_run:: ' + e + '\n'
 			pass
 
 		# record in the log model of gsi app path to script
 		log_name = '{0}_{1}.log'.format(run.id, first_script['card'].id)
 		path_log = first_script['path_runs_logs']
-		write_log(log_name, run, path_log)
+		write_log(log_name, run, path_log, file_message_error)
 
 	return {'run': run, 'step': step, 'error': message_error}
 
@@ -727,7 +731,7 @@ def create_scripts(run, sequence, card, step):
 	}
 
 
-def write_log(log_name, run, path_log):
+def write_log(log_name, run, path_log, message):
 	"""**The method writes a Log model GSI app.**"""
 
 	from gsi.models import Log
@@ -738,6 +742,11 @@ def write_log(log_name, run, path_log):
 	log.save()
 	run.log = log
 	run.save()
+	
+	# log_file = '/home/gsi/LOGS/create_scripts.log'
+	new_log_file = open(path_log, 'w+')
+	new_log_file.write(message)
+	new_log_file.close()
 
 
 def get_years(name):
