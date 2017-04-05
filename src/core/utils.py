@@ -474,7 +474,7 @@ def make_run(run_base, user):
 	first_script = {}
 	path_test_data = ''
 	message_error = None
-	file_message_error = ''
+	file_message_error = 'START MAKE RUN::\n'
 
 	run = Run.objects.create(run_base=run_base, user=user)
 	home_var = Home.objects.all()
@@ -521,10 +521,16 @@ def make_run(run_base, user):
 	if scripts:
 		first_script = scripts[0]
 		params = []
+		
+		file_message_error += 'first_script:: ' + str(first_script) + '\n'
 
 		try:
 			if first_script['card'].run_parallel:
+				file_message_error += 'PARALLEL first_script [CARD]:: ' + str(first_script['card'].run_parallel) + '\n'
+				
 				for n in first_script['execute_master_scripts']:
+					file_message_error += 'N first_script [execute_master_scripts]:: ' + str(n) + '\n'
+					
 					ex_fe_com = Popen(
 							'nohup {0} {1} {2} &'.format(
 								EXECUTE_FE_COMMAND,
