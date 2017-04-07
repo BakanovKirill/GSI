@@ -401,7 +401,8 @@ public function GetPolygonForLine($pixelY,$polyMsg)
         $meanFname = "src/media/temp_files/tempmean.csv";
         $statsFname = "src/media/temp_files/tempstats.csv";
 
-        $resultFname = "src/media/temp_files/result.csv";
+        //$resultFname = "src/media/temp_files/result.csv";
+        $resultFname = "{{ result_f_name }}";
         
         // need to convert comma-separated text strings into arrays for each of latlist and lonlist
         // finding min/max lat/lon as we go...

@@ -1702,9 +1702,18 @@ def customer_section_php(request):
     latlist = ''
     lonlist = ''
     customer = request.user
+    customer_tmp_file = str(customer) + '_result.csv'
     php_file = '{0}_php_tmp.txt'.format(customer)
     file_path_php = os.path.join(KML_PATH, php_file)
-    tmp_file_path = os.path.join(TMP_PATH, 'result.csv')
+    tmp_file_path = os.path.join(TMP_PATH, customer_tmp_file)
+    result_f_name = 'src/media/temp_files/{0}_result.csv'.format(customer)
+    
+    ####################### write log file
+    log_file = '/home/gsi/LOGS/delete_file.log'
+    log_delete_file = open(log_file, 'w+')
+    #######################
+    
+    print 'tmp_file_path ============================== ', tmp_file_path
     
     # $latlist = '48.88672158743591,48.86956150482169,48.84019508397442';
     # $lonlist = '-89.83619749546051,-89.57595884799957,-89.75036680698395';
@@ -1720,7 +1729,15 @@ def customer_section_php(request):
             
             try:
                 os.remove(tmp_file_path)
-            except Exception:
+                
+                ####################### write log file
+                log_delete_file.write('remove FILE: "{0}"'.format(tmp_file_path))
+                ####################### write log file
+            except Exception, e:
+                print 'except REMOVE FILE =========================== ', e
+                ####################### write log file
+                log_delete_file.write('ERROR remove FILE: "{0}"'.format(e))
+                ####################### write log file
                 pass
             
             
@@ -1735,12 +1752,17 @@ def customer_section_php(request):
             
             # print 'latlist =========================== ', latlist
             # print 'lonlist =========================== ', lonlist
+    
+    ####################### END write log file
+    log_delete_file.close()
+    #######################
             
     data = {
         'title': title,
         'file_tif_path': file_tif_path,
         'latlist': latlist,
         'lonlist': lonlist,
+        'result_f_name': result_f_name,
     }
 
     return data
@@ -1752,6 +1774,7 @@ def customer_section_php(request):
 def customer_delete_file(request):
     title = ''
     customer = request.user
+    result_f_name = str(customer) + '_result.csv'
     
     if request.is_ajax() and request.method == "GET":
         data = ''
@@ -1759,8 +1782,13 @@ def customer_delete_file(request):
         
         # print 'data_get AJAX ============================= ', data_get_ajax
         
+        ####################### write log file
+        log_file = '/home/gsi/LOGS/create_file.log'
+        log_create_file = open(log_file, 'w+')
+        #######################
+        
         if data_get_ajax.get('delete_file'):
-            tmp_file_path = os.path.join(TMP_PATH, 'result.csv')
+            tmp_file_path = os.path.join(TMP_PATH, result_f_name)
             while not os.path.exists(tmp_file_path):
                 print 'NO FILE ==================================='
                 pass
@@ -1774,46 +1802,3 @@ def customer_delete_file(request):
     }
 
     return data
-
-
-
-# # path to a GeoTIFF files
-# file_tif = '/home/greg/Elance_com/KeyUA/GSI/UI/images/CubicTotal_10_aws_v3.Site1.tif'
-# file_png = '/home/greg/Elance_com/KeyUA/GSI/UI/images/CubicTotal_10_aws_v3.Site201.png'
-#
-# # Convert tif to png
-# # # **** 1
-# # check_call(('cat {0} | convert - {1}').format(file_tif, file_png), shell=True)
-# #
-# # # ***** 2
-# proc = Popen(['cat', file_tif], stdout=PIPE)
-# p2 = Popen(['convert', '-', file_png],stdin=proc.stdout)
-# #
-# # out,err = proc.communicate()
-#
-# # # ***** 3
-# # gdal_translate HYP_50M_SR_W.tif HYP_50M_SR_W.png
-# # gdal_translate -of JPEG -co QUALITY=40 HYP_50M_SR_W.tif HYP_50M_SR_W.jpg
-# # check_call(('gdal_translate {0} {1}').format(file_tif, file_png), shell=True)
-# # check_call(('gdal_translate -of JPEG -co QUALITY={0} {1}').format(file_tif, file_png), shell=True)
-#
-#
-# # # ***** 4
-# # output_file = file_png
-# # output_file_root = os.path.splitext(output_file)[0]
-# # output_file_ext = os.path.splitext(output_file)[1]
-# # output_file_tmp = output_file_root + ".tmp"
-# #
-# # # Create tmp gtif
-# # driver = gdal.GetDriverByName("GTiff")
-# # dst_ds = driver.Create(output_file_tmp, 512, 512, 1, gdal.GDT_Byte )
-# # raster = numpy.zeros( (512, 512) )
-# # dst_ds.GetRasterBand(1).WriteArray(raster)
-# #
-# # # Create jpeg or rename tmp file
-# # if (cmp(output_file_ext.lower(),"jpg" ) == 0 or cmp(output_file_ext.lower(),"jpeg") == 0):
-# #     jpg_driver = gdal.GetDriverByName("PNG")
-# #     jpg_driver.CreateCopy( output_file, dst_ds, 0 )
-# #     os.remove(output_file_tmp)
-# # else:
-# #     os.rename(output_file_tmp, output_file)
