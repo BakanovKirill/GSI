@@ -455,9 +455,10 @@ function deleteFile() {
             alert(message);
         },
         'success': function(data, status, xhr){
-            // alert('deleteTMPFile!!!');
+            // alert('deleteTMPFile: '+data);
+            // /media/temp_files/result.csv
             var obj_status = status;
-            getTmpCSV();
+            getTmpCSV(data);
         },
     });
     

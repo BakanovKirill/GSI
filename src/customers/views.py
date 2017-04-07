@@ -1792,6 +1792,8 @@ def customer_delete_file(request):
             while not os.path.exists(tmp_file_path):
                 print 'NO FILE ==================================='
                 pass
+                
+            data = '/media/temp_files/' + result_f_name
             
             # print 'FILE exists ==================================='
         
