@@ -431,6 +431,7 @@ public function GetPolygonForLine($pixelY,$polyMsg)
            $outline = $lonarr[$iNode].",".$latarr[$iNode].",0.0\n";
            fwrite($kmlFile, $outline);
         }
+        
         // ensure polygon is closed...
         $outline = $lonarr[0].",".$latarr[0]."0.0\n";
         fwrite($kmlFile, $outline);
@@ -478,7 +479,7 @@ public function GetPolygonForLine($pixelY,$polyMsg)
            $polyX[$iNode] = round(($lonarr[$iNode] - $this->minlon)* ($this->numDataCols -1) / ($this->maxlon - $this->minlon) ) - $mincol;
            $polyY[$iNode] = round(($this->maxlat - $latarr[$iNode]) * ($this->numDataRows -1) / ($this->maxlat - $this->minlat) );
         }
-//
+
         $ncols = $maxcol-$mincol+1;
         $LEN_DATA = 2*$ncols;      // ( = BitsPerSample tag value / 8)
         $dataOffset = $this->stripOffsets;
@@ -497,8 +498,7 @@ public function GetPolygonForLine($pixelY,$polyMsg)
         $polymax = -99999;
         $debugCount = 0;
         $polyMsg = "polyMsg: ";
-        //$polyMsg = 'maximgLat=' . $this->maxlat . ', maxPolyLat=' . $maxlat . ', PolyPoints=' .$polyPoints . ", polyX " . $polyX[0] . "\n";
-        //$polyMsg = $polyMsg . "polyY " . $polyY[0] . "\n";
+
         for ($row=$minrow;$row<$maxrow;$row++)
       	{
       	   // get current row
@@ -572,7 +572,9 @@ public function GetPolygonForLine($pixelY,$polyMsg)
       for ($j=$nodePos[$i]; $j<$nodePos[$i+1]; $j++)
       {
       	 $pixval = $data[$j];
-      	 if ($pixval!="")
+      	 if ($pixval=="") $pixval = 0; // Extra check needed as zero-valued pixels were being ignored! MM 06Apr2017
+      	 
+      	 //if ($pixval!="")
       	 {
       	 	if ($pixval<0) $pixval = 0;
       	    if (($pixval<$polymin) && ($pixval>0)) $polymin = $pixval;
@@ -606,7 +608,7 @@ public function GetPolygonForLine($pixelY,$polyMsg)
         }
         if ($polymin>$polymax) $polymin=$polymax;
         
-        $msg = intval($area*10)/10 . ',' . intval($polysum) . ',' . intval($polysum*$area) ;
+        $msg = intval($area*10)/10 . ',' . intval($polysum*10)/10 . ',' . intval($polysum*$area) ;
         echo $msg . ";\n" ;
 
         $resultFile = fopen($resultFname,"w");

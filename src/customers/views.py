@@ -1711,6 +1711,7 @@ def customer_section_php(request):
     ####################### write log file
     log_file = '/home/gsi/LOGS/delete_file.log'
     log_delete_file = open(log_file, 'w+')
+    log_delete_file.write('FILE NAME: '+result_f_name+'\n')
     #######################
     
     print 'tmp_file_path ============================== ', tmp_file_path
@@ -1756,6 +1757,7 @@ def customer_section_php(request):
     ####################### END write log file
     log_delete_file.close()
     #######################
+    
             
     data = {
         'title': title,
