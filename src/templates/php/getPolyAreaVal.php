@@ -10,7 +10,6 @@ $res = $geo_tiff->getPolyAreaVal($latlist, $lonlist, $fileName);
 
 // *****************************************************************
 
-// header("Location: http://127.0.0.1:8000/customer/php?set_data=123");
 
 // *****************************************************************
 
@@ -68,17 +67,7 @@ class MMGeoTIFFReader {
     public function getFileName() {
         return $this->fileName;
     }
-/*
-   function debug_to_console( $data ) {
 
-    if ( is_array( $data ) )
-        $output = "<script>console.log( 'Debug Objects: " . implode( ',', $data) . "' );</script>";
-    else
-        $output = "<script>console.log( 'Debug Objects: " . $data . "' );</script>";
-
-    echo $output;
-   }
-*/
     /*
     * Convert geotiff to png at reduced scale, using specified LUT
     */
@@ -94,14 +83,12 @@ class MMGeoTIFFReader {
         $array = explode("\n", file_get_contents($LUTfile));
         $numlines = count($array);
         $lutSplit=" ";
-        //echo 'numlines = ' . $numlines . "<br>\n";
         $vals = explode($lutSplit,$array[3]);
-        //echo "Num space Lut args = " . count($vals) . "<br>\n";
+
         if (count($vals)<=1) // try tab instead
         {
            $lutSplit="	";
            $vals = explode($lutSplit,$array[3]);
-           //echo "Num tab Lut args = " . count($vals) . "<br>\n";
         }
 
         $lut = array();
@@ -123,7 +110,6 @@ class MMGeoTIFFReader {
       	if (fnmatch('*h??v??*',$fileName))
       	{
       	     // looks like a MODIS tile! So Calc min/max lat lon
-      	     //echo "Looks like MODIS tile<br>\n";
       	     $ioff = 0;
       	     $hpos = strpos($fileName,"h",$ioff);
        	     while (($hpos!=null) && ($MODISmatch==0))
@@ -145,34 +131,16 @@ class MMGeoTIFFReader {
       	     
       	     if ($MODISmatch>0)
       	     {
-     	         //echo 'Match: hpos=' . $hpos . ' vpos=' . $vpos . "<br>\n";
       	         $hh = substr($fileName,$hpos+1,2);
       	         $vv = substr($fileName,$vpos+1,2);
       	     	 $pngmaxlat = 90 - ($vv+0)*10;
       	     	 $pngminlat = $pngmaxlat - 10;
-      	     	 //echo "XX=". $hh . " YY=" . $vv . " maxlat=" . $pngmaxlat. " MinLat=" . $pngminlat . "<br>\n";
       	     	 $londegW = ($hh+0)*10-180;
       	     	 $londegE = $londegW + 10;
       	     	 $londegW = $londegW/10.0;
       	     	 $londegE = $londegE/10.0;
       	     }
       	}
-      	/*
-      	     if ($MODISmatch>0)
-      	     {
-      	     	 $rminlat = deg2rad($pngminlat);
-      	     	 $rmaxlat = deg2rad($pngmaxlat);
-      	     	 $cosminW = $londegW/cos($rminlat);
-      	     	 $cosmaxW = $londegW/cos($rmaxlat);
-      	     	 $cosminE = $londegE/cos($rminlat);
-      	     	 $cosmaxE = $londegE/cos($rmaxlat);
-      	     	 //echo "rmin=" . $rminlat . " rmax=" . $rmaxlat . "\n";
-     	     	 //echo "lonW=" . $londegW . " cminW=" . $cosminW . " cmaxW=" . $cosmaxW . "\n";
-     	     	 //echo "lonE=" . $londegE . " cminE=" . $cosminE . " cmaxE=" . $cosmaxE . "\n";
-                 $pngminlon = $cosmaxW;
-                 $pngmaxlon = $cosmaxE;
-      	     }
-        */
         
         // Now map tiff to pixel values
         $tiffvals = array();
@@ -182,25 +150,16 @@ class MMGeoTIFFReader {
         $ind = 0;
         
         $this->getTiffFilePointer($fileName . '.tif');
-        //$nx = 1024/$reduce;
-        //$ny = 1024/$reduce;
         $inpx = $this->numDataCols;
         $inpy = $this->numDataRows;
         $nx = (int) $this->numDataCols/$reduce;
         $ny = (int) $this->numDataRows/$reduce;
-        
-        //$MODISmatch = 0;
         
         if ($MODISmatch>0)
       	{
       	   // nx is MAX(East_longitude West_longitude)
       	   $rminlat = deg2rad($pngminlat);
       	   $rmaxlat = deg2rad($pngmaxlat);
-      	   //$EWsize = 1.0/cos($rminlat);
-      	   //$EWsize2 = 1.0/cos($rmaxlat);
-      	   //if ($EWsize2>$EWsize) $EWsize = $EWsize2;
-      	   //$nx = (int) ($EWsize*$inpx/$reduce);
-      	   //$nx = 800;
 
       	   $minAbsX = ($londegW/cos($rminlat))*($inpx/$reduce);
       	   $minAbsX2 = ($londegW/cos($rmaxlat))*($inpx/$reduce);
@@ -209,12 +168,8 @@ class MMGeoTIFFReader {
       	   $maxAbsX2 = ($londegE/cos($rmaxlat))*($inpx/$reduce);
       	   if ($maxAbsX2>$maxAbsX) $maxAbsX = $maxAbsX2;
       	   $nx = (int) ($maxAbsX - $minAbsX);
-      	   //echo 'MODIS Match, nx=' . nx . "\n");
       	}
-      	//$MODISmatch = 0;
-      	
-        //debug_to_console("nx=" . $nx);
-        //debug_to_console("ny=" . $ny);
+
         $dataOffset = $this->stripOffsets;
         fseek($this->fp, $dataOffset, SEEK_SET);
         $dataBytes = fread($this->fp, self::LEN_OFFSET);
@@ -223,44 +178,23 @@ class MMGeoTIFFReader {
         $maxpixval = 0;
         
         for ($y = 0; $y < $ny; ++$y) {
-           //$dataOffset = $this->stripOffsets + (($row+$y*$reduce) * self::LEN_OFFSET);
-           //$dataOffset = $this->stripOffsets + (($y*$reduce) * self::LEN_OFFSET);
-           
-           // $dataOffset = $this->stripOffsets + (($y*4/3) * self::LEN_OFFSET);
-           // fseek($this->fp, $dataOffset, SEEK_SET);
-           // $dataBytes = fread($this->fp, self::LEN_OFFSET);
-           // $data = unpack('VdataOffset', $dataBytes);
-            
-           // this is the offset of the 1st column in the required data row
-           //$firstColOffset = $data['dataOffset'];
-           //$firstColOffset = $dataStart + $y * $reduce * $nx * $reduce * $LEN_DATA;
            $firstColOffset = $dataStart + $y * $reduce  * $inpx * $LEN_DATA;
+           
            // now work out the required column offset relative to the 1st column
            $requiredColOffset = 0; //$col * $LEN_DATA;
                
            // combine the two and read the elevation data at that address
-           //fseek($this->fp, $firstColOffset + $requiredColOffset, SEEK_SET);
            fseek($this->fp, $firstColOffset, SEEK_SET);
            $numBytes = $LEN_DATA*$inpx;
            $dataBytes = fread($this->fp, $numBytes);
-           //$fmtspec = 's' . $nx . 'pix';
-           //$data = unpack($fmtspec, $dataBytes);
-           //$data = unpack('s', $dataBytes);
-           //echo "y = " . $y . " dataBytes:" . $dataBytes[0] . ", " . $dataBytes[1] .
-           //     ", " . $dataBytes[2] . ", " . $dataBytes[3] . "<br>\n";
-
+ 
            if ($MODISmatch>0)
       	   {
       	      $rdeglat = $pngmaxlat - $y*($pngmaxlat-$pngminlat)/$ny;
       	      $rlat = deg2rad($rdeglat);
       	      $coslat = cos($rlat);
-      	      //$minX = ($londegW/$coslat)*($inpx/$reduce) - $minAbsX;
       	      $minX = ($londegW/$coslat)*($inpx/$reduce) - $minAbsX;
-      	      //$maxX = ($londegE/$coslat)*($inpx/$reduce) - $minAbsX;
       	      $maxX = $minX + (1.0/$coslat)*($inpx/$reduce);
-
-              //for ($x=0; $x<$minX; $x++)
-              //   $tiffvals[$y*$nx+$x] = 241;
               $xscale = $reduce*$coslat;
 
               for ($x=$minX; $x<$maxX; $x++)
@@ -271,8 +205,6 @@ class MMGeoTIFFReader {
                   $tiffvals[$y*$nx+$x] = $pixval;
                   if ($pixval>$maxpixval) $maxpixval=$pixval;
               }
-              //for ($x=$maxX; $x<$nx; $x++)
-              //   $tiffvals[$y*$nx+$x] = 241;
       	   }
       	   else
       	   {
@@ -283,28 +215,13 @@ class MMGeoTIFFReader {
               	  if ($pixval>32767) $pixval=0;
                   $tiffvals[$y*$nx+$x] = $pixval;
                   if ($pixval>$maxpixval) $maxpixval=$pixval;
-                 //$tiffvals[$ind++] = (ord($dataBytes[$ind]) & 255);
               }
            }
-           //echo "y = " . $y . " tiffvals:" . $tiffvals[$ind-3] . ", "
-           //. $tiffvals[$ind-2] . ", ". $tiffvals[$ind-1] . ", ". "<br>\n";
         }
-        //for ($y = 0; $y < count($tiffvals); ++$y) {
-        //   $tiffvals[$y] =  $tiffvals[$y] & 255;
-        //}
         $pixscale = $maxpixval/256;
         
-        //$pixscale = 1;
-        // Grab the dimensions of the pixel array
-        //$nx = 255; //count($pixelArray, 0);
-        //$ny = 255; //count($pixelArray);
-        // ensure zero-value is transparent
-        //$lut[0] = 0;
-        //$lut[1] = 0;
-        //$lut[2] = 0;
         for ($y = 0; $y < $ny; ++$y) {
             for ($x = 0; $x < $nx; ++$x) {
-            	//$lutind = 3*(($y + $x) & 255);
             	$lutind = 3*((int)($tiffvals[$y*$nx+$x]/$pixscale) & 255);
                 $pixvals[$y*$nx+$x] = $lut[$lutind] + 256*($lut[$lutind+1] + 256*$lut[$lutind+2]);
             }
@@ -320,73 +237,14 @@ class MMGeoTIFFReader {
             }
         }
         $color = imagecolorallocate($img, $lut[0], $lut[1], $lut[2]);
-        //$color = imagecolorallocate($img, 0,0,0);
         imagecolortransparent($img, $color);
         
         // output to png file
         imagepng($img, 'MapDisplay.png');
-        //xx imagepng($img, $fileName . '.png');
         
         // Clean up after ourselves
         imagedestroy($img);
     }
-
-public function GetPolygonForLine($pixelY,$polyMsg)
-{
-  $nodes=0;
-  $nodePos = array();
-  $polyStart = 0;
-  $polyPoints = count($latarr);
-  
-  $polyMsg = $polyMsg . 'Debug: ' . $nodes . ', ' . $polyPoints . ', row=' . $pixelY . "<br>\n";
-  
-  //  Build a list of X-nodes.
-  $j=$polyStart+$polyPoints-1;
-  for ($i=$polyStart; $i<$polyStart+$polyPoints; $i++)
-  {
-    if ($polyY[$i]<$pixelY && $polyY[$j]>=$pixelY
-    ||  $polyY[$j]<$pixelY && $polyY[$i]>=$pixelY)
-    {
-      $nodePos[$nodes++]=($polyX[$i]+($pixelY-$polyY[$i])/($polyY[$j]-$polyY[$i])
-                           *($polyX[$j]-$polyX[$i]));
-    }
-    $j=$i;
-  }
-
-  //  Sort the nodes, via a simple Bubble sort.
-  $i=0;
-  while ($i<$nodes-1)
-  {
-    if ($nodePos[$i]>$nodePos[$i+1])
-    {
-      $swap=$nodePos[$i]; $nodePos[$i]=$nodePos[$i+1]; $nodePos[$i+1]=$swap; if ($i>0) $i--;
-    }
-    else
-    {
-      $i++;
-    }
-  }
-  
-  // Process inside polygon...
-  for ($i=0; $i<$nodes; $i+=2)
-  {
-    if   ($nodePos[$i  ]>=$xsize) break;
-    //if   (nodePos[i  ]>=nodePos[i+1]) break;
-    
-    if   ($nodePos[$i+1]> 0 )
-    {
-      if ($nodePos[$i  ]< 0 ) $nodePos[$i  ]=0 ;
-      if ($nodePos[$i+1]> $xsize) $nodePos[$i+1]=$xsize;
-      
-      for ($j=$nodePos[$i]; $j<$nodePos[$i+1]; $j++)
-      {
-      	 $pixval = $data[$j];
-      	 $polysum += $pixval;
-      	 $polycount++;
-      }
-    }
-  }
-}
 
 //=============================================================================================================
     /**
@@ -431,7 +289,6 @@ public function GetPolygonForLine($pixelY,$polyMsg)
            $outline = $lonarr[$iNode].",".$latarr[$iNode].",0.0\n";
            fwrite($kmlFile, $outline);
         }
-        
         // ensure polygon is closed...
         $outline = $lonarr[0].",".$latarr[0]."0.0\n";
         fwrite($kmlFile, $outline);
@@ -501,105 +358,79 @@ public function GetPolygonForLine($pixelY,$polyMsg)
 
         for ($row=$minrow;$row<$maxrow;$row++)
       	{
-      	   // get current row
-           $firstColOffset = $dataStart + ($row * $this->numDataCols + $mincol) * 2;
-           fseek($this->fp, $firstColOffset);
-           $dataBytes = fread($this->fp, $LEN_DATA);
-           $data = unpack('s'.$ncols, $dataBytes);
-           $count += ($maxcol-$mincol+1);
-           /* now need to extract pixels along each row which lie within the defined polygon
-           for ($col=0;$col<$ncols;$col++)
-           {
-           	  $val = $data[$col];
-           	  if ($val<0) $val = 0;
-              $sum += $val;
-           }
-           */
-//           if ($debugCount<5)
-//           {
-//              $this->GetPolygonForLine($row,$polyMsg);
+      	  // get current row
+          $firstColOffset = $dataStart + ($row * $this->numDataCols + $mincol) * 2;
+          fseek($this->fp, $firstColOffset);
+          $dataBytes = fread($this->fp, $LEN_DATA);
+          $data = unpack('s'.$ncols, $dataBytes);
+          $count += ($maxcol-$mincol+1);
               
-// start of in-line GetPolygonForLine
-  $pixelY = $row;
-  $pixlat = $maxlat - $pixelY*($this->maxlat-$this->minlat)/($this->numDataRows-1);
-  
-  $nodes=0;
-  $nodePos = array();
-  $polyStart = 0;
-  $polyPoints = count($latarr);
-  
-  //  Build a list of X-nodes.
-  $j=$polyStart+$polyPoints-1;
-  for ($i=$polyStart; $i<$polyStart+$polyPoints; $i++)
-  {
-    // $polyMsg = $polyMsg . 'Line ' . $row . '$i=' .$i . ' polyY=' . $polyY[$j] . ', ' . $polyY[$i] ."<br>\n";
-    if ($polyY[$i]<$pixelY && $polyY[$j]>=$pixelY
-    ||  $polyY[$j]<$pixelY && $polyY[$i]>=$pixelY)
-    {
-      $nodePos[$nodes++]=intval($polyX[$i]+($pixelY-$polyY[$i])/($polyY[$j]-$polyY[$i])
-                           *($polyX[$j]-$polyX[$i]));
-    }
-    $j=$i;
-  }
-  //$polyMsg = $polyMsg . 'Y=' . $pixelY . ', nodes=' . $nodes . ', ' . $polyPoints . ', row=' . $pixelY . "<br>\n";
-  //  Sort the nodes, via a simple Bubble sort.
-  $i=0;
-  while ($i<$nodes-1)
-  {
-    if ($nodePos[$i]>$nodePos[$i+1])
-    {
-      $swap=$nodePos[$i]; $nodePos[$i]=$nodePos[$i+1]; $nodePos[$i+1]=$swap; if ($i>0) $i--;
-    }
-    else
-    {
-      $i++;
-    }
-  }
-  //$polyMsg = $polyMsg . 'Nodes: ' . $nodePos[0] . ', ' . $nodePos[1] . "<br>\n";
-  
-  // Process inside polygon...
-  for ($i=0; $i<$nodes; $i+=2)
-  {
-    //$polyMsg = $polyMsg . '$i=' . $i . ', nodePos: ' . $nodePos[$i] . ', ' . $nodePos[$i+1] . "<br>\n";
-//tbd    //if   ($nodePos[$i  ]>=$xsize) break;
-    //if   (nodePos[i  ]>=nodePos[i+1]) break;
-    
-    if   ($nodePos[$i+1]> 0 )
-    {
-//tbd      //if ($nodePos[$i  ]< 0 ) $nodePos[$i  ]=0 ;
-//tbd      //if ($nodePos[$i+1]> $xsize) $nodePos[$i+1]=$xsize;
-      
-      for ($j=$nodePos[$i]; $j<$nodePos[$i+1]; $j++)
-      {
-      	 $pixval = $data[$j];
-      	 if ($pixval=="") $pixval = 0; // Extra check needed as zero-valued pixels were being ignored! MM 06Apr2017
-      	 
-      	 //if ($pixval!="")
-      	 {
-      	 	if ($pixval<0) $pixval = 0;
-      	    if (($pixval<$polymin) && ($pixval>0)) $polymin = $pixval;
-      	    if ($pixval>$polymax) $polymax = $pixval;
-
-            $pixlon = $minlon + $j*($this->maxlon-$this->minlon)/($this->numDataCols-1);
-            $csvinfo = $pixlat . ',' . $pixlon . ',' . $pixval . "\n";
-      	    fwrite($csvFile, $csvinfo);
-      	    $polysum += $pixval;
-      	    $polysumsq += $pixval*$pixval;
-      	    $polycount++;
-      	 }
-      }
-      //$polyMsg = $polyMsg . '$i=' . $i .   'polycount = ' . $polycount . "<br>\n";
-    }
-    //$polyMsg = $polyMsg . 'polycount = ' . $polycount . ', polysum= ' . $polysum  . "<br>\n";;
-  }
-// end of in-line GetPolygonForLine
-//           }
-           $debugCount++;
+		  // start of in-line GetPolygonForLine
+		  $pixelY = $row;
+		  $pixlat = $maxlat - $pixelY*($this->maxlat-$this->minlat)/($this->numDataRows-1);
+		  
+		  $nodes=0;
+		  $nodePos = array();
+		  $polyStart = 0;
+		  $polyPoints = count($latarr);
+		  
+		  //  Build a list of X-nodes.
+		  $j=$polyStart+$polyPoints-1;
+		  for ($i=$polyStart; $i<$polyStart+$polyPoints; $i++)
+		  {
+			if ($polyY[$i]<$pixelY && $polyY[$j]>=$pixelY
+			||  $polyY[$j]<$pixelY && $polyY[$i]>=$pixelY)
+			{
+			  $nodePos[$nodes++]=intval($polyX[$i]+($pixelY-$polyY[$i])/($polyY[$j]-$polyY[$i])
+								   *($polyX[$j]-$polyX[$i]));
+			}
+			$j=$i;
+		  }
+		
+		  //  Sort the nodes, via a simple Bubble sort.
+		  $i=0;
+		  while ($i<$nodes-1)
+		  {
+			if ($nodePos[$i]>$nodePos[$i+1])
+			{
+			  $swap=$nodePos[$i]; $nodePos[$i]=$nodePos[$i+1]; $nodePos[$i+1]=$swap; if ($i>0) $i--;
+			}
+			else
+			{
+			  $i++;
+			}
+		  }
+		  
+		  // Process inside polygon...
+		  for ($i=0; $i<$nodes; $i+=2)
+		  {
+			if   ($nodePos[$i+1]> 0 )
+			{
+			  for ($j=$nodePos[$i]; $j<$nodePos[$i+1]; $j++)
+			  {
+				 $pixval = $data[$j];
+				 if ($pixval=="") $pixval = 0; // Extra check needed as zero-valued pixels were being ignored! MM 06Apr2017
+				 
+				 //if ($pixval!="")
+				 {
+					if ($pixval<0) $pixval = 0;
+					if (($pixval<$polymin) && ($pixval>0)) $polymin = $pixval;
+					if ($pixval>$polymax) $polymax = $pixval;
+		
+					$pixlon = $minlon + $j*($this->maxlon-$this->minlon)/($this->numDataCols-1);
+					$csvinfo = $pixlat . ',' . $pixlon . ',' . $pixval . "\n";
+					fwrite($csvFile, $csvinfo);
+					$polysum += $pixval;
+					$polysumsq += $pixval*$pixval;
+					$polycount++;
+				 }
+			  }
+			}
+		  }
+		  // end of in-line GetPolygonForLine
+          $debugCount++;
         } // loop over rows
-//
-        //$msg = 'Lat: ' . $minlat . ', ' . $maxlat . ', Lon: ' . $minlon . ', ' . $maxlon;
-        //$msg = 'Rows: ' . $minrow . ', ' . $maxrow . ', Cols: ' . $mincol . ', ' . $maxcol;
-        //$mean = $sum/$count;
+
         $polystdev = 0;
         if ($polycount>0)
         {
@@ -610,10 +441,10 @@ public function GetPolygonForLine($pixelY,$polyMsg)
         
         $msg = intval($area*10)/10 . ',' . intval($polysum*10)/10 . ',' . intval($polysum*$area) ;
         echo $msg . ";\n" ;
-
+        
         $resultFile = fopen($resultFname,"w");
         fwrite($resultFile, $msg . "\n");
-
+        
         fwrite($statsFile, "Attr1," . $msg . "\n");
         fwrite($meanFile, "Attr1," . $polycount . ',' . intval($polysum)."\n");
                
@@ -629,8 +460,6 @@ public function GetPolygonForLine($pixelY,$polyMsg)
     public function getPolyVal($latlist, $lonlist, $fileName) {
     
     	$timestamp = date("_Ymd_His");
-//        $kmlFname = str_replace(".tif",$timestamp.".kml",$fileName);
-//        $csvFname = str_replace(".tif",$timestamp.".csv",$fileName);
         $kmlFname = "temp.kml";
         $csvFname = "temppixels.csv";
         $meanFname = "tempmean.csv";
@@ -698,7 +527,7 @@ public function GetPolygonForLine($pixelY,$polyMsg)
            $polyX[$iNode] = round(($lonarr[$iNode] - $this->minlon)* ($this->numDataCols -1) / ($this->maxlon - $this->minlon) ) - $mincol;
            $polyY[$iNode] = round(($this->maxlat - $latarr[$iNode]) * ($this->numDataRows -1) / ($this->maxlat - $this->minlat) );
         }
-//
+
         $ncols = $maxcol-$mincol+1;
         $LEN_DATA = 2*$ncols;      // ( = BitsPerSample tag value / 8)
         $dataOffset = $this->stripOffsets;
@@ -717,107 +546,81 @@ public function GetPolygonForLine($pixelY,$polyMsg)
         $polymax = -99999;
         $debugCount = 0;
         $polyMsg = "polyMsg: ";
-        //$polyMsg = 'maximgLat=' . $this->maxlat . ', maxPolyLat=' . $maxlat . ', PolyPoints=' .$polyPoints . ", polyX " . $polyX[0] . "\n";
-        //$polyMsg = $polyMsg . "polyY " . $polyY[0] . "\n";
         for ($row=$minrow;$row<$maxrow;$row++)
       	{
-      	   // get current row
-           $firstColOffset = $dataStart + ($row * $this->numDataCols + $mincol) * 2;
-           fseek($this->fp, $firstColOffset);
-           $dataBytes = fread($this->fp, $LEN_DATA);
-           $data = unpack('s'.$ncols, $dataBytes);
-           $count += ($maxcol-$mincol+1);
-           /* now need to extract pixels along each row which lie within the defined polygon
-           for ($col=0;$col<$ncols;$col++)
-           {
-           	  $pixval = $data[$col];
-           	  if ($pixval<0) $pixval = 0;
-              $sum += $pixval;
-           }
-           */
-//           if ($debugCount<5)
-//           {
-//              $this->GetPolygonForLine($row,$polyMsg);
+      	  // get current row
+          $firstColOffset = $dataStart + ($row * $this->numDataCols + $mincol) * 2;
+          fseek($this->fp, $firstColOffset);
+          $dataBytes = fread($this->fp, $LEN_DATA);
+          $data = unpack('s'.$ncols, $dataBytes);
+          $count += ($maxcol-$mincol+1);
               
-// start of in-line GetPolygonForLine
-  $pixelY = $row;
-  $pixlat = $maxlat - $pixelY*($this->maxlat-$this->minlat)/($this->numDataRows-1);
-  
-  $nodes=0;
-  $nodePos = array();
-  $polyStart = 0;
-  $polyPoints = count($latarr);
-  
-  //  Build a list of X-nodes.
-  $j=$polyStart+$polyPoints-1;
-  for ($i=$polyStart; $i<$polyStart+$polyPoints; $i++)
-  {
-    // $polyMsg = $polyMsg . 'Line ' . $row . '$i=' .$i . ' polyY=' . $polyY[$j] . ', ' . $polyY[$i] ."<br>\n";
-    if ($polyY[$i]<$pixelY && $polyY[$j]>=$pixelY
-    ||  $polyY[$j]<$pixelY && $polyY[$i]>=$pixelY)
-    {
-      $nodePos[$nodes++]=intval($polyX[$i]+($pixelY-$polyY[$i])/($polyY[$j]-$polyY[$i])
-                           *($polyX[$j]-$polyX[$i]));
-    }
-    $j=$i;
-  }
-  //$polyMsg = $polyMsg . 'Y=' . $pixelY . ', nodes=' . $nodes . ', ' . $polyPoints . ', row=' . $pixelY . "<br>\n";
-  //  Sort the nodes, via a simple Bubble sort.
-  $i=0;
-  while ($i<$nodes-1)
-  {
-    if ($nodePos[$i]>$nodePos[$i+1])
-    {
-      $swap=$nodePos[$i]; $nodePos[$i]=$nodePos[$i+1]; $nodePos[$i+1]=$swap; if ($i>0) $i--;
-    }
-    else
-    {
-      $i++;
-    }
-  }
-  //$polyMsg = $polyMsg . 'Nodes: ' . $nodePos[0] . ', ' . $nodePos[1] . "<br>\n";
-  
-  // Process inside polygon...
-  for ($i=0; $i<$nodes; $i+=2)
-  {
-    //$polyMsg = $polyMsg . '$i=' . $i . ', nodePos: ' . $nodePos[$i] . ', ' . $nodePos[$i+1] . "<br>\n";
-//tbd    //if   ($nodePos[$i  ]>=$xsize) break;
-    //if   (nodePos[i  ]>=nodePos[i+1]) break;
-    
-    if   ($nodePos[$i+1]> 0 )
-    {
-//tbd      //if ($nodePos[$i  ]< 0 ) $nodePos[$i  ]=0 ;
-//tbd      //if ($nodePos[$i+1]> $xsize) $nodePos[$i+1]=$xsize;
-      
-      for ($j=$nodePos[$i]; $j<$nodePos[$i+1]; $j++)
-      {
-      	 $pixval = $data[$j];
-      	 if ($pixval!="")
-      	 {
-      	    if ($pixval<0) $pixval = 0;
-      	    if (($pixval<$polymin) && ($pixval>0)) $polymin = $pixval;
-      	    if ($pixval>$polymax) $polymax = $pixval;
-
-            $pixlon = $minlon + $j*($this->maxlon-$this->minlon)/($this->numDataCols-1);
-            $csvinfo = $pixlat . ',' . $pixlon . ',' . $pixval . "\n";
-      	    fwrite($csvFile, $csvinfo);
-      	    $polysum += $pixval;
-      	    $polysumsq += $pixval*$pixval;
-      	    $polycount++;
-      	 }
-      }
-      //$polyMsg = $polyMsg . '$i=' . $i .   'polycount = ' . $polycount . "<br>\n";
-    }
-    //$polyMsg = $polyMsg . 'polycount = ' . $polycount . ', polysum= ' . $polysum  . "<br>\n";;
-  }
-// end of in-line GetPolygonForLine
-//           }
-           $debugCount++;
+		  // start of in-line GetPolygonForLine
+		  $pixelY = $row;
+		  $pixlat = $maxlat - $pixelY*($this->maxlat-$this->minlat)/($this->numDataRows-1);
+		  
+		  $nodes=0;
+		  $nodePos = array();
+		  $polyStart = 0;
+		  $polyPoints = count($latarr);
+		  
+		  //  Build a list of X-nodes.
+		  $j=$polyStart+$polyPoints-1;
+		  for ($i=$polyStart; $i<$polyStart+$polyPoints; $i++)
+		  {
+			// $polyMsg = $polyMsg . 'Line ' . $row . '$i=' .$i . ' polyY=' . $polyY[$j] . ', ' . $polyY[$i] ."<br>\n";
+			if ($polyY[$i]<$pixelY && $polyY[$j]>=$pixelY
+			||  $polyY[$j]<$pixelY && $polyY[$i]>=$pixelY)
+			{
+			  $nodePos[$nodes++]=intval($polyX[$i]+($pixelY-$polyY[$i])/($polyY[$j]-$polyY[$i])
+								   *($polyX[$j]-$polyX[$i]));
+			}
+			$j=$i;
+		  }
+		  //  Sort the nodes, via a simple Bubble sort.
+		  $i=0;
+		  while ($i<$nodes-1)
+		  {
+			if ($nodePos[$i]>$nodePos[$i+1])
+			{
+			  $swap=$nodePos[$i]; $nodePos[$i]=$nodePos[$i+1]; $nodePos[$i+1]=$swap; if ($i>0) $i--;
+			}
+			else
+			{
+			  $i++;
+			}
+		  }
+		  
+		  // Process inside polygon...
+		  for ($i=0; $i<$nodes; $i+=2)
+		  {
+			
+			if   ($nodePos[$i+1]> 0 )
+			{
+			  for ($j=$nodePos[$i]; $j<$nodePos[$i+1]; $j++)
+			  {
+				 $pixval = $data[$j];
+				 if ($pixval=="") $pixval = 0; // Extra check needed as zero-valued pixels were being ignored! MM 06Apr2017
+				 //if ($pixval!="")
+				 {
+					if ($pixval<0) $pixval = 0;
+					if (($pixval<$polymin) && ($pixval>0)) $polymin = $pixval;
+					if ($pixval>$polymax) $polymax = $pixval;
+		
+					$pixlon = $minlon + $j*($this->maxlon-$this->minlon)/($this->numDataCols-1);
+					$csvinfo = $pixlat . ',' . $pixlon . ',' . $pixval . "\n";
+					fwrite($csvFile, $csvinfo);
+					$polysum += $pixval;
+					$polysumsq += $pixval*$pixval;
+					$polycount++;
+				 }
+			  }
+			}
+		  }
+		  // end of in-line GetPolygonForLine
+          $debugCount++;
         } // loop over rows
-//
-        //$msg = 'Lat: ' . $minlat . ', ' . $maxlat . ', Lon: ' . $minlon . ', ' . $maxlon;
-        //$msg = 'Rows: ' . $minrow . ', ' . $maxrow . ', Cols: ' . $mincol . ', ' . $maxcol;
-        //$mean = $sum/$count;
+        
         $polystdev = 0;
         if ($polycount>0)
         {
@@ -826,8 +629,6 @@ public function GetPolygonForLine($pixelY,$polyMsg)
         }
         if ($polymin>$polymax) $polymin=$polymax;
         
-        //$msg = 'count=' . $count . ', mean='. intval($mean) . ', polycount=' . $polycount . ', polymean=' . intval($polysum);
-        //$msg = 'Area=' . $polycount . ', Mean=' . intval($polysum) . ', Min=' . intval($polymin). ', Max=' . intval($polymax) ;
         $msg = $polycount . ',' . intval($polysum) . ',' . intval($polystdev) . ','. intval($polymin). ',' . intval($polymax) ;
         echo $msg . ";\n" ;
         
@@ -890,23 +691,13 @@ public function GetPolygonForLine($pixelY,$polyMsg)
       	     	 $pngmaxlat = 90 - ($vv+0)*10;
       	     	 $pngminlat = $pngmaxlat - 10;
       	     	 $londegW = ($hh+0)*10-180;
-/*
-                 //echo "XX=". $hh . " YY=" . $vv . " maxlat=" . $pngmaxlat. " MinLat=" . $pngminlat . "<br>\n";
-      	     	 $londegW = ($hh+0)*10-180;
-      	     	 $londegE = $londegW + 10;
-      	     	 $londegW = $londegW/10.0;
-      	     	 $londegE = $londegE/10.0;
-*/
-      	      $ypos = ($pngmaxlat - $latitude)*$this->numDataRows/($pngmaxlat-$pngminlat);
-      	      $rlat = deg2rad($latitude);
-      	      $coslat = cos($rlat);
-      	      $rdx = $longitude * ($coslat - 1.0);
-      	      $xpos = ($longitude+$rdx-$londegW)*$this->numDataCols/10.0;
-      	      //$minX = ($londegW/$coslat)*$this->numDataCols;
-      	      //$col = (($longitude-$londegW)/$coslat)*$this->numDataCols;
-      	      $row = (int) $ypos;
-      	      $col = (int) $xpos;
-              //echo "(row=" . $row . ", col=" . $col . ") ";
+      	         $ypos = ($pngmaxlat - $latitude)*$this->numDataRows/($pngmaxlat-$pngminlat);
+      	         $rlat = deg2rad($latitude);
+      	         $coslat = cos($rlat);
+      	         $rdx = $longitude * ($coslat - 1.0);
+      	         $xpos = ($longitude+$rdx-$londegW)*$this->numDataCols/10.0;
+       	         $row = (int) $ypos;
+      	         $col = (int) $xpos;
       	     }
       	}
         
@@ -918,8 +709,6 @@ public function GetPolygonForLine($pixelY,$polyMsg)
         
         // get the pixel value for the calculated row & column
         $PixVal =  $this->getRowColumnData($row , $col);
-//        echo 'PixVal = ' . $PixVal . "<br>\n";
-
         echo $PixVal . ', ';
         
         return $PixVal;
@@ -1030,8 +819,6 @@ public function GetPolygonForLine($pixelY,$polyMsg)
         }
         $xw = $this->numDataCols;
         $yw = $this->numDataRows;
-        //echo 'Xsize= ' . $xw  . "<br>\n";
-        //echo 'Ysize= ' . $yw  . "<br>\n";
         
         fseek($fp, $ScalePos);
         $dataBytes = fread($fp, 16) ;
@@ -1045,8 +832,6 @@ public function GetPolygonForLine($pixelY,$polyMsg)
         $this->minlon = $locval['val4'];
         $this->maxlon = $locval['val4']+$xw*$dval['val1'];
         $this->minlat = $locval['val5']-$yw*$dval['val2'];
-//        echo 'Xsize= ' . $xw  . ' MinLon=' . $locval['val4'] . ' MaxLon=' . $this->maxlon . "<br>\n";
-//        echo 'Ysize= ' . $yw  . ' MinLat=' . $this->minlat . ' MaxLat=' . $locval['val5'] . "<br>\n";
          
         $this->fileName = $fileName;
         $this->fp = $fp;
@@ -1063,8 +848,6 @@ public function GetPolygonForLine($pixelY,$polyMsg)
         
         $LEN_DATA = 2;             // the number of bytes containing each item of elevation data
                                    // ( = BitsPerSample tag value / 8)
-//        echo 'Col X = ' . $col . "<br>\n";
-//        echo 'Row Y = ' . $row . "<br>\n";
         $dataOffset = $this->stripOffsets;
         fseek($this->fp, $dataOffset, SEEK_SET);
         $dataBytes = fread($this->fp, self::LEN_OFFSET);
@@ -1072,17 +855,8 @@ public function GetPolygonForLine($pixelY,$polyMsg)
         $dataStart = $data['dataOffset'];
        
         // find the location of the required data row in the StripOffsets data
-        //$dataOffset = $this->stripOffsets + ($row * self::LEN_OFFSET);
-        //fseek($this->fp, $dataOffset);
-        //$dataBytes = fread($this->fp, self::LEN_OFFSET);
-        //$data = unpack('VdataOffset', $dataBytes);
-        // this is the offset of the 1st column in the required data row
-        //$firstColOffset = $data['dataOffset'];
-        // now work out the required column offset relative to the 1st column
-        //$requiredColOffset = $col * $LEN_DATA;
         $firstColOffset = $dataStart + ($row * $this->numDataCols + $col) * $LEN_DATA;
         // combine the two and read the elevation data at that address
-        //fseek($this->fp, $firstColOffset + $requiredColOffset);
         fseek($this->fp, $firstColOffset);
         $dataBytes = fread($this->fp, $LEN_DATA);
         $data = unpack('spixval', $dataBytes);
