@@ -59,6 +59,7 @@ INSTALLED_APPS = (
     'registration',
     'crispy_forms',
     'django_php',
+    'rest_framework.authtoken',
 
     'ckeditor',
     'ckeditor_uploader',

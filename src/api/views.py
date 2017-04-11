@@ -12,6 +12,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
+from rest_framework.authtoken.models import Token
 
 from core.utils import (validate_status, write_log, get_path_folder_run, execute_fe_command)
 from gsi.models import Run, RunStep, CardSequence, OrderedCardItem, SubCardItem
@@ -242,16 +243,20 @@ def update_run(request, run_id):
     return Response(data, status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 @authentication_classes((SessionAuthentication, BasicAuthentication))
 @permission_classes((IsAuthenticated,))
-def api_gsi_maps(request):
-    """API to get ready card images."""
+def api_datasets(request):
+    """API to get data from the terraserver."""
 
     data = {}
     path_to_map_images = '/home/gsi/Web_GeoChart/GSiMaps/png'
     root_url_gsimap = 'http://indy41.epcc.ed.ac.uk/'
     url_status = status.HTTP_200_OK
+    
+    token = Token.objects.create(user=request.user)
+    
+    print 'token.key ============================= ', token.key
 
     if request.GET:
         data_get = request.GET

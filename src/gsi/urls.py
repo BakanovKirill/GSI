@@ -171,16 +171,16 @@ urlpatterns = [
 	url(r'^reset/done/$', 'django.contrib.auth.views.password_reset_complete', name='password_reset_complete'),
 
 
-	# API
-	# url(r'^step/(?P<step_id>\d+)/$', 'api.views.update_step', name='update_step'),
-	# url(r'^run/(?P<run_id>\d+\.\d+\.\d+\.\d+\.\d+)/$', 'api.views.update_run',
-	#	 name='update_run'),
-
-	# api for the execute runs
-	url(r'^run/(?P<run_id>\w+\.\w+\.\w+\.\w+\.\w+)/$', 'api.views.update_run', name='update_run'),
-	# api for the gsi
-	url(r'^api/gsi-maps', 'api.views.api_gsi_maps', name='api_gsi_maps'),
-	url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+	# # API
+	# # url(r'^step/(?P<step_id>\d+)/$', 'api.views.update_step', name='update_step'),
+	# # url(r'^run/(?P<run_id>\d+\.\d+\.\d+\.\d+\.\d+)/$', 'api.views.update_run',
+	# #	 name='update_run'),
+	#
+	# # api for the execute runs
+	# url(r'^run/(?P<run_id>\w+\.\w+\.\w+\.\w+\.\w+)/$', 'api.views.update_run', name='update_run'),
+	# # api for the gsi
+	# url(r'^api/gsi-maps', 'api.views.api_gsi_maps', name='api_gsi_maps'),
+	# url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
 	# django-ckeditor
 	url(r'^ckeditor/', include('ckeditor_uploader.urls')),
@@ -190,6 +190,7 @@ urlpatterns += [
 	url(r'^wiki/', include('articles.urls')),
 	url(r'^cards/', include('cards.urls')),
 	url(r'^customer/', include('customers.urls')),
+	url(r'^api/', include('api.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
