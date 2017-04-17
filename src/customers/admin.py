@@ -58,7 +58,7 @@ class CustomerPolygonsAdmin(admin.ModelAdmin):
     
     
 class DataTerraserverAdmin(admin.ModelAdmin):
-    list_display = ('name', 'user', 'shapefile', 'parameter', 'transaction_id')
+    list_display = ('name', 'user', 'shapefile', 'shapefile_link', 'parameter', 'transaction_id')
     search_fields = ['user', 'shapefile']
     list_filter = ('user', 'shapefile')
 

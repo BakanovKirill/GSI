@@ -1714,7 +1714,7 @@ def customer_section_php(request):
     log_delete_file.write('FILE NAME: '+result_f_name+'\n')
     #######################
     
-    print 'tmp_file_path ============================== ', tmp_file_path
+    # print 'tmp_file_path ============================== ', tmp_file_path
     
     # $latlist = '48.88672158743591,48.86956150482169,48.84019508397442';
     # $lonlist = '-89.83619749546051,-89.57595884799957,-89.75036680698395';

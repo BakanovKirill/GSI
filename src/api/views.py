@@ -23,6 +23,7 @@ from core.utils import (validate_status, write_log, get_path_folder_run, execute
 from gsi.models import Run, RunStep, CardSequence, OrderedCardItem, SubCardItem
 from gsi.settings import EXECUTE_FE_COMMAND, KML_PATH
 from cards.models import CardItem
+from customers.models import CustomerPolygons, DataTerraserver
 
 
 def is_finished(run_id, card_id, cur_counter, last, run_parallel):
@@ -283,12 +284,13 @@ def update_run(request, run_id):
 @api_view(['GET', 'POST'])
 @authentication_classes((SessionAuthentication, BasicAuthentication))
 @permission_classes((IsAuthenticated,))
-def api_datasets(request):
+def api_terraserver(request):
     """API to get data from the terraserver."""
 
     data = {}
     shapefile_name = ''
     customer = request.user
+    data_terraserver = DataTerraserver.objects.none()
     
     
     path_to_map_images = '/home/gsi/Web_GeoChart/GSiMaps/png'
@@ -309,6 +311,7 @@ def api_datasets(request):
         if data_get.get('shapefile', ''):
             data['shapefile'] = data_get.get('shapefile', '')
             shapefile_name = data['shapefile'].split('/')[-1]
+            kml_name = shapefile_name.split('.kml')[0]
             print 'data[shapefile] ============================= ', data['shapefile']
             
             new_shapefile_name = KML_PATH + '/' + shapefile_name
@@ -317,18 +320,35 @@ def api_datasets(request):
             
             url = data['shapefile']
             urllib.urlretrieve(url, new_shapefile_name)
+            
+            data_terraserver, created = DataTerraserver.objects.update_or_create(
+                user=customer,
+                shapefile_link=data['shapefile'],
+                shapefile=shapefile_name)
+            
+            obj, created = CustomerPolygons.objects.update_or_create(
+                user=customer,
+                name=kml_name,
+                kml_name=shapefile_name,
+                kml_path=new_shapefile_name
+            )
         else:
             data['message error shapefile'] = 'Invalid or missing the shapefile in the request.'
             url_status = status.HTTP_400_BAD_REQUEST
             
         if data_get.get('param', ''):
             data['param'] = data_get.get('param', '')
+            print 'param ============================= ', data['param']
+            data_terraserver.parameter = data['param']
+            data_terraserver.save()
         else:
             data['message error param'] = 'Invalid or missing the parameter in the request.'
             url_status = status.HTTP_400_BAD_REQUEST
             
         if data_get.get('transaction_id', ''):
             data['transaction_id'] = data_get.get('transaction_id', '')
+            data_terraserver.transaction_id = data['transaction_id']
+            data_terraserver.save()
         else:
             data['message error transaction_id'] = 'Invalid or missing the transaction ID in the request.'
             url_status = status.HTTP_400_BAD_REQUEST
@@ -383,3 +403,12 @@ def api_datasets(request):
         url_status = status.HTTP_400_BAD_REQUEST
 
     return Response(data, status=url_status)
+    
+    
+@api_view(['GET', 'POST'])
+@authentication_classes((SessionAuthentication, BasicAuthentication))
+@permission_classes((IsAuthenticated,))
+def api_datasets(request):
+    """API to get data from the terraserver."""
+    
+    pass

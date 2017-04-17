@@ -101,6 +101,7 @@ class CustomerPolygons(models.Model):
 class DataTerraserver(models.Model):
     name = models.CharField(max_length=300, blank=True, null=True)
     user = models.ForeignKey(User, verbose_name='User', blank=True, null=True)
+    shapefile_link = models.CharField(max_length=250, blank=True, null=True)
     shapefile = models.CharField(max_length=250, blank=True, null=True)
     parameter = models.CharField(max_length=250, blank=True, null=True)
     transaction_id = models.CharField(max_length=250, blank=True, null=True)
