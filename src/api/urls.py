@@ -14,7 +14,9 @@ urlpatterns = [
 	url(r'^run/(?P<run_id>\w+\.\w+\.\w+\.\w+\.\w+)/$', 'api.views.update_run', name='update_run'),
 	# api for the gsi
 	# url(r'^snippets/$', views.snippet_list),
-	url(r'^', 'api.views.api_terraserver', name='api_terraserver'),
+	
 	url(r'^datasets', 'api.views.api_datasets', name='api_datasets'),
 	url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+	
+	url(r'^', 'api.views.api_terraserver', name='api_terraserver'),
 ]

@@ -1,17 +1,17 @@
 from rest_framework import serializers
 
-from customers.models import DataTerraserver
+from customers.models import DataTerraserver, DataSet, CustomerAccess
 
 
-class DataTerraserverSerializer(serializers.Serializer):
-    shapefile = serializers.CharField(max_length=250)
-    parameter = serializers.CharField(max_length=250)
-    transaction_id = serializers.CharField(max_length=250)
+class DataSetSerializer(serializers.HyperlinkedModelSerializer):
+    name = serializers.CharField(max_length=250)
+    description = serializers.CharField(max_length=250)
+    results_directory = serializers.CharField(max_length=250)
     
     class Meta:
-		model = DataTerraserver
+		model = DataSet
 		fields = (
-			'shapefile',
-			'parameter',
-			'transaction_id'
+			'name',
+			'description',
+			'results_directory'
 		)

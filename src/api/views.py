@@ -23,7 +23,8 @@ from core.utils import (validate_status, write_log, get_path_folder_run, execute
 from gsi.models import Run, RunStep, CardSequence, OrderedCardItem, SubCardItem
 from gsi.settings import EXECUTE_FE_COMMAND, KML_PATH
 from cards.models import CardItem
-from customers.models import CustomerPolygons, DataTerraserver
+from customers.models import CustomerPolygons, DataTerraserver, DataSet, CustomerAccess
+from api.serializers import DataSetSerializer
 
 
 def is_finished(run_id, card_id, cur_counter, last, run_parallel):
@@ -405,10 +406,53 @@ def api_terraserver(request):
     return Response(data, status=url_status)
     
     
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 @authentication_classes((SessionAuthentication, BasicAuthentication))
 @permission_classes((IsAuthenticated,))
 def api_datasets(request):
     """API to get data from the terraserver."""
     
-    pass
+    from rest_framework.renderers import JSONRenderer
+    from rest_framework.parsers import JSONParser
+    
+    # data_sets = DataSet.objects.filter()
+    # data = DataSet.objects.none()
+    data = {}
+    
+    serializer_class = DataSetSerializer
+    data_sets_id = []
+    url_status = status.HTTP_200_OK
+    
+    # Entry.objects.filter(id__in=[1, 3, 4])
+    customer_access = CustomerAccess.objects.get(user=request.user)
+    data_sets = customer_access.data_set.all()
+    
+    for ds in data_sets:
+        data_inside = {}
+        data_inside['id'] = ds.id
+        data_inside['user'] = str(request.user)
+        
+        data_inside['name'] = ds.name
+        data_inside['description'] = ds.description
+        data[ds.id] = data_inside
+        
+    # data = DataSet.objects.all()
+    #
+    # serializer = DataSetSerializer(data[0])
+    # serializer.data
+    #
+    # # content = JSONRenderer().render(serializer.data)
+    # data = JSONParser().parse(serializer.data)
+    
+    
+    print 'customer_access data_sets ============================== ', data
+    
+    # for obj in data_sets:
+    #     data_sets_id.append(obj.data_set.id)
+    
+    # queryset = DataSet.objects.
+    
+    return Response(data, status=url_status)
+    
+        
+        
