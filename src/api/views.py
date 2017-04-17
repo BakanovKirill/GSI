@@ -2,9 +2,13 @@
 from datetime import datetime
 from subprocess import Popen
 import os
+import urllib
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
+from django.core.mail import send_mail
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -13,10 +17,11 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
+from rest_framework.parsers import JSONParser
 
 from core.utils import (validate_status, write_log, get_path_folder_run, execute_fe_command)
 from gsi.models import Run, RunStep, CardSequence, OrderedCardItem, SubCardItem
-from gsi.settings import EXECUTE_FE_COMMAND
+from gsi.settings import EXECUTE_FE_COMMAND, KML_PATH
 from cards.models import CardItem
 
 
@@ -64,6 +69,38 @@ def set_state_fail(obj, state):
     if obj.state != 'fail':
         obj.state = state
         obj.save()
+        
+        
+# def send_simple_message():
+#     import requests
+#     return requests.get(
+#         "https://api.mailgun.net/v3/domains/indy4.epcc.ed.ac.uk",
+#         auth=("api", "key-2f50cd188fd70950e5af3c9cae9aa534"))
+        
+        
+    # import requests
+    # return requests.post(
+    #     "https://api.mailgun.net/v3/indy4.epcc.ed.ac.uk",
+    #     auth=("api", "key-2f50cd188fd70950e5af3c9cae9aa534"),
+    #     data={"from": "Excited User <mailgun@indy4.epcc.ed.ac.uk>",
+    #           "to": ["favorite.69@mail.ru",],
+    #           "subject": "Hello 369",
+    #           "text": "NEW Testing some Mailgun awesomness!"})
+    
+    
+    # import smtplib
+    # from email.mime.text import MIMEText
+    #
+    # msg = MIMEText('Testing some Mailgun awesomness')
+    # msg['Subject'] = "Hello"
+    # msg['From']    = "artgrem@gmail.com"
+    # msg['To']      = "favorite.69@mail.ru"
+    #
+    # s = smtplib.SMTP('smtp.mailgun.org', 587)
+    #
+    # s.login('postmaster@indy4.epcc.ed.ac.uk', '3050e323a97e7cd65d7ac1c760f51de1')
+    # s.sendmail(msg['From'], msg['To'], msg.as_string())
+    # s.quit()
 
 
 @api_view(['GET'])
@@ -250,52 +287,99 @@ def api_datasets(request):
     """API to get data from the terraserver."""
 
     data = {}
+    shapefile_name = ''
+    customer = request.user
+    
+    
     path_to_map_images = '/home/gsi/Web_GeoChart/GSiMaps/png'
     root_url_gsimap = 'http://indy41.epcc.ed.ac.uk/'
     url_status = status.HTTP_200_OK
     
-    token = Token.objects.create(user=request.user)
+    # token = Token.objects.get(user=request.user)
+    # print 'token.key ============================= ', token.key
     
-    print 'token.key ============================= ', token.key
+    print 'customer ============================= ', customer
 
     if request.GET:
         data_get = request.GET
+        # data = JSONParser().parse(request)
+        
+        # print 'data =================== ', data
 
-        if data_get.get('param1', ''):
-            data['param 1'] = data_get.get('param1', '')
+        if data_get.get('shapefile', ''):
+            data['shapefile'] = data_get.get('shapefile', '')
+            shapefile_name = data['shapefile'].split('/')[-1]
+            print 'data[shapefile] ============================= ', data['shapefile']
+            
+            new_shapefile_name = KML_PATH + '/' + shapefile_name
+            
+            print 'new_shapefile_name ============================= ', new_shapefile_name
+            
+            url = data['shapefile']
+            urllib.urlretrieve(url, new_shapefile_name)
         else:
-            data['message error param1'] = 'Invalid or missing the param1 in the request GET.'
+            data['message error shapefile'] = 'Invalid or missing the shapefile in the request.'
+            url_status = status.HTTP_400_BAD_REQUEST
+            
+        if data_get.get('param', ''):
+            data['param'] = data_get.get('param', '')
+        else:
+            data['message error param'] = 'Invalid or missing the parameter in the request.'
+            url_status = status.HTTP_400_BAD_REQUEST
+            
+        if data_get.get('transaction_id', ''):
+            data['transaction_id'] = data_get.get('transaction_id', '')
+        else:
+            data['message error transaction_id'] = 'Invalid or missing the transaction ID in the request.'
             url_status = status.HTTP_400_BAD_REQUEST
 
-        if data_get.get('param2', ''):
-            data['param 2'] = data_get.get('param2', '')
-        else:
-            data['message error param2'] = 'Invalid or missing the param2 in the request GET.'
-            url_status = status.HTTP_400_BAD_REQUEST
-
-        if data_get.get('param3', ''):
-            data['param 3'] = data_get.get('param3', '')
-        else:
-            data['message error param3'] = 'Invalid or missing the param3 in the request GET.'
-            url_status = status.HTTP_400_BAD_REQUEST
-
+        # send mail
         if url_status == status.HTTP_200_OK:
-            try:
-                root, dirs, files = os.walk(path_to_map_images).next()
-                data['results'] = []
+            send_mail('Subject here', 'Here is the message.', 'artgrem@gmail.com',
+            ['artgrem@gmail.com'], fail_silently=False)
+        
+        # send_simple_message()
+        
+        # '''send email via mailgun'''
+        # subject = "Hello, its me"
+        # text_content = "I was wondering if after all these years"
+        # sender = "artgrem@gmail.com"
+        # receipient = "artgrem@gmail.com"
+        # msg = EmailMultiAlternatives(subject, text_content, sender, [receipient])
+        # respone = msg.send()
+        
+        # artgrem@gmail.com
 
-                for f in files:
-                    dict_tmp = {}
-                    file_without_ext = f.split('.png')[0]
-                    dict_tmp['file'] = f
-                    dict_tmp['url'] = root_url_gsimap + 'GSiMap.php?q=images/{0}'.format(file_without_ext)
-                    dict_tmp['description'] = 'a brief description of the map'
-                    data['results'].append(dict_tmp)
-            except Exception, e:
-                data['message error'] = 'No such file or directory: {0}'.format(path_to_map_images)
-                url_status = status.HTTP_500_INTERNAL_SERVER_ERROR
+        
+
+        # if url_status == status.HTTP_200_OK:
+        #     try:
+        #         root, dirs, files = os.walk(path_to_map_images).next()
+        #         data['results'] = []
+        #
+        #         for f in files:
+        #             dict_tmp = {}
+        #             file_without_ext = f.split('.png')[0]
+        #             dict_tmp['file'] = f
+        #             dict_tmp['url'] = root_url_gsimap + 'GSiMap.php?q=images/{0}'.format(file_without_ext)
+        #             dict_tmp['description'] = 'a brief description of the map'
+        #             data['results'].append(dict_tmp)
+        #     except Exception, e:
+        #         data['message error'] = 'No such file or directory: {0}'.format(path_to_map_images)
+        #         url_status = status.HTTP_500_INTERNAL_SERVER_ERROR
+    # elif request.POST:
+    #     data_post = request.POST
+    #     data = JSONParser().parse(request)
+    #
+    #     print 'shapefile =================== ', shapefile
+    #
+    #     if data_post.get('shapefile', ''):
+    #
+    #         print 'shapefile =================== ', shapefile
+    #         url_status = status.HTTP_200_OK
+        # return Response("ok")
     else:
-        data['message error'] = 'Invalid or missing the parameters for request GET.'
+        data['message error'] = 'Invalid or missing the parameters for request.'
         url_status = status.HTTP_400_BAD_REQUEST
 
     return Response(data, status=url_status)

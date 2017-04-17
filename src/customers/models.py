@@ -96,3 +96,22 @@ class CustomerPolygons(models.Model):
 
     def __unicode__(self):
         return u"{0}_{1}".format(self.user, self.name)
+        
+        
+class DataTerraserver(models.Model):
+    name = models.CharField(max_length=300, blank=True, null=True)
+    user = models.ForeignKey(User, verbose_name='User', blank=True, null=True)
+    shapefile = models.CharField(max_length=250, blank=True, null=True)
+    parameter = models.CharField(max_length=250, blank=True, null=True)
+    transaction_id = models.CharField(max_length=250, blank=True, null=True)
+    
+    def save(self, *args, **kwargs):
+        self.name = str(self.user) + '_' + str(self.shapefile)
+        super(DataTerraserver, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural = 'Data from Terraserver'
+
+    def __unicode__(self):
+        return u"{0}".format(self.name)
+    
