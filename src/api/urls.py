@@ -15,10 +15,11 @@ urlpatterns = [
 	# api for the gsi
 	# url(r'^snippets/$', views.snippet_list),
 	
+	url(r'^terraserver', 'api.views.terraserver', name='terraserver'),
 	url(r'^datasets', 'api.views.datasets_list', name='datasets_list'),
 	
 	url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 	
-	# url(r'^', 'api.views.terraserver', name='terraserver'),
+	
 	url(r'^dataset/(?P<ds_id>\w+)/$', 'api.views.dataset', name='dataset'),
 ]
