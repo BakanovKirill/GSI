@@ -10,6 +10,16 @@ from log.logger import log_it
 from core.utils import update_list_files
 
 
+from django.conf import settings
+from rest_framework.authtoken.models import Token
+
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
+
+
 @receiver(post_save, sender=Tile)
 def added_update_area_for_each_tile(sender, instance, **kwargs):
     """**When created new Tile object then creating a new Area object

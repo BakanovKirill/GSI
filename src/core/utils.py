@@ -564,7 +564,7 @@ def make_run(run_base, user):
 		# record in the log model of gsi app path to script
 		log_name = '{0}_{1}.log'.format(run.id, first_script['card'].id)
 		path_log = first_script['path_runs_logs']
-		write_log(log_name, run, path_log, file_message_error)
+		write_log(log_name, run, path_log, message=file_message_error)
 		
 		####################### write log file
 		log_file = '/home/gsi/LOGS/make_run.log'
@@ -744,7 +744,7 @@ def create_scripts(run, sequence, card, step):
 	}
 
 
-def write_log(log_name, run, path_log, message):
+def write_log(log_name, run, path_log, message=''):
 	"""**The method writes a Log model GSI app.**"""
 
 	from gsi.models import Log

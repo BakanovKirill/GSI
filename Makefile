@@ -90,3 +90,9 @@ test_cards:
 
 req:
 	fab requirements
+
+set_local_user_token:
+	fab lokal_set_user_token
+	
+set_dev_user_token:
+	fab dev_set_user_token

@@ -58,6 +58,15 @@ def fill_name_carditem():
         run("bin/django fill_name_for_carditem_card")
 
 
+def lokal_set_user_token():
+    local("bin/django set_user_token")
+
+
+def dev_set_user_token():
+    with cd(REMOTE_CODE_DIR):
+        run("bin/django set_user_token")
+
+
 @hosts(GSI_APP_SERVER)
 def update_dev_db():
     """

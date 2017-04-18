@@ -19,12 +19,15 @@ from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 from rest_framework.parsers import JSONParser
 
+from django.contrib.auth.models import User
+from rest_framework import generics
+
 from core.utils import (validate_status, write_log, get_path_folder_run, execute_fe_command)
 from gsi.models import Run, RunStep, CardSequence, OrderedCardItem, SubCardItem
 from gsi.settings import EXECUTE_FE_COMMAND, KML_PATH
 from cards.models import CardItem
 from customers.models import CustomerPolygons, DataTerraserver, DataSet, CustomerAccess
-from api.serializers import DataSetSerializer
+from api.serializers import DataSetSerializer, UserSerializer
 
 
 def is_finished(run_id, card_id, cur_counter, last, run_parallel):
@@ -71,6 +74,11 @@ def set_state_fail(obj, state):
     if obj.state != 'fail':
         obj.state = state
         obj.save()
+        
+        
+class UserListAPIView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
         
         
 # def send_simple_message():
