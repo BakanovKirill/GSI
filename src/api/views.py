@@ -13,11 +13,12 @@ from django.core.mail import EmailMultiAlternatives
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 from rest_framework.parsers import JSONParser
+from rest_framework import exceptions
 
 from django.contrib.auth.models import User
 from rest_framework import generics
@@ -27,7 +28,7 @@ from gsi.models import Run, RunStep, CardSequence, OrderedCardItem, SubCardItem
 from gsi.settings import EXECUTE_FE_COMMAND, KML_PATH
 from cards.models import CardItem
 from customers.models import CustomerPolygons, DataTerraserver, DataSet, CustomerAccess
-from api.serializers import DataSetSerializer, UserSerializer
+from api.serializers import CustomerPolygonsSerializer, UserSerializer
 
 
 def is_finished(run_id, card_id, cur_counter, last, run_parallel):
@@ -79,6 +80,23 @@ def set_state_fail(obj, state):
 class UserListAPIView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    
+
+@api_view(['POST'])
+@authentication_classes((SessionAuthentication, BasicAuthentication))
+@permission_classes((IsAuthenticated,))
+def external_auth_api(request):
+    url_status = status.HTTP_200_OK
+    content = {'detail': 'Method "GET" not allowed.'}
+    
+    # if request.method == 'POST':
+    #     url_status = status.HTTP_200_OK
+    #     content = {'detail': 'Hello User!'}
+    # else:
+    #     content = {'detail': 'Method "GET" not allowed.'}
+    #     return Response(content, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+    return Response(content, status=url_status)
         
         
 # def send_simple_message():
@@ -290,65 +308,50 @@ def update_run(request, run_id):
     return Response(data, status=status.HTTP_200_OK)
     
     
-@api_view(['GET'])
-@authentication_classes((SessionAuthentication, BasicAuthentication))
-@permission_classes((IsAuthenticated,))
-def datasets_list(request):
-    """API to get data from the terraserver."""
-    
-    from rest_framework.renderers import JSONRenderer
-    from rest_framework.parsers import JSONParser
-    
-    # data_sets = DataSet.objects.filter()
-    # data = DataSet.objects.none()
-    data = {}
-    # The path to are PNG and KML folders
-    scheme = '{0}://'.format(request.scheme)
-    absolute_url_dataset = os.path.join(scheme, request.get_host(), 'api/dataset')
-    
-    # print 'absolute_url ==================================== ', absolute_url_dataset
-    
-    serializer_class = DataSetSerializer
-    data_sets_id = []
-    url_status = status.HTTP_200_OK
-    
-    # Entry.objects.filter(id__in=[1, 3, 4])
-    customer_access = CustomerAccess.objects.get(user=request.user)
-    data_sets = customer_access.data_set.all()
-    
-    for ds in data_sets:
-        data_inside = {}
-        data_inside['url'] = absolute_url_dataset + '/' + str(ds.id)
-        data_inside['user'] = str(request.user)
+# class DataSetList(TokenAuthentication):
+#     def authenticate(self, request):
+#         print 'request ======================== ', request
+#         username = request.META.get('X_USERNAME')
+#         if not username:
+#             return None
+#
+#         try:
+#             user = User.objects.get(username=username)
+#         except User.DoesNotExist:
+#             raise exceptions.AuthenticationFailed('No such user')
+#
+#         return (user, None)
         
-        data_inside['name'] = ds.name
-        data_inside['description'] = ds.description
-        data[ds.id] = data_inside
         
-    # data = DataSet.objects.all()
-    #
-    # serializer = DataSetSerializer(data[0])
-    # serializer.data
-    #
-    # # content = JSONRenderer().render(serializer.data)
-    # data = JSONParser().parse(serializer.data)
-    
-    
-    print 'customer_access data_sets ============================== ', data
-    
-    # for obj in data_sets:
-    #     data_sets_id.append(obj.data_set.id)
-    
-    # queryset = DataSet.objects.
-    
-    return Response(data, status=url_status)
+class CustomerPolygonsList(APIView):
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, format=None):
+    #     snippets = Snippet.objects.all()
+    #    serializer = SnippetSerializer(snippets, many=True)
+    #    return Response(serializer.data)
+        
+        print 'KML_DIRECTORY ======================= ', settings.KML_DIRECTORY
+        queryset = CustomerPolygons.objects.filter(user=request.user).order_by('id')
+        serializer = CustomerPolygonsSerializer(queryset, many=True)
+        # content = serializer_class
+        
+        # content = {
+        #     'user': unicode(request.user),  # `django.contrib.auth.User` instance.
+        #     'auth': unicode(request.auth),  # None
+        # }
+        # print 'request.user ======================== ', request.user
+        print 'request.auth ======================== ', request.auth
+        return Response(serializer.data)
     
     
 @api_view(['GET'])
 @authentication_classes((SessionAuthentication, BasicAuthentication))
 @permission_classes((IsAuthenticated,))
 def dataset(request, ds_id):
-    # print 'ds_id ================================ ', ds_id
+    print 'ds_id ================================ ', ds_id
+    print 'request ================================ ', request
     url_status = status.HTTP_200_OK
     data = DataSet.objects.get(pk=ds_id)
     serializer = DataSetSerializer(data)

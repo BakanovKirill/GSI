@@ -52,7 +52,7 @@ class CustomerInfoPanelAdmin(admin.ModelAdmin):
     
     
 class CustomerPolygonsAdmin(admin.ModelAdmin):
-    list_display = ('user', 'name', 'kml_name', 'kml_path')
+    list_display = ('user', 'name', 'kml_name', 'kml_path', 'url')
     search_fields = ['user', 'name']
     list_filter = ('user', 'name')
     
