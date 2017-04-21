@@ -303,6 +303,9 @@ KML_PATH = os.path.join(BASE_DIR, KML_DIRECTORY)
 TMP_DIRECTORY = 'media/temp_files'
 TMP_PATH = os.path.join(BASE_DIR, TMP_DIRECTORY)
 
+# Attributes
+ATTRIBUTES_NAME = ['Total Area', 'Area total']
+
 # Card Type
 CARD_TYPE = {
     'rftrain': 'RFTrain',

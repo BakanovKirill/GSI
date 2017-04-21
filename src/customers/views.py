@@ -22,15 +22,17 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 
 from customers.models import (Category, ShelfData, DataSet, CustomerAccess,
-                                CustomerInfoPanel, CustomerPolygons)
+                                CustomerInfoPanel, CustomerPolygons, DataPolygons)
 from customers.customers_forms import (CategoryForm, ShelfDataForm, DataSetForm,
                                         CustomerAccessForm, CustomerPolygonsForm)
 from customers.customers_update_create import (category_update_create, shelf_data_update_create,
                                                 data_set_update_create, customer_access_update_create)
 from core.get_post import get_post
 from core.paginations import paginations
-from gsi.settings import (BASE_DIR, RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM, POLYGONS_DIRECTORY, MEDIA_ROOT, TMP_PATH,
-                        DAFAULT_LAT, DAFAULT_LON, PNG_DIRECTORY, PNG_PATH, PROJECTS_PATH, KML_DIRECTORY, KML_PATH)
+from gsi.settings import (BASE_DIR, RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM,
+                        POLYGONS_DIRECTORY, MEDIA_ROOT, TMP_PATH, DAFAULT_LAT,
+                        DAFAULT_LON, PNG_DIRECTORY, PNG_PATH, PROJECTS_PATH,
+                        KML_DIRECTORY, KML_PATH, ATTRIBUTES_NAME)
 
 
 # categorys list
@@ -995,29 +997,43 @@ def getGeoCoord(filename):
     return coord
     
     
-def addPolygonToDB(name, kml_name, user, kml_path):
+def addPolygonToDB(name, kml_name, user, kml_path, url):
+    customer_pol = CustomerPolygons.objects.none()
+    
     if CustomerPolygons.objects.filter(name=name).exists():
         CustomerPolygons.objects.filter(name=name).update(
             name=name,
             kml_name=kml_name,
             user=user,
-            kml_path=kml_path
+            kml_path=kml_path,
+            url=url
         )
+        customer_pol = CustomerPolygons.objects.get(
+                            name=name,
+                            kml_name=kml_name,
+                            user=user,
+                            kml_path=kml_path,
+                            url=url
+                        )
     else:
         customer_pol = CustomerPolygons.objects.create(
                             name=name,
                             kml_name=kml_name,
                             user=user,
-                            kml_path=kml_path
+                            kml_path=kml_path,
+                            url=url
                         )
+                        
+    return customer_pol
     
     
-def createKml(user, filename, info_window):
+def createKml(user, filename, info_window, url):
     # Create KML file for the draw polygon
     kml_filename = str(filename) + '.kml'
     tmp_file = str(user) + '_coord_tmp.txt'
     tmp_path = os.path.join(KML_PATH, tmp_file)
     coord = getGeoCoord(tmp_path)
+    kml_url = url + '/' + kml_filename
     
     # print 'coord ========================== ', coord
     
@@ -1035,7 +1051,9 @@ def createKml(user, filename, info_window):
     kml_path = os.path.join(KML_PATH, kml_filename)
     kml.save(kml_path)
     
-    addPolygonToDB(filename, kml_filename, user, kml_path)
+    polygon = addPolygonToDB(filename, kml_filename, user, kml_path, kml_url)
+    
+    return polygon
     
     
 def getAttributeUnits(user, show_file):
@@ -1366,18 +1384,36 @@ def customer_section(request):
             
             info_window = '''
             <p><b>Area "{0}"</b></p>
-            <p>Total Area: {1} ha</p>
-            <p>{2}: {3} {4}</p>
-            '''.format(area_name, total_area, attribute, tree_count, units)
+            <p>{1}: {2} ha</p>
+            <p>{3}: {4} {5}</p>
+            '''.format(area_name, ATTRIBUTES_NAME[0], total_area, attribute, tree_count, units)
+            
+            value = '{0} ha'.format(total_area)
+            
+            attributes_dict = {
+                ATTRIBUTES_NAME[0]: value,
+                attribute: '{0} {1}'.format(tree_count, units)
+            }
             
             if show_totals and data_post.get('count_hectare', ''):
                 count_hectare = data_post.get('count_hectare', '')
+                count_hectare = count_hectare.replace('\r\n', '')
+                
                 info_window += '''
-                <p>Area total: {0} {1}</p>
-                '''.format(count_hectare, units)
-            
+                <p>{0}: {1} {2}</p>
+                '''.format(ATTRIBUTES_NAME[1], count_hectare, units)
+                value = '{0} {1}'.format(count_hectare, units)
+                attributes_dict[ATTRIBUTES_NAME[1]] = '{0} {1}'.format(count_hectare, units)
+                
             # Create KML file for the draw polygon
-            createKml(request.user, area_name, info_window)
+            cur_polygon = createKml(request.user, area_name, info_window, absolute_kml_url)
+            
+            for attr in attributes_dict:
+                DataPolygons.objects.create(
+                    customer_polygons=cur_polygon,
+                    attribute=attr,
+                    value=attributes_dict[attr]
+                )
         
         if 'add-list-view' in data_post:
             if 'root_filenames[]' in data_post and 'statistics[]' in data_post:

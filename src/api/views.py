@@ -77,28 +77,6 @@ def set_state_fail(obj, state):
         obj.save()
         
         
-class UserListAPIView(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    
-
-@api_view(['POST'])
-@authentication_classes((SessionAuthentication, BasicAuthentication))
-@permission_classes((IsAuthenticated,))
-def external_auth_api(request):
-    url_status = status.HTTP_200_OK
-    content = {'detail': 'Method "GET" not allowed.'}
-    
-    # if request.method == 'POST':
-    #     url_status = status.HTTP_200_OK
-    #     content = {'detail': 'Hello User!'}
-    # else:
-    #     content = {'detail': 'Method "GET" not allowed.'}
-    #     return Response(content, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    
-    return Response(content, status=url_status)
-        
-        
 # def send_simple_message():
 #     import requests
 #     return requests.get(
@@ -307,7 +285,30 @@ def update_run(request, run_id):
 
     return Response(data, status=status.HTTP_200_OK)
     
+
+# Example
+class UserListAPIView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+        
+
+@api_view(['POST'])
+@authentication_classes((SessionAuthentication, BasicAuthentication))
+@permission_classes((IsAuthenticated,))
+def external_auth_api(request):
+    url_status = status.HTTP_200_OK
+    content = {'detail': 'Method "GET" not allowed.'}
     
+    # if request.method == 'POST':
+    #     url_status = status.HTTP_200_OK
+    #     content = {'detail': 'Hello User!'}
+    # else:
+    #     content = {'detail': 'Method "GET" not allowed.'}
+    #     return Response(content, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+    return Response(content, status=url_status)
+        
+        
 # class DataSetList(TokenAuthentication):
 #     def authenticate(self, request):
 #         print 'request ======================== ', request
@@ -328,14 +329,8 @@ class CustomerPolygonsList(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, format=None):
-    #     snippets = Snippet.objects.all()
-    #    serializer = SnippetSerializer(snippets, many=True)
-    #    return Response(serializer.data)
-        
-        print 'KML_DIRECTORY ======================= ', settings.KML_DIRECTORY
         queryset = CustomerPolygons.objects.filter(user=request.user).order_by('id')
         serializer = CustomerPolygonsSerializer(queryset, many=True)
-        # content = serializer_class
         
         # content = {
         #     'user': unicode(request.user),  # `django.contrib.auth.User` instance.
