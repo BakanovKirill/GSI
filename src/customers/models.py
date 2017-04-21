@@ -16,8 +16,18 @@ class Category(models.Model):
 
 class ShelfData(models.Model):
     category = models.ForeignKey('Category')
-    attribute_name = models.CharField(max_length=100, blank=True, null=True, verbose_name='Attribute Names')
-    root_filename = models.CharField(max_length=100, blank=True, null=True, verbose_name='Root Filenames')
+    attribute_name = models.CharField(
+                        max_length=100,
+                        blank=True,
+                        null=True,
+                        verbose_name='Attribute Names'
+                    )
+    root_filename = models.CharField(
+                        max_length=100,
+                        blank=True,
+                        null=True,
+                        verbose_name='Root Filenames'
+                    )
     units = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     show_totals = models.BooleanField(default=True)
@@ -54,7 +64,11 @@ class DataSet(models.Model):
 
 class CustomerAccess(models.Model):
     user = models.ForeignKey(User, verbose_name='Customer Name')
-    data_set = models.ManyToManyField(DataSet, related_name='customer_access', verbose_name='DataSets')
+    data_set = models.ManyToManyField(
+                    DataSet,
+                    related_name='customer_access',
+                    verbose_name='DataSets'
+                )
 
     def get_data_sets(self):
         return '; '.join([p.name for p in self.data_set.all()])
@@ -117,4 +131,15 @@ class DataTerraserver(models.Model):
 
     def __unicode__(self):
         return u"{0}".format(self.name)
+        
+        
+class DataPolygons(models.Model):
+    customer_polygons = models.ForeignKey(
+                            CustomerPolygons,
+                            verbose_name='Customer Polygons',
+                            blank=True, null=True
+                        )
+    attribute = models.CharField(max_length=250, blank=True, null=True)
+    value = models.CharField(max_length=250, blank=True, null=True)
+    
     

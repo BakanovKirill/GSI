@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 from customers.models import (Category, ShelfData, DataSet, CustomerAccess,
-                            CustomerInfoPanel, CustomerPolygons, DataTerraserver)
+                            CustomerInfoPanel, CustomerPolygons, DataTerraserver,
+                            DataPolygons)
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -61,6 +62,12 @@ class DataTerraserverAdmin(admin.ModelAdmin):
     list_display = ('name', 'user', 'shapefile', 'shapefile_link', 'parameter', 'transaction_id')
     search_fields = ['user', 'shapefile']
     list_filter = ('user', 'shapefile')
+    
+    
+class DataPolygonsAdmin(admin.ModelAdmin):
+    list_display = ('customer_polygons', 'attribute', 'value')
+    search_fields = ['customer_polygons', 'attribute']
+    list_filter = ('customer_polygons', 'attribute')
 
 
 admin.site.register(Category, CategoryAdmin)
@@ -70,3 +77,4 @@ admin.site.register(CustomerAccess, CustomerAccessAdmin)
 admin.site.register(CustomerInfoPanel, CustomerInfoPanelAdmin)
 admin.site.register(CustomerPolygons, CustomerPolygonsAdmin)
 admin.site.register(DataTerraserver, DataTerraserverAdmin)
+admin.site.register(DataPolygons, DataPolygonsAdmin)
