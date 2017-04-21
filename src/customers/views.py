@@ -1348,6 +1348,11 @@ def customer_section(request):
                 CustomerPolygons, kml_name=kml_file)
             os.remove(cur_area.kml_path)
             cur_area.delete()
+            cur_data_polygons = DataPolygons.objects.filter(
+                                    customer_polygons=cur_area
+                                    )
+            for data_pol in cur_data_polygons:
+                data_pol.delete()
         
             return HttpResponseRedirect(u'%s' % (reverse('customer_section')))
                     
@@ -1409,11 +1414,19 @@ def customer_section(request):
             cur_polygon = createKml(request.user, area_name, info_window, absolute_kml_url)
             
             for attr in attributes_dict:
-                DataPolygons.objects.create(
-                    customer_polygons=cur_polygon,
-                    attribute=attr,
-                    value=attributes_dict[attr]
-                )
+                if not DataPolygons.objects.filter(customer_polygons=cur_polygon,
+                    attribute=attr).exists():
+                        DataPolygons.objects.create(
+                            customer_polygons=cur_polygon,
+                            attribute=attr,
+                            value=attributes_dict[attr]
+                        )
+                elif DataPolygons.objects.filter(customer_polygons=cur_polygon,
+                    attribute=attr).exists():
+                        DataPolygons.objects.filter(
+                            customer_polygons=cur_polygon,
+                            attribute=attr
+                        ).update(value=attributes_dict[attr])
         
         if 'add-list-view' in data_post:
             if 'root_filenames[]' in data_post and 'statistics[]' in data_post:
