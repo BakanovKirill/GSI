@@ -997,7 +997,7 @@ def getGeoCoord(filename):
     return coord
     
     
-def addPolygonToDB(name, kml_name, user, kml_path, url):
+def addPolygonToDB(name, kml_name, user, kml_path, kml_url):
     customer_pol = CustomerPolygons.objects.none()
     
     if CustomerPolygons.objects.filter(name=name).exists():
@@ -1006,14 +1006,14 @@ def addPolygonToDB(name, kml_name, user, kml_path, url):
             kml_name=kml_name,
             user=user,
             kml_path=kml_path,
-            url=url
+            kml_url=kml_url
         )
         customer_pol = CustomerPolygons.objects.get(
                             name=name,
                             kml_name=kml_name,
                             user=user,
                             kml_path=kml_path,
-                            url=url
+                            kml_url=kml_url
                         )
     else:
         customer_pol = CustomerPolygons.objects.create(
@@ -1021,7 +1021,7 @@ def addPolygonToDB(name, kml_name, user, kml_path, url):
                             kml_name=kml_name,
                             user=user,
                             kml_path=kml_path,
-                            url=url
+                            kml_url=kml_url
                         )
                         
     return customer_pol
