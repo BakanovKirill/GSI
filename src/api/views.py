@@ -19,6 +19,7 @@ from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 from rest_framework.parsers import JSONParser
 from rest_framework import exceptions
+from rest_framework.pagination import PageNumberPagination
 
 from django.contrib.auth.models import User
 from rest_framework import generics
@@ -27,8 +28,8 @@ from core.utils import (validate_status, write_log, get_path_folder_run, execute
 from gsi.models import Run, RunStep, CardSequence, OrderedCardItem, SubCardItem
 from gsi.settings import EXECUTE_FE_COMMAND, KML_PATH
 from cards.models import CardItem
-from customers.models import CustomerPolygons, DataTerraserver, DataSet, CustomerAccess
-from api.serializers import CustomerPolygonsSerializer, UserSerializer
+from customers.models import CustomerPolygons, DataTerraserver, DataSet, CustomerAccess, DataPolygons
+from api.serializers import CustomerPolygonsSerializer, UserSerializer, DataPolygonsSerializer
 
 
 def is_finished(run_id, card_id, cur_counter, last, run_parallel):
@@ -293,7 +294,7 @@ class UserListAPIView(generics.ListAPIView):
         
 
 @api_view(['POST'])
-@authentication_classes((SessionAuthentication, BasicAuthentication))
+@authentication_classes((SessionAuthentication, BasicAuthentication, TokenAuthentication))
 @permission_classes((IsAuthenticated,))
 def external_auth_api(request):
     url_status = status.HTTP_200_OK
@@ -327,18 +328,27 @@ def external_auth_api(request):
 class CustomerPolygonsList(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
+    data = None
 
     def get(self, request, format=None):
-        queryset = CustomerPolygons.objects.filter(user=request.user).order_by('id')
-        serializer = CustomerPolygonsSerializer(queryset, many=True)
+        print 'request.auth ======================== ', request.auth
+        
+        if request.auth:
+            queryset = CustomerPolygons.objects.filter(user=request.user).order_by('id')
+            serializer = CustomerPolygonsSerializer(queryset, many=True)
+            content = serializer.data
+        else:
+            content = {
+                'auth': 'Need YOUR ACCESS TOKEN',
+            }
         
         # content = {
         #     'user': unicode(request.user),  # `django.contrib.auth.User` instance.
         #     'auth': unicode(request.auth),  # None
         # }
         # print 'request.user ======================== ', request.user
-        print 'request.auth ======================== ', request.auth
-        return Response(serializer.data)
+        
+        return Response(content)
     
     
 @api_view(['GET'])

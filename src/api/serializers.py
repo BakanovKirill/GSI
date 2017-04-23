@@ -1,7 +1,19 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
-from customers.models import CustomerPolygons
+from customers.models import CustomerPolygons, DataPolygons
+
+
+class DataPolygonsSerializer(serializers.ModelSerializer):
+    attribute = serializers.CharField(max_length=250)
+    value = serializers.CharField(max_length=250)
+    
+    class Meta:
+		model = DataPolygons
+		fields = (
+            'attribute',
+            'value',
+		)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -12,8 +24,15 @@ class UserSerializer(serializers.ModelSerializer):
 
 class CustomerPolygonsSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.IntegerField()
+    # item_url = serializers.HyperlinkedIdentityField(view_name='customer_url')
     kml_name = serializers.CharField(max_length=250)
-    url = serializers.CharField(max_length=250)
+    kml_url = serializers.CharField(max_length=250)
+    data_polygons = DataPolygonsSerializer(many=True, read_only=True)
+    # data_polygons = serializers.StringRelatedField(many=True)
+    
+    
+    # tracks = serializers.StringRelatedField(many=True)
+    
     # shelf_data = serializers.SlugRelatedField(
     #     many=True,
     #     read_only=True,
@@ -34,6 +53,10 @@ class CustomerPolygonsSerializer(serializers.HyperlinkedModelSerializer):
 		model = CustomerPolygons
 		fields = (
             'id',
+            # 'item_url',
             'kml_name',
-            'url',
+            'kml_url',
+            'data_polygons',
 		)
+        
+        

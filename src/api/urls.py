@@ -22,7 +22,7 @@ urlpatterns = [
 	url(r'^external/login/', 'api.views.external_auth_api', name='external_auth_api'),
 	url(r'^terraserver', 'api.views.terraserver', name='terraserver'),
 	# url(r'^datasets/', 'api.views.datasets_list', name='datasets_list'),
-	url(r'^polygons/$', CustomerPolygonsList.as_view()),
+	url(r'^polygons/', CustomerPolygonsList.as_view()),
 	
 	url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 	url(r'^api-token-auth/', views.obtain_auth_token),

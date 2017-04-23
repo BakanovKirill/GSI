@@ -147,7 +147,10 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_METADATA_CLASS': 'rest_framework.metadata.SimpleMetadata',
-    'PAGINATE_BY': 10
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGINATE_BY': 2,
+    'PAGE_SIZE': 2
 }
 
 # settings for django-registration-redux

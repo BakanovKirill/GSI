@@ -104,7 +104,7 @@ class CustomerPolygons(models.Model):
     user = models.ForeignKey(User, verbose_name='User', blank=True, null=True)
     kml_name = models.CharField(max_length=150, blank=True, null=True)
     kml_path = models.CharField(max_length=150, blank=True, null=True)
-    url = models.CharField(max_length=150, blank=True, null=True)
+    kml_url = models.CharField(max_length=150, blank=True, null=True)
     
 
     class Meta:
@@ -137,7 +137,8 @@ class DataPolygons(models.Model):
     customer_polygons = models.ForeignKey(
                             CustomerPolygons,
                             verbose_name='Customer Polygons',
-                            blank=True, null=True
+                            blank=True, null=True, related_name='data_polygons',
+                            on_delete=models.CASCADE
                         )
     attribute = models.CharField(max_length=250, blank=True, null=True)
     value = models.CharField(max_length=250, blank=True, null=True)
