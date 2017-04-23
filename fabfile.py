@@ -70,7 +70,7 @@ def dev_set_user_token():
 def lokal_set_url_kml():
     local("bin/django add_kml_url")
     
-
+    
 def dev_set_url_kml():
     with cd(REMOTE_CODE_DIR):
         run("bin/django add_kml_url")

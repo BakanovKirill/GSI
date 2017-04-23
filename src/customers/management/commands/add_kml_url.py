@@ -11,4 +11,3 @@ class Command(BaseCommand):
                 if '/data/work/virtualenvs' in cp.kml_path:
                     cp.url = 'http://127.0.0.1:8000/' + settings.KML_DIRECTORY + '/' + cp.kml_name
                     cp.save()
-                

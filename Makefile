@@ -99,3 +99,6 @@ set_dev_user_token:
 	
 lokal_set_url_kml:
 	fab lokal_set_url_kml
+	
+dev_set_url_kml:
+	fab dev_set_url_kml
