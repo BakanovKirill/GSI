@@ -133,6 +133,7 @@ def update_run(request, run_id):
     log_update_run.write(str(request))
     log_update_run.write('\n')
     log_update_run.write('RUN ID: '+str(run_id))
+    log_update_run.write('\n')
     #######################
 
     data = validate_status(request.query_params.get('status', False))
