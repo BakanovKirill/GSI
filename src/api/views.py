@@ -129,7 +129,10 @@ def update_run(request, run_id):
     log_update_run = open(log_file, 'w+')
     now = datetime.now()
     log_update_run.write('NOW: '+str(now))
-    log_update_run.write('****************************************')
+    log_update_run.write('REQUEST:\n')
+    log_update_run.write(request)
+    log_update_run.write('RUN ID: '+str(run_id))
+    log_update_run.write('*************************************************')
     log_update_run.close()
     #######################
 
