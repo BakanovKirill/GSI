@@ -123,6 +123,14 @@ def update_run(request, run_id):
         * *run_id*: card details. Presented as a string: <run_id>.<card_sequence_id>.<order_card_item_id>.<current_position>.<the_last_card_number>
 
     """
+    
+    ####################### write log file
+    log_file = '/home/gsi/LOGS/update_run.log'
+    log_update_run = open(log_file, 'w+')
+    now = datetime.now()
+    log_update_run.write(now)
+    log_update_run.close()
+    #######################
 
     data = validate_status(request.query_params.get('status', False))
     value_list = str(run_id).split('.')

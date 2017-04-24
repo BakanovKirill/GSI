@@ -567,10 +567,10 @@ def make_run(run_base, user):
 		write_log(log_name, run, path_log, message=file_message_error)
 		
 		####################### write log file
-		log_file = '/home/gsi/LOGS/make_run.log'
-		log_make_run = open(log_file, 'w+')
-		log_make_run.write(file_message_error)
-		log_make_run.close()
+		# log_file = '/home/gsi/LOGS/make_run.log'
+		# log_make_run = open(log_file, 'w+')
+		# log_make_run.write(file_message_error)
+		# log_make_run.close()
 		#######################
 
 	return {'run': run, 'step': step, 'error': message_error}
@@ -582,8 +582,8 @@ def create_scripts(run, sequence, card, step):
 	from gsi.models import HomeVariables as Home
 	
 	####################### write log file
-	log_file = '/home/gsi/LOGS/create_scripts.log'
-	log_create_scripts = open(log_file, 'a+')
+	# log_file = '/home/gsi/LOGS/create_scripts.log'
+	# log_create_scripts = open(log_file, 'a+')
 	#######################
 
 	card_model = None
@@ -657,7 +657,7 @@ def create_scripts(run, sequence, card, step):
 		os.makedirs(path_runs_logs)
 	except OSError, e:
 		print 'Exception OSError ==================================== ', e
-		log_create_scripts.writelines('OSError 1: {0}'.format(e))
+		# log_create_scripts.writelines('OSError 1: {0}'.format(e))
 		pass
 	finally:
 		try:
@@ -728,10 +728,10 @@ def create_scripts(run, sequence, card, step):
 				fd.close()
 		except OSError, e:
 			pass
-			log_create_scripts.writelines('OSError 2: {0}'.format(e))
+			# log_create_scripts.writelines('OSError 2: {0}'.format(e))
 			return False
 			
-	log_create_scripts.close()
+	# log_create_scripts.close()
 
 	return {
 		'script_path': script_path,
