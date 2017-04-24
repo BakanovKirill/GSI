@@ -129,6 +129,7 @@ def update_run(request, run_id):
     log_update_run = open(log_file, 'w+')
     now = datetime.now()
     log_update_run.write('NOW: '+str(now))
+    log_update_run.write('\n')
     log_update_run.write('REQUEST:\n')
     log_update_run.write(str(request))
     log_update_run.write('\n')
@@ -148,8 +149,7 @@ def update_run(request, run_id):
     finished = False
     
     ####################### write log file
-    log_update_run.write('STATUS:\n')
-    log_update_run.write(data['status'])
+    log_update_run.write('STATUS: '+data['status'])
     log_update_run.write('\n')
     #######################
 
