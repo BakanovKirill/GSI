@@ -133,8 +133,6 @@ def update_run(request, run_id):
     log_update_run.write(str(request))
     log_update_run.write('\n')
     log_update_run.write('RUN ID: '+str(run_id))
-    log_update_run.write('*************************************************')
-    log_update_run.close()
     #######################
 
     data = validate_status(request.query_params.get('status', False))
@@ -147,6 +145,12 @@ def update_run(request, run_id):
     cur_counter = last_but_one[0]
     name_sub_card = '{0}_{1}'.format(order_card_item_id, cur_counter)
     finished = False
+    
+    ####################### write log file
+    log_update_run.write('STATUS:\n')
+    log_update_run.write(data['status'])
+    log_update_run.write('\n')
+    #######################
 
     # if the status is valid
     if data['status']:
@@ -296,6 +300,12 @@ def update_run(request, run_id):
             data['message'] = str(e)
     else:
         return Response(data, status=status.HTTP_400_BAD_REQUEST)
+        
+        
+        ####################### write log file
+        log_update_run.write('*************************************************\n')
+        log_update_run.close()
+        #######################
 
     return Response(data, status=status.HTTP_200_OK)
     
