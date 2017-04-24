@@ -128,7 +128,8 @@ def update_run(request, run_id):
     log_file = '/home/gsi/LOGS/update_run.log'
     log_update_run = open(log_file, 'w+')
     now = datetime.now()
-    log_update_run.write(now)
+    log_update_run.write('NOW: '+str(now))
+    log_update_run.write('****************************************')
     log_update_run.close()
     #######################
 
