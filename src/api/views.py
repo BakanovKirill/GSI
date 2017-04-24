@@ -331,8 +331,6 @@ class CustomerPolygonsList(APIView):
     data = None
 
     def get(self, request, format=None):
-        print 'request.auth ======================== ', request.auth
-        
         if request.auth:
             queryset = CustomerPolygons.objects.filter(user=request.user).order_by('id')
             serializer = CustomerPolygonsSerializer(queryset, many=True)
@@ -355,8 +353,8 @@ class CustomerPolygonsList(APIView):
 @authentication_classes((SessionAuthentication, BasicAuthentication))
 @permission_classes((IsAuthenticated,))
 def dataset(request, ds_id):
-    print 'ds_id ================================ ', ds_id
-    print 'request ================================ ', request
+    # print 'ds_id ================================ ', ds_id
+    # print 'request ================================ ', request
     url_status = status.HTTP_200_OK
     data = DataSet.objects.get(pk=ds_id)
     serializer = DataSetSerializer(data)
@@ -383,7 +381,7 @@ def terraserver(request):
     # token = Token.objects.get(user=request.user)
     # print 'token.key ============================= ', token.key
     
-    print 'customer ============================= ', customer
+    # print 'customer ============================= ', customer
 
     if request.GET:
         data_get = request.GET
