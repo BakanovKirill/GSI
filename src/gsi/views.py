@@ -737,6 +737,8 @@ def submit_run(request):
     :Arguments:
         * *request:* The request is sent to the server when processing the page
     """
+    
+    print 'submit_run =========================== '
 
     run_bases = RunBase.objects.all().order_by('-date_modified')
     title = 'Submit a Run'
