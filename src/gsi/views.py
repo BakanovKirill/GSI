@@ -738,7 +738,7 @@ def submit_run(request):
         * *request:* The request is sent to the server when processing the page
     """
     
-    print 'submit_run =========================== '
+    # print 'submit_run =========================== ', request.POST
 
     run_bases = RunBase.objects.all().order_by('-date_modified')
     title = 'Submit a Run'
