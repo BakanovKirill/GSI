@@ -1389,15 +1389,15 @@ def customer_section(request):
             show_totals = shelf_dt.show_totals
             
             info_window += '<h4>Area "{0}" Information</h4>\n'.format(area_name)
-            info_window += '<p align="left"><font size="+5">{0}: {1} ha</p></font>\n'.format(ATTRIBUTES_NAME[0], total_area)
+            info_window += '<p align="left"><font size="+1">{0}: {1} ha</p></font>\n'.format(ATTRIBUTES_NAME[0], total_area)
             
             info_window += '<table border="1" cellspacing="5" cellpadding="5" style="border-collapse:collapse;border:1px solid black;width:100%;">\n'
             info_window += '<thead>\n'
             info_window += '<tr>\n'
-            info_window += '<th>Attribute</th>\n'
-            info_window += '<th>Value</th>\n'
-            info_window += '<th>Units</th>\n'
-            info_window += '<th>Total</th>\n'
+            info_window += '<th><font size="+1">Attribute</font></th>\n'
+            info_window += '<th><font size="+1">Value</font></th>\n'
+            info_window += '<th><font size="+1">Units</font></th>\n'
+            info_window += '<th><font size="+1">Total</font></th>\n'
             info_window += '</tr>\n'
             info_window += '</thead>\n'
             info_window += '<tbody>\n'
