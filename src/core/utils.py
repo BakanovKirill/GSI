@@ -533,7 +533,8 @@ def make_run(run_base, user):
 					
 					ex_fe_com = Popen(
 							'nohup {0} {1} {2} &'.format(
-								EXECUTE_FE_COMMAND,
+								# EXECUTE_FE_COMMAND,
+								FE_SUBMIT,
 								first_script['run'].id,
 								n
 							),
@@ -546,7 +547,8 @@ def make_run(run_base, user):
 			else:
 				ex_fe_com = Popen(
 					'nohup {0} {1} {2} &'.format(
-						EXECUTE_FE_COMMAND,
+						# EXECUTE_FE_COMMAND,
+						FE_SUBMIT,
 						first_script['run'].id,
 						first_script['card'].id
 					),
