@@ -582,8 +582,8 @@ def create_scripts(run, sequence, card, step):
 	from gsi.models import HomeVariables as Home
 	
 	####################### write log file
-	# log_file = '/home/gsi/LOGS/create_scripts.log'
-	# log_create_scripts = open(log_file, 'a+')
+	log_file = '/home/gsi/LOGS/create_scripts.log'
+	log_create_scripts = open(log_file, 'a+')
 	#######################
 
 	card_model = None
@@ -599,6 +599,11 @@ def create_scripts(run, sequence, card, step):
 	# <RESOLUTION_ENV_SCRIPT>
 	resolution = run.run_base.resolution
 	RESOLUTION_ENV_SCRIPT = GSI_HOME + 'bin/' + str(resolution) + '_config'
+	
+	####################### write log file
+	if not os.exists(RESOLUTION_ENV_SCRIPT):
+		log_create_scripts.writelines('OSError Not a directory: {0}'.format(RESOLUTION_ENV_SCRIPT))
+	#######################
 
 	# <HOME_ENV_OVERRIDES>
 	for hv in home_var:
@@ -608,6 +613,21 @@ def create_scripts(run, sequence, card, step):
 		export_home_var += 'export MODIS_DIR=' + hv.MODIS_DIR_ROOT + '\n'
 		export_home_var += 'export RF_AUXDATA_DIR=' + hv.RF_AUXDATA_DIR + '\n'
 		export_home_var += 'export SAT_DIF_DIR=' + hv.SAT_DIF_DIR_ROOT
+		
+		####################### write log file
+		if not os.exists(hv.SAT_DIF_DIR_ROOT):
+			log_create_scripts.writelines('OSError Not a directory: {0}'.format(hv.SAT_DIF_DIR_ROOT))
+		if not os.exists(hv.RF_DIR_ROOT):
+			log_create_scripts.writelines('OSError Not a directory: {0}'.format(hv.RF_DIR_ROOT))
+		if not os.exists(hv.USER_DATA_DIR_ROOT):
+			log_create_scripts.writelines('OSError Not a directory: {0}'.format(hv.USER_DATA_DIR_ROOT))
+		if not os.exists(hv.MODIS_DIR_ROOT):
+			log_create_scripts.writelines('OSError Not a directory: {0}'.format(hv.MODIS_DIR_ROOT))
+		if not os.exists(hv.RF_AUXDATA_DIR):
+			log_create_scripts.writelines('OSError Not a directory: {0}'.format(hv.RF_AUXDATA_DIR))
+		if not os.exists(hv.SAT_DIF_DIR_ROOT):
+			log_create_scripts.writelines('OSError Not a directory: {0}'.format(hv.SAT_DIF_DIR_ROOT))
+		#######################
 
 	# <LOCAL_ENV_OVERRIDES>
 	try:
@@ -619,6 +639,11 @@ def create_scripts(run, sequence, card, step):
 			if line != '':
 				ln = line.replace('export ', '')
 				LOCAL_VAR_GROUPS += u'export {0}\n'.format(ln)
+				
+				####################### write log file
+				if not os.exists(ln):
+					log_create_scripts.writelines('OSError Not a directory: {0}'.format(ln))
+				#######################
 	except Exception, e:
 		LOCAL_VAR_GROUPS = ''
 
@@ -632,6 +657,11 @@ def create_scripts(run, sequence, card, step):
 			if line != '':
 				ln = line.replace('export ', '')
 				ENVIROMENT_OVERRIDE += u'export {0}\n'.format(ln)
+				
+				####################### write log file
+				if not os.exists(ln):
+					log_create_scripts.writelines('OSError Not a directory: {0}'.format(ln))
+				#######################
 	except Exception, e:
 		ENVIROMENT_OVERRIDE = ''
 
@@ -731,7 +761,7 @@ def create_scripts(run, sequence, card, step):
 			# log_create_scripts.writelines('OSError 2: {0}'.format(e))
 			return False
 			
-	# log_create_scripts.close()
+	log_create_scripts.close()
 
 	return {
 		'script_path': script_path,
