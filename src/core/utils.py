@@ -603,10 +603,10 @@ def create_scripts(run, sequence, card, step):
 	RESOLUTION_ENV_SCRIPT = GSI_HOME + 'bin/' + str(resolution) + '_config'
 	
 	####################### write log file
-	log_create_scripts.writelines('RESOLUTION_ENV_SCRIPT Not a directory: {0}\n'.format(RESOLUTION_ENV_SCRIPT))
+	# log_create_scripts.writelines('RESOLUTION_ENV_SCRIPT: {0}\n'.format(RESOLUTION_ENV_SCRIPT))
 	
 	if not os.path.exists(RESOLUTION_ENV_SCRIPT):
-		print 'RESOLUTION_ENV_SCRIPT ============================ ', RESOLUTION_ENV_SCRIPT
+		# print 'RESOLUTION_ENV_SCRIPT ============================ ', RESOLUTION_ENV_SCRIPT
 		log_create_scripts.writelines('OSError RESOLUTION_ENV_SCRIPT Not a directory: {0}\n'.format(RESOLUTION_ENV_SCRIPT))
 	#######################
 
