@@ -1391,7 +1391,7 @@ def customer_section(request):
             info_window += '<h4>Area "{0}" Information</h4>\n'.format(area_name)
             info_window += '<p align="left"><font size="+1">{0}: {1} ha</p></font>\n'.format(ATTRIBUTES_NAME[0], total_area)
             
-            info_window += '<table border="1" cellspacing="5" cellpadding="5" style="border-collapse:collapse;border:1px solid black;width:100%;">\n'
+            info_window += '<table border="1" cellspacing="5" cellpadding="10" style="border-collapse:collapse;border:1px solid black;width:100%;">\n'
             info_window += '<thead>\n'
             info_window += '<tr>\n'
             info_window += '<th><font size="+1">Attribute</font></th>\n'
