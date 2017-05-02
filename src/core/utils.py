@@ -625,17 +625,17 @@ def create_scripts(run, sequence, card, step):
 		
 		####################### write log file
 		if not os.path.exists(hv.SAT_DIF_DIR_ROOT):
-			log_create_scripts.writelines('OSError Not a directory: {0}\n'.format(hv.SAT_DIF_DIR_ROOT))
+			log_create_scripts.writelines('OSError "SAT_TIF_DIR" Not a directory: {0}\n'.format(hv.SAT_DIF_DIR_ROOT))
 		if not os.path.exists(hv.RF_DIR_ROOT):
-			log_create_scripts.writelines('OSError Not a directory: {0}\n'.format(hv.RF_DIR_ROOT))
+			log_create_scripts.writelines('OSError "RF_DIR_ROOT" Not a directory: {0}\n'.format(hv.RF_DIR_ROOT))
 		if not os.path.exists(hv.USER_DATA_DIR_ROOT):
-			log_create_scripts.writelines('OSError Not a directory: {0}\n'.format(hv.USER_DATA_DIR_ROOT))
+			log_create_scripts.writelines('OSError "USER_DATA_DIR_ROOT" Not a directory: {0}\n'.format(hv.USER_DATA_DIR_ROOT))
 		if not os.path.exists(hv.MODIS_DIR_ROOT):
-			log_create_scripts.writelines('OSError Not a directory: {0}\n'.format(hv.MODIS_DIR_ROOT))
+			log_create_scripts.writelines('OSError "MODIS_DIR_ROOT" Not a directory: {0}\n'.format(hv.MODIS_DIR_ROOT))
 		if not os.path.exists(hv.RF_AUXDATA_DIR):
-			log_create_scripts.writelines('OSError Not a directory: {0}\n'.format(hv.RF_AUXDATA_DIR))
+			log_create_scripts.writelines('OSError "RF_AUXDATA_DIR" Not a directory: {0}\n'.format(hv.RF_AUXDATA_DIR))
 		if not os.path.exists(hv.SAT_DIF_DIR_ROOT):
-			log_create_scripts.writelines('OSError Not a directory: {0}\n'.format(hv.SAT_DIF_DIR_ROOT))
+			log_create_scripts.writelines('OSError "SAT_DIF_DIR_ROOT" Not a directory: {0}\n'.format(hv.SAT_DIF_DIR_ROOT))
 		#######################
 
 	# <LOCAL_ENV_OVERRIDES>
@@ -651,9 +651,10 @@ def create_scripts(run, sequence, card, step):
 				
 				####################### write log file
 				ln_tmp = ln.split('=')
+				# log_create_scripts.writelines('OSError "LN" Not a directory: {0}\n'.format(ln))
 				# print 'LN ======================== ', ln_tmp[1]
 				if not os.path.exists(ln_tmp[1]):
-					log_create_scripts.writelines('OSError Not a directory: {0}\n'.format(ln_tmp[1]))
+					log_create_scripts.writelines('OSError "LOCAL_VAR_GROUPS" {0} Not a directory: {1}\n'.format(ln_tmp[0], ln_tmp[1]))
 				#######################
 	except Exception, e:
 		LOCAL_VAR_GROUPS = ''
@@ -670,8 +671,9 @@ def create_scripts(run, sequence, card, step):
 				ENVIROMENT_OVERRIDE += u'export {0}\n'.format(ln)
 				
 				####################### write log file
-				if not os.path.exists(ln):
-					log_create_scripts.writelines('OSError Not a directory: {0}\n'.format(ln))
+				ln_tmp = ln.split('=')
+				if not os.path.exists(ln_tmp[1]) and ln_tmp[0] != 'RF_SCALE' and ln_tmp[0] != 'MVRF':
+					log_create_scripts.writelines('OSError ENVIROMENT OVERRIDE "{0}" Not a directory: {1}\n'.format(ln_tmp[0], ln_tmp[1]))
 				#######################
 	except Exception, e:
 		ENVIROMENT_OVERRIDE = ''
