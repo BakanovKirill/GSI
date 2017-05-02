@@ -1402,10 +1402,10 @@ def customer_section(request):
             info_window += '</thead>\n'
             info_window += '<tbody>\n'
             info_window += '<tr>\n'
-            info_window += '<td>{0}</td>\n'.format(attribute)
-            info_window += '<td>{0}</td>\n'.format(tree_count)
-            info_window += '<td>{0}</td>\n'.format(units)
-            info_window += '<td>&#8212;</td>\n'
+            info_window += '<td><font size="+1">{0}</font></td>\n'.format(attribute)
+            info_window += '<td><font size="+1">{0}</font></td>\n'.format(tree_count)
+            info_window += '<td><font size="+1">{0}</font></td>\n'.format(units)
+            info_window += '<td><font size="+1">&#8212;</font></td>\n'
             info_window += '</tr>\n'
             
             
