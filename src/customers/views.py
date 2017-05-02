@@ -1388,9 +1388,10 @@ def customer_section(request):
             shelf_dt = ShelfData.objects.get(attribute_name=attribute, units=units)
             show_totals = shelf_dt.show_totals
             
-            info_window += '<p><b>Area "{0}" Information</b></p>\n'.format(area_name)
-            info_window += '<table class="table table-bordered">\n'
-            info_window += '<caption><span class="right"><b>{0}: {1} ha</b></span></caption>\n'.format(ATTRIBUTES_NAME[0], total_area)
+            info_window += '<h3>Area "{0}" Information</h3>\n'.format(area_name)
+            info_window += '<p align="left"><b>{0}: {1} ha</b></p>\n'.format(ATTRIBUTES_NAME[0], total_area)
+            
+            info_window += '<table border="1" cellspacing="5" style="border-collapse:collapse;border:1px solid black;width:100%;">\n'
             info_window += '<thead>\n'
             info_window += '<tr>\n'
             info_window += '<th>Attribute</th>\n'
@@ -1404,13 +1405,11 @@ def customer_section(request):
             info_window += '<td>{0}</td>\n'.format(attribute)
             info_window += '<td>{0}</td>\n'.format(tree_count)
             info_window += '<td>{0}</td>\n'.format(units)
+            info_window += '<td>&#8212;</td>\n'
             info_window += '</tr>\n'
             
             
             # info_window += '</table>'
-            
-            
-            
             
             # <p>{1}: {2} ha</p>
             # <p>{3}: {4} {5}</p>
