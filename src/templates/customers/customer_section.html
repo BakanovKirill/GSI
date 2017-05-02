@@ -648,22 +648,51 @@
 				
 				// alert('result: '+data_polygon);
 				
-				
-				
-				var contentString = '<p class="left"><b>Area Information</b></p>';
 				var list_data = data_polygon.split(',')
 				
-				contentString += '<p class="left">Total Area: ' + list_data[0] + ' ha</p>';
+				var contentString = '<p class="left"><b>Area Information</b></p>';
+				contentString += '<table class="table table-bordered">';
+				contentString += '<caption><span class="right"><b>Total Area: ' + list_data[0] + ' ha</b></span></caption>'
 				contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
+				contentString += '<thead>';
+				contentString += '<tr>';
+				contentString += '<th>Attribute</th>';
+				contentString += '<th>Value</th>';
+				contentString += '<th>Units</th>';
+				contentString += '<th>Total</th>';
+				contentString += '</tr>';
+				contentString += '</thead>';
+				contentString += '<tbody>';
+				// contentString += '<p class="left"><b>Area Information</b></p>';
 				
-				contentString += '<p class="left">' + attribute + ': ' + list_data[1] + ' ' + units + '</p>';
+				
+				contentString += '<tr>';
+				contentString += '<td>' + attribute + '</td>';
+				contentString += '<td>' + list_data[1] + '</td>';
+				contentString += '<td>' + units + '</td>';
+				contentString += '<td>&#8212;</td>';
+				contentString += '</tr>';
+				// contentString += '<p class="left">Total Area: ' + list_data[0] + ' ha</p>';
+				// contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
+
+				// contentString += '<p class="left">' + attribute + ': ' + list_data[1] + ' ' + units + '</p>';
 				contentString += '<input type="hidden" name="tree_count" value="' + list_data[1] + '">'
-				
+
 				// show_totals
 				if ('{{ show_totals }}' == 'True') {
-					contentString += '<p class="left" name="count_hectare">Area total: ' + list_data[2] + ' ' + units + '</p>';
-					contentString += '<input type="hidden" name="count_hectare" value="' + list_data[2] + '">'
+					contentString += '<tr>';
+					contentString += '<td>Area total</td>';
+					contentString += '<td>' + list_data[2] + '</td>';
+					contentString += '<td>' + units + '</td>';
+					contentString += '<td>&#8212;</td>';
+					contentString += '</tr>';
+					
+				    // contentString += '<p class="left" name="count_hectare">Area total: ' + list_data[2] + ' ' + units + '</p>';
+				    contentString += '<input type="hidden" name="count_hectare" value="' + list_data[2] + '">'
 				}
+				
+				contentString += '</tbody>';
+				contentString += '</table>';
 				
 				
 				// contentString += '<p class="left">COORDINATE:</p>';
@@ -704,22 +733,76 @@
 			function showInfoWindow(event) {
 				var lat = event.latLng.lat();
 				var lon = event.latLng.lng();
+				var list_data = data_polygon.split(',')
 				
-				var text = 'DBH_10_Krig : 85<br>';
-				text += 'DBH_10_dem_Krig : 88<br>';
-				text += 'DBH_svar_1000_Krig : 14<br>';
-				text += 'DBH_svar_1000_dem_Krig : 11<br>';
-				text += 'LossYear : <br>';
-				text += 'maskmean_DBH : -9999<br>';
-				text += 'mean_CubicTotal : 350<br>';
-				text += 'mean_DBH : 116<br>';
-				text += 'mean_TPA : 50<br>';
-				text += 'mean_Tree_Count : 51<br>';
-				text += 'modmean_DBH : -9999<br>';
+				var contentString = '<p class="left"><b>Area Information</b></p>';
 				
-				var contentString = '<b>GSi Polygon</b><br>' +
-						'Location:<br>LAT: ' + lat.toFixed(6) + ', LNG:' + lon.toFixed(6) + '<br>';
-				contentString += '<p class="left">' + text + '</p>';
+				contentString += '<table class="table table-bordered">';
+				contentString += '<caption><span class="right"><b>Total Area: ' + list_data[0] + ' ha</b></span></caption>'
+				contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
+				contentString += '<thead>';
+				contentString += '<tr>';
+				contentString += '<th>Attribute</th>';
+				contentString += '<th>Value</th>';
+				contentString += '<th>Units</th>';
+				contentString += '<th>Total</th>';
+				contentString += '</tr>';
+				contentString += '</thead>';
+				contentString += '<tbody>';
+				// contentString += '<p class="left"><b>Area Information</b></p>';
+				
+				contentString += '<tr>';
+				contentString += '<td>' + attribute + '</td>';
+				contentString += '<td>' + list_data[1] + '</td>';
+				contentString += '<td>' + units + '</td>';
+				contentString += '<td>&#8212;</td>';
+				contentString += '</tr>';
+				// contentString += '<p class="left">Total Area: ' + list_data[0] + ' ha</p>';
+				// contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
+
+				// contentString += '<p class="left">' + attribute + ': ' + list_data[1] + ' ' + units + '</p>';
+				contentString += '<input type="hidden" name="tree_count" value="' + list_data[1] + '">'
+
+				// show_totals
+				if ('{{ show_totals }}' == 'True') {
+					contentString += '<tr>';
+					contentString += '<td>Area total</td>';
+					contentString += '<td>' + list_data[2] + '</td>';
+					contentString += '<td>' + units + '</td>';
+					contentString += '<td>&#8212;</td>';
+					contentString += '</tr>';
+					
+				    // contentString += '<p class="left" name="count_hectare">Area total: ' + list_data[2] + ' ' + units + '</p>';
+				    contentString += '<input type="hidden" name="count_hectare" value="' + list_data[2] + '">'
+				}
+				
+				contentString += '</tbody>';
+				contentString += '</table>';
+				
+				contentString += '<input type="text" id="input_area_name" class="margin-top-15" placeholder="Enter Area name" name="file_name" size="30" onkeyup="changeAreaName();"><br>'
+				contentString += '<button type="submit" name="save_area" class="btn btn-success btn-block margin-top-15" value="save_area" disabled id="save_area">Save Area</button>';
+				contentString += '<button type="submit" name="cancel_download_file" class="btn btn-primary btn-block margin-top-15" value="cancel_download_file">Cancel</button>';
+				
+				// infowindow = new google.maps.InfoWindow({content: contentString, position: center_pol});
+				// infowindow.open(map);
+				
+				
+				
+				// var text = 'DBH_10_Krig : 85<br>';
+				// text += 'DBH_10_dem_Krig : 88<br>';
+				// text += 'DBH_svar_1000_Krig : 14<br>';
+				// text += 'DBH_svar_1000_dem_Krig : 11<br>';
+				// text += 'LossYear : <br>';
+				// text += 'maskmean_DBH : -9999<br>';
+				// text += 'mean_CubicTotal : 350<br>';
+				// text += 'mean_DBH : 116<br>';
+				// text += 'mean_TPA : 50<br>';
+				// text += 'mean_Tree_Count : 51<br>';
+				// text += 'modmean_DBH : -9999<br>';
+				//
+				// var contentString = '<b>GSi Polygon</b><br>' +
+				// 		'Location:<br>LAT: ' + lat.toFixed(6) + ', LNG:' + lon.toFixed(6) + '<br>';
+				// contentString += '<p class="left">' + text + '</p>';
 
 				// Replace the info window's content and position.
 				infoWindow.setContent(contentString);

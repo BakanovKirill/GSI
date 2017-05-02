@@ -1377,6 +1377,7 @@ def customer_section(request):
                 return HttpResponseRedirect(u'%s' % (reverse('customer_section')))
         
         if 'save_area' in data_post:
+            info_window = ''
             area_name = data_post.get('file_name', '')
             total_area = data_post.get('total_area', '')
             
@@ -1387,11 +1388,33 @@ def customer_section(request):
             shelf_dt = ShelfData.objects.get(attribute_name=attribute, units=units)
             show_totals = shelf_dt.show_totals
             
-            info_window = '''
-            <p><b>Area "{0}"</b></p>
-            <p>{1}: {2} ha</p>
-            <p>{3}: {4} {5}</p>
-            '''.format(area_name, ATTRIBUTES_NAME[0], total_area, attribute, tree_count, units)
+            info_window += '<p><b>Area "{0}" Information</b></p>\n'.format(area_name)
+            info_window += '<table class="table table-bordered">\n'
+            info_window += '<caption><span class="right"><b>{0}: {1} ha</b></span></caption>\n'.format(ATTRIBUTES_NAME[0], total_area)
+            info_window += '<thead>\n'
+            info_window += '<tr>\n'
+            info_window += '<th>Attribute</th>\n'
+            info_window += '<th>Value</th>\n'
+            info_window += '<th>Units</th>\n'
+            info_window += '<th>Total</th>\n'
+            info_window += '</tr>\n'
+            info_window += '</thead>\n'
+            info_window += '<tbody>\n'
+            info_window += '<tr>\n'
+            info_window += '<td>{0}</td>\n'.format(attribute)
+            info_window += '<td>{0}</td>\n'.format(tree_count)
+            info_window += '<td>{0}</td>\n'.format(units)
+            info_window += '</tr>\n'
+            
+            
+            # info_window += '</table>'
+            
+            
+            
+            
+            # <p>{1}: {2} ha</p>
+            # <p>{3}: {4} {5}</p>
+            # '''.format(area_name, ATTRIBUTES_NAME[0], total_area, attribute, tree_count, units)
             
             value = '{0} ha'.format(total_area)
             
@@ -1404,11 +1427,20 @@ def customer_section(request):
                 count_hectare = data_post.get('count_hectare', '')
                 count_hectare = count_hectare.replace('\r\n', '')
                 
-                info_window += '''
-                <p>{0}: {1} {2}</p>
-                '''.format(ATTRIBUTES_NAME[1], count_hectare, units)
+                info_window += '<tr>\n'
+                info_window += '<td>{0}</td>\n'.format(ATTRIBUTES_NAME[1])
+                info_window += '<td>{0}</td>\n'.format(count_hectare)
+                info_window += '<td>{0}</td>\n'.format(units)
+                info_window += '</tr>\n'
+                
+                # info_window += '''
+                # <p>{0}: {1} {2}</p>
+                # '''.format(ATTRIBUTES_NAME[1], count_hectare, units)
                 value = '{0} {1}'.format(count_hectare, units)
                 attributes_dict[ATTRIBUTES_NAME[1]] = '{0} {1}'.format(count_hectare, units)
+            
+            info_window += '</tbody>\n'
+            info_window += '</table>'
                 
             # Create KML file for the draw polygon
             cur_polygon = createKml(request.user, area_name, info_window, absolute_kml_url)
