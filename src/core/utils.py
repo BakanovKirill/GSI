@@ -584,6 +584,8 @@ def create_scripts(run, sequence, card, step):
 	####################### write log file
 	log_file = '/home/gsi/LOGS/create_scripts.log'
 	log_create_scripts = open(log_file, 'a+')
+	now = datetime.now()
+	log_create_scripts.writelines('\n\n\nDATE: {0}\n'.format(now))
 	#######################
 
 	card_model = None
@@ -601,12 +603,19 @@ def create_scripts(run, sequence, card, step):
 	RESOLUTION_ENV_SCRIPT = GSI_HOME + 'bin/' + str(resolution) + '_config'
 	
 	####################### write log file
-	if not os.exists(RESOLUTION_ENV_SCRIPT):
-		log_create_scripts.writelines('OSError Not a directory: {0}'.format(RESOLUTION_ENV_SCRIPT))
+	if not os.path.exists(RESOLUTION_ENV_SCRIPT):
+		log_create_scripts.writelines('OSError Not a directory: {0}\n'.format(RESOLUTION_ENV_SCRIPT))
 	#######################
 
 	# <HOME_ENV_OVERRIDES>
 	for hv in home_var:
+		# print 'HV SAT_DIF_DIR_ROOT ======================== ', hv.SAT_DIF_DIR_ROOT
+		# print 'HV RF_DIR_ROOT ======================== ', hv.RF_DIR_ROOT
+		# print 'HV USER_DATA_DIR_ROOT ======================== ', hv.USER_DATA_DIR_ROOT
+		# print 'HV MODIS_DIR_ROOT ======================== ', hv.MODIS_DIR_ROOT
+		# print 'HV RF_AUXDATA_DIR ======================== ', hv.RF_AUXDATA_DIR
+		# print 'HV SAT_DIF_DIR_ROOT ======================== ', hv.SAT_DIF_DIR_ROOT
+		
 		export_home_var += 'export SAT_TIF_DIR=' + hv.SAT_DIF_DIR_ROOT + '\n'
 		export_home_var += 'export RF_DIR=' + hv.RF_DIR_ROOT + '\n'
 		export_home_var += 'export USER_DATA_DIR=' + hv.USER_DATA_DIR_ROOT + '\n'
@@ -615,18 +624,18 @@ def create_scripts(run, sequence, card, step):
 		export_home_var += 'export SAT_DIF_DIR=' + hv.SAT_DIF_DIR_ROOT
 		
 		####################### write log file
-		if not os.exists(hv.SAT_DIF_DIR_ROOT):
-			log_create_scripts.writelines('OSError Not a directory: {0}'.format(hv.SAT_DIF_DIR_ROOT))
-		if not os.exists(hv.RF_DIR_ROOT):
-			log_create_scripts.writelines('OSError Not a directory: {0}'.format(hv.RF_DIR_ROOT))
-		if not os.exists(hv.USER_DATA_DIR_ROOT):
-			log_create_scripts.writelines('OSError Not a directory: {0}'.format(hv.USER_DATA_DIR_ROOT))
-		if not os.exists(hv.MODIS_DIR_ROOT):
-			log_create_scripts.writelines('OSError Not a directory: {0}'.format(hv.MODIS_DIR_ROOT))
-		if not os.exists(hv.RF_AUXDATA_DIR):
-			log_create_scripts.writelines('OSError Not a directory: {0}'.format(hv.RF_AUXDATA_DIR))
-		if not os.exists(hv.SAT_DIF_DIR_ROOT):
-			log_create_scripts.writelines('OSError Not a directory: {0}'.format(hv.SAT_DIF_DIR_ROOT))
+		if not os.path.exists(hv.SAT_DIF_DIR_ROOT):
+			log_create_scripts.writelines('OSError Not a directory: {0}\n'.format(hv.SAT_DIF_DIR_ROOT))
+		if not os.path.exists(hv.RF_DIR_ROOT):
+			log_create_scripts.writelines('OSError Not a directory: {0}\n'.format(hv.RF_DIR_ROOT))
+		if not os.path.exists(hv.USER_DATA_DIR_ROOT):
+			log_create_scripts.writelines('OSError Not a directory: {0}\n'.format(hv.USER_DATA_DIR_ROOT))
+		if not os.path.exists(hv.MODIS_DIR_ROOT):
+			log_create_scripts.writelines('OSError Not a directory: {0}\n'.format(hv.MODIS_DIR_ROOT))
+		if not os.path.exists(hv.RF_AUXDATA_DIR):
+			log_create_scripts.writelines('OSError Not a directory: {0}\n'.format(hv.RF_AUXDATA_DIR))
+		if not os.path.exists(hv.SAT_DIF_DIR_ROOT):
+			log_create_scripts.writelines('OSError Not a directory: {0}\n'.format(hv.SAT_DIF_DIR_ROOT))
 		#######################
 
 	# <LOCAL_ENV_OVERRIDES>
@@ -641,8 +650,10 @@ def create_scripts(run, sequence, card, step):
 				LOCAL_VAR_GROUPS += u'export {0}\n'.format(ln)
 				
 				####################### write log file
-				if not os.exists(ln):
-					log_create_scripts.writelines('OSError Not a directory: {0}'.format(ln))
+				ln_tmp = ln.split('=')
+				# print 'LN ======================== ', ln_tmp[1]
+				if not os.path.exists(ln_tmp[1]):
+					log_create_scripts.writelines('OSError Not a directory: {0}\n'.format(ln_tmp[1]))
 				#######################
 	except Exception, e:
 		LOCAL_VAR_GROUPS = ''
@@ -659,8 +670,8 @@ def create_scripts(run, sequence, card, step):
 				ENVIROMENT_OVERRIDE += u'export {0}\n'.format(ln)
 				
 				####################### write log file
-				if not os.exists(ln):
-					log_create_scripts.writelines('OSError Not a directory: {0}'.format(ln))
+				if not os.path.exists(ln):
+					log_create_scripts.writelines('OSError Not a directory: {0}\n'.format(ln))
 				#######################
 	except Exception, e:
 		ENVIROMENT_OVERRIDE = ''
@@ -738,6 +749,11 @@ def create_scripts(run, sequence, card, step):
 					os.chmod(script_path, 0777)
 					os.chmod(path_runs_logs, 0777)
 					count += 1
+					
+					# **** write log file *************************************
+					log_create_scripts.writelines('*** SCRIPT PARALLEL PATH: {0}\n'.format(script_path))
+					# *********************************************************
+					
 
 				master_script.close()
 			else:
@@ -756,6 +772,10 @@ def create_scripts(run, sequence, card, step):
 				os.chmod(script_path, 0777)
 				os.chmod(path_runs_logs, 0777)
 				fd.close()
+				
+				# **** write log file *************************************
+				log_create_scripts.writelines('*** SCRIPT NOT PARALLEL PATH: {0}\n'.format(script_path))
+				# *********************************************************
 		except OSError, e:
 			pass
 			# log_create_scripts.writelines('OSError 2: {0}'.format(e))
