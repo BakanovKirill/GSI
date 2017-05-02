@@ -1388,7 +1388,7 @@ def customer_section(request):
             shelf_dt = ShelfData.objects.get(attribute_name=attribute, units=units)
             show_totals = shelf_dt.show_totals
             
-            info_window += '<h4>Area "{0}" Information</h4>\n'.format(area_name)
+            info_window += '<h4>Attribute report: {0}</h4>\n'.format(area_name)
             info_window += '<p align="left"><font size="2">{0}: {1} ha</p></font>\n'.format(ATTRIBUTES_NAME[0], total_area)
             
             info_window += '<table border="1" cellspacing="5" cellpadding="5" style="border-collapse:collapse;border:1px solid black;width:100%;">\n'
