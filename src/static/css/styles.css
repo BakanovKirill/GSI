@@ -39,6 +39,11 @@ html, body {
     margin: 0;
     padding: 0;
 }
+
+table {
+    border-spacing: 8px;
+}
+
 .main {
     min-height: 100%;
     height: auto !important;
