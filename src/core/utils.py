@@ -556,6 +556,11 @@ def make_run(run_base, user):
 				first_script['step'].save()
 				first_script['run'].state = 'running'
 				first_script['run'].save()
+				
+				####################### write log file
+				file_message_error += 'RUN: {0}'.format(first_script['run'].id)
+				file_message_error += 'CARD: {0}'.format(first_script['card'].id)
+				#######################
 		except Exception, e:
 			print 'Exception make_run ==================================== ', e
 			file_message_error += 'Exception make_run:: ' + e + '\n'
