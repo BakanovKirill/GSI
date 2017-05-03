@@ -558,8 +558,8 @@ def make_run(run_base, user):
 				first_script['run'].save()
 				
 				####################### write log file
-				file_message_error += 'RUN: {0}'.format(first_script['run'].id)
-				file_message_error += 'CARD: {0}'.format(first_script['card'].id)
+				file_message_error += '\nRUN: {0}\n'.format(first_script['run'].id)
+				file_message_error += '\nCARD: {0}\n'.format(first_script['card'].id)
 				#######################
 		except Exception, e:
 			print 'Exception make_run ==================================== ', e
@@ -588,7 +588,7 @@ def create_scripts(run, sequence, card, step):
 	
 	####################### write log file
 	log_file = '/home/gsi/LOGS/create_scripts.log'
-	log_create_scripts = open(log_file, 'a+')
+	log_create_scripts = open(log_file, 'w+')
 	now = datetime.now()
 	log_create_scripts.writelines('\n\n\nDATE: {0}\n'.format(now))
 	#######################
