@@ -2,8 +2,27 @@
 $latlist = '{{ latlist }}';
 $lonlist = '{{ lonlist }}';
 $fileName = '{{ file_tif_path }}';
+$files_tif = '{{ files_tif }}';
+$f_tiffs = explode(",", $files_tif);
+$count_files = count($f_tiffs);
 
 $geo_tiff = new MMGeoTIFFReader("/");
+
+$shelf_data = '{{ shelf_data }}';
+$f_shelfdata = explode(",", $shelf_data);
+
+$resultFname1 = '{{ result_for_db }}';
+$resultFile1 = fopen($resultFname1, "w");
+
+for ($x=0; $x<$count_files; $x++) {
+    $msg = $geo_tiff->getPolyAreaVal($latlist, $lonlist, $f_tiffs[$x]);
+    fwrite($resultFile1, $f_shelfdata[$x] . ",");
+    fwrite($resultFile1, $f_tiffs[$x] . ",");
+    fwrite($resultFile1, $msg . "\n");
+};
+
+fclose($resultFile1);
+
 $res = $geo_tiff->getPolyAreaVal($latlist, $lonlist, $fileName);
 
 //echo 'FRESULT: ' . $res . ";\n";
@@ -442,7 +461,7 @@ class MMGeoTIFFReader {
         $msg = intval($area*10)/10 . ',' . intval($polysum*10)/10 . ',' . intval($polysum*$area) ;
         echo $msg . ";\n" ;
         
-        $resultFile = fopen($resultFname,"w");
+        $resultFile = fopen($resultFname, "w");
         fwrite($resultFile, $msg . "\n");
         
         fwrite($statsFile, "Attr1," . $msg . "\n");

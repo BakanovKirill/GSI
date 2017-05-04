@@ -583,26 +583,28 @@
 			
 			function sendGetToServer() {
 				var x = new XMLHttpRequest();
-				x.open("GET", "/customer/php?tif_path="+'{{ file_tif_path }}', true);
+				// x.open("GET", "/customer/php?tif_path={{ file_tif_path }}", true);
+				x.open("GET", "/customer/php?tif_path={{ file_tif_path }}&ds={{ data_set_id }}", true);
+				// x.open("GET", "/customer/php?ds="+'{{ data_set_id }}', true);
 				x.send(null);
 				
 				// alert('sendGetToServer -> deleteFile');
-				deleteFile();
+				deleteFile('{{ data_set_id }}');
 				
 				// setTimeout(getTmpCSV, 3000);
 			}
 			
 			function getTmpCSV(file_path) {
-				// alert('file_path: '+file_path);
+				alert('getTmpCSV: '+file_path);
 				httpRequest = new XMLHttpRequest();
 				httpRequest.open("GET", file_path, true);
 				httpRequest.onreadystatechange = OnRequestStateChange;
 				httpRequest.send(null);
 				
-				setTimeout(getPoligon, 500);
+				setTimeout(getPolygon, 500);
 			}
 
-			function getPoligon() {
+			function getPolygon() {
 				var modal = $('#modalWaiting');
 			    modal.modal('hide');
 				// Construct the polygon.
@@ -646,14 +648,21 @@
 				// var tree_count = area_sq_m / average_distance;
 				// var tree_count_per_area = tree_count / area_ha;
 				
-				// alert('result: '+data_polygon);
+				alert('result: '+data_polygon);
 				
-				var list_data = data_polygon.split(',')
+				// var list_data = data_polygon.split(',');
+				var list_data = data_polygon.split('_');
+				// var list_data = data_polygon;
+				
+				alert('list_data: '+list_data);
+				alert('list_data 0: '+list_data[0]);
+				alert('list_data 1: '+list_data[1]);
+				alert('list_data 2: '+list_data[2]);
 				
 				var contentString = '<p class="left"><b>Area Information</b></p>';
 				contentString += '<table class="table table-bordered">';
-				contentString += '<caption><span class="right"><b>Total Area: ' + list_data[0] + ' ha</b></span></caption>'
-				contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
+				// contentString += '<caption><span class="right"><b>Total Area: ' + list_data[0] + ' ha</b></span></caption>'
+				// contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
 				contentString += '<thead>';
 				contentString += '<tr>';
 				contentString += '<th>Attribute</th>';
@@ -663,33 +672,39 @@
 				contentString += '</tr>';
 				contentString += '</thead>';
 				contentString += '<tbody>';
-				// contentString += '<p class="left"><b>Area Information</b></p>';
 				
+				for (var i = 0; i < list_data.length; i++) {
+					new_array = list_data[i].split(',')
+					contentString += '<tr>';
+					contentString += '<td>' + new_array[0] + '</td>';
+					contentString += '<td>' + new_array[1] + '</td>';
+					contentString += '<td>' + new_array[2] + '</td>';
+					contentString += '<td>' + new_array[3] + '</td>';
+					contentString += '</tr>';
+					contentString += '<input type="hidden" name="attribute" value="' + new_array[0] + '">'
+					contentString += '<input type="hidden" name="value" value="' + new_array[1] + '">'
+					contentString += '<input type="hidden" name="units" value="' + new_array[2] + '">'
+					contentString += '<input type="hidden" name="total" value="' + new_array[3] + '">'
+				}
 				
-				contentString += '<tr>';
-				contentString += '<td>' + attribute + '</td>';
-				contentString += '<td>' + list_data[1] + '</td>';
-				contentString += '<td>' + units + '</td>';
-				contentString += '<td>&#8212;</td>';
-				contentString += '</tr>';
 				// contentString += '<p class="left">Total Area: ' + list_data[0] + ' ha</p>';
 				// contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
 
 				// contentString += '<p class="left">' + attribute + ': ' + list_data[1] + ' ' + units + '</p>';
-				contentString += '<input type="hidden" name="tree_count" value="' + list_data[1] + '">'
+				// contentString += '<input type="hidden" name="tree_count" value="' + list_data[1] + '">'
 
 				// show_totals
-				if ('{{ show_totals }}' == 'True') {
-					contentString += '<tr>';
-					contentString += '<td>Area total</td>';
-					contentString += '<td>' + list_data[2] + '</td>';
-					contentString += '<td>' + units + '</td>';
-					contentString += '<td>&#8212;</td>';
-					contentString += '</tr>';
-					
-				    // contentString += '<p class="left" name="count_hectare">Area total: ' + list_data[2] + ' ' + units + '</p>';
-				    contentString += '<input type="hidden" name="count_hectare" value="' + list_data[2] + '">'
-				}
+				// if ('{{ show_totals }}' == 'True') {
+				// 	contentString += '<tr>';
+				// 	contentString += '<td>Area total</td>';
+				// 	contentString += '<td>' + list_data[2] + '</td>';
+				// 	contentString += '<td>' + units + '</td>';
+				// 	contentString += '<td>&#8212;</td>';
+				// 	contentString += '</tr>';
+				//
+				//     // contentString += '<p class="left" name="count_hectare">Area total: ' + list_data[2] + ' ' + units + '</p>';
+				//     contentString += '<input type="hidden" name="count_hectare" value="' + list_data[2] + '">'
+				// }
 				
 				contentString += '</tbody>';
 				contentString += '</table>';
@@ -700,7 +715,7 @@
 				// 	contentString += '<p class="left">(Lat: ' + show_coord[n]['lat'] + '; Lng: ' + show_coord[n]['lng'] + ')</p>';
 			    // }
 				
-				contentString += '<input type="text" id="input_area_name" class="margin-top-15" placeholder="Enter Area name" name="file_name" size="30" onkeyup="changeAreaName();"><br>'
+				contentString += '<input type="text" id="input_area_name" class="margin-top-15" placeholder="Enter Area name" name="file_name" size="30" style="width:100%" onkeyup="changeAreaName();"><br>'
 				contentString += '<button type="submit" name="save_area" class="btn btn-success btn-block margin-top-15" value="save_area" disabled id="save_area">Save Area</button>';
 				contentString += '<button type="submit" name="cancel_download_file" class="btn btn-primary btn-block margin-top-15" value="cancel_download_file">Cancel</button>';
 				
@@ -716,6 +731,8 @@
   					return;
 				if (httpRequest.status != 200)
   					return;
+					
+				alert('VAL: '+httpRequest.responseText);
 				
 				data_polygon = httpRequest.responseText;
 				

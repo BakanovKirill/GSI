@@ -431,7 +431,7 @@ function initEditArea() {
     });
 }
 
-function deleteFile() {
+function deleteFile(ds) {
     
     var form_url = $('#customer_section').attr('action');
     var x = new XMLHttpRequest();
@@ -446,7 +446,7 @@ function deleteFile() {
         'async': true,
         'dataType': 'text',
         data: {
-            'delete_file': 'delete',
+            'delete_file': ds,
             'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
         },
         'error': function(xhr, status, error){

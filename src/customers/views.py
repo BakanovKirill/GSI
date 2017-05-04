@@ -1071,6 +1071,24 @@ def getAttributeUnits(user, show_file):
         pass
     
     return attribute_name, units
+    
+    
+def getResultDirectory(dataset, shelfdata):
+    data_set = dataset
+    shelf_data_all = shelfdata
+    dirs_list = []
+    try:
+        project_directory = os.path.join(PROJECTS_PATH, data_set.results_directory)
+        root, dirs, files = os.walk(project_directory).next()
+
+        for sd in shelf_data_all:
+            if str(sd.root_filename) in dirs:
+                dirs_list.append(sd)
+    except Exception, e:
+        print 'Exception 02 ========================= ', e
+        pass
+        
+    return dirs_list
 
 
 # view Customer Section
@@ -1308,6 +1326,7 @@ def customer_section(request):
         return HttpResponse(data)
 
     # Get data for the Info Panel
+    # Get DataSet for the Info Panel
     try:
         data_set = DataSet.objects.get(pk=data_set_id)
     except Exception, e:
@@ -1318,21 +1337,22 @@ def customer_section(request):
             data_set_id = int(data_set.id)
 
     # Get the results_directory list
-    try:
-        project_directory = os.path.join(PROJECTS_PATH, data_set.results_directory)
-        root, dirs, files = os.walk(project_directory).next()
-
-        for sd in shelf_data_all:
-            if str(sd.root_filename) in dirs:
-                dirs_list.append(sd)
-    except Exception, e:
-        print 'Exception 02 ========================= ', e
-        warning_message = u'The directory "{0}" does not exist!'.format(project_directory)
-        # error = True
-        # return HttpResponseRedirect(
-        #     u'%s?danger_message=%s' % (reverse('customer_section'),
-        #     (u'The directory "{0}" does not exist!'.format(project_directory)))
-        # )
+    dirs_list = getResultDirectory(data_set, shelf_data_all)
+    # try:
+    #     project_directory = os.path.join(PROJECTS_PATH, data_set.results_directory)
+    #     root, dirs, files = os.walk(project_directory).next()
+    #
+    #     for sd in shelf_data_all:
+    #         if str(sd.root_filename) in dirs:
+    #             dirs_list.append(sd)
+    # except Exception, e:
+    #     print 'Exception 02 ========================= ', e
+    #     warning_message = u'The directory "{0}" does not exist!'.format(project_directory)
+    #     # error = True
+    #     # return HttpResponseRedirect(
+    #     #     u'%s?danger_message=%s' % (reverse('customer_section'),
+    #     #     (u'The directory "{0}" does not exist!'.format(project_directory)))
+    #     # )
     
     # Handling POST request
     if request.method == "POST":
@@ -1377,6 +1397,8 @@ def customer_section(request):
                 return HttpResponseRedirect(u'%s' % (reverse('customer_section')))
         
         if 'save_area' in data_post:
+            print 'data_post =========================== ', data_post
+            
             info_window = ''
             area_name = data_post.get('file_name', '')
             total_area = data_post.get('total_area', '')
@@ -1783,10 +1805,13 @@ def customer_section_php(request):
     lonlist = ''
     customer = request.user
     customer_tmp_file = str(customer) + '_result.csv'
+    customer_tmp_for_db = str(customer) + '_db.csv'
     php_file = '{0}_php_tmp.txt'.format(customer)
     file_path_php = os.path.join(KML_PATH, php_file)
     tmp_file_path = os.path.join(TMP_PATH, customer_tmp_file)
+    tmp_db_file_path = os.path.join(TMP_PATH, customer_tmp_for_db)
     result_f_name = 'src/media/temp_files/{0}_result.csv'.format(customer)
+    result_for_db = 'src/media/temp_files/{0}_db.csv'.format(customer)
     
     ####################### write log file
     log_file = '/home/gsi/LOGS/delete_file.log'
@@ -1803,16 +1828,46 @@ def customer_section_php(request):
     if request.method == "GET":
         data_get = request.GET
         
-        # print 'data_get ============================= ', data_get
-        
         if data_get.get('tif_path'):
             file_tif_path = data_get.get('tif_path')
             
+            data_set_id = data_get.get('ds')
+            data_set = DataSet.objects.get(id=data_set_id)
+            shelf_data = ShelfData.objects.all()
+            files_tif = ''
+            sh_data = ''
+            
+            dirs_list = getResultDirectory(data_set, shelf_data)
+            
+            cip_query = CustomerInfoPanel.objects.filter(
+                            user=request.user,
+                            data_set=data_set)
+            
+            for shelfdata in dirs_list:
+                # mean_ConditionalMean_Hdwd_Tons_UserY.F4tech.tif
+                # print 'shelfdata.id ============================= ', type(shelfdata.id)
+                
+                name_1 = shelfdata.root_filename
+                name_2 = data_set.results_directory.split('/')[0]
+                tiff_path = os.path.join(PROJECTS_PATH, data_set.results_directory, name_1)
+                files_tif += tiff_path + '/mean_ConditionalMean_' + name_1 + '.' + name_2 + '.tif,'
+                sh_data += '{0},'.format(shelfdata.id)
+            
+            files_tif = files_tif[0:-1]
+            sh_data = sh_data[0:-1]
+            
+            # print 'dirs_list ============================= ', dirs_list
+            # print 'sh_data ============================= ', sh_data
+            # print 'files_tif ============================= ', files_tif
+            print 'tmp_db_file_path ============================= ', tmp_db_file_path
+            
             try:
                 os.remove(tmp_file_path)
+                os.remove(tmp_db_file_path)
                 
                 ####################### write log file
-                log_delete_file.write('remove FILE: "{0}"'.format(tmp_file_path))
+                log_delete_file.write('remove FILE: "{0}"\n'.format(tmp_file_path))
+                log_delete_file.write('remove DB FILE: "{0}"\n'.format(tmp_db_file_path))
                 ####################### write log file
             except Exception, e:
                 print 'except REMOVE FILE =========================== ', e
@@ -1838,13 +1893,20 @@ def customer_section_php(request):
     log_delete_file.close()
     #######################
     
+    
+    print 'file_tif_path =========================== ', file_tif_path
+    print 'files_tif =========================== ', files_tif
+    
             
     data = {
         'title': title,
         'file_tif_path': file_tif_path,
+        'files_tif': files_tif,
+        'shelf_data': sh_data,
         'latlist': latlist,
         'lonlist': lonlist,
         'result_f_name': result_f_name,
+        'result_for_db': result_for_db,
     }
 
     return data
@@ -1857,6 +1919,20 @@ def customer_delete_file(request):
     title = ''
     customer = request.user
     result_f_name = str(customer) + '_result.csv'
+    result_for_db = str(customer) + '_db.csv'
+    result_ajax_file = str(customer) + '_ajax.csv'
+    
+    tmp_file_path = os.path.join(TMP_PATH, result_f_name)
+    db_file_path = os.path.join(TMP_PATH, result_for_db)
+    ajax_file_path = os.path.join(TMP_PATH, result_ajax_file)
+    
+    customer_ajax_file = open(ajax_file_path, 'w+')
+    
+    ####################### write log file
+    log_file = '/home/gsi/LOGS/customer_delete_file.log'
+    customer_delete_f = open(log_file, 'w+')
+    customer_delete_f.write('DB FILE: "{0}"'.format(os.path.exists(db_file_path)))
+    #######################
     
     if request.is_ajax() and request.method == "GET":
         data = ''
@@ -1864,25 +1940,89 @@ def customer_delete_file(request):
         
         # print 'data_get AJAX ============================= ', data_get_ajax
         
-        ####################### write log file
-        log_file = '/home/gsi/LOGS/create_file.log'
-        log_create_file = open(log_file, 'w+')
-        #######################
-        
         if data_get_ajax.get('delete_file'):
-            tmp_file_path = os.path.join(TMP_PATH, result_f_name)
-            while not os.path.exists(tmp_file_path):
-                print 'NO FILE ==================================='
+            # time.sleep(5)
+            data_set_id = data_get_ajax.get('delete_file')
+            data_set = DataSet.objects.get(id=data_set_id)
+            shelf_data = ShelfData.objects.all()
+            data_ajax = ''
+            
+            print 'db_file_path ====================================== ', db_file_path
+            
+            while not os.path.exists(db_file_path) and not os.path.exists(tmp_file_path):
+                time.sleep(5)
+                print 'NO tmp db FILE ==================================='
+                ####################### write log file
+                customer_delete_f.write('NO tmp db FILE === \n')
+                ####################### write log file
                 pass
+            
+            f_db = open(db_file_path)
+            
+            for l in f_db:
+                line = l.split(',')
                 
-            data = '/media/temp_files/' + result_f_name
+                # print 'L ====================================== ', l
+                print 'line ====================================== ', line
+                
+                shd_id = line[0]
+                shelf_data = ShelfData.objects.get(id=shd_id)
+                
+                if shelf_data.show_totals:
+                    data_ajax += '{0},{1},{2},{3} ha'.\
+                                format(shelf_data.attribute_name, line[3], shelf_data.units, line[4])
+                else:
+                    data_ajax += '{0},{1},{2},{3}\n'.\
+                                format(shelf_data.attribute_name, line[3], shelf_data.units, ' &#8212; ')
+                
+                ####################### write log file
+                customer_delete_f.write('data_ajax: "{0}"\n'.format(data_ajax))
+                ####################### write log file
+                
+            data_ajax = data_ajax.replace('\n', '_')
+            customer_ajax_file.write(data_ajax[0:-1])
+            f_db.close()
+            
+            print 'data_ajax ====================================== ', data_ajax
+            
+            ####################### write log file
+            customer_delete_f.write('DATA AJAX END: "{0}"\n'.format(data_ajax))
+            ####################### write log file
+                
+                
+                
+            # with open(db_file_path) as file:
+            #     # array = [row.rstrip() for row in file]
+            #     # line = l.split(',')
+            #     # f_line = line[0]
+            #     print 'file ====================================== ', file
+                
+                
+            # print 'db_file_path ====================================== ', db_file_path
+            # print 'array ====================================== ', array
+            
+            
+            
+            # while not os.path.exists(tmp_file_path):
+            #     # print 'NO FILE ==================================='
+            #     pass
+                
+            data = '/media/temp_files/' + result_ajax_file
+            # data = data_ajax
+            # file_for_db =
             
             # print 'FILE exists ==================================='
         
             return HttpResponse(data)
+            
+    customer_ajax_file.close()
         
     data = {
         'title': title,
     }
+    
+    ####################### END write log file
+    customer_delete_f.close()
+    #######################
 
     return data
