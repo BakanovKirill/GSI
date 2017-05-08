@@ -1437,9 +1437,9 @@ def customer_section(request):
             info_window += '<thead>\n'
             info_window += '<tr>\n'
             info_window += '<th align="left" style="padding:10px">Attribute</th>\n'
-            info_window += '<th>Value</th>\n'
-            info_window += '<th>Units</th>\n'
-            info_window += '<th>Total</th>\n'
+            info_window += '<th style="padding:10px>Value</th>\n'
+            info_window += '<th style="padding:10px>Units</th>\n'
+            info_window += '<th style="padding:10px>Total</th>\n'
             info_window += '</tr>\n'
             info_window += '</thead>\n'
             info_window += '<tbody>\n'
@@ -1451,9 +1451,9 @@ def customer_section(request):
                     info_window += '<tr>';
                     
                 info_window += '<td align="left" style="padding:10px">{0}</td>\n'.format(attribute[n])
-                info_window += '<td>{0}</td>\n'.format(value[n])
-                info_window += '<td>{0}</td>\n'.format(units[n])
-                info_window += '<td>{0}</td>\n'.format(total[n])
+                info_window += '<td style="padding:10px>{0}</td>\n'.format(value[n])
+                info_window += '<td style="padding:10px>{0}</td>\n'.format(units[n])
+                info_window += '<td style="padding:10px>{0}</td>\n'.format(total[n])
                 info_window += '</tr>\n'
             
             info_window += '</tbody>\n'
