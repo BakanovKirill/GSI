@@ -679,7 +679,13 @@
 				
 				for (var i = 1; i < list_data.length; i++) {
 					new_array = list_data[i].split(',')
-					contentString += '<tr>';
+					
+					if ( i & 1 ) {
+    					contentString += '<tr bgcolor="#F5F5F5">';
+					} else {
+    					contentString += '<tr>';
+					}
+					
 					contentString += '<td align="left">' + new_array[0] + '</td>';
 					contentString += '<td>' + new_array[1] + '</td>';
 					contentString += '<td>' + new_array[2] + '</td>';
@@ -750,6 +756,13 @@
 				
 				for (var i = 1; i < list_data.length; i++) {
 					new_array = list_data[i].split(',')
+					
+					if ( i & 1 ) {
+						contentString += '<tr bgcolor="#F5F5F5">';
+					} else {
+						contentString += '<tr>';
+					}
+					
 					contentString += '<tr>';
 					contentString += '<td align="left">' + new_array[0] + '</td>';
 					contentString += '<td>' + new_array[1] + '</td>';

@@ -1445,7 +1445,11 @@ def customer_section(request):
             info_window += '<tbody>\n'
             
             for n in xrange(len_attr):
-                info_window += '<tr>\n'
+                if n % 2 == 0:
+                    info_window += '<tr bgcolor="#F5F5F5">\n'
+                else:
+                    info_window += '<tr>';
+                    
                 info_window += '<td align="left" style="padding:10px">{0}</td>\n'.format(attribute[n])
                 info_window += '<td>{0}</td>\n'.format(value[n])
                 info_window += '<td>{0}</td>\n'.format(units[n])
