@@ -432,7 +432,6 @@ function initEditArea() {
 }
 
 function deleteFile(ds) {
-    
     var form_url = $('#customer_section').attr('action');
     var x = new XMLHttpRequest();
     x.open("GET", "/customer/delete?delete_file=del", true);

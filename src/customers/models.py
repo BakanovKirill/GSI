@@ -142,5 +142,7 @@ class DataPolygons(models.Model):
                         )
     attribute = models.CharField(max_length=250, blank=True, null=True)
     value = models.CharField(max_length=250, blank=True, null=True)
+    units = models.CharField(max_length=250, blank=True, null=True)
+    total = models.CharField(max_length=250, blank=True, null=True)
     
     

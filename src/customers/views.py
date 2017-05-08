@@ -1397,21 +1397,34 @@ def customer_section(request):
                 return HttpResponseRedirect(u'%s' % (reverse('customer_section')))
         
         if 'save_area' in data_post:
-            print 'data_post =========================== ', data_post
+            # print 'data_post =========================== ', data_post
+            data_kml = data_post.lists()
+            area_name = ''
+            attribute = []
+            value = []
+            units = []
+            total = []
+                    
+            for item in data_kml:
+                if 'area_name' in item:
+                    area_name = item[1][0].replace(' ', '-')
+                    
+                if 'attribute' in item:
+                    attribute = item[1]
+                    
+                if 'value' in item:
+                    value = item[1]
+                    
+                if 'units' in item:
+                    units = item[1]
+                    
+                if 'total' in item:
+                    total = item[1]
+                
+            len_attr = len(attribute)
             
-            info_window = ''
-            area_name = data_post.get('file_name', '')
-            total_area = data_post.get('total_area', '')
-            
-            tree_count = data_post.get('tree_count', '')
-            area_name = area_name.replace(' ', '-')
-            attribute, units = getAttributeUnits(request.user, show_file)
-            
-            shelf_dt = ShelfData.objects.get(attribute_name=attribute, units=units)
-            show_totals = shelf_dt.show_totals
-            
-            info_window += '<h4>Attribute report: {0}</h4>\n'.format(area_name)
-            info_window += '<p align="left"><font size="2">{0}: {1} ha</p></font>\n'.format(ATTRIBUTES_NAME[0], total_area)
+            info_window = '<h4>Attribute report: {0}</h4>\n'.format(area_name)
+            # info_window += '<p align="left"><font size="2">{0}: {1} ha</p></font>\n'.format(ATTRIBUTES_NAME[0], total_area)
             
             info_window += '<table border="1" cellspacing="5" cellpadding="5" style="border-collapse:collapse;border:1px solid black;width:100%;">\n'
             info_window += '<thead>\n'
@@ -1423,42 +1436,14 @@ def customer_section(request):
             info_window += '</tr>\n'
             info_window += '</thead>\n'
             info_window += '<tbody>\n'
-            info_window += '<tr>\n'
-            info_window += '<td>{0}</td>\n'.format(attribute)
-            info_window += '<td>{0}</td>\n'.format(tree_count)
-            info_window += '<td>{0}</td>\n'.format(units)
-            info_window += '<td>&#8212;</td>\n'
-            info_window += '</tr>\n'
             
-            
-            # info_window += '</table>'
-            
-            # <p>{1}: {2} ha</p>
-            # <p>{3}: {4} {5}</p>
-            # '''.format(area_name, ATTRIBUTES_NAME[0], total_area, attribute, tree_count, units)
-            
-            value = '{0} ha'.format(total_area)
-            
-            attributes_dict = {
-                ATTRIBUTES_NAME[0]: value,
-                attribute: '{0} {1}'.format(tree_count, units)
-            }
-            
-            if show_totals and data_post.get('count_hectare', ''):
-                count_hectare = data_post.get('count_hectare', '')
-                count_hectare = count_hectare.replace('\r\n', '')
-                
+            for n in xrange(len_attr):
                 info_window += '<tr>\n'
-                info_window += '<td>{0}</td>\n'.format(ATTRIBUTES_NAME[1])
-                info_window += '<td>{0}</td>\n'.format(count_hectare)
-                info_window += '<td>{0}</td>\n'.format(units)
+                info_window += '<td>{0}</td>\n'.format(attribute[n])
+                info_window += '<td>{0}</td>\n'.format(value[n])
+                info_window += '<td>{0}</td>\n'.format(units[n])
+                info_window += '<td>{0}</td>\n'.format(total[n])
                 info_window += '</tr>\n'
-                
-                # info_window += '''
-                # <p>{0}: {1} {2}</p>
-                # '''.format(ATTRIBUTES_NAME[1], count_hectare, units)
-                value = '{0} {1}'.format(count_hectare, units)
-                attributes_dict[ATTRIBUTES_NAME[1]] = '{0} {1}'.format(count_hectare, units)
             
             info_window += '</tbody>\n'
             info_window += '</table>'
@@ -1466,20 +1451,26 @@ def customer_section(request):
             # Create KML file for the draw polygon
             cur_polygon = createKml(request.user, area_name, info_window, absolute_kml_url)
             
-            for attr in attributes_dict:
-                if not DataPolygons.objects.filter(customer_polygons=cur_polygon,
-                    attribute=attr).exists():
+            for n in xrange(len_attr):
+                if not DataPolygons.objects.filter(
+                    customer_polygons=cur_polygon, attribute=attribute[n]).exists():
                         DataPolygons.objects.create(
                             customer_polygons=cur_polygon,
-                            attribute=attr,
-                            value=attributes_dict[attr]
+                            attribute=attribute[n],
+                            value=value[n],
+                            units=units[n],
+                            total=total[n]
                         )
-                elif DataPolygons.objects.filter(customer_polygons=cur_polygon,
-                    attribute=attr).exists():
+                elif DataPolygons.objects.filter(
+                    customer_polygons=cur_polygon, attribute=attribute[n]).exists():
                         DataPolygons.objects.filter(
-                            customer_polygons=cur_polygon,
-                            attribute=attr
-                        ).update(value=attributes_dict[attr])
+                            customer_polygons=cur_polygon, attribute=attribute[n]
+                        ).update(
+                            attribute=attribute[n],
+                            value=value[n],
+                            units=units[n],
+                            total=total[n]
+                        )
         
         if 'add-list-view' in data_post:
             if 'root_filenames[]' in data_post and 'statistics[]' in data_post:
@@ -1947,11 +1938,9 @@ def customer_delete_file(request):
             shelf_data = ShelfData.objects.all()
             data_ajax = ''
             
-            print 'db_file_path ====================================== ', db_file_path
-            
             while not os.path.exists(db_file_path) and not os.path.exists(tmp_file_path):
                 time.sleep(5)
-                print 'NO tmp db FILE ==================================='
+                # print 'NO tmp db FILE ==================================='
                 ####################### write log file
                 customer_delete_f.write('NO tmp db FILE === \n')
                 ####################### write log file
@@ -1961,19 +1950,17 @@ def customer_delete_file(request):
             
             for l in f_db:
                 line = l.split(',')
-                
-                # print 'L ====================================== ', l
-                print 'line ====================================== ', line
-                
                 shd_id = line[0]
                 shelf_data = ShelfData.objects.get(id=shd_id)
                 
                 if shelf_data.show_totals:
-                    data_ajax += '{0},{1},{2},{3} ha'.\
-                                format(shelf_data.attribute_name, line[3], shelf_data.units, line[4])
+                    ha = line[4].replace('\n', ' ha')
+                    ha = '{0}\n'.format(ha)
+                    data_ajax += '{0},{1},{2},{3}'.\
+                                format(shelf_data.attribute_name, line[3], shelf_data.units, ha)
                 else:
-                    data_ajax += '{0},{1},{2},{3}\n'.\
-                                format(shelf_data.attribute_name, line[3], shelf_data.units, ' &#8212; ')
+                    data_ajax += '{0},{1},{2}, - \n'.\
+                                format(shelf_data.attribute_name, line[3], shelf_data.units)
                 
                 ####################### write log file
                 customer_delete_f.write('data_ajax: "{0}"\n'.format(data_ajax))
@@ -1983,36 +1970,16 @@ def customer_delete_file(request):
             customer_ajax_file.write(data_ajax[0:-1])
             f_db.close()
             
-            print 'data_ajax ====================================== ', data_ajax
+            # print 'data_ajax ====================================== ', data_ajax
             
             ####################### write log file
             customer_delete_f.write('DATA AJAX END: "{0}"\n'.format(data_ajax))
             ####################### write log file
                 
-                
-                
-            # with open(db_file_path) as file:
-            #     # array = [row.rstrip() for row in file]
-            #     # line = l.split(',')
-            #     # f_line = line[0]
-            #     print 'file ====================================== ', file
-                
-                
-            # print 'db_file_path ====================================== ', db_file_path
-            # print 'array ====================================== ', array
-            
-            
-            
-            # while not os.path.exists(tmp_file_path):
-            #     # print 'NO FILE ==================================='
-            #     pass
-                
             data = '/media/temp_files/' + result_ajax_file
             # data = data_ajax
             # file_for_db =
             
-            # print 'FILE exists ==================================='
-        
             return HttpResponse(data)
             
     customer_ajax_file.close()

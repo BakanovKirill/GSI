@@ -65,9 +65,9 @@ class DataTerraserverAdmin(admin.ModelAdmin):
     
     
 class DataPolygonsAdmin(admin.ModelAdmin):
-    list_display = ('customer_polygons', 'attribute', 'value')
-    search_fields = ['customer_polygons', 'attribute']
-    list_filter = ('customer_polygons', 'attribute')
+    list_display = ('customer_polygons', 'attribute', 'value', 'units', 'total')
+    search_fields = ['customer_polygons', 'attribute', 'units']
+    list_filter = ('customer_polygons', 'attribute', 'units')
 
 
 admin.site.register(Category, CategoryAdmin)
