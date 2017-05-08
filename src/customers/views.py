@@ -1400,12 +1400,17 @@ def customer_section(request):
             # print 'data_post =========================== ', data_post
             data_kml = data_post.lists()
             area_name = ''
+            total_area = ''
             attribute = []
             value = []
             units = []
             total = []
                     
             for item in data_kml:
+                # total_area
+                if 'total_area' in item:
+                    total_area = item[1][0]
+                    
                 if 'area_name' in item:
                     area_name = item[1][0].replace(' ', '-')
                     
@@ -1420,16 +1425,18 @@ def customer_section(request):
                     
                 if 'total' in item:
                     total = item[1]
-                
+                    
             len_attr = len(attribute)
             
-            info_window = '<h4>Attribute report: {0}</h4>\n'.format(area_name)
+            info_window = '<h4 align="center">Attribute report: {0}</h4>\n'.format(area_name)
+            info_window += '<p align="center"><span><b>Total Area:</b></span> ' + total_area + ' ha</p>';
             # info_window += '<p align="left"><font size="2">{0}: {1} ha</p></font>\n'.format(ATTRIBUTES_NAME[0], total_area)
             
             info_window += '<table border="1" cellspacing="5" cellpadding="5" style="border-collapse:collapse;border:1px solid black;width:100%;">\n'
+            # info_window += '<caption align="left" style="margin-bottom:15px"><span><b>Total Area:</b></span> ' + total_area + ' ha</caption>'
             info_window += '<thead>\n'
             info_window += '<tr>\n'
-            info_window += '<th>Attribute</th>\n'
+            info_window += '<th align="left" style="padding:10px">Attribute</th>\n'
             info_window += '<th>Value</th>\n'
             info_window += '<th>Units</th>\n'
             info_window += '<th>Total</th>\n'
@@ -1439,7 +1446,7 @@ def customer_section(request):
             
             for n in xrange(len_attr):
                 info_window += '<tr>\n'
-                info_window += '<td>{0}</td>\n'.format(attribute[n])
+                info_window += '<td align="left" style="padding:10px">{0}</td>\n'.format(attribute[n])
                 info_window += '<td>{0}</td>\n'.format(value[n])
                 info_window += '<td>{0}</td>\n'.format(units[n])
                 info_window += '<td>{0}</td>\n'.format(total[n])
@@ -1850,11 +1857,14 @@ def customer_section_php(request):
             # print 'dirs_list ============================= ', dirs_list
             # print 'sh_data ============================= ', sh_data
             # print 'files_tif ============================= ', files_tif
-            print 'tmp_db_file_path ============================= ', tmp_db_file_path
+            # print 'tmp_db_file_path ============================= ', tmp_db_file_path
             
             try:
                 os.remove(tmp_file_path)
                 os.remove(tmp_db_file_path)
+                
+                # print 'remove FILE: "{0}"'.format(tmp_file_path)
+                # print 'remove FILE: "{0}"'.format(tmp_db_file_path)
                 
                 ####################### write log file
                 log_delete_file.write('remove FILE: "{0}"\n'.format(tmp_file_path))
@@ -1885,8 +1895,8 @@ def customer_section_php(request):
     #######################
     
     
-    print 'file_tif_path =========================== ', file_tif_path
-    print 'files_tif =========================== ', files_tif
+    # print 'file_tif_path =========================== ', file_tif_path
+    # print 'files_tif =========================== ', files_tif
     
             
     data = {
@@ -1917,8 +1927,6 @@ def customer_delete_file(request):
     db_file_path = os.path.join(TMP_PATH, result_for_db)
     ajax_file_path = os.path.join(TMP_PATH, result_ajax_file)
     
-    customer_ajax_file = open(ajax_file_path, 'w+')
-    
     ####################### write log file
     log_file = '/home/gsi/LOGS/customer_delete_file.log'
     customer_delete_f = open(log_file, 'w+')
@@ -1933,14 +1941,17 @@ def customer_delete_file(request):
         
         if data_get_ajax.get('delete_file'):
             # time.sleep(5)
+            customer_ajax_file = open(ajax_file_path, 'w+')
             data_set_id = data_get_ajax.get('delete_file')
             data_set = DataSet.objects.get(id=data_set_id)
             shelf_data = ShelfData.objects.all()
             data_ajax = ''
+            data_ajax_total = ''
             
             while not os.path.exists(db_file_path) and not os.path.exists(tmp_file_path):
                 time.sleep(5)
-                # print 'NO tmp db FILE ==================================='
+                # print 'FILE {0}: {1} ==================================='.format(db_file_path, os.path.exists(db_file_path))
+                # print 'FILE {0}: {1} ==================================='.format(tmp_file_path, os.path.exists(tmp_file_path))
                 ####################### write log file
                 customer_delete_f.write('NO tmp db FILE === \n')
                 ####################### write log file
@@ -1952,12 +1963,13 @@ def customer_delete_file(request):
                 line = l.split(',')
                 shd_id = line[0]
                 shelf_data = ShelfData.objects.get(id=shd_id)
+                data_ajax_total = '{0}_'.format(line[2])
                 
                 if shelf_data.show_totals:
-                    ha = line[4].replace('\n', ' ha')
-                    ha = '{0}\n'.format(ha)
+                    # ha = line[4].replace('\n', ' ha')
+                    # ha = '{0}\n'.format(ha)
                     data_ajax += '{0},{1},{2},{3}'.\
-                                format(shelf_data.attribute_name, line[3], shelf_data.units, ha)
+                                format(shelf_data.attribute_name, line[3], shelf_data.units, line[4])
                 else:
                     data_ajax += '{0},{1},{2}, - \n'.\
                                 format(shelf_data.attribute_name, line[3], shelf_data.units)
@@ -1967,8 +1979,11 @@ def customer_delete_file(request):
                 ####################### write log file
                 
             data_ajax = data_ajax.replace('\n', '_')
-            customer_ajax_file.write(data_ajax[0:-1])
+            data_ajax_total += data_ajax[0:-1]
+            customer_ajax_file.write(data_ajax_total)
+            # customer_ajax_file.write(data_ajax[0:-1])
             f_db.close()
+            customer_ajax_file.close()
             
             # print 'data_ajax ====================================== ', data_ajax
             
@@ -1980,9 +1995,12 @@ def customer_delete_file(request):
             # data = data_ajax
             # file_for_db =
             
+            # print 'DATA data_ajax_total ======================= ', data_ajax_total
+            # print 'DATA delete_file ======================= ', data
+            
             return HttpResponse(data)
             
-    customer_ajax_file.close()
+    
         
     data = {
         'title': title,

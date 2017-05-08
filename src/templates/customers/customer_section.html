@@ -649,23 +649,27 @@
 				
 				var center_pol = polygonCenter(selectPolygon);
 				coord = [];
-				
-				// alert('text1: '+coord);
-				
 				var list_data = data_polygon.split('_');
+				
 				
 				// alert('list_data: '+list_data);
 				// alert('list_data 0: '+list_data[0]);
 				// alert('list_data 1: '+list_data[1]);
 				// alert('list_data 2: '+list_data[2]);
+				// alert('list_data 3: '+list_data[3]);
+				//
+				// alert('data_polygon: '+data_polygon);
 				
-				var contentString = '<p class="left"><b>Area Information</b></p>';
+				var contentString = '<h4 align="center"><b>Area Information</b></h4>';
+				contentString += '<p align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</p>';
+				contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
+				
 				contentString += '<table class="table table-bordered">';
-				// contentString += '<caption><span class="right"><b>Total Area: ' + list_data[0] + ' ha</b></span></caption>'
-				// contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
+				// contentString += '<caption align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</caption>'
+				
 				contentString += '<thead>';
 				contentString += '<tr>';
-				contentString += '<th>Attribute</th>';
+				contentString += '<th align="left">Attribute</th>';
 				contentString += '<th>Value</th>';
 				contentString += '<th>Units</th>';
 				contentString += '<th>Total</th>';
@@ -673,10 +677,10 @@
 				contentString += '</thead>';
 				contentString += '<tbody>';
 				
-				for (var i = 0; i < list_data.length; i++) {
+				for (var i = 1; i < list_data.length; i++) {
 					new_array = list_data[i].split(',')
 					contentString += '<tr>';
-					contentString += '<td>' + new_array[0] + '</td>';
+					contentString += '<td align="left">' + new_array[0] + '</td>';
 					contentString += '<td>' + new_array[1] + '</td>';
 					contentString += '<td>' + new_array[2] + '</td>';
 					contentString += '<td>' + new_array[3] + '</td>';
@@ -711,8 +715,6 @@
 				if (httpRequest.status != 200)
   					return;
 					
-				// alert('VAL: '+httpRequest.responseText);
-				
 				data_polygon = httpRequest.responseText;
 			}
 
@@ -729,13 +731,16 @@
 				var lon = event.latLng.lng();
 				var list_data = data_polygon.split('_');
 				
-				var contentString = '<p class="left"><b>Area Information</b></p>';
+				var contentString = '<h4 align="center"><b>Area Information</b></h4>';
+				contentString += '<p align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</p>';
+				contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
+				
 				contentString += '<table class="table table-bordered">';
-				// contentString += '<caption><span class="right"><b>Total Area: ' + list_data[0] + ' ha</b></span></caption>'
-				// contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
+				// contentString += '<caption align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</caption>'
+				
 				contentString += '<thead>';
 				contentString += '<tr>';
-				contentString += '<th>Attribute</th>';
+				contentString += '<th align="left">Attribute</th>';
 				contentString += '<th>Value</th>';
 				contentString += '<th>Units</th>';
 				contentString += '<th>Total</th>';
@@ -743,10 +748,10 @@
 				contentString += '</thead>';
 				contentString += '<tbody>';
 				
-				for (var i = 0; i < list_data.length; i++) {
+				for (var i = 1; i < list_data.length; i++) {
 					new_array = list_data[i].split(',')
 					contentString += '<tr>';
-					contentString += '<td>' + new_array[0] + '</td>';
+					contentString += '<td align="left">' + new_array[0] + '</td>';
 					contentString += '<td>' + new_array[1] + '</td>';
 					contentString += '<td>' + new_array[2] + '</td>';
 					contentString += '<td>' + new_array[3] + '</td>';
@@ -756,7 +761,7 @@
 					contentString += '<input type="hidden" name="units" value="' + new_array[2] + '">'
 					contentString += '<input type="hidden" name="total" value="' + new_array[3] + '">'
 				}
-				
+
 				contentString += '</tbody>';
 				contentString += '</table>';
 				

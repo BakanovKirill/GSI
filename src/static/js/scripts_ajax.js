@@ -432,12 +432,11 @@ function initEditArea() {
 }
 
 function deleteFile(ds) {
+    // alert('deleteFile '+ds);
     var form_url = $('#customer_section').attr('action');
     var x = new XMLHttpRequest();
     x.open("GET", "/customer/delete?delete_file=del", true);
     x.send(null);
-    
-    // alert('DATA !!! '+form_url);
     
     $.ajax({
         url: '/customer/delete',
@@ -449,12 +448,13 @@ function deleteFile(ds) {
             'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
         },
         'error': function(xhr, status, error){
-            // alert('error: '+error);
+            alert('error: '+error);
             var message = 'An unexpected error occurred. Try later.';
             alert(message);
         },
         'success': function(data, status, xhr){
-            // alert('deleteTMPFile: '+data);
+            // alert('DATA deleteTMPFile: '+data);
+            // alert('deleteTMPFile status: '+status);
             // /media/temp_files/result.csv
             var obj_status = status;
             getTmpCSV(data);
