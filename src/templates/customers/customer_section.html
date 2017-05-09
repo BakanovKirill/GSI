@@ -650,6 +650,7 @@
 				var center_pol = polygonCenter(selectPolygon);
 				coord = [];
 				var list_data = data_polygon.split('_');
+				var count_pol = list_data.length;
 				
 				
 				// alert('list_data: '+list_data);
@@ -664,6 +665,12 @@
 				contentString += '<p align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</p>';
 				contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
 				
+				if (count_pol >= 8) {
+					contentString += '<div style="height:300px;overflow:scroll;">';
+				} else {
+					contentString += '<div style="overflow:auto;">';
+				}
+				
 				contentString += '<table class="table table-bordered">';
 				// contentString += '<caption align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</caption>'
 				
@@ -677,7 +684,7 @@
 				contentString += '</thead>';
 				contentString += '<tbody>';
 				
-				for (var i = 1; i < list_data.length; i++) {
+				for (var i = 1; i < count_pol; i++) {
 					new_array = list_data[i].split(',')
 					
 					if ( i & 1 ) {
@@ -699,6 +706,7 @@
 
 				contentString += '</tbody>';
 				contentString += '</table>';
+				contentString += '</div>';
 				
 				
 				// contentString += '<p class="left">COORDINATE:</p>';
@@ -741,7 +749,13 @@
 				contentString += '<p align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</p>';
 				contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
 				
-				contentString += '<table class="table table-bordered">';
+				if (count_pol >= 8) {
+					contentString += '<div style="height:300px;overflow:scroll;">';
+				} else {
+					contentString += '<div style="overflow:auto;">';
+				}
+				
+				contentString += '<table class="table table-bordered" style="height:50px;overflow:scroll;">';
 				// contentString += '<caption align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</caption>'
 				
 				contentString += '<thead>';
@@ -777,6 +791,7 @@
 
 				contentString += '</tbody>';
 				contentString += '</table>';
+				contentString += '</div>';
 				
 				contentString += '<input type="text" id="input_area_name" class="margin-top-15" placeholder="Enter Area name" name="file_name" size="30" style="width:100%" onkeyup="changeAreaName();" autofocus><br>'
 				contentString += '<button type="submit" name="save_area" class="btn btn-success btn-block margin-top-15" value="save_area" disabled id="save_area">Save Area</button>';

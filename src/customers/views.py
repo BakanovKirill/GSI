@@ -1080,7 +1080,8 @@ def getResultDirectory(dataset, shelfdata):
     try:
         project_directory = os.path.join(PROJECTS_PATH, data_set.results_directory)
         root, dirs, files = os.walk(project_directory).next()
-
+        dirs.sort()
+        
         for sd in shelf_data_all:
             if str(sd.root_filename) in dirs:
                 dirs_list.append(sd)
@@ -1432,6 +1433,11 @@ def customer_section(request):
             info_window += '<p align="center"><span><b>Total Area:</b></span> ' + total_area + ' ha</p>';
             # info_window += '<p align="left"><font size="2">{0}: {1} ha</p></font>\n'.format(ATTRIBUTES_NAME[0], total_area)
             
+            if len_attr >= 8:
+                info_window += '<div style="height:300px;overflow:scroll;">'
+            else:
+                contentString += '<div style="overflow:auto;">'
+            
             info_window += '<table border="1" cellspacing="5" cellpadding="5" style="border-collapse:collapse;border:1px solid black;width:100%;">\n'
             # info_window += '<caption align="left" style="margin-bottom:15px"><span><b>Total Area:</b></span> ' + total_area + ' ha</caption>'
             info_window += '<thead>\n'
@@ -1457,7 +1463,8 @@ def customer_section(request):
                 info_window += '</tr>\n'
             
             info_window += '</tbody>\n'
-            info_window += '</table>'
+            info_window += '</table>\n'
+            info_window += '</div>'
                 
             # Create KML file for the draw polygon
             cur_polygon = createKml(request.user, area_name, info_window, absolute_kml_url)
@@ -1835,15 +1842,15 @@ def customer_section_php(request):
             
             data_set_id = data_get.get('ds')
             data_set = DataSet.objects.get(id=data_set_id)
-            shelf_data = ShelfData.objects.all()
+            shelf_data = ShelfData.objects.all().order_by('attribute_name')
             files_tif = ''
             sh_data = ''
             
             dirs_list = getResultDirectory(data_set, shelf_data)
             
-            cip_query = CustomerInfoPanel.objects.filter(
-                            user=request.user,
-                            data_set=data_set)
+            # cip_query = CustomerInfoPanel.objects.filter(
+            #                 user=request.user,
+            #                 data_set=data_set)
             
             for shelfdata in dirs_list:
                 # mean_ConditionalMean_Hdwd_Tons_UserY.F4tech.tif
