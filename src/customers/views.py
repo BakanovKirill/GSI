@@ -1435,7 +1435,7 @@ def customer_section(request):
             info_window += '<table border="1" cellspacing="5" cellpadding="5" style="border-collapse:collapse;border:1px solid black;width:100%;">\n'
             # info_window += '<caption align="left" style="margin-bottom:15px"><span><b>Total Area:</b></span> ' + total_area + ' ha</caption>'
             info_window += '<thead>\n'
-            info_window += '<tr>\n'
+            info_window += '<tr bgcolor="#CFCFCF">\n'
             info_window += '<th align="left" style="padding:10px">Attribute</th>\n'
             info_window += '<th style="padding:10px">Value</th>\n'
             info_window += '<th style="padding:10px">Units</th>\n'
