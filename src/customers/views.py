@@ -1434,7 +1434,7 @@ def customer_section(request):
             # info_window += '<p align="left"><font size="2">{0}: {1} ha</p></font>\n'.format(ATTRIBUTES_NAME[0], total_area)
             
             if len_attr >= 8:
-                info_window += '<div style="height:300px;overflow:scroll;">'
+                info_window += '<div style="height:350px;overflow:scroll;">'
             else:
                 contentString += '<div style="overflow:auto;">'
             
