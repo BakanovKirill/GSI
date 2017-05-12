@@ -997,7 +997,7 @@ def getGeoCoord(filename):
     return coord
     
     
-def addPolygonToDB(name, kml_name, user, kml_path, kml_url):
+def addPolygonToDB(name, kml_name, user, kml_path, kml_url, ds):
     customer_pol = CustomerPolygons.objects.none()
     
     if CustomerPolygons.objects.filter(name=name).exists():
@@ -1005,6 +1005,7 @@ def addPolygonToDB(name, kml_name, user, kml_path, kml_url):
             name=name,
             kml_name=kml_name,
             user=user,
+            data_set=ds,
             kml_path=kml_path,
             kml_url=kml_url
         )
@@ -1012,6 +1013,7 @@ def addPolygonToDB(name, kml_name, user, kml_path, kml_url):
                             name=name,
                             kml_name=kml_name,
                             user=user,
+                            data_set=ds,
                             kml_path=kml_path,
                             kml_url=kml_url
                         )
@@ -1020,6 +1022,7 @@ def addPolygonToDB(name, kml_name, user, kml_path, kml_url):
                             name=name,
                             kml_name=kml_name,
                             user=user,
+                            data_set=ds,
                             kml_path=kml_path,
                             kml_url=kml_url
                         )
@@ -1027,7 +1030,7 @@ def addPolygonToDB(name, kml_name, user, kml_path, kml_url):
     return customer_pol
     
     
-def createKml(user, filename, info_window, url):
+def createKml(user, filename, info_window, url, data_set):
     # Create KML file for the draw polygon
     kml_filename = str(filename) + '.kml'
     tmp_file = str(user) + '_coord_tmp.txt'
@@ -1051,7 +1054,7 @@ def createKml(user, filename, info_window, url):
     kml_path = os.path.join(KML_PATH, kml_filename)
     kml.save(kml_path)
     
-    polygon = addPolygonToDB(filename, kml_filename, user, kml_path, kml_url)
+    polygon = addPolygonToDB(filename, kml_filename, user, kml_path, kml_url, data_set)
     
     return polygon
     
@@ -1325,7 +1328,7 @@ def customer_section(request):
         status = 'success'
 
         return HttpResponse(data)
-
+        
     # Get data for the Info Panel
     # Get DataSet for the Info Panel
     try:
@@ -1339,6 +1342,7 @@ def customer_section(request):
 
     # Get the results_directory list
     dirs_list = getResultDirectory(data_set, shelf_data_all)
+    # dirs_list = CustomerPolygons.object.filter(data_set=data_set)
     # try:
     #     project_directory = os.path.join(PROJECTS_PATH, data_set.results_directory)
     #     root, dirs, files = os.walk(project_directory).next()
@@ -1371,7 +1375,7 @@ def customer_section(request):
             cur_area.delete()
             cur_data_polygons = DataPolygons.objects.filter(
                                     customer_polygons=cur_area
-                                    )
+                                )
             for data_pol in cur_data_polygons:
                 data_pol.delete()
         
@@ -1436,7 +1440,7 @@ def customer_section(request):
             if len_attr >= 8:
                 info_window += '<div style="height:400px;overflow:scroll;">'
             else:
-                contentString += '<div style="overflow:auto;">'
+                info_window += '<div style="overflow:auto;">'
             
             info_window += '<table border="1" cellspacing="5" cellpadding="5" style="border-collapse:collapse;border:1px solid black;width:100%;">\n'
             # info_window += '<caption align="left" style="margin-bottom:15px"><span><b>Total Area:</b></span> ' + total_area + ' ha</caption>'
@@ -1467,27 +1471,32 @@ def customer_section(request):
             info_window += '</div>'
                 
             # Create KML file for the draw polygon
-            cur_polygon = createKml(request.user, area_name, info_window, absolute_kml_url)
+            ds = DataSet.objects.get(pk=data_set_id)
+            cur_polygon = createKml(request.user, area_name, info_window, absolute_kml_url, ds)
             
             for n in xrange(len_attr):
-                if not DataPolygons.objects.filter(
+                if not DataPolygons.objects.filter(user=request.user, data_set=data_set,
                     customer_polygons=cur_polygon, attribute=attribute[n]).exists():
                         DataPolygons.objects.create(
+                            user=request.user,
                             customer_polygons=cur_polygon,
+                            data_set=data_set,
                             attribute=attribute[n],
                             value=value[n],
                             units=units[n],
-                            total=total[n]
+                            total=total[n],
+                            total_area=total_area+' ha'
                         )
-                elif DataPolygons.objects.filter(
+                elif DataPolygons.objects.filter(user=request.user, data_set=data_set,
                     customer_polygons=cur_polygon, attribute=attribute[n]).exists():
                         DataPolygons.objects.filter(
                             customer_polygons=cur_polygon, attribute=attribute[n]
                         ).update(
-                            attribute=attribute[n],
+                            # attribute=attribute[n],
                             value=value[n],
                             units=units[n],
-                            total=total[n]
+                            total=total[n],
+                            total_area=total_area+' ha'
                         )
         
         if 'add-list-view' in data_post:
@@ -1736,14 +1745,18 @@ def customer_section(request):
         
     # Get the polygons list from media folder
     try:
-        root, dirs, files = os.walk(polygons_path).next()
-        
-        for pol in customer_polygons:
-            if pol.kml_name in files:
-                file_extension = os.path.splitext(pol.kml_name)
-                polygons.append(pol)
-            else:
-                pol.delete()
+        polygons = CustomerPolygons.objects.filter(
+                        user=request.user,
+                        data_set=data_set
+                    )
+        # root, dirs, files = os.walk(polygons_path).next()
+        #
+        # for pol in customer_polygons:
+        #     if pol.kml_name in files:
+        #         file_extension = os.path.splitext(pol.kml_name)
+        #         polygons.append(pol)
+        #     else:
+        #         pol.delete()
     except Exception, e:
         print 'Exception 02 ========================= ', e
         warning_message = u'The polygon directory "{0}" does not exist!'.format(polygons_path)
@@ -1804,7 +1817,8 @@ def customer_section(request):
     
 
 # PHP calculations
-@user_passes_test(lambda u: u.is_superuser)
+# @user_passes_test(lambda u: u.is_superuser)
+@login_required
 @render_to('customers/customer_section_php.html')
 def customer_section_php(request):
     title = 'PHP page'
@@ -1925,7 +1939,8 @@ def customer_section_php(request):
     
     
 # Delete TMP file
-@user_passes_test(lambda u: u.is_superuser)
+# @user_passes_test(lambda u: u.is_superuser)
+@login_required
 @render_to('customers/customer_delete_file.html')
 def customer_delete_file(request):
     title = ''

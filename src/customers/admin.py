@@ -53,9 +53,9 @@ class CustomerInfoPanelAdmin(admin.ModelAdmin):
     
     
 class CustomerPolygonsAdmin(admin.ModelAdmin):
-    list_display = ('user', 'name', 'kml_name', 'kml_path', 'kml_url')
-    search_fields = ['user', 'name']
-    list_filter = ('user', 'name')
+    list_display = ('user', 'name', 'data_set', 'kml_name', 'kml_path', 'kml_url')
+    search_fields = ['user', 'name', 'data_set']
+    list_filter = ('user', 'name', 'data_set')
     
     
 class DataTerraserverAdmin(admin.ModelAdmin):
@@ -65,9 +65,10 @@ class DataTerraserverAdmin(admin.ModelAdmin):
     
     
 class DataPolygonsAdmin(admin.ModelAdmin):
-    list_display = ('customer_polygons', 'attribute', 'value', 'units', 'total')
-    search_fields = ['customer_polygons', 'attribute', 'units']
-    list_filter = ('customer_polygons', 'attribute', 'units')
+    list_display = ('user', 'data_set', 'customer_polygons', 'attribute',
+                    'value', 'units', 'total', 'total_area')
+    search_fields = ['user', 'data_set', 'customer_polygons', 'attribute', 'units']
+    list_filter = ('user', 'data_set', 'customer_polygons', 'attribute', 'units')
 
 
 admin.site.register(Category, CategoryAdmin)

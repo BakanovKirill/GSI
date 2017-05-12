@@ -102,6 +102,12 @@ class CustomerInfoPanel(models.Model):
 class CustomerPolygons(models.Model):
     name = models.CharField(max_length=150, blank=True, null=True)
     user = models.ForeignKey(User, verbose_name='User', blank=True, null=True)
+    data_set = models.ForeignKey(
+                DataSet,
+                verbose_name='Shapefiles',
+                blank=True, null=True, related_name='shapefiles',
+                on_delete=models.CASCADE
+            )
     kml_name = models.CharField(max_length=150, blank=True, null=True)
     kml_path = models.CharField(max_length=150, blank=True, null=True)
     kml_url = models.CharField(max_length=150, blank=True, null=True)
@@ -134,15 +140,26 @@ class DataTerraserver(models.Model):
         
         
 class DataPolygons(models.Model):
+    data_set = models.ForeignKey(
+                    DataSet,
+                    verbose_name='DataSet',
+                    blank=True, null=True, related_name='attributes',
+                    on_delete=models.CASCADE
+                )
     customer_polygons = models.ForeignKey(
-                            CustomerPolygons,
-                            verbose_name='Customer Polygons',
-                            blank=True, null=True, related_name='data_polygons',
-                            on_delete=models.CASCADE
-                        )
+                    CustomerPolygons,
+                    verbose_name='Customer Polygons',
+                    blank=True, null=True, related_name='attributes_shapefile',
+                    on_delete=models.CASCADE
+                )
+    user = models.ForeignKey(User, verbose_name='Polygons User',
+                blank=True, null=True, related_name='shapefiles_user',
+                on_delete=models.CASCADE
+            )
     attribute = models.CharField(max_length=250, blank=True, null=True)
     value = models.CharField(max_length=250, blank=True, null=True)
     units = models.CharField(max_length=250, blank=True, null=True)
     total = models.CharField(max_length=250, blank=True, null=True)
+    total_area = models.CharField(max_length=250, blank=True, null=True)
     
     
