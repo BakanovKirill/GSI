@@ -397,7 +397,7 @@ class DataSetsList(APIView):
                         # shapefile = CustomerPolygons.objects.get(id=shapefile_id)
                         # url_status = status.HTTP_200_OK
                         if not CustomerPolygons.objects.filter(id=shapefile_id).exists():
-                            content += {'error the parameter "shapefile"': 'Invalid or missing the parameters "shapefile".'}
+                            content['error the parameter "shapefile"'] = 'Invalid or missing the parameters "shapefile".'
                         else:
                             data = CustomerPolygons.objects.get(id=shapefile_id)
                             # data = DataSet.objects.get(id=dataset_id, shapefiles=shapefile_id)
