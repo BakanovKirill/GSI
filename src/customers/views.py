@@ -1656,6 +1656,22 @@ def customer_section(request):
                     file_tif = customer_info_panel_file[0].tif_path
                     file_png = customer_info_panel_file[0].png_path
                     url_png = customer_info_panel_file[0].url_png
+                    
+                    ####################### write log file
+                    log_file = '/home/gsi/LOGS/customer_section.log'
+                    customer_section = open(log_file, 'a+')
+                    now = datetime.now()
+                    customer_section.write('USER: '+str(request.user))
+                    customer_section.write('\n')
+                    customer_section.write('DATA SET: '+str(data_set))
+                    customer_section.write('\n')
+                    customer_section.write('FILE AREA NAME: '+str(show_file))
+                    customer_section.write('\n')
+                    customer_section.write('CUSTOMER INFO PANEL: '+str(customer_info_panel_file))
+                    customer_section.write('\n')
+                    
+                    customer_section.close()
+                    #######################
 
                     # Convert tif to png
 
