@@ -409,9 +409,9 @@ class DataSetsList(APIView):
                                 serializer = CustomerPolygonSerializer(data)
                                 content = serializer.data
                     else:
-                        content = {'message error': '1 Invalid or missing the parameters for request.'}
+                        content = {'message error': 'Invalid or missing the parameters for request.'}
                 except CustomerPolygons.DoesNotExist:
-                    content = {'message error': '2 Invalid or missing the parameters for request.'}
+                    content = {'message error': 'Invalid or missing the parameters for request.'}
             else:
                 customer_access = CustomerAccess.objects.get(user=request.user)
                 queryset = DataSet.objects.filter(customer_access=customer_access).order_by('id')
