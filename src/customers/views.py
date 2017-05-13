@@ -1649,13 +1649,13 @@ def customer_section(request):
             if CustomerInfoPanel.objects.filter(
                     user=request.user, data_set=data_set, file_area_name=show_file).exists():
                 try:
-                    customer_info_panel_file = CustomerInfoPanel.objects.get(
+                    customer_info_panel_file = CustomerInfoPanel.objects.filter(
                                                 user=request.user,
                                                 data_set=data_set,
                                                 file_area_name=show_file)
-                    file_tif = customer_info_panel_file.tif_path
-                    file_png = customer_info_panel_file.png_path
-                    url_png = customer_info_panel_file.url_png
+                    file_tif = customer_info_panel_file[0].tif_path
+                    file_png = customer_info_panel_file[0].png_path
+                    url_png = customer_info_panel_file[0].url_png
 
                     # Convert tif to png
 
