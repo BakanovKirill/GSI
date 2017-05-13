@@ -391,13 +391,19 @@ class DataSetsList(APIView):
                     if 'dataset' in request.query_params and 'shapefile' in request.query_params:
                         dataset_id = request.query_params['dataset']
                         shapefile_id = request.query_params['shapefile']
+                        
+                        if not DataSet.objects.filter(id=dataset_id).exists:
+                            content = {'message error': 'Invalid or missing the parameters "dataset".'}
                         # shapefile = CustomerPolygons.objects.get(id=shapefile_id)
                         # url_status = status.HTTP_200_OK
-                        data = CustomerPolygons.objects.get(id=shapefile_id)
-                        # data = DataSet.objects.get(id=dataset_id, shapefiles=shapefile_id)
-                        # serializer = DataSetSerializer(data)
-                        serializer = CustomerPolygonSerializer(data)
-                        content = serializer.data
+                        if not CustomerPolygons.objects.filter(id=shapefile_id).exists:
+                            content = {'message error': 'Invalid or missing the parameters "shapefile".'}
+                        else:
+                            data = CustomerPolygons.objects.get(id=shapefile_id)
+                            # data = DataSet.objects.get(id=dataset_id, shapefiles=shapefile_id)
+                            # serializer = DataSetSerializer(data)
+                            serializer = CustomerPolygonSerializer(data)
+                            content = serializer.data
                     else:
                         content = {'message error': 'Invalid or missing the parameters for request.'}
                 except CustomerPolygons.DoesNotExist:
