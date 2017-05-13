@@ -47,9 +47,9 @@ class CustomerAccessAdmin(admin.ModelAdmin):
 
 
 class CustomerInfoPanelAdmin(admin.ModelAdmin):
-    list_display = ('user', 'data_set', 'attribute_name', 'statisctic', 'tif_path', 'png_path',)
-    search_fields = ['user', 'data_set']
-    list_filter = ('user', 'data_set')
+    list_display = ('user', 'data_set', 'attribute_name', 'statisctic', 'file_area_name', 'tif_path', 'png_path',)
+    search_fields = ['user', 'data_set', 'file_area_name']
+    list_filter = ('user', 'data_set', 'file_area_name')
     
     
 class CustomerPolygonsAdmin(admin.ModelAdmin):

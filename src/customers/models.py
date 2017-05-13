@@ -104,7 +104,7 @@ class CustomerPolygons(models.Model):
     user = models.ForeignKey(User, verbose_name='User', blank=True, null=True)
     data_set = models.ForeignKey(
                 DataSet,
-                verbose_name='Shapefiles',
+                verbose_name='DataSets',
                 blank=True, null=True, related_name='shapefiles',
                 on_delete=models.CASCADE
             )
