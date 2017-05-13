@@ -8,6 +8,7 @@ from subprocess import check_call, Popen, PIPE
 from osgeo import osr, gdal
 import simplekml
 import pickle
+from datetime import datetime
 
 # import Image, ImageDraw
 # from osgeo import gdal
