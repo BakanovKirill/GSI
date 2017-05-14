@@ -70,8 +70,8 @@ dep_migrate:
 update:
 	fab update
 
-ngnix:
-	fab ngnix
+nginx:
+	fab nginx
 
 fill_name:
 	fab fill_name_carditem
