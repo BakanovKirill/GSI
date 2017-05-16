@@ -571,11 +571,12 @@ def make_run(run_base, user):
 				# 				first_script['run'].id,
 				# 				first_script['card'].id
 				# 			), shell=True)
+				command = 'sshpass -p 3Geo\!Tarf ssh gsi@cirrus.epcc.ed.ac.uk /lustre/home/i214/indy0-home/mattgsi/bin/nfe_submit $1 $2'
 				
-				res_F = os.access(EXECUTE_FE_COMMAND, os.F_OK)
-				res_R = os.access(EXECUTE_FE_COMMAND, os.R_OK)
-				res_W = os.access(EXECUTE_FE_COMMAND, os.W_OK)
-				res_X = os.access(EXECUTE_FE_COMMAND, os.X_OK)
+				res_F = os.access(command, os.F_OK)
+				res_R = os.access(command, os.R_OK)
+				res_W = os.access(command, os.W_OK)
+				res_X = os.access(command, os.X_OK)
 				
 				####################### write log file Permission denied
 				file_message_error += '\n\Permission denied: {0}\n'.format(EXECUTE_FE_COMMAND)
@@ -587,7 +588,7 @@ def make_run(run_base, user):
 				file_message_error += 'res_X: {0}\n\n'.format(res_X)
 				#######################
 				
-				command = 'sshpass -p 3Geo\!Tarf ssh gsi@cirrus.epcc.ed.ac.uk /lustre/home/i214/indy0-home/mattgsi/bin/nfe_submit $1 $2'
+				
 				
 				out, err = Popen(
 				    'nohup {0} {1} {2} &'.format(
