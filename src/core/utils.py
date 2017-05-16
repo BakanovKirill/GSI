@@ -566,8 +566,8 @@ def make_run(run_base, user):
 				file_message_error += 'TIME: {0}\n'.format(now)
 				#######################
 				
-				command = 'sshpass -p 3Geo\!Tarf ssh gsi@cirrus.epcc.ed.ac.uk /lustre/home/i214/indy0-home/mattgsi/bin/nfe_submit $1 $2'
-				command = Popen(['sshpass', '-p', '3Geo\!Tarf', 'ssh', 'gsi@cirrus.epcc.ed.ac.uk', '/lustre/home/i214/indy0-home/mattgsi/bin/nfe_submit', '$1', '$2'], stdin=PIPE, stdout=PIPE, stderr=PIPE).communicate()
+				# command = 'sshpass -p 3Geo\!Tarf ssh gsi@cirrus.epcc.ed.ac.uk /lustre/home/i214/indy0-home/mattgsi/bin/nfe_submit $1 $2'
+				command = Popen(['sshpass', '-p', '3Geo\!Tarf', 'ssh', 'gsi@cirrus.epcc.ed.ac.uk', '/lustre/home/i214/indy0-home/mattgsi/bin/nfe_submit', first_script['run'].id, first_script['card'].id], stdin=PIPE, stdout=PIPE, stderr=PIPE).communicate()
 				
 				status = command[0].strip()
 				
@@ -581,11 +581,11 @@ def make_run(run_base, user):
 				# else:
 				#     print ip + " is vulnerable"
 				
-				ex_fe_com = call('nohup {0} {1} {2} &'.format(
-								command,
-								first_script['run'].id,
-								first_script['card'].id
-							), shell=True)
+				# ex_fe_com = call('nohup {0} {1} {2} &'.format(
+				# 				command,
+				# 				first_script['run'].id,
+				# 				first_script['card'].id
+				# 			), shell=True)
 				
 				# ex_fe_com = call('nohup {0} {1} {2} &'.format(
 				# 				EXECUTE_FE_COMMAND,
