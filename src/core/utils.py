@@ -534,7 +534,7 @@ def make_run(run_base, user):
 					####################### write log file
 					file_message_error += 'N first_script [execute_master_scripts]:: ' + str(n) + '\n'
 					now = datetime.now()
-					file_message_error += 'TIME: {0}'.format(now)
+					file_message_error += 'TIME: {0}\n'.format(now)
 					#######################
 					
 					out, err = Popen(
@@ -563,9 +563,29 @@ def make_run(run_base, user):
 				####################### write log file
 				file_message_error += 'NO PARALLEL first_script [CARD]:: ' + str(first_script['card'].run_parallel) + '\n'
 				now = datetime.now()
-				file_message_error += 'TIME: {0}'.format(now)
+				file_message_error += 'TIME: {0}\n'.format(now)
 				#######################
 				
+				# ex_fe_com = call('nohup {0} {1} {2} &'.format(
+				# 				EXECUTE_FE_COMMAND,
+				# 				first_script['run'].id,
+				# 				first_script['card'].id
+				# 			), shell=True)
+				
+				res_F = os.access(EXECUTE_FE_COMMAND, os.F_OK)
+				res_R = os.access(EXECUTE_FE_COMMAND, os.R_OK)
+				res_W = os.access(EXECUTE_FE_COMMAND, os.W_OK)
+				res_X = os.access(EXECUTE_FE_COMMAND, os.X_OK)
+				
+				####################### write log file Permission denied
+				file_message_error += '\n\Permission denied: {0}\n'.format(EXECUTE_FE_COMMAND)
+				file_message_error += 'res_F: {0}\n'.format(res_F)
+				file_message_error += 'res_R: {0}\n'.format(res_R)
+				file_message_error += 'res_W: {0}\n'.format(res_W)
+				file_message_error += 'res_X: {0}\n\n'.format(res_X)
+				#######################
+				
+					
 				out, err = Popen(
 				    'nohup {0} {1} {2} &'.format(
 				        EXECUTE_FE_COMMAND,
@@ -579,8 +599,9 @@ def make_run(run_base, user):
 				# print 'err =========================== ', err
 
 				####################### write log file
-				file_message_error += '\OUT: {0}\n'.format(out)
-				file_message_error += '\ERR: {0}\n'.format(err)
+				file_message_error += 'ERR: {0}\n'.format(err)
+				file_message_error += 'OUT: {0}\n'.format(out)
+				# file_message_error += 'LOG: {0}\n'.format(ex_fe_com)
 				#######################
 				
 				first_script['step'].state = 'running'
