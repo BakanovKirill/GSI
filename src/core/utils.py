@@ -3,7 +3,7 @@ import os
 import stat
 import time
 import shutil
-from subprocess import call, Popen
+from subprocess import call, Popen, PIPE
 from datetime import datetime
 import magic
 import multiprocessing
@@ -544,14 +544,23 @@ def make_run(run_base, user):
 				first_script['run'].state = 'running'
 				first_script['run'].save()
 			else:
-				ex_fe_com = Popen(
+				out, err = Popen(
 					'nohup {0} {1} {2} &'.format(
 						EXECUTE_FE_COMMAND,
 						first_script['run'].id,
 						first_script['card'].id
 					),
-					shell=True,
-				)
+					shell=True, stdout=PIPE
+				).communicate()
+				
+				print 'out =========================== ', out
+				print 'err =========================== ', err
+				
+				####################### write log file
+				file_message_error += '\OUT: {0}\n'.format(out)
+				file_message_error += '\ERR: {0}\n'.format(err)
+				#######################
+				
 				first_script['step'].state = 'running'
 				first_script['step'].save()
 				first_script['run'].state = 'running'
