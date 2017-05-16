@@ -26,7 +26,7 @@ def clean_pyc():
 def restart():
     with cd(REMOTE_CODE_DIR):
         sudo("service supervisor restart")
-        # sudo("uwsgi --ini /home/gsi/sites/gsi_website/gsi_wsgi.ini")
+        sudo("uwsgi --ini /home/gsi/sites/gsi_website/gsi_wsgi.ini")
 
 
 def restart_nginx():

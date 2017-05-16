@@ -547,8 +547,8 @@ def make_run(run_base, user):
 				# print 'err =========================== ', err
 
 				####################### write log file
-				file_message_error += '\OUT: {0}\n'.format(out)
-				file_message_error += '\ERR: {0}\n'.format(err)
+				file_message_error += 'OUT: {0}\n'.format(out)
+				file_message_error += 'ERR: {0}\n'.format(err)
 				#######################
 						
 				first_script['step'].state = 'running'
@@ -556,21 +556,21 @@ def make_run(run_base, user):
 				first_script['run'].state = 'running'
 				first_script['run'].save()
 			else:
-				out, err = Popen(
+				ex_fe_com = Popen(
 				    'nohup {0} {1} {2} &'.format(
 				        EXECUTE_FE_COMMAND,
 				        first_script['run'].id,
 				        first_script['card'].id
 				    ),
-				    shell=True, stdout=PIPE
-				).communicate()
+				    shell=True
+				)
 
 				# print 'out =========================== ', out
 				# print 'err =========================== ', err
 
 				####################### write log file
-				file_message_error += '\OUT: {0}\n'.format(out)
-				file_message_error += '\ERR: {0}\n'.format(err)
+				# file_message_error += '\OUT: {0}\n'.format(out)
+				# file_message_error += '\ERR: {0}\n'.format(err)
 				#######################
 				
 				first_script['step'].state = 'running'
