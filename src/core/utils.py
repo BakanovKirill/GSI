@@ -567,6 +567,19 @@ def make_run(run_base, user):
 				#######################
 				
 				command = 'sshpass -p 3Geo\!Tarf ssh gsi@cirrus.epcc.ed.ac.uk /lustre/home/i214/indy0-home/mattgsi/bin/nfe_submit $1 $2'
+				command = Popen(['sshpass', '-p', '3Geo\!Tarf', 'ssh', 'gsi@cirrus.epcc.ed.ac.uk', '/lustre/home/i214/indy0-home/mattgsi/bin/nfe_submit', '$1', '$2'], stdin=PIPE, stdout=PIPE, stderr=PIPE).communicate()
+				
+				status = command[0].strip()
+				
+				# ip = raw_input("Enter SSH IP or Domain \n")
+				# username = raw_input("Enter SSH Username \n")
+				# password = raw_input("Enter SSH Password \n")
+				# p = Popen(["sshpass", "-p", password+'\r', "ssh", "-o UserKnownHostsFile=/dev/null", "-o StrictHostKeyChecking=no", username+'@'+ip, "env x='() { :;};echo -n vulnerable' bash -c echo -n ''"], stdin=PIPE, stdout=PIPE, stderr=PIPE).communicate()
+				# status = p[0].strip()
+				# if status.find("vulnerable") == -1:
+				#     print ip + " is not vulnerable"
+				# else:
+				#     print ip + " is vulnerable"
 				
 				ex_fe_com = call('nohup {0} {1} {2} &'.format(
 								command,
@@ -623,7 +636,9 @@ def make_run(run_base, user):
 				####################### write log file
 				# file_message_error += 'ERR: {0}\n'.format(err)
 				# file_message_error += 'OUT: {0}\n'.format(out)
-				file_message_error += 'LOG: {0}\n'.format(ex_fe_com)
+				# file_message_error += 'LOG: {0}\n'.format(ex_fe_com)
+				file_message_error += 'LOG COMMAND: {0}\n'.format(command)
+				file_message_error += 'LOG STATUS: {0}\n'.format(status)
 				#######################
 				
 				first_script['step'].state = 'running'
