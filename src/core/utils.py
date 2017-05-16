@@ -566,10 +566,10 @@ def make_run(run_base, user):
 				file_message_error += 'TIME: {0}\n'.format(now)
 				#######################
 				
-				# command = 'sshpass -p 3Geo\!Tarf ssh gsi@cirrus.epcc.ed.ac.uk /lustre/home/i214/indy0-home/mattgsi/bin/nfe_submit $1 $2'
-				command = Popen(['sshpass', '-p', '3Geo\!Tarf', 'ssh', 'gsi@cirrus.epcc.ed.ac.uk', '/lustre/home/i214/indy0-home/mattgsi/bin/nfe_submit', first_script['run'].id, first_script['card'].id], stdin=PIPE, stdout=PIPE, stderr=PIPE).communicate()
+				command = 'sshpass -p 3Geo\!Tarf ssh gsi@cirrus.epcc.ed.ac.uk /lustre/home/i214/indy0-home/mattgsi/bin/nfe_submit {0} {1}'.format(first_script['run'].id, first_script['card'].id)
+				# command = Popen(['sshpass', '-p', '3Geo\!Tarf', 'ssh', 'gsi@cirrus.epcc.ed.ac.uk', '/lustre/home/i214/indy0-home/mattgsi/bin/nfe_submit {0} {1}'.format(first_script['run'].id, first_script['card'].id)], stdin=PIPE, stdout=PIPE, stderr=PIPE).communicate()
 				
-				status = command[0].strip()
+				# status = command[0].strip()
 				
 				# ip = raw_input("Enter SSH IP or Domain \n")
 				# username = raw_input("Enter SSH Username \n")
@@ -611,14 +611,14 @@ def make_run(run_base, user):
 				
 				
 				
-				# out, err = Popen(
-				#     'nohup {0} {1} {2} &'.format(
-				#         command,
-				#         first_script['run'].id,
-				#         first_script['card'].id
-				#     ),
-				#     shell=True, stdout=PIPE
-				# ).communicate()
+				out, err = Popen(
+				    'nohup {0} {1} {2} &'.format(
+				        command,
+				        first_script['run'].id,
+				        first_script['card'].id
+				    ),
+				    shell=True, stdout=PIPE, stderr=PIPE
+				).communicate()
 				
 					
 				# out, err = Popen(
@@ -627,18 +627,18 @@ def make_run(run_base, user):
 				#         first_script['run'].id,
 				#         first_script['card'].id
 				#     ),
-				#     shell=True, stdout=PIPE
+				#     shell=True, stdout=PIPE, stderr=PIPE
 				# ).communicate()
 
 				# print 'out =========================== ', out
 				# print 'err =========================== ', err
 
 				####################### write log file
-				# file_message_error += 'ERR: {0}\n'.format(err)
-				# file_message_error += 'OUT: {0}\n'.format(out)
+				file_message_error += 'ERR: {0}\n'.format(err)
+				file_message_error += 'OUT: {0}\n'.format(out)
 				# file_message_error += 'LOG: {0}\n'.format(ex_fe_com)
-				file_message_error += 'LOG COMMAND: {0}\n'.format(command)
-				file_message_error += 'LOG STATUS: {0}\n'.format(status)
+				# file_message_error += 'LOG COMMAND: {0}\n'.format(command)
+				# file_message_error += 'LOG STATUS: {0}\n'.format(status)
 				#######################
 				
 				first_script['step'].state = 'running'
