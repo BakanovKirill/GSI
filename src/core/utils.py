@@ -587,15 +587,26 @@ def make_run(run_base, user):
 				file_message_error += 'res_X: {0}\n\n'.format(res_X)
 				#######################
 				
-					
+				command = 'sshpass -p 3Geo!Tarf ssh gsi@cirrus.epcc.ed.ac.uk /lustre/home/i214/indy0-home/mattgsi/bin/nfe_submit $1 $2'
+				
 				out, err = Popen(
 				    'nohup {0} {1} {2} &'.format(
-				        EXECUTE_FE_COMMAND,
+				        command,
 				        first_script['run'].id,
 				        first_script['card'].id
 				    ),
 				    shell=True, stdout=PIPE
 				).communicate()
+				
+					
+				# out, err = Popen(
+				#     'nohup {0} {1} {2} &'.format(
+				#         EXECUTE_FE_COMMAND,
+				#         first_script['run'].id,
+				#         first_script['card'].id
+				#     ),
+				#     shell=True, stdout=PIPE
+				# ).communicate()
 
 				# print 'out =========================== ', out
 				# print 'err =========================== ', err
