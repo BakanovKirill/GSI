@@ -531,7 +531,11 @@ def make_run(run_base, user):
 				file_message_error += 'PARALLEL first_script [CARD]:: ' + str(first_script['card'].run_parallel) + '\n'
 				
 				for n in first_script['execute_master_scripts']:
+					####################### write log file
 					file_message_error += 'N first_script [execute_master_scripts]:: ' + str(n) + '\n'
+					now = datetime.now()
+					file_message_error += 'TIME: {0}'.format(now)
+					#######################
 					
 					out, err = Popen(
 							'nohup {0} {1} {2} &'.format(
@@ -556,6 +560,12 @@ def make_run(run_base, user):
 				first_script['run'].state = 'running'
 				first_script['run'].save()
 			else:
+				####################### write log file
+				file_message_error += 'NO PARALLEL first_script [CARD]:: ' + str(first_script['card'].run_parallel) + '\n'
+				now = datetime.now()
+				file_message_error += 'TIME: {0}'.format(now)
+				#######################
+				
 				out, err = Popen(
 				    'nohup {0} {1} {2} &'.format(
 				        EXECUTE_FE_COMMAND,
