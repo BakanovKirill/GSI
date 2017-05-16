@@ -611,24 +611,24 @@ def make_run(run_base, user):
 				
 				
 				
-				out, err = Popen(
-				    'nohup {0} {1} {2} &'.format(
-				        command,
-				        first_script['run'].id,
-				        first_script['card'].id
-				    ),
-				    shell=True, stdout=PIPE, stderr=PIPE
-				).communicate()
-				
-					
 				# out, err = Popen(
 				#     'nohup {0} {1} {2} &'.format(
-				#         EXECUTE_FE_COMMAND,
+				#         command,
 				#         first_script['run'].id,
 				#         first_script['card'].id
 				#     ),
 				#     shell=True, stdout=PIPE, stderr=PIPE
 				# ).communicate()
+				
+					
+				out, err = Popen(
+				    'nohup {0} {1} {2} &'.format(
+				        EXECUTE_FE_COMMAND,
+				        first_script['run'].id,
+				        first_script['card'].id
+				    ),
+				    shell=True, stdout=PIPE, stderr=PIPE
+				).communicate()
 
 				# print 'out =========================== ', out
 				# print 'err =========================== ', err
