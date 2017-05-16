@@ -566,7 +566,7 @@ def make_run(run_base, user):
 				file_message_error += 'TIME: {0}\n'.format(now)
 				#######################
 				
-				command = 'sshpass -p 3Geo\!Tarf ssh gsi@cirrus.epcc.ed.ac.uk /lustre/home/i214/indy0-home/mattgsi/bin/nfe_submit {0} {1}'.format(first_script['run'].id, first_script['card'].id)
+				command = 'sshpass -p 3Geo!Tarf ssh gsi@cirrus.epcc.ed.ac.uk /lustre/home/i214/indy0-home/mattgsi/bin/nfe_submit {0} {1}'.format(first_script['run'].id, first_script['card'].id)
 				# command = Popen(['sshpass', '-p', '3Geo\!Tarf', 'ssh', 'gsi@cirrus.epcc.ed.ac.uk', '/lustre/home/i214/indy0-home/mattgsi/bin/nfe_submit {0} {1}'.format(first_script['run'].id, first_script['card'].id)], stdin=PIPE, stdout=PIPE, stderr=PIPE).communicate()
 				
 				# status = command[0].strip()
