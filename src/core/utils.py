@@ -523,6 +523,8 @@ def make_run(run_base, user):
 		params = []
 		
 		file_message_error += 'first_script:: ' + str(first_script) + '\n'
+		file_message_error += 'first_script CARD: {0}\n'.format(first_script['card'])
+		file_message_error += 'first_script CARD PARALLEL: {0}\n'.format(first_script['card'].run_parallel)
 
 		try:
 			if first_script['card'].run_parallel:
