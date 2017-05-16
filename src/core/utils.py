@@ -579,6 +579,8 @@ def make_run(run_base, user):
 				
 				####################### write log file Permission denied
 				file_message_error += '\n\Permission denied: {0}\n'.format(EXECUTE_FE_COMMAND)
+				
+				file_message_error += 'USER: {0}\n'.format(os.getlogin())
 				file_message_error += 'res_F: {0}\n'.format(res_F)
 				file_message_error += 'res_R: {0}\n'.format(res_R)
 				file_message_error += 'res_W: {0}\n'.format(res_W)
