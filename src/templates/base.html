@@ -265,68 +265,8 @@
                                 {% block content_customer %}{% endblock content_customer %}
                             </div>
                             <!-- End Content -->
-
-
-                            <!-- Right Sidebar for the Customer Section -->
-                            {% if data_sets %}
-                                <form class="form-modal" id="customer_section_right" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data" role="form" class="form-horizontal">
-                                    {% csrf_token %}
-
-                                    <div class="col-md-2 li-menu dropdown-left-0 left" id="dropdownMenu">
-                                        <label class="control-label margin-top-25">Info Panel:</label>
-                                        {# <h4 class="margin-top-40 background-fill-grey"><b>Info Panel</b></h4>#}
-                                        <select class="form-control margin-top-10" name="root_filenames[]" multiple size="8">
-                                            {% for dl in dirs_list%}
-                                                <option value="{{ dl.id }}" {% if dl.attribute_name in dirs_infopanel %}selected="selected"{% endif %}>{{ dl.attribute_name }}</option>
-                                            {% endfor %}
-                                        </select>
-
-                                        {% if dirs_list %}
-                                            <label class="control-label margin-top-25">Statistics:</label>
-                                            <select class="form-control margin-top-10 disable" name="statistics[]" multiple size="6">
-                                                <option value="mean_ConditionalMax" {% if 'mean_ConditionalMax' in statisctics_infopanel %}selected="selected"{% endif %}>mean_ConditionalMax</option>
-                                                <option value="mean_ConditionalMean" {% if 'mean_ConditionalMean' in statisctics_infopanel %}selected="selected"{% endif %}>mean_ConditionalMean</option>
-                                                <option value="mean_ConditionalMedian" {% if 'mean_ConditionalMedian' in statisctics_infopanel %}selected="selected"{% endif %}>mean_ConditionalMedian</option>
-                                                <option value="mean_ConditionalMin" {% if 'mean_ConditionalMin' in statisctics_infopanel %}selected="selected"{% endif %}>mean_ConditionalMin</option>
-                                                <option value="mean_LowerQuartile" {% if 'mean_LowerQuartile' in statisctics_infopanel %}selected="selected"{% endif %}>mean_LowerQuartile</option>
-                                                <option value="mean_Quantile" {% if 'mean_Quantile' in statisctics_infopanel %}selected="selected"{% endif %}>mean_Quantile</option>
-                                            </select>
-                                        {% endif %}
-                                        
-                                        <div class="margin-top-20 button-link">
-                                            <a name="remove-selected-items" onclick="removeSelectedItems()" href="">
-                                                Remove the all selected items
-                                            </a>
-                                        </div>
-                                        
-                                        <div class="margin-top-15">
-                                            <button type="submit" name="add-list-view" class="btn btn-success btn-block">
-                                                Add to list view
-                                            </button>
-                                        </div>
-                                        
-                                        {% if polygons_list %}
-                                            <label class="control-label margin-top-25">Area of Interest:</label><br />
-                                            {% for polygon in polygons_list%}
-                                                <input type="radio" name="polygon" value="{{ polygon }}.kml" onchange="setPolygon(this);"> {{ polygon }}<br>
-                                            {% endfor %}
-                                        {% endif %}
-                                    </div>
-                                </form>
-                            {% endif %}
                         {% endif %}
                     </div>
-
-                    <!-- Start Contact Form -->
-                    <!--<div class="container">-->
-                        <!--<div class="row" id="header">-->
-                            <!--<div class="col-xs-12">-->
-                                <!--<h2>{% block title-form %}{% endblock title-form %}</h2>-->
-                                <!--{% block contact_form %}{% endblock contact_form %}-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!-- End Contact Form -->
                 </div>
                 
                 <!-- Start Bufer -->
@@ -345,7 +285,8 @@
         <!-- End Body -->
     </div>
     <!-- End Container -->
-
+    
+    <!-- ??????????????????????????????????????????????????????????????????????????????????????????????????? -->
     <!-- Modal Upload Test Data -->
     <div class="modal fade" id="modalUpload" tabindex="-1" role="dialog" aria-labelledby="modalUploadLabel">
         <div class="modal-dialog" role="document">

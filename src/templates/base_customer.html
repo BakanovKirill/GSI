@@ -86,41 +86,21 @@
                         <!-- Left Sidebar for the Customer Section -->
                         <form class="form-modal" id="customer_section_left" action="{% url 'customer_section' %}" method="get" enctype="multipart/form-data" role="form" class="form-horizontal">
                             {% csrf_token %}
-
+                            
+                            <!-- Left Sidebar -->
                             <div class="col-md-2 li-menu dropdown-left-0 left" id="col1">
+                                <!-- DataSets Menu -->
                                 <label class="control-label margin-top-25">Datasets:</label>
                                 <select class="form-control" name="select" id="mydataset" onchange="showDataSets({{ data_set_id }})">
                                     {% for ds in data_sets %}
                                         <option id="{{ ds.id }}" name="{{ ds }}" value="{{ ds.id }}" {% if data_set_id == ds.id %}selected="selected"{% endif %}>{{ ds }}</option>
                                     {% endfor %}
                                 </select>
-                            </div>
-                        </form>
-                        <!-- END Left Sidebar for the Customer Section -->
-
-                        
-                        
-
-                        <!-- Start Content -->
-                        <div class="col-md-8 margin-top-020" id="content-column">
-                            <!-- Start Status Messages -->
-                            {% include '_base_message.html' %}
-                            <!-- End Status Messages -->
-                            
-                            <!-- Title -->
-                            <h2>{% block title_customer %}{% endblock title_customer %}</h2>
-                            <!-- End Title -->
-                            {% block content_customer %}{% endblock content_customer %}
-                        </div>
-                        <!-- End Content -->
-
-
-                        <!-- Right Sidebar for the Customer Section -->
-                        <form class="form-modal" id="customer_section_right" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data" role="form" class="form-horizontal">
-                            {% csrf_token %}
-                            
-                            <div class="col-md-2 li-menu dropdown-left-0 left" id="col2">
+                                <!-- END DataSets Menu -->
+                                
+                                
                                 {% if dirs_list %}
+                                    <!-- Info Panel Menu -->
                                     <label class="control-label margin-top-25">Info Panel:</label>
                                     {# <h4 class="margin-top-40 background-fill-grey"><b>Info Panel</b></h4>#}
                                     <select class="form-control margin-top-10" name="root_filenames[]" multiple size="8">
@@ -128,7 +108,9 @@
                                             <option value="{{ dl.id }}" {% if dl.attribute_name in dirs_infopanel %}selected="selected"{% endif %}>{{ dl.attribute_name }}</option>
                                         {% endfor %}
                                     </select>
-                                
+                                    <!-- END Info Panel Menu -->
+                                    
+                                    <!-- Statistics Menu -->
                                     <label class="control-label margin-top-25">Statistics:</label>
                                     <select class="form-control margin-top-10 disable" name="statistics[]" multiple size="6">
                                         <option value="mean_ConditionalMax" {% if 'mean_ConditionalMax' in statisctics_infopanel %}selected="selected"{% endif %}>mean_ConditionalMax</option>
@@ -138,7 +120,9 @@
                                         <option value="mean_LowerQuartile" {% if 'mean_LowerQuartile' in statisctics_infopanel %}selected="selected"{% endif %}>mean_LowerQuartile</option>
                                         <option value="mean_Quantile" {% if 'mean_Quantile' in statisctics_infopanel %}selected="selected"{% endif %}>mean_Quantile</option>
                                     </select>
-                                
+                                    <!-- END Statistics Menu -->
+                                    
+                                    <!-- Add/Remove buttons -->
                                     <div class="margin-top-20 button-link">
                                         <a name="remove-selected-items" onclick="removeSelectedItems()" href="">
                                             Remove the all selected items
@@ -150,6 +134,7 @@
                                             Add to list view
                                         </button>
                                     </div>
+                                    <!-- END Add/Remove buttons -->
                                 {% endif %}
                                 
                                 {% if polygons %}
@@ -175,7 +160,22 @@
                                     {% endfor %}
                                 {% endif %}
                             </div>
+                            <!-- END Left Sidebar -->
                         </form>
+                        <!-- END Left Sidebar for the Customer Section -->
+
+                        <!-- Start Content -->
+                        <div class="col-md-10 margin-top-020" id="content-column">
+                            <!-- Start Status Messages -->
+                            {% include '_base_message.html' %}
+                            <!-- End Status Messages -->
+                            
+                            <!-- Title -->
+                            <h2>{% block title_customer %}{% endblock title_customer %}</h2>
+                            <!-- End Title -->
+                            {% block content_customer %}{% endblock content_customer %}
+                        </div>
+                        <!-- End Content -->
                     </div>
                 </div>
                 
@@ -183,46 +183,11 @@
                 <!-- <div class="footer-push"></div> -->
                 <!-- End Bufer -->
             </div>
-            
-            <!-- Start Footer -->
-            
-            <!-- End Footer -->
         {% endif %}
         <!-- End Body -->
     </div>
     <!-- End Container -->
 
-    <!-- Modal Upload Test Data -->
-    <div class="modal fade" id="modalUpload" tabindex="-1" role="dialog" aria-labelledby="modalUploadLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <div class="form-group {% if form.test_data.errors %}has-error{% endif %}">
-                        <h4 class="modal-title" id="modalUploadLabel"><!-- --></h4>
-                    </div>
-                </div>
-                <div class="modal-body"><!-- --></div>
-                <div class="modal-footer"><!-- --></div>
-            </div>
-        </div>
-    </div>
-    <!-- End Modal Upload Test Data -->
-
-    <!-- Modal of Wiki -->
-    <div class="modal fade bs-example-modal-lg" id="modalWiki" tabindex="-1" role="dialog" aria-labelledby="modalWikiLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h2 class="modal-title" id="modalWikiLabel">Editing the article</h2>
-                </div>
-                <div class="modal-body"><iframe ckass="iframe-modal" src="" style="zoom:0.60" width="99.6%" height="250" frameborder="0"><!-- --></iframe></div>
-                <div class="modal-footer"><!-- --></div>
-            </div>
-        </div>
-    </div>
-    <!-- End Modal of Wiki -->
 
     <!-- jQuery -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
