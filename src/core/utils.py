@@ -543,17 +543,22 @@ def make_run(run_base, user):
 								first_script['run'].id,
 								n
 							),
-							shell=True, stdout=PIPE
+							shell=True, stdout=PIPE, stderr=PIPE
 						).communicate()
 						
-				# ex_fe_com
-				# print 'out =========================== ', out
-				# print 'err =========================== ', err
+					# ex_fe_com
+					# print 'out =========================== ', out
+					# print 'err =========================== ', err
 
-				####################### write log file
-				file_message_error += 'OUT: {0}\n'.format(out)
-				file_message_error += 'ERR: {0}\n'.format(err)
-				#######################
+					####################### write log file
+					file_message_error += '********************************************\n'
+					file_message_error += 'RUN: {0}\n'.format(first_script['run'])
+					file_message_error += 'RUN ID: {0}\n'.format(first_script['run'].id)
+					file_message_error += 'RUN N: {0}\n'.format(n)
+					file_message_error += 'OUT: {0}\n'.format(out)
+					file_message_error += 'ERR: {0}\n'.format(err)
+					file_message_error += '********************************************\n'
+					#######################
 						
 				first_script['step'].state = 'running'
 				first_script['step'].save()
@@ -566,7 +571,8 @@ def make_run(run_base, user):
 				file_message_error += 'TIME: {0}\n'.format(now)
 				#######################
 				
-				command = 'sshpass -p 3Geo!Tarf ssh gsi@cirrus.epcc.ed.ac.uk /lustre/home/i214/indy0-home/mattgsi/bin/nfe_submit {0} {1}'.format(first_script['run'].id, first_script['card'].id)
+				# command = 'sshpass -p 3Geo!Tarf ssh gsi@cirrus.epcc.ed.ac.uk /lustre/home/i214/indy0-home/mattgsi/bin/nfe_submit {0} {1}'.format(first_script['run'].id, first_script['card'].id)
+				
 				# command = Popen(['sshpass', '-p', '3Geo\!Tarf', 'ssh', 'gsi@cirrus.epcc.ed.ac.uk', '/lustre/home/i214/indy0-home/mattgsi/bin/nfe_submit {0} {1}'.format(first_script['run'].id, first_script['card'].id)], stdin=PIPE, stdout=PIPE, stderr=PIPE).communicate()
 				
 				# status = command[0].strip()
@@ -594,13 +600,13 @@ def make_run(run_base, user):
 				# 			), shell=True)
 				
 				
-				res_F = os.access(command, os.F_OK)
-				res_R = os.access(command, os.R_OK)
-				res_W = os.access(command, os.W_OK)
-				res_X = os.access(command, os.X_OK)
+				res_F = os.access(EXECUTE_FE_COMMAND, os.F_OK)
+				res_R = os.access(EXECUTE_FE_COMMAND, os.R_OK)
+				res_W = os.access(EXECUTE_FE_COMMAND, os.W_OK)
+				res_X = os.access(EXECUTE_FE_COMMAND, os.X_OK)
 				
 				####################### write log file Permission denied
-				file_message_error += '\n\Permission denied: {0}\n'.format(EXECUTE_FE_COMMAND)
+				file_message_error += '\nPermission denied: {0}\n'.format(EXECUTE_FE_COMMAND)
 				
 				file_message_error += 'USER: {0}\n'.format(os.getlogin())
 				file_message_error += 'res_F: {0}\n'.format(res_F)
@@ -648,7 +654,7 @@ def make_run(run_base, user):
 				
 				####################### write log file
 				file_message_error += '\nRUN: {0}\n'.format(first_script['run'].id)
-				file_message_error += '\nCARD: {0}\n'.format(first_script['card'].id)
+				file_message_error += 'CARD: {0}\n'.format(first_script['card'].id)
 				#######################
 		except Exception, e:
 			print 'Exception make_run ==================================== ', e
