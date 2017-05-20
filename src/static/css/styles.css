@@ -97,6 +97,12 @@ input:focus, textarea:focus {
 }
 
 /* link styles */
+a {
+    color: #283890 !important;
+    /*border-bottom: 1px dotted #283890 !important;*/
+    /*text-decoration: underline;*/
+}
+
 a.a-select {
     color: #283890 !important;
     border-bottom: 1px dotted #283890 !important;
@@ -136,7 +142,7 @@ a:focus, a:hover {
     border-color: #8bc53f !important;
 }
 
-.button-link {
+/*.button-link {
     color: #283890 !important;
     border-bottom: 1px  #283890 !important;
     background-color: transparent !important;
@@ -149,7 +155,7 @@ a:focus, a:hover {
     border-bottom: 0px !important;
     border-bottom: 1px dotted !important;
     text-decoration: transparent !important;
-}
+}*/
 
 /* rows style */
 th {
