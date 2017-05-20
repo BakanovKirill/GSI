@@ -83,197 +83,199 @@
                     <!-- End Top Menu -->
 
                     <div class="row">
-                        <!-- Left Sidebar for the Customer Section -->
-                        <form class="form-modal" id="customer_section_left" action="{% url 'customer_section' %}" method="get" enctype="multipart/form-data" role="form" class="form-horizontal">
-                            {% csrf_token %}
-                            
+                        {% if error_message %}
+                    		<h3>{{ error_message }}</a></h3>
+                    	{% else %}
                             <!-- Left Sidebar -->
-                            <div class="col-md-2 li-menu dropdown-left-0 left" id="col1">
-                                <!-- DataSets Menu -->
-                                <label class="control-label margin-top-25">Datasets:</label>
-                                <select class="form-control" name="select" id="mydataset" onchange="showDataSets({{ data_set_id }})">
-                                    {% for ds in data_sets %}
-                                        <option id="{{ ds.id }}" name="{{ ds }}" value="{{ ds.id }}" {% if data_set_id == ds.id %}selected="selected"{% endif %}>{{ ds }}</option>
-                                    {% endfor %}
-                                </select>
-                                <!-- END DataSets Menu -->
+                            <form class="form-modal" id="customer_section_left" action="{% url 'customer_section' %}" method="get" enctype="multipart/form-data" role="form" class="form-horizontal">
+                                {% csrf_token %}
                                 
-                                <!-- TABS menu -->
-                                <div role="tabpanel" class="margin-top-20">
-                                    <!-- Navigational tabs -->
-                                    <ul class="nav nav-tabs" role="tablist">
-                                        <li role="presentation" class="active"><a href="#view" class="a-tab" aria-controls="view" role="tab" data-toggle="tab">View</a></li>
-                                        <li role="presentation"><a href="#report" class="a-tab" aria-controls="report" role="tab" data-toggle="tab">Report</a></li>
-                                        <li role="presentation"><a href="#aoi" class="a-tab" aria-controls="aoi" role="tab" data-toggle="tab">AOI</a></li>
-                                    </ul>
+                                <div class="col-md-2 li-menu dropdown-left-0 left" id="col1">
+                                    <!-- DataSets Menu -->
+                                    <label class="control-label margin-top-25">Datasets:</label>
+                                    <select class="form-control" name="select" id="mydataset" onchange="showDataSets({{ data_set_id }})">
+                                        {% for ds in data_sets %}
+                                            <option id="{{ ds.id }}" name="{{ ds }}" value="{{ ds.id }}" {% if data_set_id == ds.id %}selected="selected"{% endif %}>{{ ds }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <!-- END DataSets Menu -->
+                                    
+                                    <!-- TABS menu -->
+                                    <div role="tabpanel" class="margin-top-20">
+                                        <!-- Navigational tabs -->
+                                        <ul class="nav nav-tabs" role="tablist">
+                                            <li role="presentation" class="active"><a href="#view" class="a-tab" aria-controls="view" role="tab" data-toggle="tab">View</a></li>
+                                            <li role="presentation"><a href="#report" class="a-tab" aria-controls="report" role="tab" data-toggle="tab">Report</a></li>
+                                            <li role="presentation"><a href="#aoi" class="a-tab" aria-controls="aoi" role="tab" data-toggle="tab">AOI</a></li>
+                                        </ul>
 
-                                    <!-- Tabs panel -->
-                                    <div class="tab-content">
-                                        <div role="tabpanel" class="tab-pane fade in active" id="view">
-                                            <div class="row">
-                                                <div class="col-md-6 left">
-                                                    <div>
-                                                        <a class="a-select" name="select-all-items" onclick="removeSelectedItems()" href="">
-                                                            Select All
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="col-md-6 right">
-                                                    <div class="right">
-                                                        <a class="a-select" name="select-none-items" onclick="removeSelectedItems()" href="">
-                                                            Select None
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="row">
-                                                <div class="col-md-12 left margin-top-15">
-                                                    {% for dl in dirs_list%}
-                                                        <input type="checkbox" value="view_{{ dl.id }}" {% if dl.attribute_name in dirs_infopanel %}selected="selected"{% endif %}> {{ dl.attribute_name }}<br>
-                                                    {% endfor %}
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="row">
-                                                <div class="col-md-6 left margin-top-15">
-                                                    <button type="submit" name="add-list-view" class="btn btn-success btn-block">
-                                                        Next
-                                                    </button>
-                                                </div>
-                                                
-                                                <div class="col-md-6 left margin-top-15">
-                                                    <button type="submit" name="add-list-view" class="btn btn-success btn-block">
-                                                        Previous
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div role="tabpanel" class="tab-pane fade" id="report">
-                                            <div class="row">
-                                                <div class="col-md-6 left">
-                                                    <div class="button-link">
-                                                        <a name="remove-selected-items" onclick="removeSelectedItems()" href="">
-                                                            Select All
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="col-md-6 right">
-                                                    <div class="button-link right">
-                                                        <a name="remove-selected-items" onclick="removeSelectedItems()" href="">
-                                                            Select None
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="row">
-                                                <div class="col-md-12 left margin-top-15">
-                                                    {% for dl in dirs_list%}
-                                                        <input type="checkbox" value="report_{{ dl.id }}" {% if dl.attribute_name in dirs_infopanel %}selected="selected"{% endif %}> {{ dl.attribute_name }}<br>
-                                                    {% endfor %}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div role="tabpanel" class="tab-pane fade" id="aoi">
-                                            {% for polygon in polygons%}
+                                        <!-- Tabs panel -->
+                                        <div class="tab-content">
+                                            <div role="tabpanel" class="tab-pane fade in active" id="view">
                                                 <div class="row">
-                                                    <div class="col-md-8">
-                                                        <input type="radio" name="polygon" value="{{ polygon.kml_name }}" onchange="setPolygon(this);"><a href="{{ absolute_kml_url }}/{{ polygon.kml_name }}"> {{ polygon.name }}</a>
+                                                    <div class="col-md-6 left">
+                                                        <div>
+                                                            <a class="a-select" name="select-all-items" onclick="removeSelectedItems()" href="">
+                                                                Select All
+                                                            </a>
+                                                        </div>
                                                     </div>
-                                                        
-                                                    <div class="col-md-1">
-                                                        <button class="btn del-btn edit-area margin-top-07 left" type="button" name="save_area" value="{{ polygon.id }}" data-toggle="tooltip" data-placement="top" title="Edit">
-                                                            <img src="{% static 'img/edit-18.png' %}" class="margin-left-010"/>
+                                                    
+                                                    <div class="col-md-6 right">
+                                                        <div class="right">
+                                                            <a class="a-select" name="select-none-items" onclick="removeSelectedItems()" href="">
+                                                                Select None
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="row">
+                                                    <div class="col-md-12 left margin-top-15 tab-view-min-height">
+                                                        {% for dl in dirs_list%}
+                                                            <input class="margin-bottom-6" type="checkbox" value="view_{{ dl.id }}" {% if dl.attribute_name in dirs_infopanel %}selected="selected"{% endif %}> {{ dl.attribute_name }}<br>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="row">
+                                                    <div class="col-md-6 left margin-top-15">
+                                                        <button type="submit" name="add-list-view" class="btn btn-success btn-block">
+                                                            Next
                                                         </button>
                                                     </div>
                                                     
-                                                    <div class="col-md-1">
-                                                        <button class="btn del-btn check-cur-delete margin-top-07 right" type="button" name="del_current_btn" value="{{ polygon.kml_name }}" data-toggle="tooltip" data-placement="top" title="Delete">
-                                                            <img src="{% static 'img/delete-18.png' %}" class="margin-left-010"/>
+                                                    <div class="col-md-6 left margin-top-15">
+                                                        <button type="submit" name="add-list-view" class="btn btn-success btn-block">
+                                                            Previous
                                                         </button>
                                                     </div>
                                                 </div>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <!-- END TABS menu -->
-                                
-                                
-                                
-                                
-                                {% if dirs_list %}
-                                    <!-- Info Panel Menu -->
-                                    <label class="control-label margin-top-25">Info Panel:</label>
-                                    {# <h4 class="margin-top-40 background-fill-grey"><b>Info Panel</b></h4>#}
-                                    <select class="form-control margin-top-10" name="root_filenames[]" multiple size="8">
-                                        {% for dl in dirs_list%}
-                                            <option value="{{ dl.id }}" {% if dl.attribute_name in dirs_infopanel %}selected="selected"{% endif %}>{{ dl.attribute_name }}</option>
-                                        {% endfor %}
-                                    </select>
-                                    <!-- END Info Panel Menu -->
-                                    
-                                    <!-- Statistics Menu -->
-                                    <label class="control-label margin-top-25">Statistics:</label>
-                                    <select class="form-control margin-top-10 disable" name="statistics[]" multiple size="6">
-                                        <option value="mean_ConditionalMax" {% if 'mean_ConditionalMax' in statisctics_infopanel %}selected="selected"{% endif %}>mean_ConditionalMax</option>
-                                        <option value="mean_ConditionalMean" {% if 'mean_ConditionalMean' in statisctics_infopanel %}selected="selected"{% endif %}>mean_ConditionalMean</option>
-                                        <option value="mean_ConditionalMedian" {% if 'mean_ConditionalMedian' in statisctics_infopanel %}selected="selected"{% endif %}>mean_ConditionalMedian</option>
-                                        <option value="mean_ConditionalMin" {% if 'mean_ConditionalMin' in statisctics_infopanel %}selected="selected"{% endif %}>mean_ConditionalMin</option>
-                                        <option value="mean_LowerQuartile" {% if 'mean_LowerQuartile' in statisctics_infopanel %}selected="selected"{% endif %}>mean_LowerQuartile</option>
-                                        <option value="mean_Quantile" {% if 'mean_Quantile' in statisctics_infopanel %}selected="selected"{% endif %}>mean_Quantile</option>
-                                    </select>
-                                    <!-- END Statistics Menu -->
-                                    
-                                    <!-- Add/Remove buttons -->
-                                    <div class="margin-top-20 button-link">
-                                        <a name="remove-selected-items" onclick="removeSelectedItems()" href="">
-                                            Remove the all selected items
-                                        </a>
-                                    </div>
-                                    
-                                    <div class="margin-top-15">
-                                        <button type="submit" name="add-list-view" class="btn btn-success btn-block">
-                                            Add to list view
-                                        </button>
-                                    </div>
-                                    <!-- END Add/Remove buttons -->
-                                {% endif %}
-                                
-                                {% if polygons %}
-                                    <label class="control-label margin-top-25">Area of Interest:</label><br />
-                                    {% for polygon in polygons%}
-                                        <div class="row">
-                                            <div class="col-md-8">
-                                                <input type="radio" name="polygon" value="{{ polygon.kml_name }}" onchange="setPolygon(this);"><a href="{{ absolute_kml_url }}/{{ polygon.kml_name }}"> {{ polygon.name }}</a>
-                                            </div>
-                                                
-                                            <div class="col-md-1">
-                                                <button class="btn del-btn edit-area margin-top-07 left" type="button" name="save_area" value="{{ polygon.id }}" data-toggle="tooltip" data-placement="top" title="Edit">
-                                                    <img src="{% static 'img/edit-18.png' %}" class="margin-left-010"/>
-                                                </button>
                                             </div>
                                             
-                                            <div class="col-md-1">
-                                                <button class="btn del-btn check-cur-delete margin-top-07 right" type="button" name="del_current_btn" value="{{ polygon.kml_name }}" data-toggle="tooltip" data-placement="top" title="Delete">
-                                                    <img src="{% static 'img/delete-18.png' %}" class="margin-left-010"/>
-                                                </button>
+                                            <div role="tabpanel" class="tab-pane fade" id="report">
+                                                <div class="row">
+                                                    <div class="col-md-5 left">
+                                                        <div class="button-link">
+                                                            <a class="a-select" name="remove-selected-items" onclick="removeSelectedItems()" href="">
+                                                                Select All
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="col-md-7 right">
+                                                        <div class="button-link right">
+                                                            <a class="a-select" name="remove-selected-items" onclick="removeSelectedItems()" href="">
+                                                                Select None
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="row">
+                                                    <div class="col-md-12 left margin-top-15 tab-report-min-height">
+                                                        {% for dl in dirs_list%}
+                                                            <input class="margin-bottom-6" type="checkbox" value="report_{{ dl.id }}" {% if dl.attribute_name in dirs_infopanel %}selected="selected"{% endif %}> {{ dl.attribute_name }}<br>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div role="tabpanel" class="tab-pane fade tab-aoi-min-height" id="aoi">
+                                                {% for polygon in polygons%}
+                                                    <div class="row">
+                                                        <div class="col-md-8">
+                                                            <input type="radio" name="polygon" value="{{ polygon.kml_name }}" onchange="setPolygon(this);"><a href="{{ absolute_kml_url }}/{{ polygon.kml_name }}"> {{ polygon.name }}</a>
+                                                        </div>
+                                                            
+                                                        <div class="col-md-1">
+                                                            <button class="btn del-btn edit-area margin-top-07 left" type="button" name="save_area" value="{{ polygon.id }}" data-toggle="tooltip" data-placement="top" title="Edit">
+                                                                <img src="{% static 'img/edit-18.png' %}" class="margin-left-010"/>
+                                                            </button>
+                                                        </div>
+                                                        
+                                                        <div class="col-md-1">
+                                                            <button class="btn del-btn check-cur-delete margin-top-07 right" type="button" name="del_current_btn" value="{{ polygon.kml_name }}" data-toggle="tooltip" data-placement="top" title="Delete">
+                                                                <img src="{% static 'img/delete-18.png' %}" class="margin-left-010"/>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
                                             </div>
                                         </div>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
-                            <!-- END Left Sidebar -->
-                        </form>
-                        <!-- END Left Sidebar for the Customer Section -->
 
-                        <!-- Start Content -->
+                                    </div>
+                                    <!-- END TABS menu -->
+                                    
+                                    
+                                    
+                                    
+                                    {% if dirs_list %}
+                                        <!-- Info Panel Menu -->
+                                        <label class="control-label margin-top-25">Info Panel:</label>
+                                        {# <h4 class="margin-top-40 background-fill-grey"><b>Info Panel</b></h4>#}
+                                        <select class="form-control margin-top-10" name="root_filenames[]" multiple size="8">
+                                            {% for dl in dirs_list%}
+                                                <option value="{{ dl.id }}" {% if dl.attribute_name in dirs_infopanel %}selected="selected"{% endif %}>{{ dl.attribute_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <!-- END Info Panel Menu -->
+                                        
+                                        <!-- Statistics Menu -->
+                                        <label class="control-label margin-top-25">Statistics:</label>
+                                        <select class="form-control margin-top-10 disable" name="statistics[]" multiple size="6">
+                                            <option value="mean_ConditionalMax" {% if 'mean_ConditionalMax' in statisctics_infopanel %}selected="selected"{% endif %}>mean_ConditionalMax</option>
+                                            <option value="mean_ConditionalMean" {% if 'mean_ConditionalMean' in statisctics_infopanel %}selected="selected"{% endif %}>mean_ConditionalMean</option>
+                                            <option value="mean_ConditionalMedian" {% if 'mean_ConditionalMedian' in statisctics_infopanel %}selected="selected"{% endif %}>mean_ConditionalMedian</option>
+                                            <option value="mean_ConditionalMin" {% if 'mean_ConditionalMin' in statisctics_infopanel %}selected="selected"{% endif %}>mean_ConditionalMin</option>
+                                            <option value="mean_LowerQuartile" {% if 'mean_LowerQuartile' in statisctics_infopanel %}selected="selected"{% endif %}>mean_LowerQuartile</option>
+                                            <option value="mean_Quantile" {% if 'mean_Quantile' in statisctics_infopanel %}selected="selected"{% endif %}>mean_Quantile</option>
+                                        </select>
+                                        <!-- END Statistics Menu -->
+                                        
+                                        <!-- Add/Remove buttons -->
+                                        <div class="margin-top-20 button-link">
+                                            <a name="remove-selected-items" onclick="removeSelectedItems()" href="">
+                                                Remove the all selected items
+                                            </a>
+                                        </div>
+                                        
+                                        <div class="margin-top-15">
+                                            <button type="submit" name="add-list-view" class="btn btn-success btn-block">
+                                                Add to list view
+                                            </button>
+                                        </div>
+                                        <!-- END Add/Remove buttons -->
+                                    {% endif %}
+                                    
+                                    {% if polygons %}
+                                        <label class="control-label margin-top-25">Area of Interest:</label><br />
+                                        {% for polygon in polygons%}
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    <input type="radio" name="polygon" value="{{ polygon.kml_name }}" onchange="setPolygon(this);"><a href="{{ absolute_kml_url }}/{{ polygon.kml_name }}"> {{ polygon.name }}</a>
+                                                </div>
+                                                    
+                                                <div class="col-md-1">
+                                                    <button class="btn del-btn edit-area margin-top-07 left" type="button" name="save_area" value="{{ polygon.id }}" data-toggle="tooltip" data-placement="top" title="Edit">
+                                                        <img src="{% static 'img/edit-18.png' %}" class="margin-left-010"/>
+                                                    </button>
+                                                </div>
+                                                
+                                                <div class="col-md-1">
+                                                    <button class="btn del-btn check-cur-delete margin-top-07 right" type="button" name="del_current_btn" value="{{ polygon.kml_name }}" data-toggle="tooltip" data-placement="top" title="Delete">
+                                                        <img src="{% static 'img/delete-18.png' %}" class="margin-left-010"/>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </form>
+                        {% endif %}
+                        <!-- END Left Sidebar -->
+
+                        <!-- Customer Section Content -->
                         <div class="col-md-10 margin-top-020" id="content-column">
                             <!-- Start Status Messages -->
                             {% include '_base_message.html' %}
@@ -284,7 +286,7 @@
                             <!-- End Title -->
                             {% block content_customer %}{% endblock content_customer %}
                         </div>
-                        <!-- End Content -->
+                        <!-- End Customer Section Content -->
                     </div>
                 </div>
                 

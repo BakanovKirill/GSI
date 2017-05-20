@@ -3,9 +3,7 @@
 {% load php %}
 
 {% block content_customer %}
-	{% if error_message %}
-		<h3>{{ error_message }}</a></h3>
-	{% else %}
+	{% if not error_message %}
 		<form class="form-modal" id="customer_section" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data" role="form" class="form-horizontal">
 		{% csrf_token %}
 

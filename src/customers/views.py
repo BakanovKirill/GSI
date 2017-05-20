@@ -930,7 +930,7 @@ def check_current_dataset(request, data_post):
     request.session['select_data_set'] = data_set_id
     data_set = DataSet.objects.get(pk=data_set_id)
 
-    # print 'data_set_id ==================================', data_set_id
+    # print 'data_set_id ==================================', request.session['select_data_set']
 
     if not CustomerInfoPanel.objects.filter(user=request.user, data_set=data_set).exists():
         info_panel = CustomerInfoPanel.objects.filter(user=request.user).delete()
@@ -1078,15 +1078,14 @@ def getAttributeUnits(user, show_file):
     
     
 def getResultDirectory(dataset, shelfdata):
-    data_set = dataset
-    shelf_data_all = shelfdata
     dirs_list = []
+    
     try:
-        project_directory = os.path.join(PROJECTS_PATH, data_set.results_directory)
+        project_directory = os.path.join(PROJECTS_PATH, dataset.results_directory)
         root, dirs, files = os.walk(project_directory).next()
         dirs.sort()
         
-        for sd in shelf_data_all:
+        for sd in shelfdata:
             if str(sd.root_filename) in dirs:
                 dirs_list.append(sd)
     except Exception, e:
@@ -1095,29 +1094,120 @@ def getResultDirectory(dataset, shelfdata):
         
     return dirs_list
 
-    # view Customer Section
-    # @login_required
-    # @render_to('customers/customer_section.html')
-    # def customer_section1(request):
-    #     """**View for the "Customer '<user>' section" page.**
-    #
-    #     :Functions:
-    #         When you load the page is loaded map with Google MAP. Initial coordinates: eLat = 0, eLng = 0.
-    #         Zoom map is variable GOOGLE_MAP_ZOOM, whose value is in the project settings.
-    #         Code view allows to change position when you enter values in the fields on the page "Enter Lat" and "Enter Log".
-    #
-    #     :Arguments:
-    #         * *request:* The request is sent to the server when processing the page
-    #     """
-    #
-    #     # PNG_DIRECTORY = 'media/png'
-    #     # PNG_PATH = os.path.join(BASE_DIR, PNG_DIRECTORY)
-    #     # PROJECTS_PATH = '/lustre/w23/mattgsi/satdata/RF/Projects'
-    #
-    #     customer = request.user
-    #     customer_access = CustomerAccess.objects.get(user=customer)
-    #     data_sets_current = CustomerAccess.data_set.through.objects.filter(
-    #                     customeraccess_id=customer_access.id).order_by('dataset_id')
+# view Customer Section
+@login_required
+@render_to('customers/customer_section.html')
+def customer_section(request):
+    """**View for the "Customer section" page.**
+
+    :Functions:
+        When you load the page is loaded map with Google MAP. Initial coordinates: eLat = 0, eLng = 0.
+        Zoom map is variable GOOGLE_MAP_ZOOM, whose value is in the project settings.
+        Code view allows to change position when you enter values in the fields on the page "Enter Lat" and "Enter Log".
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+    """
+
+    # PNG_DIRECTORY = 'media/png'
+    # PNG_PATH = os.path.join(BASE_DIR, PNG_DIRECTORY)
+    # PROJECTS_PATH = '/lustre/w23/mattgsi/satdata/RF/Projects'
+
+    customer = request.user
+    shelf_data_all = ShelfData.objects.all()
+    customer_info_panel = CustomerInfoPanel.objects.filter(user=request.user)
+    customer_access = CustomerAccess.objects.get(user=customer)
+    customer_access_ds = CustomerAccess.data_set.through.objects.filter(
+                    customeraccess_id=customer_access.id).order_by('dataset_id')
+                    
+    url_name = 'customer_section'
+    error_message = ''
+    data_set_id = 0
+    
+    # default GEOTIFF coordinates
+    cLng = DAFAULT_LON
+    cLat = DAFAULT_LAT
+    eLat_1 = 0
+    eLng_1 = 0
+    eLat_2 = 0
+    eLng_2 = 0
+    google_map_zoom = 6
+                    
+    data_sets = []
+    
+    # Get the User DataSets
+    if customer_access_ds:
+        for n in customer_access_ds:
+            try:
+                ds = DataSet.objects.get(pk=n.dataset_id)
+                data_sets.append(ds)
+            except DataSet.DoesNotExist:
+                print 'ERROR DataSet.DoesNotExist ==================== '
+                pass
+    else:
+        print 'NO DATASETS ==================== '
+        error_message = 'You have no one DataSet for view. Please contact to the admin.'
+        data = {
+            'error_message': error_message
+        }
+        
+        return data
+    
+    # GET SESSIONS !!!!!!!!!!!!!!!!!!!!!!!!!
+    # Get select data_set sessions
+    print 'data_set_id ==================== ', request.session['select_data_set']
+    
+    if request.session.get('select_data_set', False):
+        data_set_id = int(request.session['select_data_set'])
+    else:
+        CustomerInfoPanel.objects.filter(user=request.user).delete()
+        request.session['select_data_set'] = data_sets[0].id
+        
+        # request.session.set_expiry(172800)
+    
+    
+    # get AJAX GET
+    if request.is_ajax() and request.method == "GET":
+        data = ''
+        data_get = request.GET
+        cip = CustomerInfoPanel.objects.filter(user=request.user)
+        
+        print 'GET customer_section ====================== ', data_get
+        
+        # When user celect a new DataSet, the previous celected DataSet to remove
+        if 'datasets_id' in data_get:
+            for ip in cip:
+                remove_file_png(ip.png_path)
+
+            check_current_dataset(request, data_get)
+    
+    # Get the DataSet select
+    try:
+        data_set = DataSet.objects.get(pk=data_set_id)
+    except Exception, e:
+        print 'Exception 01 ========================= ', e
+        data_set_id = int(data_sets[0].id)
+
+    # Get the ShelfData directorys list
+    dirs_list = getResultDirectory(data_set, shelf_data_all)
+    
+    
+    data = {
+        'data_sets': data_sets,
+        'data_set_id': data_set_id,
+        'dirs_list': dirs_list,
+        
+        'cLng': cLng,
+        'cLat': cLat,
+        'eLat_1': eLat_1,
+        'eLng_1': eLng_1,
+        'eLat_2': eLat_2,
+        'eLng_2': eLng_2,
+        'GOOGLE_MAP_ZOOM': GOOGLE_MAP_ZOOM,
+    }
+
+
+    return data
         
         
         
@@ -1126,7 +1216,7 @@ def getResultDirectory(dataset, shelfdata):
 # view Customer Section
 @login_required
 @render_to('customers/customer_section.html')
-def customer_section(request):
+def customer_section_copy(request):
     """**View for the "Customer '<user>' section" page.**
 
     :Functions:

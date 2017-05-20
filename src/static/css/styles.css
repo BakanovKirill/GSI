@@ -272,6 +272,10 @@ th {
     margin-bottom: 4px !important;
 }
 
+.margin-bottom-6 {
+    margin-bottom: 6px !important;
+}
+
 .margin-bottom-20 {
     margin-bottom: 20px !important;
 }
@@ -1188,4 +1192,22 @@ hr {
 .nav-tabs {
     border-bottom: 1px solid #283890 !important;;
     /*border: 1px solid #283890 !important;*/
+}
+
+.tab-view-min-height,
+.tab-report-min-height,
+.tab-aoi-min-height {
+    overflow-y: auto;
+}
+
+.tab-view-min-height {
+    height: 130px !important;
+}
+
+.tab-report-min-height {
+    height: 178px !important;
+}
+
+.tab-aoi-min-height {
+    height: 212px !important;
 }
