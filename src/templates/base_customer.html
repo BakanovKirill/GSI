@@ -99,27 +99,87 @@
                                 <!-- END DataSets Menu -->
                                 
                                 <!-- TABS menu -->
-                                <div class="tabs">
-                                    <ul class="tab-links">
-                                        <li class="active"><a href="#view">View</a></li>
-                                        <li><a href="#report">Report</a></li>
-                                        <li><a href="#aoi">AOI</a></li>
+                                <div role="tabpanel" class="margin-top-20">
+                                    <!-- Navigational tabs -->
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li role="presentation" class="active"><a href="#view" class="a-tab" aria-controls="view" role="tab" data-toggle="tab">View</a></li>
+                                        <li role="presentation"><a href="#report" class="a-tab" aria-controls="report" role="tab" data-toggle="tab">Report</a></li>
+                                        <li role="presentation"><a href="#aoi" class="a-tab" aria-controls="aoi" role="tab" data-toggle="tab">AOI</a></li>
                                     </ul>
-                                 
+
+                                    <!-- Tabs panel -->
                                     <div class="tab-content">
-                                        <div id="view" class="tab active">
-                                            {% for dl in dirs_list%}
-                                                <option value="{{ dl.id }}" {% if dl.attribute_name in dirs_infopanel %}selected="selected"{% endif %}>{{ dl.attribute_name }}</option>
-                                            {% endfor %}
+                                        <div role="tabpanel" class="tab-pane fade in active" id="view">
+                                            <div class="row">
+                                                <div class="col-md-6 left">
+                                                    <div>
+                                                        <a class="a-select" name="select-all-items" onclick="removeSelectedItems()" href="">
+                                                            Select All
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col-md-6 right">
+                                                    <div class="right">
+                                                        <a class="a-select" name="select-none-items" onclick="removeSelectedItems()" href="">
+                                                            Select None
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-md-12 left margin-top-15">
+                                                    {% for dl in dirs_list%}
+                                                        <input type="checkbox" value="view_{{ dl.id }}" {% if dl.attribute_name in dirs_infopanel %}selected="selected"{% endif %}> {{ dl.attribute_name }}<br>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-md-6 left margin-top-15">
+                                                    <button type="submit" name="add-list-view" class="btn btn-success btn-block">
+                                                        Next
+                                                    </button>
+                                                </div>
+                                                
+                                                <div class="col-md-6 left margin-top-15">
+                                                    <button type="submit" name="add-list-view" class="btn btn-success btn-block">
+                                                        Previous
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
-                                 
-                                        <div id="report" class="tab">
-                                            {% for dl in dirs_list%}
-                                                <option value="{{ dl.id }}" {% if dl.attribute_name in dirs_infopanel %}selected="selected"{% endif %}>{{ dl.attribute_name }}</option>
-                                            {% endfor %}
+                                        
+                                        <div role="tabpanel" class="tab-pane fade" id="report">
+                                            <div class="row">
+                                                <div class="col-md-6 left">
+                                                    <div class="button-link">
+                                                        <a name="remove-selected-items" onclick="removeSelectedItems()" href="">
+                                                            Select All
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col-md-6 right">
+                                                    <div class="button-link right">
+                                                        <a name="remove-selected-items" onclick="removeSelectedItems()" href="">
+                                                            Select None
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-md-12 left margin-top-15">
+                                                    {% for dl in dirs_list%}
+                                                        <input type="checkbox" value="report_{{ dl.id }}" {% if dl.attribute_name in dirs_infopanel %}selected="selected"{% endif %}> {{ dl.attribute_name }}<br>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
                                         </div>
-                                 
-                                        <div id="aoi" class="tab">
+                                        
+                                        <div role="tabpanel" class="tab-pane fade" id="aoi">
                                             {% for polygon in polygons%}
                                                 <div class="row">
                                                     <div class="col-md-8">
@@ -141,8 +201,11 @@
                                             {% endfor %}
                                         </div>
                                     </div>
+
                                 </div>
                                 <!-- END TABS menu -->
+                                
+                                
                                 
                                 
                                 {% if dirs_list %}

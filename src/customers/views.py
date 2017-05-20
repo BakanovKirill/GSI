@@ -1095,7 +1095,34 @@ def getResultDirectory(dataset, shelfdata):
         
     return dirs_list
 
-
+    # view Customer Section
+    # @login_required
+    # @render_to('customers/customer_section.html')
+    # def customer_section1(request):
+    #     """**View for the "Customer '<user>' section" page.**
+    #
+    #     :Functions:
+    #         When you load the page is loaded map with Google MAP. Initial coordinates: eLat = 0, eLng = 0.
+    #         Zoom map is variable GOOGLE_MAP_ZOOM, whose value is in the project settings.
+    #         Code view allows to change position when you enter values in the fields on the page "Enter Lat" and "Enter Log".
+    #
+    #     :Arguments:
+    #         * *request:* The request is sent to the server when processing the page
+    #     """
+    #
+    #     # PNG_DIRECTORY = 'media/png'
+    #     # PNG_PATH = os.path.join(BASE_DIR, PNG_DIRECTORY)
+    #     # PROJECTS_PATH = '/lustre/w23/mattgsi/satdata/RF/Projects'
+    #
+    #     customer = request.user
+    #     customer_access = CustomerAccess.objects.get(user=customer)
+    #     data_sets_current = CustomerAccess.data_set.through.objects.filter(
+    #                     customeraccess_id=customer_access.id).order_by('dataset_id')
+        
+        
+        
+        
+        
 # view Customer Section
 @login_required
 @render_to('customers/customer_section.html')

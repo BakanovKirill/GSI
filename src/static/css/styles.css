@@ -97,9 +97,9 @@ input:focus, textarea:focus {
 }
 
 /* link styles */
-a {
+a.a-select {
     color: #283890 !important;
-    /*border-bottom: 1px dotted #283890 !important;*/
+    border-bottom: 1px dotted #283890 !important;
     /*text-decoration: underline;*/
 }
 
@@ -138,16 +138,17 @@ a:focus, a:hover {
 
 .button-link {
     color: #283890 !important;
-    border-bottom: 1px dotted #283890 !important;
+    border-bottom: 1px  #283890 !important;
     background-color: transparent !important;
     text-align: left;
+    text-decoration: dotted !important;
 }
 
 .button-link:focus, .button-link:hover {
     color: #283890 !important;
     border-bottom: 0px !important;
-    border-bottom: 1px dotted transparent !important;
-    text-decoration: none !important;
+    border-bottom: 1px dotted !important;
+    text-decoration: transparent !important;
 }
 
 /* rows style */
@@ -312,6 +313,10 @@ th {
 
 .margin-left-05 {
     margin-left: -5px !important;
+}
+
+.margin-bottom-015 {
+    margin-bottom: -15px !important;
 }
 
 /* Paddings "+" */
@@ -1107,77 +1112,74 @@ hr {
     cursor: pointer;
 }
 
-/* TABs customer section */
-/*----- Tabs -----*/
-.tabs {
-    width:100%;
-    display:inline-block;
-    /*padding: 0px;*/
-    /*margin: 0px;*/
-}
- 
-/*----- Tab Links -----*/
-/* Clearfix */
-.tab-links {
-    padding:0px;
-    margin:0px 5px;
-    float:left;
-    /*list-style:none;*/
+
+
+/* TABs BOOTSTRAP customer section */
+.nav-tabs > li > a.a-tab, .nav-tabs > li > a.a-tab:hover, .nav-tabs > li > a.a-tab:focus {
+    margin: 1px !important;
+    padding: 6px !important;
+    border: 1px solid #283890 !important;
+    /*border-style: solid;*/
+    /*border-color: #283890;*/
+    /*border-width:0.5px;*/
+    border-bottom: 1px !important;
+    background-color: #fff !important;
+    /*;*/
     
 }
 
-.tab-links:after {
-    display:block;
-    clear:both;
-    content:'';
+.nav > li > a.a-tab, .nav > li > a.a-tab:hover, .nav > li > a.a-tab:focus {
+    margin: 1px !important;
+    padding: 6px !important;
+    border: 1px solid #283890 !important;
+    /*border-style: solid;*/
+    /*border-color: #283890;*/
+    /*border-width:0.5px;*/
+    border-bottom: 1px !important;
+    background-color: #fff !important;
+    /*;*/
+    
 }
 
-.tab-links li {
-    margin:5px 1px;
-    float:left;
-    list-style:none;
+.nav-tabs > li > a.a-tab:hover, .nav-tabs > li > a.a-tab:focus {
+    background-color: #66afe9 !important;
+    border-bottom: 1px !important;
+    /*border-bottom-color: transparent !important;*/
 }
 
-.tab-links a {
-    padding:1px 12px;
-    display:inline-block;
-    /*border-radius:3px 3px 0px 0px;*/
-    background:#7FB5DA;
-    font-size:16px;
-    font-weight:600;
-    color:#4c4c4c;
-    transition:all linear 0.15s;
-    /*border: 1px solid black;*/
-    border-style: solid;
-    border-color: black;
-    border-width:0.5px;
-    border-bottom: 1px;
+.nav > li > a.a-tab:hover, .nav > li > a.a-tab:focus {
+    background-color: #66afe9 !important;
+    border-bottom: 1px !important;
+    /*border-bottom-color: transparent !important;*/
 }
 
-.tab-links a:hover {
-    background:#a7cce5;
-    text-decoration:none;
+.nav > li.active > a.a-tab, .nav > li.active > a.a-tab:hover, .nav > li.active > a.a-tab:focus {
+    margin: 0.5px !important;
+    padding: 6px !important;
+    border: 1px solid #283890 !important;
+    /*border-style: solid;*/
+    /*border-color: #283890;*/
+    /*border-width:0.5px;*/
+    /*border-bottom: 1px;*/
+    color: #fff !important;
+    background-color: #283890 !important;
+    /*border-bottom: 1px !important;*/
+    border-bottom-color: transparent !important;
 }
 
-li.active a, li.active a:hover {
-    background:#fff;
-    color:#4c4c4c;
-}
-
-/*----- Content of Tabs -----*/
 .tab-content {
-    margin-top: 30px;
-    padding:15px;
-    /*border-radius:3px;*/
-    box-shadow:-1px 1px 1px rgba(0,0,0,0.15);
-    background:#fff;
-    border: 1px solid black;
+    border-bottom: 1px !important;
+    margin-top: -0.5px !important;
+    padding: 5px !important;
+    border: 1px solid #283890 !important;
+    border-top: 1px !important;
+    /*border-style: solid;*/
+    /*border-color: #283890;*/
+    /*border-width:0.5px;*/
+    /*border-bottom: 1px;*/
 }
 
-.tab {
-    display:none;
-}
-
-.tab.active {
-    display:block;
+.nav-tabs {
+    border-bottom: 1px solid #283890 !important;;
+    /*border: 1px solid #283890 !important;*/
 }
