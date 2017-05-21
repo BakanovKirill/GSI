@@ -49,9 +49,17 @@
                         <div class="col-md-12 center">
                             <nav class="navbar navbar-static-top main-menu-customer navbar-main-menu">
                                 <div class="container-fluid">
-                                    <!-- DataSets in the InfoPanel -->
-                                    <div class="navbar-brand white"><b class="purple">Dataset: </b><span id="info_dataset"></span></div>
-                                    <!-- End DataSets in the InfoPanel -->
+                                    <!-- Show DataSets in the InfoPanel -->
+                                    <div class="navbar-brand white"><b class="purple">Dataset: </b><span id="show_info_dataset"></span></div>
+                                    <!-- End Show DataSets in the InfoPanel -->
+                                    
+                                    <!-- Show DataSets in the InfoPanel -->
+                                    {% if show_image_ip %}
+                                        <div class="navbar-brand white"><b class="purple">Image: </b><span>{{ show_image_ip }}</span></div>
+                                    {% else %}
+                                        <div class="navbar-brand white"><b class="purple">Image: </b><span id="show_info_image"></span></div>
+                                    {% endif %}
+                                    <!-- End Show DataSets in the InfoPanel -->
 
                                     <div class="collapse navbar-collapse">
                                         <div class="dropdown user-profile" id="dropUser">
@@ -135,7 +143,7 @@
                                                     <div class="row">
                                                         <div class="col-md-12 left margin-top-15 tab-view-min-height margin-left-4">
                                                             {% for dl in dirs_list%}
-                                                                <label class="normal"><input class="margin-bottom-6" name="viewlist" type="checkbox" value="view_{{ dl.id }}" {% if dl.attribute_name in dirs_infopanel %}checked="checked"{% endif %}> {{ dl.attribute_name }}</label><br>
+                                                                <label class="normal"><input class="margin-bottom-6" name="viewlist" type="checkbox" value="view_{{ dl.id }}" {% if dl.attribute_name in attribute_list_infopanel %}checked="checked"{% endif %}> {{ dl.attribute_name }}</label><br>
                                                             {% endfor %}
                                                         </div>
                                                     </div>
@@ -178,7 +186,7 @@
                                                     <div class="row">
                                                         <div class="col-md-12 left margin-top-15 tab-report-min-height margin-left-4">
                                                             {% for dl in dirs_list%}
-                                                                <label class="normal"><input class="margin-bottom-6" name="viewreport" type="checkbox" value="report_{{ dl.id }}" {% if dl.attribute_name in dirs_infopanel %}selected="selected"{% endif %}> {{ dl.attribute_name }}</label><br>
+                                                                <label class="normal"><input class="margin-bottom-6" name="viewreport" type="checkbox" value="report_{{ dl.id }}" {% if dl.attribute_name in dirs_infopanel %}checked="checked"{% endif %}> {{ dl.attribute_name }}</label><br>
                                                             {% endfor %}
                                                         </div>
                                                     </div>

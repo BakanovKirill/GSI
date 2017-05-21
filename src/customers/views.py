@@ -926,6 +926,7 @@ def remove_file_png(file_path):
 
 
 def check_current_dataset(request, data_post):
+    is_delete = False
     data_set_id = data_post.get('datasets_id', '')
     request.session['select_data_set'] = data_set_id
     data_set = DataSet.objects.get(pk=data_set_id)
@@ -934,6 +935,9 @@ def check_current_dataset(request, data_post):
 
     if not CustomerInfoPanel.objects.filter(user=request.user, data_set=data_set).exists():
         info_panel = CustomerInfoPanel.objects.filter(user=request.user).delete()
+        is_delete = True
+        
+    return is_delete
 
 
 def check_date_files(file_tif, file_png):
@@ -1031,6 +1035,44 @@ def addPolygonToDB(name, kml_name, user, kml_path, kml_url, ds):
     return customer_pol
     
     
+def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute_png_url):
+    # print 'data_set =========================== ', data_set
+    # order_data_set = data_set.order_by('attribute_name')
+    attribute_name = shelf_data.attribute_name
+    results_directory = data_set.results_directory
+    project_name = results_directory.split('/')[0]
+    file_area_name = '{0}_{1}.{2}'.format(stat_file, shelf_data.root_filename, project_name)
+    tif = '{0}.tif'.format(file_area_name)
+    png = '{0}.png'.format(file_area_name)
+    tif_path = os.path.join(PROJECTS_PATH, data_set.results_directory, shelf_data.root_filename, tif)
+    png_path = os.path.join(PNG_PATH, png)
+    url_png = '{0}/{1}'.format(absolute_png_url, png)
+    
+    return attribute_name, file_area_name, tif_path, png_path, url_png
+    
+def createCustomerInfoPanel(customer, data_set, shelf_data, stat_file, absolute_png_url,
+                            is_show, order=0):
+    CustomerInfoPanel.objects.filter(user=customer).delete()
+    attribute_name, file_area_name,\
+    tif_path, png_path, url_png = get_parameters_customer_info_panel(data_set,
+                                    shelf_data, stat_file, absolute_png_url)
+                                        
+    info_panel = CustomerInfoPanel.objects.create(
+                    user=customer,
+                    data_set=data_set,
+                    attribute_name=attribute_name,
+                    statisctic=stat_file,
+                    file_area_name=file_area_name,
+                    tif_path=tif_path,
+                    png_path=png_path,
+                    url_png=url_png,
+                    order=order,
+                    is_show=is_show)
+    info_panel.save()
+    
+    return info_panel
+    
+    
 def createKml(user, filename, info_window, url, data_set):
     # Create KML file for the draw polygon
     kml_filename = str(filename) + '.kml'
@@ -1088,11 +1130,24 @@ def getResultDirectory(dataset, shelfdata):
         for sd in shelfdata:
             if str(sd.root_filename) in dirs:
                 dirs_list.append(sd)
+            dirs_list.sort()
     except Exception, e:
         print 'Exception 02 ========================= ', e
         pass
         
     return dirs_list
+    
+    
+def getDataSet(ds_id, data_set):
+    data_set_id = ds_id
+    
+    try:
+        data_set = DataSet.objects.get(pk=data_set_id)
+    except DataSet.DoesNotExist, e:
+        print 'DataSet.DoesNotExist ========================= ', e
+        data_set_id = int(data_set.id)
+        
+    return data_set, data_set_id
 
 # view Customer Section
 @login_required
@@ -1114,7 +1169,7 @@ def customer_section(request):
     # PROJECTS_PATH = '/lustre/w23/mattgsi/satdata/RF/Projects'
 
     customer = request.user
-    shelf_data_all = ShelfData.objects.all()
+    shelf_data_all = ShelfData.objects.all().order_by('attribute_name')
     customer_info_panel = CustomerInfoPanel.objects.filter(user=request.user)
     customer_polygons = CustomerPolygons.objects.filter(user=request.user)
     polygons_path = os.path.join(MEDIA_ROOT, 'kml')
@@ -1127,6 +1182,10 @@ def customer_section(request):
     error_message = ''
     data_set_id = 0
     polygons = []
+    attribute_list_infopanel = []
+    statisctics_infopanel = []
+    show_image_ip = ''
+    current_area_image = ''
     
     # default GEOTIFF coordinates
     cLng = DAFAULT_LON
@@ -1137,8 +1196,9 @@ def customer_section(request):
     eLng_2 = 0
     google_map_zoom = 6
     
+    # print 'customer_info_panel ========================== ', customer_info_panel
     
-    # The path to are PNG and KML folders
+    # The path to are PNG, KML urls
     scheme = '{0}://'.format(request.scheme)
     absolute_png_url = os.path.join(scheme, request.get_host(), PNG_DIRECTORY)
     absolute_kml_url = os.path.join(scheme, request.get_host(), KML_DIRECTORY)
@@ -1149,8 +1209,8 @@ def customer_section(request):
             try:
                 ds = DataSet.objects.get(pk=n.dataset_id)
                 data_sets.append(ds)
-            except DataSet.DoesNotExist:
-                print 'ERROR DataSet.DoesNotExist ==================== '
+            except DataSet.DoesNotExist, e:
+                print 'ERROR Get DataSet ==================== ', e
                 pass
     else:
         print 'NO DATASETS ==================== '
@@ -1160,17 +1220,15 @@ def customer_section(request):
         }
         
         return data
-    
+        
     # GET SESSIONS !!!!!!!!!!!!!!!!!!!!!!!!!
     # Get select data_set sessions
-    print 'data_set_id ==================== ', request.session['select_data_set']
-    
+    # print 'data_set_id ==================== ', request.session['select_data_set']
     if request.session.get('select_data_set', False):
         data_set_id = int(request.session['select_data_set'])
     else:
         CustomerInfoPanel.objects.filter(user=request.user).delete()
         request.session['select_data_set'] = data_sets[0].id
-        
         # request.session.set_expiry(172800)
     
     
@@ -1178,7 +1236,7 @@ def customer_section(request):
     if request.is_ajax() and request.method == "GET":
         data = ''
         data_get = request.GET
-        cip = CustomerInfoPanel.objects.filter(user=request.user)
+        cip = CustomerInfoPanel.objects.filter(user=customer)
         
         print 'GET customer_section ====================== ', data_get
         
@@ -1187,31 +1245,72 @@ def customer_section(request):
             for ip in cip:
                 remove_file_png(ip.png_path)
 
-            check_current_dataset(request, data_get)
+            status = check_current_dataset(request, data_get)
+            
+            if request.session.get('select_data_set', False):
+                data_set_id = int(request.session['select_data_set'])
+            else:
+                request.session['select_data_set'] = data_sets[0].id
+                data_set_id = request.session['select_data_set']
+            
+            # print 'status ========================== ', status
+            # print 'data_set_id REQ ========================== ', request.session['select_data_set']
+            # print 'data_set_id ========================== ', data_set_id
+            
+            
+            if status:
+                data_set, data_set_id = getDataSet(data_set_id, data_sets[0])
+                dirs_list = getResultDirectory(data_set, shelf_data_all)
+                statisctic = 'mean_ConditionalMean'
+                is_show = True
+                
+                # print 'data_set ========================== ', data_set
+                # print 'dirs_list[0] ========================== ', dirs_list[0]
+                
+                info_panel = createCustomerInfoPanel(
+                                customer, data_set, dirs_list[0], statisctic,
+                                absolute_png_url, is_show
+                            )
+            
+        # print 'GET data ====================== ', data
+        
+        return HttpResponse(data)
     
-    # Get the DataSet select
-    try:
-        data_set = DataSet.objects.get(pk=data_set_id)
-    except Exception, e:
-        print 'Exception 01 ========================= ', e
-        data_set_id = int(data_sets[0].id)
+    # Get the DataSet and DataSet ID select
+    data_set, data_set_id = getDataSet(data_set_id, data_sets[0])
 
-    # Get the ShelfData directorys list
+    # Get the Statistics list
     dirs_list = getResultDirectory(data_set, shelf_data_all)
     
     
+    if not customer_info_panel and dirs_list:
+        attribute_list_infopanel.append(dirs_list[0].attribute_name)
+        statisctics_infopanel.append('mean_ConditionalMean')
+        current_area_image = ''
+    elif customer_info_panel and dirs_list:
+        cip = customer_info_panel.filter(
+                user=customer, data_set=data_set, is_show=True).order_by('attribute_name')[0]
+        attribute_list_infopanel.append(cip.attribute_name)
+        statisctics_infopanel.append(cip.statisctic)
+        
     
     # Get the polygons list from media folder
     polygons = CustomerPolygons.objects.filter(
                     user=request.user,
                     data_set=data_set
                 )
-    print 'absolute_kml_url ======================================= ', absolute_kml_url
+    
+    print 'attribute_list_infopanel ======================================= ', attribute_list_infopanel
+    print 'statisctics_infopanel ======================================= ', statisctics_infopanel
+    
     data = {
         'data_sets': data_sets,
         'data_set_id': data_set_id,
         'dirs_list': dirs_list,
         'polygons': polygons,
+        'attribute_list_infopanel': attribute_list_infopanel,
+        'statisctics_infopanel': statisctics_infopanel,
+        'show_image_ip': show_image_ip,
         
         'absolute_kml_url': absolute_kml_url,
         
@@ -1647,6 +1746,9 @@ def customer_section_copy(request):
                 for dr in dirs:
                     shelf_data = ShelfData.objects.get(pk=dr)
                     attribute_name = shelf_data.attribute_name
+                    
+                    print 'dirs ========================== ', dirs
+                    print 'shelf_data ========================== ', shelf_data
 
                     for st in statistics:
                         file_area_name = '{0}_{1}.{2}'.format(st, shelf_data.root_filename, project_name)
@@ -1655,6 +1757,7 @@ def customer_section_copy(request):
                         tif_path = os.path.join(PROJECTS_PATH, data_set.results_directory, shelf_data.root_filename, tif)
                         png_path = os.path.join(PNG_PATH, png)
                         url_png = '{0}/{1}'.format(absolute_png_url, png)
+                        
                         info_panel = CustomerInfoPanel.objects.create(
                                         user=request.user,
                                         data_set=data_set,

@@ -247,10 +247,13 @@ function showDataSets(obj) {
             var message = 'An unexpected error occurred. Try later.';
         },
         'success': function(data, status, xhr){
-            if (obj != datasets_id) {
-                // setTimeout(function(){location.reload(true);}, 500);
-                window.location.href = form_url;
-            }
+            // alert('success: '+data);
+            // alert('success status: '+status);
+            window.location.href = form_url;
+            // if (obj != datasets_id) {
+            //     // setTimeout(function(){location.reload(true);}, 500);
+            //     window.location.href = form_url;
+            // }
         },
     });
     return false;

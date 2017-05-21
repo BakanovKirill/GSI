@@ -232,7 +232,14 @@ function greyColorSelect() {
 
 function setDataSetInfoPanel() {
     var select_dataset = $("#mydataset option:selected");
-    var info_dataset = $("span#info_dataset");
+    var info_dataset = $("span#show_info_dataset");
+    var current_dataset = select_dataset.html();
+    $(info_dataset).html(current_dataset);
+}
+
+function setImageInfoPanel() {
+    var select_dataset = $("#mydataset option:selected");
+    var info_dataset = $("span#show_info_image");
     var current_dataset = select_dataset.html();
     $(info_dataset).html(current_dataset);
 }
@@ -324,6 +331,7 @@ $(document).ready(function(){
     initAddFormatingTextarrea();
     greyColorSelect();
     setDataSetInfoPanel();
+    setImageInfoPanel();
     resizeScreen();
     // tabsCustomerMenu();
     // showCheckboxes();

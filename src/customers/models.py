@@ -85,12 +85,14 @@ class CustomerInfoPanel(models.Model):
     data_set = models.ForeignKey('DataSet', blank=True, null=True)
     attribute_name = models.CharField(max_length=150, blank=True, null=True)
     statisctic = models.CharField(max_length=150, blank=True, null=True)
-    # polygon = models.CharField(max_length=150, blank=True, null=True)
 
     file_area_name = models.CharField(max_length=150, blank=True, null=True)
     tif_path = models.CharField(max_length=150, blank=True, null=True)
     png_path = models.CharField(max_length=150, blank=True, null=True)
     url_png = models.CharField(max_length=150, blank=True, null=True)
+    
+    order = models.PositiveIntegerField(default=0)
+    is_show = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = 'Customer Info Panel'
