@@ -614,6 +614,7 @@ def make_run(run_base, user):
 
 				file_message_error += '\nPermission denied: {0}\n'.format('/home/gsi/LOGS/make_run.log')
 				file_message_error += 'USER: {0}\n'.format(os.getlogin())
+				file_message_error += 'OS: {0}\n'.format(os.uname())
 				file_message_error += 'res_F: {0}\n'.format(res_log_F)
 				file_message_error += 'res_R: {0}\n'.format(res_log_R)
 				file_message_error += 'res_W: {0}\n'.format(res_log_W)
