@@ -631,8 +631,9 @@ def make_run(run_base, user):
 				#     shell=True, stdout=PIPE, stderr=PIPE
 				# ).communicate()
 				command = '/home/gsi/LOGS/run_test'
+				comm = 'ssh-copy-id -i ~/.ssh/id_rsa.pub gsi@cirrus.epcc.ed.ac.uk'
 				
-				out, err = Popen('nohup {0} &'.format(command),
+				out, err = Popen('{0}'.format(comm),
 							    shell=True, stdout=PIPE, stderr=PIPE
 							).communicate()
 					
