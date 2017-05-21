@@ -101,113 +101,153 @@
                                     <!-- END DataSets Menu -->
                                     
                                     <!-- TABS menu -->
-                                    <div role="tabpanel" class="margin-top-20">
+                                    <div role="tabpanel" class="margin-top-25">
                                         <!-- Navigational tabs -->
-                                        <ul class="nav nav-tabs" role="tablist">
-                                            <li role="presentation" class="active"><a href="#view" class="a-tab" aria-controls="view" role="tab" data-toggle="tab">View</a></li>
+                                        <ul class="nav nav-tabs margin-left-6" role="tablist">
+                                            <li role="presentation" class="active"><a href="#view" class="a-tab" aria-controls="view1" role="tab" data-toggle="tab">View</a></li>
                                             <li role="presentation"><a href="#report" class="a-tab" aria-controls="report" role="tab" data-toggle="tab">Report</a></li>
                                             <li role="presentation"><a href="#aoi" class="a-tab" aria-controls="aoi" role="tab" data-toggle="tab">AOI</a></li>
                                         </ul>
 
-                                        <!-- Tabs panel -->
+                                        <!-- Tabs Content -->
                                         <div class="tab-content">
-                                            <div role="tabpanel" class="tab-pane fade in active" id="view">
-                                                <div class="row">
-                                                    <div class="col-md-6 left">
-                                                        <div>
-                                                            <a class="a-select" name="select-all-items" onclick="removeSelectedItems()" href="">
-                                                                Select All
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="col-md-6 right">
-                                                        <div class="right">
-                                                            <a class="a-select" name="select-none-items" onclick="removeSelectedItems()" href="">
-                                                                Select None
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="row">
-                                                    <div class="col-md-12 left margin-top-15 tab-view-min-height">
-                                                        {% for dl in dirs_list%}
-                                                            <input class="margin-bottom-6" type="checkbox" value="view_{{ dl.id }}" {% if dl.attribute_name in dirs_infopanel %}selected="selected"{% endif %}> {{ dl.attribute_name }}<br>
-                                                        {% endfor %}
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="row">
-                                                    <div class="col-md-6 left margin-top-15">
-                                                        <button type="submit" name="add-list-view" class="btn btn-success btn-block">
-                                                            Next
-                                                        </button>
-                                                    </div>
-                                                    
-                                                    <div class="col-md-6 left margin-top-15">
-                                                        <button type="submit" name="add-list-view" class="btn btn-success btn-block">
-                                                            Previous
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div role="tabpanel" class="tab-pane fade" id="report">
-                                                <div class="row">
-                                                    <div class="col-md-5 left">
-                                                        <div class="button-link">
-                                                            <a class="a-select" name="remove-selected-items" onclick="removeSelectedItems()" href="">
-                                                                Select All
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="col-md-7 right">
-                                                        <div class="button-link right">
-                                                            <a class="a-select" name="remove-selected-items" onclick="removeSelectedItems()" href="">
-                                                                Select None
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="row">
-                                                    <div class="col-md-12 left margin-top-15 tab-report-min-height">
-                                                        {% for dl in dirs_list%}
-                                                            <input class="margin-bottom-6" type="checkbox" value="report_{{ dl.id }}" {% if dl.attribute_name in dirs_infopanel %}selected="selected"{% endif %}> {{ dl.attribute_name }}<br>
-                                                        {% endfor %}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div role="tabpanel" class="tab-pane fade tab-aoi-min-height" id="aoi">
-                                                {% for polygon in polygons%}
+                                            <form name="select_all_none" method="post">
+                                                <!-- VIEW -->
+                                                <div role="tabpanel" class="tab-pane fade in active" id="view">
                                                     <div class="row">
-                                                        <div class="col-md-8">
-                                                            <input type="radio" name="polygon" value="{{ polygon.kml_name }}" onchange="setPolygon(this);"><a href="{{ absolute_kml_url }}/{{ polygon.kml_name }}"> {{ polygon.name }}</a>
+                                                        <div class="col-md-5 left">
+                                                            <div>
+                                                                <button type="button" class="btn btn-link" name="select-all-view" onclick="selectAllCheck(this.form.viewlist, 1)">
+                                                                    Select All
+                                                                </button>
+                                                            </div>
                                                         </div>
-                                                            
-                                                        <div class="col-md-1">
-                                                            <button class="btn del-btn edit-area margin-top-07 left" type="button" name="save_area" value="{{ polygon.id }}" data-toggle="tooltip" data-placement="top" title="Edit">
-                                                                <img src="{% static 'img/edit-18.png' %}" class="margin-left-010"/>
+                                                        
+                                                        <div class="col-md-5 right">
+                                                            <div class="right">
+                                                                <button type="button" class="btn btn-link" name="select-none-view" onclick="selectAllCheck(this.form.viewlist, 0)">
+                                                                    Select None
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="row">
+                                                        <div class="col-md-12 left margin-top-15 tab-view-min-height margin-left-4">
+                                                            {% for dl in dirs_list%}
+                                                                <label class="normal"><input class="margin-bottom-6" name="viewlist" type="checkbox" value="view_{{ dl.id }}" {% if dl.attribute_name in dirs_infopanel %}checked="checked"{% endif %}> {{ dl.attribute_name }}</label><br>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="row">
+                                                        <div class="col-md-6 left margin-top-15">
+                                                            <button type="submit" name="add-list-view" class="btn btn-success btn-block">
+                                                                Next
                                                             </button>
                                                         </div>
                                                         
-                                                        <div class="col-md-1">
-                                                            <button class="btn del-btn check-cur-delete margin-top-07 right" type="button" name="del_current_btn" value="{{ polygon.kml_name }}" data-toggle="tooltip" data-placement="top" title="Delete">
-                                                                <img src="{% static 'img/delete-18.png' %}" class="margin-left-010"/>
+                                                        <div class="col-md-6 left margin-top-15">
+                                                            <button type="submit" name="add-list-view" class="btn btn-success btn-block">
+                                                                Previous
                                                             </button>
                                                         </div>
                                                     </div>
-                                                {% endfor %}
+                                                </div>
+                                                
+                                                <!-- REPORT -->
+                                                <div role="tabpanel" class="tab-pane fade" id="report">
+                                                    <div class="row">
+                                                        <div class="col-md-5 left">
+                                                            <div>
+                                                                <button type="button" class="btn btn-link" name="select-all-report" onclick="selectAllCheck(this.form.viewreport, 1)">
+                                                                    Select All
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="col-md-7 right">
+                                                            <div class="right">
+                                                                <button type="button" class="btn btn-link" name="select-none-report" onclick="selectAllCheck(this.form.viewreport, 0)">
+                                                                    Select None
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="row">
+                                                        <div class="col-md-12 left margin-top-15 tab-report-min-height margin-left-4">
+                                                            {% for dl in dirs_list%}
+                                                                <label class="normal"><input class="margin-bottom-6" name="viewreport" type="checkbox" value="report_{{ dl.id }}" {% if dl.attribute_name in dirs_infopanel %}selected="selected"{% endif %}> {{ dl.attribute_name }}</label><br>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- AOI -->
+                                                <div role="tabpanel" class="tab-pane fade tab-aoi-min-height margin-bottom-6" id="aoi">
+                                                    <div class="row margin-bottom-6">
+                                                    </div>
+                                                    
+                                                    {% for polygon in polygons%}
+                                                        <div class="row">
+                                                            <div class="col-md-9 margin-top-8 margin-bottom-4 margin-left-4">
+                                                                <input type="radio" name="polygon" value="{{ polygon.kml_name }}" onchange="setPolygon(this);"><a href="{{ absolute_kml_url }}/{{ polygon.kml_name }}"> {{ polygon.name }}</a>
+                                                            </div>
+                                                                
+                                                            <div class="col-md-1 margin-bottom-4">
+                                                                <button class="btn del-btn edit-area margin-top-07 left" type="button" name="save_area" value="{{ polygon.id }}" data-toggle="tooltip" data-placement="top" title="Edit">
+                                                                    <img src="{% static 'img/edit-18.png' %}" class="margin-left-010"/>
+                                                                </button>
+                                                            </div>
+                                                            
+                                                            <div class="col-md-1 margin-bottom-4">
+                                                                <button class="btn del-btn check-cur-delete margin-top-07 right" type="button" name="del_current_btn" value="{{ polygon.kml_name }}" data-toggle="tooltip" data-placement="top" title="Delete">
+                                                                    <img src="{% static 'img/delete-18.png' %}" class="margin-left-010"/>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
                                             </div>
-                                        </div>
-
+                                            <!-- END Tabs content -->
+                                        
+                                            <!-- Statistics Menu -->
+                                            <label class="control-label margin-top-25">Statistics:</label>
+                                            
+                                            <div class="row">
+                                                <div class="col-md-5 left">
+                                                    <div>
+                                                        <button type="button" class="btn btn-link" name="select-all-statistics" onclick="selectAllCheck(this.form.statistics, 1)">
+                                                            Select All
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col-md-7 right">
+                                                    <div class="right">
+                                                        <button type="button" class="btn btn-link" name="select-none-statistics" onclick="selectAllCheck(this.form.statistics, 0)">
+                                                            Select None
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <label class="normal"><input class="margin-top-20" name="statistics" type="checkbox" value="mean_ConditionalMax" {% if 'mean_ConditionalMax' in statisctics_infopanel %}checked="checked"{% endif %}> mean_ConditionalMax</label><br>
+                                            
+                                            <label class="normal"><input class="margin-top-10" name="statistics" type="checkbox" value="mean_ConditionalMean" {% if 'mean_ConditionalMean' in statisctics_infopanel %}checked="checked"{% endif %}> mean_ConditionalMean</label><br>
+                                            
+                                            <label class="normal"><input class="margin-top-10" name="statistics" type="checkbox" value="mean_ConditionalMedian" {% if 'mean_ConditionalMedian' in statisctics_infopanel %}checked="checked"{% endif %}> mean_ConditionalMedian</label><br>
+                                            
+                                            <label class="normal"><input class="margin-top-10" name="statistics" type="checkbox" value="mean_ConditionalMin" {% if 'mean_ConditionalMin' in statisctics_infopanel %}checked="checked"{% endif %}> mean_ConditionalMin</label><br>
+                                            
+                                            <label class="normal"><input class="margin-top-10" name="statistics" type="checkbox" value="mean_LowerQuartile" {% if 'mean_LowerQuartile' in statisctics_infopanel %}checked="checked"{% endif %}> mean_LowerQuartile</label><br>
+                                            
+                                            <label class="normal"><input class="margin-top-10" name="statistics" type="checkbox" value="mean_Quantile" {% if 'mean_Quantile' in statisctics_infopanel %}checked="checked"{% endif %}> mean_Quantile</label><br>
+                                            <!-- END Statistics Menu -->
+                                        </form>
                                     </div>
                                     <!-- END TABS menu -->
-                                    
-                                    
                                     
                                     
                                     {% if dirs_list %}

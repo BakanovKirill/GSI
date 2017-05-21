@@ -1116,13 +1116,17 @@ def customer_section(request):
     customer = request.user
     shelf_data_all = ShelfData.objects.all()
     customer_info_panel = CustomerInfoPanel.objects.filter(user=request.user)
+    customer_polygons = CustomerPolygons.objects.filter(user=request.user)
+    polygons_path = os.path.join(MEDIA_ROOT, 'kml')
     customer_access = CustomerAccess.objects.get(user=customer)
     customer_access_ds = CustomerAccess.data_set.through.objects.filter(
                     customeraccess_id=customer_access.id).order_by('dataset_id')
                     
     url_name = 'customer_section'
+    data_sets = []
     error_message = ''
     data_set_id = 0
+    polygons = []
     
     # default GEOTIFF coordinates
     cLng = DAFAULT_LON
@@ -1132,8 +1136,12 @@ def customer_section(request):
     eLat_2 = 0
     eLng_2 = 0
     google_map_zoom = 6
-                    
-    data_sets = []
+    
+    
+    # The path to are PNG and KML folders
+    scheme = '{0}://'.format(request.scheme)
+    absolute_png_url = os.path.join(scheme, request.get_host(), PNG_DIRECTORY)
+    absolute_kml_url = os.path.join(scheme, request.get_host(), KML_DIRECTORY)
     
     # Get the User DataSets
     if customer_access_ds:
@@ -1192,10 +1200,20 @@ def customer_section(request):
     dirs_list = getResultDirectory(data_set, shelf_data_all)
     
     
+    
+    # Get the polygons list from media folder
+    polygons = CustomerPolygons.objects.filter(
+                    user=request.user,
+                    data_set=data_set
+                )
+    print 'absolute_kml_url ======================================= ', absolute_kml_url
     data = {
         'data_sets': data_sets,
         'data_set_id': data_set_id,
         'dirs_list': dirs_list,
+        'polygons': polygons,
+        
+        'absolute_kml_url': absolute_kml_url,
         
         'cLng': cLng,
         'cLat': cLat,

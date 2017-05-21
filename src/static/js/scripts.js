@@ -293,34 +293,18 @@ function getUrlVars() {
     return vars;
 }
 
-// function tabsCustomerMenu() {
-//     // alert('tabsCustomerMenu');
-//     $('.tabs > .tab-links > li > a').on('click', function(e)  {
-//
-//         var currentAttrValue = $(this).attr('href');
-//
-//         // Show/Hide Tabs
-//         $('.tabs ' + currentAttrValue).slideDown(400).siblings().slideUp(400);
-//
-//         // $/remove current tab to active
-//         $(this).parent('li').addClass('active').siblings().removeClass('active');
-//
-//         e.preventDefault();
-//     });
-// }
-// jQuery(document).ready(function() {
-//     jQuery('.tabs .tab-links a').on('click', function(e)  {
-//         var currentAttrValue = jQuery(this).attr('href');
-//
-//         // Show/Hide Tabs
-//         jQuery('.tabs ' + currentAttrValue).show().siblings().hide();
-//
-//         // Change/remove current tab to active
-//         jQuery(this).parent('li').addClass('active').siblings().removeClass('active');
-//
-//         e.preventDefault();
-//     });
-// });
+function selectAllCheck(field, flag) {
+    if (flag == "1") {
+        for (i=0; i<field.length; i++) {
+            field[i].checked = true;
+        }
+    }
+    else {
+        for (i=0; i<field.length; i++) {
+            field[i].checked = false;
+        }
+    }
+}
 
 
 $(document).ready(function(){

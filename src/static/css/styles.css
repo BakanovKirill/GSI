@@ -103,10 +103,25 @@ a {
     /*text-decoration: underline;*/
 }
 
-a.a-select {
+a.a-select, .btn-link {
     color: #283890 !important;
     border-bottom: 1px dotted #283890 !important;
     /*text-decoration: underline;*/
+}
+
+.btn:after, .btn:before {
+    /*border: none !important;*/
+    /*webkit-box-shadow: none !important;*/
+    box-shadow: none !important;
+    outline: none;
+}
+
+.btn-link:hover, .btn-link:focus {
+    color: #283890 !important;
+    border-bottom: 0px !important;
+    text-decoration: none !important;
+    box-shadow: none !important;
+    outline: none;
 }
 
 a:focus, a:hover {
@@ -236,6 +251,10 @@ th {
     margin-top: 8px !important;
 }
 
+.margin-top-10 {
+    margin-top: 10px !important;
+}
+
 .margin-top-15 {
     margin-top: 15px !important;
 }
@@ -280,12 +299,24 @@ th {
     margin-bottom: 20px !important;
 }
 
+.margin-left-4 {
+    margin-left: 4px !important;
+}
+
+.margin-left-6 {
+    margin-left: 6px !important;
+}
+
 .margin-left-12 {
     margin-left: 20px !important;
 }
 
 .margin-left-10 {
     margin-left: 10px !important;
+}
+
+.margin-left-15 {
+    margin-left: 15px !important;
 }
 
 .margin-right-10 {
@@ -1147,6 +1178,7 @@ hr {
     /*border-width:0.5px;*/
     border-bottom: 1px !important;
     background-color: #fff !important;
+    width: 60px;
     /*;*/
     
 }
@@ -1179,20 +1211,20 @@ hr {
 
 .tab-content {
     border-bottom: 1px !important;
-    margin-top: -0.5px !important;
+    margin-top: -1px !important;
     padding: 5px !important;
     border: 1px solid #283890 !important;
-    border-top: 1px !important;
+    /*border-top: 1px !important;*/
     /*border-style: solid;*/
     /*border-color: #283890;*/
     /*border-width:0.5px;*/
     /*border-bottom: 1px;*/
 }
 
-.nav-tabs {
-    border-bottom: 1px solid #283890 !important;;
+/*.nav-tabs {
+    /*border-bottom: 1px solid #283890 !important;*/
     /*border: 1px solid #283890 !important;*/
-}
+}*/
 
 .tab-view-min-height,
 .tab-report-min-height,
@@ -1205,9 +1237,13 @@ hr {
 }
 
 .tab-report-min-height {
-    height: 178px !important;
+    height: 179px !important;
 }
 
 .tab-aoi-min-height {
-    height: 212px !important;
+    height: 222px !important;
+}
+
+.normal {
+    font-weight: normal;
 }
