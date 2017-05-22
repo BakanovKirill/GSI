@@ -635,7 +635,7 @@ def make_run(run_base, user):
 				comm = 'ssh-copy-id -i ~/.ssh/id_rsa.pub gsi@cirrus.epcc.ed.ac.uk'
 				comm_2 = 'groups'
 				
-				out, err = Popen('{0}'.format(comm_2),
+				out, err = Popen('{0}'.format(command),
 							    shell=True, stdout=PIPE, stderr=PIPE
 							).communicate()
 					
