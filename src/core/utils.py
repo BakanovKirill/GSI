@@ -633,7 +633,7 @@ def make_run(run_base, user):
 				# ).communicate()
 				command = '/home/gsi/LOGS/run_test'
 				comm = 'ssh-copy-id -i ~/.ssh/id_rsa.pub gsi@cirrus.epcc.ed.ac.uk'
-				comm_2 = 'grups'
+				comm_2 = 'groups'
 				
 				out, err = Popen('{0}'.format(comm_2),
 							    shell=True, stdout=PIPE, stderr=PIPE
