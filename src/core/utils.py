@@ -483,20 +483,20 @@ def make_run(run_base, user):
 	from gsi.models import HomeVariables as Home
 	
 	# Create SSH KEY
-	private_key, public_key = generate_RSA()
-	ssh_path = '/home/gsi/.ssh'
-	
-	print 'private_key ============================ ', private_key
-	print 'public_key ============================ ', public_key
-	
-	pri_key = '/home/gsi/.ssh/indy2-login0_id_rsa'
-	pub_key = '/home/gsi/.ssh/indy2-login0_id_rsa.pub'
-	ssh_pri_key_file = open(pri_key, 'w+')
-	ssh_pub_key_file = open(pub_key, 'w+')
-	ssh_pri_key_file.write(private_key)
-	ssh_pub_key_file.write(public_key)
-	ssh_pri_key_file.close()
-	ssh_pub_key_file.close()
+	# private_key, public_key = generate_RSA()
+	# ssh_path = '/home/gsi/.ssh'
+	#
+	# print 'private_key ============================ ', private_key
+	# print 'public_key ============================ ', public_key
+	#
+	# pri_key = '/home/gsi/.ssh/indy2-login0_id_rsa'
+	# pub_key = '/home/gsi/.ssh/indy2-login0_id_rsa.pub'
+	# ssh_pri_key_file = open(pri_key, 'w+')
+	# ssh_pub_key_file = open(pub_key, 'w+')
+	# ssh_pri_key_file.write(private_key)
+	# ssh_pub_key_file.write(public_key)
+	# ssh_pri_key_file.close()
+	# ssh_pub_key_file.close()
 	# End Create SSH KEY
 
 	now = datetime.now()
