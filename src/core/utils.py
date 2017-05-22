@@ -582,8 +582,8 @@ def make_run(run_base, user):
 					# print 'err =========================== ', err
 
 					####################### write log file
-					file_message_error += 'OUT: {0}\n'.format(out)
-					file_message_error += 'ERR: {0}\n'.format(err)
+					file_message_error += '\nOUT: {0}\n'.format(out)
+					file_message_error += '\nERR: {0}\n'.format(err)
 					#######################
 						
 				first_script['step'].state = 'running'
@@ -668,18 +668,18 @@ def make_run(run_base, user):
 				comm = 'ssh-copy-id -i ~/.ssh/id_rsa.pub gsi@cirrus.epcc.ed.ac.uk'
 				comm_2 = 'groups'
 				
-				out, err = Popen('{0}'.format(command),
-							    shell=True, stdout=PIPE, stderr=PIPE
-							).communicate()
+				# out, err = Popen('{0}'.format(command),
+				# 			    shell=True, stdout=PIPE, stderr=PIPE
+				# 			).communicate()
 					
-				# out, err = Popen(
-				#     'nohup {0} {1} {2} &'.format(
-				#         EXECUTE_FE_COMMAND,
-				#         first_script['run'].id,
-				#         first_script['card'].id
-				#     ),
-				#     shell=True, stdout=PIPE, stderr=PIPE
-				# ).communicate()
+				out, err = Popen(
+				    'nohup {0} {1} {2} &'.format(
+				        EXECUTE_FE_COMMAND,
+				        first_script['run'].id,
+				        first_script['card'].id
+				    ),
+				    shell=True, stdout=PIPE, stderr=PIPE
+				).communicate()
 
 				# print 'out =========================== ', out
 				# print 'err =========================== ', err
