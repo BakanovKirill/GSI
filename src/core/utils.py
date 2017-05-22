@@ -577,14 +577,14 @@ def make_run(run_base, user):
 							shell=True, stdout=PIPE
 						).communicate()
 						
-				# ex_fe_com
-				# print 'out =========================== ', out
-				# print 'err =========================== ', err
+					# ex_fe_com
+					# print 'out =========================== ', out
+					# print 'err =========================== ', err
 
-				####################### write log file
-				file_message_error += 'OUT: {0}\n'.format(out)
-				file_message_error += 'ERR: {0}\n'.format(err)
-				#######################
+					####################### write log file
+					file_message_error += 'OUT: {0}\n'.format(out)
+					file_message_error += 'ERR: {0}\n'.format(err)
+					#######################
 						
 				first_script['step'].state = 'running'
 				first_script['step'].save()
