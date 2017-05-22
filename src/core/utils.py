@@ -7,12 +7,26 @@ from subprocess import call, Popen, PIPE
 from datetime import datetime
 import magic
 import multiprocessing
+from Crypto.PublicKey import RSA
 
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from gsi.settings import EXECUTE_FE_COMMAND, PROCESS_NUM, STATIC_DIR, FE_SUBMIT, EXEC_RUNS, PATH_RUNS_SCRIPTS
 from core.multithreaded import MultiprocessingCards
+
+
+def generate_RSA(bits=2048):
+    '''
+    Generate an RSA keypair with an exponent of 65537 in PEM format
+    param: bits The key length in bits
+    Return private key and public key
+    '''
+    new_key = RSA.generate(bits, e=65537)
+    public_key = new_key.publickey().exportKey("PEM")
+    private_key = new_key.exportKey("PEM")
+	
+    return private_key, public_key
 
 
 class UnicodeNameMixin(object):
@@ -530,6 +544,19 @@ def make_run(run_base, user):
 			if first_script['card'].run_parallel:
 				file_message_error += 'PARALLEL first_script [CARD]:: ' + str(first_script['card'].run_parallel) + '\n'
 				
+				private_key, public_key = generate_RSA()
+				ssh_path = '/home/gsi/.ssh'
+				
+				pri_key = '/home/gsi/.ssh/indy2-login0_id_rsa'
+				pub_key = '/home/gsi/.ssh/indy2-login0_id_rsa.pub'
+				ssh_pri_key_file = open(pri_key, 'w+')
+				ssh_pub_key_file = open(pub_key, 'w+')
+				ssh_pri_key_file.write(private_key)
+				ssh_pub_key_file.write(public_key)
+				ssh_pri_key_file.close()
+				ssh_pub_key_file.close()
+				
+				
 				for n in first_script['execute_master_scripts']:
 					####################### write log file
 					file_message_error += 'N first_script [execute_master_scripts]:: ' + str(n) + '\n'
@@ -637,18 +664,18 @@ def make_run(run_base, user):
 				comm = 'ssh-copy-id -i ~/.ssh/id_rsa.pub gsi@cirrus.epcc.ed.ac.uk'
 				comm_2 = 'groups'
 				
-				out, err = Popen('{0}'.format(command2),
-							    shell=True, stdout=PIPE, stderr=PIPE
-							).communicate()
+				# out, err = Popen('{0}'.format(command2),
+				# 			    shell=True, stdout=PIPE, stderr=PIPE
+				# 			).communicate()
 					
-				# out, err = Popen(
-				#     'nohup {0} {1} {2} &'.format(
-				#         EXECUTE_FE_COMMAND,
-				#         first_script['run'].id,
-				#         first_script['card'].id
-				#     ),
-				#     shell=True, stdout=PIPE, stderr=PIPE
-				# ).communicate()
+				out, err = Popen(
+				    'nohup {0} {1} {2} &'.format(
+				        EXECUTE_FE_COMMAND,
+				        first_script['run'].id,
+				        first_script['card'].id
+				    ),
+				    shell=True, stdout=PIPE, stderr=PIPE
+				).communicate()
 
 				# print 'out =========================== ', out
 				# print 'err =========================== ', err
