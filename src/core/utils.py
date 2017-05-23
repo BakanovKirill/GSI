@@ -663,10 +663,11 @@ def make_run(run_base, user):
 				#     shell=True, stdout=PIPE, stderr=PIPE
 				# ).communicate()
 				# ssh -i /home/gsi/.ssh/id_rsa gsi@cirrus.epcc.ed.ac.uk /lustre/home/i214/indy0-lustre/mattgsi/scripts/runs/R_1500/LOGS/run_test
-				command = '/home/gsi/LOGS/run_test'
-				command2 = 'ssh -i /home/gsi/.ssh/id_rsa gsi@cirrus.epcc.ed.ac.uk /lustre/home/i214/indy0-lustre/mattgsi/scripts/runs/R_1500/LOGS/run_test'
-				comm = 'ssh-copy-id -i ~/.ssh/id_rsa.pub gsi@cirrus.epcc.ed.ac.uk'
-				comm_2 = 'groups'
+				
+				# command = '/home/gsi/LOGS/run_test'
+				# command2 = 'ssh -i /home/gsi/.ssh/id_rsa gsi@cirrus.epcc.ed.ac.uk /lustre/home/i214/indy0-lustre/mattgsi/scripts/runs/R_1500/LOGS/run_test'
+				# comm = 'ssh-copy-id -i ~/.ssh/id_rsa.pub gsi@cirrus.epcc.ed.ac.uk'
+				# comm_2 = 'groups'
 				
 				# out, err = Popen('{0}'.format(command),
 				# 			    shell=True, stdout=PIPE, stderr=PIPE
