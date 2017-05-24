@@ -154,7 +154,7 @@
                                                     </div>
                                                     
                                                     <div class="row">
-                                                        <div class="col-md-12 left margin-top-15 tab-view-min-height margin-left-4">
+                                                        <div class="col-md-12 left margin-top-15 tab-view-min-height margin-left-4" id="show_file_arrea">
                                                             {% for dl in dirs_list%}
                                                                 <label class="normal"><input class="margin-bottom-6" name="attribute_viewlist" type="checkbox" value="view_{{ dl.id }}" {% if dl.attribute_name in attribute_list_infopanel %}checked="checked"{% endif %}> {{ dl.attribute_name }}</label><br>
                                                             {% endfor %}
@@ -163,7 +163,7 @@
                                                     
                                                     <div class="row">
                                                         <div class="col-md-6 left margin-top-15">
-                                                            <button type="submit" name="next-view" class="btn btn-success btn-block" value="next" onclick="sendButtonPost(this);">
+                                                            <button type="submit" name="next-view" class="btn btn-success btn-block" value="next">
                                                                 Next
                                                             </button>
                                                         </div>

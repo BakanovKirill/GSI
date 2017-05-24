@@ -467,31 +467,6 @@ function deleteFile(ds) {
     
 }
 
-function sendButtonPost(obj) {
-    // alert('CLICK: '+obj.value);
-    var form_url = $('#customer_section').attr('action');
-    
-    $.ajax({
-        url: form_url,
-        type: 'GET',
-        'async': true,
-        'dataType': 'text',
-        data: {
-            'next-view': obj.value,
-            'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
-        },
-        'error': function(xhr, status, error){
-            alert('error: '+error);
-            var message = 'An unexpected error occurred. Try later.';
-            alert(message);
-        },
-        'success': function(data, status, xhr){
-            // alert('DATA deleteTMPFile: '+data);
-            window.location.href = form_url;
-        },
-    });
-}
-
 
 $(document).ready(function(){
     initCheckDeleteItems();
@@ -500,6 +475,5 @@ $(document).ready(function(){
     initUploadFile();
     initAddOverrideMaping();
     initEditArea();
-    // sendButtonPost();
     // deleteFile();
 });

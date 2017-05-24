@@ -1201,8 +1201,6 @@ def customer_section(request):
     google_map_zoom = 6
     url_png = ''
     
-    # print 'customer_info_panel ========================== ', customer_info_panel
-    
     # The path to are PNG, KML urls
     scheme = '{0}://'.format(request.scheme)
     absolute_png_url = os.path.join(scheme, request.get_host(), PNG_DIRECTORY)
@@ -1227,13 +1225,76 @@ def customer_section(request):
         
     # GET SESSIONS !!!!!!!!!!!!!!!!!!!!!!!!!
     # Get select data_set sessions
-    # print 'data_set_id ==================== ', request.session['select_data_set']
     if request.session.get('select_data_set', False):
         data_set_id = int(request.session['select_data_set'])
     else:
         CustomerInfoPanel.objects.filter(user=customer).delete()
         request.session['select_data_set'] = data_sets[0].id
         # request.session.set_expiry(172800)
+        
+    # get AJAX POST for KML files
+    if request.is_ajax() and request.method == "POST":
+        data_post_ajax = request.POST
+        
+        # print 'data_post_ajax ===================== ', data_post_ajax
+    
+        if 'send_data[0][]' in data_post_ajax:
+            coord_tmp = str(request.user) + '_coord_tmp.txt'
+            php_tmp = str(request.user) + '_php_tmp.txt'
+            file_path_coord = os.path.join(KML_PATH, coord_tmp)
+            file_path_php = os.path.join(KML_PATH, php_tmp)
+            myfile_coord = open(file_path_coord, "w")
+            myfile_php = open(file_path_php, "w")
+            
+            list_size = len(data_post_ajax.lists()) - 1
+            coord = []*list_size
+            tmp = {}
+            coord_dict = {}
+            lon = []
+            lat = []
+            
+            for n in data_post_ajax.lists():
+                if n[0] != 'csrfmiddlewaretoken':
+                    index = getIndex(n[0])
+                    tmp[index] = n[1]
+
+            for k in sorted(tmp.keys()):
+                coord_dict[k] = tmp[k]
+                
+            for n in coord_dict:
+                myfile_coord.write(",".join(coord_dict[n]));
+                myfile_coord.write("\n");
+                
+            for n in coord_dict:
+                lon.append(coord_dict[n][0])
+                lat.append(coord_dict[n][1])
+                
+            lat_str = ','.join(lat)
+            lon_str = ','.join(lon)
+            
+            myfile_php.write(lat_str);
+            myfile_php.write("\n");
+            myfile_php.write(lon_str);
+            myfile_php.write("\n");
+            
+            myfile_coord.close()
+            myfile_php.close()
+            
+            # print 'coord_dict ======================== ', coord_dict
+            
+            status = 'success'
+
+            return HttpResponse(status)
+            
+        if 'cur_run_id' in data_post_ajax:
+            message = u'Are you sure you want to remove this objects:'
+            arrea = data_post_ajax['cur_run_id']
+            data = u'Are you sure you want to remove this objects: <b>"{0}"</b>?'.format(arrea)
+
+            return HttpResponse(data)
+        else:
+            data = ''
+            return HttpResponse(data)
     
     
     # get AJAX GET
@@ -1257,10 +1318,8 @@ def customer_section(request):
                 request.session['select_data_set'] = data_sets[0].id
                 data_set_id = request.session['select_data_set']
             
-            # print 'status ========================== ', status
             # print 'data_set_id REQ ========================== ', request.session['select_data_set']
             # print 'data_set_id ========================== ', data_set_id
-            
             
             if status:
                 data_set, data_set_id = getDataSet(data_set_id, data_sets[0])
@@ -1278,12 +1337,7 @@ def customer_section(request):
                 else:
                     data = 'error'
                     # print 'ERRRRRRRRRRRRRRRRRRRRRRRROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-                    # return HttpResponseRedirect(u'%s?warning_message=%s' % (
-                    #     reverse('customer_section'),
-                    #     (u"DataSet {0} have not attributes".format(data_set))))
             
-        # print 'GET data ====================== ', data
-        
         return HttpResponse(data)
         
     # Get the DataSet and DataSet ID select
@@ -1295,12 +1349,10 @@ def customer_section(request):
     if request.method == "POST":
         data_post = request.POST
         print 'POST =========================== ', data_post
-        
+            
         if 'next-view' in data_post:
             attributes_viewlist = data_post.getlist('attribute_viewlist')
             statistics_viewlist = data_post.getlist('statistics_viewlist')
-            
-            # print 'statistics_viewlist ========================= ', type(statistics_viewlist)
             
             if attributes_viewlist and statistics_viewlist:
                 count_obj = len(attributes_viewlist) * len(statistics_viewlist) - 1
@@ -1318,14 +1370,11 @@ def customer_section(request):
                     show_attribute_name = is_show_sip[0].attribute_name
                     show_statistics_name = is_show_sip[0].statisctic
                 
-                # print 'USER ========================= ', customer
                 # print 'is_show_sip ========================= ', is_show_sip
                 # print 'show_attribute_name ========================= ', show_attribute_name
                 # print 'show_statistics_name ========================= ', show_statistics_name
                 
                 CustomerInfoPanel.objects.filter(user=customer).delete()
-                
-                print 'COUNT ========================= ', count_obj
                 
                 for attr in attributes_viewlist:
                     attr_id = int(attr.split('view_')[1])
@@ -1341,35 +1390,86 @@ def customer_section(request):
                                                         
                                 # print 'show_attribute_name ========================= ', show_attribute_name
                                 # print 'shelf_data[0].attribute_name ========================= ', shelf_data[0].attribute_name
-                                #
-                                # print 'show_statistics_name ========================= ', show_statistics_name
-                                # print 'statistics ========================= ', st
-                                
-                                print 'SHOW ORDER 1 ========================= ', show_order
-                                print 'ORDER 1 ========================= ', new_order
                                 
                                 if show_attribute_name == shelf_data[0].attribute_name and show_statistics_name == st:
                                     show_order = new_order + 1
-                                    print '!!!!!!!!!!!!!!!! SHOW ORDER 2 ========================= ', show_order
+                                    # print '!!!!!!!!!!!!!!!! SHOW ORDER 2 ========================= ', show_order
                                 
                                     if show_order > count_obj:
                                         show_order = 0
-                                        
-                                # if show_order == new_order:
-                                #     is_show = True
-                                # else:
-                                #     is_show = False
                                     
+                                createCustomerInfoPanel(customer, data_set, shelf_data[0],
+                                                        st, absolute_png_url,
+                                                        False, order=new_order, delete=False)
+                            else:
+                                if new_order == 0:
+                                    is_show = True
+                                else:
+                                    is_show = False
                                 
-                                # print 'ORDER 2 ========================= ', new_order
-                                # print 'IS SHOW ========================= ', is_show
+                                empty_show = False
                                     
-                                # if CustomerInfoPanel.objects.filter(user=customer,
-                                #             order=show_order).exists():
-                                #     if show_order == new_order:
-                                #         is_show = True
-                                #     else:
-                                #         show_order = 0
+                                createCustomerInfoPanel(customer, data_set, shelf_data[0],
+                                                        st, absolute_png_url,
+                                                        is_show, order=new_order, delete=False)
+                            new_order += 1
+                            
+                        if empty_show:
+                            CustomerInfoPanel.objects.filter(user=customer, order=show_order).update(is_show=True)
+                    except ShelfData.DoesNotExist:
+                        pass
+            else:
+                CustomerInfoPanel.objects.filter(user=customer).delete()
+        elif 'previous-view' in data_post:
+            attributes_viewlist = data_post.getlist('attribute_viewlist')
+            statistics_viewlist = data_post.getlist('statistics_viewlist')
+            
+            # print 'attributes_viewlist ========================= ', attributes_viewlist
+            # print 'statistics_viewlist ========================= ', statistics_viewlist
+            
+            if attributes_viewlist and statistics_viewlist:
+                count_obj = len(attributes_viewlist) * len(statistics_viewlist) - 1
+                check_show = False
+                is_show = False
+                empty_show = True
+                new_order = 0
+                show_order = -1
+                show_attribute_name = ''
+                show_statistics_name = ''
+                is_show_sip = CustomerInfoPanel.objects.filter(
+                                user=customer, is_show=True)
+                                
+                if is_show_sip:
+                    show_attribute_name = is_show_sip[0].attribute_name
+                    show_statistics_name = is_show_sip[0].statisctic
+                
+                # print 'is_show_sip ========================= ', is_show_sip
+                # print 'show_attribute_name ========================= ', show_attribute_name
+                # print 'show_statistics_name ========================= ', show_statistics_name
+                
+                CustomerInfoPanel.objects.filter(user=customer).delete()
+                
+                for attr in attributes_viewlist:
+                    attr_id = int(attr.split('view_')[1])
+
+                    try:
+                        shelf_data = ShelfData.objects.filter(id=int(attr_id))
+                        
+                        # print 'shelf_data ========================= ', shelf_data
+                        
+                        for st in statistics_viewlist:
+                            if show_attribute_name and show_statistics_name:
+                                
+                                                        
+                                # print 'show_attribute_name ========================= ', show_attribute_name
+                                # print 'shelf_data[0].attribute_name ========================= ', shelf_data[0].attribute_name
+                                
+                                if show_attribute_name == shelf_data[0].attribute_name and show_statistics_name == st:
+                                    show_order = new_order - 1
+                                    # print '!!!!!!!!!!!!!!!! SHOW ORDER 2 ========================= ', show_order
+                                
+                                    if show_order < 0:
+                                        show_order = count_obj
                                     
                                 createCustomerInfoPanel(customer, data_set, shelf_data[0],
                                                         st, absolute_png_url,

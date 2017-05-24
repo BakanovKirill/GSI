@@ -30,7 +30,7 @@
 
 				<!-- GSi Info Data -->
 				<div class="col-md-6">
-					<select class="form-control" name="select_file_area" id="show_file_arrea" onchange="showFileSelectArea('{{ show_file }}')">
+					<select class="form-control" name="select_file_area" id="show_file_arrea22" onchange="showFileSelectArea('{{ show_file }}')">
 						{% if files_infopanel %}
 							{% for file in files_infopanel %}
 								<option id="{{ file }}" name="{{ file }}" value="{{ file }}" {% if file == show_file %}selected="selected"{% endif %}>{{ file }}</option>
@@ -168,6 +168,8 @@
 			var units = '{{ units }}';
 			var attribute = '{{ attribute }}';
 			var data_polygon;
+			
+			var select_image = '{{ absolute_url_png_file }}'
 			
 			// var units = 'Tree';
 			// var attribute = 'UNITS';
@@ -504,13 +506,14 @@
 
 			// applied markers on the map.
 			function appliedMarkers() {
-				var select_infopanel = document.getElementById("show_file_arrea").value;
+				// var select_infopanel = document.getElementById("show_file_arrea").value;
 				var img = document.getElementById("ap_marker");
 				
+				// var select_views = $("input[name='attribute_viewlist']:checked").size();
 				
-				// alert('select_infopanel: '+select_infopanel);
+				// alert('select_image: '+select_image);
 				
-				if (select_infopanel != 'none_file') {
+				if (select_image) {
 					// alert('select_infopanel: NO: '+select_infopanel);
 					map.addListener('click', function(e) {
 						placeMarkerAndPanTo(e.latLng.lat(), e.latLng.lng());
