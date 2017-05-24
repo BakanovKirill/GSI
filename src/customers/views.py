@@ -1051,8 +1051,10 @@ def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute
     return attribute_name, file_area_name, tif_path, png_path, url_png
     
 def createCustomerInfoPanel(customer, data_set, shelf_data, stat_file, absolute_png_url,
-                            is_show, order=0):
-    CustomerInfoPanel.objects.filter(user=customer).delete()
+                            is_show, order=0, delete=True):
+    if delete:
+        CustomerInfoPanel.objects.filter(user=customer).delete()
+        
     attribute_name, file_area_name,\
     tif_path, png_path, url_png = get_parameters_customer_info_panel(data_set,
                                     shelf_data, stat_file, absolute_png_url)
@@ -1130,9 +1132,8 @@ def getResultDirectory(dataset, shelfdata):
         for sd in shelfdata:
             if str(sd.root_filename) in dirs:
                 dirs_list.append(sd)
-            dirs_list.sort()
     except Exception, e:
-        print 'Exception 02 ========================= ', e
+        print 'Exception getResultDirectory ========================= ', e
         pass
         
     return dirs_list
@@ -1170,8 +1171,8 @@ def customer_section(request):
 
     customer = request.user
     shelf_data_all = ShelfData.objects.all().order_by('attribute_name')
-    customer_info_panel = CustomerInfoPanel.objects.filter(user=request.user)
-    customer_polygons = CustomerPolygons.objects.filter(user=request.user)
+    # customer_info_panel = CustomerInfoPanel.objects.filter(user=customer)
+    customer_polygons = CustomerPolygons.objects.filter(user=customer)
     polygons_path = os.path.join(MEDIA_ROOT, 'kml')
     customer_access = CustomerAccess.objects.get(user=customer)
     customer_access_ds = CustomerAccess.data_set.through.objects.filter(
@@ -1180,12 +1181,15 @@ def customer_section(request):
     url_name = 'customer_section'
     data_sets = []
     error_message = ''
+    warning_message = ''
     data_set_id = 0
     polygons = []
     attribute_list_infopanel = []
     statisctics_infopanel = []
-    show_image_ip = ''
-    current_area_image = ''
+    show_dataset_cip = ''
+    show_image_cip = ''
+    show_statistic_cip = ''
+    # current_area_image = ''
     
     # default GEOTIFF coordinates
     cLng = DAFAULT_LON
@@ -1195,6 +1199,7 @@ def customer_section(request):
     eLat_2 = 0
     eLng_2 = 0
     google_map_zoom = 6
+    url_png = ''
     
     # print 'customer_info_panel ========================== ', customer_info_panel
     
@@ -1213,7 +1218,6 @@ def customer_section(request):
                 print 'ERROR Get DataSet ==================== ', e
                 pass
     else:
-        print 'NO DATASETS ==================== '
         error_message = 'You have no one DataSet for view. Please contact to the admin.'
         data = {
             'error_message': error_message
@@ -1227,7 +1231,7 @@ def customer_section(request):
     if request.session.get('select_data_set', False):
         data_set_id = int(request.session['select_data_set'])
     else:
-        CustomerInfoPanel.objects.filter(user=request.user).delete()
+        CustomerInfoPanel.objects.filter(user=customer).delete()
         request.session['select_data_set'] = data_sets[0].id
         # request.session.set_expiry(172800)
     
@@ -1266,32 +1270,142 @@ def customer_section(request):
                 
                 # print 'data_set ========================== ', data_set
                 # print 'dirs_list[0] ========================== ', dirs_list[0]
-                
-                info_panel = createCustomerInfoPanel(
-                                customer, data_set, dirs_list[0], statisctic,
-                                absolute_png_url, is_show
-                            )
+                if dirs_list:
+                    info_panel = createCustomerInfoPanel(
+                                    customer, data_set, dirs_list[0], statisctic,
+                                    absolute_png_url, is_show
+                                )
+                else:
+                    data = 'error'
+                    # print 'ERRRRRRRRRRRRRRRRRRRRRRRROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+                    # return HttpResponseRedirect(u'%s?warning_message=%s' % (
+                    #     reverse('customer_section'),
+                    #     (u"DataSet {0} have not attributes".format(data_set))))
             
         # print 'GET data ====================== ', data
         
         return HttpResponse(data)
-    
+        
     # Get the DataSet and DataSet ID select
     data_set, data_set_id = getDataSet(data_set_id, data_sets[0])
 
     # Get the Statistics list
     dirs_list = getResultDirectory(data_set, shelf_data_all)
     
+    if request.method == "POST":
+        data_post = request.POST
+        print 'POST =========================== ', data_post
+        
+        if 'next-view' in data_post:
+            attributes_viewlist = data_post.getlist('attribute_viewlist')
+            statistics_viewlist = data_post.getlist('statistics_viewlist')
+            
+            # print 'statistics_viewlist ========================= ', type(statistics_viewlist)
+            
+            if attributes_viewlist and statistics_viewlist:
+                count_obj = len(attributes_viewlist) * len(statistics_viewlist) - 1
+                check_show = False
+                is_show = False
+                empty_show = True
+                new_order = 0
+                show_order = -1
+                show_attribute_name = ''
+                show_statistics_name = ''
+                is_show_sip = CustomerInfoPanel.objects.filter(
+                                user=customer, is_show=True)
+                                
+                if is_show_sip:
+                    show_attribute_name = is_show_sip[0].attribute_name
+                    show_statistics_name = is_show_sip[0].statisctic
+                
+                # print 'USER ========================= ', customer
+                # print 'is_show_sip ========================= ', is_show_sip
+                # print 'show_attribute_name ========================= ', show_attribute_name
+                # print 'show_statistics_name ========================= ', show_statistics_name
+                
+                CustomerInfoPanel.objects.filter(user=customer).delete()
+                
+                print 'COUNT ========================= ', count_obj
+                
+                for attr in attributes_viewlist:
+                    attr_id = int(attr.split('view_')[1])
+
+                    try:
+                        shelf_data = ShelfData.objects.filter(id=int(attr_id))
+                        
+                        # print 'shelf_data ========================= ', shelf_data
+                        
+                        for st in statistics_viewlist:
+                            if show_attribute_name and show_statistics_name:
+                                
+                                                        
+                                # print 'show_attribute_name ========================= ', show_attribute_name
+                                # print 'shelf_data[0].attribute_name ========================= ', shelf_data[0].attribute_name
+                                #
+                                # print 'show_statistics_name ========================= ', show_statistics_name
+                                # print 'statistics ========================= ', st
+                                
+                                print 'SHOW ORDER 1 ========================= ', show_order
+                                print 'ORDER 1 ========================= ', new_order
+                                
+                                if show_attribute_name == shelf_data[0].attribute_name and show_statistics_name == st:
+                                    show_order = new_order + 1
+                                    print '!!!!!!!!!!!!!!!! SHOW ORDER 2 ========================= ', show_order
+                                
+                                    if show_order > count_obj:
+                                        show_order = 0
+                                        
+                                # if show_order == new_order:
+                                #     is_show = True
+                                # else:
+                                #     is_show = False
+                                    
+                                
+                                # print 'ORDER 2 ========================= ', new_order
+                                # print 'IS SHOW ========================= ', is_show
+                                    
+                                # if CustomerInfoPanel.objects.filter(user=customer,
+                                #             order=show_order).exists():
+                                #     if show_order == new_order:
+                                #         is_show = True
+                                #     else:
+                                #         show_order = 0
+                                    
+                                createCustomerInfoPanel(customer, data_set, shelf_data[0],
+                                                        st, absolute_png_url,
+                                                        False, order=new_order, delete=False)
+                            else:
+                                if new_order == 0:
+                                    is_show = True
+                                else:
+                                    is_show = False
+                                
+                                empty_show = False
+                                    
+                                createCustomerInfoPanel(customer, data_set, shelf_data[0],
+                                                        st, absolute_png_url,
+                                                        is_show, order=new_order, delete=False)
+                            new_order += 1
+                            
+                        if empty_show:
+                            CustomerInfoPanel.objects.filter(user=customer, order=show_order).update(is_show=True)
+                    except ShelfData.DoesNotExist:
+                        pass
+            else:
+                CustomerInfoPanel.objects.filter(user=customer).delete()
     
-    if not customer_info_panel and dirs_list:
-        attribute_list_infopanel.append(dirs_list[0].attribute_name)
-        statisctics_infopanel.append('mean_ConditionalMean')
-        current_area_image = ''
-    elif customer_info_panel and dirs_list:
-        cip = customer_info_panel.filter(
-                user=customer, data_set=data_set, is_show=True).order_by('attribute_name')[0]
-        attribute_list_infopanel.append(cip.attribute_name)
-        statisctics_infopanel.append(cip.statisctic)
+    customer_info_panel = CustomerInfoPanel.objects.filter(user=customer)
+    
+    # if not customer_info_panel and dirs_list:
+    #     attribute_list_infopanel.append(dirs_list[0].attribute_name)
+    #     statisctics_infopanel.append('mean_ConditionalMean')
+    #     current_area_image = ''
+    if customer_info_panel and dirs_list:
+        cip = customer_info_panel.filter(user=customer).order_by('attribute_name')
+        
+        for n in cip:
+            attribute_list_infopanel.append(n.attribute_name)
+            statisctics_infopanel.append(n.statisctic)
         
     
     # Get the polygons list from media folder
@@ -1300,9 +1414,116 @@ def customer_section(request):
                     data_set=data_set
                 )
     
-    print 'attribute_list_infopanel ======================================= ', attribute_list_infopanel
-    print 'statisctics_infopanel ======================================= ', statisctics_infopanel
+    # print 'shelf_data_all ======================================= ', shelf_data_all
+    # print '!!!!!!!! dirs_list ======================================= ', dirs_list
+    # attribute_list_infopanel
+    # print '!!!!!!!! attribute_list_infopanel ======================================= ', attribute_list_infopanel
+    # print 'statisctics_infopanel ======================================= ', statisctics_infopanel
     
+    if customer_info_panel:
+        try:
+            customer_info_panel_file = CustomerInfoPanel.objects.filter(
+                                        user=request.user,
+                                        is_show=True)
+                                        
+            if customer_info_panel_file:
+                file_tif = customer_info_panel_file[0].tif_path
+                file_png = customer_info_panel_file[0].png_path
+                url_png = customer_info_panel_file[0].url_png
+                
+                ####################### write log file
+                # log_file = '/home/gsi/LOGS/customer_section.log'
+                # customer_section = open(log_file, 'a+')
+                # now = datetime.now()
+                # customer_section.write('USER: '+str(request.user))
+                # customer_section.write('\n')
+                # customer_section.write('DATA SET: '+str(data_set))
+                # customer_section.write('\n')
+                # customer_section.write('FILE AREA NAME: '+str(show_file))
+                # customer_section.write('\n')
+                # customer_section.write('CUSTOMER INFO PANEL: '+str(customer_info_panel_file))
+                # customer_section.write('\n')
+                #
+                # customer_section.close()
+                #######################
+
+                # Convert tif to png
+
+                # Set file vars
+                # # output_file = "out.jpg"
+                # # output_file_root = os.path.splitext(output_file)[0]
+                # output_file_ext = 'png'
+                # output_file_tmp = customer_info_panel_file.file_area_name + ".tmp"
+                #
+                # # Create tmp gtif
+                # driver = gdal.GetDriverByName("GTiff")
+                # dst_ds = driver.Create(output_file_tmp, 512, 512, 1, gdal.GDT_Byte )
+                # raster = numpy.zeros( (512, 512) )
+                # dst_ds.GetRasterBand(1).WriteArray(raster)
+                #
+                # # Create jpeg or rename tmp file
+                # if (cmp(output_file_ext.lower(),"png" ) == 0):
+                #     jpg_driver = gdal.GetDriverByName("PNG")
+                #     jpg_driver.CreateCopy( file_png, dst_ds, 0 )
+                #     os.remove(output_file_tmp)
+                # else:
+                #     os.rename(output_file_tmp, file_png)
+
+                try:
+                    check_date = check_date_files(file_tif, file_png)
+
+                    if check_date:
+                        if os.path.exists(file_tif):
+                            proc = Popen(['cat', file_tif], stdout=PIPE)
+                            p2 = Popen(['convert', '-', file_png], stdin=proc.stdout)
+
+                            while not os.path.exists(file_png):
+                                pass
+                        else:
+                            warning_message = u'The images "{0}" does not exist!'.\
+                                                format(customer_info_panel_file.file_area_name)
+                except Exception, e:
+                    print 'Popen Exception =============================== ', e
+
+                # get the lat/lon values for a GeoTIFF files
+                try:
+                    ds = gdal.Open(file_tif)
+                    width = ds.RasterXSize
+                    height = ds.RasterYSize
+                    gt = ds.GetGeoTransform()
+                    minx = gt[0]
+                    miny = gt[3] + width*gt[4] + height*gt[5]
+                    maxx = gt[0] + width*gt[1] + height*gt[2]
+                    maxy = gt[3]
+                    centery = (maxy + miny) / 2
+                    centerx = (maxx + minx) / 2
+
+                    cLng = centerx
+                    cLat = centery
+                    eLat_1 = miny
+                    eLng_1 = minx
+                    eLat_2 = maxy
+                    eLng_2 = maxx
+                    google_map_zoom = GOOGLE_MAP_ZOOM
+                except AttributeError, e:
+                    print 'GDAL AttributeError =============================== ', e
+        except CustomerInfoPanel.DoesNotExist, e:
+            print 'CustomerInfoPanel.DoesNotExist =============================== ', e
+            warning_message = u'The file "{0}" does not exist. Perhaps the data is outdated. Please refresh the page and try again.'.format(show_file)
+            # return HttpResponseRedirect(
+            #     u'%s?danger_message=%s' % (reverse('customer_section'),
+            #     (u'The file "{0}" does not exist. Perhaps the data is outdated. Please refresh the page and try again.'.format(show_file)))
+            # )
+    # print 'url_png ==================================== ', url_png
+    customer_info_panel_show = CustomerInfoPanel.objects.filter(
+                                user=request.user,
+                                is_show=True)
+    
+    if customer_info_panel_show:
+        show_dataset_cip = customer_info_panel_show[0].data_set.name
+        show_image_cip = customer_info_panel_show[0].attribute_name
+        show_statistic_cip = customer_info_panel_show[0].statisctic
+        
     data = {
         'data_sets': data_sets,
         'data_set_id': data_set_id,
@@ -1310,7 +1531,11 @@ def customer_section(request):
         'polygons': polygons,
         'attribute_list_infopanel': attribute_list_infopanel,
         'statisctics_infopanel': statisctics_infopanel,
-        'show_image_ip': show_image_ip,
+        'show_dataset_cip': show_dataset_cip,
+        'show_image_cip': show_image_cip,
+        'show_statistic_cip': show_statistic_cip,
+        
+        'warning_message': warning_message,
         
         'absolute_kml_url': absolute_kml_url,
         
@@ -1321,6 +1546,7 @@ def customer_section(request):
         'eLat_2': eLat_2,
         'eLng_2': eLng_2,
         'GOOGLE_MAP_ZOOM': GOOGLE_MAP_ZOOM,
+        'absolute_url_png_file': url_png,
     }
 
 

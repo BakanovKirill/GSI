@@ -467,6 +467,23 @@ def make_run(run_base, user):
 
 	from gsi.models import Run, Log, RunStep, OrderedCardItem, SubCardItem
 	from gsi.models import HomeVariables as Home
+	
+	# Create SSH KEY
+	# private_key, public_key = generate_RSA()
+	# ssh_path = '/home/gsi/.ssh'
+	#
+	# print 'private_key ============================ ', private_key
+	# print 'public_key ============================ ', public_key
+	#
+	# pri_key = '/home/gsi/.ssh/indy2-login0_id_rsa'
+	# pub_key = '/home/gsi/.ssh/indy2-login0_id_rsa.pub'
+	# ssh_pri_key_file = open(pri_key, 'w+')
+	# ssh_pub_key_file = open(pub_key, 'w+')
+	# ssh_pri_key_file.write(private_key)
+	# ssh_pub_key_file.write(public_key)
+	# ssh_pri_key_file.close()
+	# ssh_pub_key_file.close()
+	# End Create SSH KEY
 
 	now = datetime.now()
 	step = RunStep.objects.none()
@@ -543,7 +560,7 @@ def make_run(run_base, user):
 								first_script['run'].id,
 								n
 							),
-							shell=True, stdout=PIPE, stderr=PIPE
+							shell=True, stdout=PIPE
 						).communicate()
 						
 					# ex_fe_com
@@ -551,13 +568,8 @@ def make_run(run_base, user):
 					# print 'err =========================== ', err
 
 					####################### write log file
-					file_message_error += '********************************************\n'
-					file_message_error += 'RUN: {0}\n'.format(first_script['run'])
-					file_message_error += 'RUN ID: {0}\n'.format(first_script['run'].id)
-					file_message_error += 'RUN N: {0}\n'.format(n)
-					file_message_error += 'OUT: {0}\n'.format(out)
-					file_message_error += 'ERR: {0}\n'.format(err)
-					file_message_error += '********************************************\n'
+					file_message_error += '\nOUT: {0}\n'.format(out)
+					file_message_error += '\nERR: {0}\n'.format(err)
 					#######################
 						
 				first_script['step'].state = 'running'
@@ -572,7 +584,6 @@ def make_run(run_base, user):
 				#######################
 				
 				# command = 'sshpass -p 3Geo!Tarf ssh gsi@cirrus.epcc.ed.ac.uk /lustre/home/i214/indy0-home/mattgsi/bin/nfe_submit {0} {1}'.format(first_script['run'].id, first_script['card'].id)
-				
 				# command = Popen(['sshpass', '-p', '3Geo\!Tarf', 'ssh', 'gsi@cirrus.epcc.ed.ac.uk', '/lustre/home/i214/indy0-home/mattgsi/bin/nfe_submit {0} {1}'.format(first_script['run'].id, first_script['card'].id)], stdin=PIPE, stdout=PIPE, stderr=PIPE).communicate()
 				
 				# status = command[0].strip()
@@ -608,18 +619,19 @@ def make_run(run_base, user):
 				res_log_R = os.access('/home/gsi/LOGS/make_run.log', os.R_OK)
 				res_log_W = os.access('/home/gsi/LOGS/make_run.log', os.W_OK)
 				res_log_X = os.access('/home/gsi/LOGS/make_run.log', os.X_OK)
-				
+
 				####################### write log file Permission denied
 				file_message_error += '\nPermission denied: {0}\n'.format(EXECUTE_FE_COMMAND)
-				
+
 				file_message_error += 'USER: {0}\n'.format(os.getlogin())
 				file_message_error += 'res_F: {0}\n'.format(res_F)
 				file_message_error += 'res_R: {0}\n'.format(res_R)
 				file_message_error += 'res_W: {0}\n'.format(res_W)
 				file_message_error += 'res_X: {0}\n\n'.format(res_X)
-				
+
 				file_message_error += '\nPermission denied: {0}\n'.format('/home/gsi/LOGS/make_run.log')
 				file_message_error += 'USER: {0}\n'.format(os.getlogin())
+				file_message_error += 'OS: {0}\n'.format(os.uname())
 				file_message_error += 'res_F: {0}\n'.format(res_log_F)
 				file_message_error += 'res_R: {0}\n'.format(res_log_R)
 				file_message_error += 'res_W: {0}\n'.format(res_log_W)
@@ -636,7 +648,16 @@ def make_run(run_base, user):
 				#     ),
 				#     shell=True, stdout=PIPE, stderr=PIPE
 				# ).communicate()
+				# ssh -i /home/gsi/.ssh/id_rsa gsi@cirrus.epcc.ed.ac.uk /lustre/home/i214/indy0-lustre/mattgsi/scripts/runs/R_1500/LOGS/run_test
 				
+				# command = '/home/gsi/LOGS/run_test'
+				# command2 = 'ssh -i /home/gsi/.ssh/id_rsa gsi@cirrus.epcc.ed.ac.uk /lustre/home/i214/indy0-lustre/mattgsi/scripts/runs/R_1500/LOGS/run_test'
+				# comm = 'ssh-copy-id -i ~/.ssh/id_rsa.pub gsi@cirrus.epcc.ed.ac.uk'
+				# comm_2 = 'groups'
+				
+				# out, err = Popen('{0}'.format(command),
+				# 			    shell=True, stdout=PIPE, stderr=PIPE
+				# 			).communicate()
 					
 				out, err = Popen(
 				    'nohup {0} {1} {2} &'.format(
@@ -665,7 +686,7 @@ def make_run(run_base, user):
 				
 				####################### write log file
 				file_message_error += '\nRUN: {0}\n'.format(first_script['run'].id)
-				file_message_error += 'CARD: {0}\n'.format(first_script['card'].id)
+				file_message_error += '\nCARD: {0}\n'.format(first_script['card'].id)
 				#######################
 		except Exception, e:
 			print 'Exception make_run ==================================== ', e
