@@ -23,7 +23,8 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 
 from customers.models import (Category, ShelfData, DataSet, CustomerAccess,
-                                CustomerInfoPanel, CustomerPolygons, DataPolygons)
+                                CustomerInfoPanel, CustomerPolygons, DataPolygons,
+                                AttributesReport)
 from customers.customers_forms import (CategoryForm, ShelfDataForm, DataSetForm,
                                         CustomerAccessForm, CustomerPolygonsForm)
 from customers.customers_update_create import (category_update_create, shelf_data_update_create,
@@ -926,14 +927,18 @@ def remove_file_png(file_path):
 
 
 def check_current_dataset(request, data_post):
+    is_delete = False
     data_set_id = data_post.get('datasets_id', '')
     request.session['select_data_set'] = data_set_id
     data_set = DataSet.objects.get(pk=data_set_id)
 
-    # print 'data_set_id ==================================', data_set_id
+    # print 'data_set_id ==================================', request.session['select_data_set']
 
     if not CustomerInfoPanel.objects.filter(user=request.user, data_set=data_set).exists():
         info_panel = CustomerInfoPanel.objects.filter(user=request.user).delete()
+        is_delete = True
+        
+    return is_delete
 
 
 def check_date_files(file_tif, file_png):
@@ -1031,6 +1036,46 @@ def addPolygonToDB(name, kml_name, user, kml_path, kml_url, ds):
     return customer_pol
     
     
+def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute_png_url):
+    # print 'data_set =========================== ', data_set
+    # order_data_set = data_set.order_by('attribute_name')
+    attribute_name = shelf_data.attribute_name
+    results_directory = data_set.results_directory
+    project_name = results_directory.split('/')[0]
+    file_area_name = '{0}_{1}.{2}'.format(stat_file, shelf_data.root_filename, project_name)
+    tif = '{0}.tif'.format(file_area_name)
+    png = '{0}.png'.format(file_area_name)
+    tif_path = os.path.join(PROJECTS_PATH, data_set.results_directory, shelf_data.root_filename, tif)
+    png_path = os.path.join(PNG_PATH, png)
+    url_png = '{0}/{1}'.format(absolute_png_url, png)
+    
+    return attribute_name, file_area_name, tif_path, png_path, url_png
+    
+def createCustomerInfoPanel(customer, data_set, shelf_data, stat_file, absolute_png_url,
+                            is_show, order=0, delete=True):
+    if delete:
+        CustomerInfoPanel.objects.filter(user=customer).delete()
+        
+    attribute_name, file_area_name,\
+    tif_path, png_path, url_png = get_parameters_customer_info_panel(data_set,
+                                    shelf_data, stat_file, absolute_png_url)
+                                        
+    info_panel = CustomerInfoPanel.objects.create(
+                    user=customer,
+                    data_set=data_set,
+                    attribute_name=attribute_name,
+                    statisctic=stat_file,
+                    file_area_name=file_area_name,
+                    tif_path=tif_path,
+                    png_path=png_path,
+                    url_png=url_png,
+                    order=order,
+                    is_show=is_show)
+    info_panel.save()
+    
+    return info_panel
+    
+    
 def createKml(user, filename, info_window, url, data_set):
     # Create KML file for the draw polygon
     kml_filename = str(filename) + '.kml'
@@ -1078,28 +1123,696 @@ def getAttributeUnits(user, show_file):
     
     
 def getResultDirectory(dataset, shelfdata):
-    data_set = dataset
-    shelf_data_all = shelfdata
     dirs_list = []
+    
     try:
-        project_directory = os.path.join(PROJECTS_PATH, data_set.results_directory)
+        project_directory = os.path.join(PROJECTS_PATH, dataset.results_directory)
         root, dirs, files = os.walk(project_directory).next()
         dirs.sort()
         
-        for sd in shelf_data_all:
+        for sd in shelfdata:
             if str(sd.root_filename) in dirs:
                 dirs_list.append(sd)
     except Exception, e:
-        print 'Exception 02 ========================= ', e
+        print 'Exception getResultDirectory ========================= ', e
         pass
         
     return dirs_list
-
+    
+    
+def getDataSet(ds_id, data_set):
+    data_set_id = ds_id
+    
+    try:
+        data_set = DataSet.objects.get(pk=data_set_id)
+    except DataSet.DoesNotExist, e:
+        print 'DataSet.DoesNotExist ========================= ', e
+        data_set_id = int(data_set.id)
+        
+    return data_set, data_set_id
 
 # view Customer Section
 @login_required
 @render_to('customers/customer_section.html')
 def customer_section(request):
+    """**View for the "Customer section" page.**
+
+    :Functions:
+        When you load the page is loaded map with Google MAP. Initial coordinates: eLat = 0, eLng = 0.
+        Zoom map is variable GOOGLE_MAP_ZOOM, whose value is in the project settings.
+        Code view allows to change position when you enter values in the fields on the page "Enter Lat" and "Enter Log".
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+    """
+
+    # PNG_DIRECTORY = 'media/png'
+    # PNG_PATH = os.path.join(BASE_DIR, PNG_DIRECTORY)
+    # PROJECTS_PATH = '/lustre/w23/mattgsi/satdata/RF/Projects'
+
+    customer = request.user
+    shelf_data_all = ShelfData.objects.all().order_by('attribute_name')
+    # customer_info_panel = CustomerInfoPanel.objects.filter(user=customer)
+    customer_polygons = CustomerPolygons.objects.filter(user=customer)
+    polygons_path = os.path.join(MEDIA_ROOT, 'kml')
+    customer_access = CustomerAccess.objects.get(user=customer)
+    customer_access_ds = CustomerAccess.data_set.through.objects.filter(
+                    customeraccess_id=customer_access.id).order_by('dataset_id')
+                    
+    url_name = 'customer_section'
+    data_sets = []
+    error_message = ''
+    warning_message = ''
+    data_set_id = 0
+    polygons = []
+    attribute_list_infopanel = []
+    statisctics_infopanel = []
+    show_dataset_cip = ''
+    show_image_cip = ''
+    show_statistic_cip = ''
+    show_report_ap = []
+    file_tif_path = ''
+    tab_active = 'view'
+    # current_area_image = ''
+    
+    # default GEOTIFF coordinates
+    cLng = DAFAULT_LON
+    cLat = DAFAULT_LAT
+    eLat_1 = 0
+    eLng_1 = 0
+    eLat_2 = 0
+    eLng_2 = 0
+    google_map_zoom = 6
+    url_png = ''
+    
+    # The path to are PNG, KML urls
+    scheme = '{0}://'.format(request.scheme)
+    absolute_png_url = os.path.join(scheme, request.get_host(), PNG_DIRECTORY)
+    absolute_kml_url = os.path.join(scheme, request.get_host(), KML_DIRECTORY)
+    
+    # Get the User DataSets
+    if customer_access_ds:
+        for n in customer_access_ds:
+            try:
+                ds = DataSet.objects.get(pk=n.dataset_id)
+                data_sets.append(ds)
+            except DataSet.DoesNotExist, e:
+                print 'ERROR Get DataSet ==================== ', e
+                pass
+    else:
+        error_message = 'You have no one DataSet for view. Please contact to the admin.'
+        data = {
+            'error_message': error_message
+        }
+        
+        return data
+        
+    # GET SESSIONS !!!!!!!!!!!!!!!!!!!!!!!!!
+    # Get select data_set sessions
+    if request.session.get('select_data_set', False):
+        data_set_id = int(request.session['select_data_set'])
+    else:
+        CustomerInfoPanel.objects.filter(user=customer).delete()
+        request.session['select_data_set'] = data_sets[0].id
+        # request.session.set_expiry(172800)
+    
+    # Get select active tab sessions
+    if request.session.get('tab_active', False):
+        tab_active = request.session['tab_active']
+    else:
+        request.session['tab_active'] = tab_active
+        
+    # Get the DataSet and DataSet ID select
+    data_set, data_set_id = getDataSet(data_set_id, data_sets[0])
+
+    # Get the Statistics list
+    dirs_list = getResultDirectory(data_set, shelf_data_all)
+        
+    # get AJAX POST for KML files
+    if request.is_ajax() and request.method == "POST":
+        data_post_ajax = request.POST
+        data = ''
+        
+        # print '!!!!!!!!!!!!!!!!! data_post_ajax ===================== ', data_post_ajax
+        # print '!!!!!!!!!!!!!!!!! data_post_ajax LIST ===================== ', data_post_ajax.lists()
+        # print '!!!!!!!!!!!!!!!!! coordinate_list[0][] ===================== ', 'coordinate_list[0][]' in data_post_ajax
+        # print '!!!!!!!!!!!!!!!!! BUTTON ===================== ', 'button' in data_post_ajax
+        
+        
+        if 'button' in data_post_ajax:
+            if 'attr_list[]' in data_post_ajax and 'stat_list[]' in data_post_ajax:
+                attributes_viewlist = data_post_ajax.getlist('attr_list[]')
+                statistics_viewlist = data_post_ajax.getlist('stat_list[]')
+                
+                # print 'attributes_viewlist ========================= ', attributes_viewlist
+                # print 'statistics_viewlist ========================= ', statistics_viewlist
+                
+                count_obj = len(attributes_viewlist) * len(statistics_viewlist) - 1
+                is_show = False
+                new_order = 0
+                show_order = 0
+                show_attribute_name = ''
+                show_statistics_name = ''
+                is_show_sip = CustomerInfoPanel.objects.filter(
+                                user=customer, is_show=True)
+                                
+                if is_show_sip:
+                    show_attribute_name = is_show_sip[0].attribute_name
+                    show_statistics_name = is_show_sip[0].statisctic
+                
+                # print 'CIP count_obj ========================= ', count_obj
+                # print 'CIP ORDER ========================= ', is_show_sip[0].order
+                # print 'show_statistics_name ========================= ', show_statistics_name
+                
+                CustomerInfoPanel.objects.filter(user=customer).delete()
+                
+                for attr in attributes_viewlist:
+                    attr_id = int(attr.split('view_')[1])
+                    
+                    try:
+                        shelf_data = ShelfData.objects.get(id=int(attr_id))
+                        
+                        for st in statistics_viewlist:
+                            createCustomerInfoPanel(customer, data_set, shelf_data,
+                                                    st, absolute_png_url,
+                                                    False, order=new_order, delete=False)
+                            
+                            
+                            if show_attribute_name == shelf_data.attribute_name and show_statistics_name == st:
+                                if data_post_ajax['button'] == 'next':
+                                    show_order = new_order + 1
+                                elif data_post_ajax['button'] == 'previous':
+                                    show_order = new_order - 1
+                            
+                            new_order += 1
+                            # print '**************************************************************************************'
+                            # print 'show_attribute_name ========================= ', show_attribute_name
+                            # print 'shelf_data.attribute_name ========================= ', shelf_data.attribute_name
+                            # print ''
+                            # print 'show_statistics_name ========================= ', show_statistics_name
+                            # print 'statistics ========================= ', st
+                            # print '!!!!!!!!!!!!! show_order ========================= ', show_order
+                            # print '**************************************************************************************'
+                    except ShelfData.DoesNotExist:
+                        pass
+                        
+                if is_show_sip:
+                    if show_order > count_obj:
+                        show_order = 0
+                    elif show_order < 0:
+                        show_order = count_obj
+                    CustomerInfoPanel.objects.filter(user=customer, order=show_order).update(is_show=True)
+                else:
+                    CustomerInfoPanel.objects.filter(user=customer, order=0).update(is_show=True)
+                    
+                # try:
+                #     show_cip = CustomerInfoPanel.objects.get(user=customer, is_show=True)
+                #     data = '{0}${1}${2}'.format(show_cip.data_set.name, show_cip.attribute_name, show_cip.statisctic)
+                # except CustomerInfoPanel.DoesNotExist:
+                #     pass
+                
+                return HttpResponse(data)
+            elif 'attr_list[]' in data_post_ajax or not 'stat_list[]' in data_post_ajax:
+                createCustomerInfoPanel(customer, data_set, dirs_list[0],
+                                        'mean_ConditionalMean', absolute_png_url,
+                                        True, order=0)
+                
+            return HttpResponse(data)
+    
+        if 'coordinate_list[0][]' in data_post_ajax:
+            reports_cip = []
+            
+            if 'reports[]' in data_post_ajax:
+                reports_ids = []
+                for rep_id in data_post_ajax.getlist('reports[]'):
+                    reports_ids.append(rep_id.split('report_')[1])
+                    
+                reports_cip = ShelfData.objects.filter(
+                                id__in=reports_ids).order_by('attribute_name')
+            else:
+                reports_cip = dirs_list
+                
+            AttributesReport.objects.filter(user=customer).delete()
+            stat = CustomerInfoPanel.objects.filter(user=customer, is_show=True)
+            
+            for rs in reports_cip:
+                attribute_report = AttributesReport.objects.create(
+                                        user=customer,
+                                        data_set=data_set,
+                                        shelfdata=rs,
+                                        statisctic=stat[0].statisctic
+                                    )
+                                
+            coord_tmp = str(request.user) + '_coord_tmp.txt'
+            php_tmp = str(request.user) + '_php_tmp.txt'
+            file_path_coord = os.path.join(KML_PATH, coord_tmp)
+            file_path_php = os.path.join(KML_PATH, php_tmp)
+            myfile_coord = open(file_path_coord, "w")
+            myfile_php = open(file_path_php, "w")
+            
+            list_size = len(data_post_ajax.lists()) - 1
+            coord = []*list_size
+            tmp = {}
+            coord_dict = {}
+            lon = []
+            lat = []
+            
+            for n in data_post_ajax.lists():
+                if n[0] != 'csrfmiddlewaretoken' and n[0] != 'reports[]':
+                    index = getIndex(n[0])
+                    tmp[index] = n[1]
+
+            for k in sorted(tmp.keys()):
+                coord_dict[k] = tmp[k]
+                
+            for n in coord_dict:
+                myfile_coord.write(",".join(coord_dict[n]));
+                myfile_coord.write("\n");
+                
+            for n in coord_dict:
+                lon.append(coord_dict[n][0])
+                lat.append(coord_dict[n][1])
+                
+            lat_str = ','.join(lat)
+            lon_str = ','.join(lon)
+            
+            print '!!!!!!!!!!!!!!!! lat_str =========================== ', lat_str
+            print '!!!!!!!!!!!!!!!! lat_str =========================== ', lat_str
+            
+            myfile_php.write(lat_str);
+            myfile_php.write("\n");
+            myfile_php.write(lon_str);
+            myfile_php.write("\n");
+            
+            myfile_coord.close()
+            myfile_php.close()
+            
+            # print 'coord_dict ======================== ', coord_dict
+
+            return HttpResponse(data)
+            
+        if 'cur_run_id' in data_post_ajax:
+            # message = u'Are you sure you want to remove this objects:'
+            arrea = data_post_ajax['cur_run_id']
+            data = u'Are you sure you want to remove this objects: <b>"{0}"</b>?'.format(arrea)
+
+            return HttpResponse(data)
+        else:
+            return HttpResponse(data)
+    
+    
+    # get AJAX GET
+    if request.is_ajax() and request.method == "GET":
+        data = ''
+        data_get_ajax = request.GET
+        cip = CustomerInfoPanel.objects.filter(user=customer)
+        
+        # print 'GET customer_section ====================== ', data_get_ajax
+        
+        # When user celect a new DataSet, the previous celected DataSet to remove
+        if 'datasets_id' in data_get_ajax:
+            for ip in cip:
+                remove_file_png(ip.png_path)
+
+            status = check_current_dataset(request, data_get_ajax)
+            
+            if request.session.get('select_data_set', False):
+                data_set_id = int(request.session['select_data_set'])
+            else:
+                request.session['select_data_set'] = data_sets[0].id
+                data_set_id = request.session['select_data_set']
+            
+            # print 'data_set_id REQ ========================== ', request.session['select_data_set']
+            # print 'data_set_id ========================== ', data_set_id
+            
+            if status:
+                data_set, data_set_id = getDataSet(data_set_id, data_sets[0])
+                dirs_list = getResultDirectory(data_set, shelf_data_all)
+                statisctic = 'mean_ConditionalMean'
+                is_show = True
+                
+                # print 'data_set ========================== ', data_set
+                # print 'dirs_list[0] ========================== ', dirs_list[0]
+                if dirs_list:
+                    info_panel = createCustomerInfoPanel(
+                                    customer, data_set, dirs_list[0], statisctic,
+                                    absolute_png_url, is_show
+                                )
+                else:
+                    data = 'error'
+                    # print 'ERRRRRRRRRRRRRRRRRRRRRRRROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+                    
+        if 'cur_area' in data_get_ajax:
+            # print 'POL ========================================= ', data_get_ajax.get('cur_area', '')
+            polygon_id = data_get_ajax.get('cur_area', '')
+            try:
+                select_area = CustomerPolygons.objects.get(pk=polygon_id)
+                data = '{0}${1}'.format(select_area.name, polygon_id)
+            except CustomerPolygons.DoesNotExist:
+                data = 'There is no such polygon.'
+                
+        if 'tab_active' in data_get_ajax:
+            tab_active = data_get_ajax.get('tab_active', '')
+            request.session['tab_active'] = tab_active
+            # print 'tab_active ================================ ', tab_active
+            
+        return HttpResponse(data)
+    
+    if request.method == "POST":
+        data_post = request.POST
+        # print 'POST =========================== ', data_post
+    
+        if 'save_area' in data_post:
+            data_kml = data_post.lists()
+            area_name = ''
+            total_area = ''
+            attribute = []
+            value = []
+            units = []
+            total = []
+            statistic = ''
+                    
+            for item in data_kml:
+                # total_area
+                if 'total_area' in item:
+                    total_area = item[1][0]
+                    
+                if 'area_name' in item:
+                    area_name = item[1][0].replace(' ', '-')
+                    
+                if 'attribute' in item:
+                    attribute = item[1]
+                    
+                if 'value' in item:
+                    value = item[1]
+                    
+                if 'units' in item:
+                    units = item[1]
+                    
+                if 'total' in item:
+                    total = item[1]
+                    
+                if 'statistic' in item:
+                    statistic = item[1][0]
+                    
+            len_attr = len(attribute)
+            
+            info_window = '<h4 align="center">Attribute report: {0}</h4>\n'.format(area_name)
+            info_window += '<p align="center"><span><b>Total Area:</b></span> ' + total_area + ' ha</p>';
+            
+            if statistic:
+                info_window += '<p align="center"><span><b>Statistic:</b></span> ' + statistic + ' ha</p>';
+            # info_window += '<p align="left"><font size="2">{0}: {1} ha</p></font>\n'.format(ATTRIBUTES_NAME[0], total_area)
+            
+            if len_attr >= 8:
+                info_window += '<div style="height:400px;overflow:scroll;">'
+            else:
+                info_window += '<div style="overflow:auto;">'
+            
+            info_window += '<table border="1" cellspacing="5" cellpadding="5" style="border-collapse:collapse;border:1px solid black;width:100%;">\n'
+            # info_window += '<caption align="left" style="margin-bottom:15px"><span><b>Total Area:</b></span> ' + total_area + ' ha</caption>'
+            info_window += '<thead>\n'
+            info_window += '<tr bgcolor="#CFCFCF">\n'
+            info_window += '<th align="left" style="padding:10px">Attribute</th>\n'
+            info_window += '<th style="padding:10px">Value</th>\n'
+            info_window += '<th style="padding:10px">Units</th>\n'
+            info_window += '<th style="padding:10px">Total</th>\n'
+            info_window += '</tr>\n'
+            info_window += '</thead>\n'
+            info_window += '<tbody>\n'
+            
+            for n in xrange(len_attr):
+                if n % 2 == 0:
+                    info_window += '<tr bgcolor="#F5F5F5">\n'
+                else:
+                    info_window += '<tr>';
+                    
+                info_window += '<td align="left" style="padding:10px">{0}</td>\n'.format(attribute[n])
+                info_window += '<td style="padding:10px">{0}</td>\n'.format(value[n])
+                info_window += '<td style="padding:10px">{0}</td>\n'.format(units[n])
+                info_window += '<td style="padding:10px">{0}</td>\n'.format(total[n])
+                info_window += '</tr>\n'
+            
+            info_window += '</tbody>\n'
+            info_window += '</table>\n'
+            info_window += '</div>'
+                
+            # Create KML file for the draw polygon
+            ds = DataSet.objects.get(pk=data_set_id)
+            cur_polygon = createKml(request.user, area_name, info_window, absolute_kml_url, ds)
+            
+            for n in xrange(len_attr):
+                if not DataPolygons.objects.filter(user=request.user, data_set=data_set,
+                    customer_polygons=cur_polygon, attribute=attribute[n]).exists():
+                        DataPolygons.objects.create(
+                            user=request.user,
+                            customer_polygons=cur_polygon,
+                            data_set=data_set,
+                            attribute=attribute[n],
+                            value=value[n],
+                            units=units[n],
+                            total=total[n],
+                            total_area=total_area+' ha'
+                        )
+                elif DataPolygons.objects.filter(user=request.user, data_set=data_set,
+                    customer_polygons=cur_polygon, attribute=attribute[n]).exists():
+                        DataPolygons.objects.filter(
+                            customer_polygons=cur_polygon, attribute=attribute[n]
+                        ).update(
+                            # attribute=attribute[n],
+                            value=value[n],
+                            units=units[n],
+                            total=total[n],
+                            total_area=total_area+' ha'
+                        )
+                        
+        if 'delete_button' in data_post:
+            kml_file = data_post.get('delete_button')
+            
+            # print 'kml_file ======================================== ', kml_file
+            cur_area = get_object_or_404(
+                CustomerPolygons, kml_name=kml_file)
+            os.remove(cur_area.kml_path)
+            cur_area.delete()
+            cur_data_polygons = DataPolygons.objects.filter(
+                                    customer_polygons=cur_area
+                                )
+            for data_pol in cur_data_polygons:
+                data_pol.delete()
+        
+            return HttpResponseRedirect(u'%s' % (reverse('customer_section')))
+                    
+        if 'area_name' in data_post:
+            area_id = data_post.get('save_area_name', '')
+        
+            if area_id:
+                old_area = CustomerPolygons.objects.get(pk=area_id)
+                new_area_name = data_post.get('area_name')
+                new_area_name = new_area_name.replace(' ', '-')
+                new_kml_name = str(new_area_name) + '.kml'
+                old_path = old_area.kml_path
+                new_path = os.path.join(KML_PATH, new_kml_name)
+        
+                os.rename(old_path, new_path)
+        
+                area = CustomerPolygons.objects.filter(pk=area_id).update(
+                            name = new_area_name,
+                            kml_name = new_kml_name,
+                            kml_path = new_path)
+        
+                return HttpResponseRedirect(u'%s' % (reverse('customer_section')))
+    
+    
+    
+    customer_info_panel = CustomerInfoPanel.objects.filter(user=customer)
+    
+    # if not customer_info_panel and dirs_list:
+    #     attribute_list_infopanel.append(dirs_list[0].attribute_name)
+    #     statisctics_infopanel.append('mean_ConditionalMean')
+    #     current_area_image = ''
+    if customer_info_panel and dirs_list:
+        cip = customer_info_panel.filter(user=customer).order_by('attribute_name')
+        
+        for n in cip:
+            attribute_list_infopanel.append(n.attribute_name)
+            statisctics_infopanel.append(n.statisctic)
+        
+    
+    # Get the polygons list from media folder
+    polygons = CustomerPolygons.objects.filter(
+                    user=request.user,
+                    data_set=data_set
+                )
+    
+    # print 'shelf_data_all ======================================= ', shelf_data_all
+    # print '!!!!!!!! dirs_list ======================================= ', dirs_list
+    # attribute_list_infopanel
+    # print '!!!!!!!! attribute_list_infopanel ======================================= ', attribute_list_infopanel
+    # print 'statisctics_infopanel ======================================= ', statisctics_infopanel
+    
+    if customer_info_panel:
+        try:
+            customer_info_panel_file = CustomerInfoPanel.objects.filter(
+                                        user=request.user,
+                                        is_show=True)
+                                        
+            if customer_info_panel_file:
+                file_tif = customer_info_panel_file[0].tif_path
+                file_png = customer_info_panel_file[0].png_path
+                url_png = customer_info_panel_file[0].url_png
+                
+                ####################### write log file
+                # log_file = '/home/gsi/LOGS/customer_section.log'
+                # customer_section = open(log_file, 'a+')
+                # now = datetime.now()
+                # customer_section.write('USER: '+str(request.user))
+                # customer_section.write('\n')
+                # customer_section.write('DATA SET: '+str(data_set))
+                # customer_section.write('\n')
+                # customer_section.write('FILE AREA NAME: '+str(show_file))
+                # customer_section.write('\n')
+                # customer_section.write('CUSTOMER INFO PANEL: '+str(customer_info_panel_file))
+                # customer_section.write('\n')
+                #
+                # customer_section.close()
+                #######################
+
+                # Convert tif to png
+
+                # Set file vars
+                # # output_file = "out.jpg"
+                # # output_file_root = os.path.splitext(output_file)[0]
+                # output_file_ext = 'png'
+                # output_file_tmp = customer_info_panel_file.file_area_name + ".tmp"
+                #
+                # # Create tmp gtif
+                # driver = gdal.GetDriverByName("GTiff")
+                # dst_ds = driver.Create(output_file_tmp, 512, 512, 1, gdal.GDT_Byte )
+                # raster = numpy.zeros( (512, 512) )
+                # dst_ds.GetRasterBand(1).WriteArray(raster)
+                #
+                # # Create jpeg or rename tmp file
+                # if (cmp(output_file_ext.lower(),"png" ) == 0):
+                #     jpg_driver = gdal.GetDriverByName("PNG")
+                #     jpg_driver.CreateCopy( file_png, dst_ds, 0 )
+                #     os.remove(output_file_tmp)
+                # else:
+                #     os.rename(output_file_tmp, file_png)
+
+                try:
+                    check_date = check_date_files(file_tif, file_png)
+
+                    if check_date:
+                        if os.path.exists(file_tif):
+                            proc = Popen(['cat', file_tif], stdout=PIPE)
+                            p2 = Popen(['convert', '-', file_png], stdin=proc.stdout)
+
+                            while not os.path.exists(file_png):
+                                pass
+                        else:
+                            warning_message = u'The images "{0}" does not exist!'.\
+                                                format(customer_info_panel_file.file_area_name)
+                except Exception, e:
+                    print 'Popen Exception =============================== ', e
+
+                # get the lat/lon values for a GeoTIFF files
+                try:
+                    ds = gdal.Open(file_tif)
+                    width = ds.RasterXSize
+                    height = ds.RasterYSize
+                    gt = ds.GetGeoTransform()
+                    minx = gt[0]
+                    miny = gt[3] + width*gt[4] + height*gt[5]
+                    maxx = gt[0] + width*gt[1] + height*gt[2]
+                    maxy = gt[3]
+                    centery = (maxy + miny) / 2
+                    centerx = (maxx + minx) / 2
+
+                    cLng = centerx
+                    cLat = centery
+                    eLat_1 = miny
+                    eLng_1 = minx
+                    eLat_2 = maxy
+                    eLng_2 = maxx
+                    google_map_zoom = GOOGLE_MAP_ZOOM
+                except AttributeError, e:
+                    print 'GDAL AttributeError =============================== ', e
+        except CustomerInfoPanel.DoesNotExist, e:
+            print 'CustomerInfoPanel.DoesNotExist =============================== ', e
+            warning_message = u'The file "{0}" does not exist. Perhaps the data is outdated. Please refresh the page and try again.'.format(show_file)
+            # return HttpResponseRedirect(
+            #     u'%s?danger_message=%s' % (reverse('customer_section'),
+            #     (u'The file "{0}" does not exist. Perhaps the data is outdated. Please refresh the page and try again.'.format(show_file)))
+            # )
+
+    customer_info_panel_show = CustomerInfoPanel.objects.filter(
+                                user=request.user,
+                                is_show=True)
+                                
+    try:
+        cip_active = CustomerInfoPanel.objects.filter(
+                            user=customer,
+                            # data_set=data_set,
+                            is_show=True)
+        # file_tif_path = show_file + '.tif'
+        if cip_active:
+            file_tif_path = cip_active[0].tif_path
+        
+        # attribute, units = getAttributeUnits(request.user, show_file)
+    except Exception:
+        pass
+    
+    if customer_info_panel_show:
+        show_dataset_cip = customer_info_panel_show[0].data_set.name
+        show_image_cip = customer_info_panel_show[0].attribute_name
+        show_statistic_cip = customer_info_panel_show[0].statisctic
+    
+        # print 'show_dataset_cip ===================================== ', show_dataset_cip
+        # print 'show_image_cip ===================================== ', show_image_cip
+        # print 'show_statistic_cip ===================================== ', show_statistic_cip
+        
+    attribute_report = AttributesReport.objects.filter(user=customer)
+    
+    if attribute_report:
+        for ar in attribute_report:
+            show_report_ap.append(ar.shelfdata.attribute_name)
+        
+    data = {
+        'data_sets': data_sets,
+        'data_set_id': data_set_id,
+        'dirs_list': dirs_list,
+        'polygons': polygons,
+        'attribute_list_infopanel': attribute_list_infopanel,
+        'statisctics_infopanel': statisctics_infopanel,
+        'show_dataset_cip': show_dataset_cip,
+        'show_image_cip': show_image_cip,
+        'show_statistic_cip': show_statistic_cip,
+        'show_report_ap': show_report_ap,
+        'tab_active': tab_active,
+        
+        'file_tif_path': file_tif_path,
+        
+        'warning_message': warning_message,
+        
+        'absolute_kml_url': absolute_kml_url,
+        
+        'cLng': cLng,
+        'cLat': cLat,
+        'eLat_1': eLat_1,
+        'eLng_1': eLng_1,
+        'eLat_2': eLat_2,
+        'eLng_2': eLng_2,
+        'GOOGLE_MAP_ZOOM': GOOGLE_MAP_ZOOM,
+        'absolute_url_png_file': url_png,
+    }
+
+    return data
+        
+        
+# view Customer Section
+@login_required
+@render_to('customers/customer_section.html')
+def customer_section_copy(request):
     """**View for the "Customer '<user>' section" page.**
 
     :Functions:
@@ -1227,7 +1940,7 @@ def customer_section(request):
     if request.is_ajax() and request.method == "POST":
         data_post_ajax = request.POST
         
-        # print 'data_post_ajax ===================== ', data_post_ajax
+        print 'POST NEW data_post_ajax ===================== ', data_post_ajax
     
         if 'send_data[0][]' in data_post_ajax:
             coord_tmp = str(request.user) + '_coord_tmp.txt'
@@ -1293,7 +2006,9 @@ def customer_section(request):
         data_get = request.GET
         cip = CustomerInfoPanel.objects.filter(user=request.user)
         
-        print 'GET customer_section ====================== ', data_get
+        _ajax
+        
+        print 'GET NEW AJAX ====================== ', data_get
         
         # When user celect a new DataSet, the previous celected DataSet to remove
         if 'datasets_id' in data_get:
@@ -1370,6 +2085,8 @@ def customer_section(request):
         
         if request.POST.get('delete_button'):
             kml_file = data_post.get('delete_button')
+            
+            print 'kml_file ======================================== ', kml_file
             cur_area = get_object_or_404(
                 CustomerPolygons, kml_name=kml_file)
             os.remove(cur_area.kml_path)
@@ -1512,6 +2229,9 @@ def customer_section(request):
                 for dr in dirs:
                     shelf_data = ShelfData.objects.get(pk=dr)
                     attribute_name = shelf_data.attribute_name
+                    
+                    print 'dirs ========================== ', dirs
+                    print 'shelf_data ========================== ', shelf_data
 
                     for st in statistics:
                         file_area_name = '{0}_{1}.{2}'.format(st, shelf_data.root_filename, project_name)
@@ -1520,6 +2240,7 @@ def customer_section(request):
                         tif_path = os.path.join(PROJECTS_PATH, data_set.results_directory, shelf_data.root_filename, tif)
                         png_path = os.path.join(PNG_PATH, png)
                         url_png = '{0}/{1}'.format(absolute_png_url, png)
+                        
                         info_panel = CustomerInfoPanel.objects.create(
                                         user=request.user,
                                         data_set=data_set,
@@ -1843,6 +2564,8 @@ def customer_section_php(request):
     coord_list = []
     latlist = ''
     lonlist = ''
+    files_tif = ''
+    sh_data = ''
     customer = request.user
     customer_tmp_file = str(customer) + '_result.csv'
     customer_tmp_for_db = str(customer) + '_db.csv'
@@ -1866,32 +2589,34 @@ def customer_section_php(request):
     
     # Handling GET request
     if request.method == "GET":
-        data_get = request.GET
+        data_get_ajax = request.GET
         
-        if data_get.get('tif_path'):
-            file_tif_path = data_get.get('tif_path')
+        if data_get_ajax.get('tif_path'):
+            file_tif_path = data_get_ajax.get('tif_path')
             
-            data_set_id = data_get.get('ds')
+            data_set_id = data_get_ajax.get('ds')
             data_set = DataSet.objects.get(id=data_set_id)
             shelf_data = ShelfData.objects.all().order_by('attribute_name')
-            files_tif = ''
-            sh_data = ''
             
-            dirs_list = getResultDirectory(data_set, shelf_data)
+            attributes_reports = AttributesReport.objects.filter(
+                                    user=customer, data_set=data_set
+                                ).order_by('shelfdata__attribute_name')
+                                
+            
+            
+            # dirs_list = getResultDirectory(data_set, shelf_data)
             
             # cip_query = CustomerInfoPanel.objects.filter(
             #                 user=request.user,
             #                 data_set=data_set)
             
-            for shelfdata in dirs_list:
-                # mean_ConditionalMean_Hdwd_Tons_UserY.F4tech.tif
-                # print 'shelfdata.id ============================= ', type(shelfdata.id)
-                
-                name_1 = shelfdata.root_filename
+            for attr in attributes_reports:
+                name_1 = attr.shelfdata.root_filename
                 name_2 = data_set.results_directory.split('/')[0]
                 tiff_path = os.path.join(PROJECTS_PATH, data_set.results_directory, name_1)
-                files_tif += tiff_path + '/mean_ConditionalMean_' + name_1 + '.' + name_2 + '.tif,'
-                sh_data += '{0},'.format(shelfdata.id)
+                # files_tif += tiff_path + attr.statisctic + '/mean_ConditionalMean_' + name_1 + '.' + name_2 + '.tif,'
+                files_tif += '{0}/{1}_{2}.{3}.tif,'.format(tiff_path, attr.statisctic, name_1, name_2)
+                sh_data += '{0},'.format(attr.shelfdata.id)
             
             files_tif = files_tif[0:-1]
             sh_data = sh_data[0:-1]
@@ -1980,7 +2705,7 @@ def customer_delete_file(request):
         data = ''
         data_get_ajax = request.GET
         
-        # print 'data_get AJAX ============================= ', data_get_ajax
+        print 'DELETES FILE data_get_ajax AJAX ============================= ', data_get_ajax
         
         if data_get_ajax.get('delete_file'):
             # time.sleep(5)
@@ -1992,18 +2717,25 @@ def customer_delete_file(request):
             data_ajax_total = ''
             
             while not os.path.exists(db_file_path) and not os.path.exists(tmp_file_path):
-                time.sleep(5)
+                # print 'WHILE DELETE FILES ========================================= '
+                time.sleep(10)
                 # print 'FILE {0}: {1} ==================================='.format(db_file_path, os.path.exists(db_file_path))
                 # print 'FILE {0}: {1} ==================================='.format(tmp_file_path, os.path.exists(tmp_file_path))
                 ####################### write log file
-                customer_delete_f.write('NO tmp db FILE === \n')
+                customer_delete_f.write('********************** NO tmp db FILE === \n')
                 ####################### write log file
                 pass
+            
+            print '****************** EXISTS db_file_path ========================================= ', os.path.exists(db_file_path)
+            print '****************** EXISTS tmp_file_path ========================================= ', os.path.exists(tmp_file_path)
             
             f_db = open(db_file_path)
             
             for l in f_db:
                 line = l.split(',')
+                
+                print '******************** LINE ========================================= ', line
+                
                 shd_id = line[0]
                 shelf_data = ShelfData.objects.get(id=shd_id)
                 data_ajax_total = '{0}_'.format(line[2])

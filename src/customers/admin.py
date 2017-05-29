@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from customers.models import (Category, ShelfData, DataSet, CustomerAccess,
                             CustomerInfoPanel, CustomerPolygons, DataTerraserver,
-                            DataPolygons)
+                            DataPolygons, AttributesReport)
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -47,7 +47,8 @@ class CustomerAccessAdmin(admin.ModelAdmin):
 
 
 class CustomerInfoPanelAdmin(admin.ModelAdmin):
-    list_display = ('user', 'data_set', 'attribute_name', 'statisctic', 'file_area_name', 'tif_path', 'png_path',)
+    list_display = ('user', 'data_set', 'attribute_name', 'statisctic',
+                    'file_area_name', 'tif_path', 'png_path', 'order', 'is_show')
     search_fields = ['user', 'data_set', 'file_area_name']
     list_filter = ('user', 'data_set', 'file_area_name')
     
@@ -65,10 +66,16 @@ class DataTerraserverAdmin(admin.ModelAdmin):
     
     
 class DataPolygonsAdmin(admin.ModelAdmin):
-    list_display = ('user', 'data_set', 'customer_polygons', 'attribute',
+    list_display = ('user', 'data_set', 'customer_polygons', 'attribute', 'statisctic',
                     'value', 'units', 'total', 'total_area')
-    search_fields = ['user', 'data_set', 'customer_polygons', 'attribute', 'units']
-    list_filter = ('user', 'data_set', 'customer_polygons', 'attribute', 'units')
+    search_fields = ['user', 'data_set', 'customer_polygons', 'attribute', 'statisctic', 'units']
+    list_filter = ('user', 'data_set', 'customer_polygons', 'attribute', 'statisctic', 'units')
+    
+    
+class AttributesReportAdmin(admin.ModelAdmin):
+    list_display = ('user', 'data_set', 'shelfdata', 'statisctic')
+    search_fields = ['user', 'data_set', 'shelfdata', 'statisctic']
+    list_filter = ('user', 'data_set', 'shelfdata', 'statisctic')
 
 
 admin.site.register(Category, CategoryAdmin)
@@ -79,3 +86,4 @@ admin.site.register(CustomerInfoPanel, CustomerInfoPanelAdmin)
 admin.site.register(CustomerPolygons, CustomerPolygonsAdmin)
 admin.site.register(DataTerraserver, DataTerraserverAdmin)
 admin.site.register(DataPolygons, DataPolygonsAdmin)
+admin.site.register(AttributesReport, AttributesReportAdmin)

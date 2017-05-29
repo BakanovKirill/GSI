@@ -243,14 +243,18 @@ function showDataSets(obj) {
         },
         'error': function(xhr, status, error){
             // alert('status 1: '+status);
-            // alert('error: '+error);
+            alert('error: '+error);
             var message = 'An unexpected error occurred. Try later.';
         },
         'success': function(data, status, xhr){
-            if (obj != datasets_id) {
-                // setTimeout(function(){location.reload(true);}, 500);
-                window.location.href = form_url;
-            }
+            // alert('success: '+data);
+            // alert('success status: '+status);
+            window.location.href = form_url;
+            
+            // if (obj != datasets_id) {
+            //     // setTimeout(function(){location.reload(true);}, 500);
+            //     window.location.href = form_url;
+            // }
         },
     });
     return false;
@@ -355,25 +359,24 @@ function setPolygon(obj) {
     }
 }
 
-function sendDataToServer(obj) {
+function sendDataToServer(coord, reports) {
     // alert('sendDataToServer');
-    // var send_data = JSON.parse(obj);
-    // var send_data = JSON.parse(data);
+    
     var form_url = $('#customer_section').attr('action');
-    var obj_list = []
+    var coord_list = []
     var count = 0;
     var modal = $('#modalWaiting');
     modal.modal('show');
     
-    for(n in obj) {
+    for(n in coord) {
         var temp = [];
         var reverce_list = [];
-        for(k in obj[n]) {
-            temp.push(obj[n][k]);
+        for(k in coord[n]) {
+            temp.push(coord[n][k]);
             var reverce_list = temp.reverse();
         }
         // alert('reverce_list: '+reverce_list);
-        obj_list.push(reverce_list);
+        coord_list.push(reverce_list);
     }
     
     $.ajax({
@@ -382,7 +385,9 @@ function sendDataToServer(obj) {
         'async': true,
         'dataType': 'text',
         data: {
-            'send_data': obj_list,
+            // 'send_data': coord_list,
+            'coordinate_list': coord_list,
+            'reports': reports,
             'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
         },
         'error': function(xhr, status, error){
@@ -423,7 +428,10 @@ function initEditArea() {
                 modal.modal('show');
             },
             'success': function(data, status, xhr){
-                $('#areaName').val(data);
+                // alert('DAATA: '+data);
+                polygon = data.split('$')
+                $('#areaName').val(polygon[0]);
+                $('#save_area_name').val(polygon[1]);
                 modal.modal('show');
             },
         });
@@ -460,8 +468,102 @@ function deleteFile(ds) {
             getTmpCSV(data);
         },
     });
-    
 }
+
+function sendDataAttrStatToServer(obj) {
+    var form_url = $('#customer_section').attr('action');
+    var attr_list = [];
+    var stat_list = [];
+    
+    // alert('BUT: '+$(obj).val());
+    
+    $('#view_attribute input:checkbox:checked').each(function(){
+        // alert($(this).val());
+        attr_list.push($(this).val())
+    });
+    
+    $('#statictics_list input:checkbox:checked').each(function(){
+        // alert($(this).val());
+        stat_list.push($(this).val())
+    });
+    
+    // alert('attr_list: '+attr_list);
+    // alert('stat_list: '+stat_list);
+    
+    $.ajax({
+        url: form_url,
+        type: 'POST',
+        'async': true,
+        'dataType': 'text',
+        data: {
+            'button': $(obj).val(),
+            'attr_list': attr_list,
+            'stat_list': stat_list,
+            'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+        },
+        'error': function(xhr, status, error){
+            // alert('error: '+error);
+            var message = 'An unexpected error occurred. Try later.';
+            alert(message);
+        },
+        'success': function(data, status, xhr){
+            // alert('URL DATA: '+data);
+            // var new_data = data.split('$');
+            
+            // function reload() {
+            //     alert('URL DATA: '+data);
+            //     window.location.href = form_url;
+            // }
+            //
+            // setTimeout(reload, 100);
+            
+            window.location.href = form_url;
+            
+            
+            // $("#ds_show span").text('new_data[0]');
+            // $("#ds_show span").text(new_data[0]);
+            // $("span#img_show").text(new_data[1]);
+            // $("span#stat_show").text(new_data[2]);
+            //
+            // alert('URL DATA: '+data);
+            // sendGetToServer();
+            // window.location.href = form_url;
+            
+            
+        },
+    });
+}
+
+function selectTab(obj) {
+    var form_url = $('#customer_section').attr('action');
+    var tab_name = $(obj).attr('value');
+
+    $.ajax({
+        url: form_url,
+        type: 'GET',
+        'async': true,
+        'dataType': 'text',
+        data: {
+            'tab_active': tab_name,
+            'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+        },
+        'error': function(xhr, status, error){
+            // alert('error: '+error);
+            var message = 'An unexpected error occurred. Try later.';
+            alert(message);
+        },
+        'success': function(data, status, xhr){
+            // alert('URL DATA: '+data);
+            // var obj_status = status;
+            // sendGetToServer();
+            // window.location.href = form_url;
+        },
+    });
+}
+
+// function sendDataReportToServer() {
+//
+// }
 
 
 $(document).ready(function(){

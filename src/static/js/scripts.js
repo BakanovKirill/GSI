@@ -232,7 +232,14 @@ function greyColorSelect() {
 
 function setDataSetInfoPanel() {
     var select_dataset = $("#mydataset option:selected");
-    var info_dataset = $("span#info_dataset");
+    var info_dataset = $("span#show_info_dataset");
+    var current_dataset = select_dataset.html();
+    $(info_dataset).html(current_dataset);
+}
+
+function setImageInfoPanel() {
+    var select_dataset = $("#mydataset option:selected");
+    var info_dataset = $("span#show_info_image");
     var current_dataset = select_dataset.html();
     $(info_dataset).html(current_dataset);
 }
@@ -241,7 +248,7 @@ function resizeScreen() {
     var width = window.innerWidth;
     var div_map = document.getElementById('map');
     var col1 = document.getElementById('col1');
-    var col2 = document.getElementById('col2');
+    // var col2 = document.getElementById('col2');
     var get_status_message = getUrlVars()["status_message"];
     
     // alert('GET: '+getUrlVars()["id"]);
@@ -254,10 +261,10 @@ function resizeScreen() {
             
             if (get_status_message) {
                 col1.style.height = "1030px";
-                col2.style.height = "1030px";
+                // col2.style.height = "1030px";
             } else {
                 col1.style.height = "870px";
-                col2.style.height = "870px";
+                // col2.style.height = "870px";
             }
         } else if (width >= '1355' && width <= '1800') {
             div_map.style.width = "102%";
@@ -265,10 +272,10 @@ function resizeScreen() {
             
             if (get_status_message) {
                 col1.style.height = "1105px";
-                col2.style.height = "1105px";
+                // col2.style.height = "1105px";
             } else {
                 col1.style.height = "1045px";
-                col2.style.height = "1045px";
+                // col2.style.height = "1045px";
             }
         } else {
             div_map.style.width = "101%";
@@ -276,10 +283,10 @@ function resizeScreen() {
             
             if (get_status_message) {
                 col1.style.height = "1345px";
-                col2.style.height = "1345px";
+                // col2.style.height = "1345px";
             } else {
                 col1.style.height = "1285px";
-                col2.style.height = "1285px";
+                // col2.style.height = "1285px";
             }
         }
     }
@@ -291,6 +298,19 @@ function getUrlVars() {
         vars[key] = value;
     });
     return vars;
+}
+
+function selectAllCheck(field, flag) {
+    if (flag == "1") {
+        for (i=0; i<field.length; i++) {
+            field[i].checked = true;
+        }
+    }
+    else {
+        for (i=0; i<field.length; i++) {
+            field[i].checked = false;
+        }
+    }
 }
 
 
@@ -311,6 +331,8 @@ $(document).ready(function(){
     initAddFormatingTextarrea();
     greyColorSelect();
     setDataSetInfoPanel();
+    setImageInfoPanel();
     resizeScreen();
+    // tabsCustomerMenu();
     // showCheckboxes();
 });
