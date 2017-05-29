@@ -159,9 +159,33 @@ class DataPolygons(models.Model):
                 on_delete=models.CASCADE
             )
     attribute = models.CharField(max_length=250, blank=True, null=True)
+    statisctic = models.CharField(max_length=250, blank=True, null=True)
     value = models.CharField(max_length=250, blank=True, null=True)
     units = models.CharField(max_length=250, blank=True, null=True)
     total = models.CharField(max_length=250, blank=True, null=True)
     total_area = models.CharField(max_length=250, blank=True, null=True)
     
     
+class AttributesReport(models.Model):
+    user = models.ForeignKey(User, verbose_name='User',
+                blank=True, null=True, related_name='users_attributes_reports',
+                on_delete=models.CASCADE
+            )
+    data_set = models.ForeignKey(
+                    DataSet,
+                    verbose_name='DataSet',
+                    blank=True, null=True, related_name='attributes_datasets',
+                    on_delete=models.CASCADE
+                )
+    shelfdata = models.ForeignKey(
+                    ShelfData,
+                    verbose_name='ShelfData',
+                    blank=True, null=True, related_name='attributes_shelfdata',
+                    on_delete=models.CASCADE
+                )
+    statisctic = models.CharField(max_length=250, blank=True, null=True)
+    
+    
+# class TempFiles(models.Model):
+#     name = models.CharField(max_length=250, blank=True, null=True)
+#     create_at = models.DateTimeField(null=True, blank=True)

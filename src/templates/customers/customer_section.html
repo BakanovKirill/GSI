@@ -9,38 +9,24 @@
 
 			<!-- Draw Menu -->
 			<div class="row margin-top-20 ">
-				<div class="col-md-4 right">
+				<div class="col-md-4 left">
 					<button type="button" class="btn btn-default" onclick="appliedMarkers();"><img class="img-draw" id="ap_marker" src="{% static 'img/map-marker-plus.png' %}" alt="hand" title="Applied Markers" class="area-draw"></button>
 					<button type="button" class="btn btn-default" onclick="drawPoligon();"><img class="img-draw" src="{% static 'img/vector-polygon.png' %}" alt="vector polygon" title="Draw a Poligon" class="area-draw"></button>
 					<button type="button" class="btn btn-default" onclick="removePoligon();"><img class="img-draw" src="{% static 'img/map-marker-off.png' %}" alt="hand" title="Remove Poligon" class="area-draw"></button>
 					<button type="button" class="btn btn-default" onclick="togglePlygonOverlays();"><img class="img-draw" src="{% static 'img/eye-off.png' %}" alt="hide/show" title="Hide/Show a Poligon" class="area-draw"></button>
 				</div>
 
-				<div class="col-md-2 left padding-lr-5">
+				<div class="col-md-4 center">
 					<div class="row">
 						<div class="col-md-12">
 							<span id="slider_value">Visibility: 50%</span>
 						</div>
 						
-						<div class="col-md-12">
-							<input type="range" id="opacity" min="0" max="100" oninput="setOpacity();" alt="transparency" title="Transparency" value="50"/>
+						<div class="col-md-12 margin-top-4">
+							<input type="range" id="opacity" min="0" max="100" oninput="setOpacity();" alt="transparency" title="Transparency" value="50" class="center"/>
 						</div>
 					</div>
 				</div>
-
-				<!-- GSi Info Data -->
-				<div class="col-md-6">
-					<select class="form-control" name="select_file_area" id="show_file_arrea22" onchange="showFileSelectArea('{{ show_file }}')">
-						{% if files_infopanel %}
-							{% for file in files_infopanel %}
-								<option id="{{ file }}" name="{{ file }}" value="{{ file }}" {% if file == show_file %}selected="selected"{% endif %}>{{ file }}</option>
-							{% endfor %}
-						{% else %}
-							<option id="none_file" name="none_file" value="none_file">No chosen files</option>
-						{% endif %}
-					</select>
-				</div>
-				<!-- End GSi Info Data -->
 			</div>
 			<!-- End Draw Menu -->
 
@@ -163,6 +149,7 @@
 			var selectArea;
 			var polygonVisible;
 			var mapTypesArr = [];
+			var count_pol;
 			var infowindow = new google.maps.InfoWindow();
 			
 			var units = '{{ units }}';
@@ -579,14 +566,23 @@
   			}
 			
 			function drawPoligon() {
+				var report_list = [];
+				
 				if (polygons) {
 					for (i in polygons) {
 						polygons[i].setMap(null);
 					}
 				}
 				// removePoligon();
+				$('#report_attribute input:checkbox:checked').each(function(){
+			        // alert($(this).val());
+			        report_list.push($(this).val())
+			    });
+				
+				// alert('REPORT: '+report_list);
+				
 				var show_coord = coord;
-				sendDataToServer(show_coord);
+				sendDataToServer(show_coord, report_list);
 				// setTimeout(sendGetToServer, 500);
 			}
 			
@@ -633,6 +629,7 @@
 				for (var i = 0; i < markers.length; i++) {
 					markers[i].setMap(null);
 				}
+				infowindow.close();
 				
 				// sendDataToServer(show_coord);
 				
@@ -653,7 +650,7 @@
 				var center_pol = polygonCenter(selectPolygon);
 				coord = [];
 				var list_data = data_polygon.split('_');
-				var count_pol = list_data.length;
+				count_pol = list_data.length;
 				
 				
 				// alert('list_data: '+list_data);
@@ -667,6 +664,11 @@
 				var contentString = '<h4 align="center"><b>Area Information</b></h4>';
 				contentString += '<p align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</p>';
 				contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
+				
+				if ('{{ show_statistic_cip }}') {
+					contentString += '<p align="center"><span><b>Statistic:</b></span> {{ show_statistic_cip }}</p>';
+					contentString += '<input type="hidden" name="statistic" value="{{ show_statistic_cip }}">'
+				}
 				
 				if (count_pol >= 8) {
 					contentString += '<div style="height:400px;overflow:scroll;">';
