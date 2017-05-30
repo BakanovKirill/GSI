@@ -1543,7 +1543,7 @@ def customer_section(request):
             info_window += '<p align="center"><span><b>Total Area:</b></span> ' + total_area + ' ha</p>';
             
             if statistic:
-                info_window += '<p align="center"><span><b>Values:</b></span> ' + statistic + ' ha</p>';
+                info_window += '<p align="center"><span><b>Values:</b></span> ' + statistic + '</p>';
             # info_window += '<p align="left"><font size="2">{0}: {1} ha</p></font>\n'.format(ATTRIBUTES_NAME[0], total_area)
             
             if len_attr >= 8:
