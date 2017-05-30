@@ -1995,7 +1995,7 @@ def customer_delete_file(request):
             
             while not os.path.exists(db_file_path) and not os.path.exists(tmp_file_path):
                 # print 'WHILE DELETE FILES ========================================= '
-                time.sleep(10)
+                time.sleep(15)
                 # print 'FILE {0}: {1} ==================================='.format(db_file_path, os.path.exists(db_file_path))
                 # print 'FILE {0}: {1} ==================================='.format(tmp_file_path, os.path.exists(tmp_file_path))
                 ####################### write log file
