@@ -313,6 +313,13 @@ function selectAllCheck(field, flag) {
     }
 }
 
+function setStatic() {
+    $('#statictics_list label input:radio').click(function () {
+        var value = $(this).val();
+        $("span#stat_show").text(value);
+    });
+}
+
 
 $(document).ready(function(){
     //selectAll();
@@ -333,6 +340,7 @@ $(document).ready(function(){
     setDataSetInfoPanel();
     setImageInfoPanel();
     resizeScreen();
+    setStatic();
     // tabsCustomerMenu();
     // showCheckboxes();
 });

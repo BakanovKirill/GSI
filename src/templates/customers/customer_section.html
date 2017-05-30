@@ -155,6 +155,7 @@
 			var units = '{{ units }}';
 			var attribute = '{{ attribute }}';
 			var data_polygon;
+			var statistic;
 			
 			var select_image = '{{ absolute_url_png_file }}'
 			
@@ -567,6 +568,7 @@
 			
 			function drawPoligon() {
 				var report_list = [];
+				var stat_list = [];
 				
 				if (polygons) {
 					for (i in polygons) {
@@ -579,10 +581,15 @@
 			        report_list.push($(this).val())
 			    });
 				
+				$('#statictics_list input:radio:checked').each(function(){
+			        // alert($(this).val());
+			        stat_list.push($(this).val())
+			    });
+				
 				// alert('REPORT: '+report_list);
 				
 				var show_coord = coord;
-				sendDataToServer(show_coord, report_list);
+				sendDataToServer(show_coord, report_list, stat_list);
 				// setTimeout(sendGetToServer, 500);
 			}
 			
@@ -597,19 +604,21 @@
 				// setTimeout(getTmpCSV, 3000);
 			}
 			
-			function getTmpCSV(file_path) {
+			function getTmpCSV(file_path, stat) {
 				// alert('getTmpCSV: '+file_path);
 				httpRequest = new XMLHttpRequest();
 				httpRequest.open("GET", file_path, true);
 				httpRequest.onreadystatechange = OnRequestStateChange;
 				httpRequest.send(null);
 				
-				setTimeout(getPolygon, 500);
+				setTimeout(getPolygon, 500, stat);
 			}
 
-			function getPolygon() {
+			function getPolygon(stat) {
+				// alert('STAT: '+stat);
 				var modal = $('#modalWaiting');
 			    modal.modal('hide');
+				statistic = stat;
 				
 				// Construct the polygon.
 				selectPolygon = new google.maps.Polygon({
@@ -665,9 +674,9 @@
 				contentString += '<p align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</p>';
 				contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
 				
-				if ('{{ show_statistic_cip }}') {
-					contentString += '<p align="center"><span><b>Statistic:</b></span> {{ show_statistic_cip }}</p>';
-					contentString += '<input type="hidden" name="statistic" value="{{ show_statistic_cip }}">'
+				if (statistic) {
+					contentString += '<p align="center"><span><b>Value:</b></span> ' + statistic + '</p>';
+					contentString += '<input type="hidden" name="statistic" value=' + statistic + '>'
 				}
 				
 				if (count_pol >= 8) {
@@ -754,6 +763,11 @@
 				contentString += '<p align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</p>';
 				contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
 				
+				if (statistic) {
+					contentString += '<p align="center"><span><b>Value:</b></span> ' + statistic + '</p>';
+					contentString += '<input type="hidden" name="statistic" value=' + statistic + '>'
+				}
+				
 				if (count_pol >= 8) {
 					contentString += '<div style="height:400px;overflow:scroll;">';
 				} else {
@@ -798,7 +812,7 @@
 				contentString += '</table>';
 				contentString += '</div>';
 				
-				contentString += '<input type="text" id="input_area_name" class="margin-top-15" placeholder="Enter Area name" name="file_name" size="30" style="width:100%" onkeyup="changeAreaName();" autofocus><br>'
+				contentString += '<input type="text" id="input_area_name" class="margin-top-15" placeholder="Enter Area name" name="area_name" size="30" style="width:100%" onkeyup="changeAreaName();" autofocus><br>'
 				contentString += '<button type="submit" name="save_area" class="btn btn-success btn-block margin-top-15" value="save_area" disabled id="save_area">Save Area</button>';
 				contentString += '<button type="submit" name="cancel_download_file" class="btn btn-primary btn-block margin-top-15" value="cancel_download_file">Cancel</button>';
 

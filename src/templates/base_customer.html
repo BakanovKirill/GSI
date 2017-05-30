@@ -249,36 +249,18 @@
                                             <label class="control-label margin-top-25">Statistics:</label>
                                             
                                             <div class="row">
-                                                <div class="col-md-5 left">
-                                                    <div>
-                                                        <button type="button" class="btn btn-link" name="select-all-statistics" onclick="selectAllCheck(this.form.statistics_viewlist, 1)">
-                                                            Select All
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="col-md-7 right">
-                                                    <div class="right">
-                                                        <button type="button" class="btn btn-link" name="select-none-statistics" onclick="selectAllCheck(this.form.statistics_viewlist, 0)">
-                                                            Select None
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="row">
                                                 <div class="col-md-12 left tab-report-min-height margin-left-4" id="statictics_list">
-                                                    <label class="normal"><input class="margin-top-20" name="statistics_viewlist" type="checkbox" value="mean_ConditionalMax" {% if 'mean_ConditionalMax' in statisctics_infopanel %}checked="checked"{% endif %}> mean_ConditionalMax</label><br>
+                                                    <label class="normal"><input class="margin-top-20" name="statistics_viewlist" type="radio" value="mean_ConditionalMax"  {% if 'mean_ConditionalMax' in statisctics_infopanel %}checked="checked"{% endif %}> mean_ConditionalMax</label><br>
                                                     
-                                                    <label class="normal"><input class="margin-top-10" name="statistics_viewlist" type="checkbox" value="mean_ConditionalMean" {% if 'mean_ConditionalMean' in statisctics_infopanel %}checked="checked"{% endif %}> mean_ConditionalMean</label><br>
+                                                    <label class="normal"><input class="margin-top-10" name="statistics_viewlist" type="radio" value="mean_ConditionalMean" {% if 'mean_ConditionalMean' in statisctics_infopanel %}checked="checked"{% endif %}> mean_ConditionalMean</label><br>
                                                     
-                                                    <label class="normal"><input class="margin-top-10" name="statistics_viewlist" type="checkbox" value="mean_ConditionalMedian" {% if 'mean_ConditionalMedian' in statisctics_infopanel %}checked="checked"{% endif %}> mean_ConditionalMedian</label><br>
+                                                    <label class="normal"><input class="margin-top-10" name="statistics_viewlist" type="radio" value="mean_ConditionalMedian" {% if 'mean_ConditionalMedian' in statisctics_infopanel %}checked="checked"{% endif %}> mean_ConditionalMedian</label><br>
                                                     
-                                                    <label class="normal"><input class="margin-top-10" name="statistics_viewlist" type="checkbox" value="mean_ConditionalMin" {% if 'mean_ConditionalMin' in statisctics_infopanel %}checked="checked"{% endif %}> mean_ConditionalMin</label><br>
+                                                    <label class="normal"><input class="margin-top-10" name="statistics_viewlist" type="radio" value="mean_ConditionalMin" {% if 'mean_ConditionalMin' in statisctics_infopanel %}checked="checked"{% endif %}> mean_ConditionalMin</label><br>
                                                     
-                                                    <label class="normal"><input class="margin-top-10" name="statistics_viewlist" type="checkbox" value="mean_LowerQuartile" {% if 'mean_LowerQuartile' in statisctics_infopanel %}checked="checked"{% endif %}> mean_LowerQuartile</label><br>
+                                                    <label class="normal"><input class="margin-top-10" name="statistics_viewlist" type="radio" value="mean_LowerQuartile" {% if 'mean_LowerQuartile' in statisctics_infopanel %}checked="checked"{% endif %}> mean_LowerQuartile</label><br>
                                                     
-                                                    <label class="normal"><input class="margin-top-10" name="statistics_viewlist" type="checkbox" value="mean_Quantile" {% if 'mean_Quantile' in statisctics_infopanel %}checked="checked"{% endif %}> mean_Quantile</label><br>
+                                                    <label class="normal"><input class="margin-top-10" name="statistics_viewlist" type="radio" value="mean_Quantile" {% if 'mean_Quantile' in statisctics_infopanel %}checked="checked"{% endif %}> mean_Quantile</label><br>
                                                 </div>
                                             </div>
                                             <!-- END Statistics Menu -->

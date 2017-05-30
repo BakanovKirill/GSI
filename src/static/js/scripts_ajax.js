@@ -61,7 +61,7 @@ function initCheckCurDeleteItems() {
                 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
             },
             'error': function(xhr, status, error){
-                alert('ERROR: '+error);
+                // alert('ERROR: '+error);
                 var message = 'An unexpected error occurred. Try later.';
                 modal.find('.modal-body').html(message);
                 modal.modal('show');
@@ -243,8 +243,9 @@ function showDataSets(obj) {
         },
         'error': function(xhr, status, error){
             // alert('status 1: '+status);
-            alert('error: '+error);
+            // alert('error: '+error);
             var message = 'An unexpected error occurred. Try later.';
+            alert(message);
         },
         'success': function(data, status, xhr){
             // alert('success: '+data);
@@ -359,8 +360,9 @@ function setPolygon(obj) {
     }
 }
 
-function sendDataToServer(coord, reports) {
-    // alert('sendDataToServer');
+function sendDataToServer(coord, reports, stats) {
+    // alert('sendDataToServer REP: '+reports);
+    // alert('sendDataToServer STAT: '+stats);
     
     var form_url = $('#customer_section').attr('action');
     var coord_list = []
@@ -388,6 +390,7 @@ function sendDataToServer(coord, reports) {
             // 'send_data': coord_list,
             'coordinate_list': coord_list,
             'reports': reports,
+            'stats': stats,
             'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
         },
         'error': function(xhr, status, error){
@@ -396,7 +399,11 @@ function sendDataToServer(coord, reports) {
             alert(message);
         },
         'success': function(data, status, xhr){
-            // alert('URL DATA: '+data);
+            // var message = JSON.parse(data);
+            // var message = data['message'];
+            
+            // alert('sendDataToServer: '+data);
+            
             var obj_status = status;
             sendGetToServer();
         },
@@ -450,13 +457,13 @@ function deleteFile(ds) {
         url: '/customer/delete',
         type: 'GET',
         'async': true,
-        'dataType': 'text',
+        'dataType': 'json',
         data: {
             'delete_file': ds,
             'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
         },
         'error': function(xhr, status, error){
-            alert('error: '+error);
+            // alert('error: '+error);
             var message = 'An unexpected error occurred. Try later.';
             alert(message);
         },
@@ -465,7 +472,9 @@ function deleteFile(ds) {
             // alert('deleteTMPFile status: '+status);
             // /media/temp_files/result.csv
             var obj_status = status;
-            getTmpCSV(data);
+            var delete_file = data['delete_file'];
+            var stat = data['static'];
+            getTmpCSV(delete_file, stat);
         },
     });
 }
@@ -482,7 +491,7 @@ function sendDataAttrStatToServer(obj) {
         attr_list.push($(this).val())
     });
     
-    $('#statictics_list input:checkbox:checked').each(function(){
+    $('#statictics_list input:radio:checked').each(function(){
         // alert($(this).val());
         stat_list.push($(this).val())
     });
