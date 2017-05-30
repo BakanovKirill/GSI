@@ -1484,6 +1484,15 @@ def customer_section(request):
             except CustomerPolygons.DoesNotExist:
                 data = 'There is no such polygon.'
                 
+        if 'polygon' in data_get_ajax:
+            # for ip in cip:
+            #     remove_file_png(ip.png_path)
+            #
+            # CustomerInfoPanel.objects.filter(user=request.user).delete()
+            
+            polygon = data_get_ajax.get('polygon', '')
+            data = os.path.join(absolute_kml_url, polygon)
+                
         if 'tab_active' in data_get_ajax:
             tab_active = data_get_ajax.get('tab_active', '')
             request.session['tab_active'] = tab_active
@@ -1973,16 +1982,7 @@ def customer_delete_file(request):
         data = ''
         data_get_ajax = request.GET
         
-        print 'DELETES FILE data_get_ajax AJAX ============================= ', data_get_ajax
-        
-        if 'polygon' in data_get_ajax:
-            # for ip in cip:
-            #     remove_file_png(ip.png_path)
-            #
-            # CustomerInfoPanel.objects.filter(user=request.user).delete()
-            
-            polygon = data_get_ajax.get('polygon', '')
-            data = os.path.join(absolute_kml_url, polygon)
+        # print 'DELETES FILE data_get_ajax AJAX ============================= ', data_get_ajax
         
         if data_get_ajax.get('delete_file'):
             # time.sleep(5)
