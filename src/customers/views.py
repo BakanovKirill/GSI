@@ -2018,7 +2018,7 @@ def customer_delete_file(request):
                 time.sleep(5)
                 
             while not os.path.exists(count_items_path):
-                time.sleep(5)
+                time.sleep(15)
             
             while counts != count_files:
                 try:
@@ -2054,10 +2054,7 @@ def customer_delete_file(request):
             for l in f_db:
                 line = l.split(',')
                 
-                print '******************** LINE ========================================= ', line
-                
                 ####################### write log file
-                customer_delete_f.write('LINE: "{0}"\n'.format(line))
                 customer_delete_f.write('LINE: "{0}"\n'.format(line))
                 ####################### write log file
                 
