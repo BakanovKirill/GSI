@@ -1846,12 +1846,15 @@ def customer_section_php(request):
     customer = request.user
     customer_tmp_file = str(customer) + '_result.csv'
     customer_tmp_for_db = str(customer) + '_db.csv'
+    result_ajax_file = str(customer) + '_ajax.csv'
     php_file = '{0}_php_tmp.txt'.format(customer)
     file_path_php = os.path.join(KML_PATH, php_file)
     tmp_file_path = os.path.join(TMP_PATH, customer_tmp_file)
     tmp_db_file_path = os.path.join(TMP_PATH, customer_tmp_for_db)
+    ajax_file_path = os.path.join(TMP_PATH, result_ajax_file)
     result_f_name = 'src/media/temp_files/{0}_result.csv'.format(customer)
     result_for_db = 'src/media/temp_files/{0}_db.csv'.format(customer)
+    
     
     ####################### write log file
     log_file = '/home/gsi/LOGS/delete_file.log'
@@ -1906,6 +1909,7 @@ def customer_section_php(request):
             try:
                 os.remove(tmp_file_path)
                 os.remove(tmp_db_file_path)
+                os.remove(ajax_file_path)
                 
                 # print 'remove FILE: "{0}"'.format(tmp_file_path)
                 # print 'remove FILE: "{0}"'.format(tmp_db_file_path)
@@ -1934,13 +1938,17 @@ def customer_section_php(request):
             # print 'latlist =========================== ', latlist
             # print 'lonlist =========================== ', lonlist
     
-    ####################### END write log file
-    log_delete_file.close()
-    #######################
+    
     
     
     # print 'file_tif_path =========================== ', file_tif_path
-    # print 'files_tif =========================== ', files_tif
+    print 'files_tif =========================== ', files_tif
+    
+    
+    ####################### END write log file
+    log_delete_file.write('FILES TIF: {0}'.format(files_tif))
+    log_delete_file.close()
+    #######################
     
             
     data = {
@@ -1986,6 +1994,32 @@ def customer_delete_file(request):
         
         if data_get_ajax.get('delete_file'):
             # time.sleep(5)
+            while not os.path.exists(db_file_path):
+                # print 'WHILE DELETE FILES ========================================= '
+                time.sleep(10)
+                # print 'FILE {0}: {1} ==================================='.format(db_file_path, os.path.exists(db_file_path))
+                # print 'FILE {0}: {1} ==================================='.format(tmp_file_path, os.path.exists(tmp_file_path))
+                ####################### write log file
+                # customer_delete_f.write('********************** NO DB FILE === \n')
+                ####################### write log file
+                
+            while not os.path.exists(tmp_file_path):
+                # print 'WHILE DELETE FILES ========================================= '
+                time.sleep(10)
+                # print 'FILE {0}: {1} ==================================='.format(db_file_path, os.path.exists(db_file_path))
+                # print 'FILE {0}: {1} ==================================='.format(tmp_file_path, os.path.exists(tmp_file_path))
+                ####################### write log file
+                # customer_delete_f.write('********************** NO TMP FILE === \n')
+                ####################### write log file
+                # pass
+            
+            ####################### write log file
+            customer_delete_f.write('***EXISTS db_file_path: {0} \n'.format(os.path.exists(db_file_path)))
+            customer_delete_f.write('***EXISTS tmp_file_path: {0} \n'.format(os.path.exists(tmp_file_path)))
+            ####################### write log file
+            print '****************** EXISTS db_file_path ========================================= ', os.path.exists(db_file_path)
+            print '****************** EXISTS tmp_file_path ========================================= ', os.path.exists(tmp_file_path)
+            
             customer_ajax_file = open(ajax_file_path, 'w+')
             data_set_id = data_get_ajax.get('delete_file')
             data_set = DataSet.objects.get(id=data_set_id)
@@ -1993,25 +2027,21 @@ def customer_delete_file(request):
             data_ajax = ''
             data_ajax_total = ''
             
-            while not os.path.exists(db_file_path) and not os.path.exists(tmp_file_path):
-                # print 'WHILE DELETE FILES ========================================= '
-                time.sleep(15)
-                # print 'FILE {0}: {1} ==================================='.format(db_file_path, os.path.exists(db_file_path))
-                # print 'FILE {0}: {1} ==================================='.format(tmp_file_path, os.path.exists(tmp_file_path))
-                ####################### write log file
-                customer_delete_f.write('********************** NO tmp db FILE === \n')
-                ####################### write log file
-                # pass
-            
-            print '****************** EXISTS db_file_path ========================================= ', os.path.exists(db_file_path)
-            print '****************** EXISTS tmp_file_path ========================================= ', os.path.exists(tmp_file_path)
-            
             f_db = open(db_file_path)
+            
+            ####################### write log file
+            customer_delete_f.write('LEN FILE: "{0}"\n'.format(len(f_db)))
+            ####################### write log file
             
             for l in f_db:
                 line = l.split(',')
                 
                 print '******************** LINE ========================================= ', line
+                
+                ####################### write log file
+                customer_delete_f.write('LINE LEN: "{0}"\n'.format(line))
+                customer_delete_f.write('LINE: "{0}"\n'.format(line))
+                ####################### write log file
                 
                 shd_id = line[0]
                 shelf_data = ShelfData.objects.get(id=shd_id)
@@ -2033,7 +2063,8 @@ def customer_delete_file(request):
             data_ajax = data_ajax.replace('\n', '_')
             data_ajax_total += data_ajax[0:-1]
             customer_ajax_file.write(data_ajax_total)
-            # customer_ajax_file.write(data_ajax[0:-1])
+            
+            # time.sleep(10)
             f_db.close()
             customer_ajax_file.close()
             

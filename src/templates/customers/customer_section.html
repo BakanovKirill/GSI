@@ -605,7 +605,7 @@
 			}
 			
 			function getTmpCSV(file_path, stat) {
-				// alert('getTmpCSV: '+file_path);
+				alert('getTmpCSV: '+file_path);
 				httpRequest = new XMLHttpRequest();
 				httpRequest.open("GET", file_path, true);
 				httpRequest.onreadystatechange = OnRequestStateChange;
@@ -660,7 +660,6 @@
 				coord = [];
 				var list_data = data_polygon.split('_');
 				count_pol = list_data.length;
-				
 				
 				// alert('list_data: '+list_data);
 				// alert('list_data 0: '+list_data[0]);

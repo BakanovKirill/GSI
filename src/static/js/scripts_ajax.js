@@ -474,7 +474,8 @@ function deleteFile(ds) {
             var obj_status = status;
             var delete_file = data['delete_file'];
             var stat = data['static'];
-            getTmpCSV(delete_file, stat);
+            setTimeout(getTmpCSV, 3000, delete_file, stat);
+            // getTmpCSV(delete_file, stat);
         },
     });
 }
