@@ -1983,7 +1983,7 @@ def customer_delete_file(request):
     ####################### write log file
     log_file = '/home/gsi/LOGS/customer_delete_file.log'
     customer_delete_f = open(log_file, 'w+')
-    customer_delete_f.write('DB FILE: "{0}"'.format(os.path.exists(db_file_path)))
+    customer_delete_f.write('DB FILE: "{0}"\n'.format(os.path.exists(db_file_path)))
     #######################
     
     if request.is_ajax() and request.method == "GET":
@@ -2027,7 +2027,12 @@ def customer_delete_file(request):
             data_ajax = ''
             data_ajax_total = ''
             
-            f_db = open(db_file_path)
+            try:
+                f_db = open(db_file_path)
+            except Exception, e:
+                ####################### write log file
+                customer_delete_f.write('ERROR OPEN FILE: "{0}"\n'.format(e))
+                ####################### write log file
             
             ####################### write log file
             customer_delete_f.write('LEN FILE: "{0}"\n'.format(len(f_db)))
