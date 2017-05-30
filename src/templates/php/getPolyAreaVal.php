@@ -14,7 +14,7 @@ $f_shelfdata = explode(",", $shelf_data);
 $resultFname1 = '{{ result_for_db }}';
 $resultFile1 = fopen($resultFname1, "w");
 
-for ($x=0; $x<$count_files; $x++) {
+for ($x = 0; $x < $count_files; $x++) {
     $msg = $geo_tiff->getPolyAreaVal($latlist, $lonlist, $f_tiffs[$x]);
     fwrite($resultFile1, $f_shelfdata[$x] . ",");
     fwrite($resultFile1, $f_tiffs[$x] . ",");

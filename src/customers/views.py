@@ -1921,7 +1921,7 @@ def customer_section_php(request):
             except Exception, e:
                 print 'except REMOVE FILE =========================== ', e
                 ####################### write log file
-                log_delete_file.write('ERROR remove FILE: "{0}"'.format(e))
+                log_delete_file.write('ERROR remove FILE: "{0}"\n'.format(e))
                 ####################### write log file
                 pass
             
@@ -1946,7 +1946,7 @@ def customer_section_php(request):
     
     
     ####################### END write log file
-    log_delete_file.write('FILES TIF: {0}'.format(files_tif))
+    log_delete_file.write('FILES TIF: {0}\n'.format(files_tif))
     log_delete_file.close()
     #######################
     
@@ -1983,7 +1983,7 @@ def customer_delete_file(request):
     ####################### write log file
     log_file = '/home/gsi/LOGS/customer_delete_file.log'
     customer_delete_f = open(log_file, 'w+')
-    customer_delete_f.write('DB FILE: "{0}"\n'.format(os.path.exists(db_file_path)))
+    customer_delete_f.write('DB FILE: {0}\n'.format(os.path.exists(db_file_path)))
     #######################
     
     if request.is_ajax() and request.method == "GET":
@@ -1993,7 +1993,7 @@ def customer_delete_file(request):
         # print 'DELETES FILE data_get_ajax AJAX ============================= ', data_get_ajax
         
         if data_get_ajax.get('delete_file'):
-            # time.sleep(5)
+            time.sleep(10)
             while not os.path.exists(db_file_path):
                 # print 'WHILE DELETE FILES ========================================= '
                 time.sleep(10)
@@ -2017,8 +2017,8 @@ def customer_delete_file(request):
             customer_delete_f.write('***EXISTS db_file_path: {0} \n'.format(os.path.exists(db_file_path)))
             customer_delete_f.write('***EXISTS tmp_file_path: {0} \n'.format(os.path.exists(tmp_file_path)))
             ####################### write log file
-            print '****************** EXISTS db_file_path ========================================= ', os.path.exists(db_file_path)
-            print '****************** EXISTS tmp_file_path ========================================= ', os.path.exists(tmp_file_path)
+            # print '****************** EXISTS db_file_path ========================================= ', os.path.exists(db_file_path)
+            # print '****************** EXISTS tmp_file_path ========================================= ', os.path.exists(tmp_file_path)
             
             customer_ajax_file = open(ajax_file_path, 'w+')
             data_set_id = data_get_ajax.get('delete_file')
@@ -2034,17 +2034,12 @@ def customer_delete_file(request):
                 customer_delete_f.write('ERROR OPEN FILE: "{0}"\n'.format(e))
                 ####################### write log file
             
-            ####################### write log file
-            customer_delete_f.write('LEN FILE: "{0}"\n'.format(len(f_db)))
-            ####################### write log file
-            
             for l in f_db:
                 line = l.split(',')
                 
                 print '******************** LINE ========================================= ', line
                 
                 ####################### write log file
-                customer_delete_f.write('LINE LEN: "{0}"\n'.format(line))
                 customer_delete_f.write('LINE: "{0}"\n'.format(line))
                 ####################### write log file
                 
@@ -2076,6 +2071,7 @@ def customer_delete_file(request):
             # print 'data_ajax ====================================== ', data_ajax
             
             ####################### write log file
+            customer_delete_f.write('1 DATA AJAX EXISTS: "{0}"\n'.format(os.path.exists(ajax_file_path)))
             customer_delete_f.write('DATA AJAX END: "{0}"\n'.format(data_ajax))
             ####################### write log file
                 
@@ -2098,6 +2094,7 @@ def customer_delete_file(request):
     }
     
     ####################### END write log file
+    customer_delete_f.write('1 DATA AJAX EXISTS: "{0}"\n'.format(os.path.exists(ajax_file_path)))
     customer_delete_f.close()
     #######################
 
