@@ -1847,13 +1847,18 @@ def customer_section_php(request):
     customer_tmp_file = str(customer) + '_result.csv'
     customer_tmp_for_db = str(customer) + '_db.csv'
     result_ajax_file = str(customer) + '_ajax.csv'
+    count_items_file = str(customer) + '_count_items.csv'
+    
     php_file = '{0}_php_tmp.txt'.format(customer)
     file_path_php = os.path.join(KML_PATH, php_file)
     tmp_file_path = os.path.join(TMP_PATH, customer_tmp_file)
     tmp_db_file_path = os.path.join(TMP_PATH, customer_tmp_for_db)
     ajax_file_path = os.path.join(TMP_PATH, result_ajax_file)
+    count_items_path = os.path.join(TMP_PATH, count_items_file)
+    
     result_f_name = 'src/media/temp_files/{0}_result.csv'.format(customer)
     result_for_db = 'src/media/temp_files/{0}_db.csv'.format(customer)
+    result_count_items = 'src/media/temp_files/{0}_count_items.csv'.format(customer)
     
     
     ####################### write log file
@@ -1890,6 +1895,7 @@ def customer_section_php(request):
             #                 user=request.user,
             #                 data_set=data_set)
             
+            count_files = 0
             for attr in attributes_reports:
                 name_1 = attr.shelfdata.root_filename
                 name_2 = data_set.results_directory.split('/')[0]
@@ -1897,9 +1903,11 @@ def customer_section_php(request):
                 # files_tif += tiff_path + attr.statisctic + '/mean_ConditionalMean_' + name_1 + '.' + name_2 + '.tif,'
                 files_tif += '{0}/{1}_{2}.{3}.tif,'.format(tiff_path, attr.statisctic, name_1, name_2)
                 sh_data += '{0},'.format(attr.shelfdata.id)
+                count_files += 1
             
             files_tif = files_tif[0:-1]
             sh_data = sh_data[0:-1]
+            request.session['count_files'] = count_files
             
             # print 'dirs_list ============================= ', dirs_list
             # print 'sh_data ============================= ', sh_data
@@ -1910,6 +1918,7 @@ def customer_section_php(request):
                 os.remove(tmp_file_path)
                 os.remove(tmp_db_file_path)
                 os.remove(ajax_file_path)
+                os.remove(count_items_path)
                 
                 # print 'remove FILE: "{0}"'.format(tmp_file_path)
                 # print 'remove FILE: "{0}"'.format(tmp_db_file_path)
@@ -1946,7 +1955,10 @@ def customer_section_php(request):
     
     
     ####################### END write log file
+    log_delete_file.write('LEN FILES TIF: {0}\n'.format(len(files_tif)))
     log_delete_file.write('FILES TIF: {0}\n'.format(files_tif))
+    log_delete_file.write('COUNT FILES: {0}\n'.format(count_files))
+    log_delete_file.write('COUNT FILE PATH: {0}\n'.format(result_count_items))
     log_delete_file.close()
     #######################
     
@@ -1960,6 +1972,7 @@ def customer_section_php(request):
         'lonlist': lonlist,
         'result_f_name': result_f_name,
         'result_for_db': result_for_db,
+        'result_count_items': result_count_items,
     }
 
     return data
@@ -1972,13 +1985,17 @@ def customer_section_php(request):
 def customer_delete_file(request):
     title = ''
     customer = request.user
+    count_files = int(request.session['count_files'])
+    counts = 0
     result_f_name = str(customer) + '_result.csv'
     result_for_db = str(customer) + '_db.csv'
     result_ajax_file = str(customer) + '_ajax.csv'
+    count_items_file = str(customer) + '_count_items.csv'
     
     tmp_file_path = os.path.join(TMP_PATH, result_f_name)
     db_file_path = os.path.join(TMP_PATH, result_for_db)
     ajax_file_path = os.path.join(TMP_PATH, result_ajax_file)
+    count_items_path = os.path.join(TMP_PATH, count_items_file)
     
     ####################### write log file
     log_file = '/home/gsi/LOGS/customer_delete_file.log'
@@ -1993,25 +2010,30 @@ def customer_delete_file(request):
         # print 'DELETES FILE data_get_ajax AJAX ============================= ', data_get_ajax
         
         if data_get_ajax.get('delete_file'):
-            time.sleep(10)
+            # time.sleep(10)
             while not os.path.exists(db_file_path):
-                # print 'WHILE DELETE FILES ========================================= '
-                time.sleep(30)
-                # print 'FILE {0}: {1} ==================================='.format(db_file_path, os.path.exists(db_file_path))
-                # print 'FILE {0}: {1} ==================================='.format(tmp_file_path, os.path.exists(tmp_file_path))
-                ####################### write log file
-                # customer_delete_f.write('********************** NO DB FILE === \n')
-                ####################### write log file
-                
+                time.sleep(5)
+            
             while not os.path.exists(tmp_file_path):
-                # print 'WHILE DELETE FILES ========================================= '
-                time.sleep(30)
-                # print 'FILE {0}: {1} ==================================='.format(db_file_path, os.path.exists(db_file_path))
-                # print 'FILE {0}: {1} ==================================='.format(tmp_file_path, os.path.exists(tmp_file_path))
-                ####################### write log file
-                # customer_delete_f.write('********************** NO TMP FILE === \n')
-                ####################### write log file
-                # pass
+                time.sleep(5)
+                
+            while not os.path.exists(count_items_path):
+                time.sleep(5)
+            
+            while counts != count_files:
+                try:
+                    counts_file = open(count_items_path).readlines()
+                    counts = int(counts_file[0])
+                except Exception, e:
+                    ####################### write log file
+                    customer_delete_f.write('ERROR COUNTS === {0}\n'.format(e))
+                    ####################### write log file
+                    
+            ####################### write log file
+            customer_delete_f.write('COUNT SESSION === {0}\n'.format(count_files))
+            customer_delete_f.write('COUNT FILES === {0}\n'.format(counts))
+            ####################### write log file
+                
             
             ####################### write log file
             customer_delete_f.write('***EXISTS db_file_path: {0} \n'.format(os.path.exists(db_file_path)))
@@ -2027,12 +2049,7 @@ def customer_delete_file(request):
             data_ajax = ''
             data_ajax_total = ''
             
-            try:
-                f_db = open(db_file_path)
-            except Exception, e:
-                ####################### write log file
-                customer_delete_f.write('ERROR OPEN FILE: "{0}"\n'.format(e))
-                ####################### write log file
+            f_db = open(db_file_path)
             
             for l in f_db:
                 line = l.split(',')
@@ -2040,6 +2057,7 @@ def customer_delete_file(request):
                 print '******************** LINE ========================================= ', line
                 
                 ####################### write log file
+                customer_delete_f.write('LINE: "{0}"\n'.format(line))
                 customer_delete_f.write('LINE: "{0}"\n'.format(line))
                 ####################### write log file
                 

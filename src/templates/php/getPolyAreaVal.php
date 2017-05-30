@@ -5,6 +5,7 @@ $fileName = '{{ file_tif_path }}';
 $files_tif = '{{ files_tif }}';
 $f_tiffs = explode(",", $files_tif);
 $count_files = count($f_tiffs);
+$count = 0;
 
 $geo_tiff = new MMGeoTIFFReader("/");
 
@@ -14,14 +15,22 @@ $f_shelfdata = explode(",", $shelf_data);
 $resultFname1 = '{{ result_for_db }}';
 $resultFile1 = fopen($resultFname1, "w");
 
+$result_count_items = '{{ result_count_items }}';
+$result_count_items = fopen($result_count_items, "w");
+
 for ($x = 0; $x < $count_files; $x++) {
     $msg = $geo_tiff->getPolyAreaVal($latlist, $lonlist, $f_tiffs[$x]);
     fwrite($resultFile1, $f_shelfdata[$x] . ",");
     fwrite($resultFile1, $f_tiffs[$x] . ",");
     fwrite($resultFile1, $msg . "\n");
+    $count = $x + 1;
+    
 };
 
 fclose($resultFile1);
+
+fwrite($result_count_items, $count);
+fclose($result_count_items);
 
 $res = $geo_tiff->getPolyAreaVal($latlist, $lonlist, $fileName);
 
