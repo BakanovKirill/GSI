@@ -1248,13 +1248,22 @@ def customer_section(request):
 
     # Get the Statistics list
     dirs_list = getResultDirectory(data_set, shelf_data_all)
+    
+    cip_is_show = CustomerInfoPanel.objects.filter(
+                                user=customer,
+                                is_show=True)
+    if not cip_is_show:
+        new_cip = createCustomerInfoPanel(
+                        customer, data_set, dirs_list[0], 'mean_ConditionalMean',
+                        absolute_png_url, True, order=0
+                    )
         
     # get AJAX POST for KML files
     if request.is_ajax() and request.method == "POST":
         data_post_ajax = request.POST
         data = ''
         
-        print '!!!!!!!!!!!!!!!!! data_post_ajax ===================== ', data_post_ajax
+        # print '!!!!!!!!!!!!!!!!! data_post_ajax ===================== ', data_post_ajax
         # print '!!!!!!!!!!!!!!!!! data_post_ajax LIST ===================== ', data_post_ajax.lists()
         # print '!!!!!!!!!!!!!!!!! coordinate_list[0][] ===================== ', 'coordinate_list[0][]' in data_post_ajax
         # print '!!!!!!!!!!!!!!!!! BUTTON ===================== ', 'button' in data_post_ajax
@@ -1784,10 +1793,15 @@ def customer_section(request):
     except Exception:
         pass
     
+    customer_info_panel_show = CustomerInfoPanel.objects.filter(
+                                user=customer,
+                                is_show=True)
     if customer_info_panel_show:
         show_dataset_cip = customer_info_panel_show[0].data_set.name
         show_image_cip = customer_info_panel_show[0].attribute_name
         show_statistic_cip = customer_info_panel_show[0].statisctic
+    elif not customer_info_panel_show and data_set:
+        show_dataset_cip = data_set
     
         # print 'show_dataset_cip ===================================== ', show_dataset_cip
         # print 'show_image_cip ===================================== ', show_image_cip

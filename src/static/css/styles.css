@@ -1262,7 +1262,7 @@ hr {
 
 .tab-resize {
     /*overflow-y: auto !important;*/
-    height: 350px;
+    height: 120px;
     /*padding: 5px;*/
     resize: vertical;
     overflow-y: auto;
