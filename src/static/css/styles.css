@@ -707,6 +707,7 @@ li.active-main-menu, li.active-main-menu a:hover, li.li-menu > a:hover, .title:h
 
 /* user profile */
 .user-profile {
+    z-index: 1000;
     left: 20%;
     top: 7px;
 }
