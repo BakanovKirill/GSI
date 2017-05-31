@@ -1896,6 +1896,7 @@ def customer_section_php(request):
             #                 data_set=data_set)
             
             count_files = 0
+            
             for attr in attributes_reports:
                 name_1 = attr.shelfdata.root_filename
                 name_2 = data_set.results_directory.split('/')[0]
@@ -1909,6 +1910,7 @@ def customer_section_php(request):
             sh_data = sh_data[0:-1]
             request.session['count_files'] = count_files
             
+            print '!!!! COUNTE FILES ============================= ', count_files
             # print 'dirs_list ============================= ', dirs_list
             # print 'sh_data ============================= ', sh_data
             # print 'files_tif ============================= ', files_tif
@@ -1992,7 +1994,7 @@ def customer_delete_file(request):
     result_ajax_file = str(customer) + '_ajax.csv'
     count_items_file = str(customer) + '_count_items.csv'
     
-    tmp_file_path = os.path.join(TMP_PATH, result_f_name)
+    result_file_path = os.path.join(TMP_PATH, result_f_name)
     db_file_path = os.path.join(TMP_PATH, result_for_db)
     ajax_file_path = os.path.join(TMP_PATH, result_ajax_file)
     count_items_path = os.path.join(TMP_PATH, count_items_file)
@@ -2011,20 +2013,21 @@ def customer_delete_file(request):
         
         if data_get_ajax.get('delete_file'):
             # time.sleep(10)
+            while not os.path.exists(result_file_path):
+                time.sleep(15)
+                
             while not os.path.exists(db_file_path):
-                time.sleep(5)
-            
-            while not os.path.exists(tmp_file_path):
-                time.sleep(5)
+                time.sleep(10)
                 
             while not os.path.exists(count_items_path):
-                time.sleep(15)
+                time.sleep(10)
             
             while counts != count_files:
                 try:
                     counts_file = open(count_items_path).readlines()
                     counts = int(counts_file[0])
                 except Exception, e:
+                    time.sleep(10)
                     ####################### write log file
                     customer_delete_f.write('ERROR COUNTS === {0}\n'.format(e))
                     ####################### write log file
@@ -2032,15 +2035,11 @@ def customer_delete_file(request):
             ####################### write log file
             customer_delete_f.write('COUNT SESSION === {0}\n'.format(count_files))
             customer_delete_f.write('COUNT FILES === {0}\n'.format(counts))
-            ####################### write log file
-                
-            
-            ####################### write log file
             customer_delete_f.write('***EXISTS db_file_path: {0} \n'.format(os.path.exists(db_file_path)))
-            customer_delete_f.write('***EXISTS tmp_file_path: {0} \n'.format(os.path.exists(tmp_file_path)))
+            customer_delete_f.write('***EXISTS result_file_path: {0} \n'.format(os.path.exists(result_file_path)))
             ####################### write log file
             # print '****************** EXISTS db_file_path ========================================= ', os.path.exists(db_file_path)
-            # print '****************** EXISTS tmp_file_path ========================================= ', os.path.exists(tmp_file_path)
+            # print '****************** EXISTS result_file_path ========================================= ', os.path.exists(result_file_path)
             
             customer_ajax_file = open(ajax_file_path, 'w+')
             data_set_id = data_get_ajax.get('delete_file')
@@ -2049,7 +2048,13 @@ def customer_delete_file(request):
             data_ajax = ''
             data_ajax_total = ''
             
-            f_db = open(db_file_path)
+            db_file = False
+            while not db_file:
+                try:
+                    f_db = open(db_file_path)
+                    db_file = True
+                except Exception:
+                    time.sleep(5)
             
             for l in f_db:
                 line = l.split(',')
@@ -2072,7 +2077,7 @@ def customer_delete_file(request):
                                 format(shelf_data.attribute_name, line[3], shelf_data.units)
                 
                 ####################### write log file
-                customer_delete_f.write('data_ajax: "{0}"\n'.format(data_ajax))
+                # customer_delete_f.write('data_ajax: "{0}"\n'.format(data_ajax))
                 ####################### write log file
                 
             data_ajax = data_ajax.replace('\n', '_')
@@ -2082,6 +2087,10 @@ def customer_delete_file(request):
             # time.sleep(10)
             f_db.close()
             customer_ajax_file.close()
+            
+            # while not os.path.exists(ajax_file_path):
+            #     time.sleep(5)
+            #     customer_ajax_file.close()
             
             # print 'data_ajax ====================================== ', data_ajax
             

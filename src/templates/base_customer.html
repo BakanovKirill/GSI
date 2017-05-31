@@ -44,64 +44,67 @@
         {% if user.is_authenticated %}
             <div class="row main">
                 <div class="col-md-12 center">
-                    <!-- Start Top Menu -->
-                    <div class="row">
-                        <div class="col-md-12 center">
-                            <nav class="navbar navbar-static-top main-menu-customer navbar-main-menu">
-                                <div class="container-fluid">
-                                    <!-- Show DataSets in the InfoPanel -->
-                                    <!-- <div class="navbar-brand white"><b class="purple">Dataset: </b><span id="show_info_dataset"></span></div> -->
-                                    {% if show_dataset_cip %}
-                                        <div class="navbar-brand white" id="ds_show"><b class="purple">Dataset: </b><span></span>{{ show_dataset_cip }}</div>
-                                    {% else %}
-                                        <div class="navbar-brand white"><b class="purple">Dataset: </b>None</div>
-                                    {% endif %}
-                                    <!-- End Show DataSets in the InfoPanel -->
-                                    
-                                    <!-- Show Attribute in the InfoPanel -->
-                                    {% if show_image_cip %}
-                                        <div class="navbar-brand white"><b class="purple left-30">Image: </b><span id="img_show">{{ show_image_cip }}</span></div>
-                                    {% else %}
-                                        <div class="navbar-brand white"><b class="purple left-30">Image: </b>None</div>
-                                    {% endif %}
-                                    <!-- End Show DataSets in the InfoPanel -->
-                                    
-                                    <!-- Show Statistic in the InfoPanel -->
-                                    {% if show_statistic_cip %}
-                                        <div class="navbar-brand white"><b class="purple left-30">Values: </b><span id="stat_show">{{ show_statistic_cip }}</span></div>
-                                    {% else %}
-                                        <div class="navbar-brand white"><b class="purple left-30">Values: </b>None</div>
-                                    {% endif %}
-                                    <!-- End Show DataSets in the InfoPanel -->
-
-                                    <div class="collapse navbar-collapse">
-                                        <div class="dropdown user-profile" id="dropUser">
-                                            <button class="dropbtn-user dropdown-toggle white" id="titleUser" onclick="showSubMenuUser()">
-                                                <b class="purple">User:</b> {{ request.user }}
-                                                <i class="fa fa-caret-right icon-visible-user"></i>
-                                                <i class="fa fa-caret-down icon-visible-user" style="display: none"></i>
-                                            </button>
-                                            <div class="dropdown-content-user dropdown-user left li-menu" id="dropdownUser">
-                                                <a href="{% url 'index' %}" >
-                                                    <img class="right-indent-10" src="{% static 'img/profile-18.png' %}">
-                                                    Profile
-                                                </a>
-                                                <a href="{% url 'index' %}">
-                                                    <img class="right-indent-10" src="{% static 'img/settings.png' %}">
-                                                    Settings
-                                                </a>
-                                                <a href="{% url 'auth_logout' %}">
-                                                    <img class="right-indent-10" src="{% static 'img/logout.png' %}">
-                                                    Log Out
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </nav>
+                    <!-- Start Top Menu 1 -->
+                    <div class="row top-menu">
+                        <!-- Show DataSets in the InfoPanel -->
+                        <div class="col-md-3 left">
+                            {% if show_dataset_cip %}
+                                <div class="navbar-brand white margin-left-20" id="ds_show"><b class="purple">Dataset: </b><span>{{ show_dataset_cip }}</span></div>
+                            {% else %}
+                                <div class="navbar-brand white margin-left-20"><b class="purple">Dataset: </b>None</div>
+                            {% endif %}
                         </div>
+                        <!-- End Show DataSets in the InfoPanel -->
+                        
+                        <!-- Show Attribute in the InfoPanel -->
+                        <div class="col-md-3 left">
+                            {% if show_image_cip %}
+                                <div class="navbar-brand white"><b class="purple left-30">Image: </b><span id="img_show">{{ show_image_cip }}</span></div>
+                            {% else %}
+                                <div class="navbar-brand white"><b class="purple left-30">Image: </b>None</div>
+                            {% endif %}
+                        </div>
+                        <!-- End Show Attribute in the InfoPanel -->
+                        
+                        <!-- Show Statistic in the InfoPanel -->
+                        <div class="col-md-3 left">
+                            {% if show_statistic_cip %}
+                                <div class="navbar-brand white"><b class="purple left-30">Values: </b><span id="stat_show">{{ show_statistic_cip }}</span></div>
+                            {% else %}
+                                <div class="navbar-brand white"><b class="purple left-30">Values: </b>None</div>
+                            {% endif %}
+                        </div>
+                        <!-- End Show Statistic in the InfoPanel -->
+                        
+                        <!-- Show User DropDown Menu in the InfoPanel -->
+                        <div class="col-md-3 left">
+                            <div class="dropdown user-profile" id="dropUser">
+                                <button class="dropbtn-user dropdown-toggle white" id="titleUser" onclick="showSubMenuUser()">
+                                    <b class="purple">User:</b> {{ request.user }}
+                                    <i class="fa fa-caret-right icon-visible-user"></i>
+                                    <i class="fa fa-caret-down icon-visible-user" style="display: none"></i>
+                                </button>
+                                <div class="dropdown-content-user dropdown-user left li-menu" id="dropdownUser">
+                                    <a href="{% url 'index' %}" >
+                                        <img class="right-indent-10" src="{% static 'img/profile-18.png' %}">
+                                        Profile
+                                    </a>
+                                    <a href="{% url 'index' %}">
+                                        <img class="right-indent-10" src="{% static 'img/settings.png' %}">
+                                        Settings
+                                    </a>
+                                    <a href="{% url 'auth_logout' %}">
+                                        <img class="right-indent-10" src="{% static 'img/logout.png' %}">
+                                        Log Out
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Show User DropDown Menu in the InfoPanel -->
                     </div>
-                    <!-- End Top Menu -->
+                    <!-- End Top Menu 1 -->
+                    
+                    
 
                     <div class="row">
                         {% if error_message %}
@@ -131,12 +134,12 @@
                                         </ul>
 
                                         <!-- Tabs Content -->
-                                        <div class="tab-content tab-overflow snap-bottom-parent">
+                                        <div class="tab-content tab-resize snap-parent">
                                             <form name="select_all_none" method="post">
                                                 <!-- VIEW -->
                                                 <div role="tabpanel" {% if tab_active == 'view' %}class="tab-pane fade in active"{% else %}class="tab-pane fade"{% endif %} id="view">
                                                     <div class="col-md-5 left">
-                                                        <div>
+                                                        <div class="snap-top-child-left">
                                                             <button type="button" class="btn btn-link" name="select-all-view" onclick="selectAllCheck(this.form.attribute_viewlist, 1);">
                                                                 Select All
                                                             </button>
@@ -144,83 +147,53 @@
                                                     </div>
                                                     
                                                     <div class="col-md-5 right">
-                                                        <div class="right">
+                                                        <div class="snap-top-child-right">
                                                             <button type="button" class="btn btn-link" name="select-none-view" onclick="selectAllCheck(this.form.attribute_viewlist, 0);">
                                                                 Select None
                                                             </button>
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="col-md-12 left margin-top-15 margin-left-4" id="view_attribute">
+                                                    <div class="col-md-12 left margin-top-15" id="view_attribute">
                                                         {% for dl in dirs_list%}
                                                             <label class="normal"><input class="margin-bottom-6" name="attribute_viewlist" type="checkbox" value="view_{{ dl.id }}" {% if dl.attribute_name in attribute_list_infopanel %}checked="checked"{% endif %}> {{ dl.attribute_name }}</label><br>
                                                         {% endfor %}
                                                     </div>
                                                     
-                                                    <div class="col-md-6 left margin-top-15">
+                                                    <div class="col-md-6 left margin-top-15 snap-bottom-child-left">
                                                         <button type="button" name="next-view" id="next" class="btn btn-success" value="next" onclick="sendDataAttrStatToServer(this);">
                                                             Next
                                                         </button>
                                                     </div>
                                                     
-                                                    <div class="col-md-6 left margin-top-15">
+                                                    <div class="col-md-6 left margin-top-15 snap-bottom-child-right">
                                                         <button type="button" name="previous-view" id="previous" class="btn btn-success" value="previous"  onclick="sendDataAttrStatToServer(this);">
                                                             Previous
                                                         </button>
                                                     </div>
                                                 </div>
                                                 
-                                                <!-- REPORT
+                                                <!-- REPORT -->
                                                 <div role="tabpanel" {% if tab_active == 'report' %}class="tab-pane fade in active"{% else %}class="tab-pane fade"{% endif %} id="report">
-                                                    <div class="row">
-                                                        <div class="col-md-5 left">
-                                                            <div>
-                                                                <button type="button" class="btn btn-link" name="select-all-report" onclick="selectAllCheck(this.form.viewreport, 1)">
-                                                                    Select All
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                        
-                                                        <div class="col-md-7 right">
-                                                            <div class="right">
-                                                                <button type="button" class="btn btn-link" name="select-none-report" onclick="selectAllCheck(this.form.viewreport, 0)">
-                                                                    Select None
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="row">
-                                                        <div class="col-md-12 left margin-top-15 layer margin-left-4" id="report_attribute">
-                                                            {% for dl in dirs_list%}
-                                                                <label class="normal"><input class="margin-bottom-6" name="viewreport" type="checkbox" value="report_{{ dl.id }}" {% if dl.attribute_name in show_report_ap %}checked="checked"{% endif %}> {{ dl.attribute_name }}</label><br>
-                                                            {% endfor %}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                END REPORT -->
-                                                
-                                                <!-- REPORT 2 -->
-                                                <div role="tabpanel" {% if tab_active == 'report' %}class="tab-pane fade in active"{% else %}class="tab-pane fade"{% endif %} id="report">
-                                                    <div class="col-md-5 left">
+                                                    <div class="col-md-5 left snap-top-child-left">
                                                         <button type="button" class="btn btn-link" name="select-all-report" onclick="selectAllCheck(this.form.viewreport, 1)">
                                                             Select All
                                                         </button>
                                                     </div>
                                                     
-                                                    <div class="col-md-7 right">
+                                                    <div class="col-md-5 snap-top-child-right">
                                                         <button type="button" class="btn btn-link" name="select-none-report" onclick="selectAllCheck(this.form.viewreport, 0)">
                                                             Select None
                                                         </button>
                                                     </div>
                                                     
-                                                    <div class="col-md-12 left margin-top-15 margin-left-4" id="report_attribute">
+                                                    <div class="col-md-12 left margin-top-15" id="report_attribute">
                                                         {% for dl in dirs_list%}
                                                             <label class="normal"><input class="margin-bottom-6" name="viewreport" type="checkbox" value="report_{{ dl.id }}" {% if dl.attribute_name in show_report_ap %}checked="checked"{% endif %}> {{ dl.attribute_name }}</label><br>
                                                         {% endfor %}
                                                     </div>
                                                 </div>
-                                                <!-- END REPORT 2 -->
+                                                <!-- END REPORT -->
                                                 
                                                 <!-- AOI -->
                                                 <div role="tabpanel" {% if tab_active == 'aoi' %}class="tab-pane fade margin-bottom-6 in active"{% else %}class="tab-pane fade margin-bottom-6"{% endif %} id="aoi">
@@ -249,8 +222,8 @@
                                             <label class="control-label margin-top-25">Statistics:</label>
                                             
                                             <div class="row">
-                                                <div class="col-md-12 left tab-report-min-height margin-left-4" id="statictics_list">
-                                                    <label class="normal"><input class="margin-top-20" name="statistics_viewlist" type="radio" value="mean_ConditionalMax"  {% if 'mean_ConditionalMax' in statisctics_infopanel %}checked="checked"{% endif %}> mean_ConditionalMax</label><br>
+                                                <div class="col-md-12 left" id="statictics_list">
+                                                    <label class="normal"><input class="margin-top-10" name="statistics_viewlist" type="radio" value="mean_ConditionalMax"  {% if 'mean_ConditionalMax' in statisctics_infopanel %}checked="checked"{% endif %}> mean_ConditionalMax</label><br>
                                                     
                                                     <label class="normal"><input class="margin-top-10" name="statistics_viewlist" type="radio" value="mean_ConditionalMean" {% if 'mean_ConditionalMean' in statisctics_infopanel %}checked="checked"{% endif %}> mean_ConditionalMean</label><br>
                                                     

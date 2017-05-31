@@ -307,16 +307,20 @@ th {
     margin-left: 6px !important;
 }
 
-.margin-left-12 {
-    margin-left: 20px !important;
-}
-
 .margin-left-10 {
     margin-left: 10px !important;
 }
 
 .margin-left-15 {
     margin-left: 15px !important;
+}
+
+.margin-left-20 {
+    margin-left: 20px !important;
+}
+
+.margin-left-50 {
+    margin-left: 50px !important;
 }
 
 .margin-right-10 {
@@ -1217,7 +1221,7 @@ hr {
 .tab-content {
     border-bottom: 1px !important;
     margin-top: -1px !important;
-    padding: 8px !important;
+    padding: 0px !important;
     border: 1px solid #283890 !important;
     /*border-top: 1px !important;*/
     /*border-style: solid;*/
@@ -1255,13 +1259,15 @@ hr {
 }
 
 
-.tab-overflow {
-    overflow-y: auto !important;
-    height: 250px;
+.tab-resize {
+    /*overflow-y: auto !important;*/
+    height: 350px;
     /*padding: 5px;*/
+    resize: vertical;
+    overflow-y: auto;
 }
 
-.snap-bottom-parent {
+.snap-parent {
     position: relative !important;
     padding-bottom: 5px !important;
 }
@@ -1275,9 +1281,40 @@ hr {
 .snap-bottom-child-right {
     position: absolute !important;
     bottom: 5px !important;
-    /*float: right;*/
     text-align: center !important;
-    /*align: right;*/
-    margin-left: 80px !important;
-    /*flo*/
+    margin-left: 60px !important;
+}
+
+.snap-top-child-left {
+    display: inline-block;
+    /*position: fixed;*/
+    margin-left: -10px;
+    /*margin-bottom: 15px !important;*/
+}
+
+.snap-top-child-right {
+    display: inline-block;
+    /*position: fixed;*/
+    /*margin-left: 20px;*/
+    /*margin-bottom: 15px !important;*/
+}
+
+.tab-in-content-overflow {
+    overflow-y: visible !important;
+    height: 30px !important;
+}
+
+div.scroll {
+    background-color: #00FFFF;
+    width: 100px;
+    height: 100px;
+    overflow: scroll;
+}
+
+/* main menu */
+.top-menu {
+    border-color: #283890;
+    background-image: none !important;
+    background-color: #66afe9 !important;
+    margin: 0px -50px 40px -50px;
 }
