@@ -1262,10 +1262,10 @@ hr {
 
 .tab-resize {
     /*overflow-y: auto !important;*/
-    height: 120px;
+    height: 350px;
     /*padding: 5px;*/
     resize: vertical;
-    overflow-y: auto;
+    overflow-y: hidden;
 }
 
 .snap-parent {
@@ -1300,16 +1300,14 @@ hr {
     /*margin-bottom: 15px !important;*/
 }
 
-.tab-in-content-overflow {
-    overflow-y: visible !important;
-    height: 30px !important;
+.snap-bottom-left, .snap-bottom-right {
+    bottom: 5px;
 }
 
-div.scroll {
-    background-color: #00FFFF;
-    width: 100px;
-    height: 100px;
-    overflow: scroll;
+.tab-in-content-overflow {
+    overflow-y: visible !important;
+    overflow-x: hidden;
+    height: 30px !important;
 }
 
 /* main menu */
@@ -1318,4 +1316,21 @@ div.scroll {
     background-image: none !important;
     background-color: #66afe9 !important;
     margin: 0px -50px 40px -50px;
+}
+
+.view-list, .report-list, .aoi-list {
+    resize: vertical;
+    overflow-y: auto;
+}
+
+.view-list {
+    height: 250px;
+}
+
+.report-list {
+    height: 270px;
+}
+
+.aoi-list {
+    height: 345px;
 }

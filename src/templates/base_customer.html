@@ -154,20 +154,20 @@
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="col-md-12 left margin-top-15" id="view_attribute">
+                                                    <div class="col-md-12 left margin-top-15 view-list" id="view_attribute">
                                                         {% for dl in dirs_list%}
                                                             <label class="normal"><input class="margin-bottom-6" name="attribute_viewlist" type="checkbox" value="view_{{ dl.id }}" {% if dl.attribute_name in attribute_list_infopanel %}checked="checked"{% endif %}> {{ dl.attribute_name }}</label><br>
                                                         {% endfor %}
                                                     </div>
                                                     
-                                                    <div class="col-md-6 left margin-top-15 snap-bottom-child-left">
-                                                        <button type="button" name="next-view" id="next" class="btn btn-success" value="next" onclick="sendDataAttrStatToServer(this);">
+                                                    <div class="col-md-6 left margin-top-15 snap-bottom-left">
+                                                        <button type="button" name="next-view" id="next" class="btn btn-success btn-block" value="next" onclick="sendDataAttrStatToServer(this);">
                                                             Next
                                                         </button>
                                                     </div>
                                                     
-                                                    <div class="col-md-6 left margin-top-15 snap-bottom-child-right">
-                                                        <button type="button" name="previous-view" id="previous" class="btn btn-success" value="previous"  onclick="sendDataAttrStatToServer(this);">
+                                                    <div class="col-md-6 left margin-top-15 snap-bottom-right">
+                                                        <button type="button" name="previous-view" id="previous" class="btn btn-success btn-block margin-right-10" value="previous"  onclick="sendDataAttrStatToServer(this);">
                                                             Previous
                                                         </button>
                                                     </div>
@@ -187,7 +187,7 @@
                                                         </button>
                                                     </div>
                                                     
-                                                    <div class="col-md-12 left margin-top-15" id="report_attribute">
+                                                    <div class="col-md-12 left margin-top-15 report-list" id="report_attribute">
                                                         {% for dl in dirs_list%}
                                                             <label class="normal"><input class="margin-bottom-6" name="viewreport" type="checkbox" value="report_{{ dl.id }}" {% if dl.attribute_name in show_report_ap %}checked="checked"{% endif %}> {{ dl.attribute_name }}</label><br>
                                                         {% endfor %}
@@ -196,7 +196,7 @@
                                                 <!-- END REPORT -->
                                                 
                                                 <!-- AOI -->
-                                                <div role="tabpanel" {% if tab_active == 'aoi' %}class="tab-pane fade margin-bottom-6 in active"{% else %}class="tab-pane fade margin-bottom-6"{% endif %} id="aoi">
+                                                <div role="tabpanel" {% if tab_active == 'aoi' %}class="tab-pane fade margin-bottom-6 in active aoi-list"{% else %}class="tab-pane fade margin-bottom-6 aoi-list"{% endif %} id="aoi">
                                                     {% for polygon in polygons%}
                                                         <div class="col-md-8 margin-top-8 margin-bottom-4 margin-left-4">
                                                             <input type="radio" name="polygon" value="{{ polygon.kml_name }}" onchange="setPolygon(this);"><a href="{{ absolute_kml_url }}/{{ polygon.kml_name }}"> {{ polygon.name }}</a>
