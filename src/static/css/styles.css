@@ -1301,7 +1301,7 @@ hr {
 }
 
 .snap-bottom-left, .snap-bottom-right {
-    bottom: 5px;
+    bottom: 15px;
 }
 
 .tab-in-content-overflow {
