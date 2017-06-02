@@ -184,6 +184,12 @@ class AttributesReport(models.Model):
                     on_delete=models.CASCADE
                 )
     statisctic = models.CharField(max_length=250, blank=True, null=True)
+
+
+class CountFiles(models.Model):
+    user = models.ForeignKey(User, verbose_name='User', blank=True, null=True)
+    count = models.PositiveIntegerField(default=0)
+    
     
     
 # class TempFiles(models.Model):

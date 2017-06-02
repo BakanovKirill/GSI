@@ -12,27 +12,36 @@ $geo_tiff = new MMGeoTIFFReader("/");
 $shelf_data = '{{ shelf_data }}';
 $f_shelfdata = explode(",", $shelf_data);
 
-$resultFname1 = '{{ result_for_db }}';
-$resultFile1 = fopen($resultFname1, "w");
 
-$result_count_items = '{{ result_count_items }}';
-$result_count_items = fopen($result_count_items, "w");
+$result_db = "";
 
 for ($x = 0; $x < $count_files; $x++) {
     $msg = $geo_tiff->getPolyAreaVal($latlist, $lonlist, $f_tiffs[$x]);
-    fwrite($resultFile1, $f_shelfdata[$x] . ",");
-    fwrite($resultFile1, $f_tiffs[$x] . ",");
-    fwrite($resultFile1, $msg . "\n");
+    $result_db .= $f_shelfdata[$x] . ",";
+    $result_db .= $f_tiffs[$x] . ",";
+    $result_db .= $msg . "\n";
+    //fwrite($resultFile1, $f_shelfdata[$x] . ",");
+    //fwrite($resultFile1, $f_tiffs[$x] . ",");
+    //fwrite($resultFile1, $msg . "\n");
     $count = $x + 1;
-    
 };
 
+$resultFname1 = '{{ result_for_db }}';
+$resultFile1 = fopen($resultFname1, "w");
+fwrite($resultFile1, $result_db);
 fclose($resultFile1);
 
+$result_count = '{{ result_count_items }}';
+$result_count_items = fopen($result_count, "w");
 fwrite($result_count_items, $count);
 fclose($result_count_items);
 
 $res = $geo_tiff->getPolyAreaVal($latlist, $lonlist, $fileName);
+
+$resultFname = "{{ result_f_name }}";
+$resultFile = fopen($resultFname, "w");
+fwrite($resultFile, $res . "\n");
+fclose($resultFile);
 
 //echo 'FRESULT: ' . $res . ";\n";
 
@@ -288,7 +297,7 @@ class MMGeoTIFFReader {
         $statsFname = "src/media/temp_files/tempstats.csv";
 
         //$resultFname = "src/media/temp_files/result.csv";
-        $resultFname = "{{ result_f_name }}";
+        //$resultFname = "{{ result_f_name }}";
         
         // need to convert comma-separated text strings into arrays for each of latlist and lonlist
         // finding min/max lat/lon as we go...
@@ -470,16 +479,13 @@ class MMGeoTIFFReader {
         $msg = intval($area*10)/10 . ',' . intval($polysum*10)/10 . ',' . intval($polysum*$area) ;
         echo $msg . ";\n" ;
         
-        $resultFile = fopen($resultFname, "w");
-        fwrite($resultFile, $msg . "\n");
-        
         fwrite($statsFile, "Attr1," . $msg . "\n");
         fwrite($meanFile, "Attr1," . $polycount . ',' . intval($polysum)."\n");
                
         fclose($csvFile);
         fclose($meanFile);
         fclose($statsFile);
-        fclose($resultFile);
+        
         
         return $msg;
     }

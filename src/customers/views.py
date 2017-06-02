@@ -25,7 +25,7 @@ from django.contrib.auth.models import User
 
 from customers.models import (Category, ShelfData, DataSet, CustomerAccess,
                                 CustomerInfoPanel, CustomerPolygons, DataPolygons,
-                                AttributesReport)
+                                AttributesReport, CountFiles)
 from customers.customers_forms import (CategoryForm, ShelfDataForm, DataSetForm,
                                         CustomerAccessForm, CustomerPolygonsForm)
 from customers.customers_update_create import (category_update_create, shelf_data_update_create,
@@ -1922,7 +1922,9 @@ def customer_section_php(request):
             
             files_tif = files_tif[0:-1]
             sh_data = sh_data[0:-1]
-            request.session['count_files'] = count_files
+            
+            cf = CountFiles.objects.update_or_create(user=customer, count=count_files)
+            # request.session['count_files'] = count_files
             
             print '!!!! COUNTE FILES ============================= ', count_files
             # print 'dirs_list ============================= ', dirs_list
@@ -2001,8 +2003,9 @@ def customer_section_php(request):
 def customer_delete_file(request):
     title = ''
     customer = request.user
-    count_files = int(request.session['count_files'])
     counts = 0
+    count_files = CountFiles.objects.filter(user=customer)
+    
     result_f_name = str(customer) + '_result.csv'
     result_for_db = str(customer) + '_db.csv'
     result_ajax_file = str(customer) + '_ajax.csv'
@@ -2019,27 +2022,35 @@ def customer_delete_file(request):
     customer_delete_f.write('DB FILE: {0}\n'.format(os.path.exists(db_file_path)))
     #######################
     
+    
     if request.is_ajax() and request.method == "GET":
         data = ''
         data_get_ajax = request.GET
         
         # print 'DELETES FILE data_get_ajax AJAX ============================= ', data_get_ajax
+        # print 'DELETES FILE COUNT ============================= ', count_files
         
         if data_get_ajax.get('delete_file'):
             # time.sleep(10)
-            while not os.path.exists(result_file_path):
-                time.sleep(15)
-                
             while not os.path.exists(db_file_path):
+                time.sleep(10)
+                
+            while not os.path.exists(result_file_path):
                 time.sleep(10)
                 
             while not os.path.exists(count_items_path):
                 time.sleep(10)
+                
+            ####################### write log file
+            customer_delete_f.write('***EXISTS db_file_path: {0} \n'.format(os.path.exists(db_file_path)))
+            customer_delete_f.write('***EXISTS result_file_path: {0} \n'.format(os.path.exists(result_file_path)))
+            ####################### write log file
             
-            while counts != count_files:
+            while counts != count_files[0].count:
                 try:
-                    counts_file = open(count_items_path).readlines()
-                    counts = int(counts_file[0])
+                    cf = open(count_items_path).readlines()
+                    counts = int(cf[0])
+                    time.sleep(10)
                 except Exception, e:
                     time.sleep(10)
                     ####################### write log file
@@ -2047,13 +2058,13 @@ def customer_delete_file(request):
                     ####################### write log file
                     
             ####################### write log file
-            customer_delete_f.write('COUNT SESSION === {0}\n'.format(count_files))
+            customer_delete_f.write('COUNT DB === {0}\n'.format(count_files[0].count))
             customer_delete_f.write('COUNT FILES === {0}\n'.format(counts))
-            customer_delete_f.write('***EXISTS db_file_path: {0} \n'.format(os.path.exists(db_file_path)))
-            customer_delete_f.write('***EXISTS result_file_path: {0} \n'.format(os.path.exists(result_file_path)))
             ####################### write log file
             # print '****************** EXISTS db_file_path ========================================= ', os.path.exists(db_file_path)
             # print '****************** EXISTS result_file_path ========================================= ', os.path.exists(result_file_path)
+            
+            # CountFiles.objects.filter(user=customer).delete()
             
             customer_ajax_file = open(ajax_file_path, 'w+')
             data_set_id = data_get_ajax.get('delete_file')

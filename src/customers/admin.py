@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from customers.models import (Category, ShelfData, DataSet, CustomerAccess,
                             CustomerInfoPanel, CustomerPolygons, DataTerraserver,
-                            DataPolygons, AttributesReport)
+                            DataPolygons, AttributesReport, CountFiles)
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -76,6 +76,10 @@ class AttributesReportAdmin(admin.ModelAdmin):
     list_display = ('user', 'data_set', 'shelfdata', 'statisctic')
     search_fields = ['user', 'data_set', 'shelfdata', 'statisctic']
     list_filter = ('user', 'data_set', 'shelfdata', 'statisctic')
+    
+    CountFiles
+class CountFilesAdmin(admin.ModelAdmin):
+    list_display = ('user','count')
 
 
 admin.site.register(Category, CategoryAdmin)
@@ -87,3 +91,4 @@ admin.site.register(CustomerPolygons, CustomerPolygonsAdmin)
 admin.site.register(DataTerraserver, DataTerraserverAdmin)
 admin.site.register(DataPolygons, DataPolygonsAdmin)
 admin.site.register(AttributesReport, AttributesReportAdmin)
+admin.site.register(CountFiles, CountFilesAdmin)
