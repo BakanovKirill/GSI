@@ -204,10 +204,21 @@ th {
 
 /* Uploads file */
 .upload-file {
-    text-align: center;
+    position: relative;
+    left: 18%;
     width: 50%;
-    padding: 0;
     border-style: none none !important;
+    box-shadow: 0 0 0px rgba(0,0,0,0) !important;
+    /*float: left;*/
+    /*text-align: center !important;*/
+    /*padding: 0;*/
+}
+
+.upload-button {
+    margin: 0px auto;
+  /*margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;*/
 }
 
 /* alert */
@@ -217,7 +228,7 @@ th {
 
 /* placement */
 .center {
-    text-align: center;
+    text-align: center !important;
 }
 
 .right {
@@ -832,14 +843,14 @@ li.active-main-menu, li.active-main-menu a:hover, li.li-menu > a:hover, .title:h
 /* Select styles */
 .form-control {
     background: transparent !important;
-    border: 1px solid #283890 !important;
+    /*border: 1px solid #283890 !important;*/
     border-radius: 0px !important;
     color: #283890 !important;
 }
 
 .form-control:active, .form-control:focus {
     background: transparent !important;
-    border: 1px solid #283890 !important;
+    /*border: 1px solid #283890 !important;*/
     border-radius: 0px !important;
     color: #283890 !important;
     box-shadow: 0 0 10px rgba(0,0,0,0.45);

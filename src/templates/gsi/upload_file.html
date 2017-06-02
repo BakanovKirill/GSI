@@ -9,12 +9,12 @@
 </div>
 
 {% block content %}
-<div class="row">
+<div class="row center">
     <form action="{% url 'upload_file' %}" enctype="multipart/form-data" role="form"
           class="form-horizontal" method="post">
         {% csrf_token %}
         <div class="col-md-12 center">
-            <div class="form-group">
+            <div class="form-group upload-button center">
                 {{ form.test_data }}
                 <p class="help-block font-size-12">
                     For test data upload please use text files
