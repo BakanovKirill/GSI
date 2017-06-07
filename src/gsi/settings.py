@@ -264,6 +264,9 @@ LOGGING = {
     }
 }
 
+# FTP Path
+FTP_PATH = '/lustre/w23/CUSTOMER_FTP_AREA'
+
 # home folder for new cripts
 # /lustre/home/i214/indy0-home/mattgsi/bin
 # /lustre/home/i214/indy0-lustre/mattgsi/scripts/runs/R_1321/

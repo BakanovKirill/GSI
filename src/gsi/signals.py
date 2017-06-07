@@ -18,6 +18,13 @@ from rest_framework.authtoken.models import Token
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
+        
+        
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_ftp_user_folder(sender, instance=None, created=False, **kwargs):
+    if created:
+        path_ftp_user = os.path.join(settings.FTP_PATH, instance.username)
+        os.makedirs(path_ftp_user, 0755);
 
 
 @receiver(post_save, sender=Tile)

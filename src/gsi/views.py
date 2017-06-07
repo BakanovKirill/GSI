@@ -30,25 +30,26 @@ from cards.card_update_create import (qrf_update_create, rfscore_update_create, 
                                     year_filter_update_create, collate_update_create, preproc_update_create,
                                     mergecsv_update_create, rftrain_update_create, randomforest_update_create,
                                     calcstats_update_create)
-from core.utils import (make_run, get_dir_root_static_path, get_path_folder_run, slash_remove_from_path,
-                        get_files_dirs, create_sub_dir, get_copy_name, get_files, update_list_dirs)
+from core.utils import (make_run, get_dir_root_static_path, get_path_folder_run,
+                        slash_remove_from_path, get_files_dirs, create_sub_dir,
+                        get_copy_name, get_files, update_list_dirs, handle_uploaded_file)
 from core.get_post import get_post
 from core.copy_card import create_copycard
 from core.paginations import paginations
 from log.logger import get_logs
 
 
-def handle_uploaded_file(f, path):
-    """**Upload file on the server.**
-
-    :Arguments:
-        * *f*: File name
-        * *path*: Path where to save the file
-    """
-
-    with open(path, 'a') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
+# def handle_uploaded_file(f, path):
+#     """**Upload file on the server.**
+#
+#     :Arguments:
+#         * *f*: File name
+#         * *path*: Path where to save the file
+#     """
+#
+#     with open(path, 'a') as destination:
+#         for chunk in f.chunks():
+#             destination.write(chunk)
 
 
 def update_qrf_rftrain_card(cs, cs_cards):

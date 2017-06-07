@@ -41,14 +41,16 @@ function onOffSubMenuUploadTestData() {
 }
 
 function onOffSubMenuUser() {
-  var menuElem = document.getElementById('dropUser');
-  var titleElem = document.getElementById('titleUser');
-
-  titleElem.onclick = function() {
-    menuElem.classList.toggle('open');
-    $(".icon-visible-user").toggle();
-    document.getElementById("dropdownUser").classList.toggle("show");
-  };
+    var menuElem = document.getElementById('dropUser');
+    var titleElem = document.getElementById('titleUser');
+    
+    if (titleElem) {
+        titleElem.onclick = function() {
+            menuElem.classList.toggle('open');
+            $(".icon-visible-user").toggle();
+            document.getElementById("dropdownUser").classList.toggle("show");
+        };
+    }
 }
 
 function showSubMenuUser() {
@@ -320,6 +322,18 @@ function setStatic() {
     });
 }
 
+function get_file_name() {
+    // alert('GET FILE NAME');
+    // var file_name = document.getElementById('upload_file_customer').files.name;
+    // alert('FILE 1: '+file_name);
+    
+    $('input[type="file"]').on('change', function (event, files, label) {
+        var file_name = document.getElementById('upload_file_customer').files[0].name;
+        var span_obj = document.getElementById('upload_file').innerHTML = file_name;
+        // alert('FILE 2: '+file_name);
+    });
+}
+
 
 $(document).ready(function(){
     //selectAll();
@@ -341,6 +355,7 @@ $(document).ready(function(){
     setImageInfoPanel();
     resizeScreen();
     setStatic();
+    get_file_name();
     // tabsCustomerMenu();
     // showCheckboxes();
 });

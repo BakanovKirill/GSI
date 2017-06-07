@@ -16,6 +16,19 @@ from gsi.settings import EXECUTE_FE_COMMAND, PROCESS_NUM, STATIC_DIR, FE_SUBMIT,
 from core.multithreaded import MultiprocessingCards
 
 
+def handle_uploaded_file(f, path):
+    """**Upload file on the server.**
+
+    :Arguments:
+        * *f*: File name
+        * *path*: Path where to save the file
+    """
+
+    with open(path, 'a') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
+
 def generate_RSA(bits=2048):
     '''
     Generate an RSA keypair with an exponent of 65537 in PEM format

@@ -116,6 +116,10 @@ a.a-select, .btn-link {
     outline: none;
 }
 
+.no-hover, .no-hover:hover {
+    color: #fff !important;
+}
+
 .btn-link:hover, .btn-link:focus {
     color: #283890 !important;
     border-bottom: 0px !important;

@@ -22,6 +22,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
+from django.utils.datastructures import MultiValueDictKeyError
 
 from customers.models import (Category, ShelfData, DataSet, CustomerAccess,
                                 CustomerInfoPanel, CustomerPolygons, DataPolygons,
@@ -32,10 +33,11 @@ from customers.customers_update_create import (category_update_create, shelf_dat
                                                 data_set_update_create, customer_access_update_create)
 from core.get_post import get_post
 from core.paginations import paginations
+from core.utils import handle_uploaded_file, get_files_dirs
 from gsi.settings import (BASE_DIR, RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM,
                         POLYGONS_DIRECTORY, MEDIA_ROOT, TMP_PATH, DAFAULT_LAT,
                         DAFAULT_LON, PNG_DIRECTORY, PNG_PATH, PROJECTS_PATH,
-                        KML_DIRECTORY, KML_PATH, ATTRIBUTES_NAME)
+                        KML_DIRECTORY, KML_PATH, ATTRIBUTES_NAME, FTP_PATH)
 
 
 # categorys list
@@ -1176,9 +1178,12 @@ def customer_section(request):
     # customer_info_panel = CustomerInfoPanel.objects.filter(user=customer)
     customer_polygons = CustomerPolygons.objects.filter(user=customer)
     polygons_path = os.path.join(MEDIA_ROOT, 'kml')
-    customer_access = CustomerAccess.objects.get(user=customer)
-    customer_access_ds = CustomerAccess.data_set.through.objects.filter(
-                    customeraccess_id=customer_access.id).order_by('dataset_id')
+    customer_access = CustomerAccess.objects.filter(user=customer)
+    customer_access_ds = None
+    
+    if customer_access:
+        customer_access_ds = CustomerAccess.data_set.through.objects.filter(
+                        customeraccess_id=customer_access[0].id).order_by('dataset_id')
                     
     url_name = 'customer_section'
     data_sets = []
@@ -1511,7 +1516,25 @@ def customer_section(request):
     
     if request.method == "POST":
         data_post = request.POST
-        # print 'POST =========================== ', data_post
+        
+        if 'load_button' in data_post:
+            path_ftp_user = os.path.join(FTP_PATH, customer.username)
+            
+            if not os.path.exists(path_ftp_user):
+                os.makedirs(path_ftp_user, 0755);
+                
+            try:
+                load_file_name = str(request.FILES['upload_file_customer']).decode('utf-8')
+                load_file_path = os.path.join(path_ftp_user, load_file_name)
+                handle_uploaded_file(request.FILES['upload_file_customer'], load_file_path)
+
+                return HttpResponseRedirect(u'%s?status_message=%s' % (
+                    reverse('files_lister'),
+                    (u'The file "{0}" is loaded'.format(load_file_name))))
+            except MultiValueDictKeyError:
+                return HttpResponseRedirect(u'%s?warning_message=%s' % (
+                    reverse('customer_section'),
+                    (u'Please select a file to upload to the server!')))
     
         if 'save_area' in data_post:
             data_kml = data_post.lists()
@@ -2147,4 +2170,49 @@ def customer_delete_file(request):
     customer_delete_f.close()
     #######################
 
+    return data
+    
+    
+# Lister files
+@login_required
+@render_to('customers/files_lister.html')
+def files_lister(request):
+    customer = request.user
+    path_ftp_user = os.path.join(FTP_PATH, customer.username)
+    files_list = os.listdir(path_ftp_user)
+    
+    # Ajax when deleting objects
+    if request.method == "POST" and request.is_ajax():
+        data_post_ajax = request.POST
+        
+        # print '!!!!!!!!!!! POST ====================== ', data_post_ajax
+
+        if 'cur_run_id' in data_post_ajax:
+            message = u'Are you sure you want to remove this objects:'
+            file_customer = data_post_ajax['cur_run_id']
+            data = '<b>"' + file_customer + '"</b>'
+            data = '{0} {1}?'.format(message, data)
+            
+            return HttpResponse(data)
+        else:
+            data = ''
+            return HttpResponse(data)
+    
+    if request.method == "POST":
+        data_post = request.POST
+        
+        # print '!!!!!!!!!! POST ================== ', data_post
+        
+        if 'delete_button' in data_post:
+            filename_customer = data_post['delete_button']
+            path_filename = os.path.join(path_ftp_user, filename_customer)
+            os.remove(path_filename)
+    
+    dirs, files, info_message = get_files_dirs('', path_ftp_user)
+    
+    data = {
+        'files': files,
+        # 'dirs': dirs,
+    }
+    
     return data

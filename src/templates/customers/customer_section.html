@@ -9,14 +9,14 @@
 
 			<!-- Draw Menu -->
 			<div class="row margin-top-20 ">
-				<div class="col-md-4 left">
+				<div class="col-md-3 left">
 					<button type="button" class="btn btn-default" onclick="appliedMarkers();"><img class="img-draw" id="ap_marker" src="{% static 'img/map-marker-plus.png' %}" alt="hand" title="Applied Markers" class="area-draw"></button>
 					<button type="button" class="btn btn-default" onclick="drawPoligon();"><img class="img-draw" src="{% static 'img/vector-polygon.png' %}" alt="vector polygon" title="Draw a Poligon" class="area-draw"></button>
 					<button type="button" class="btn btn-default" onclick="removePoligon();"><img class="img-draw" src="{% static 'img/map-marker-off.png' %}" alt="hand" title="Remove Poligon" class="area-draw"></button>
 					<button type="button" class="btn btn-default" onclick="togglePlygonOverlays();"><img class="img-draw" src="{% static 'img/eye-off.png' %}" alt="hide/show" title="Hide/Show a Poligon" class="area-draw"></button>
 				</div>
 
-				<div class="col-md-4 center">
+				<div class="col-md-3 center">
 					<div class="row">
 						<div class="col-md-12">
 							<span id="slider_value">Visibility: 50%</span>
@@ -27,6 +27,17 @@
 						</div>
 					</div>
 				</div>
+				
+				<div class="col-md-6 left">
+					<label class="btn btn-default btn-file">
+    					Chose File <input type="file" name="upload_file_customer" id="upload_file_customer" style="display: none;">
+					</label>
+					<span id='upload_file'>No file chosen</span>
+					<button type="submit" id="load" name="load_button" value="load" class="btn btn-primary"> Load</button>
+				</div>
+				
+				
+
 			</div>
 			<!-- End Draw Menu -->
 
