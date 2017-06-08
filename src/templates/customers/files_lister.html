@@ -31,6 +31,10 @@
                             <td class="right">{{ file.size }}</td>
                             <td class="right">{{ file.date }}</td>
                             <td class="right">
+                                <a href="{{ file.path }}" class="btn del-btn check-cur-delete" role="button">
+                                    <img src="{% static 'img/download-18.png' %}"/>
+                                </a>
+                                    
                                 <button class="btn del-btn check-cur-delete" type="button" name="del_current_btn" value="{{ file.name }}"  data-toggle="tooltip" data-placement="top" title="Delete">
                                     <img src="{% static 'img/delete-18.png' %}"/>
                                 </button>
@@ -44,6 +48,10 @@
                             Back
                         </a>
                     </div>
+                    
+                    
+                    
+                        
                 </div>
                 
                 <!-- Modal Check Delete Items -->

@@ -2180,6 +2180,7 @@ def files_lister(request):
     customer = request.user
     path_ftp_user = os.path.join(FTP_PATH, customer.username)
     files_list = os.listdir(path_ftp_user)
+    url_path = os.path.join('/media/CUSTOMER_FTP_AREA', customer.username)
     
     # Ajax when deleting objects
     if request.method == "POST" and request.is_ajax():
@@ -2208,7 +2209,7 @@ def files_lister(request):
             path_filename = os.path.join(path_ftp_user, filename_customer)
             os.remove(path_filename)
     
-    dirs, files, info_message = get_files_dirs('', path_ftp_user)
+    dirs, files, info_message = get_files_dirs(url_path, path_ftp_user)
     
     data = {
         'files': files,
