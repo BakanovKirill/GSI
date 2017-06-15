@@ -39,11 +39,43 @@ class ShelfData(models.Model):
         return u"{0}".format(self.attribute_name)
 
 
+LUTFILES = (
+    ('grey', 'Grey'),
+    ('red', 'Red'),
+    ('green', 'Green'),
+    ('yellow', 'Yellow'),
+    ('orange', 'Orange'), )
+
+
 class DataSet(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=150, blank=True, null=True)
     results_directory = models.CharField(max_length=150, blank=True, null=True)
     shelf_data = models.ForeignKey('ShelfData', blank=True, null=True)
+    
+    lutfile = models.CharField(max_length=50, choices=LUTFILES, default='running')
+    
+    # lut_file = models.CharField(
+    #                 max_length=250,
+    #                 blank=True, null=True,
+    #                 verbose_name='LUT file',)
+    max_val = models.PositiveIntegerField(
+                    default=100,
+                    blank=True, null=True,
+                    verbose_name='Maximum Value for colour scaling',)
+    legend = models.CharField(
+                    max_length=250,
+                    blank=True, null=True,
+                    verbose_name='Legend',)
+                    
+                    
+    # set_color_png = models.ForeignKey(
+    #             SetColorPng,
+    #             verbose_name='SetColorPng',
+    #             blank=True, null=True, related_name='set_color_png',
+    #             on_delete=models.CASCADE
+    #         )
+    
 
     def get_root_filename(self):
         if self.shelf_data:
@@ -191,7 +223,17 @@ class CountFiles(models.Model):
     count = models.PositiveIntegerField(default=0)
     
     
+# class LutFile(models.Model):
+#     name = models.CharField(max_length=300, blank=True, null=True)
+#     data_color = models.TextField()
     
-# class TempFiles(models.Model):
-#     name = models.CharField(max_length=250, blank=True, null=True)
-#     create_at = models.DateTimeField(null=True, blank=True)
+    
+# class SetColorPng(models.Model):
+#     name =  = models.CharField(max_length=250, blank=True, null=True)
+#     lut_file = models.CharField(max_length=250, blank=True, null=True)
+#     max_val = models.CharField(max_length=250, blank=True, null=True)
+#     legend = models.CharField(max_length=250, blank=True, null=True)
+#
+#     def __unicode__(self):
+#         return u"{0}".format(self.name)
+    

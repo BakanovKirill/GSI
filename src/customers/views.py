@@ -1172,7 +1172,7 @@ def customer_section(request):
     # PNG_DIRECTORY = 'media/png'
     # PNG_PATH = os.path.join(BASE_DIR, PNG_DIRECTORY)
     # PROJECTS_PATH = '/lustre/w23/mattgsi/satdata/RF/Projects'
-
+    
     customer = request.user
     shelf_data_all = ShelfData.objects.all().order_by('attribute_name')
     # customer_info_panel = CustomerInfoPanel.objects.filter(user=customer)

@@ -78,6 +78,22 @@
             <button type="submit" name="add_override_maping_button" id="add_override_maping_button" class="btn btn-success btn-block">Add override maping</button>
         </div>
     </div>
+    
+    <div class="row margin-top-15">
+        <div class="col-md-2 right">
+            <div class="form-group {% if form.root_filename.errors %}has-error{% endif %}">
+                <label class="control-label font-normal">{{ form.lut_file.label }}</label>
+            </div>
+        </div>
+        <div class="col-md-10">
+            {% if not form.lut_file.errors %}
+                {{ form.lut_file }}
+            {% else %}
+                <span class="field-error">{{ form.lut_file }}</span>
+                <b class="error-form">{{ form.lut_file.errors }}</b>
+            {% endif %}
+        </div>
+    </div>
 
     <div class="row margin-top-15">
         <div class="col-md-2 right">

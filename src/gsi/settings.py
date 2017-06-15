@@ -296,10 +296,14 @@ DAFAULT_LON = -151.147061
 # results_directory
 RESULTS_DIRECTORY = '/lustre/w23/mattgsi/satdata/RF/Projects/'
 POLYGONS_DIRECTORY = '/lustre/w23/mattgsi/satdata/RF/Polygons/kml/'
+
 # tif and png files path and folders
 PNG_DIRECTORY = 'media/png'
 PNG_PATH = os.path.join(BASE_DIR, PNG_DIRECTORY)
 PROJECTS_PATH = '/lustre/w23/mattgsi/satdata/RF/Projects'
+
+# LUT Directory
+LUT_DIRECTORY = '/lustre/w23/mattgsi/satdata/RF/LUTHOME'
 
 # KML files
 KML_DIRECTORY = 'media/kml'

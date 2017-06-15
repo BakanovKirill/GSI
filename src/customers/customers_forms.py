@@ -91,6 +91,14 @@ class DataSetForm(forms.ModelForm):
         required=False,
         help_text='Enter only the project folder. For example: "WagnerB1/Scores_All"',
         label=u'Results Directory')
+        
+    lut_file = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+        }),
+        required=False,
+        label=u'LUT File', )
+            
     root_filename = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'form-control',

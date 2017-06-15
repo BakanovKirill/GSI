@@ -16,9 +16,9 @@ class ShelfDataAdmin(admin.ModelAdmin):
 
 
 class DataSetAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'results_directory', 'get_attribute_name', 'get_root_filename',)
-    search_fields = ['name', 'description', 'get_attribute_name',]
-    list_filter = ('name', 'description', 'shelf_data__attribute_name', 'shelf_data__root_filename',)
+    list_display = ('name', 'description', 'results_directory', 'lutfile', 'max_val', 'legend', 'get_attribute_name', 'get_root_filename',)
+    search_fields = ['name', 'description', 'get_attribute_name', 'lutfile',]
+    list_filter = ('name', 'description', 'shelf_data__attribute_name', 'shelf_data__root_filename', 'lutfile',)
 
     def get_attribute_name(self, obj):
         if obj.shelf_data:
