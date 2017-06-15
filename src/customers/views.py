@@ -260,7 +260,7 @@ def shelf_data(request):
     if request.method == "GET":
         order_by = request.GET.get('order_by', '')
 
-        if order_by in ('category', 'attribute_name', 'root_filename', 'units',):
+        if order_by in ('category', 'attribute_name', 'root_filename', 'units', 'scale'):
             shelf_data = shelf_data.order_by(order_by)
 
             if request.GET.get('reverse', '') == '1':

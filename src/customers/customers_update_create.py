@@ -42,6 +42,7 @@ def shelf_data_update_create(form, item_id=None):
             units=form.cleaned_data["units"],
             description=form.cleaned_data["description"],
             show_totals=form.cleaned_data["show_totals"],
+            scale=form.cleaned_data["scale"],
         )
         shelf_data = ShelfData.objects.get(id=item_id)
     else:
@@ -52,6 +53,7 @@ def shelf_data_update_create(form, item_id=None):
             units=form.cleaned_data["units"],
             description=form.cleaned_data["description"],
             show_totals=form.cleaned_data["show_totals"],
+            scale=form.cleaned_data["scale"],
         )
 
     return shelf_data
@@ -71,6 +73,9 @@ def data_set_update_create(form, item_id=None):
             name=form.cleaned_data["name"],
             description=form.cleaned_data["description"],
             results_directory=form.cleaned_data["results_directory"],
+            lutfile=form.cleaned_data["lutfile"],
+            max_val=form.cleaned_data["max_val"],
+            legend=form.cleaned_data["legend"],
         )
         data_set = DataSet.objects.get(id=item_id)
     else:
@@ -78,6 +83,9 @@ def data_set_update_create(form, item_id=None):
             name=form.cleaned_data["name"],
             description=form.cleaned_data["description"],
             results_directory=form.cleaned_data["results_directory"],
+            lutfile=form.cleaned_data["lutfile"],
+            max_val=form.cleaned_data["max_val"],
+            legend=form.cleaned_data["legend"],
         )
 
     if form.cleaned_data["root_filename"] and form.cleaned_data["attribute_name"]:

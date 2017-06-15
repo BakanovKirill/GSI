@@ -38,6 +38,32 @@
                                     {% endif %}
                                 </a>
                             </th>
+                            
+                            <th>
+                                <a href="{% url 'data_sets' %}?order_by=lutfile{% if order_by == 'lutfile' and reverse != '1' %}&amp;reverse=1{% endif %}">
+                                    LUT Files
+                                    {% if order_by == 'lutfile' and reverse != '1' %}&#9652;
+                                    {% elif order_by == 'lutfile' and reverse == '1' %}&#9662;
+                                    {% endif %}
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{% url 'data_sets' %}?order_by=max_val{% if order_by == 'max_val' and reverse != '1' %}&amp;reverse=1{% endif %}">
+                                    MAX Value
+                                    {% if order_by == 'max_val' and reverse != '1' %}&#9652;
+                                    {% elif order_by == 'max_val' and reverse == '1' %}&#9662;
+                                    {% endif %}
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{% url 'data_sets' %}?order_by=legend{% if order_by == 'legend' and reverse != '1' %}&amp;reverse=1{% endif %}">
+                                    Legend
+                                    {% if order_by == 'legend' and reverse != '1' %}&#9652;
+                                    {% elif order_by == 'legend' and reverse == '1' %}&#9662;
+                                    {% endif %}
+                                </a>
+                            </th>
+                            
                             <th>
                                 <a href="{% url 'data_sets' %}?order_by=shelf_data__attribute_name{% if order_by == 'shelf_data__attribute_name' and reverse != '1' %}&amp;reverse=1{% endif %}">
                                     Attribute Name
@@ -65,6 +91,9 @@
                             <td>{{ ds.name }}</td>
                             <td>{{ ds.description }}</td>
                             <td>{{ ds.results_directory }}</td>
+                            <td>{{ ds.lutfile }}</td>
+                            <td>{{ ds.max_val }}</td>
+                            <td>{{ ds.legend }}</td>
                             <td>{{ ds.get_attribute_name }}</td>
                             <td>{{ ds.get_root_filename }}</td>
                             <td>

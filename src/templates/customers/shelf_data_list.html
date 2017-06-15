@@ -47,6 +47,14 @@
                                 </a>
                             </th>
                             <th>
+                                <a href="{% url 'shelf_data' %}?order_by=scale{% if order_by == 'scale' and reverse != '1' %}&amp;reverse=1{% endif %}">
+                                    Scale
+                                    {% if order_by == 'scale' and reverse != '1' %}&#9652;
+                                    {% elif order_by == 'scale' and reverse == '1' %}&#9662;
+                                    {% endif %}
+                                </a>
+                            </th>
+                            <th>
                                 Description
                             </th>
                             <th>
@@ -64,6 +72,7 @@
                             <td>{{ sd.attribute_name }}</td>
                             <td>{{ sd.root_filename }}</td>
                             <td>{{ sd.units }}</td>
+                            <td>{{ sd.scale }}</td>
                             <td>{{ sd.description }}</td>
                             <td>{{ sd.show_totals }}</td>
                             <td>

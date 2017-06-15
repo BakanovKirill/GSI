@@ -52,12 +52,40 @@
             <label class="control-label font-normal">{{ form.units.label }}</label>
         </div>
     </div>
-    <div class="col-md-10">
+    <div class="col-md-2 left">
         {% if not form.units.errors %}
             {{ form.units }}
         {% else %}
             <span class="field-error">{{ form.units }}</span>
             <b class="error-form">{{ form.units.errors }}</b>
+        {% endif %}
+    </div>
+    
+    <div class="col-md-1 right">
+        <div class="form-group {% if form.scale.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.scale.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-1 left">
+        {% if not form.scale.errors %}
+            {{ form.scale }}
+        {% else %}
+            <span class="field-error">{{ form.scale }}</span>
+            <b class="error-form">{{ form.scale.errors }}</b>
+        {% endif %}
+    </div>
+    
+    <div class="col-md-1 right">
+        <div class="form-group {% if form.show_totals.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.show_totals.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-1 margin-top-6">
+        {% if not form.show_totals.errors %}
+            {{ form.show_totals }}
+        {% else %}
+            <span class="field-error">{{ form.show_totals }}</span>
+            <b class="error-form">{{ form.show_totals.errors }}</b>
         {% endif %}
     </div>
 </div>
@@ -74,22 +102,6 @@
         {% else %}
             <span class="field-error">{{ form.description }}</span>
             <b class="error-form">{{ form.description.errors }}</b>
-        {% endif %}
-    </div>
-</div>
-
-<div class="row margin-top-15 left">
-    <div class="col-md-2 right">
-        <div class="form-group {% if form.show_totals.errors %}has-error{% endif %}">
-            <label class="control-label font-normal">{{ form.show_totals.label }}</label>
-        </div>
-    </div>
-    <div class="col-md-10 margin-top-6">
-        {% if not form.show_totals.errors %}
-            {{ form.show_totals }}
-        {% else %}
-            <span class="field-error">{{ form.show_totals }}</span>
-            <b class="error-form">{{ form.show_totals.errors }}</b>
         {% endif %}
     </div>
 </div>

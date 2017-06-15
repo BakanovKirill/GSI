@@ -31,6 +31,11 @@ class ShelfData(models.Model):
     units = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     show_totals = models.BooleanField(default=True)
+    
+    scale = models.PositiveIntegerField(
+                    default=0,
+                    # blank=True, null=True,
+                    verbose_name='Scale',)
 
     class Meta:
         verbose_name_plural = 'Shelf Data'
@@ -53,7 +58,7 @@ class DataSet(models.Model):
     results_directory = models.CharField(max_length=150, blank=True, null=True)
     shelf_data = models.ForeignKey('ShelfData', blank=True, null=True)
     
-    lutfile = models.CharField(max_length=50, choices=LUTFILES, default='running')
+    lutfile = models.CharField(max_length=50, choices=LUTFILES, default='grey')
     
     # lut_file = models.CharField(
     #                 max_length=250,
@@ -61,7 +66,7 @@ class DataSet(models.Model):
     #                 verbose_name='LUT file',)
     max_val = models.PositiveIntegerField(
                     default=100,
-                    blank=True, null=True,
+                    # blank=True, null=True,
                     verbose_name='Maximum Value for colour scaling',)
     legend = models.CharField(
                     max_length=250,
