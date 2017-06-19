@@ -395,7 +395,7 @@ def shelf_data_edit(request, shelf_data_id):
     """
 
     shelf_data = get_object_or_404(ShelfData, pk=shelf_data_id)
-    title = 'Category Edit "%s"' % (shelf_data.attribute_name)
+    title = 'ShelfData Edit "%s"' % (shelf_data.attribute_name)
     url_form = 'shelf_data_edit'
     template_name = 'customers/_shelf_data_form.html'
     reverse_url = {
