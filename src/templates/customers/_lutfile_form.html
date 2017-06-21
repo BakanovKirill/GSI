@@ -1,0 +1,71 @@
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.name.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form.name.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if not form.name.errors %}
+            {{ form.name }}
+        {% else %}
+            <span class="field-error">{{ form.name }}</span>
+            <b class="error-form">{{ form.name.errors }}</b>
+        {% endif %}
+    </div>
+    
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.filename.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.filename.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if not form.filename.errors %}
+            {{ form.filename }}
+        {% else %}
+            <span class="field-error">{{ form.filename }}</span>
+            <b class="error-form">{{ form.filename.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.max_val.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.max_val.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-2">
+        {% if not form.max_val.errors %}
+            {{ form.max_val }}
+        {% else %}
+            <span class="field-error">{{ form.max_val }}</span>
+            <b class="error-form">{{ form.max_val.errors }}</b>
+        {% endif %}
+    </div>
+    
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.legend.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.legend.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-6">
+        {% if not form.legend.errors %}
+            {{ form.legend }}
+        {% else %}
+            <span class="field-error">{{ form.legend }}</span>
+            <b class="error-form">{{ form.legend.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-50">
+    <div class="col-md-2 col-md-offset-4">
+        <button type="submit" name="cancel_button" class="btn btn-default btn-block">Cancel</button>
+    </div>
+    <div class="col-md-4">
+        <button type="submit" name="save_and_another_button" class="btn btn-primary btn-block">Save and another</button>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" name="save_button" class="btn btn-primary btn-block">Save</button>
+    </div>
+</div>

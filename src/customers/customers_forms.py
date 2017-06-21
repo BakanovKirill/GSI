@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.models import User
 
 from core.validator_gsi import validate_order
-from customers.models import (Category, ShelfData, DataSet,
+from customers.models import (Category, ShelfData, DataSet, LutFiles,
                             CustomerAccess, CustomerPolygons, LUTFILES)
 
 
@@ -68,11 +68,19 @@ class ShelfDataForm(forms.ModelForm):
         required=False,
         label=u'Show Totals',
     )
+    lutfiles = forms.ModelChoiceField(
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+        }),
+        required=False,
+        queryset=LutFiles.objects.all(),
+        empty_label='Select',
+        label=u'LUT File', )
 
     class Meta:
         model = ShelfData
         fields = ['category', 'attribute_name', 'root_filename', 'units',
-                'description', 'show_totals', 'scale']
+                'description', 'show_totals', 'scale', 'lutfiles']
 
 
 class DataSetForm(forms.ModelForm):
@@ -100,31 +108,39 @@ class DataSetForm(forms.ModelForm):
         required=False,
         help_text='Enter only the project folder. For example: "WagnerB1/Scores_All"',
         label=u'Results Directory')
-        
-    lutfile = forms.CharField(
-        widget=forms.Select(
-                attrs={
-                    "class": 'form-control',
-                },
-                choices=LUTFILES
-        ),
-        required=False,
-        label=u'LUT File',
-    )
-    max_val = forms.FloatField(
-        widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '1'}),
-        initial=100,
-        validators=[validate_order],
-        error_messages={'required': 'Must be a positive number'},
-        required=False,
-        label=u'MAX Value',
-    )
-    legend = forms.CharField(
-        widget=forms.TextInput(attrs={
+    shelf_data = forms.ModelChoiceField(
+        widget=forms.Select(attrs={
             'class': 'form-control',
         }),
         required=False,
-        label=u'Legend', )
+        queryset=ShelfData.objects.all(),
+        empty_label='Select',
+        label=u'Shelf Data', )
+        
+    # lutfile = forms.CharField(
+    #     widget=forms.Select(
+    #             attrs={
+    #                 "class": 'form-control',
+    #             },
+    #             choices=LUTFILES
+    #     ),
+    #     required=False,
+    #     label=u'LUT File',
+    # )
+    # max_val = forms.FloatField(
+    #     widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '1'}),
+    #     initial=100,
+    #     validators=[validate_order],
+    #     error_messages={'required': 'Must be a positive number'},
+    #     required=False,
+    #     label=u'MAX Value',
+    # )
+    # legend = forms.CharField(
+    #     widget=forms.TextInput(attrs={
+    #         'class': 'form-control',
+    #     }),
+    #     required=False,
+    #     label=u'Legend', )
             
     root_filename = forms.CharField(
         widget=forms.TextInput(attrs={
@@ -141,8 +157,7 @@ class DataSetForm(forms.ModelForm):
 
     class Meta:
         model = DataSet
-        fields = ['name', 'description', 'results_directory',
-                'lutfile', 'max_val', 'legend']
+        fields = ['name', 'description', 'results_directory', 'shelf_data']
 
 
 class CustomerAccessForm(forms.ModelForm):
@@ -188,3 +203,35 @@ class CustomerPolygonsForm(forms.ModelForm):
     class Meta:
         model = CustomerPolygons
         fields = ['name',]
+        
+        
+class LutFilesForm(forms.ModelForm):
+    """**Form for editing LutFiles.**"""
+
+    def __init__(self, *args, **kwargs):
+        super(LutFilesForm, self).__init__(*args, **kwargs)
+
+    name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'LUT File name'}),
+        # required=False,
+        label=u'Name')
+    filename = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'File name'}),
+        required=False,
+        label=u'FileName')
+    max_val = forms.FloatField(
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '1'}),
+        initial=0,
+        validators=[validate_order],
+        error_messages={'required': 'Must be a positive number'},
+        required=False,
+        label=u'Max value',)
+    legend = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Legend'}),
+        required=False,
+        label=u'Legend')
+    
+
+    class Meta:
+        model = LutFiles
+        fields = ['name', 'filename', 'max_val', 'legend']

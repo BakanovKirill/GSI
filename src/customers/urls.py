@@ -32,6 +32,13 @@ urlpatterns = [
 	url(r'^access/add$', 'customers.views.customer_access_add', name='customer_access_add'),
 	# the url for the customer_access edit
 	url(r'^access/(?P<customer_access_id>\d+)/edit$', 'customers.views.customer_access_edit', name='customer_access_edit'),
+	
+	# the url for the lutfiles list
+	url(r'^lutfiles/show$', 'customers.views.lutfiles', name='lutfiles'),
+	# the url for the customer_access add
+	url(r'^lutfile/add$', 'customers.views.lutfile_add', name='lutfile_add'),
+	# the url for the customer_access edit
+	url(r'^lutfile/(?P<lutfile_id>\d+)/edit$', 'customers.views.lutfile_edit', name='lutfile_edit'),
 
 	# the Customer Section
 	url(r'^section', 'customers.views.customer_section', name='customer_section'),

@@ -54,12 +54,9 @@
                                     {% endif %}
                                 </a>
                             </th>
-                            <th>
-                                Description
-                            </th>
-                            <th>
-                                Show Totals
-                            </th>
+                            <th>LUT Files</th>
+                            <th>Description</th>
+                            <th>Show Totals</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -73,6 +70,7 @@
                             <td>{{ sd.root_filename }}</td>
                             <td>{{ sd.units }}</td>
                             <td>{{ sd.scale }}</td>
+                            <td>{{ sd.lutfiles }}</td>
                             <td>{{ sd.description }}</td>
                             <td>{{ sd.show_totals }}</td>
                             <td>

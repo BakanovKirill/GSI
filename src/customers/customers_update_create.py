@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from gsi.settings import RESULTS_DIRECTORY
-from customers.models import (Category, ShelfData, DataSet, CustomerAccess)
+from customers.models import (Category, ShelfData, DataSet, CustomerAccess, LutFiles)
 
 
 def category_update_create(form, item_id=None):
@@ -43,6 +43,7 @@ def shelf_data_update_create(form, item_id=None):
             description=form.cleaned_data["description"],
             show_totals=form.cleaned_data["show_totals"],
             scale=form.cleaned_data["scale"],
+            lutfiles=form.cleaned_data["lutfiles"],
         )
         shelf_data = ShelfData.objects.get(id=item_id)
     else:
@@ -54,6 +55,7 @@ def shelf_data_update_create(form, item_id=None):
             description=form.cleaned_data["description"],
             show_totals=form.cleaned_data["show_totals"],
             scale=form.cleaned_data["scale"],
+            lutfiles=form.cleaned_data["lutfiles"],
         )
 
     return shelf_data
@@ -73,9 +75,9 @@ def data_set_update_create(form, item_id=None):
             name=form.cleaned_data["name"],
             description=form.cleaned_data["description"],
             results_directory=form.cleaned_data["results_directory"],
-            lutfile=form.cleaned_data["lutfile"],
-            max_val=form.cleaned_data["max_val"],
-            legend=form.cleaned_data["legend"],
+            # lutfile=form.cleaned_data["lutfile"],
+            # max_val=form.cleaned_data["max_val"],
+            # legend=form.cleaned_data["legend"],
         )
         data_set = DataSet.objects.get(id=item_id)
     else:
@@ -83,9 +85,9 @@ def data_set_update_create(form, item_id=None):
             name=form.cleaned_data["name"],
             description=form.cleaned_data["description"],
             results_directory=form.cleaned_data["results_directory"],
-            lutfile=form.cleaned_data["lutfile"],
-            max_val=form.cleaned_data["max_val"],
-            legend=form.cleaned_data["legend"],
+            # lutfile=form.cleaned_data["lutfile"],
+            # max_val=form.cleaned_data["max_val"],
+            # legend=form.cleaned_data["legend"],
         )
 
     if form.cleaned_data["root_filename"] and form.cleaned_data["attribute_name"]:
@@ -139,3 +141,31 @@ def customer_access_update_create(form, multiple=None, item_id=None, delete=Fals
                 )
 
     return result
+    
+    
+def lutfile_update_create(form, item_id=None):
+    """**Updated LutFiles model.**
+
+    :Arguments:
+        * *form*: Object of the form
+        * *item_id*: ID of the object. Set when editing (the item_id=None when you create a object)
+
+    """
+
+    if item_id:
+        LutFiles.objects.filter(id=item_id).update(
+            name=form.cleaned_data["name"],
+            filename=form.cleaned_data["filename"],
+            max_val=form.cleaned_data["max_val"],
+            legend=form.cleaned_data["legend"],
+        )
+        lut_file = LutFiles.objects.get(id=item_id)
+    else:
+        lut_file = LutFiles.objects.create(
+            name=form.cleaned_data["name"],
+            filename=form.cleaned_data["filename"],
+            max_val=form.cleaned_data["max_val"],
+            legend=form.cleaned_data["legend"],
+        )
+
+    return lut_file

@@ -26,11 +26,13 @@ from django.utils.datastructures import MultiValueDictKeyError
 
 from customers.models import (Category, ShelfData, DataSet, CustomerAccess,
                                 CustomerInfoPanel, CustomerPolygons, DataPolygons,
-                                AttributesReport, CountFiles)
+                                AttributesReport, CountFiles, LutFiles)
 from customers.customers_forms import (CategoryForm, ShelfDataForm, DataSetForm,
-                                        CustomerAccessForm, CustomerPolygonsForm)
+                                        CustomerAccessForm, CustomerPolygonsForm,
+                                        LutFilesForm)
 from customers.customers_update_create import (category_update_create, shelf_data_update_create,
-                                                data_set_update_create, customer_access_update_create)
+                                                data_set_update_create, customer_access_update_create,
+                                                lutfile_update_create)
 from core.get_post import get_post
 from core.paginations import paginations
 from core.utils import handle_uploaded_file, get_files_dirs
@@ -784,7 +786,7 @@ def customer_access(request):
         if request.POST.get('customer_access_select'):
             for customer_access_id in request.POST.getlist('customer_access_select'):
                 cur_customer_access = get_object_or_404(CustomerAccess, pk=customer_access_id)
-                customer_access_name += '"{0}", '.format(cur_customer_access)
+                customer_access_name += '"{0}" '.format(cur_customer_access)
                 cur_customer_access.delete()
 
             return HttpResponseRedirect(u'%s?status_message=%s' % (
@@ -915,6 +917,204 @@ def customer_access_edit(request, customer_access_id):
         'chosen_data_set': chosen_data_set,
         'url_name': url_name,
         'but_name': but_name,
+    }
+
+    return data
+    
+    
+# LUT Files list
+@user_passes_test(lambda u: u.is_superuser)
+@render_to('customers/lutfiles_list.html')
+def lutfiles(request):
+    """**View the LUT Files.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+    """
+
+    title = 'LUT Files'
+    url_name = 'lutfiles'
+    but_name = 'info_panel'
+
+    lutfiles = LutFiles.objects.all()
+    lutfiles_name = ''
+
+    # Sorted by customer name
+    if request.method == "GET":
+        order_by = request.GET.get('order_by', '')
+
+        if order_by in ('name', 'filename', 'max_val', ):
+            lutfiles = lutfiles.order_by(order_by)
+
+            if request.GET.get('reverse', '') == '1':
+                lutfiles = lutfiles.reverse()
+
+    # Ajax when deleting objects
+    if request.method == "POST" and request.is_ajax():
+        data_post = request.POST
+
+        if 'run_id[]' in data_post:
+            data = ''
+            message = u'Are you sure you want to remove these objects:'
+            run_id = data_post.getlist('run_id[]')
+
+            for r in run_id:
+                cur_lutfile = get_object_or_404(LutFiles, pk=int(r))
+                data += '"{0}", '.format(cur_lutfile)
+
+            data = data[:-2]
+            data = '<b>' + data + '</b>'
+            data = '{0} {1}?'.format(message, data)
+
+            return HttpResponse(data)
+
+        if 'cur_run_id' in data_post:
+            message = u'Are you sure you want to remove this objects:'
+            run_id = data_post['cur_run_id']
+            cur_lutfile = get_object_or_404(LutFiles, pk=int(run_id))
+            data = '<b>"{0}"</b>'.format(cur_lutfile)
+            data = '{0} {1}?'.format(message, data)
+
+            return HttpResponse(data)
+        else:
+            data = ''
+            return HttpResponse(data)
+
+    # Handling POST request
+    if request.method == "POST":
+        if request.POST.get('lutfiles_select'):
+            for lutfile_id in request.POST.getlist('lutfiles_select'):
+                cur_lutfile = get_object_or_404(LutFiles, pk=lutfile_id)
+                lutfiles_name += '"{0}", '.format(cur_lutfile)
+                cur_lutfile.delete()
+
+            return HttpResponseRedirect(u'%s?status_message=%s' % (
+                reverse('lutfiles'),
+                (u'LUT Files: {0} deleted.'.format(lutfiles_name))))
+        elif request.POST.get('delete_button'):
+            cur_lutfile = get_object_or_404(LutFiles, pk=request.POST.get('delete_button'))
+            lutfiles_name += '"{0}", '.format(cur_lutfile)
+            cur_lutfile.delete()
+
+            return HttpResponseRedirect(u'%s?status_message=%s' % (
+                reverse('lutfiles'), (u'LUT File: {0} deleted.'.format(lutfiles_name))))
+        else:
+            return HttpResponseRedirect(u'%s?warning_message=%s' % (
+                reverse('lutfiles'), (u"To delete, select LUT File or more LUT Files.")))
+
+    # paginations
+    model_name = paginations(request, lutfiles)
+
+    data = {
+        'title': title,
+        'lutfiles': model_name,
+        'model_name': model_name,
+        'url_name': url_name,
+        'but_name': but_name,
+    }
+
+    return data
+    
+    
+# customer access add
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def lutfile_add(request):
+    """**View for a new LUT File.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+
+    """
+
+    title = 'LUT File Add'
+    url_form = 'lutfile_add'
+    template_name = 'customers/_lutfile_form.html'
+    reverse_url = {
+        'save_button': 'lutfiles',
+        'save_and_another': 'lutfile_add',
+        'save_and_continue': 'customer_access_edit',
+        'cancel_button': 'lutfiles'
+    }
+    func = lutfile_update_create
+    form = None
+    url_name = 'lutfiles'
+    but_name = 'info_panel'
+
+    # Handling POST request
+    if request.method == "POST":
+        response = get_post(request, LutFilesForm, 'LUT File', reverse_url, func)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
+    else:
+        form = LutFilesForm()
+
+    data = {
+        'title': title,
+        'url_form': url_form,
+        'template_name': template_name,
+        'form': form,
+        'url_name': url_name,
+        'but_name': but_name,
+    }
+
+    return data
+    
+    
+# lutfile edit
+@login_required
+@render_to('gsi/static_data_item_edit.html')
+def lutfile_edit(request, lutfile_id):
+    """**View for the "Category "<name>" Edit" page.**
+
+    :Arguments:
+        * *request:* The request is sent to the server when processing the page
+        * *lutfile_id:* The Category object ID
+    """
+
+    lutfile = get_object_or_404(LutFiles, pk=lutfile_id)
+    title = 'LUT File Edit "%s"' % (lutfile.name)
+    url_form = 'lutfile_edit'
+    template_name = 'customers/_lutfile_form.html'
+    reverse_url = {
+        'save_button': 'lutfiles',
+        'save_and_another': 'lutfile_add',
+        'save_and_continue': 'lutfile_edit',
+        'cancel_button': 'lutfiles'
+    }
+    func = lutfile_update_create
+    form = None
+    url_name = 'lutfiles'
+    but_name = 'info_panel'
+
+    # Handling POST request
+    if request.method == "POST":
+        response = get_post(
+            request,
+            LutFilesForm,
+            'LUT File',
+            reverse_url,
+            func,
+            item_id=lutfile_id)
+
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
+    else:
+        form = LutFilesForm(instance=lutfile)
+
+    data = {
+        'title': title,
+        'url_form': url_form,
+        'url_name': url_name,
+        'but_name': but_name,
+        'template_name': template_name,
+        'form': form,
+        'item_id': lutfile_id,
     }
 
     return data

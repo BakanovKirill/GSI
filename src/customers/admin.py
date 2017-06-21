@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from customers.models import (Category, ShelfData, DataSet, CustomerAccess,
                             CustomerInfoPanel, CustomerPolygons, DataTerraserver,
-                            DataPolygons, AttributesReport, CountFiles)
+                            DataPolygons, AttributesReport, CountFiles, LutFiles)
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -16,9 +16,9 @@ class ShelfDataAdmin(admin.ModelAdmin):
 
 
 class DataSetAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'results_directory', 'lutfile', 'max_val', 'legend', 'get_attribute_name', 'get_root_filename',)
-    search_fields = ['name', 'description', 'get_attribute_name', 'lutfile',]
-    list_filter = ('name', 'description', 'shelf_data__attribute_name', 'shelf_data__root_filename', 'lutfile',)
+    list_display = ('name', 'description', 'results_directory', 'get_attribute_name', 'get_root_filename',)
+    search_fields = ['name', 'description', 'get_attribute_name',]
+    list_filter = ('name', 'description', 'shelf_data__attribute_name', 'shelf_data__root_filename',)
 
     def get_attribute_name(self, obj):
         if obj.shelf_data:
@@ -77,9 +77,15 @@ class AttributesReportAdmin(admin.ModelAdmin):
     search_fields = ['user', 'data_set', 'shelfdata', 'statisctic']
     list_filter = ('user', 'data_set', 'shelfdata', 'statisctic')
     
-    CountFiles
+
 class CountFilesAdmin(admin.ModelAdmin):
     list_display = ('user','count')
+    
+    
+class LutFilesAdmin(admin.ModelAdmin):
+    list_display = ('name', 'filename', 'max_val', 'legend')
+    search_fields = ['name', 'max_val']
+    list_filter = ('name', 'max_val')
 
 
 admin.site.register(Category, CategoryAdmin)
@@ -92,3 +98,4 @@ admin.site.register(DataTerraserver, DataTerraserverAdmin)
 admin.site.register(DataPolygons, DataPolygonsAdmin)
 admin.site.register(AttributesReport, AttributesReportAdmin)
 admin.site.register(CountFiles, CountFilesAdmin)
+admin.site.register(LutFiles, LutFilesAdmin)

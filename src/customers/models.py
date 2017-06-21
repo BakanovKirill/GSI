@@ -4,6 +4,32 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+LUTFILES = (
+    ('grey', 'Grey'),
+    ('red', 'Red'),
+    ('green', 'Green'),
+    ('yellow', 'Yellow'),
+    ('orange', 'Orange'), )
+
+
+class LutFiles(models.Model):
+    name = models.CharField(max_length=300, blank=True, null=True)
+    filename = models.CharField(max_length=300, blank=True, null=True)
+    max_val = models.PositiveIntegerField(
+                    default=100,
+                    verbose_name='Maximum Value for colour scaling',)
+    legend = models.CharField(
+                    max_length=250,
+                    blank=True, null=True,
+                    verbose_name='Legend',)
+                    
+    class Meta:
+        verbose_name_plural = 'LUTFiles'
+
+    def __unicode__(self):
+        return u"{0}".format(self.name)
+
+
 class Category(models.Model):
     name = models.CharField(max_length=100)
 
@@ -32,9 +58,16 @@ class ShelfData(models.Model):
     description = models.TextField(blank=True, null=True)
     show_totals = models.BooleanField(default=True)
     
+    lutfiles = models.ForeignKey(
+                LutFiles,
+                verbose_name='LUT Files',
+                blank=True, null=True,
+                related_name='lut_files',
+                on_delete=models.CASCADE
+            )
+    
     scale = models.PositiveIntegerField(
                     default=0,
-                    # blank=True, null=True,
                     verbose_name='Scale',)
 
     class Meta:
@@ -44,34 +77,26 @@ class ShelfData(models.Model):
         return u"{0}".format(self.attribute_name)
 
 
-LUTFILES = (
-    ('grey', 'Grey'),
-    ('red', 'Red'),
-    ('green', 'Green'),
-    ('yellow', 'Yellow'),
-    ('orange', 'Orange'), )
-
-
 class DataSet(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=150, blank=True, null=True)
     results_directory = models.CharField(max_length=150, blank=True, null=True)
     shelf_data = models.ForeignKey('ShelfData', blank=True, null=True)
     
-    lutfile = models.CharField(max_length=50, choices=LUTFILES, default='grey')
+    # lutfile = models.CharField(max_length=50, choices=LUTFILES, default='grey')
     
     # lut_file = models.CharField(
     #                 max_length=250,
     #                 blank=True, null=True,
     #                 verbose_name='LUT file',)
-    max_val = models.PositiveIntegerField(
-                    default=100,
-                    # blank=True, null=True,
-                    verbose_name='Maximum Value for colour scaling',)
-    legend = models.CharField(
-                    max_length=250,
-                    blank=True, null=True,
-                    verbose_name='Legend',)
+    # max_val = models.PositiveIntegerField(
+    #                 default=100,
+    #                 # blank=True, null=True,
+    #                 verbose_name='Maximum Value for colour scaling',)
+    # legend = models.CharField(
+    #                 max_length=250,
+    #                 blank=True, null=True,
+    #                 verbose_name='Legend',)
                     
                     
     # set_color_png = models.ForeignKey(
@@ -226,11 +251,6 @@ class AttributesReport(models.Model):
 class CountFiles(models.Model):
     user = models.ForeignKey(User, verbose_name='User', blank=True, null=True)
     count = models.PositiveIntegerField(default=0)
-    
-    
-# class LutFile(models.Model):
-#     name = models.CharField(max_length=300, blank=True, null=True)
-#     data_color = models.TextField()
     
     
 # class SetColorPng(models.Model):

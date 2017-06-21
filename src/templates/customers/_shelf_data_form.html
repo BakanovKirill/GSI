@@ -92,6 +92,22 @@
 
 <div class="row margin-top-15">
     <div class="col-md-2 right">
+        <div class="form-group {% if form.lutfiles.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.lutfiles.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-6">
+        {% if not form.lutfiles.errors %}
+            {{ form.lutfiles }}
+        {% else %}
+            <span class="field-error">{{ form.lutfiles }}</span>
+            <b class="error-form">{{ form.lutfiles.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
         <div class="form-group {% if form.description.errors %}has-error{% endif %}">
             <label class="control-label font-normal">{{ form.description.label }}</label>
         </div>
