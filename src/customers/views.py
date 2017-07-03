@@ -2031,7 +2031,9 @@ def customer_section(request):
                     else:
                         check_date = check_date_files(file_tif, file_png)
                     
-                    # print '!!!!!!!!   Convert IMAGE =============================== ', is_lutfile
+                    print '!!!!!!!!   is_lutfile =============================== ', is_lutfile
+                    print '!!!!!!!!   check_date =============================== ', check_date
+                    # print '!!!!!!!!   PNG_PATH =============================== ', PNG_PATH
                     # print '!!!!!!!!   COMMAND LINE =============================== ', command_line
                     # TifPng <InpTiff> <LUTfile> [<MaxVal>] [<Legend>]
 
@@ -2039,7 +2041,9 @@ def customer_section(request):
                         if os.path.exists(file_tif):
                             if is_lutfile:
                                 command_line_copy = 'cp {0} {1}'.format(old_file_png, new_file_png)
+                                command_set_outpudir = 'TIFPNG_OUTPUTDIR="{0}"'.format(PNG_PATH)
                                 
+                                # subprocess.call(command_set_outpudir, shell=True)
                                 proc_script = Popen(command_line, shell=True)
                                 proc_script.wait()
                                 subprocess.call(command_line_copy, shell=True)
@@ -2047,13 +2051,16 @@ def customer_section(request):
                                 proc = Popen(['cat', file_tif], stdout=PIPE)
                                 p2 = Popen(['convert', '-', file_png], stdin=proc.stdout)
 
-                            while not os.path.exists(file_png):
-                                pass
+                            # while not os.path.exists(file_png):
+                            #     pass
                         else:
                             warning_message = u'The images "{0}" does not exist!'.\
                                                 format(customer_info_panel_file.file_area_name)
+                                                
+                                                
+                        print '!!!!!!!!   PNG_PATH =============================== ', PNG_PATH
                 except Exception, e:
-                    print 'Popen Exception =============================== ', e
+                    print 'Popen Exception =============================== '
 
                 # get the lat/lon values for a GeoTIFF files
                 try:
