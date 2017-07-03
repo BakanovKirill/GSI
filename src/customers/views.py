@@ -39,7 +39,8 @@ from core.utils import handle_uploaded_file, get_files_dirs
 from gsi.settings import (BASE_DIR, RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM,
                         POLYGONS_DIRECTORY, MEDIA_ROOT, TMP_PATH, DAFAULT_LAT,
                         DAFAULT_LON, PNG_DIRECTORY, PNG_PATH, PROJECTS_PATH,
-                        KML_DIRECTORY, KML_PATH, ATTRIBUTES_NAME, FTP_PATH)
+                        KML_DIRECTORY, KML_PATH, ATTRIBUTES_NAME, FTP_PATH,
+                        LUT_DIRECTORY)
 
 
 # categorys list
@@ -1152,7 +1153,7 @@ def check_date_files(file_tif, file_png):
         if f_tif > f_png:
             return True
     except Exception, e:
-        print 'Exception check_date_files ========================= ', e
+        print '---> Exception check_date_files ========================= ', e
         return True
 
     return False
@@ -1254,6 +1255,7 @@ def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute
     
     return attribute_name, file_area_name, tif_path, png_path, url_png
     
+    
 def createCustomerInfoPanel(customer, data_set, shelf_data, stat_file, absolute_png_url,
                             is_show, order=0, delete=True):
     if delete:
@@ -1354,7 +1356,7 @@ def getDataSet(ds_id, data_set):
         
     return data_set, data_set_id
 
-# view Customer Section
+# view C ustomer Section
 @login_required
 @render_to('customers/customer_section.html')
 def customer_section(request):
@@ -1546,6 +1548,17 @@ def customer_section(request):
                 # except CustomerInfoPanel.DoesNotExist:
                 #     pass
                 
+                # not_show_cip = CustomerInfoPanel.objects.filter(user=customer, is_show=False)
+                #
+                # for n in not_show_cip:
+                #     try:
+                #         os.remove(n.png_path)
+                #     except Exception, e:
+                #         print '!!!!!!!!!!! ERROR =================== ', e
+                #         pass
+                #
+                # print '!!!!!!!!!!! NEXT PREW =================== '
+                
                 return HttpResponse(data)
             elif 'attr_list[]' in data_post_ajax or not 'stat_list[]' in data_post_ajax:
                 createCustomerInfoPanel(customer, data_set, dirs_list[0],
@@ -1654,7 +1667,7 @@ def customer_section(request):
         data_get_ajax = request.GET
         cip = CustomerInfoPanel.objects.filter(user=customer)
         
-        print 'GET customer_section ====================== ', data_get_ajax
+        # print 'GET customer_section ====================== ', data_get_ajax
         
         # When user celect a new DataSet, the previous celected DataSet to remove
         if 'datasets_id' in data_get_ajax:
@@ -1898,22 +1911,63 @@ def customer_section(request):
                     data_set=data_set
                 )
     
-    # print 'shelf_data_all ======================================= ', shelf_data_all
-    # print '!!!!!!!! dirs_list ======================================= ', dirs_list
-    # attribute_list_infopanel
-    # print '!!!!!!!! attribute_list_infopanel ======================================= ', attribute_list_infopanel
-    # print 'statisctics_infopanel ======================================= ', statisctics_infopanel
-    
     if customer_info_panel:
+        is_lutfile = False
+        
         try:
             customer_info_panel_file = CustomerInfoPanel.objects.filter(
                                         user=request.user,
                                         is_show=True)
                                         
             if customer_info_panel_file:
-                file_tif = customer_info_panel_file[0].tif_path
-                file_png = customer_info_panel_file[0].png_path
-                url_png = customer_info_panel_file[0].url_png
+                cip_choice = customer_info_panel_file[0]
+                file_tif = cip_choice.tif_path
+                file_png = cip_choice.png_path
+                url_png = cip_choice.url_png
+                file_area_name = cip_choice.file_area_name
+                
+                if cip_choice.data_set.shelf_data:
+                    shelf_data_choice = cip_choice.data_set.shelf_data
+                    
+                    if shelf_data_choice.lutfiles:
+                        filename = shelf_data_choice.lutfiles.filename
+                        max_val = shelf_data_choice.lutfiles.max_val
+                        legend = shelf_data_choice.lutfiles.legend
+                        
+                        lut_1 = '.' + filename.split('.')[-1]
+                        lut_name = filename.replace(lut_1, '')
+                    
+                        # print 'LUT NAME ========================= ', lut_name
+                        
+                        tif_png_script = os.path.join(LUT_DIRECTORY, 'TifPng')
+                        lut_file = os.path.join(LUT_DIRECTORY, filename)
+                        
+                        command_line = tif_png_script + ' '
+                        command_line += file_tif + ' '
+                        command_line += lut_file + ' '
+                        command_line += str(max_val) + ' '
+                        command_line += str(legend)
+                        
+                        new_color_file = file_area_name + lut_name + '.png'
+                        url_png = '{0}/{1}'.format(absolute_png_url, new_color_file)
+                        
+                        tmp_png = file_png.split('/')[-1]
+                        new_file_png = file_png.replace(tmp_png, new_color_file)
+                        
+                        tmp_png = file_tif.split('/')[-1]
+                        old_file_png = file_tif.replace(tmp_png, new_color_file)
+                        
+                        cip_choice.png_path = new_file_png
+                        cip_choice.url_png = url_png
+                        cip_choice.save()
+                        
+                        is_lutfile = True
+                        
+                        # print '================   new_file_png NAME ========================= ', new_file_png
+                        # print '================   old_file_png NAME ========================= ', file_png
+                        # print 'lut_name NAME ========================= ', lut_name
+                        # print 'NEW COLOR NAME ========================= ', new_color_file
+                    
                 
                 ####################### write log file
                 # log_file = '/home/gsi/LOGS/customer_section.log'
@@ -1952,14 +2006,31 @@ def customer_section(request):
                 #     os.remove(output_file_tmp)
                 # else:
                 #     os.rename(output_file_tmp, file_png)
+                
+                # LUT_DIRECTORY
+                # TifPng
 
                 try:
-                    check_date = check_date_files(file_tif, file_png)
+                    if is_lutfile:
+                        check_date = check_date_files(old_file_png, new_file_png)
+                    else:
+                        check_date = check_date_files(file_tif, file_png)
+                    
+                    # print '!!!!!!!!   Convert IMAGE =============================== ', is_lutfile
+                    # print '!!!!!!!!   COMMAND LINE =============================== ', command_line
+                    # TifPng <InpTiff> <LUTfile> [<MaxVal>] [<Legend>]
 
                     if check_date:
                         if os.path.exists(file_tif):
-                            proc = Popen(['cat', file_tif], stdout=PIPE)
-                            p2 = Popen(['convert', '-', file_png], stdin=proc.stdout)
+                            if is_lutfile:
+                                command_line_copy = 'cp {0} {1}'.format(old_file_png, new_file_png)
+                                
+                                proc_script = Popen(command_line, shell=True)
+                                proc_script.wait()
+                                subprocess.call(command_line_copy, shell=True)
+                            else:
+                                proc = Popen(['cat', file_tif], stdout=PIPE)
+                                p2 = Popen(['convert', '-', file_png], stdin=proc.stdout)
 
                             while not os.path.exists(file_png):
                                 pass
@@ -2023,12 +2094,14 @@ def customer_section(request):
         show_dataset_cip = customer_info_panel_show[0].data_set.name
         show_image_cip = customer_info_panel_show[0].attribute_name
         show_statistic_cip = customer_info_panel_show[0].statisctic
+        
+        # url_png = customer_info_panel_show[0].png_path
     elif not customer_info_panel_show and data_set:
         show_dataset_cip = data_set
     
         # print 'show_dataset_cip ===================================== ', show_dataset_cip
         # print 'show_image_cip ===================================== ', show_image_cip
-        # print 'show_statistic_cip ===================================== ', show_statistic_cip
+    # print '!!!!!!! URL PNG  ===================================== ', url_png
         
     attribute_report = AttributesReport.objects.filter(user=customer)
     

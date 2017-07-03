@@ -293,6 +293,7 @@ EXEC_RUNS = 2000
 GOOGLE_MAP_ZOOM = 11
 DAFAULT_LAT = 63.817957
 DAFAULT_LON = -151.147061
+
 # results_directory
 RESULTS_DIRECTORY = '/lustre/w23/mattgsi/satdata/RF/Projects/'
 POLYGONS_DIRECTORY = '/lustre/w23/mattgsi/satdata/RF/Polygons/kml/'
@@ -304,6 +305,9 @@ PROJECTS_PATH = '/lustre/w23/mattgsi/satdata/RF/Projects'
 
 # LUT Directory
 LUT_DIRECTORY = '/lustre/w23/mattgsi/satdata/RF/LUTHOME'
+
+# Script TifPng
+SCRIPT_TIFPNG = 'TifPng'
 
 # KML files
 KML_DIRECTORY = 'media/kml'
