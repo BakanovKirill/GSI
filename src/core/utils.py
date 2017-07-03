@@ -8,11 +8,12 @@ from datetime import datetime
 import magic
 import multiprocessing
 from Crypto.PublicKey import RSA
+from itertools import chain, islice, izip
 
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
-from gsi.settings import EXECUTE_FE_COMMAND, PROCESS_NUM, STATIC_DIR, FE_SUBMIT, EXEC_RUNS, PATH_RUNS_SCRIPTS
+from gsi.settings import EXECUTE_FE_COMMAND, PROCESS_NUM, STATIC_DIR, FE_SUBMIT, EXEC_RUNS, PATH_RUNS_SCRIPTS, LUT_DIRECTORY
 from core.multithreaded import MultiprocessingCards
 
 
@@ -219,6 +220,19 @@ def get_type_file(mime_type):
 			type_file = 'archive'
 
 	return type_file
+    
+    
+def get_list_lutfiles():
+    lutfiles = []
+    
+    root, dirs, files = os.walk(LUT_DIRECTORY).next()
+    files.remove('TifPng')
+    files.insert(0, 'select')
+    
+    for i in izip(files, files):
+        lutfiles.append(i)
+        
+    return tuple(lutfiles)
 
 
 def get_files_dirs(url_path, full_path):

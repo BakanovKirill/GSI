@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+from itertools import chain
+
 from django import forms
 from django.contrib.auth.models import User
 
 from core.validator_gsi import validate_order
+from core.utils import get_list_lutfiles
 from customers.models import (Category, ShelfData, DataSet, LutFiles,
                             CustomerAccess, CustomerPolygons, LUTFILES)
 
@@ -116,32 +119,6 @@ class DataSetForm(forms.ModelForm):
         queryset=ShelfData.objects.all(),
         empty_label='Select',
         label=u'Shelf Data', )
-        
-    # lutfile = forms.CharField(
-    #     widget=forms.Select(
-    #             attrs={
-    #                 "class": 'form-control',
-    #             },
-    #             choices=LUTFILES
-    #     ),
-    #     required=False,
-    #     label=u'LUT File',
-    # )
-    # max_val = forms.FloatField(
-    #     widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '1'}),
-    #     initial=100,
-    #     validators=[validate_order],
-    #     error_messages={'required': 'Must be a positive number'},
-    #     required=False,
-    #     label=u'MAX Value',
-    # )
-    # legend = forms.CharField(
-    #     widget=forms.TextInput(attrs={
-    #         'class': 'form-control',
-    #     }),
-    #     required=False,
-    #     label=u'Legend', )
-            
     root_filename = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'form-control',
@@ -203,7 +180,7 @@ class CustomerPolygonsForm(forms.ModelForm):
     class Meta:
         model = CustomerPolygons
         fields = ['name',]
-        
+
         
 class LutFilesForm(forms.ModelForm):
     """**Form for editing LutFiles.**"""
@@ -212,13 +189,21 @@ class LutFilesForm(forms.ModelForm):
         super(LutFilesForm, self).__init__(*args, **kwargs)
 
     name = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'LUT File name'}),
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
         # required=False,
         label=u'Name')
+    # filename = forms.CharField(
+    #     widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'File name'}),
+    #     required=False,
+    #     label=u'FileName')
+        
     filename = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'File name'}),
+        widget=forms.Select(
+                attrs={'class': 'form-control'},
+                choices=LUTFILES),
         required=False,
-        label=u'FileName')
+        label=u'FileName'
+    )
     max_val = forms.FloatField(
         widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '1'}),
         initial=0,
@@ -227,7 +212,7 @@ class LutFilesForm(forms.ModelForm):
         required=False,
         label=u'Max value',)
     legend = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Legend'}),
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
         required=False,
         label=u'Legend')
     

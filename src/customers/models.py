@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-
 from django.contrib.auth.models import User
+
+from core.utils import get_list_lutfiles
 
 
 LUTFILES = (
@@ -10,11 +11,14 @@ LUTFILES = (
     ('green', 'Green'),
     ('yellow', 'Yellow'),
     ('orange', 'Orange'), )
+    
+    
+LUTFILES = get_list_lutfiles()
 
 
 class LutFiles(models.Model):
     name = models.CharField(max_length=300, blank=True, null=True)
-    filename = models.CharField(max_length=300, blank=True, null=True)
+    filename = models.CharField(max_length=300, blank=True, null=True, choices=LUTFILES)
     max_val = models.PositiveIntegerField(
                     default=100,
                     verbose_name='Maximum Value for colour scaling',)

@@ -147,11 +147,16 @@ def lutfile_update_create(form, item_id=None):
         * *item_id*: ID of the object. Set when editing (the item_id=None when you create a object)
 
     """
-
+    
+    lut_filename = ''
+    
+    if form.cleaned_data["filename"] != 'select':
+        lut_filename = form.cleaned_data["filename"]
+        
     if item_id:
         LutFiles.objects.filter(id=item_id).update(
             name=form.cleaned_data["name"],
-            filename=form.cleaned_data["filename"],
+            filename=lut_filename,
             max_val=form.cleaned_data["max_val"],
             legend=form.cleaned_data["legend"],
         )
@@ -159,7 +164,7 @@ def lutfile_update_create(form, item_id=None):
     else:
         lut_file = LutFiles.objects.create(
             name=form.cleaned_data["name"],
-            filename=form.cleaned_data["filename"],
+            filename=lut_filename,
             max_val=form.cleaned_data["max_val"],
             legend=form.cleaned_data["legend"],
         )
