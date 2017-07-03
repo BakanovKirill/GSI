@@ -1241,15 +1241,24 @@ def addPolygonToDB(name, kml_name, user, kml_path, kml_url, ds):
     
     
 def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute_png_url):
-    # print 'data_set =========================== ', data_set
+    # print '================    shelf_data =========================== ', shelf_data
     # order_data_set = data_set.order_by('attribute_name')
-    attribute_name = shelf_data.attribute_name
+    try:
+        attribute_name = shelf_data.attribute_name
+    except Exception:
+        attribute_name = ''
+        
+    try:
+        root_filename = shelf_data.root_filename
+    except Exception:
+        root_filename = ''
+        
     results_directory = data_set.results_directory
     project_name = results_directory.split('/')[0]
-    file_area_name = '{0}_{1}.{2}'.format(stat_file, shelf_data.root_filename, project_name)
+    file_area_name = '{0}_{1}.{2}'.format(stat_file, root_filename, project_name)
     tif = '{0}.tif'.format(file_area_name)
     png = '{0}.png'.format(file_area_name)
-    tif_path = os.path.join(PROJECTS_PATH, data_set.results_directory, shelf_data.root_filename, tif)
+    tif_path = os.path.join(PROJECTS_PATH, data_set.results_directory, root_filename, tif)
     png_path = os.path.join(PNG_PATH, png)
     url_png = '{0}/{1}'.format(absolute_png_url, png)
     
@@ -1339,7 +1348,7 @@ def getResultDirectory(dataset, shelfdata):
             if str(sd.root_filename) in dirs:
                 dirs_list.append(sd)
     except Exception, e:
-        print 'Exception getResultDirectory ========================= ', e
+        print '----->>>    Exception getResultDirectory ========================= ', e
         pass
         
     return dirs_list
@@ -1455,13 +1464,17 @@ def customer_section(request):
 
     # Get the Statistics list
     dirs_list = getResultDirectory(data_set, shelf_data_all)
+    if dirs_list:
+        dl = dirs_list[0]
+    else:
+        dl = ''
     
     cip_is_show = CustomerInfoPanel.objects.filter(
                                 user=customer,
                                 is_show=True)
     if not cip_is_show:
         new_cip = createCustomerInfoPanel(
-                        customer, data_set, dirs_list[0], 'mean_ConditionalMean',
+                        customer, data_set, dl, 'mean_ConditionalMean',
                         absolute_png_url, True, order=0
                     )
         
@@ -1671,7 +1684,9 @@ def customer_section(request):
         
         # When user celect a new DataSet, the previous celected DataSet to remove
         if 'datasets_id' in data_get_ajax:
+            print '!!!!!!!!! datasets_id ====================== \n'
             for ip in cip:
+                print '!!!!!!!!! datasets_id ====================== ', ip.png_path
                 remove_file_png(ip.png_path)
 
             status = check_current_dataset(request, data_get_ajax)
