@@ -11,8 +11,8 @@ LUTFILES = (
     ('green', 'Green'),
     ('yellow', 'Yellow'),
     ('orange', 'Orange'), )
-    
-    
+
+
 LUTFILES = get_list_lutfiles()
 
 
@@ -26,7 +26,7 @@ class LutFiles(models.Model):
                     max_length=250,
                     blank=True, null=True,
                     verbose_name='Legend',)
-                    
+
     class Meta:
         verbose_name_plural = 'LUTFiles'
 
@@ -61,7 +61,7 @@ class ShelfData(models.Model):
     units = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     show_totals = models.BooleanField(default=True)
-    
+
     lutfiles = models.ForeignKey(
                 LutFiles,
                 verbose_name='LUT Files',
@@ -69,7 +69,7 @@ class ShelfData(models.Model):
                 related_name='lut_files',
                 on_delete=models.CASCADE
             )
-    
+
     scale = models.PositiveIntegerField(
                     default=0,
                     verbose_name='Scale',)
@@ -86,9 +86,9 @@ class DataSet(models.Model):
     description = models.CharField(max_length=150, blank=True, null=True)
     results_directory = models.CharField(max_length=150, blank=True, null=True)
     shelf_data = models.ForeignKey('ShelfData', blank=True, null=True)
-    
+
     # lutfile = models.CharField(max_length=50, choices=LUTFILES, default='grey')
-    
+
     # lut_file = models.CharField(
     #                 max_length=250,
     #                 blank=True, null=True,
@@ -101,15 +101,15 @@ class DataSet(models.Model):
     #                 max_length=250,
     #                 blank=True, null=True,
     #                 verbose_name='Legend',)
-                    
-                    
+
+
     # set_color_png = models.ForeignKey(
     #             SetColorPng,
     #             verbose_name='SetColorPng',
     #             blank=True, null=True, related_name='set_color_png',
     #             on_delete=models.CASCADE
     #         )
-    
+
 
     def get_root_filename(self):
         if self.shelf_data:
@@ -149,14 +149,14 @@ class CustomerAccess(models.Model):
 class CustomerInfoPanel(models.Model):
     user = models.ForeignKey(User, verbose_name='User', blank=True, null=True)
     data_set = models.ForeignKey('DataSet', blank=True, null=True)
-    attribute_name = models.CharField(max_length=150, blank=True, null=True)
-    statisctic = models.CharField(max_length=150, blank=True, null=True)
+    attribute_name = models.CharField(max_length=300, blank=True, null=True)
+    statisctic = models.CharField(max_length=300, blank=True, null=True)
 
-    file_area_name = models.CharField(max_length=150, blank=True, null=True)
-    tif_path = models.CharField(max_length=150, blank=True, null=True)
-    png_path = models.CharField(max_length=150, blank=True, null=True)
-    url_png = models.CharField(max_length=150, blank=True, null=True)
-    
+    file_area_name = models.CharField(max_length=300, blank=True, null=True)
+    tif_path = models.CharField(max_length=300, blank=True, null=True)
+    png_path = models.CharField(max_length=300, blank=True, null=True)
+    url_png = models.CharField(max_length=300, blank=True, null=True)
+
     order = models.PositiveIntegerField(default=0)
     is_show = models.BooleanField(default=False)
 
@@ -165,8 +165,8 @@ class CustomerInfoPanel(models.Model):
 
     def __unicode__(self):
         return u"{0}_{1}".format(self.user, self.data_set)
-        
-        
+
+
 class CustomerPolygons(models.Model):
     name = models.CharField(max_length=150, blank=True, null=True)
     user = models.ForeignKey(User, verbose_name='User', blank=True, null=True)
@@ -179,15 +179,15 @@ class CustomerPolygons(models.Model):
     kml_name = models.CharField(max_length=150, blank=True, null=True)
     kml_path = models.CharField(max_length=150, blank=True, null=True)
     kml_url = models.CharField(max_length=150, blank=True, null=True)
-    
+
 
     class Meta:
         verbose_name_plural = 'Customer Polygons'
 
     def __unicode__(self):
         return u"{0}_{1}".format(self.user, self.name)
-        
-        
+
+
 class DataTerraserver(models.Model):
     name = models.CharField(max_length=300, blank=True, null=True)
     user = models.ForeignKey(User, verbose_name='User', blank=True, null=True)
@@ -195,7 +195,7 @@ class DataTerraserver(models.Model):
     shapefile = models.CharField(max_length=250, blank=True, null=True)
     parameter = models.CharField(max_length=250, blank=True, null=True)
     transaction_id = models.CharField(max_length=250, blank=True, null=True)
-    
+
     def save(self, *args, **kwargs):
         self.name = str(self.user) + '_' + str(self.shapefile)
         super(DataTerraserver, self).save(*args, **kwargs)
@@ -205,8 +205,8 @@ class DataTerraserver(models.Model):
 
     def __unicode__(self):
         return u"{0}".format(self.name)
-        
-        
+
+
 class DataPolygons(models.Model):
     data_set = models.ForeignKey(
                     DataSet,
@@ -230,8 +230,8 @@ class DataPolygons(models.Model):
     units = models.CharField(max_length=250, blank=True, null=True)
     total = models.CharField(max_length=250, blank=True, null=True)
     total_area = models.CharField(max_length=250, blank=True, null=True)
-    
-    
+
+
 class AttributesReport(models.Model):
     user = models.ForeignKey(User, verbose_name='User',
                 blank=True, null=True, related_name='users_attributes_reports',
@@ -255,8 +255,8 @@ class AttributesReport(models.Model):
 class CountFiles(models.Model):
     user = models.ForeignKey(User, verbose_name='User', blank=True, null=True)
     count = models.PositiveIntegerField(default=0)
-    
-    
+
+
 # class SetColorPng(models.Model):
 #     name =  = models.CharField(max_length=250, blank=True, null=True)
 #     lut_file = models.CharField(max_length=250, blank=True, null=True)
@@ -265,4 +265,3 @@ class CountFiles(models.Model):
 #
 #     def __unicode__(self):
 #         return u"{0}".format(self.name)
-    
