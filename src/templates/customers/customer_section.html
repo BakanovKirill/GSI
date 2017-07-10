@@ -21,26 +21,26 @@
 						<div class="col-md-12">
 							<span id="slider_value">Visibility: 50%</span>
 						</div>
-						
+
 						<div class="col-md-12 margin-top-4">
 							<input type="range" id="opacity" min="0" max="100" oninput="setOpacity();" alt="transparency" title="Transparency" value="50" class="center"/>
 						</div>
 					</div>
 				</div>
-				
+
 				<div class="col-md-6 left">
 					<label class="btn btn-default btn-file">
     					Chose File <input type="file" name="upload_file_customer" id="upload_file_customer" style="display: none;">
 					</label>
 					<span id='upload_file'>No file chosen</span>
 					<button type="submit" id="load" name="load_button" value="load" class="btn btn-primary"> Load</button>
-					
+
 					<a href="{% url 'files_lister' %}" class="btn del-btn check-cur-delete" role="button" data-toggle="tooltip" data-placement="top" title="Mangage Files">
 						<img src="{% static 'img/settings-24.png' %}"/>
 					</a>
 				</div>
-				
-				
+
+
 
 			</div>
 			<!-- End Draw Menu -->
@@ -59,7 +59,7 @@
 					<!-- GSi MAP -->
 					<div id="map"></div>
 					<!-- END GSi MAP -->
-					
+
 					<!-- GSi User Photo -->
 					<div id="user-photo">
 						<img src="{% static 'img/anonim.png' %}" class="img-circle circle">
@@ -80,7 +80,7 @@
 						<input class="form-control placeholder" type="text" id="longitude" readonly>
 					</div>
 					<!-- GSi Coordinates -->
-					
+
 					<!-- Start Footer -->
 					<div class="footer">
 	                    <span class="padding-top-15">&copy; {{ CURRENT_YEAR }} GSi Web Site</span>
@@ -89,19 +89,19 @@
 				</div>
 			</div>
 			<!-- End Google map -->
-			
+
 			<!-- Modal Check Delete Items -->
 			{% include '_modal_check_delete_items.html' %}
 			<!-- End Modal Check Delete Items -->
-			
+
 			<!-- Modal Edit Area -->
 			{% include '_modal_edit_polygons.html' %}
 			<!-- End Modal Edit Area -->
-			
-			<!-- Modal Edit Area -->
+
+			<!-- Modal Waiting -->
 			{% include '_modal_waiting.html' %}
-			<!-- End Modal Edit Area -->
-			
+			<!-- End Modal Waiting -->
+
 			<!-- The Modal: You can not draw a polygon without selecting a dataset -->
 			<div id="myModal" class="modal-draw">
   				<!-- Modal content -->
@@ -111,24 +111,24 @@
   				</div>
 			</div>
 			<!-- End the Modal: You can not draw a polygon without selecting a dataset -->
-			
+
 			<!-- The input field for the data Polygon -->
 			<p id="data_polygon" disable></p>
 			<input type="hidden" id="data_polygon" name="data_polygon" value="">
 		</form>
-		
+
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqRnPthP9_pygDbSG34MDKiJpXQkHm2ws&signed_in=true"></script
 		<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyANOITZIFVq0CxUycWsprMslU0sk9ipK5Y&callback=initMap"
   type="text/javascript"></script>
 		<!-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyB4HosogGf9o2-Cnef_SiUR6jZYVszGkGY&sensor=false"></script> -->
-		
+
 		<!-- AIzaSyDqRnPthP9_pygDbSG34MDKiJpXQkHm2ws -->
 		<!-- AIzaSyANOITZIFVq0CxUycWsprMslU0sk9ipK5Y -->
-		
+
 	    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false"></script>
-		
+
 		<script src="http://www.google.com/jsapi"></script>
-		
+
 		<script>
 			// Get the modal
 			var modal = document.getElementById('myModal');
@@ -149,7 +149,7 @@
 				}
 			}
 		</script>
-		
+
 		<script>
 			USGSOverlay.prototype = new google.maps.OverlayView();
 
@@ -166,20 +166,20 @@
 			var mapTypesArr = [];
 			var count_pol;
 			var infowindow = new google.maps.InfoWindow();
-			
+
 			var units = '{{ units }}';
 			var attribute = '{{ attribute }}';
 			var data_polygon;
 			var statistic;
-			
+
 			var select_image = '{{ absolute_url_png_file }}'
-			
+
 			// var units = 'Tree';
 			// var attribute = 'UNITS';
-			
+
 			// var kml_layer = new google.maps.KmlLayer();
-			
-			
+
+
 			// alert('eLat_1: '+{{ eLat_1 }});
 			// alert('eLng_1: '+{{ eLng_1 }});
 			// alert('eLat_2: '+{{ eLat_2 }});
@@ -312,18 +312,18 @@
 				map.mapTypes.set(MY_MAPTYPE_ID, jayzMapType);
 				map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
 				//
-				
+
 				// START KML *************************************************************************************************************
-				
+
 				// Set KML file
 				// var url_kml = "{{ kml_path_show }}";
 				// var url_kml = "http://indy4.epcc.ed.ac.uk/media/kml/LinearRing.kml";
-				
+
 				// var kml = kml_layer(url_kml);
 				// kml.setMap(map);
-				
+
 				// alert('url_kml: '+url_kml);
-				
+
 				// END KML ****************************************************************************************************************
 
 				// var min_marker = new google.maps.Marker({
@@ -511,11 +511,11 @@
 			function appliedMarkers() {
 				// var select_infopanel = document.getElementById("show_file_arrea").value;
 				var img = document.getElementById("ap_marker");
-				
+
 				// var select_views = $("input[name='attribute_viewlist']:checked").size();
-				
+
 				// alert('select_image: '+select_image);
-				
+
 				if (select_image) {
 					// alert('select_infopanel: NO: '+select_infopanel);
 					map.addListener('click', function(e) {
@@ -525,11 +525,11 @@
 				} else {
 					// Get the modal
 					var modal = document.getElementById('myModal');
-					
+
 					// When the user clicks on the button, open the modal
 					modal.style.display = "block";
 				}
-				
+
 			}
 
 			// Removes the poligon from the map, but keeps them in the array.
@@ -554,7 +554,7 @@
 					markers[i].setMap(null);
 				}
 			}
-			
+
 			function polygonCenter(poly) {
 			    var lowx,
 			        highx,
@@ -577,14 +577,14 @@
 			    highy = lngs[vertices.length - 1];
 			    center_x = lowx + ((highx-lowx) / 2);
 			    center_y = lowy + ((highy - lowy) / 2);
-				
+
 			    return (new google.maps.LatLng(center_x, center_y));
   			}
-			
+
 			function drawPoligon() {
 				var report_list = [];
 				var stat_list = [];
-				
+
 				if (polygons) {
 					for (i in polygons) {
 						polygons[i].setMap(null);
@@ -595,37 +595,37 @@
 			        // alert($(this).val());
 			        report_list.push($(this).val())
 			    });
-				
+
 				$('#statictics_list input:radio:checked').each(function(){
 			        // alert($(this).val());
 			        stat_list.push($(this).val())
 			    });
-				
+
 				// alert('REPORT: '+report_list);
-				
+
 				var show_coord = coord;
 				sendDataToServer(show_coord, report_list, stat_list);
 				// setTimeout(sendGetToServer, 500);
 			}
-			
+
 			function sendGetToServer() {
 				var x = new XMLHttpRequest();
 				// x.open("GET", "/customer/php?tif_path={{ file_tif_path }}", true);
 				x.open("GET", "/customer/php?tif_path={{ file_tif_path }}&ds={{ data_set_id }}", true);
 				x.send(null);
-				
+
 				deleteFile('{{ data_set_id }}');
-				
+
 				// setTimeout(getTmpCSV, 3000);
 			}
-			
+
 			function getTmpCSV(file_path, stat) {
 				// alert('getTmpCSV: '+file_path);
 				httpRequest = new XMLHttpRequest();
 				httpRequest.open("GET", file_path, true);
 				httpRequest.onreadystatechange = OnRequestStateChange;
 				httpRequest.send(null);
-				
+
 				setTimeout(getPolygon, 500, stat);
 			}
 
@@ -634,7 +634,7 @@
 				var modal = $('#modalWaiting');
 			    modal.modal('hide');
 				statistic = stat;
-				
+
 				// Construct the polygon.
 				selectPolygon = new google.maps.Polygon({
 					paths: coord,
@@ -648,21 +648,21 @@
 				selectPolygon.setMap(map);
 				polygons.push(selectPolygon);
 				polygonVisible = true;
-				
+
 				// remove all markers
 				for (var i = 0; i < markers.length; i++) {
 					markers[i].setMap(null);
 				}
 				infowindow.close();
-				
+
 				// sendDataToServer(show_coord);
-				
+
 				// for (n in show_coord){
 				// 	for (k in show_coord[n]){
 				// 		// alert('NK: '+show_coord[n][k]);
 				// 	}
 				// }
-				
+
 				// Add a listener for the click event.
 				selectPolygon.addListener('click', showInfoWindow);
 				infoWindow = new google.maps.InfoWindow;
@@ -670,12 +670,12 @@
 				// Add a listener for the mousemove event.
 				selectPolygon.addListener('mousemove', showCoordinates);
 				infoWindow = new google.maps.InfoWindow;
-				
+
 				var center_pol = polygonCenter(selectPolygon);
 				coord = [];
 				var list_data = data_polygon.split('_');
 				count_pol = list_data.length;
-				
+
 				// alert('list_data: '+list_data);
 				// alert('list_data 0: '+list_data[0]);
 				// alert('list_data 1: '+list_data[1]);
@@ -683,25 +683,25 @@
 				// alert('list_data 3: '+list_data[3]);
 				//
 				// alert('data_polygon: '+data_polygon);
-				
+
 				var contentString = '<h4 align="center"><b>Area Information</b></h4>';
 				contentString += '<p align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</p>';
 				contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
-				
+
 				if (statistic) {
 					contentString += '<p align="center"><span><b>Value:</b></span> ' + statistic + '</p>';
 					contentString += '<input type="hidden" name="statistic" value=' + statistic + '>'
 				}
-				
+
 				if (count_pol >= 8) {
 					contentString += '<div style="height:400px;overflow:scroll;">';
 				} else {
 					contentString += '<div style="overflow:auto;">';
 				}
-				
+
 				contentString += '<table class="table table-bordered">';
 				// contentString += '<caption align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</caption>'
-				
+
 				contentString += '<thead>';
 				contentString += '<tr bgcolor="#CFCFCF">';
 				contentString += '<th align="left">Attribute</th>';
@@ -711,16 +711,16 @@
 				contentString += '</tr>';
 				contentString += '</thead>';
 				contentString += '<tbody>';
-				
+
 				for (var i = 1; i < count_pol; i++) {
 					new_array = list_data[i].split(',')
-					
+
 					if ( i & 1 ) {
     					contentString += '<tr bgcolor="#F5F5F5">';
 					} else {
     					contentString += '<tr>';
 					}
-					
+
 					contentString += '<td align="left">' + new_array[0] + '</td>';
 					contentString += '<td>' + new_array[1] + '</td>';
 					contentString += '<td>' + new_array[2] + '</td>';
@@ -735,28 +735,28 @@
 				contentString += '</tbody>';
 				contentString += '</table>';
 				contentString += '</div>';
-				
-				
+
+
 				// contentString += '<p class="left">COORDINATE:</p>';
 				// for(n in show_coord) {
 				// 	contentString += '<p class="left">(Lat: ' + show_coord[n]['lat'] + '; Lng: ' + show_coord[n]['lng'] + ')</p>';
 			    // }
-				
+
 				contentString += '<input type="text" id="input_area_name" class="margin-top-15" placeholder="Enter Area name" name="area_name" size="30" style="width:100%" onkeyup="changeAreaName();" autofocus><br>'
 				contentString += '<button type="submit" name="save_area" class="btn btn-success btn-block margin-top-15" value="save_area" disabled id="save_area">Save Area</button>';
 				contentString += '<button type="submit" name="cancel_download_file" class="btn btn-primary btn-block margin-top-15" value="cancel_download_file">Cancel</button>';
-				
+
 				infowindow = new google.maps.InfoWindow({content: contentString, position: center_pol});
 				infowindow.open(map);
 			}
-			
+
 			function OnRequestStateChange()
 			{
 				if (httpRequest.readyState != 4)
   					return;
 				if (httpRequest.status != 200)
   					return;
-					
+
 				data_polygon = httpRequest.responseText;
 			}
 
@@ -772,25 +772,25 @@
 				var lat = event.latLng.lat();
 				var lon = event.latLng.lng();
 				var list_data = data_polygon.split('_');
-				
+
 				var contentString = '<h4 align="center"><b>Area Information</b></h4>';
 				contentString += '<p align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</p>';
 				contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
-				
+
 				if (statistic) {
 					contentString += '<p align="center"><span><b>Value:</b></span> ' + statistic + '</p>';
 					contentString += '<input type="hidden" name="statistic" value=' + statistic + '>'
 				}
-				
+
 				if (count_pol >= 8) {
 					contentString += '<div style="height:400px;overflow:scroll;">';
 				} else {
 					contentString += '<div style="overflow:auto;">';
 				}
-				
+
 				contentString += '<table class="table table-bordered" style="height:50px;overflow:scroll;">';
 				// contentString += '<caption align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</caption>'
-				
+
 				contentString += '<thead>';
 				contentString += '<tr bgcolor="#CFCFCF">';
 				contentString += '<th align="left">Attribute</th>';
@@ -800,16 +800,16 @@
 				contentString += '</tr>';
 				contentString += '</thead>';
 				contentString += '<tbody>';
-				
+
 				for (var i = 1; i < list_data.length; i++) {
 					new_array = list_data[i].split(',')
-					
+
 					if ( i & 1 ) {
 						contentString += '<tr bgcolor="#F5F5F5">';
 					} else {
 						contentString += '<tr>';
 					}
-					
+
 					contentString += '<tr>';
 					contentString += '<td align="left">' + new_array[0] + '</td>';
 					contentString += '<td>' + new_array[1] + '</td>';
@@ -825,7 +825,7 @@
 				contentString += '</tbody>';
 				contentString += '</table>';
 				contentString += '</div>';
-				
+
 				contentString += '<input type="text" id="input_area_name" class="margin-top-15" placeholder="Enter Area name" name="area_name" size="30" style="width:100%" onkeyup="changeAreaName();" autofocus><br>'
 				contentString += '<button type="submit" name="save_area" class="btn btn-success btn-block margin-top-15" value="save_area" disabled id="save_area">Save Area</button>';
 				contentString += '<button type="submit" name="cancel_download_file" class="btn btn-primary btn-block margin-top-15" value="cancel_download_file">Cancel</button>';

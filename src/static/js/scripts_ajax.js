@@ -231,7 +231,7 @@ function showDataSets(obj) {
     var select_dataset = $("#mydataset option:selected");
     var datasets_id = $(select_dataset).val();
     var form_url = $('#customer_section').attr('action');
-    
+
     $.ajax({
         url: form_url,
         type: 'GET',
@@ -251,7 +251,7 @@ function showDataSets(obj) {
             // alert('success: '+data);
             // alert('success status: '+status);
             window.location.href = form_url;
-            
+
             // if (obj != datasets_id) {
             //     // setTimeout(function(){location.reload(true);}, 500);
             //     window.location.href = form_url;
@@ -321,7 +321,7 @@ function setPolygon(obj) {
     // alert(obj.checked);
     var checked = obj.checked;
     var form_url = $('#customer_section').attr('action');
-    
+
     if (checked) {
         $.ajax({
             url: form_url,
@@ -347,7 +347,7 @@ function setPolygon(obj) {
                 // }
                 // var uri_kml = data_status.url;
                 // window.location.href = form_url;
-                
+
                 // alert('DATA: '+data);
                 // var kml;
                 // kml = new google.maps.KmlLayer(data);
@@ -363,13 +363,13 @@ function setPolygon(obj) {
 function sendDataToServer(coord, reports, stats) {
     // alert('sendDataToServer REP: '+reports);
     // alert('sendDataToServer STAT: '+stats);
-    
+
     var form_url = $('#customer_section').attr('action');
     var coord_list = []
     var count = 0;
     var modal = $('#modalWaiting');
     modal.modal('show');
-    
+
     for(n in coord) {
         var temp = [];
         var reverce_list = [];
@@ -380,7 +380,7 @@ function sendDataToServer(coord, reports, stats) {
         // alert('reverce_list: '+reverce_list);
         coord_list.push(reverce_list);
     }
-    
+
     $.ajax({
         url: form_url,
         type: 'POST',
@@ -401,9 +401,9 @@ function sendDataToServer(coord, reports, stats) {
         'success': function(data, status, xhr){
             // var message = JSON.parse(data);
             // var message = data['message'];
-            
+
             // alert('sendDataToServer: '+data);
-            
+
             var obj_status = status;
             sendGetToServer();
         },
@@ -416,9 +416,9 @@ function initEditArea() {
         var modal = $('#modalEditArea');
         var form_modal = $('.form-modal').attr('action');
         var cur_area = $(this).val();
-        
+
         // alert('cur_area: '+cur_area);
-        
+
         $.ajax({
             url: form_modal,
             type: 'GET',
@@ -452,7 +452,7 @@ function deleteFile(ds) {
     var x = new XMLHttpRequest();
     x.open("GET", "/customer/delete?delete_file=del", true);
     x.send(null);
-    
+
     $.ajax({
         url: '/customer/delete',
         type: 'GET',
@@ -484,22 +484,22 @@ function sendDataAttrStatToServer(obj) {
     var form_url = $('#customer_section').attr('action');
     var attr_list = [];
     var stat_list = [];
-    
+
     // alert('BUT: '+$(obj).val());
-    
+
     $('#view_attribute input:checkbox:checked').each(function(){
         // alert($(this).val());
         attr_list.push($(this).val())
     });
-    
+
     $('#statictics_list input:radio:checked').each(function(){
         // alert($(this).val());
         stat_list.push($(this).val())
     });
-    
+
     // alert('attr_list: '+attr_list);
     // alert('stat_list: '+stat_list);
-    
+
     $.ajax({
         url: form_url,
         type: 'POST',
@@ -519,17 +519,17 @@ function sendDataAttrStatToServer(obj) {
         'success': function(data, status, xhr){
             // alert('URL DATA: '+data);
             // var new_data = data.split('$');
-            
+
             // function reload() {
             //     alert('URL DATA: '+data);
             //     window.location.href = form_url;
             // }
             //
             // setTimeout(reload, 100);
-            
+
             window.location.href = form_url;
-            
-            
+
+
             // $("#ds_show span").text('new_data[0]');
             // $("#ds_show span").text(new_data[0]);
             // $("span#img_show").text(new_data[1]);
@@ -538,8 +538,8 @@ function sendDataAttrStatToServer(obj) {
             // alert('URL DATA: '+data);
             // sendGetToServer();
             // window.location.href = form_url;
-            
-            
+
+
         },
     });
 }
@@ -571,9 +571,50 @@ function selectTab(obj) {
     });
 }
 
-// function sendDataReportToServer() {
-//
-// }
+function clickUpdate() {
+    var values = [];
+    var modal = $('#modalUpdate');
+    var form_modal = $('.form-modal').attr('action');
+    modal.modal('show');
+
+    $.ajax({
+        url: form_modal,
+        type: 'GET',
+        'async': true,
+        'dataType': 'text',
+        data: {
+            'update': 'update',
+            'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+        },
+        'error': function(xhr, status, error){
+            var message = 'An unexpected error occurred. Try later.';
+            modal.find('.modal-body').html(message);
+            modal.modal('show');
+        },
+        'success': function(data, status, xhr){
+            // alert('DATA: '+data);
+            // if (!data){
+            //     data = 'To delete, select Item or more Items.';
+            //     modal.find('div.div-cancel').removeClass("col-sm-6");
+            //     modal.find('div.div-cancel').addClass("col-sm-4 col-sm-offset-4")
+            //     modal.find('.cancel-but').html('Ok');
+            //     modal.find('.del-but').hide();
+            // }
+            // else {
+            //     modal.find('.cancel-but').html("No. I don't want delete this Item.");
+            //     modal.find('div.div-cancel').removeClass("col-sm-4 col-sm-offset-4");
+            //     modal.find('div.div-cancel').addClass("col-sm-6");
+            //     modal.find('.del-but').show();
+            // }
+            // msg = 'LUT File updated!'
+            // modal.find('div.div-cancel').addClass("col-sm-6");
+            // modal.find('.modal-header').html(msg);
+            // setTimeout("alert('Привет')", 3000);
+            setTimeout(modal.modal('hide'), 3000);
+            // modal.modal('hide');
+        },
+    });
+}
 
 
 $(document).ready(function(){

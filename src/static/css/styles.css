@@ -68,6 +68,12 @@ table {
     padding-top: 5px;
 }
 
+button,
+button:active,
+button:focus {
+    outline: none!important;
+}
+
 /* New style for the fileld for forms */
 input, textarea {
     border: 1px solid #283890 !important;
@@ -113,7 +119,7 @@ a.a-select, .btn-link {
     /*border: none !important;*/
     /*webkit-box-shadow: none !important;*/
     box-shadow: none !important;
-    outline: none;
+    outline: none !important;
 }
 
 .no-hover, .no-hover:hover {
@@ -1079,7 +1085,7 @@ hr {
     height: 1285px;
     float: left;
     /*box-shadow: inset -5px 0 0 #283890;*/
-    
+
     -webkit-box-shadow: 6px 0px 0px 0px #283890;
     -moz-box-shadow: 6px 0px 0px 0px #283890;
     box-shadow: 6px 0px 0px 0px #283890;
@@ -1091,7 +1097,7 @@ hr {
     height: 1285px;
     float: right;
     /*box-shadow: inset 5px 0 0 #283890;*/
-    
+
     -webkit-box-shadow: -6px 0px 0px 0px #283890;
     -moz-box-shadow: -6px 0px 0px 0px #283890;
     box-shadow: -6px 0px 0px 0px #283890;
@@ -1105,7 +1111,7 @@ hr {
     margin-right: -30px;
     margin-left: -30px;
     padding-left: 30px;
-    
+
     border-bottom-width: 5px;
     border-bottom-style: solid;
     border-bottom-color: #283890;
@@ -1191,7 +1197,7 @@ hr {
     border-bottom: 1px !important;
     background-color: #fff !important;
     /*;*/
-    
+
 }
 
 .nav > li > a.a-tab, .nav > li > a.a-tab:hover, .nav > li > a.a-tab:focus {
@@ -1205,7 +1211,7 @@ hr {
     background-color: #fff !important;
     width: 60px;
     /*;*/
-    
+
 }
 
 .nav-tabs > li > a.a-tab:hover, .nav-tabs > li > a.a-tab:focus {

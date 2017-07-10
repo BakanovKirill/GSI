@@ -1,10 +1,12 @@
+{% load static from staticfiles %}
+
 <div class="row margin-top-15">
     <div class="col-md-2 right">
         <div class="form-group {% if form.name.errors %}has-error{% endif %}">
             <label class="control-label">{{ form.name.label }}*</label>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         {% if not form.name.errors %}
             {{ form.name }}
         {% else %}
@@ -12,8 +14,8 @@
             <b class="error-form">{{ form.name.errors }}</b>
         {% endif %}
     </div>
-    
-    <div class="col-md-2 right">
+
+    <div class="col-md-1 right">
         <div class="form-group {% if form.filename.errors %}has-error{% endif %}">
             <label class="control-label font-normal">{{ form.filename.label }}</label>
         </div>
@@ -26,6 +28,14 @@
             <b class="error-form">{{ form.filename.errors }}</b>
         {% endif %}
     </div>
+
+    {% if item_id %}
+        <div class="col-md-2 left">
+            <button class="btn del-btn check-cur-delete" type="button" name="update_btn" value="update"  data-toggle="tooltip" data-placement="top" title="Update" onclick="clickUpdate();">
+                <img src="{% static 'img/reload-24.png' %}"/>
+            </button>
+        </div>
+    {% endif %}
 </div>
 
 <div class="row margin-top-15">
@@ -42,7 +52,7 @@
             <b class="error-form">{{ form.max_val.errors }}</b>
         {% endif %}
     </div>
-    
+
     <div class="col-md-2 right">
         <div class="form-group {% if form.legend.errors %}has-error{% endif %}">
             <label class="control-label font-normal">{{ form.legend.label }}</label>
@@ -69,3 +79,7 @@
         <button type="submit" name="save_button" class="btn btn-primary btn-block">Save</button>
     </div>
 </div>
+
+<!-- Modal Update -->
+{% include '_modal_update.html' %}
+<!-- End Modal Update -->

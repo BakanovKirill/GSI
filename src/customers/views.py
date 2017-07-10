@@ -1092,6 +1092,22 @@ def lutfile_edit(request, lutfile_id):
     url_name = 'lutfiles'
     but_name = 'info_panel'
 
+    # get AJAX POST for KML files
+    if request.is_ajax() and request.method == "GET":
+        data_get_ajax = request.GET
+        data = ''
+
+        if 'update' in data_get_ajax:
+            customer = request.user
+            cip = CustomerInfoPanel.objects.filter(user=customer)
+
+            for cp in cip:
+                os.remove(cp.png_path)
+
+            cip.delete()
+
+        return HttpResponse(data)
+
     # Handling POST request
     if request.method == "POST":
         response = get_post(
@@ -2022,39 +2038,39 @@ def customer_section(request):
                 # TifPng
 
                 try:
-                    if is_lutfile:
-                        check_date = check_date_files(old_file_png, new_file_png)
-                    else:
-                        check_date = check_date_files(file_tif, file_png)
-
-                    print '!!!!!!!!   is_lutfile =============================== ', is_lutfile
-                    print '!!!!!!!!   check_date =============================== ', check_date
+                    # if is_lutfile:
+                    #     check_date = check_date_files(old_file_png, new_file_png)
+                    # else:
+                    #     check_date = check_date_files(file_tif, file_png)
+                    #
+                    # print '!!!!!!!!   is_lutfile =============================== ', is_lutfile
+                    # print '!!!!!!!!   check_date =============================== ', check_date
                     # print '!!!!!!!!   PNG_PATH =============================== ', PNG_PATH
                     # print '!!!!!!!!   COMMAND LINE =============================== ', command_line
                     # TifPng <InpTiff> <LUTfile> [<MaxVal>] [<Legend>]
 
-                    if check_date:
-                        if os.path.exists(file_tif):
-                            if is_lutfile:
-                                command_line_copy = 'cp {0} {1}'.format(old_file_png, new_file_png)
-                                command_set_outpudir = 'TIFPNG_OUTPUTDIR="{0}"'.format(PNG_PATH)
+                    # if check_date:
+                    if os.path.exists(file_tif):
+                        if is_lutfile:
+                            command_line_copy = 'cp {0} {1}'.format(old_file_png, new_file_png)
+                            command_set_outpudir = 'TIFPNG_OUTPUTDIR="{0}"'.format(PNG_PATH)
 
-                                # subprocess.call(command_set_outpudir, shell=True)
-                                proc_script = Popen(command_line, shell=True)
-                                proc_script.wait()
-                                subprocess.call(command_line_copy, shell=True)
-                            else:
-                                proc = Popen(['cat', file_tif], stdout=PIPE)
-                                p2 = Popen(['convert', '-', file_png], stdin=proc.stdout)
-
-                            # while not os.path.exists(file_png):
-                            #     pass
+                            # subprocess.call(command_set_outpudir, shell=True)
+                            proc_script = Popen(command_line, shell=True)
+                            proc_script.wait()
+                            subprocess.call(command_line_copy, shell=True)
                         else:
-                            warning_message = u'The images "{0}" does not exist!'.\
-                                                format(customer_info_panel_file.file_area_name)
+                            proc = Popen(['cat', file_tif], stdout=PIPE)
+                            p2 = Popen(['convert', '-', file_png], stdin=proc.stdout)
+
+                        # while not os.path.exists(file_png):
+                        #     pass
+                    else:
+                        warning_message = u'The images "{0}" does not exist!'.\
+                                            format(customer_info_panel_file.file_area_name)
 
 
-                        print '!!!!!!!!   PNG_PATH =============================== ', PNG_PATH
+                    print '!!!!!!!!   PNG_PATH =============================== ', PNG_PATH
                 except Exception, e:
                     print 'Popen Exception =============================== '
 
