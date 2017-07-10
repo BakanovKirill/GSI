@@ -1102,9 +1102,12 @@ def lutfile_edit(request, lutfile_id):
             cip = CustomerInfoPanel.objects.filter(user=customer)
 
             for cp in cip:
-                os.remove(cp.png_path)
+                try:
+                    os.remove(cp.png_path)
+                except Exception:
+                    pass
 
-            cip.delete()
+            # cip.delete()
 
         return HttpResponse(data)
 
