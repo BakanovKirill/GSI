@@ -75,7 +75,7 @@ def data_set_update_create(form, item_id=None):
             name=form.cleaned_data["name"],
             description=form.cleaned_data["description"],
             results_directory=form.cleaned_data["results_directory"],
-            shelf_data=form.cleaned_data["shelf_data"],
+            # shelf_data=form.cleaned_data["shelf_data"],
         )
         data_set = DataSet.objects.get(id=item_id)
     else:
@@ -83,7 +83,7 @@ def data_set_update_create(form, item_id=None):
             name=form.cleaned_data["name"],
             description=form.cleaned_data["description"],
             results_directory=form.cleaned_data["results_directory"],
-            shelf_data=form.cleaned_data["shelf_data"],
+            # shelf_data=form.cleaned_data["shelf_data"],
         )
 
     if form.cleaned_data["root_filename"] and form.cleaned_data["attribute_name"]:
@@ -137,8 +137,8 @@ def customer_access_update_create(form, multiple=None, item_id=None, delete=Fals
                 )
 
     return result
-    
-    
+
+
 def lutfile_update_create(form, item_id=None):
     """**Updated LutFiles model.**
 
@@ -147,12 +147,12 @@ def lutfile_update_create(form, item_id=None):
         * *item_id*: ID of the object. Set when editing (the item_id=None when you create a object)
 
     """
-    
+
     lut_filename = ''
-    
+
     if form.cleaned_data["filename"] != 'select':
         lut_filename = form.cleaned_data["filename"]
-        
+
     if item_id:
         LutFiles.objects.filter(id=item_id).update(
             name=form.cleaned_data["name"],

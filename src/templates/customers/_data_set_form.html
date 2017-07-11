@@ -12,7 +12,7 @@
             <b class="error-form">{{ form.name.errors }}</b>
         {% endif %}
     </div>
-    
+
     <div class="col-md-1 right">
         <div class="form-group {% if form.description.errors %}has-error{% endif %}">
             <label class="control-label font-normal">{{ form.description.label }}</label>
@@ -24,22 +24,6 @@
         {% else %}
             <span class="field-error">{{ form.description }}</span>
             <b class="error-form">{{ form.description.errors }}</b>
-        {% endif %}
-    </div>
-</div>
-
-<div class="row margin-top-15">
-    <div class="col-md-2 right">
-        <div class="form-group {% if form.shelf_data.errors %}has-error{% endif %}">
-            <label class="control-label font-normal">{{ form.shelf_data.label }}</label>
-        </div>
-    </div>
-    <div class="col-md-4">
-        {% if not form.shelf_data.errors %}
-            {{ form.shelf_data }}
-        {% else %}
-            <span class="field-error">{{ form.shelf_data }}</span>
-            <b class="error-form">{{ form.shelf_data.errors }}</b>
         {% endif %}
     </div>
 </div>
@@ -97,20 +81,6 @@
 {% if dirs_list %}
     <div class="row margin-top-15">
         <div class="col-md-2 right">
-            <div class="form-group {% if form.root_filename.errors %}has-error{% endif %}">
-                <label class="control-label font-normal">{{ form.root_filename.label }}</label>
-            </div>
-        </div>
-        <div class="col-md-5">
-            {% if not form.root_filename.errors %}
-                {{ form.root_filename }}
-            {% else %}
-                <span class="field-error">{{ form.root_filename }}</span>
-                <b class="error-form">{{ form.root_filename.errors }}</b>
-            {% endif %}
-        </div>
-        
-        <div class="col-md-1 right">
             <div class="form-group {% if form.attribute_name.errors %}has-error{% endif %}">
                 <label class="control-label font-normal">{{ form.attribute_name.label }}</label>
             </div>
@@ -121,6 +91,20 @@
             {% else %}
                 <span class="field-error">{{ form.attribute_name }}</span>
                 <b class="error-form">{{ form.attribute_name.errors }}</b>
+            {% endif %}
+        </div>
+
+        <div class="col-md-1 right">
+            <div class="form-group {% if form.root_filename.errors %}has-error{% endif %}">
+                <label class="control-label font-normal">{{ form.root_filename.label }}</label>
+            </div>
+        </div>
+        <div class="col-md-5">
+            {% if not form.root_filename.errors %}
+                {{ form.root_filename }}
+            {% else %}
+                <span class="field-error">{{ form.root_filename }}</span>
+                <b class="error-form">{{ form.root_filename.errors }}</b>
             {% endif %}
         </div>
     </div>

@@ -6,7 +6,6 @@ import subprocess
 from PIL import Image
 from subprocess import check_call, Popen, PIPE
 from osgeo import osr, gdal
-# import gdal
 import simplekml
 import pickle
 from datetime import datetime

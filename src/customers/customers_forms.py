@@ -111,14 +111,15 @@ class DataSetForm(forms.ModelForm):
         required=False,
         help_text='Enter only the project folder. For example: "WagnerB1/Scores_All"',
         label=u'Results Directory')
-    shelf_data = forms.ModelChoiceField(
-        widget=forms.Select(attrs={
-            'class': 'form-control',
-        }),
-        required=False,
-        queryset=ShelfData.objects.all(),
-        empty_label='Select',
-        label=u'Shelf Data', )
+    # shelf_data = forms.ModelChoiceField(
+    #     widget=forms.Select(attrs={
+    #         'class': 'form-control',
+    #         'disabled': 'disabled',
+    #     }),
+    #     required=False,
+    #     queryset=ShelfData.objects.all(),
+    #     empty_label='Select',
+    #     label=u'Shelf Data', )
     root_filename = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'form-control',
@@ -134,7 +135,7 @@ class DataSetForm(forms.ModelForm):
 
     class Meta:
         model = DataSet
-        fields = ['name', 'description', 'results_directory', 'shelf_data']
+        fields = ['name', 'description', 'results_directory',]
 
 
 class CustomerAccessForm(forms.ModelForm):
@@ -164,8 +165,8 @@ class CustomerAccessForm(forms.ModelForm):
             'user',
             'data_set',
         ]
-        
-        
+
+
 class CustomerPolygonsForm(forms.ModelForm):
     """**Form for editing Polygons.**"""
 
@@ -181,7 +182,7 @@ class CustomerPolygonsForm(forms.ModelForm):
         model = CustomerPolygons
         fields = ['name',]
 
-        
+
 class LutFilesForm(forms.ModelForm):
     """**Form for editing LutFiles.**"""
 
@@ -196,7 +197,7 @@ class LutFilesForm(forms.ModelForm):
     #     widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'File name'}),
     #     required=False,
     #     label=u'FileName')
-        
+
     filename = forms.CharField(
         widget=forms.Select(
                 attrs={'class': 'form-control'},
@@ -215,7 +216,7 @@ class LutFilesForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         required=False,
         label=u'Legend')
-    
+
 
     class Meta:
         model = LutFiles
