@@ -1715,9 +1715,9 @@ def customer_section(request):
 
         # When user celect a new DataSet, the previous celected DataSet to remove
         if 'datasets_id' in data_get_ajax:
-            print '!!!!!!!!! datasets_id ====================== \n'
+            # print '!!!!!!!!! datasets_id ====================== \n'
             for ip in cip:
-                print '!!!!!!!!! datasets_id ====================== ', ip.png_path
+                # print '!!!!!!!!! datasets_id ====================== ', ip.png_path
                 remove_file_png(ip.png_path)
 
             status = check_current_dataset(request, data_get_ajax)
@@ -2054,10 +2054,14 @@ def customer_section(request):
                     # if check_date:
                     if os.path.exists(file_tif):
                         if is_lutfile:
+                            # rf_transparent = 'export RF_TRANSPARENT=0'
                             command_line_copy = 'cp {0} {1}'.format(old_file_png, new_file_png)
-                            command_set_outpudir = 'TIFPNG_OUTPUTDIR="{0}"'.format(PNG_PATH)
+                            # command_set_outpudir = 'TIFPNG_OUTPUTDIR="{0}"'.format(PNG_PATH)
 
                             # subprocess.call(command_set_outpudir, shell=True)
+                            
+                            # os.environ['RF_TRANSPARENT']='0'
+                            os.environ.__setitem__('RF_TRANSPARENT', '0')
                             proc_script = Popen(command_line, shell=True)
                             proc_script.wait()
                             subprocess.call(command_line_copy, shell=True)
