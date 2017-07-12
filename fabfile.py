@@ -25,6 +25,7 @@ def clean_pyc():
 
 def restart():
     with cd(REMOTE_CODE_DIR):
+        # sudo("service php5-fpm restart")
         sudo("service supervisor restart")
         sudo("uwsgi --ini /home/gsi/sites/gsi_website/gsi_wsgi.ini")
 
@@ -66,12 +67,12 @@ def lokal_set_user_token():
 def dev_set_user_token():
     with cd(REMOTE_CODE_DIR):
         run("bin/django set_user_token")
-        
-        
+
+
 def lokal_set_url_kml():
     local("bin/django add_kml_url")
-    
-    
+
+
 def dev_set_url_kml():
     with cd(REMOTE_CODE_DIR):
         run("bin/django add_kml_url")

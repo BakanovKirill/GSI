@@ -8,7 +8,7 @@
     <meta charset="utf-8">
 
     <title>Greetings</title>
-    
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
@@ -24,7 +24,7 @@
     <!-- Formstone Select -->
     <!-- <link rel="stylesheet" href="{% static 'css/jquery.fs.selecter.css' %}"> -->
     <!--<link rel="stylesheet" href="{% static 'css/dropdown.css' %}">-->
-    
+
     <!-- Slider -->
     {# <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.7.2/css/bootstrap-slider.min.css" rel="stylesheet">#}
 
@@ -47,7 +47,7 @@
                     <!-- Start Top Menu 1 -->
                     <div class="row top-menu">
                         <!-- Show DataSets in the InfoPanel -->
-                        <div class="col-md-3 left">
+                        <div class="col-md-2 left">
                             {% if show_dataset_cip %}
                                 <div class="navbar-brand white margin-left-20" id="ds_show"><b class="purple">Dataset: </b><span>{{ show_dataset_cip }}</span></div>
                             {% else %}
@@ -55,9 +55,9 @@
                             {% endif %}
                         </div>
                         <!-- End Show DataSets in the InfoPanel -->
-                        
+
                         <!-- Show Attribute in the InfoPanel -->
-                        <div class="col-md-3 left">
+                        <div class="col-md-4 left">
                             {% if show_image_cip %}
                                 <div class="navbar-brand white"><b class="purple left-30">Image: </b><span id="img_show">{{ show_image_cip }}</span></div>
                             {% else %}
@@ -65,9 +65,9 @@
                             {% endif %}
                         </div>
                         <!-- End Show Attribute in the InfoPanel -->
-                        
+
                         <!-- Show Statistic in the InfoPanel -->
-                        <div class="col-md-3 left">
+                        <div class="col-md-4 left">
                             {% if show_statistic_cip %}
                                 <div class="navbar-brand white"><b class="purple left-30">Values: </b><span id="stat_show">{{ show_statistic_cip }}</span></div>
                             {% else %}
@@ -75,9 +75,9 @@
                             {% endif %}
                         </div>
                         <!-- End Show Statistic in the InfoPanel -->
-                        
+
                         <!-- Show User DropDown Menu in the InfoPanel -->
-                        <div class="col-md-3 left">
+                        <div class="col-md-1 left">
                             <div class="dropdown user-profile" id="dropUser">
                                 <button class="dropbtn-user dropdown-toggle white" id="titleUser" onclick="showSubMenuUser()">
                                     <b class="purple">User:</b> {{ request.user }}
@@ -103,8 +103,6 @@
                         <!-- End Show User DropDown Menu in the InfoPanel -->
                     </div>
                     <!-- End Top Menu 1 -->
-                    
-                    
 
                     <div class="row">
                         {% if error_message %}
@@ -113,7 +111,7 @@
                             <!-- Left Sidebar -->
                             <form class="form-modal" id="customer_section_left" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data" role="form" class="form-horizontal">
                                 {% csrf_token %}
-                                
+
                                 <div class="col-md-2 li-menu dropdown-left-0 left" id="col1">
                                     <!-- DataSets Menu -->
                                     <label class="control-label margin-top-25">Datasets:</label>
@@ -123,7 +121,7 @@
                                         {% endfor %}
                                     </select>
                                     <!-- END DataSets Menu -->
-                                    
+
                                     <!-- TABS menu -->
                                     <div role="tabpanel" class="margin-top-25">
                                         <!-- Navigational tabs -->
@@ -145,7 +143,7 @@
                                                             </button>
                                                         </div>
                                                     </div>
-                                                    
+
                                                     <div class="col-md-5 right">
                                                         <div class="snap-top-child-right">
                                                             <button type="button" class="btn btn-link" name="select-none-view" onclick="selectAllCheck(this.form.attribute_viewlist, 0);">
@@ -153,26 +151,26 @@
                                                             </button>
                                                         </div>
                                                     </div>
-                                                    
+
                                                     <div class="col-md-12 left margin-top-15 view-list" id="view_attribute">
                                                         {% for dl in dirs_list%}
                                                             <label class="normal"><input class="margin-bottom-6" name="attribute_viewlist" type="checkbox" value="view_{{ dl.id }}" {% if dl.attribute_name in attribute_list_infopanel %}checked="checked"{% endif %}> {{ dl.attribute_name }}</label><br>
                                                         {% endfor %}
                                                     </div>
-                                                    
+
                                                     <div class="col-md-6 left margin-top-15 snap-bottom-left">
                                                         <button type="button" name="next-view" id="next" class="btn btn-success btn-block" value="next" onclick="sendDataAttrStatToServer(this);">
                                                             Next
                                                         </button>
                                                     </div>
-                                                    
+
                                                     <div class="col-md-6 left margin-top-15 snap-bottom-right">
                                                         <button type="button" name="previous-view" id="previous" class="btn btn-success btn-block margin-right-10" value="previous"  onclick="sendDataAttrStatToServer(this);">
                                                             Previous
                                                         </button>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <!-- REPORT -->
                                                 <div role="tabpanel" {% if tab_active == 'report' %}class="tab-pane fade in active"{% else %}class="tab-pane fade"{% endif %} id="report">
                                                     <div class="col-md-5 left snap-top-child-left">
@@ -180,13 +178,13 @@
                                                             Select All
                                                         </button>
                                                     </div>
-                                                    
+
                                                     <div class="col-md-5 snap-top-child-right">
                                                         <button type="button" class="btn btn-link" name="select-none-report" onclick="selectAllCheck(this.form.viewreport, 0)">
                                                             Select None
                                                         </button>
                                                     </div>
-                                                    
+
                                                     <div class="col-md-12 left margin-top-15 report-list" id="report_attribute">
                                                         {% for dl in dirs_list%}
                                                             <label class="normal"><input class="margin-bottom-6" name="viewreport" type="checkbox" value="report_{{ dl.id }}" {% if dl.attribute_name in show_report_ap %}checked="checked"{% endif %}> {{ dl.attribute_name }}</label><br>
@@ -194,20 +192,20 @@
                                                     </div>
                                                 </div>
                                                 <!-- END REPORT -->
-                                                
+
                                                 <!-- AOI -->
                                                 <div role="tabpanel" {% if tab_active == 'aoi' %}class="tab-pane fade margin-bottom-6 in active aoi-list"{% else %}class="tab-pane fade margin-bottom-6 aoi-list"{% endif %} id="aoi">
                                                     {% for polygon in polygons%}
                                                         <div class="col-md-8 margin-top-8 margin-bottom-4 margin-left-4">
                                                             <input type="radio" name="polygon" value="{{ polygon.kml_name }}" onchange="setPolygon(this);"><a href="{{ absolute_kml_url }}/{{ polygon.kml_name }}"> {{ polygon.name }}</a>
                                                         </div>
-                                                            
+
                                                         <div class="col-md-1 margin-bottom-4">
                                                             <button class="btn del-btn edit-area margin-top-07 left" type="button" name="save_area" value="{{ polygon.id }}" data-toggle="tooltip" data-placement="top" title="Edit">
                                                                 <img src="{% static 'img/edit-18.png' %}" class="margin-left-010"/>
                                                             </button>
                                                         </div>
-                                                        
+
                                                         <div class="col-md-1 margin-bottom-4">
                                                             <button class="btn del-btn check-cur-delete margin-top-07 right" type="button" name="del_current_btn" value="{{ polygon.kml_name }}" data-toggle="tooltip" data-placement="top" title="Delete">
                                                                 <img src="{% static 'img/delete-18.png' %}" class="margin-left-010"/>
@@ -217,22 +215,22 @@
                                                 </div>
                                             </div>
                                             <!-- END Tabs content -->
-                                        
+
                                             <!-- Statistics Menu -->
                                             <label class="control-label margin-top-25">Statistics:</label>
-                                            
+
                                             <div class="row">
                                                 <div class="col-md-12 left" id="statictics_list">
                                                     <label class="normal"><input class="margin-top-10" name="statistics_viewlist" type="radio" value="mean_ConditionalMax"  {% if 'mean_ConditionalMax' in statisctics_infopanel %}checked="checked"{% endif %}> mean_ConditionalMax</label><br>
-                                                    
+
                                                     <label class="normal"><input class="margin-top-10" name="statistics_viewlist" type="radio" value="mean_ConditionalMean" {% if 'mean_ConditionalMean' in statisctics_infopanel %}checked="checked"{% endif %}> mean_ConditionalMean</label><br>
-                                                    
+
                                                     <label class="normal"><input class="margin-top-10" name="statistics_viewlist" type="radio" value="mean_ConditionalMedian" {% if 'mean_ConditionalMedian' in statisctics_infopanel %}checked="checked"{% endif %}> mean_ConditionalMedian</label><br>
-                                                    
+
                                                     <label class="normal"><input class="margin-top-10" name="statistics_viewlist" type="radio" value="mean_ConditionalMin" {% if 'mean_ConditionalMin' in statisctics_infopanel %}checked="checked"{% endif %}> mean_ConditionalMin</label><br>
-                                                    
+
                                                     <label class="normal"><input class="margin-top-10" name="statistics_viewlist" type="radio" value="mean_LowerQuartile" {% if 'mean_LowerQuartile' in statisctics_infopanel %}checked="checked"{% endif %}> mean_LowerQuartile</label><br>
-                                                    
+
                                                     <label class="normal"><input class="margin-top-10" name="statistics_viewlist" type="radio" value="mean_Quantile" {% if 'mean_Quantile' in statisctics_infopanel %}checked="checked"{% endif %}> mean_Quantile</label><br>
                                                 </div>
                                             </div>
@@ -250,7 +248,7 @@
                             <!-- Start Status Messages -->
                             {% include '_base_message.html' %}
                             <!-- End Status Messages -->
-                            
+
                             <!-- Title -->
                             <h2>{% block title_customer %}{% endblock title_customer %}</h2>
                             <!-- End Title -->
@@ -259,7 +257,7 @@
                         <!-- End Customer Section Content -->
                     </div>
                 </div>
-                
+
                 <!-- Start Bufer -->
                 <!-- <div class="footer-push"></div> -->
                 <!-- End Bufer -->
@@ -268,7 +266,7 @@
         <!-- End Body -->
     </div>
     <!-- End Container -->
-    
+
 
     <!-- jQuery -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -290,7 +288,7 @@
     <!-- CKEditor JavaScript -->
     <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
     <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
-    
+
     <!-- Checkboxes -->
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 
@@ -299,10 +297,10 @@
     <script type="text/javascript" src="{% static 'js/scripts_ajax.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/script_selectors.js' %}"></script>
 
-    
+
     <!-- Slider scripts -->
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.7.2/bootstrap-slider.min.js"></script> -->
-    
+
 
     <!--
     <script type="text/javascript" src="{% static 'js/scripts_google_maps.js' %}"></script>
