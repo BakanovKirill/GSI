@@ -347,7 +347,9 @@
 					new google.maps.LatLng({{ eLat_2 }}, {{ eLng_2 }}));
 
 				// The source to image overlay
-				var srcImage = '{{ absolute_url_png_file }}';
+				// var srcImage = '{{ absolute_url_png_file }}';
+				var srcImage = select_image;
+
 				var overlay = new USGSOverlay(bounds, srcImage, map);
 
 				// Show the lat and lng under the mouse cursor.
@@ -609,10 +611,11 @@
 			}
 
 			function sendGetToServer() {
-				var x = new XMLHttpRequest();
+				// var x = new XMLHttpRequest();
 				// x.open("GET", "/customer/php?tif_path={{ file_tif_path }}", true);
-				x.open("GET", "/customer/php?tif_path={{ file_tif_path }}&ds={{ data_set_id }}", true);
-				x.send(null);
+                
+				// x.open("GET", "/customer/php?tif_path={{ file_tif_path }}&ds={{ data_set_id }}", true);
+				// x.send(null);
 
 				deleteFile('{{ data_set_id }}');
 

@@ -10,6 +10,7 @@ import simplekml
 import pickle
 from datetime import datetime
 import json
+import csv
 
 # import Image, ImageDraw
 # from osgeo import gdal
@@ -40,7 +41,7 @@ from gsi.settings import (BASE_DIR, RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM,
                         POLYGONS_DIRECTORY, MEDIA_ROOT, TMP_PATH, DAFAULT_LAT,
                         DAFAULT_LON, PNG_DIRECTORY, PNG_PATH, PROJECTS_PATH,
                         KML_DIRECTORY, KML_PATH, ATTRIBUTES_NAME, FTP_PATH,
-                        LUT_DIRECTORY)
+                        LUT_DIRECTORY, SCRIPT_TIFPNG, SCRIPT_GETPOLYINFO)
 
 
 # categorys list
@@ -1312,12 +1313,12 @@ def createCustomerInfoPanel(customer, data_set, shelf_data, stat_file, absolute_
 def createKml(user, filename, info_window, url, data_set):
     # Create KML file for the draw polygon
     kml_filename = str(filename) + '.kml'
-    tmp_file = str(user) + '_coord_tmp.txt'
+    tmp_file = str(user) + '_coord_kml.txt'
     tmp_path = os.path.join(KML_PATH, tmp_file)
     coord = getGeoCoord(tmp_path)
     kml_url = url + '/' + kml_filename
 
-    # print 'coord ========================== ', coord
+    # print '!!!!!!!!!!! COORD ======================== ', coord
 
     kml = simplekml.Kml()
     pol = kml.newpolygon(name=filename)
@@ -1384,7 +1385,31 @@ def getDataSet(ds_id, data_set):
 
     return data_set, data_set_id
 
-# view C ustomer Section
+
+def getListTifFiles(customer, dataset):
+    list_files_tif = []
+    list_data_db = []
+    attributes_reports = AttributesReport.objects.filter(
+                            user=customer, data_set=dataset
+                        ).order_by('shelfdata__attribute_name')
+
+    if attributes_reports:
+        for attr in attributes_reports:
+            name_1 = attr.shelfdata.root_filename
+            name_2 = dataset.results_directory.split('/')[0]
+            tif_path = os.path.join(PROJECTS_PATH, dataset.results_directory, name_1)
+            fl_tif = '{0}/{1}_{2}.{3}.tif'.format(tif_path, attr.statisctic, name_1, name_2)
+            str_data_db = '{0},{1},'.format(attr.shelfdata.id, fl_tif)
+
+            list_files_tif.append(fl_tif)
+            list_data_db.append(str_data_db)
+
+    # print '!!!!!!!!!! FILE ========================= ', list_files_tif
+
+    return list_files_tif, list_data_db
+
+
+# view Customer Section
 @login_required
 @render_to('customers/customer_section.html')
 def customer_section(request):
@@ -1414,11 +1439,27 @@ def customer_section(request):
 
     customer = request.user
     shelf_data_all = ShelfData.objects.all().order_by('attribute_name')
-    # customer_info_panel = CustomerInfoPanel.objects.filter(user=customer)
+    customer_info_panel = CustomerInfoPanel.objects.filter(user=customer)
     customer_polygons = CustomerPolygons.objects.filter(user=customer)
     polygons_path = os.path.join(MEDIA_ROOT, 'kml')
     customer_access = CustomerAccess.objects.filter(user=customer)
     customer_access_ds = None
+
+    # COORDINATE
+    in_coord_tmp = str(customer) + '_coord_tmp.kml'
+    out_coord_tmp = str(customer) + '_coord_tmp.txt'
+    out_coord_kml = str(customer) + '_coord_kml.txt'
+    file_path_in_coord_tmp = os.path.join(KML_PATH, in_coord_tmp)
+    file_path_out_coord_tmp = os.path.join(KML_PATH, out_coord_tmp)
+    file_path_out_coord_kml = os.path.join(KML_PATH, out_coord_kml)
+
+    # TMP FILES
+    customer_tmp_for_db = str(customer) + '_db.csv'
+    result_ajax_file = str(customer) + '_ajax.csv'
+
+    tmp_db_file = os.path.join(TMP_PATH, customer_tmp_for_db)
+    ajax_file = os.path.join(TMP_PATH, result_ajax_file)
+
 
     if customer_access:
         customer_access_ds = CustomerAccess.data_set.through.objects.filter(
@@ -1455,6 +1496,7 @@ def customer_section(request):
     absolute_png_url = os.path.join(scheme, request.get_host(), PNG_DIRECTORY)
     absolute_kml_url = os.path.join(scheme, request.get_host(), KML_DIRECTORY)
 
+    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     # Get the User DataSets
     if customer_access_ds:
         for n in customer_access_ds:
@@ -1471,11 +1513,14 @@ def customer_section(request):
         }
 
         return data
+    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     # GET SESSIONS !!!!!!!!!!!!!!!!!!!!!!!!!
     # Get select data_set sessions
     if request.session.get('select_data_set', False):
         data_set_id = int(request.session['select_data_set'])
+        # cur_cip = CustomerInfoPanel.objects.filter(user=customer)
+        # data_set_id = cur_cip[0].data_set.id
     else:
         CustomerInfoPanel.objects.filter(user=customer).delete()
         request.session['select_data_set'] = data_sets[0].id
@@ -1487,6 +1532,8 @@ def customer_section(request):
     else:
         request.session['tab_active'] = tab_active
 
+    # print '!!!!!!!!!!!!!!!!!!!! data_set_id ==================== ', data_set_id
+    # print '!!!!!!!!!!!!!!!!!!!! data_set ==================== ', data_sets[0]
     # Get the DataSet and DataSet ID select
     data_set, data_set_id = getDataSet(data_set_id, data_sets[0])
 
@@ -1615,6 +1662,8 @@ def customer_section(request):
             reports_cip = []
             statistic = ''
 
+            # print '!!!!!!!!!!!!! COORD data_post_ajax ====================== ', data_post_ajax
+
             if 'reports[]' in data_post_ajax:
                 reports_ids = []
                 for rep_id in data_post_ajax.getlist('reports[]'):
@@ -1647,19 +1696,23 @@ def customer_section(request):
                                         statisctic=statistic
                                     )
 
-            coord_tmp = str(request.user) + '_coord_tmp.txt'
-            php_tmp = str(request.user) + '_php_tmp.txt'
+            coord_tmp = str(request.user) + '_coord_tmp.kml'
+            kml_name ='{0} {1} AREA COORDINATE'.format(request.user, data_set)
             file_path_coord = os.path.join(KML_PATH, coord_tmp)
-            file_path_php = os.path.join(KML_PATH, php_tmp)
-            myfile_coord = open(file_path_coord, "w")
-            myfile_php = open(file_path_php, "w")
 
-            list_size = len(data_post_ajax.lists()) - 1
-            coord = []*list_size
+
+            # php_tmp = str(request.user) + '_php_tmp.txt'
+            # file_path_php = os.path.join(KML_PATH, php_tmp)
+            # myfile_coord = open(file_path_coord, "w")
+            # myfile_php = open(file_path_php, "w")
+
+            # list_size = len(data_post_ajax.lists()) - 1
+            # coord = []*list_size
+            
+            kml_file_coord = open(file_path_out_coord_kml, "w")
             tmp = {}
             coord_dict = {}
-            lon = []
-            lat = []
+            points_coord = []
 
             for n in data_post_ajax.lists():
                 if n[0] != 'csrfmiddlewaretoken' and n[0] != 'reports[]' and n[0] != 'stats[]':
@@ -1670,28 +1723,78 @@ def customer_section(request):
                 coord_dict[k] = tmp[k]
 
             for n in coord_dict:
-                myfile_coord.write(",".join(coord_dict[n]));
-                myfile_coord.write("\n");
+                str_coord = '{0},{1}\n'.format(coord_dict[n][0], coord_dict[n][1])
+                # print '!!!!!!!!!!! COORD =================== ', str_coord
+                kml_file_coord.write(str_coord)
+                points_coord.append(tuple(coord_dict[n]))
 
-            for n in coord_dict:
-                lon.append(coord_dict[n][0])
-                lat.append(coord_dict[n][1])
+            kml_file_coord.close()
 
-            lat_str = ','.join(lat)
-            lon_str = ','.join(lon)
+            # *************************************************************************************************
+            kml = simplekml.Kml()
+            kml.newpoint(name=kml_name, coords=points_coord)  # lon, lat, optional height
+            kml.save(file_path_coord)
+            list_file_tif, list_data_db = getListTifFiles(customer, data_set)
 
-            # print '!!!!!!!!!!!!!!!! lat_str =========================== ', lat_str
-            # print '!!!!!!!!!!!!!!!! lat_str =========================== ', lat_str
+            try:
+                os.remove(file_path_out_coord_tmp)
+            except Exception:
+                pass
 
-            myfile_php.write(lat_str);
-            myfile_php.write("\n");
-            myfile_php.write(lon_str);
-            myfile_php.write("\n");
+            # file_path_in_coord_tmp
+            # file_path_out_coord_tmp
 
-            myfile_coord.close()
-            myfile_php.close()
+            # list_files_tif = []
+            # data_db_list = []
 
-            # print 'coord_dict ======================== ', coord_dict
+            # tmp_db_file = os.path.join(TMP_PATH, customer_tmp_for_db)
+            # ajax_file = os.path.join(TMP_PATH, result_ajax_file)
+
+            try:
+                count_data = 0
+                new_line = ''
+                db_file_open = open(tmp_db_file, 'w')
+
+                for file_tif in list_file_tif:
+                    command_line = '{0} {1} {2} {3}'.format(
+                                        SCRIPT_GETPOLYINFO,
+                                        file_tif,
+                                        file_path_in_coord_tmp,
+                                        file_path_out_coord_tmp
+                                    )
+
+                    # print '!!! COMMAND LINE =========================== ', command_line
+                    # print '!!! FILE =========================== ', f_tif
+                    proc_script = Popen(command_line, shell=True)
+                    proc_script.wait()
+
+                    file_out_coord_open = open(file_path_out_coord_tmp)
+
+                    for line in file_out_coord_open.readlines():
+                        new_line = line.replace(' ', '')
+                        new_line = new_line.replace('\n', '')
+                    
+                        # print '!!!!!!! 1 NEW LINE ========================== ', new_line
+
+                        if new_line:
+                            new_line = new_line.split(',')[1:]
+                            new_line = ','.join(new_line)
+                            str_db_file = '{0}{1}'.format(list_data_db[count_data], new_line) 
+                            db_file_open.write('{0}\n'.format(str_db_file))
+                            count_data += 1
+                            # print '!!!!!!! 2 SPLIT TYPE NEW LINE ========================== ', new_line.split(',')
+                            # print '!!!!!!! str_DB_file ========================== ', str_db_file
+                
+                db_file_open.close()
+            except Exception, e:
+                print '!!!! ERROR ALL ======================= ', e
+                pass
+
+            # *************************************************************************************************
+
+            # print '!!!!!!!!!!! LIST F ======================== ', list_file_tif
+            # print '!!!!!!!!!!! LIST DB ======================== ', list_data_db
+            # print '!!!!!!!!!!! POINTS_coord ======================== ', points_coord
 
             return HttpResponse(data)
 
@@ -1965,12 +2068,23 @@ def customer_section(request):
                                         user=request.user,
                                         is_show=True)
 
+            remove_png_file = CustomerInfoPanel.objects.filter(
+                                        user=request.user)
+
+            for rm_f in remove_png_file:
+                try:
+                    os.remove(rm_f.png_path)
+                except OSError:
+                    pass
+
             if customer_info_panel_file:
                 cip_choice = customer_info_panel_file[0]
                 file_tif = cip_choice.tif_path
                 file_png = cip_choice.png_path
                 url_png = cip_choice.url_png
                 file_area_name = cip_choice.file_area_name
+
+                # print 'CIP NAME ========================= ', cip_choice
 
                 if cip_choice.data_set.shelf_data:
                     shelf_data_choice = cip_choice.data_set.shelf_data
@@ -1985,7 +2099,7 @@ def customer_section(request):
 
                         # print 'LUT NAME ========================= ', lut_name
 
-                        tif_png_script = os.path.join(LUT_DIRECTORY, 'TifPng')
+                        tif_png_script = SCRIPT_TIFPNG
                         lut_file = os.path.join(LUT_DIRECTORY, filename)
 
                         command_line = tif_png_script + ' '
@@ -2015,30 +2129,6 @@ def customer_section(request):
                         # print 'NEW COLOR NAME ========================= ', new_color_file
 
                 # Convert tif to png
-
-                # Set file vars
-                # # output_file = "out.jpg"
-                # # output_file_root = os.path.splitext(output_file)[0]
-                # output_file_ext = 'png'
-                # output_file_tmp = customer_info_panel_file.file_area_name + ".tmp"
-                #
-                # # Create tmp gtif
-                # driver = gdal.GetDriverByName("GTiff")
-                # dst_ds = driver.Create(output_file_tmp, 512, 512, 1, gdal.GDT_Byte )
-                # raster = numpy.zeros( (512, 512) )
-                # dst_ds.GetRasterBand(1).WriteArray(raster)
-                #
-                # # Create jpeg or rename tmp file
-                # if (cmp(output_file_ext.lower(),"png" ) == 0):
-                #     jpg_driver = gdal.GetDriverByName("PNG")
-                #     jpg_driver.CreateCopy( file_png, dst_ds, 0 )
-                #     os.remove(output_file_tmp)
-                # else:
-                #     os.rename(output_file_tmp, file_png)
-
-                # LUT_DIRECTORY
-                # TifPng
-
                 try:
                     # if is_lutfile:
                     #     check_date = check_date_files(old_file_png, new_file_png)
@@ -2048,24 +2138,30 @@ def customer_section(request):
                     # print '!!!!!!!!   is_lutfile =============================== ', is_lutfile
                     # print '!!!!!!!!   check_date =============================== ', check_date
                     # print '!!!!!!!!   PNG_PATH =============================== ', PNG_PATH
-                    # print '!!!!!!!!   COMMAND LINE =============================== ', command_line
+
                     # TifPng <InpTiff> <LUTfile> [<MaxVal>] [<Legend>]
+
+                    # print '!!!!!!!!!!!!!!!!!!!!! 2 is_lutfile ========================== ', is_lutfile
 
                     # if check_date:
                     if os.path.exists(file_tif):
                         if is_lutfile:
+                            # print '!!!!!!!!   COMMAND LINE =============================== 2 ', command_line
+
                             # rf_transparent = 'export RF_TRANSPARENT=0'
                             command_line_copy = 'cp {0} {1}'.format(old_file_png, new_file_png)
                             # command_set_outpudir = 'TIFPNG_OUTPUTDIR="{0}"'.format(PNG_PATH)
 
                             # subprocess.call(command_set_outpudir, shell=True)
-                            
+
                             # os.environ['RF_TRANSPARENT']='0'
                             os.environ.__setitem__('RF_TRANSPARENT', '0')
                             proc_script = Popen(command_line, shell=True)
                             proc_script.wait()
                             subprocess.call(command_line_copy, shell=True)
                         else:
+                            # print '!!!!!!!!!!!!!!!!!!!!! 3 is_lutfile ========================== ', is_lutfile
+                            # print '!!!!!!!!!!!!!!!!!!!!! 3 file_png ========================== ', file_png
                             proc = Popen(['cat', file_tif], stdout=PIPE)
                             p2 = Popen(['convert', '-', file_png], stdin=proc.stdout)
 
@@ -2076,7 +2172,7 @@ def customer_section(request):
                                             format(customer_info_panel_file.file_area_name)
 
 
-                    print '!!!!!!!!   PNG_PATH =============================== ', PNG_PATH
+                    # print '!!!!!!!!   PNG_PATH =============================== ', PNG_PATH
                 except Exception, e:
                     print 'Popen Exception =============================== '
 
@@ -2134,14 +2230,20 @@ def customer_section(request):
         show_dataset_cip = customer_info_panel_show[0].data_set.name
         show_image_cip = customer_info_panel_show[0].attribute_name
         show_statistic_cip = customer_info_panel_show[0].statisctic
+        data_set_id = customer_info_panel_show[0].data_set.id
+        request.session['select_data_set'] = data_set_id
 
-        # url_png = customer_info_panel_show[0].png_path
+        dirs_list = getResultDirectory(customer_info_panel_show[0].data_set, shelf_data_all)
+
+        # png_name = customer_info_panel_show[0].png_path.split('/')[-1]
+        # url_png = '{0}/{1}'.format(absolute_png_url, png_name)
     elif not customer_info_panel_show and data_set:
         show_dataset_cip = data_set
 
-        # print 'show_dataset_cip ===================================== ', show_dataset_cip
-        # print 'show_image_cip ===================================== ', show_image_cip
-    # print '!!!!!!! URL PNG  ===================================== ', url_png
+    # print 'show_dataset_cip ===================================== ', show_dataset_cip
+    # print 'show_image_cip ===================================== ', show_image_cip
+    # print 'show_statistic_cip  ===================================== ', show_statistic_cip
+    # print 'dirs_list  ===================================== ', dirs_list
 
     attribute_report = AttributesReport.objects.filter(user=customer)
 
@@ -2190,153 +2292,226 @@ def customer_section(request):
 
 # PHP calculations
 # @user_passes_test(lambda u: u.is_superuser)
-@login_required
-@render_to('customers/customer_section_php.html')
-def customer_section_php(request):
-    title = 'PHP page'
-    file_tif_path = ''
-    coord_list = []
-    latlist = ''
-    lonlist = ''
-    files_tif = ''
-    sh_data = ''
-    customer = request.user
-    customer_tmp_file = str(customer) + '_result.csv'
-    customer_tmp_for_db = str(customer) + '_db.csv'
-    result_ajax_file = str(customer) + '_ajax.csv'
-    count_items_file = str(customer) + '_count_items.csv'
+# @login_required
+# @render_to('customers/customer_section_php.html')
+# def customer_section_php(request):
+#     title = 'PHP page'
+#     file_tif_path = ''
+#     coord_list = []
+#     latlist = ''
+#     lonlist = ''
+#     files_tif = ''
+#     sh_data = ''
+#     customer = request.user
 
-    php_file = '{0}_php_tmp.txt'.format(customer)
-    file_path_php = os.path.join(KML_PATH, php_file)
-    tmp_file_path = os.path.join(TMP_PATH, customer_tmp_file)
-    tmp_db_file_path = os.path.join(TMP_PATH, customer_tmp_for_db)
-    ajax_file_path = os.path.join(TMP_PATH, result_ajax_file)
-    count_items_path = os.path.join(TMP_PATH, count_items_file)
+#     # customer_tmp_file = str(customer) + '_result.csv'
+#     customer_tmp_for_db = str(customer) + '_db.csv'
+#     result_ajax_file = str(customer) + '_ajax.csv'
+#     count_items_file = str(customer) + '_count_items.csv'
 
-    result_f_name = 'src/media/temp_files/{0}_result.csv'.format(customer)
-    result_for_db = 'src/media/temp_files/{0}_db.csv'.format(customer)
-    result_count_items = 'src/media/temp_files/{0}_count_items.csv'.format(customer)
+#     tmp_db_file_path = os.path.join(TMP_PATH, customer_tmp_for_db)
+#     ajax_file_path = os.path.join(TMP_PATH, result_ajax_file)
+#     count_items_path = os.path.join(TMP_PATH, count_items_file)
 
-
-    ####################### write log file
-    log_file = '/home/gsi/LOGS/delete_file.log'
-    log_delete_file = open(log_file, 'w+')
-    log_delete_file.write('FILE NAME: '+result_f_name+'\n')
-    #######################
-
-    # print 'tmp_file_path ============================== ', tmp_file_path
-
-    # $latlist = '48.88672158743591,48.86956150482169,48.84019508397442';
-    # $lonlist = '-89.83619749546051,-89.57595884799957,-89.75036680698395';
-
-    # Handling GET request
-    if request.method == "GET":
-        data_get_ajax = request.GET
-
-        if data_get_ajax.get('tif_path'):
-            file_tif_path = data_get_ajax.get('tif_path')
-
-            data_set_id = data_get_ajax.get('ds')
-            data_set = DataSet.objects.get(id=data_set_id)
-            shelf_data = ShelfData.objects.all().order_by('attribute_name')
-
-            attributes_reports = AttributesReport.objects.filter(
-                                    user=customer, data_set=data_set
-                                ).order_by('shelfdata__attribute_name')
+#     # COORDINATE SECTION
+#     in_coord_tmp = str(customer) + '_coord_tmp.kml'
+#     out_coord_tmp = str(customer) + '_coord_tmp.txt'
+#     file_coord_tmp = os.path.join(KML_PATH, in_coord_tmp)
+#     file_out_coord_tmp = os.path.join(KML_PATH, out_coord_tmp)
+#     list_files_tif = []
+#     data_db_list = []
 
 
+#     # php_file = '{0}_php_tmp.kml'.format(customer)
+#     # file_path_php = os.path.join(KML_PATH, php_file)
+#     # tmp_file_path = os.path.join(TMP_PATH, customer_tmp_file)
+    
 
-            # dirs_list = getResultDirectory(data_set, shelf_data)
-
-            # cip_query = CustomerInfoPanel.objects.filter(
-            #                 user=request.user,
-            #                 data_set=data_set)
-
-            count_files = 0
-
-            for attr in attributes_reports:
-                name_1 = attr.shelfdata.root_filename
-                name_2 = data_set.results_directory.split('/')[0]
-                tiff_path = os.path.join(PROJECTS_PATH, data_set.results_directory, name_1)
-                # files_tif += tiff_path + attr.statisctic + '/mean_ConditionalMean_' + name_1 + '.' + name_2 + '.tif,'
-                files_tif += '{0}/{1}_{2}.{3}.tif,'.format(tiff_path, attr.statisctic, name_1, name_2)
-                sh_data += '{0},'.format(attr.shelfdata.id)
-                count_files += 1
-
-            files_tif = files_tif[0:-1]
-            sh_data = sh_data[0:-1]
-
-            cf = CountFiles.objects.update_or_create(user=customer, count=count_files)
-            # request.session['count_files'] = count_files
-
-            print '!!!! COUNTE FILES ============================= ', count_files
-            # print 'dirs_list ============================= ', dirs_list
-            # print 'sh_data ============================= ', sh_data
-            # print 'files_tif ============================= ', files_tif
-            # print 'tmp_db_file_path ============================= ', tmp_db_file_path
-
-            try:
-                os.remove(tmp_file_path)
-                os.remove(tmp_db_file_path)
-                os.remove(ajax_file_path)
-                os.remove(count_items_path)
-
-                # print 'remove FILE: "{0}"'.format(tmp_file_path)
-                # print 'remove FILE: "{0}"'.format(tmp_db_file_path)
-
-                ####################### write log file
-                log_delete_file.write('remove FILE: "{0}"\n'.format(tmp_file_path))
-                log_delete_file.write('remove DB FILE: "{0}"\n'.format(tmp_db_file_path))
-                ####################### write log file
-            except Exception, e:
-                print 'except REMOVE FILE =========================== ', e
-                ####################### write log file
-                log_delete_file.write('ERROR remove FILE: "{0}"\n'.format(e))
-                ####################### write log file
-                pass
+#     # result_f_name = 'src/media/temp_files/{0}_result.csv'.format(customer)
+#     # result_for_db = 'src/media/temp_files/{0}_db.csv'.format(customer)
+#     # result_count_items = 'src/media/temp_files/{0}_count_items.csv'.format(customer)
 
 
-            f_php_coord = open(file_path_php)
-            for line in f_php_coord.readlines():
-                coord_list.append(line.replace('\n',''))
+#     ####################### write log file
+#     log_file = '/home/gsi/LOGS/delete_file.log'
+#     log_delete_file = open(log_file, 'w+')
+#     # log_delete_file.write('FILE NAME: '+result_f_name+'\n')
+#     #######################
 
-            # print 'coord_list ============================= ', coord_list
+#     # print 'tmp_file_path ============================== ', tmp_file_path
 
-            latlist = coord_list[0]
-            lonlist = coord_list[1]
+#     # $latlist = '48.88672158743591,48.86956150482169,48.84019508397442';
+#     # $lonlist = '-89.83619749546051,-89.57595884799957,-89.75036680698395';
 
-            # print 'latlist =========================== ', latlist
-            # print 'lonlist =========================== ', lonlist
+#     #######################
+#     # proc_script = Popen(command_line, shell=True)
+#     # proc_script.wait()
+#     # subprocess.call(command_line_copy, shell=True)
+#     #######################
+
+#     # Handling GET request
+#     if request.method == "GET":
+#         data_get_ajax = request.GET
+
+#         print 'data_get_ajax ============================== ', data_get_ajax
+
+#         if data_get_ajax.get('tif_path'):
+#             try:
+#                 # os.remove(tmp_file_path)
+#                 os.remove(tmp_db_file_path)
+#                 os.remove(ajax_file_path)
+#                 os.remove(count_items_path)
+#                 os.remove(file_coord_tmp)
+
+
+#                 # print 'remove FILE: "{0}"'.format(tmp_file_path)
+#                 # print 'remove FILE: "{0}"'.format(tmp_db_file_path)
+
+#                 ####################### write log file
+#                 # log_delete_file.write('remove FILE: "{0}"\n'.format(tmp_file_path))
+#                 log_delete_file.write('remove DB FILE: "{0}"\n'.format(tmp_db_file_path))
+#                 ####################### write log file
+#             except Exception, e:
+#                 print 'except REMOVE FILE =========================== ', e
+#                 ####################### write log file
+#                 log_delete_file.write('ERROR remove FILE: "{0}"\n'.format(e))
+#                 ####################### write log file
+#                 pass
+
+
+#             file_tif_path = data_get_ajax.get('tif_path')
+
+#             data_set_id = data_get_ajax.get('ds')
+#             data_set = DataSet.objects.get(id=data_set_id)
+#             # shelf_data = ShelfData.objects.all().order_by('attribute_name')
+
+#             attributes_reports = AttributesReport.objects.filter(
+#                                     user=customer, data_set=data_set
+#                                 ).order_by('shelfdata__attribute_name')
 
 
 
+#             # dirs_list = getResultDirectory(data_set, shelf_data)
 
-    # print 'file_tif_path =========================== ', file_tif_path
-    print 'files_tif =========================== ', files_tif
+#             # cip_query = CustomerInfoPanel.objects.filter(
+#             #                 user=request.user,
+#             #                 data_set=data_set)
+
+#             count_files = 0
+
+#             for attr in attributes_reports:
+#                 name_1 = attr.shelfdata.root_filename
+#                 name_2 = data_set.results_directory.split('/')[0]
+#                 tiff_path = os.path.join(PROJECTS_PATH, data_set.results_directory, name_1)
+
+#                 # files_tif += '{0}/{1}_{2}.{3}.tif,'.format(tiff_path, attr.statisctic, name_1, name_2)
+#                 fl_tif = '{0}/{1}_{2}.{3}.tif'.format(tiff_path, attr.statisctic, name_1, name_2)
+
+#                 # sh_data += '{0},'.format(attr.shelfdata.id)
+                
+#                 str_data_db = '{0},{1},'.format(attr.shelfdata.id, fl_tif)
+
+#                 list_files_tif.append(fl_tif)
+#                 data_db_list.append(str_data_db)
+#                 count_files += 1
+
+#             # print '!!!!!!!!!! FILE ========================= ', list_files_tif
+
+#             # files_tif = files_tif[0:-1]
+#             # sh_data = sh_data[0:-1]
+
+#             cf = CountFiles.objects.update_or_create(user=customer, count=count_files)
+#             # request.session['count_files'] = count_files
+
+#             # print '!!!! COUNTE FILES ============================= ', count_files
+#             # print 'dirs_list ============================= ', dirs_list
+#             # print 'sh_data ============================= ', sh_data
+#             # print '!!!!  files_tif ============================= ', files_tif
+#             # print 'tmp_db_file_path ============================= ', tmp_db_file_path
+
+            
 
 
-    ####################### END write log file
-    log_delete_file.write('LEN FILES TIF: {0}\n'.format(len(files_tif)))
-    log_delete_file.write('FILES TIF: {0}\n'.format(files_tif))
-    log_delete_file.write('COUNT FILES: {0}\n'.format(count_files))
-    log_delete_file.write('COUNT FILE PATH: {0}\n'.format(result_count_items))
-    log_delete_file.close()
-    #######################
+#             # f_php_coord = open(file_path_php)
+#             # for line in f_php_coord.readlines():
+#             #     print '!!!!! LINE ============================== ', line
+#             #     coord_list.append(line.replace('\n',''))
+#             #
+#             # print 'coord_list ============================= ', coord_list
+#             #
+#             # latlist = coord_list[0]
+#             # lonlist = coord_list[1]
+
+#             # print 'latlist =========================== ', latlist
+#             # print 'lonlist =========================== ', lonlist
+#             # print 'files_tif =========================== ', files_tif
+
+#             # command_line = SCRIPT_GETPOLYINFO
+#             # files_tif
+#             # data_db_list
+# ###########################################################################################################
+#             # try:
+#             #     db_file_path = open(tmp_db_file_path, 'w')
+
+#             #     for f_tif in list_files_tif:
+#             #         command_line = SCRIPT_GETPOLYINFO + ' ' + str(f_tif) + ' '  + file_coord_tmp + ' '  + file_out_coord_tmp
+#             #         # print '!!! COMMAND LINE =========================== ', command_line
+#             #         # print '!!! FILE =========================== ', f_tif
+#             #         proc_script = Popen(command_line, shell=True)
+#             #         proc_script.wait()
+#             #         time.sleep(5)
+                    
+#             #         count_data = 0
+
+#             #         open_file_out_coord_tmp = open(file_out_coord_tmp)
+
+#             #         for line in open_file_out_coord_tmp.readlines():
+#             #             new_line = line.replace(' ', '')
+#             #             new_line = new_line.replace('\n', '')
+#             #             # print '!!!!!!! 1 NEW LINE ========================== ', new_line
+
+#             #             if new_line:
+#             #                 new_line = new_line.split(',')[1:]
+#             #                 new_line = ','.join(new_line)
+#             #                 str_db_file = '{0}{1}'.format(data_db_list[count_data], new_line) 
+#             #                 db_file_path.write('{0}\n'.format(str_db_file))
+#             #                 count_data += 1
+#             #                 # print '!!!!!!! 2 SPLIT TYPE NEW LINE ========================== ', new_line.split(',')
+#             #                 # print '!!!!!!! str_DB_file ========================== ', str_db_file
+                
+#             #     db_file_path.close()
 
 
-    data = {
-        'title': title,
-        'file_tif_path': file_tif_path,
-        'files_tif': files_tif,
-        'shelf_data': sh_data,
-        'latlist': latlist,
-        'lonlist': lonlist,
-        'result_f_name': result_f_name,
-        'result_for_db': result_for_db,
-        'result_count_items': result_count_items,
-    }
+#             # except Exception, e:
+#             #     print '!!!! ERROR ======================= ', e
+# #####################################################################################################
 
-    return data
+#     # print 'file_tif_path =========================== ', file_tif_path
+#     # print 'files_tif =========================== ', files_tif
+
+
+#     ####################### END write log file
+#     log_delete_file.write('LEN FILES TIF: {0}\n'.format(len(files_tif)))
+#     log_delete_file.write('FILES TIF: {0}\n'.format(files_tif))
+#     log_delete_file.write('COUNT FILES: {0}\n'.format(count_files))
+#     log_delete_file.write('COUNT FILE PATH: {0}\n'.format(count_items_path))
+#     log_delete_file.close()
+#     #######################
+
+
+#     data = {
+#         'title': title,
+#         # 'file_tif_path': file_tif_path,
+#         # 'files_tif': files_tif,
+#         # 'shelf_data': sh_data,
+#         # 'latlist': latlist,
+#         # 'lonlist': lonlist,
+#         # 'result_f_name': result_f_name,
+#         # 'result_for_db': tmp_db_file_path,
+#         # 'result_count_items': result_count_items,
+#     }
+
+#     return data
 
 
 # Delete TMP file
@@ -2346,18 +2521,18 @@ def customer_section_php(request):
 def customer_delete_file(request):
     title = ''
     customer = request.user
-    counts = 0
+    # counts = 0
     count_files = CountFiles.objects.filter(user=customer)
 
-    result_f_name = str(customer) + '_result.csv'
+    # result_f_name = str(customer) + '_result.csv'
     result_for_db = str(customer) + '_db.csv'
     result_ajax_file = str(customer) + '_ajax.csv'
-    count_items_file = str(customer) + '_count_items.csv'
+    # count_items_file = str(customer) + '_count_items.csv'
 
-    result_file_path = os.path.join(TMP_PATH, result_f_name)
+    # result_file_path = os.path.join(TMP_PATH, result_f_name)
     db_file_path = os.path.join(TMP_PATH, result_for_db)
     ajax_file_path = os.path.join(TMP_PATH, result_ajax_file)
-    count_items_path = os.path.join(TMP_PATH, count_items_file)
+    # count_items_path = os.path.join(TMP_PATH, count_items_file)
 
     ####################### write log file
     log_file = '/home/gsi/LOGS/customer_delete_file.log'
@@ -2374,35 +2549,34 @@ def customer_delete_file(request):
         # print 'DELETES FILE COUNT ============================= ', count_files
 
         if data_get_ajax.get('delete_file'):
-            # time.sleep(10)
-            while not os.path.exists(db_file_path):
-                time.sleep(10)
+            # while not os.path.exists(db_file_path):
+            #     time.sleep(5)
 
-            while not os.path.exists(result_file_path):
-                time.sleep(10)
+            # while not os.path.exists(result_file_path):
+            #     time.sleep(10)
 
-            while not os.path.exists(count_items_path):
-                time.sleep(10)
+            # while not os.path.exists(count_items_path):
+            #     time.sleep(5)
 
             ####################### write log file
             customer_delete_f.write('***EXISTS db_file_path: {0} \n'.format(os.path.exists(db_file_path)))
-            customer_delete_f.write('***EXISTS result_file_path: {0} \n'.format(os.path.exists(result_file_path)))
+            # customer_delete_f.write('***EXISTS result_file_path: {0} \n'.format(os.path.exists(result_file_path)))
             ####################### write log file
 
-            while counts != count_files[0].count:
-                try:
-                    cf = open(count_items_path).readlines()
-                    counts = int(cf[0])
-                    time.sleep(10)
-                except Exception, e:
-                    time.sleep(10)
-                    ####################### write log file
-                    customer_delete_f.write('ERROR COUNTS === {0}\n'.format(e))
-                    ####################### write log file
+            # while counts != count_files[0].count:
+            #     try:
+            #         cf = open(count_items_path).readlines()
+            #         counts = int(cf[0])
+            #         time.sleep(15)
+            #     except Exception, e:
+            #         time.sleep(5)
+            #         ####################### write log file
+            #         customer_delete_f.write('ERROR COUNTS === {0}\n'.format(e))
+            #         ####################### write log file
 
             ####################### write log file
             customer_delete_f.write('COUNT DB === {0}\n'.format(count_files[0].count))
-            customer_delete_f.write('COUNT FILES === {0}\n'.format(counts))
+            # customer_delete_f.write('COUNT FILES === {0}\n'.format(counts))
             ####################### write log file
             # print '****************** EXISTS db_file_path ========================================= ', os.path.exists(db_file_path)
             # print '****************** EXISTS result_file_path ========================================= ', os.path.exists(result_file_path)
@@ -2416,13 +2590,15 @@ def customer_delete_file(request):
             data_ajax = ''
             data_ajax_total = ''
 
-            db_file = False
-            while not db_file:
-                try:
-                    f_db = open(db_file_path)
-                    db_file = True
-                except Exception:
-                    time.sleep(5)
+            # db_file = False
+            # while not db_file:
+            try:
+                f_db = open(db_file_path)
+                db_file = True
+            except Exception, e:
+                # time.sleep(5)
+                print '!!!!!!!!!! ERROR OPEN DB FILE ======================= ', e
+                pass
 
             for l in f_db:
                 line = l.split(',')
@@ -2460,7 +2636,7 @@ def customer_delete_file(request):
             #     time.sleep(5)
             #     customer_ajax_file.close()
 
-            # print 'data_ajax ====================================== ', data_ajax
+            # print '===========>>>> 8888888   data_ajax ====================================== ', data_ajax
 
             ####################### write log file
             customer_delete_f.write('1 DATA AJAX EXISTS: "{0}"\n'.format(os.path.exists(ajax_file_path)))

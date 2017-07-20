@@ -24,7 +24,7 @@
 
 /* body */
 body {
-    background: url(../img/background_main_1.png) no-repeat center center fixed;
+    /*background: url(../img/background_main_1.png) no-repeat center center fixed;*/
     -webkit-background-size: cover; /* Safari 3.1+ и Chrome 4.0+ */
     -moz-background-size: cover; /* Firefox 3.6+ */
     -o-background-size: cover; /* Opera 9.6+ */

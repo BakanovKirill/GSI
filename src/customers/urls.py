@@ -44,7 +44,7 @@ urlpatterns = [
 	url(r'^section', 'customers.views.customer_section', name='customer_section'),
 	
 	# PHP url
-	url(r'^php', 'customers.views.customer_section_php', name='customer_section_php'),
+	# url(r'^php', 'customers.views.customer_section_php', name='customer_section_php'),
 	
 	# Files Lister url
 	url(r'^files-lister/$', 'customers.views.files_lister', name='files_lister'),
