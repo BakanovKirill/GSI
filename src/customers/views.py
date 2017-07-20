@@ -2632,6 +2632,11 @@ def customer_delete_file(request):
             f_db.close()
             customer_ajax_file.close()
 
+            try:
+                os.remove(db_file_path)
+            except Exception, e:
+                pass
+
             # while not os.path.exists(ajax_file_path):
             #     time.sleep(5)
             #     customer_ajax_file.close()
