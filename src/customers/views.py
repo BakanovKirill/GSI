@@ -1657,7 +1657,7 @@ def customer_section(request):
                                             'mean_ConditionalMean', absolute_png_url,
                                             True, order=0)
             except Exception, e:
-                log_var += 'ERROR: {0}'.format(e)
+                log_var += 'ERROR ATTR & STAT LIST: {0}'.format(e)
 
             return HttpResponse(data)
 
@@ -1703,6 +1703,7 @@ def customer_section(request):
                 os.remove(ajax_file)
                 os.remove(file_path_coord)
             except Exception, e:
+                log_var += 'ERROR DELETE TMP FILES: {0}'.format(e)
                 pass
 
             for cip in cips:
@@ -2403,7 +2404,7 @@ def customer_delete_file(request):
             #     # time.sleep(5)
             #     print '!!!!!!!!!! ERROR OPEN DB FILE ======================= ', e
             #     pass
-            
+
             f_db = open(db_file_path)
 
             for l in f_db:
