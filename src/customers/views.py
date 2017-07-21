@@ -1684,6 +1684,23 @@ def customer_section(request):
             AttributesReport.objects.filter(user=customer).delete()
             cips = CustomerInfoPanel.objects.filter(user=customer)
 
+            # file_path_in_coord_tmp = os.path.join(KML_PATH, in_coord_tmp)
+            # file_path_out_coord_tmp = os.path.join(KML_PATH, out_coord_tmp)
+            # file_path_out_coord_kml = os.path.join(KML_PATH, out_coord_kml)
+
+            # tmp_db_file = os.path.join(TMP_PATH, customer_tmp_for_db)
+            # ajax_file = os.path.join(TMP_PATH, result_ajax_file)
+
+            try:
+                os.remove(file_path_in_coord_tmp)
+                os.remove(file_path_out_coord_tmp)
+                os.remove(file_path_out_coord_kml)
+                
+                os.remove(tmp_db_file)
+                os.remove(ajax_file)
+            except Exception:
+                pass
+
             for cip in cips:
                 cip.statisctic = statistic
                 cip.save()
@@ -2522,16 +2539,18 @@ def customer_delete_file(request):
     title = ''
     customer = request.user
     # counts = 0
-    count_files = CountFiles.objects.filter(user=customer)
-
-    # result_f_name = str(customer) + '_result.csv'
+    # count_files = CountFiles.objects.filter(user=customer)
+    
     result_for_db = str(customer) + '_db.csv'
     result_ajax_file = str(customer) + '_ajax.csv'
-    # count_items_file = str(customer) + '_count_items.csv'
 
-    # result_file_path = os.path.join(TMP_PATH, result_f_name)
     db_file_path = os.path.join(TMP_PATH, result_for_db)
     ajax_file_path = os.path.join(TMP_PATH, result_ajax_file)
+
+
+    # result_f_name = str(customer) + '_result.csv'
+    # count_items_file = str(customer) + '_count_items.csv'
+    # result_file_path = os.path.join(TMP_PATH, result_f_name)
     # count_items_path = os.path.join(TMP_PATH, count_items_file)
 
     ####################### write log file
@@ -2575,7 +2594,7 @@ def customer_delete_file(request):
             #         ####################### write log file
 
             ####################### write log file
-            customer_delete_f.write('COUNT DB === {0}\n'.format(count_files[0].count))
+            # customer_delete_f.write('COUNT DB === {0}\n'.format(count_files[0].count))
             # customer_delete_f.write('COUNT FILES === {0}\n'.format(counts))
             ####################### write log file
             # print '****************** EXISTS db_file_path ========================================= ', os.path.exists(db_file_path)
