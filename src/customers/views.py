@@ -1665,7 +1665,7 @@ def customer_section(request):
             reports_cip = []
             statistic = ''
 
-            # print '!!!!!!!!!!!!! COORD data_post_ajax ====================== ', data_post_ajax
+            print '!!!!!!!!!!!!! COORD data_post_ajax ====================== ', data_post_ajax
 
             if 'reports[]' in data_post_ajax:
                 reports_ids = []
@@ -1682,7 +1682,7 @@ def customer_section(request):
                     statistic = stat
 
             # print '!!!!!!!!!!!!! statistic ====================== ', statistic
-            # print '!!!!!!!!!!!!! statistic TYPE ====================== ', type(statistic)
+            # print '!!!!!!!!!!!!! reports_cip ====================== ', reports_cip
 
             AttributesReport.objects.filter(user=customer).delete()
             cips = CustomerInfoPanel.objects.filter(user=customer)
@@ -1758,10 +1758,10 @@ def customer_section(request):
             kml.save(file_path_coord)
             list_file_tif, list_data_db = getListTifFiles(customer, data_set)
 
-            try:
-                os.remove(file_path_out_coord_tmp)
-            except Exception:
-                pass
+            ###################### LOG
+            log_var += 'LIST TIF FILES: {0}'.format(list_file_tif)
+            log_var += 'LIST DATA DB: {0}'.format(list_data_db)
+            ###################### LOG
 
             # file_path_in_coord_tmp
             # file_path_out_coord_tmp
