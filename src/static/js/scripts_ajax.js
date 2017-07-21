@@ -477,8 +477,8 @@ function deleteFile(ds) {
             var data_aoi = data['data_aoi'];
             var stat = data['static'];
             
-            setTimeout(getTmpCSV, 100, data_aoi, stat);
-            // getTmpCSV(delete_file, stat);
+            // setTimeout(getTmpCSV, 100, data_aoi, stat);
+            getPolygon(data_aoi, stat);
         },
     });
 }
