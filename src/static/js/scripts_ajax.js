@@ -474,10 +474,10 @@ function deleteFile(ds) {
             // alert('deleteTMPFile status: '+status);
             // /media/temp_files/result.csv
             var obj_status = status;
-            var delete_file = data['delete_file'];
-            var stat = data['static'];
             var data_aoi = data['data_aoi'];
-            setTimeout(getTmpCSV, 100, data_aoi, delete_file, stat);
+            var stat = data['static'];
+            
+            setTimeout(getTmpCSV, 100, data_aoi, stat);
             // getTmpCSV(delete_file, stat);
         },
     });

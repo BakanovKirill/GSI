@@ -622,7 +622,7 @@
 				// setTimeout(getTmpCSV, 3000);
 			}
 
-			function getTmpCSV(data_aoi, file_path, stat) {
+			function getTmpCSV(data_aoi, stat) {
 				// alert('getTmpCSV: '+file_path);
 				// httpRequest = new XMLHttpRequest();
 				// httpRequest.open("GET", file_path, true);
@@ -682,7 +682,7 @@
 				count_pol = list_data_draw.length;
                 var new_array = []
 
-				alert('list_data_draw: '+list_data_draw);
+				// alert('list_data_draw: '+list_data_draw);
 				// alert('list_data_draw 0: '+list_data_draw[0]);
 				// alert('list_data_draw 1: '+list_data_draw[1]);
 				// alert('list_data_draw 2: '+list_data_draw[2]);
@@ -756,16 +756,16 @@
 				infowindow.open(map);
 			}
 
-			function OnRequestStateChange()
-			{
-				if (httpRequest.readyState != 4)
-  					return;
-				if (httpRequest.status != 200)
-  					return;
+			// function OnRequestStateChange()
+			// {
+			// 	if (httpRequest.readyState != 4)
+  	// 				return;
+			// 	if (httpRequest.status != 200)
+  	// 				return;
 
-                data_polygon = ''
-				data_polygon = httpRequest.responseText;
-			}
+   //              data_polygon = ''
+			// 	data_polygon = httpRequest.responseText;
+			// }
 
 			function showCoordinates(event) {
 				var lat = event.latLng.lat();

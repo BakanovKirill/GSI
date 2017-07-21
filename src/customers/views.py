@@ -2462,7 +2462,7 @@ def customer_delete_file(request):
             customer_delete_f.write('DATA AJAX END: "{0}"\n'.format(data_ajax))
             ####################### write log file
 
-            delete_file = '/media/temp_files/' + result_ajax_file
+            # delete_file = '/media/temp_files/' + result_ajax_file
 
 
             cips = CustomerInfoPanel.objects.filter(user=customer)
@@ -2475,7 +2475,7 @@ def customer_delete_file(request):
             # print 'DATA select_static ======================= ', select_static
 
             # return HttpResponse(data)
-            return HttpResponse(json.dumps({'delete_file': delete_file, 'data_aoi': data_ajax_total, 'static': select_static}))
+            return HttpResponse(json.dumps({'data_aoi': data_ajax_total, 'static': select_static}))
 
     data = {
         'title': title,
