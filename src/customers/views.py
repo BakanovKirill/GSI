@@ -1657,7 +1657,8 @@ def customer_section(request):
                                             'mean_ConditionalMean', absolute_png_url,
                                             True, order=0)
             except Exception, e:
-                log_var += 'ERROR ATTR & STAT LIST: {0}'.format(e)
+                customer_section.write('ERROR ATTR & STAT LIST: {0}\n'.format(e))
+                log_var += 'ERROR ATTR & STAT LIST: {0}\n'.format(e)
 
             return HttpResponse(data)
 
@@ -1703,7 +1704,8 @@ def customer_section(request):
                 os.remove(ajax_file)
                 os.remove(file_path_coord)
             except Exception, e:
-                log_var += 'ERROR DELETE TMP FILES: {0}'.format(e)
+                customer_section.write('ERROR DELETE TMP FILES: {0}\n'.format(e))
+                log_var += 'ERROR DELETE TMP FILES: {0}\n'.format(e)
                 pass
 
             for cip in cips:
@@ -1759,8 +1761,10 @@ def customer_section(request):
             list_file_tif, list_data_db = getListTifFiles(customer, data_set)
 
             ###################### LOG
-            log_var += 'LIST TIF FILES: {0}'.format(list_file_tif)
-            log_var += 'LIST DATA DB: {0}'.format(list_data_db)
+            customer_section.write('LIST TIF FILES: {0}\n'.format(list_file_tif))
+            customer_section.write('LIST DATA DB: {0}\n'.format(list_data_db))
+            log_var += 'LIST TIF FILES: {0}\n'.format(list_file_tif)
+            log_var += 'LIST DATA DB: {0}\n'.format(list_data_db)
             ###################### LOG
 
             # file_path_in_coord_tmp
@@ -2275,9 +2279,9 @@ def customer_section(request):
             show_report_ap.append(ar.shelfdata.attribute_name)
 
     ####################### write log file
+    print '!!!!!!!!!!!    LOG ========================== ', log_var
     customer_section.write(log_var)
     customer_section.write('\n')
-
     customer_section.close()
     #######################
 
