@@ -2440,6 +2440,8 @@ def customer_delete_file(request):
             data_ajax_total += data_ajax[0:-1]
             customer_ajax_file.write(data_ajax_total)
 
+            print ('!!!!!!!!!!! data_ajax_total ===================== '), data_ajax_total
+
             # time.sleep(10)
             f_db.close()
             customer_ajax_file.close()
@@ -2473,7 +2475,7 @@ def customer_delete_file(request):
             # print 'DATA select_static ======================= ', select_static
 
             # return HttpResponse(data)
-            return HttpResponse(json.dumps({'delete_file': delete_file, 'static': select_static}))
+            return HttpResponse(json.dumps({'delete_file': delete_file, 'data_aoi': data_ajax_total, 'static': select_static}))
 
     data = {
         'title': title,
