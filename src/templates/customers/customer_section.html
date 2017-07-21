@@ -676,20 +676,21 @@
 
 				var center_pol = polygonCenter(selectPolygon);
 				coord = [];
-				var list_data = data_polygon.split('_');
-				count_pol = list_data.length;
+				var list_data_draw = data_polygon.split('_');
+				count_pol = list_data_draw.length;
+                var new_array = []
 
-				// alert('list_data: '+list_data);
-				// alert('list_data 0: '+list_data[0]);
-				// alert('list_data 1: '+list_data[1]);
-				// alert('list_data 2: '+list_data[2]);
-				// alert('list_data 3: '+list_data[3]);
+				// alert('list_data_draw: '+list_data_draw);
+				// alert('list_data_draw 0: '+list_data_draw[0]);
+				// alert('list_data_draw 1: '+list_data_draw[1]);
+				// alert('list_data_draw 2: '+list_data_draw[2]);
+				// alert('list_data_draw 3: '+list_data_draw[3]);
 				//
 				// alert('data_polygon: '+data_polygon);
 
 				var contentString = '<h4 align="center"><b>Area Information</b></h4>';
-				contentString += '<p align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</p>';
-				contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
+				contentString += '<p align="center"><span><b>Total Area:</b></span> ' + list_data_draw[0] + ' ha</p>';
+				contentString += '<input type="hidden" name="total_area" value="' + list_data_draw[0] + '">'
 
 				if (statistic) {
 					contentString += '<p align="center"><span><b>Value:</b></span> ' + statistic + '</p>';
@@ -703,7 +704,7 @@
 				}
 
 				contentString += '<table class="table table-bordered">';
-				// contentString += '<caption align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</caption>'
+				// contentString += '<caption align="center"><span><b>Total Area:</b></span> ' + list_data_draw[0] + ' ha</caption>'
 
 				contentString += '<thead>';
 				contentString += '<tr bgcolor="#CFCFCF">';
@@ -716,7 +717,7 @@
 				contentString += '<tbody>';
 
 				for (var i = 1; i < count_pol; i++) {
-					new_array = list_data[i].split(',')
+					new_array = list_data_draw[i].split(',')
 
 					if ( i & 1 ) {
     					contentString += '<tr bgcolor="#F5F5F5">';
@@ -775,6 +776,7 @@
 				var lat = event.latLng.lat();
 				var lon = event.latLng.lng();
 				var list_data = data_polygon.split('_');
+                var new_array = []
 
 				var contentString = '<h4 align="center"><b>Area Information</b></h4>';
 				contentString += '<p align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</p>';

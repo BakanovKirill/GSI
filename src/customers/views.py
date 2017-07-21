@@ -1814,6 +1814,7 @@ def customer_section(request):
                 
                 db_file_open.close()
             except Exception, e:
+                customer_section.write('ERROR CREATE KML FILES: {0}\n'.format(e))
                 print '!!!! ERROR ALL ======================= ', e
                 pass
 
