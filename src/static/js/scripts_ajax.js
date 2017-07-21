@@ -404,8 +404,10 @@ function sendDataToServer(coord, reports, stats) {
 
             // alert('sendDataToServer: '+data);
 
-            var obj_status = status;
-            sendGetToServer();
+            // var obj_status = status;
+            
+            // sendGetToServer();
+            setTimeout(sendGetToServer, 1000);
         },
     });
 }
@@ -474,7 +476,7 @@ function deleteFile(ds) {
             var obj_status = status;
             var delete_file = data['delete_file'];
             var stat = data['static'];
-            setTimeout(getTmpCSV, 3000, delete_file, stat);
+            setTimeout(getTmpCSV, 100, delete_file, stat);
             // getTmpCSV(delete_file, stat);
         },
     });

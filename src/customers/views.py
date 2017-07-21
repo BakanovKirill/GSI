@@ -1788,6 +1788,7 @@ def customer_section(request):
                     # print '!!! FILE =========================== ', f_tif
                     proc_script = Popen(command_line, shell=True)
                     proc_script.wait()
+                    time.sleep(1)
 
                     file_out_coord_open = open(file_path_out_coord_tmp)
 
@@ -2394,13 +2395,16 @@ def customer_delete_file(request):
 
             # db_file = False
             # while not db_file:
-            try:
-                f_db = open(db_file_path)
-                db_file = True
-            except Exception, e:
-                # time.sleep(5)
-                print '!!!!!!!!!! ERROR OPEN DB FILE ======================= ', e
-                pass
+
+            # try:
+            #     f_db = open(db_file_path)
+            #     db_file = True
+            # except Exception, e:
+            #     # time.sleep(5)
+            #     print '!!!!!!!!!! ERROR OPEN DB FILE ======================= ', e
+            #     pass
+            
+            f_db = open(db_file_path)
 
             for l in f_db:
                 line = l.split(',')
