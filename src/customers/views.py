@@ -1449,9 +1449,12 @@ def customer_section(request):
     in_coord_tmp = str(customer) + '_coord_tmp.kml'
     out_coord_tmp = str(customer) + '_coord_tmp.txt'
     out_coord_kml = str(customer) + '_coord_kml.txt'
-    file_path_in_coord_tmp = os.path.join(KML_PATH, in_coord_tmp)
-    file_path_out_coord_tmp = os.path.join(KML_PATH, out_coord_tmp)
-    file_path_out_coord_kml = os.path.join(KML_PATH, out_coord_kml)
+    coord_tmp = str(request.user) + '_coord_tmp.kml'
+    
+    file_path_in_coord_tmp = os.path.join(TMP_PATH, in_coord_tmp)
+    file_path_out_coord_tmp = os.path.join(TMP_PATH, out_coord_tmp)
+    file_path_out_coord_kml = os.path.join(TMP_PATH, out_coord_kml)
+    file_path_coord = os.path.join(TMP_PATH, coord_tmp)
 
     # TMP FILES
     customer_tmp_for_db = str(customer) + '_db.csv'
@@ -1695,10 +1698,11 @@ def customer_section(request):
                 os.remove(file_path_in_coord_tmp)
                 os.remove(file_path_out_coord_tmp)
                 os.remove(file_path_out_coord_kml)
-                
+
                 os.remove(tmp_db_file)
                 os.remove(ajax_file)
-            except Exception:
+                os.remove(file_path_coord)
+            except Exception, e:
                 pass
 
             for cip in cips:
@@ -1713,9 +1717,8 @@ def customer_section(request):
                                         statisctic=statistic
                                     )
 
-            coord_tmp = str(request.user) + '_coord_tmp.kml'
-            kml_name ='{0} {1} AREA COORDINATE'.format(request.user, data_set)
-            file_path_coord = os.path.join(KML_PATH, coord_tmp)
+            # coord_tmp = str(request.user) + '_coord_tmp.kml'
+            # file_path_coord = os.path.join(TMP_PATH, coord_tmp)
 
 
             # php_tmp = str(request.user) + '_php_tmp.txt'
@@ -1748,6 +1751,7 @@ def customer_section(request):
             kml_file_coord.close()
 
             # *************************************************************************************************
+            kml_name ='{0} {1} AREA COORDINATE'.format(request.user, data_set)
             kml = simplekml.Kml()
             kml.newpoint(name=kml_name, coords=points_coord)  # lon, lat, optional height
             kml.save(file_path_coord)
@@ -2307,6 +2311,224 @@ def customer_section(request):
     return data
 
 
+
+
+
+# Delete TMP file
+# @user_passes_test(lambda u: u.is_superuser)
+@login_required
+@render_to('customers/customer_delete_file.html')
+def customer_delete_file(request):
+    title = ''
+    customer = request.user
+    # counts = 0
+    # count_files = CountFiles.objects.filter(user=customer)
+    
+    result_for_db = str(customer) + '_db.csv'
+    result_ajax_file = str(customer) + '_ajax.csv'
+
+    db_file_path = os.path.join(TMP_PATH, result_for_db)
+    ajax_file_path = os.path.join(TMP_PATH, result_ajax_file)
+
+
+    # result_f_name = str(customer) + '_result.csv'
+    # count_items_file = str(customer) + '_count_items.csv'
+    # result_file_path = os.path.join(TMP_PATH, result_f_name)
+    # count_items_path = os.path.join(TMP_PATH, count_items_file)
+
+    ####################### write log file
+    log_file = '/home/gsi/LOGS/customer_delete_file.log'
+    customer_delete_f = open(log_file, 'w+')
+    customer_delete_f.write('DB FILE: {0}\n'.format(os.path.exists(db_file_path)))
+    #######################
+
+
+    if request.is_ajax() and request.method == "GET":
+        data = ''
+        data_get_ajax = request.GET
+
+        # print 'DELETES FILE data_get_ajax AJAX ============================= ', data_get_ajax
+        # print 'DELETES FILE COUNT ============================= ', count_files
+
+        if data_get_ajax.get('delete_file'):
+            # while not os.path.exists(db_file_path):
+            #     time.sleep(5)
+
+            # while not os.path.exists(result_file_path):
+            #     time.sleep(10)
+
+            # while not os.path.exists(count_items_path):
+            #     time.sleep(5)
+
+            ####################### write log file
+            customer_delete_f.write('***EXISTS db_file_path: {0} \n'.format(os.path.exists(db_file_path)))
+            # customer_delete_f.write('***EXISTS result_file_path: {0} \n'.format(os.path.exists(result_file_path)))
+            ####################### write log file
+
+            # while counts != count_files[0].count:
+            #     try:
+            #         cf = open(count_items_path).readlines()
+            #         counts = int(cf[0])
+            #         time.sleep(15)
+            #     except Exception, e:
+            #         time.sleep(5)
+            #         ####################### write log file
+            #         customer_delete_f.write('ERROR COUNTS === {0}\n'.format(e))
+            #         ####################### write log file
+
+            ####################### write log file
+            # customer_delete_f.write('COUNT DB === {0}\n'.format(count_files[0].count))
+            # customer_delete_f.write('COUNT FILES === {0}\n'.format(counts))
+            ####################### write log file
+            # print '****************** EXISTS db_file_path ========================================= ', os.path.exists(db_file_path)
+            # print '****************** EXISTS result_file_path ========================================= ', os.path.exists(result_file_path)
+
+            # CountFiles.objects.filter(user=customer).delete()
+
+            customer_ajax_file = open(ajax_file_path, 'w+')
+            data_set_id = data_get_ajax.get('delete_file')
+            data_set = DataSet.objects.get(id=data_set_id)
+            shelf_data = ShelfData.objects.all()
+            data_ajax = ''
+            data_ajax_total = ''
+
+            # db_file = False
+            # while not db_file:
+            try:
+                f_db = open(db_file_path)
+                db_file = True
+            except Exception, e:
+                # time.sleep(5)
+                print '!!!!!!!!!! ERROR OPEN DB FILE ======================= ', e
+                pass
+
+            for l in f_db:
+                line = l.split(',')
+
+                ####################### write log file
+                customer_delete_f.write('LINE: "{0}"\n'.format(line))
+                ####################### write log file
+
+                shd_id = line[0]
+                shelf_data = ShelfData.objects.get(id=shd_id)
+                data_ajax_total = '{0}_'.format(line[2])
+
+                if shelf_data.show_totals:
+                    # ha = line[4].replace('\n', ' ha')
+                    # ha = '{0}\n'.format(ha)
+                    data_ajax += '{0},{1},{2},{3}'.\
+                                format(shelf_data.attribute_name, line[3], shelf_data.units, line[4])
+                else:
+                    data_ajax += '{0},{1},{2}, - \n'.\
+                                format(shelf_data.attribute_name, line[3], shelf_data.units)
+
+                ####################### write log file
+                # customer_delete_f.write('data_ajax: "{0}"\n'.format(data_ajax))
+                ####################### write log file
+
+            data_ajax = data_ajax.replace('\n', '_')
+            data_ajax_total += data_ajax[0:-1]
+            customer_ajax_file.write(data_ajax_total)
+
+            # time.sleep(10)
+            f_db.close()
+            customer_ajax_file.close()
+
+            try:
+                os.remove(db_file_path)
+            except Exception, e:
+                pass
+
+            # while not os.path.exists(ajax_file_path):
+            #     time.sleep(5)
+            #     customer_ajax_file.close()
+
+            # print '===========>>>> 8888888   data_ajax ====================================== ', data_ajax
+
+            ####################### write log file
+            customer_delete_f.write('1 DATA AJAX EXISTS: "{0}"\n'.format(os.path.exists(ajax_file_path)))
+            customer_delete_f.write('DATA AJAX END: "{0}"\n'.format(data_ajax))
+            ####################### write log file
+
+            delete_file = '/media/temp_files/' + result_ajax_file
+
+
+            cips = CustomerInfoPanel.objects.filter(user=customer)
+            select_static = cips[0].statisctic
+            # data = data_ajax
+            # file_for_db =
+
+            # print 'DATA data_ajax_total ======================= ', data_ajax_total
+            # print 'DATA delete_file ======================= ', delete_file
+            # print 'DATA select_static ======================= ', select_static
+
+            # return HttpResponse(data)
+            return HttpResponse(json.dumps({'delete_file': delete_file, 'static': select_static}))
+
+    data = {
+        'title': title,
+    }
+
+    ####################### END write log file
+    customer_delete_f.write('1 DATA AJAX EXISTS: "{0}"\n'.format(os.path.exists(ajax_file_path)))
+    customer_delete_f.close()
+    #######################
+
+    return data
+
+
+# Lister files
+@login_required
+@render_to('customers/files_lister.html')
+def files_lister(request):
+    customer = request.user
+    path_ftp_user = os.path.join(FTP_PATH, customer.username)
+    files_list = os.listdir(path_ftp_user)
+    url_path = os.path.join('/media/CUSTOMER_FTP_AREA', customer.username)
+
+    # Ajax when deleting objects
+    if request.method == "POST" and request.is_ajax():
+        data_post_ajax = request.POST
+
+        # print '!!!!!!!!!!! POST ====================== ', data_post_ajax
+
+        if 'cur_run_id' in data_post_ajax:
+            message = u'Are you sure you want to remove this objects:'
+            file_customer = data_post_ajax['cur_run_id']
+            data = '<b>"' + file_customer + '"</b>'
+            data = '{0} {1}?'.format(message, data)
+
+            return HttpResponse(data)
+        else:
+            data = ''
+            return HttpResponse(data)
+
+    if request.method == "POST":
+        data_post = request.POST
+
+        # print '!!!!!!!!!! POST ================== ', data_post
+
+        if 'delete_button' in data_post:
+            filename_customer = data_post['delete_button']
+            path_filename = os.path.join(path_ftp_user, filename_customer)
+            os.remove(path_filename)
+
+    dirs, files, info_message = get_files_dirs(url_path, path_ftp_user)
+
+    data = {
+        'files': files,
+        # 'dirs': dirs,
+    }
+
+    return data
+
+
+
+
+
+
+
+# #####################################################################################################
 # PHP calculations
 # @user_passes_test(lambda u: u.is_superuser)
 # @login_required
@@ -2529,211 +2751,3 @@ def customer_section(request):
 #     }
 
 #     return data
-
-
-# Delete TMP file
-# @user_passes_test(lambda u: u.is_superuser)
-@login_required
-@render_to('customers/customer_delete_file.html')
-def customer_delete_file(request):
-    title = ''
-    customer = request.user
-    # counts = 0
-    # count_files = CountFiles.objects.filter(user=customer)
-    
-    result_for_db = str(customer) + '_db.csv'
-    result_ajax_file = str(customer) + '_ajax.csv'
-
-    db_file_path = os.path.join(TMP_PATH, result_for_db)
-    ajax_file_path = os.path.join(TMP_PATH, result_ajax_file)
-
-
-    # result_f_name = str(customer) + '_result.csv'
-    # count_items_file = str(customer) + '_count_items.csv'
-    # result_file_path = os.path.join(TMP_PATH, result_f_name)
-    # count_items_path = os.path.join(TMP_PATH, count_items_file)
-
-    ####################### write log file
-    log_file = '/home/gsi/LOGS/customer_delete_file.log'
-    customer_delete_f = open(log_file, 'w+')
-    customer_delete_f.write('DB FILE: {0}\n'.format(os.path.exists(db_file_path)))
-    #######################
-
-
-    if request.is_ajax() and request.method == "GET":
-        data = ''
-        data_get_ajax = request.GET
-
-        # print 'DELETES FILE data_get_ajax AJAX ============================= ', data_get_ajax
-        # print 'DELETES FILE COUNT ============================= ', count_files
-
-        if data_get_ajax.get('delete_file'):
-            # while not os.path.exists(db_file_path):
-            #     time.sleep(5)
-
-            # while not os.path.exists(result_file_path):
-            #     time.sleep(10)
-
-            # while not os.path.exists(count_items_path):
-            #     time.sleep(5)
-
-            ####################### write log file
-            customer_delete_f.write('***EXISTS db_file_path: {0} \n'.format(os.path.exists(db_file_path)))
-            # customer_delete_f.write('***EXISTS result_file_path: {0} \n'.format(os.path.exists(result_file_path)))
-            ####################### write log file
-
-            # while counts != count_files[0].count:
-            #     try:
-            #         cf = open(count_items_path).readlines()
-            #         counts = int(cf[0])
-            #         time.sleep(15)
-            #     except Exception, e:
-            #         time.sleep(5)
-            #         ####################### write log file
-            #         customer_delete_f.write('ERROR COUNTS === {0}\n'.format(e))
-            #         ####################### write log file
-
-            ####################### write log file
-            # customer_delete_f.write('COUNT DB === {0}\n'.format(count_files[0].count))
-            # customer_delete_f.write('COUNT FILES === {0}\n'.format(counts))
-            ####################### write log file
-            # print '****************** EXISTS db_file_path ========================================= ', os.path.exists(db_file_path)
-            # print '****************** EXISTS result_file_path ========================================= ', os.path.exists(result_file_path)
-
-            # CountFiles.objects.filter(user=customer).delete()
-
-            customer_ajax_file = open(ajax_file_path, 'w+')
-            data_set_id = data_get_ajax.get('delete_file')
-            data_set = DataSet.objects.get(id=data_set_id)
-            shelf_data = ShelfData.objects.all()
-            data_ajax = ''
-            data_ajax_total = ''
-
-            # db_file = False
-            # while not db_file:
-            try:
-                f_db = open(db_file_path)
-                db_file = True
-            except Exception, e:
-                # time.sleep(5)
-                print '!!!!!!!!!! ERROR OPEN DB FILE ======================= ', e
-                pass
-
-            for l in f_db:
-                line = l.split(',')
-
-                ####################### write log file
-                customer_delete_f.write('LINE: "{0}"\n'.format(line))
-                ####################### write log file
-
-                shd_id = line[0]
-                shelf_data = ShelfData.objects.get(id=shd_id)
-                data_ajax_total = '{0}_'.format(line[2])
-
-                if shelf_data.show_totals:
-                    # ha = line[4].replace('\n', ' ha')
-                    # ha = '{0}\n'.format(ha)
-                    data_ajax += '{0},{1},{2},{3}'.\
-                                format(shelf_data.attribute_name, line[3], shelf_data.units, line[4])
-                else:
-                    data_ajax += '{0},{1},{2}, - \n'.\
-                                format(shelf_data.attribute_name, line[3], shelf_data.units)
-
-                ####################### write log file
-                # customer_delete_f.write('data_ajax: "{0}"\n'.format(data_ajax))
-                ####################### write log file
-
-            data_ajax = data_ajax.replace('\n', '_')
-            data_ajax_total += data_ajax[0:-1]
-            customer_ajax_file.write(data_ajax_total)
-
-            # time.sleep(10)
-            f_db.close()
-            customer_ajax_file.close()
-
-            try:
-                os.remove(db_file_path)
-            except Exception, e:
-                pass
-
-            # while not os.path.exists(ajax_file_path):
-            #     time.sleep(5)
-            #     customer_ajax_file.close()
-
-            # print '===========>>>> 8888888   data_ajax ====================================== ', data_ajax
-
-            ####################### write log file
-            customer_delete_f.write('1 DATA AJAX EXISTS: "{0}"\n'.format(os.path.exists(ajax_file_path)))
-            customer_delete_f.write('DATA AJAX END: "{0}"\n'.format(data_ajax))
-            ####################### write log file
-
-            delete_file = '/media/temp_files/' + result_ajax_file
-
-            cips = CustomerInfoPanel.objects.filter(user=customer)
-            select_static = cips[0].statisctic
-            # data = data_ajax
-            # file_for_db =
-
-            # print 'DATA data_ajax_total ======================= ', data_ajax_total
-            # print 'DATA delete_file ======================= ', delete_file
-            # print 'DATA select_static ======================= ', select_static
-
-            # return HttpResponse(data)
-            return HttpResponse(json.dumps({'delete_file':delete_file, 'static': select_static}))
-
-    data = {
-        'title': title,
-    }
-
-    ####################### END write log file
-    customer_delete_f.write('1 DATA AJAX EXISTS: "{0}"\n'.format(os.path.exists(ajax_file_path)))
-    customer_delete_f.close()
-    #######################
-
-    return data
-
-
-# Lister files
-@login_required
-@render_to('customers/files_lister.html')
-def files_lister(request):
-    customer = request.user
-    path_ftp_user = os.path.join(FTP_PATH, customer.username)
-    files_list = os.listdir(path_ftp_user)
-    url_path = os.path.join('/media/CUSTOMER_FTP_AREA', customer.username)
-
-    # Ajax when deleting objects
-    if request.method == "POST" and request.is_ajax():
-        data_post_ajax = request.POST
-
-        # print '!!!!!!!!!!! POST ====================== ', data_post_ajax
-
-        if 'cur_run_id' in data_post_ajax:
-            message = u'Are you sure you want to remove this objects:'
-            file_customer = data_post_ajax['cur_run_id']
-            data = '<b>"' + file_customer + '"</b>'
-            data = '{0} {1}?'.format(message, data)
-
-            return HttpResponse(data)
-        else:
-            data = ''
-            return HttpResponse(data)
-
-    if request.method == "POST":
-        data_post = request.POST
-
-        # print '!!!!!!!!!! POST ================== ', data_post
-
-        if 'delete_button' in data_post:
-            filename_customer = data_post['delete_button']
-            path_filename = os.path.join(path_ftp_user, filename_customer)
-            os.remove(path_filename)
-
-    dirs, files, info_message = get_files_dirs(url_path, path_ftp_user)
-
-    data = {
-        'files': files,
-        # 'dirs': dirs,
-    }
-
-    return data
