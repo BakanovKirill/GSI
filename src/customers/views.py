@@ -1458,10 +1458,10 @@ def customer_section(request):
 
     # TMP FILES
     customer_tmp_for_db = str(customer) + '_db.csv'
-    result_ajax_file = str(customer) + '_ajax.csv'
+    # result_ajax_file = str(customer) + '_ajax.csv'
 
     tmp_db_file = os.path.join(TMP_PATH, customer_tmp_for_db)
-    ajax_file = os.path.join(TMP_PATH, result_ajax_file)
+    # ajax_file = os.path.join(TMP_PATH, result_ajax_file)
 
 
     if customer_access:
@@ -1701,7 +1701,7 @@ def customer_section(request):
                 os.remove(file_path_out_coord_kml)
 
                 os.remove(tmp_db_file)
-                os.remove(ajax_file)
+                # os.remove(ajax_file)
                 os.remove(file_path_coord)
             except Exception, e:
                 customer_section.write('ERROR DELETE TMP FILES: {0}\n'.format(e))
@@ -2229,10 +2229,6 @@ def customer_section(request):
         except CustomerInfoPanel.DoesNotExist, e:
             print 'CustomerInfoPanel.DoesNotExist =============================== ', e
             warning_message = u'The file "{0}" does not exist. Perhaps the data is outdated. Please refresh the page and try again.'.format(show_file)
-            # return HttpResponseRedirect(
-            #     u'%s?danger_message=%s' % (reverse('customer_section'),
-            #     (u'The file "{0}" does not exist. Perhaps the data is outdated. Please refresh the page and try again.'.format(show_file)))
-            # )
 
     customer_info_panel_show = CustomerInfoPanel.objects.filter(
                                 user=customer,
@@ -2332,10 +2328,10 @@ def customer_delete_file(request):
     # count_files = CountFiles.objects.filter(user=customer)
     
     result_for_db = str(customer) + '_db.csv'
-    result_ajax_file = str(customer) + '_ajax.csv'
+    # result_ajax_file = str(customer) + '_ajax.csv'
 
     db_file_path = os.path.join(TMP_PATH, result_for_db)
-    ajax_file_path = os.path.join(TMP_PATH, result_ajax_file)
+    # ajax_file_path = os.path.join(TMP_PATH, result_ajax_file)
 
 
     # result_f_name = str(customer) + '_result.csv'
@@ -2392,7 +2388,7 @@ def customer_delete_file(request):
 
             # CountFiles.objects.filter(user=customer).delete()
 
-            customer_ajax_file = open(ajax_file_path, 'w+')
+            # customer_ajax_file = open(ajax_file_path, 'w+')
             data_set_id = data_get_ajax.get('delete_file')
             data_set = DataSet.objects.get(id=data_set_id)
             shelf_data = ShelfData.objects.all()
@@ -2438,13 +2434,13 @@ def customer_delete_file(request):
 
             data_ajax = data_ajax.replace('\n', '_')
             data_ajax_total += data_ajax[0:-1]
-            customer_ajax_file.write(data_ajax_total)
+            # customer_ajax_file.write(data_ajax_total)
 
-            print ('!!!!!!!!!!! data_ajax_total ===================== '), data_ajax_total
+            # print ('!!!!!!!!!!! data_ajax_total ===================== '), data_ajax_total
 
             # time.sleep(10)
             f_db.close()
-            customer_ajax_file.close()
+            # customer_ajax_file.close()
 
             try:
                 os.remove(db_file_path)
@@ -2458,7 +2454,7 @@ def customer_delete_file(request):
             # print '===========>>>> 8888888   data_ajax ====================================== ', data_ajax
 
             ####################### write log file
-            customer_delete_f.write('1 DATA AJAX EXISTS: "{0}"\n'.format(os.path.exists(ajax_file_path)))
+            # customer_delete_f.write('1 DATA AJAX EXISTS: "{0}"\n'.format(os.path.exists(ajax_file_path)))
             customer_delete_f.write('DATA AJAX END: "{0}"\n'.format(data_ajax))
             ####################### write log file
 
@@ -2482,7 +2478,7 @@ def customer_delete_file(request):
     }
 
     ####################### END write log file
-    customer_delete_f.write('1 DATA AJAX EXISTS: "{0}"\n'.format(os.path.exists(ajax_file_path)))
+    # customer_delete_f.write('1 DATA AJAX EXISTS: "{0}"\n'.format(os.path.exists(ajax_file_path)))
     customer_delete_f.close()
     #######################
 
