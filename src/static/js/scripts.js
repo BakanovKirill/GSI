@@ -335,6 +335,11 @@ function get_file_name() {
 }
 
 
+function drag() {
+    $( ".draggable" ).draggable();
+}
+
+
 $(document).ready(function(){
     //selectAll();
     onOffSubMenuSetupStaticData();
@@ -356,6 +361,7 @@ $(document).ready(function(){
     resizeScreen();
     setStatic();
     get_file_name();
+    drag();
     // tabsCustomerMenu();
     // showCheckboxes();
 });
