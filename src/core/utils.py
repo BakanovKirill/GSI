@@ -238,7 +238,7 @@ def get_list_lutfiles():
     files.insert(0, 'select')
 
     ####################### write log file
-    lut_files.write('FILES: {0}\n',format(files))
+    lut_files.write('FILES: {0}\n'.format(files))
     lut_files.write('\n')
     #######################
     
@@ -246,7 +246,7 @@ def get_list_lutfiles():
         lutfiles.append(i)
 
     ####################### write log file
-    lut_files.write('LUT FILES: {0}\n',format(lutfiles))
+    lut_files.write('LUT FILES: {0}\n'.format(lutfiles))
     lut_files.close()
     #######################
         
