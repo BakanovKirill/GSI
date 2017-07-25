@@ -99,15 +99,15 @@
 			{% include '_modal_waiting.html' %}
 			<!-- End Modal Waiting -->
 
-			<!-- The Modal: You can not draw a polygon without selecting a dataset -->
-			<div id="myModal" class="modal-draw">
-  				<!-- Modal content -->
-  				<div class="modal-content">
-    				<span class="close" id="close">&times;</span>
-					<p>It makes no sense to draw a polygon if the attribute is not selected.<br>Please select attribute from Info Panel before drawing Polygon.</p>
-  				</div>
-			</div>
-			<!-- End the Modal: You can not draw a polygon without selecting a dataset -->
+            <!-- The Modal: You can not draw a polygon without selecting a dataset -->
+            <div id="myModal" class="modal-draw">
+                <!-- Modal content -->
+                <div class="modal-content">
+                    <span class="close" id="close">&times;</span>
+                    <p>It makes no sense to draw a polygon if the attribute is not selected.<br>Please select attribute from Info Panel before drawing Polygon.</p>
+                </div>
+            </div>
+            <!-- End the Modal: You can not draw a polygon without selecting a dataset -->			
 
 			<!-- The input field for the data Polygon -->
 			<p id="data_polygon" disable></p>
@@ -738,11 +738,8 @@
 				contentString += '<button type="submit" name="save_area" class="btn btn-success btn-block margin-top-15" value="save_area" disabled id="save_area">Save Area</button>';
 				contentString += '<button type="submit" name="cancel_download_file" class="btn btn-primary btn-block margin-top-15" value="cancel_download_file">Cancel</button>';
 
-				infowindow = new google.maps.InfoWindow({content: contentString, position: center_pol});
-				// infowindow.open(map);
-                // ########################################################
-                var modal = $('#modalUpdate');
-                modal.modal('show');
+                infowindow = new google.maps.InfoWindow({content: contentString, position: center_pol});
+				infowindow.open(map);
 			}
 
 			// function OnRequestStateChange()
