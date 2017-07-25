@@ -309,20 +309,6 @@
 
 				map.mapTypes.set(MY_MAPTYPE_ID, jayzMapType);
 				map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
-				//
-
-				// START KML *************************************************************************************************************
-
-				// Set KML file
-				// var url_kml = "{{ kml_path_show }}";
-				// var url_kml = "http://indy4.epcc.ed.ac.uk/media/kml/LinearRing.kml";
-
-				// var kml = kml_layer(url_kml);
-				// kml.setMap(map);
-
-				// alert('url_kml: '+url_kml);
-
-				// END KML ****************************************************************************************************************
 
 				// var min_marker = new google.maps.Marker({
 				//     position: {
@@ -753,7 +739,10 @@
 				contentString += '<button type="submit" name="cancel_download_file" class="btn btn-primary btn-block margin-top-15" value="cancel_download_file">Cancel</button>';
 
 				infowindow = new google.maps.InfoWindow({content: contentString, position: center_pol});
-				infowindow.open(map);
+				// infowindow.open(map);
+                // ########################################################
+                var modal = $('#modalUpdate');
+                modal.modal('show');
 			}
 
 			// function OnRequestStateChange()

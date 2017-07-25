@@ -574,50 +574,31 @@ function selectTab(obj) {
     });
 }
 
-function clickUpdate() {
-    var values = [];
-    var modal = $('#modalUpdate');
-    var form_modal = $('.form-modal').attr('action');
-    modal.modal('show');
+// function clickUpdate() {
+//     var values = [];
+//     var modal = $('#modalUpdate');
+//     var form_modal = $('.form-modal').attr('action');
+//     modal.modal('show');
 
-    $.ajax({
-        url: form_modal,
-        type: 'GET',
-        'async': true,
-        'dataType': 'text',
-        data: {
-            'update': 'update',
-            'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
-        },
-        'error': function(xhr, status, error){
-            var message = 'An unexpected error occurred. Try later.';
-            modal.find('.modal-body').html(message);
-            modal.modal('show');
-        },
-        'success': function(data, status, xhr){
-            // alert('DATA: '+data);
-            // if (!data){
-            //     data = 'To delete, select Item or more Items.';
-            //     modal.find('div.div-cancel').removeClass("col-sm-6");
-            //     modal.find('div.div-cancel').addClass("col-sm-4 col-sm-offset-4")
-            //     modal.find('.cancel-but').html('Ok');
-            //     modal.find('.del-but').hide();
-            // }
-            // else {
-            //     modal.find('.cancel-but').html("No. I don't want delete this Item.");
-            //     modal.find('div.div-cancel').removeClass("col-sm-4 col-sm-offset-4");
-            //     modal.find('div.div-cancel').addClass("col-sm-6");
-            //     modal.find('.del-but').show();
-            // }
-            // msg = 'LUT File updated!'
-            // modal.find('div.div-cancel').addClass("col-sm-6");
-            // modal.find('.modal-header').html(msg);
-            // setTimeout("alert('Привет')", 3000);
-            setTimeout(modal.modal('hide'), 3000);
-            // modal.modal('hide');
-        },
-    });
-}
+//     $.ajax({
+//         url: form_modal,
+//         type: 'GET',
+//         'async': true,
+//         'dataType': 'text',
+//         data: {
+//             'update': 'update',
+//             'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+//         },
+//         'error': function(xhr, status, error){
+//             var message = 'An unexpected error occurred. Try later.';
+//             modal.find('.modal-body').html(message);
+//             modal.modal('show');
+//         },
+//         'success': function(data, status, xhr){
+//             setTimeout(modal.modal('hide'), 3000);
+//         },
+//     });
+// }
 
 
 $(document).ready(function(){
