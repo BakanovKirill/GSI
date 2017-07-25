@@ -1971,7 +1971,7 @@ def customer_section(request):
             if len_attr >= 8:
                 info_window += '<div style="height:400px;overflow:scroll;" class="ui-widget-content">'
             else:
-                info_window += '<div style="overflow:auto;" class="draggable ui-widget-content">'
+                info_window += '<div style="overflow:auto;" class="ui-widget-content">'
 
             info_window += '<table border="1" cellspacing="5" cellpadding="5" style="border-collapse:collapse;border:1px solid black;width:100%;">\n'
             # info_window += '<caption align="left" style="margin-bottom:15px"><span><b>Total Area:</b></span> ' + total_area + ' ha</caption>'
