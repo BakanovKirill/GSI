@@ -13,7 +13,10 @@ from itertools import chain, islice, izip
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
-from gsi.settings import EXECUTE_FE_COMMAND, PROCESS_NUM, STATIC_DIR, FE_SUBMIT, EXEC_RUNS, PATH_RUNS_SCRIPTS, LUT_DIRECTORY
+from gsi.settings import (EXECUTE_FE_COMMAND, PROCESS_NUM,
+                            STATIC_DIR, FE_SUBMIT, EXEC_RUNS,
+                            PATH_RUNS_SCRIPTS, LUT_DIRECTORY
+                        )
 from core.multithreaded import MultiprocessingCards
 
 
