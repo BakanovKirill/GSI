@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block title %}{{ title }}{% endblock title %}
+
+{% block content %}
+    <form class="form-modal" action="{% url 'development_mode_edit' %}" method="post" enctype="multipart/form-data"
+          role="form" class="form-horizontal">
+        {% csrf_token %}
+
+        
+    </form>
+
+    
+{% endblock content %}

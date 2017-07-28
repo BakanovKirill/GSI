@@ -1,0 +1,35 @@
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.title.errors %}has-error{% endif %}">
+            <label class="control-label">{{ form.title.label }}*</label>
+        </div>
+    </div>
+    <div class="col-md-7">
+        {% if not form.title.errors %}
+            {{ form.title }}
+        {% else %}
+            <span class="field-error">{{ form.title }}</span>
+            <b class="error-form">{{ form.title.errors }}</b>
+        {% endif %}
+    </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.is_development.errors %}has-error{% endif %}">
+            <label class="control-label  font-normal">{{ form.is_development.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-1 margin-top-4">
+        {% if not form.is_development.errors %}
+            {{ form.is_development }}
+        {% else %}
+            <span class="field-error">{{ form.is_development }}</span>
+            <b class="error-form">{{ form.is_development.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-50">
+    <div class="col-md-2 col-md-offset-10">
+        <button type="submit" name="save_button" class="btn btn-primary btn-block">Save</button>
+    </div>
+</div>

@@ -1,0 +1,192 @@
+{% load static from staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+
+    <title>Greetings</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+          crossorigin="anonymous">
+
+    <!-- Bootstrap theme -->
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+          integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
+          crossorigin="anonymous">
+
+    <!-- Formstone Select -->
+    <!-- <link rel="stylesheet" href="{% static 'css/jquery.fs.selecter.css' %}"> -->
+    <!--<link rel="stylesheet" href="{% static 'css/dropdown.css' %}">-->
+
+    <!-- Slider -->
+    {# <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.7.2/css/bootstrap-slider.min.css" rel="stylesheet">#}
+
+    <!-- Font Awesomee -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+    <!-- custom styles -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" type="text/css" />
+
+    {% block extra_css %}{% endblock extra_css %}
+</head>
+
+<body onload='initMap()'>
+    <!-- Start Container -->
+    <div class="container-fluid">
+        <!-- Start Body -->
+        {% if user.is_authenticated %}
+            <div class="row main">
+                <div class="col-md-12 center">
+                    <!-- Start Top Menu -->
+                    <div class="row">
+                        <div class="col-md-12 center">
+                            <nav class="navbar navbar-static-top main-menu navbar-main-menu">
+                                <div class="container-fluid">
+                                    <!-- Brand and toggle get grouped for better mobile display -->
+                                    <a class="dropbtn brand-logo navbar-brand" href="{% url 'index' %}">GSi</a>
+                                    <!-- End Brand and toggle get grouped for better mobile display -->
+
+                                    <div class="collapse navbar-collapse">
+                                        <!-- <div class="dropdown-search">
+                                            <input type="text" class="search-form no-yelow-autofill" id="username"
+                                                   value="" name="username" placeholder="type here for search..." oninput="" onkeyup="" />
+                                        </div> -->
+
+                                        <div class="dropdown user-profile" id="dropUser">
+                                            <button class="dropbtn-user dropdown-toggle" id="titleUser" onclick="showSubMenuUser()">
+                                                {{ request.user }}
+                                                <i class="fa fa-caret-right icon-visible-user"></i>
+                                                <i class="fa fa-caret-down icon-visible-user" style="display: none"></i>
+                                            </button>
+                                            <div class="dropdown-content-user dropdown-user left li-menu" id="dropdownUser">
+                                                <a href="{% url 'index' %}" >
+                                                    <img class="right-indent-10" src="{% static 'img/profile-18.png' %}">
+                                                    Profile
+                                                </a>
+                                                <a href="{% url 'index' %}">
+                                                    <img class="right-indent-10" src="{% static 'img/settings.png' %}">
+                                                    Settings
+                                                </a>
+                                                <a href="{% url 'auth_logout' %}">
+                                                    <img class="right-indent-10" src="{% static 'img/logout.png' %}">
+                                                    Log Out
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- End Top Menu -->
+
+                    <div class="row">
+                            <!-- Start Content -->
+                            <div class="col-md-12" id="content-column">
+                                <!-- Title -->
+                                <h2>{% block title %}{% endblock title %}</h2>
+                                <!-- End Title -->
+                            </div>
+                            <!-- End Content -->
+                    </div>
+                </div>
+
+                <!-- Start Bufer -->
+                <div class="footer-push"></div>
+                <!-- End Bufer -->
+            </div>
+
+            <!-- Start Footer -->
+            <div class="row">
+                <footer class="col-md-12 center margin-top-50 margin-bottom-50 font-11">
+                    &copy; {{ CURRENT_YEAR }} GSi Web Site
+                </footer>
+            </div>
+            <!-- End Footer -->
+        {% endif %}
+        <!-- End Body -->
+    </div>
+    <!-- End Container -->
+
+    <!-- ??????????????????????????????????????????????????????????????????????????????????????????????????? -->
+    <!-- Modal Upload Test Data -->
+    <div class="modal fade" id="modalUpload" tabindex="-1" role="dialog" aria-labelledby="modalUploadLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <div class="form-group {% if form.test_data.errors %}has-error{% endif %}">
+                        <h4 class="modal-title" id="modalUploadLabel"><!-- --></h4>
+                    </div>
+                </div>
+                <div class="modal-body"><!-- --></div>
+                <div class="modal-footer"><!-- --></div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal Upload Test Data -->
+
+    <!-- Modal of Wiki -->
+    <div class="modal fade bs-example-modal-lg" id="modalWiki" tabindex="-1" role="dialog" aria-labelledby="modalWikiLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h2 class="modal-title" id="modalWikiLabel">Editing the article</h2>
+                </div>
+                <div class="modal-body"><iframe ckass="iframe-modal" src="" style="zoom:0.60" width="99.6%" height="250" frameborder="0"><!-- --></iframe></div>
+                <div class="modal-footer"><!-- --></div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal of Wiki -->
+
+    <!-- jQuery -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+
+    <!-- Formstone Select JavaScript -->
+    <!-- <script src="{% static 'js/modernizr.js' %}"></script>
+    <script src="{% static 'js/jquery.fs.selecter.min.js' %}"></script> -->
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+            integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+            crossorigin="anonymous">
+    </script>
+
+    <!-- CKEditor JavaScript -->
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+
+    <!-- Checkboxes -->
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+    <!-- custom scripts -->
+    <script type="text/javascript" src="{% static 'js/scripts.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/scripts_ajax.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/script_selectors.js' %}"></script>
+
+    <!-- Slider scripts -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.7.2/bootstrap-slider.min.js"></script> -->
+
+
+    <!--
+    <script type="text/javascript" src="{% static 'js/scripts_google_maps.js' %}"></script>
+    -->
+
+    <!-- Myscripts -->
+    {% block extra_js %}{% endblock extra_js %}
+    <!-- End Myscripts -->
+</body>
+</html>
