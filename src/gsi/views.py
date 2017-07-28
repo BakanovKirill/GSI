@@ -14,14 +14,15 @@ from django.contrib.contenttypes.models import ContentType
 from gsi.settings import PATH_RUNS_SCRIPTS, CONFIGFILE_PATH, GOOGLE_MAP_ZOOM
 from gsi.models import (Run, RunStep, RunBase, Log, OrderedCardItem, HomeVariables,
                         VariablesGroup, YearGroup, Year, Satellite, Area, CardSequence,
-                        InputDataDirectory, SubCardItem, Resolution, Tile)
+                        InputDataDirectory, SubCardItem, Resolution, Tile, DevelopmentPage)
 from gsi.gsi_forms import (RunForm, CardSequenceForm, CardSequenceCardForm, CardSequenceCreateForm, HomeVariablesForm,
                             EnvironmentGroupsForm, AreasForm, YearGroupForm, SatelliteForm, UploadFileForm,
-                            InputDataDirectoryForm, ConfigFileForm, ResolutionForm, TileForm, YearForm)
+                            InputDataDirectoryForm, ConfigFileForm, ResolutionForm, TileForm, YearForm,
+                            DevelopmentPageForm)
 from gsi.gsi_update_create import (configfile_update_create, var_group_update_create, area_update_create,
-                                        yg_update_create, create_update_card_sequence, satellite_update_create,
-                                        data_dir_update_create, resolution_update_create, tile_update_create,
-                                        year_update_create)
+                                    yg_update_create, create_update_card_sequence, satellite_update_create,
+                                    data_dir_update_create, resolution_update_create, tile_update_create,
+                                    year_update_create, development_page_update)
 from cards.models import (QRF, RFScore, Remap, YearFilter, Collate, PreProc, CardItem,
                           MergeCSV, RFTrain, RandomForest, CalcStats, FILTER_OUT, PERIOD)
 from cards.cards_forms import (QRFForm, RFScoreForm, RemapForm, YearFilterForm, CollateForm, PreProcForm,
@@ -244,6 +245,18 @@ def upload_file(request):
 
 
 @login_required
+@render_to('gsi/index-development.html')
+def index_development(request):
+    development_mode = DevelopmentPage.objects.all()
+
+    is_development = development_mode[0].is_development
+
+    data = {'title': development_mode[0].title}
+
+    return data
+
+
+@login_required
 @render_to('gsi/index.html')
 def index(request):
     """**View for the Main page.**
@@ -256,15 +269,28 @@ def index(request):
     url_name = 'home'
     is_homevar = False
 
+    development_mode = DevelopmentPage.objects.all()
+
+    if development_mode:
+        is_development = development_mode[0].is_development
+
+        if is_development and not request.user.is_superuser:
+            return HttpResponseRedirect('/block')
+            # data = {'title': development_mode[0].title, 'is_development': development_mode[0].is_development}
+
+            # return data
+
+    # index-development.html
+
+    if not request.user.is_superuser:
+        return HttpResponseRedirect('/customer/section')
+
     try:
         home_var = HomeVariables.objects.all()[0]
         if home_var.RF_AUXDATA_DIR:
             is_homevar = True
     except IndexError:
         home_var = ''
-
-    if not request.user.is_superuser:
-        return HttpResponseRedirect('/customer/section')
 
     # Handling POST request
     if request.POST:
@@ -291,7 +317,8 @@ def index(request):
                     'test_data'].errors.as_text()))))
     else:
         form = UploadFileForm()
-    data = {'title': title, 'form': form, 'url_name': url_name, 'is_homevar': is_homevar}
+    data = {'title': title, 'form': form, 'url_name': url_name,
+            'is_homevar': is_homevar, 'is_development': development_mode[0].is_development}
 
     return data
 
@@ -1213,6 +1240,17 @@ def sub_card_details(request, run_id, card_id):
     }
 
     return data
+
+
+# # setup home variable
+# @login_required
+# @render_to('gsi/home_variable_setup.html')
+# def home_variable_setup(request):
+#     """**View for the "Home Variables Setup" page.**
+
+#     :Arguments:
+#         * *request:* The request is sent to the server when processing the page
+#     """
 
 
 # setup home variable
@@ -3182,9 +3220,9 @@ def year_edit(request, year_id):
 
 # view Customer section
 @login_required
-@render_to('gsi/customer_section.html')
-def customer_section(request):
-    """**View for the "Customer '<user>' section" page.**
+@render_to('gsi/static_data_item_edit.html')
+def development_mode_edit(request):
+    """**View for the "Development Mode Edit" page.**
 
     :Functions:
         When you load the page is loaded map with Google MAP. Initial coordinates: eLat = 0, eLng = 0.
@@ -3195,30 +3233,41 @@ def customer_section(request):
         * *request:* The request is sent to the server when processing the page
     """
 
-    customer = request.user
-    title = 'Customer {0} section'.format(customer)
-    url_name = 'customer_section'
-    eLat = 0
-    eLng = 0
+    title = 'Development Mode Edit'
+    development_mode = DevelopmentPage.objects.all()[0]
+    url_name = 'development_mode'
+    but_name = 'static_data'
+    url_form = 'development_mode_edit'
+    template_name = 'gsi/_development_mode_form.html'
+    reverse_url = {'save_button': 'development_mode_edit'}
+    func = development_page_update
+    form = None
 
     # Handling POST request
     if request.method == "POST":
-        data_request = request.POST
+        response = get_post(
+            request,
+            DevelopmentPageForm,
+            'Development Mode Edit',
+            reverse_url,
+            func,
+            item_id=development_mode.id)
 
-        if data_request.get('eLat', ''):
-            eLat = data_request.get('eLat', '')
-
-        if data_request.get('eLng', ''):
-            eLng = data_request.get('eLng', '')
-
+        if isinstance(response, HttpResponseRedirect):
+            return response
+        else:
+            form = response
+    else:
+        form = DevelopmentPageForm(instance=development_mode)
 
     data = {
         'title': title,
-        'customer': customer,
         'url_name': url_name,
-        'eLat': eLat,
-        'eLng': eLng,
-        'GOOGLE_MAP_ZOOM': GOOGLE_MAP_ZOOM
+
+        'url_form': url_form,
+        'but_name': but_name,
+        'template_name': template_name,
+        'form': form,
     }
 
     return data

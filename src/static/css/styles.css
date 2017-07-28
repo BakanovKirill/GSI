@@ -44,6 +44,11 @@ table {
     border-spacing: 8px;
 }
 
+/* BLOCK STYLE */
+.title-block {
+    text-align:  center;
+}
+
 .main {
     min-height: 100%;
     height: auto !important;

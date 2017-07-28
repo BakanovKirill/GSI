@@ -28,6 +28,9 @@ urlpatterns = [
 	# index
 	url(r'^$', 'gsi.views.index', name='index'),
 
+    # index
+    url(r'^block', 'gsi.views.index_development', name='index-development'),
+
 	# upload file
 	url(r'^customer/upload-file/$', 'gsi.views.upload_file', name='upload_file'),
 
@@ -127,8 +130,8 @@ urlpatterns = [
 	# cards list
 	url(r'^cards/list/$', 'gsi.views.cards_list', name='cards_list'),
 
-	# Customer section
-	# url(r'^customer/$', 'gsi.views.customer_section', name='customer_section'),
+	# Development Mode
+	url(r'^development-mode/$', 'gsi.views.development_mode_edit', name='development_mode_edit'),
 
 	# Card Sequence edit
 	url(r'^run/(?P<run_id>\d+)/card-sequence/(?P<cs_id>\d+)/$', 'gsi.views.card_sequence_update', name='card_sequence_update'),
@@ -162,7 +165,9 @@ urlpatterns = [
 		name='auth_logout'),
 	url(r'^register/complete/$', RedirectView.as_view(pattern_name='index'),
 		name='registration_complete'),
-	url(r'^', include('registration.backends.simple.urls', namespace='users')),
+	
+    url(r'^', include('registration.backends.simple.urls', namespace='users')),
+    # url(r'^accounts/', include('registration.backends.simple.urls')),
 
 	# reset password option
 	url(r'^reset/password_reset/$', 'django.contrib.auth.views.password_reset', name='reset_password_reset1'),

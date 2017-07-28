@@ -12,6 +12,18 @@ from core.utils import (UnicodeNameMixin, create_new_folder, update_root_list_fi
 from gsi.settings import STATIC_ROOT, STATIC_DIR
 
 
+class DevelopmentPage(models.Model):
+    title = models.CharField(max_length=300, unique=False)
+    is_development = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['title']
+
+    def __unicode__(self):
+        return u"{0}".format(self.title)
+
+
+
 class HomeVariables(SingletonModel):
     """**Model for the Home Variables.**
 

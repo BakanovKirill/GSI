@@ -155,8 +155,15 @@ REST_FRAMEWORK = {
 
 # settings for django-registration-redux
 REGISTRATION_OPEN = True
+ACCOUNT_ACTIVATION_DAYS = 7
+# LOGIN_REDIRECT_URL = '/index/'
+# LOGIN_URL = '/login/'
+# LOGOUT_URL = '/logout/'
+
 LOGIN_URL = 'users:auth_login'
 LOGOUT_URL = 'users:auth_logout'
+
+
 
 # to send the activation code
 # EMAIL_HOST = 'localhost'

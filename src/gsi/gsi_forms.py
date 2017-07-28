@@ -5,7 +5,7 @@ from core.validator_gsi import validate_order
 from cards.models import CardItem
 from gsi.models import (RunBase, Resolution, CardSequence, VariablesGroup,
                         HomeVariables, Tile, YearGroup, Year, Satellite,
-                        InputDataDirectory, ConfigFile)
+                        InputDataDirectory, ConfigFile, DevelopmentPage)
 
 
 class RunForm(forms.ModelForm):
@@ -388,3 +388,23 @@ class YearForm(forms.ModelForm):
     class Meta:
         model = Year
         fields = ['name', ]
+
+
+class DevelopmentPageForm(forms.ModelForm):
+    """**Form for editing DevelopmentPage.**"""
+
+    def __init__(self, *args, **kwargs):
+        super(DevelopmentPageForm, self).__init__(*args, **kwargs)
+
+    title = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label=u'Title', )
+    is_development = forms.BooleanField(
+        initial=False,
+        required=False,
+        label=u'Development Mode',
+    )
+
+    class Meta:
+        model = DevelopmentPage
+        fields = ['title', 'is_development']

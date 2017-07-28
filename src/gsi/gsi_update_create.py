@@ -1,7 +1,18 @@
 # -*- coding: utf-8 -*-
 from gsi.models import (VariablesGroup, Area, Tile, Resolution,
 						YearGroup, CardSequence, Satellite,
-                        InputDataDirectory, ConfigFile, Year)
+                        InputDataDirectory, ConfigFile, Year,
+                        DevelopmentPage)
+
+
+def development_page_update(form, item_id):
+    DevelopmentPage.objects.filter(id=item_id).update(
+        title=form.cleaned_data["title"],
+        is_development=form.cleaned_data["is_development"]
+    )
+    result = DevelopmentPage.objects.get(id=item_id)
+
+    return result
 
 
 def configfile_update_create(pathname):

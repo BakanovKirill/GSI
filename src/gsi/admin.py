@@ -7,7 +7,7 @@ from core.utils import (make_run, update_root_list_files, update_list_dirs, upda
 from .models import (HomeVariables, VariablesGroup, Tile, Area, YearGroup,
                      Year, CardSequence, RunBase, RunStep, Run,
                      Resolution, Log, TileType, Satellite, InputDataDirectory,
-                     ListTestFiles, SubCardItem, ConfigFile)
+                     ListTestFiles, SubCardItem, ConfigFile, DevelopmentPage)
 from solo.admin import SingletonModelAdmin
 
 
@@ -36,6 +36,10 @@ class CardSequenceAdmin(admin.ModelAdmin):
     exclude = ('cards',)
 
 
+class DevelopmentPageAdmin(admin.ModelAdmin):
+    list_display = ('title', 'is_development',)
+
+
 admin.site.register(CardSequence, CardSequenceAdmin)
 admin.site.register(Area, AreaAdmin)
 admin.site.register(HomeVariables, SingletonModelAdmin)
@@ -43,6 +47,7 @@ admin.site.register(VariablesGroup, admin.ModelAdmin)
 admin.site.register(Year, admin.ModelAdmin)
 admin.site.register(YearGroup, YearGroupAdmin)
 admin.site.register(Tile, admin.ModelAdmin)
+admin.site.register(DevelopmentPage, DevelopmentPageAdmin)
 
 
 class RunBaseAdmin(admin.ModelAdmin):
