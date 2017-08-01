@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Views for the customers app."""
-import os, numpy
+import os
 import os.path, time
 import subprocess
 from PIL import Image
