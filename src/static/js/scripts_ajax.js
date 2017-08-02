@@ -357,6 +357,13 @@ function setPolygon(obj) {
                     suppressInfoWindows: true,
                     map: map
                 });
+                google.maps.event.addListener(kmlLayer, 'click', function(event) {
+                    alert('KML Click!');
+                    // var content = event.featureData.infoWindowHtml;
+                    // var testimonial = document.getElementById('capture');
+                    // testimonial.innerHTML = content;
+                });
+
 
 
                 // kml.setMap(map);
