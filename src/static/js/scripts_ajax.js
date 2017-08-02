@@ -322,6 +322,9 @@ function createDiv() {
     divNode.setAttribute("class", "popup");
     divNode.setAttribute("id", "myPopup");
     divNode.setAttribute("draggable", "true");
+
+    divNode.innerHTML = 'A <b>different</b> Popup!<br> with multiple lines</span>';
+    document.body.appendChild(divNode);
 }
 
 function setPolygon(obj) {
@@ -381,7 +384,7 @@ function setPolygon(obj) {
                     }
                 
                 // When the user clicks on div, open the popup
-                function myFunction(x,y,text) {
+                function myFunction(x, y, text) {
                     console.log("MyFunction: x="+x+", y="+y);
                     var popup = document.getElementById('myPopup');
                 //    var canvas = document.getElementById('canvas1');
@@ -449,9 +452,9 @@ function setPolygon(obj) {
                     
                     
 
-                    dm.addEventListener('dragstart',drag_start,false); 
-                    document.body.addEventListener('dragover',drag_over,false); 
-                    document.body.addEventListener('drop',drop,false);
+                    dm.addEventListener('dragstart', drag_start, false); 
+                    document.body.addEventListener('dragover', drag_over, false); 
+                    document.body.addEventListener('drop', drop, false);
 
                     myFunction(350,530,"New text");
                 });
