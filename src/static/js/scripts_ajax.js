@@ -358,7 +358,7 @@ function setPolygon(obj) {
                     map: map
                 });
 
-                kmlLayer.addListener('click', function(kmlEvent) {
+                kml.addListener('click', function(kmlEvent) {
                     alert('KML Click addListener!');
                     // var text = kmlEvent.featureData.description;
                     // showInContentWindow(text);
