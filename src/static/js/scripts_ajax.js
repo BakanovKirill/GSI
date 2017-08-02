@@ -339,18 +339,25 @@ function setPolygon(obj) {
             },
             'success': function(data, status, xhr){
                 // alert('DATA: '+data);
-                // var data_status = JSON.parse(data);
-                // alert('URL: '+data_status.url);
-                // alert('status: '+data_status.status);
-                // if (data_status.status == 'reload') {
-                //     window.location.href = form_url;
-                // }
-                // var uri_kml = data_status.url;
-                // window.location.href = form_url;
-
-                // alert('DATA: '+data);
-                // var kml;
-                // kml = new google.maps.KmlLayer(data);
+                
+                function drag_start(event) {
+                    var style = window.getComputedStyle(event.target, null);
+                    event.dataTransfer.setData("text/plain",
+                    (parseInt(style.getPropertyValue("left"),10) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top"),10) - event.clientY));
+                } 
+                function drag_over(event) { 
+                    event.preventDefault(); 
+                    return false; 
+                } 
+                function drop(event) { 
+                    var offset = event.dataTransfer.getData("text/plain").split(',');
+                    var dm = document.getElementById('myPopup');
+                    console.log("drop: x="+parseInt(offset[0],10)+", y="+parseInt(offset[1],10));
+                    dm.style.left = (event.clientX + parseInt(offset[0],10)) + 'px';
+                    dm.style.top = (event.clientY + parseInt(offset[1],10)) + 'px';
+                    event.preventDefault();
+                    return false;
+                } 
                 
                 var kml = new google.maps.KmlLayer({
                     url: data,
@@ -359,18 +366,22 @@ function setPolygon(obj) {
                 });
 
                 kml.addListener('click', function(kmlEvent) {
-                    alert('KML Click addListener!');
+                    // alert('KML Click addListener!');
                     // var text = kmlEvent.featureData.description;
                     // showInContentWindow(text);
+                    
+                    var divNode = document.createElement("div");
+                    divNode.setAttribute("class", "popup");
+                    divNode.setAttribute("id", "myPopup");
+                    divNode.setAttribute("draggable", "true");
+                    divNode.innerHTML = 'A <b>different</b> Popup!<br> with multiple lines</span>';
+                    document.body.appendChild(divNode);
+
+                    var dm = document.getElementById('myPopup'); 
+                    dm.addEventListener('dragstart',drag_start,false); 
+                    document.body.addEventListener('dragover',drag_over,false); 
+                    document.body.addEventListener('drop',drop,false);  
                 });
-
-                // google.maps.event.addListener(kmlLayer, 'click', function(event) {
-                //     alert('KML Click!');
-                //     // var content = event.featureData.infoWindowHtml;
-                //     // var testimonial = document.getElementById('capture');
-                //     // testimonial.innerHTML = content;
-                // });
-
 
 
                 // kml.setMap(map);
