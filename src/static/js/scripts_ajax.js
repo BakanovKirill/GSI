@@ -317,6 +317,13 @@ function removeSelectedItems() {
     return false;
 }
 
+function createDiv() {
+    var divNode = document.createElement("div");
+    divNode.setAttribute("class", "popup");
+    divNode.setAttribute("id", "myPopup");
+    divNode.setAttribute("draggable", "true");
+}
+
 function setPolygon(obj) {
     // alert(obj.checked);
     var checked = obj.checked;
@@ -418,18 +425,20 @@ function setPolygon(obj) {
                     // var text = kmlEvent.featureData.description;
                     // showInContentWindow(text);
                     
-                    var popup_X = kmlEvent.pageX;
-                    var popup_Y = kmlEvent.pageY;
+                    // var popup_X = kmlEvent.pageX;
+                    // var popup_Y = kmlEvent.pageY;
 
-                    // event.pageX+':'+event.pageY
+                    // // event.pageX+':'+event.pageY
 
-                    alert('COORD X: '+MouseCoords.getX(kmlEvent));
-                    alert('COORD Y: '+MouseCoords.getY(kmlEvent));
+                    // alert('COORD X: '+MouseCoords.getX(kmlEvent));
+                    // alert('COORD Y: '+MouseCoords.getY(kmlEvent));
+
+                    createDiv();
                     
-                    var divNode = document.createElement("div");
-                    divNode.setAttribute("class", "popup");
-                    divNode.setAttribute("id", "myPopup");
-                    divNode.setAttribute("draggable", "true");
+                    // var divNode = document.createElement("div");
+                    // divNode.setAttribute("class", "popup");
+                    // divNode.setAttribute("id", "myPopup");
+                    // divNode.setAttribute("draggable", "true");
                     // divNode.innerHTML = 'A <b>different</b> Popup!<br> with multiple lines</span>';
                     // document.body.appendChild(divNode);
 
