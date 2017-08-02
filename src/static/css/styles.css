@@ -1382,18 +1382,16 @@ hr {
     background-color: #ffc;
 }`;*/
 
+/* The actual popup */
 .popup {
-    position: relative;
+    /*position: relative;*/
     display: inline-block;
     cursor: pointer;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-}
 
-/* The actual popup */
-.popup {
     visibility: hidden;
     width: 160px;
     background-color: #555;
