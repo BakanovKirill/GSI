@@ -396,6 +396,8 @@ function setPolygon(obj) {
                     dm.innerHTML = data;
 
                     // dm.classList.toggle("show");
+                    
+                    alert('COORD: '+kmlEvent.pixelOffset)
 
                     dm.addEventListener('dragstart',drag_start,false); 
                     document.body.addEventListener('dragover',drag_over,false); 
