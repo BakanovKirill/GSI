@@ -375,8 +375,8 @@ function setPolygon(obj) {
                     var offset = event.dataTransfer.getData("text/plain").split(',');
                     var dm = document.getElementById('myPopup');
                     // console.log("drop: x="+parseInt(offset[0], 10)+", y="+parseInt(offset[1],10));
-                    dm.style.left = (event.clientX + parseInt(offset[0], 10)) + 'px';
-                    dm.style.top = (event.clientY + parseInt(offset[1], 10)) + 'px';
+                    // dm.style.left = (event.clientX + parseInt(offset[0], 10)) + 'px';
+                    // dm.style.top = (event.clientY + parseInt(offset[1], 10)) + 'px';
                     event.preventDefault();
                     return false;
                 } 
@@ -421,7 +421,7 @@ function setPolygon(obj) {
 
                     dm.addEventListener('dragstart', drag_start, false); 
                     document.body.addEventListener('dragover', drag_over, false); 
-                    // document.body.addEventListener('drop', drop, false);
+                    document.body.addEventListener('drop', drop, false);
 
                     myFunction(centerX, centerY, "New text");
                 });
