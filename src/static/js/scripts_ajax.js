@@ -432,9 +432,12 @@ function setPolygon(obj) {
                     // var popup_Y = kmlEvent.pageY;
 
                     // // event.pageX+':'+event.pageY
+                    
+                    var centerX = document.documentElement.clientWidth / 2;
+                    var centerY = document.documentElement.clientHeight / 2;
 
-                    // alert('COORD X: '+MouseCoords.getX(kmlEvent));
-                    // alert('COORD Y: '+MouseCoords.getY(kmlEvent));
+                    alert('COORD X: '+centerX);
+                    alert('COORD Y: '+McenterY);
 
                     createDiv();
                     
@@ -456,7 +459,7 @@ function setPolygon(obj) {
                     document.body.addEventListener('dragover', drag_over, false); 
                     document.body.addEventListener('drop', drop, false);
 
-                    myFunction(350,530,"New text");
+                    myFunction(centerX, centerY, "New text");
                 });
 
 

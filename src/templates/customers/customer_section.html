@@ -126,30 +126,6 @@
 
 		<script src="http://www.google.com/jsapi"></script>
 
-        <script>
-            document.onclick = function(e)
-            {
-                if (!e) e = window.event;
-
-                var dm = document.getElementById('myPopup');
-                // dm.innerHTML = data;
-
-                dm.addEventListener('dragstart', drag_start, false); 
-                document.body.addEventListener('dragover', drag_over, false); 
-                document.body.addEventListener('drop', drop, false);
-
-                alert('X: '+dm.getX(e));
-                alert('Y: '+dm.getY(e));
-
-                myFunction(dm.getX(e), dm.getY(e), "New text");
-
-                // var mouseCoordsLayer = document.getElementById('mouse_coords_on_click');
-                // mouseCoordsLayer.innerHTML = '<h2>Координаты при клике</h2>';
-                // mouseCoordsLayer.innerHTML += '<p>X: '+dm.getX(e)+'</p>';
-                // mouseCoordsLayer.innerHTML += '<p>Y: '+dm.getY(e)+'</p>';
-            }
-        </script>
-
 		<script>
 			// Get the modal
 			var modal = document.getElementById('myModal');
