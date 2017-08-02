@@ -380,9 +380,9 @@ function setPolygon(obj) {
                     var dm = document.getElementById('myPopup');
                     dm.innerHTML = data;
 
-                    // dm.addEventListener('dragstart',drag_start,false); 
-                    // document.body.addEventListener('dragover',drag_over,false); 
-                    // document.body.addEventListener('drop',drop,false);  
+                    dm.addEventListener('dragstart',drag_start,false); 
+                    document.body.addEventListener('dragover',drag_over,false); 
+                    document.body.addEventListener('drop',drop,false);  
                 });
 
 
