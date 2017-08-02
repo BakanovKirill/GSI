@@ -437,7 +437,7 @@ function setPolygon(obj) {
                     var centerY = document.documentElement.clientHeight / 2;
 
                     alert('COORD X: '+centerX);
-                    alert('COORD Y: '+McenterY);
+                    alert('COORD Y: '+centerY);
 
                     createDiv();
                     
