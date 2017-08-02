@@ -401,7 +401,7 @@ function setPolygon(obj) {
                     document.body.addEventListener('dragover',drag_over,false); 
                     document.body.addEventListener('drop',drop,false);
 
-                    myFunction(50,30,"New text");
+                    myFunction(350,530,"New text");
                 });
 
 
