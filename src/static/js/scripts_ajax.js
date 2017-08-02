@@ -385,11 +385,13 @@ function setPolygon(obj) {
                     // var text = kmlEvent.featureData.description;
                     // showInContentWindow(text);
                     
-                    var coord_popup = kmlEvent.latLng;
+                    var popup_X = kmlEvent.pageX;
+                    var popup_Y = kmlEvent.pageY;
 
-                    alert('COORD: '+coord_popup);
-                    alert('COORD 0: '+coord_popup[0]);
-                    alert('COORD 1: '+coord_popup[1]);
+                    // event.pageX+':'+event.pageY
+
+                    alert('COORD X: '+popup_X);
+                    alert('COORD Y: '+popup_Y);
                     
                     var divNode = document.createElement("div");
                     divNode.setAttribute("class", "popup");
