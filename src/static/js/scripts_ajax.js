@@ -385,7 +385,7 @@ function setPolygon(obj) {
                     // var text = kmlEvent.featureData.description;
                     // showInContentWindow(text);
                     
-                    var coord_popup = kmlEvent.position.coords.latitude;
+                    var coord_popup = kmlEvent.latLng;
                     
                     var divNode = document.createElement("div");
                     divNode.setAttribute("class", "popup");
