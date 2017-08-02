@@ -340,6 +340,21 @@ function setPolygon(obj) {
             'success': function(data, status, xhr){
                 // alert('DATA: '+data);
                 
+                // When the user clicks on div, open the popup
+                function myFunction(x,y,text) {
+                    console.log("MyFunction: x="+x+", y="+y);
+                    var popup = document.getElementById('myPopup');
+                //    var canvas = document.getElementById('canvas1');
+                //    var rect = canvas.getBoundingClientRect();
+                //    popup.style.left=x+rect.left+"px";
+                //    popup.style.top=y+rect.top+"px";
+                    popup.innerHTML = text;
+                    popup.style.left=x+"px";
+                    popup.style.top=y+"px";
+                    popup.style.visibility="visible";
+                }
+
+                
                 function drag_start(event) {
                     var style = window.getComputedStyle(event.target, null);
                     event.dataTransfer.setData("text/plain",
@@ -384,7 +399,9 @@ function setPolygon(obj) {
 
                     dm.addEventListener('dragstart',drag_start,false); 
                     document.body.addEventListener('dragover',drag_over,false); 
-                    document.body.addEventListener('drop',drop,false);  
+                    document.body.addEventListener('drop',drop,false);
+
+                    myFunction(50,30,"New text");
                 });
 
 
