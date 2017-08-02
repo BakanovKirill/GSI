@@ -361,7 +361,7 @@ function setPolygon(obj) {
                 
                 var kml = new google.maps.KmlLayer({
                     url: data,
-                    // suppressInfoWindows: true,
+                    suppressInfoWindows: true,
                     map: map
                 });
 
