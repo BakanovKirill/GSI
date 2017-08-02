@@ -340,6 +340,39 @@ function setPolygon(obj) {
             'success': function(data, status, xhr){
                 // alert('DATA: '+data);
                 
+                var MouseCoords = {
+
+                    // X-координата
+                    getX: function(e)
+                    {
+                    if (e.pageX)
+                    {
+                    return e.pageX;
+                    }
+                    else if (e.clientX)
+                    {
+                    return e.clientX+(document.documentElement.scrollLeft || document.body.scrollLeft) - document.documentElement.clientLeft;
+                    }
+
+                    return 0;
+                    },
+
+                    // Y-координата
+                    getY: function(e)
+                    {
+                    if (e.pageY)
+                    {
+                    return e.pageY;
+                    }
+                    else if (e.clientY)
+                    {
+                    return e.clientY+(document.documentElement.scrollTop || document.body.scrollTop) - document.documentElement.clientTop;
+                    }
+
+                    return 0;
+                    }
+                    }
+                
                 // When the user clicks on div, open the popup
                 function myFunction(x,y,text) {
                     console.log("MyFunction: x="+x+", y="+y);
@@ -390,8 +423,8 @@ function setPolygon(obj) {
 
                     // event.pageX+':'+event.pageY
 
-                    alert('COORD X: '+popup_X);
-                    alert('COORD Y: '+popup_Y);
+                    alert('COORD X: '+MouseCoords.getX(kmlEvent));
+                    alert('COORD Y: '+MouseCoords.getY(kmlEvent));
                     
                     var divNode = document.createElement("div");
                     divNode.setAttribute("class", "popup");
