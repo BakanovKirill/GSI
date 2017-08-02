@@ -385,14 +385,14 @@ function setPolygon(obj) {
                     // var text = kmlEvent.featureData.description;
                     // showInContentWindow(text);
                     
-                    var coord_popup = kmlEvent.position;
+                    var coord_popup = kmlEvent.position.coords.latitude;
                     
                     var divNode = document.createElement("div");
                     divNode.setAttribute("class", "popup");
                     divNode.setAttribute("id", "myPopup");
                     divNode.setAttribute("draggable", "true");
-                    divNode.innerHTML = 'A <b>different</b> Popup!<br> with multiple lines</span>';
-                    document.body.appendChild(divNode);
+                    // divNode.innerHTML = 'A <b>different</b> Popup!<br> with multiple lines</span>';
+                    // document.body.appendChild(divNode);
 
                     var dm = document.getElementById('myPopup');
                     dm.innerHTML = data;
