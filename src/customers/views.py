@@ -1960,7 +1960,7 @@ def customer_section(request):
                     statistic = item[1][0]
 
             len_attr = len(attribute)
-
+            
             info_window = '<h4 align="center">Attribute report: {0}</h4>\n'.format(area_name)
             info_window += '<p align="center"><span><b>Total Area:</b></span> ' + total_area + ' ha</p>';
 

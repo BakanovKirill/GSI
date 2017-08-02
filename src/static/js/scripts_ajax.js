@@ -352,7 +352,12 @@ function setPolygon(obj) {
                 // var kml;
                 // kml = new google.maps.KmlLayer(data);
                 
-                var kml = new google.maps.KmlLayer({url: data, map: map});
+                var kml = new google.maps.KmlLayer({
+                    url: data,
+                    suppressInfoWindows: true,
+                    map: map
+                });
+
 
                 // kml.setMap(map);
             },
@@ -574,6 +579,16 @@ function selectTab(obj) {
         },
     });
 }
+
+function movingInfoWindow() {
+    $('.gm-style-iw').click(function(){
+        alert('Вы нажали на элемент "foo"');
+    });
+}
+
+// 
+// 
+
 
 // function clickUpdate() {
 //     var values = [];
