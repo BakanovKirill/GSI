@@ -386,6 +386,10 @@ function setPolygon(obj) {
                     // showInContentWindow(text);
                     
                     var coord_popup = kmlEvent.latLng;
+
+                    alert('COORD: '+coord_popup);
+                    alert('COORD 0: '+coord_popup[0]);
+                    alert('COORD 1: '+coord_popup[1]);
                     
                     var divNode = document.createElement("div");
                     divNode.setAttribute("class", "popup");
@@ -399,9 +403,7 @@ function setPolygon(obj) {
 
                     // dm.classList.toggle("show");
                     
-                    alert('COORD: '+coord_popup);
-                    alert('COORD 0: '+coord_popup[0]);
-                    alert('COORD 1: '+coord_popup[1]);
+                    
 
                     dm.addEventListener('dragstart',drag_start,false); 
                     document.body.addEventListener('dragover',drag_over,false); 
