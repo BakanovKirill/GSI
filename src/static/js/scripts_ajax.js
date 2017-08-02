@@ -377,10 +377,12 @@ function setPolygon(obj) {
                     divNode.innerHTML = 'A <b>different</b> Popup!<br> with multiple lines</span>';
                     document.body.appendChild(divNode);
 
-                    var dm = document.getElementById('myPopup'); 
-                    dm.addEventListener('dragstart',drag_start,false); 
-                    document.body.addEventListener('dragover',drag_over,false); 
-                    document.body.addEventListener('drop',drop,false);  
+                    var dm = document.getElementById('myPopup');
+                    dm.innerHTML = data;
+
+                    // dm.addEventListener('dragstart',drag_start,false); 
+                    // document.body.addEventListener('dragover',drag_over,false); 
+                    // document.body.addEventListener('drop',drop,false);  
                 });
 
 
