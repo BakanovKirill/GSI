@@ -406,8 +406,9 @@ function setPolygon(obj) {
                     // alert('KML Click addListener! '+data);
                     // var text = kmlEvent.featureData.description;
                     // showInContentWindow(text);
+                    info_window_id = kmlEvent.featureData.id
                     
-                    alert("EVENT KML: "+kmlEvent.featureData.id);
+                    alert("EVENT KML: "+info_window_id);
                     
                     var centerX = document.documentElement.clientWidth / 2;
                     var centerY = document.documentElement.clientHeight / 2;
@@ -419,11 +420,11 @@ function setPolygon(obj) {
 
                     createDiv(polygon_name);
 
-                    var dm = document.getElementById(polygon_name);
+                    var dm = document.getElementById(info_window_id);
                     dm.innerHTML = data;
                     dm.addEventListener('dragstart', drag_start, false); 
                     document.body.addEventListener('dragover', drag_over, false); 
-                    document.body.addEventListener('drop', function() {drop(polygon_name)}, false);
+                    document.body.addEventListener('drop', function() {drop(info_window_id)}, false);
 
                     // var dm = document.getElementById('myPopup');
                     // dm.innerHTML = data;
@@ -431,7 +432,7 @@ function setPolygon(obj) {
                     // document.body.addEventListener('dragover', drag_over, false); 
                     // document.body.addEventListener('drop', drop, false);
 
-                    myFunction(centerX, centerY, data, polygon_name);
+                    myFunction(centerX, centerY, data, info_window_id);
                 });
 
 
