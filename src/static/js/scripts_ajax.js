@@ -331,9 +331,9 @@ function createDiv(obj_id) {
 
 
 // When the user clicks on div, open the popup
-function myFunction(x, y, text) {
+function myFunction(x, y, text, div_id) {
     console.log("MyFunction: x="+x+", y="+y);
-    var popup = document.getElementById('myPopup');
+    var popup = document.getElementById(div_id);
 //    var canvas = document.getElementById('canvas1');
 //    var rect = canvas.getBoundingClientRect();
 //    popup.style.left=x+rect.left+"px";
@@ -355,7 +355,7 @@ function drag_over(event) {
 } 
 function drop(event) { 
     var offset = event.dataTransfer.getData("text/plain").split(',');
-    var dm = document.getElementById('myPopup');
+    var dm = document.getElementById('feat_4_iw');
     console.log("drop: x="+parseInt(offset[0],10)+", y="+parseInt(offset[1],10));
     dm.style.left = (event.clientX + parseInt(offset[0],10)) + 'px';
     dm.style.top = (event.clientY + parseInt(offset[1],10)) + 'px';
@@ -398,8 +398,16 @@ function setPolygon(obj) {
                 });
 
                 kml.addListener('click', function(kmlEvent) {
+                    alert("KML DATA: "+data);
+
                     var info_window_id = kmlEvent.featureData.id + '_iw'
-                    createDiv('myPopup');
+                    // createDiv('myPopup');
+                    createDiv(info_window_id);
+
+                    alert("KML ID: "+info_window_id);
+                    
+
+                    // ***********************************************************************************
 
                     // var divNode = document.createElement("div");
                     // divNode.setAttribute("class", "popup");
@@ -408,10 +416,12 @@ function setPolygon(obj) {
                     // divNode.innerHTML = 'A <b>different</b> Popup!<br> with multiple lines</span>';
                     // document.body.appendChild(divNode);
 
-                    var dm = document.getElementById('myPopup'); 
-                    dm.addEventListener('dragstart',drag_start,false); 
-                    document.body.addEventListener('dragover',drag_over,false); 
-                    document.body.addEventListener('drop',drop,false);
+                    // var dm = document.getElementById('myPopup'); 
+                    // dm.addEventListener('dragstart',drag_start,false); 
+                    // document.body.addEventListener('dragover',drag_over,false); 
+                    // document.body.addEventListener('drop',drop,false);
+                    // 
+                    // ***********************************************************************************
 
 
                     // // alert('KML Click addListener! '+data);
@@ -433,11 +443,11 @@ function setPolygon(obj) {
 
                     // createDiv(info_window_id);
 
-                    // var dm = document.getElementById(info_window_id);
+                    var dm = document.getElementById(info_window_id);
                     // dm.innerHTML = data;
-                    // dm.addEventListener('dragstart', drag_start, false); 
-                    // document.body.addEventListener('dragover', drag_over, false); 
-                    // document.body.addEventListener('drop', drop, false);
+                    dm.addEventListener('dragstart', drag_start, false); 
+                    document.body.addEventListener('dragover', drag_over, false); 
+                    document.body.addEventListener('drop', drop, false);
 
                     // // var dm = document.getElementById('myPopup');
                     // // dm.innerHTML = data;
@@ -445,8 +455,8 @@ function setPolygon(obj) {
                     // // document.body.addEventListener('dragover', drag_over, false); 
                     // // document.body.addEventListener('drop', drop, false);
 
-                    // myFunction(centerX, centerY, data, info_window_id);
-                    myFunction(centerX, centerY, data);
+                    myFunction(centerX, centerY, data, info_window_id);
+                    // myFunction(centerX, centerY, data);
                 });
 
 

@@ -1893,9 +1893,13 @@ def customer_section(request):
             #     remove_file_png(ip.png_path)
             #
             # CustomerInfoPanel.objects.filter(user=request.user).delete()
+            
+            abs_path = 'http://indy4.epcc.ed.ac.uk/media/kml/lynne1.kml'
+            data = abs_path
 
-            polygon = data_get_ajax.get('polygon', '')
-            data = os.path.join(absolute_kml_url, polygon)
+            # polygon = data_get_ajax.get('polygon', '')
+            # data = os.path.join(absolute_kml_url, polygon)
+            
 
         if 'tab_active' in data_get_ajax:
             tab_active = data_get_ajax.get('tab_active', '')
