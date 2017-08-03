@@ -348,9 +348,9 @@ function drag_over(event) {
     return false; 
 }
 
-function drop(event, obj_id) {
+function drop(event) {
     // alert('EVENT ID: '+obj_id);
-    alert('EVENT ID: '+event.id);
+    alert('EVENT ID: '+event.target.id);
     alert('EVENT description: '+event.featureData);
     // var data = kmlEvent.featureData;
     
@@ -424,7 +424,7 @@ function setPolygon(obj) {
                     dm.innerHTML = data;
                     dm.addEventListener('dragstart', drag_start, false); 
                     document.body.addEventListener('dragover', drag_over, false); 
-                    document.body.addEventListener('drop', function() {drop(info_window_id)}, false);
+                    document.body.addEventListener('drop', drop, false);
 
                     // var dm = document.getElementById('myPopup');
                     // dm.innerHTML = data;
