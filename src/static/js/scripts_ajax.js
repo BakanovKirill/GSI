@@ -349,7 +349,7 @@ function drag_over(event) {
 }
 
 function drop(event, obj_id) {
-    alert('EVENT ID: '+tobj_id);
+    alert('EVENT ID: '+obj_id);
     // alert('EVENT ID: '+this.id);
     // alert('EVENT description: '+event.featureData.description);
     
