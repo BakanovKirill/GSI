@@ -351,7 +351,7 @@ function drag_over(event) {
 function drop(event, obj_id) {
     // alert('OBJ ID: '+obj_id);
     
-    if !obj_id:
+    if (!obj_id):
         $('.popup').live('click', function() {
              alert($(this).attr("id"));
         });
