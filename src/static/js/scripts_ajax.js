@@ -351,7 +351,7 @@ function drag_over(event) {
 function drop(event, obj_id) {
     // alert('EVENT ID: '+obj_id);
     // alert('EVENT ID: '+this.id);
-    alert('EVENT description: '+event.featureData.id);
+    // alert('EVENT description: '+event.featureData.id);
     // var data = kmlEvent.featureData;
     
     // $('.popup').live('click', function() {
@@ -407,13 +407,15 @@ function setPolygon(obj) {
                     // var text = kmlEvent.featureData.description;
                     // showInContentWindow(text);
                     
-                    alert("EVENT KML: "+kmlEvent.featureData);
+                    alert("EVENT KML: "+kmlEvent.featureData.id);
                     
                     var centerX = document.documentElement.clientWidth / 2;
                     var centerY = document.documentElement.clientHeight / 2;
 
                     // alert('COORD X: '+centerX);
                     // alert('COORD Y: '+centerY);
+                    
+                    // alert('EVENT description: '+kmlEvent.featureData.id);
 
                     createDiv(polygon_name);
 
