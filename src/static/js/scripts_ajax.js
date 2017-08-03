@@ -350,7 +350,7 @@ function drag_over(event) {
 
 function drop(event) {
     // alert('EVENT ID: '+obj_id);
-    alert('EVENT ID: '+event.target.id);
+    alert('EVENT ID: '+event.target);
     alert('EVENT description: '+event.featureData);
     // var data = kmlEvent.featureData;
     
