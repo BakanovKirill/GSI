@@ -391,7 +391,7 @@ function setPolygon(obj) {
                 var message = 'An unexpected error occurred. Try later.';
             },
             'success': function(data, status, xhr){
-                // alert('DATA: '+data);
+                alert('DATA: '+data);
                 
                 // When the user clicks on div, open the popup
                 
@@ -421,7 +421,7 @@ function setPolygon(obj) {
                     createDiv(polygon_name);
 
                     var dm = document.getElementById(info_window_id);
-                    dm.innerHTML = data;
+                    dm.innerHTML = info_window_id;
                     dm.addEventListener('dragstart', drag_start, false); 
                     document.body.addEventListener('dragover', drag_over, false); 
                     document.body.addEventListener('drop', function() {drop(info_window_id)}, false);
@@ -432,7 +432,7 @@ function setPolygon(obj) {
                     // document.body.addEventListener('dragover', drag_over, false); 
                     // document.body.addEventListener('drop', drop, false);
 
-                    myFunction(centerX, centerY, data, info_window_id);
+                    myFunction(centerX, centerY, info_window_id, info_window_id);
                 });
 
 
