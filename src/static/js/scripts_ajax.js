@@ -362,6 +362,7 @@ function drop(event) {
         var popup_id = 'feat_' + i + '_iw';
 
         alert('EVENT ID 1: '+popup_id);
+        alert('IS EVENT ID 1: '+document.getElementById(popup_id));
 
         if(document.getElementById(popup_id)) {
             var offset = event.dataTransfer.getData("text/plain").split(',');
