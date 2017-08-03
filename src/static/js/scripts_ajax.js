@@ -347,9 +347,9 @@ function myFunction(x, y, text, div_id) {
 //    popup.style.left=x+rect.left+"px";
 //    popup.style.top=y+rect.top+"px";
     popup.innerHTML = text;
-    popup.style.left=x+"px";
-    popup.style.top=y+"px";
-    popup.style.visibility="visible";
+    popup.style.left = x + "px";
+    popup.style.top = y + "px";
+    popup.style.visibility = "visible";
 }
 
 function drag_start(event) {
@@ -362,9 +362,6 @@ function drag_over(event) {
     return false; 
 } 
 function drop(event) {
-    // event.preventDefault();
-    // var div_id = event.target.id;
-
     // alert('EVENT DROP 1: '+div_id);
     // alert('EVENT DROP 1: '+event.target.id);
     // feat_4_iw
@@ -373,9 +370,9 @@ function drop(event) {
     // var dm = document.getElementById('feat_4_iw');
     var offset = event.dataTransfer.getData("text/plain").split(',');
     
-    console.log("drop: x="+parseInt(offset[0],10)+", y="+parseInt(offset[1],10));
-    dm.style.left = (event.clientX + parseInt(offset[0],10)) + 'px';
-    dm.style.top = (event.clientY + parseInt(offset[1],10)) + 'px';
+    console.log("drop: x="+parseInt(offset[0], 10)+", y="+parseInt(offset[1], 10));
+    dm.style.left = (event.clientX + parseInt(offset[0], 10)) + 'px';
+    dm.style.top = (event.clientY + parseInt(offset[1], 10)) + 'px';
     event.preventDefault();
 
     return false;
