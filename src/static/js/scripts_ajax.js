@@ -318,9 +318,9 @@ function removeSelectedItems() {
 }
 
 // For create movable info windows
-function myFunction(x, y, text) {
+function myFunction(x, y, text, obj_id) {
     // console.log("MyFunction: x=" + x + ", y=" + y);
-    var popup = document.getElementById('myPopup');
+    var popup = document.getElementById(obj_id);
     popup.innerHTML = text;
     popup.style.left = x + "px";
     popup.style.top = y + "px";
@@ -419,7 +419,7 @@ function setPolygon(obj) {
                     // document.body.addEventListener('dragover', drag_over, false); 
                     // document.body.addEventListener('drop', drop, false);
 
-                    myFunction(centerX, centerY, data);
+                    myFunction(centerX, centerY, data, polygon_name);
                 });
 
 
