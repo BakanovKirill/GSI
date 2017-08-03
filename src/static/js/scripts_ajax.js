@@ -369,8 +369,8 @@ function drop(event) {
     // alert('EVENT DROP 1: '+event.target.id);
     // feat_4_iw
 
-    // var dm = document.getElementById(div_id);
-    var dm = document.getElementById('feat_4_iw');
+    var dm = document.getElementById(div_id);
+    // var dm = document.getElementById('feat_4_iw');
     var offset = event.dataTransfer.getData("text/plain").split(',');
     
     console.log("drop: x="+parseInt(offset[0],10)+", y="+parseInt(offset[1],10));
