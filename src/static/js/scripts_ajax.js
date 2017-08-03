@@ -349,8 +349,8 @@ function drag_over(event) {
 }
 
 function drop(event, obj_id) {
-    // alert('EVENT ID: '+event.featureData.id);
-    alert('EVENT description: '+event.featureData.description);
+    alert('EVENT ID: '+this.id);
+    // alert('EVENT description: '+event.featureData.description);
     
     // $('.popup').live('click', function() {
     //      alert($(this).attr("id"));
