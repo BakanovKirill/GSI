@@ -2130,6 +2130,9 @@ def customer_section(request):
                     tif_png_script = SCRIPT_TIFPNG
                     lut_file = os.path.join(LUT_DIRECTORY, filename)
 
+                    # Command Line
+                    # TifPng <InpTiff> <LUTfile> [<MaxVal>] [<Legend>]
+
                     command_line = tif_png_script + ' '
                     command_line += file_tif + ' '
                     command_line += lut_file + ' '

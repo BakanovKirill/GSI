@@ -5,20 +5,22 @@ from django.contrib.auth.models import User
 from core.utils import get_list_lutfiles
 
 
-LUTFILES = (
-    ('grey', 'Grey'),
-    ('red', 'Red'),
-    ('green', 'Green'),
-    ('yellow', 'Yellow'),
-    ('orange', 'Orange'), )
+# LUTFILES = (
+#     ('grey', 'Grey'),
+#     ('red', 'Red'),
+#     ('green', 'Green'),
+#     ('yellow', 'Yellow'),
+#     ('orange', 'Orange'), )
 
 
 LUTFILES = get_list_lutfiles()
 
 
 class LutFiles(models.Model):
+    # TifPng <InpTiff> <LUTfile> [<MaxVal>] [<Legend>] [<Units>] [<ValScale>]
+    
     name = models.CharField(max_length=300, blank=True, null=True)
-    filename = models.CharField(max_length=300, blank=True, null=True, choices=LUTFILES)
+    lut_file = models.CharField(max_length=300, blank=True, null=True, choices=LUTFILES)
     max_val = models.PositiveIntegerField(
                     default=100,
                     verbose_name='Maximum Value for colour scaling',)
@@ -26,6 +28,11 @@ class LutFiles(models.Model):
                     max_length=250,
                     blank=True, null=True,
                     verbose_name='Legend',)
+    units = models.CharField(
+                    max_length=250,
+                    blank=True, null=True,
+                    verbose_name='Legend',)
+    val_scale models.FloatField(blank=True, null=True, default=1.0)
 
     class Meta:
         verbose_name_plural = 'LUTFiles'
