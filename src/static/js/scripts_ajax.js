@@ -362,7 +362,7 @@ function drop(event) {
         var popup_id = 'feat_' + i + '_iw';
         if(document.getElementById('popup_id')) {
             var offset = event.dataTransfer.getData("text/plain").split(',');
-            var dm = document.getElementById('feat_7_iw');
+            var dm = document.getElementById(popup_id);
             // console.log("drop: x="+parseInt(offset[0], 10)+", y="+parseInt(offset[1],10));
             dm.style.left = (event.clientX + parseInt(offset[0], 10)) + 'px';
             dm.style.top = (event.clientY + parseInt(offset[1], 10)) + 'px';
