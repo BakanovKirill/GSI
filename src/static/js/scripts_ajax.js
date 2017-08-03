@@ -349,7 +349,12 @@ function drag_over(event) {
 }
 
 function drop(event, obj_id) {
-    alert('OBJ ID: '+obj_id);
+    // alert('OBJ ID: '+obj_id);
+    
+    if !obj_id:
+        $('.popup').live('click', function() {
+             alert($(this).attr("id"));
+        });
 
     var offset = event.dataTransfer.getData("text/plain").split(',');
     var dm = document.getElementById(obj_id);
@@ -383,7 +388,7 @@ function setPolygon(obj) {
                 var message = 'An unexpected error occurred. Try later.';
             },
             'success': function(data, status, xhr){
-                alert('DATA: '+data);
+                // alert('DATA: '+data);
                 
                 // When the user clicks on div, open the popup
                 
@@ -395,7 +400,7 @@ function setPolygon(obj) {
                 });
 
                 kml.addListener('click', function(kmlEvent) {
-                    alert('KML Click addListener! '+data);
+                    // alert('KML Click addListener! '+data);
                     // var text = kmlEvent.featureData.description;
                     // showInContentWindow(text);
                     
