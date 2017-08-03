@@ -354,9 +354,9 @@ function drop(event) {
     alert('EVENT description: '+event.featureData);
     // var data = kmlEvent.featureData;
     
-    // $('.popup').live('click', function() {
-    //      alert($(this).attr("id"));
-    // });
+    $(this).live('click', function() {
+         alert($(this).attr("id"));
+    });
         
 
     var offset = event.dataTransfer.getData("text/plain").split(',');
