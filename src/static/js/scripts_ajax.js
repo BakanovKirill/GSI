@@ -363,7 +363,7 @@ function drop(event) {
 
         alert('EVENT ID 1: '+popup_id);
 
-        if(document.getElementById('popup_id')) {
+        if(document.getElementById(popup_id)) {
             var offset = event.dataTransfer.getData("text/plain").split(',');
             var dm = document.getElementById(popup_id);
 
