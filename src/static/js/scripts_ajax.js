@@ -423,9 +423,9 @@ function setPolygon(obj) {
                     // createDiv('myPopup');
                     createDiv(info_window_id);
 
-                    alert("KML ID: "+info_window_id);
-                    alert("KML featureData: "+kmlEvent.featureData);
-                    alert("KML NAME: "+kmlEvent.featureData.name);
+                    // alert("KML ID: "+info_window_id);
+                    // alert("KML featureData: "+kmlEvent.featureData);
+                    // alert("KML NAME: "+kmlEvent.featureData.name);
                     
 
                     // ***********************************************************************************
