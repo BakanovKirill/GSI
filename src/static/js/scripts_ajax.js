@@ -405,7 +405,7 @@ function setPolygon(obj) {
                     // var text = kmlEvent.featureData.description;
                     // showInContentWindow(text);
                     
-                    alert($(this).attr("id"));
+                    alert("EVENT KML: "+kmlEvent.featureData.infoWindowHtml);
                     
                     var centerX = document.documentElement.clientWidth / 2;
                     var centerY = document.documentElement.clientHeight / 2;
