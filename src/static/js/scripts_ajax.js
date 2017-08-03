@@ -365,10 +365,10 @@ function drop(event) {
         alert('IS EVENT ID 1: '+document.getElementById(popup_id));
 
         if(document.getElementById(popup_id)) {
+            alert('EVENT ID 2: '+popup_id);
+            
             var offset = event.dataTransfer.getData("text/plain").split(',');
             var dm = document.getElementById(popup_id);
-
-            alert('EVENT ID 2: '+popup_id);
 
             // console.log("drop: x="+parseInt(offset[0], 10)+", y="+parseInt(offset[1],10));
             dm.style.left = (event.clientX + parseInt(offset[0], 10)) + 'px';
