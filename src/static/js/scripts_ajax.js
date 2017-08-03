@@ -339,7 +339,7 @@ function createDiv(obj_id) {
 }
 
 function getPopup(obj) {
-    alert('getPopup: '.obj.id);
+    alert('getPopup: '+obj.id);
 }
 
 function drag_start(event) {
