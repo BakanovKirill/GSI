@@ -318,12 +318,20 @@ function removeSelectedItems() {
 }
 
 // For create movable info windows
+var div_id;
+
+function mOver(obj) {
+    div_id = obj.id;
+}
+
+
 function createDiv(obj_id) {
     var divNode = document.createElement("div");
     divNode.setAttribute("class", "popup");
     divNode.setAttribute("id", obj_id);
     divNode.setAttribute("draggable", "true");
-    // divNode.setAttribute("onclick", "getPopup(this)");
+    divNode.setAttribute("onmouseover", "mOver(this)");
+    // divNode.setAttribute("ondrop", "drop(event)");
 
     divNode.innerHTML = 'A <b>different</b> Popup!<br> with multiple lines</span>';
     document.body.appendChild(divNode);
@@ -332,7 +340,7 @@ function createDiv(obj_id) {
 
 // When the user clicks on div, open the popup
 function myFunction(x, y, text, div_id) {
-    console.log("MyFunction: x="+x+", y="+y);
+    // console.log("MyFunction: x="+x+", y="+y);
     var popup = document.getElementById(div_id);
 //    var canvas = document.getElementById('canvas1');
 //    var rect = canvas.getBoundingClientRect();
@@ -347,19 +355,29 @@ function myFunction(x, y, text, div_id) {
 function drag_start(event) {
     var style = window.getComputedStyle(event.target, null);
     event.dataTransfer.setData("text/plain",
-    (parseInt(style.getPropertyValue("left"),10) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top"),10) - event.clientY));
+    (parseInt(style.getPropertyValue("left"), 10) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top"), 10) - event.clientY));
 } 
 function drag_over(event) { 
     event.preventDefault(); 
     return false; 
 } 
-function drop(event) { 
-    var offset = event.dataTransfer.getData("text/plain").split(',');
+function drop(event) {
+    // event.preventDefault();
+    // var div_id = event.target.id;
+
+    // alert('EVENT DROP 1: '+div_id);
+    // alert('EVENT DROP 1: '+event.target.id);
+    // feat_4_iw
+
+    // var dm = document.getElementById(div_id);
     var dm = document.getElementById('feat_4_iw');
+    var offset = event.dataTransfer.getData("text/plain").split(',');
+    
     console.log("drop: x="+parseInt(offset[0],10)+", y="+parseInt(offset[1],10));
     dm.style.left = (event.clientX + parseInt(offset[0],10)) + 'px';
     dm.style.top = (event.clientY + parseInt(offset[1],10)) + 'px';
     event.preventDefault();
+
     return false;
 } 
 
@@ -386,7 +404,7 @@ function setPolygon(obj) {
                 var message = 'An unexpected error occurred. Try later.';
             },
             'success': function(data, status, xhr){
-                alert('DATA: '+data);
+                // alert('DATA: '+data);
                 
                 // When the user clicks on div, open the popup
                 
@@ -398,7 +416,7 @@ function setPolygon(obj) {
                 });
 
                 kml.addListener('click', function(kmlEvent) {
-                    alert("KML DATA: "+data);
+                    // alert("KML DATA: "+data);
 
                     var info_window_id = kmlEvent.featureData.id + '_iw'
                     // createDiv('myPopup');
@@ -422,16 +440,6 @@ function setPolygon(obj) {
                     // document.body.addEventListener('drop',drop,false);
                     // 
                     // ***********************************************************************************
-
-
-                    // // alert('KML Click addListener! '+data);
-                    // // var text = kmlEvent.featureData.description;
-                    // // showInContentWindow(text);
-                    // info_window_id = kmlEvent.featureData.id + '_iw'
-
-                    // info_window_id = 'feat_7_iw'
-                    
-                    // alert("EVENT KML: "+info_window_id);
                     
                     var centerX = document.documentElement.clientWidth / 2;
                     var centerY = document.documentElement.clientHeight / 2;
@@ -439,7 +447,7 @@ function setPolygon(obj) {
                     // // alert('COORD X: '+centerX);
                     // // alert('COORD Y: '+centerY);
                     
-                    // // alert('EVENT description: '+kmlEvent.featureData.id);
+                    // alert('EVENT addListener ID: '+info_window_id);
 
                     // createDiv(info_window_id);
 
@@ -448,12 +456,6 @@ function setPolygon(obj) {
                     dm.addEventListener('dragstart', drag_start, false); 
                     document.body.addEventListener('dragover', drag_over, false); 
                     document.body.addEventListener('drop', drop, false);
-
-                    // // var dm = document.getElementById('myPopup');
-                    // // dm.innerHTML = data;
-                    // // dm.addEventListener('dragstart', drag_start, false); 
-                    // // document.body.addEventListener('dragover', drag_over, false); 
-                    // // document.body.addEventListener('drop', drop, false);
 
                     myFunction(centerX, centerY, data, info_window_id);
                     // myFunction(centerX, centerY, data);
