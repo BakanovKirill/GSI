@@ -332,14 +332,10 @@ function createDiv(obj_id) {
     divNode.setAttribute("class", "popup");
     divNode.setAttribute("id", obj_id);
     divNode.setAttribute("draggable", "true");
-    divNode.setAttribute("onclick", "getPopup(this)");
+    // divNode.setAttribute("onclick", "getPopup(this)");
 
     divNode.innerHTML = 'A <b>different</b> Popup!<br> with multiple lines</span>';
     document.body.appendChild(divNode);
-}
-
-function getPopup(obj) {
-    alert('getPopup: '+obj.id);
 }
 
 function drag_start(event) {
@@ -361,15 +357,20 @@ function drop(event) {
     // $(this).live('onmousedown', function() {
     //      alert($(this).attr("id"));
     // });
+    
+    for (var i = 0; i < 100; i++) {
+        var popup_id = 'feat_' + i + '_iw';
+        if(document.getElementById('popup_id')) {
+            var offset = event.dataTransfer.getData("text/plain").split(',');
+            var dm = document.getElementById('feat_7_iw');
+            // console.log("drop: x="+parseInt(offset[0], 10)+", y="+parseInt(offset[1],10));
+            dm.style.left = (event.clientX + parseInt(offset[0], 10)) + 'px';
+            dm.style.top = (event.clientY + parseInt(offset[1], 10)) + 'px';
+            event.preventDefault();
+        }
         
-
-    var offset = event.dataTransfer.getData("text/plain").split(',');
-    var dm = document.getElementById('feat_7_iw');
-    // console.log("drop: x="+parseInt(offset[0], 10)+", y="+parseInt(offset[1],10));
-    dm.style.left = (event.clientX + parseInt(offset[0], 10)) + 'px';
-    dm.style.top = (event.clientY + parseInt(offset[1], 10)) + 'px';
-    event.preventDefault();
-    return false;
+    return false;    
+    }
 }
 
 
