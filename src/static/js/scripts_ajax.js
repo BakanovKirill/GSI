@@ -418,11 +418,14 @@ function setPolygon(obj) {
                 kml.addListener('click', function(kmlEvent) {
                     // alert("KML DATA: "+data);
 
-                    var info_window_id = kmlEvent.featureData.id + '_iw'
+                    // var info_window_id = kmlEvent.featureData.id + '_iw'
+                    var info_window_id = kmlEvent.featureData.name
                     // createDiv('myPopup');
                     createDiv(info_window_id);
 
                     alert("KML ID: "+info_window_id);
+                    alert("KML featureData: "+kmlEvent.featureData);
+                    alert("KML NAME: "+kmlEvent.featureData.name);
                     
 
                     // ***********************************************************************************
