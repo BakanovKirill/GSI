@@ -350,8 +350,8 @@ function drag_over(event) {
 }
 
 function drop(event) {
-    alert('EVENT ID: '+document.documentElement);
-    alert('EVENT description: '+event.target.id);
+    // alert('EVENT ID: '+document.documentElement);
+    // alert('EVENT description: '+event.target.id);
     // var data = kmlEvent.featureData;
     
     // $(this).live('onmousedown', function() {
@@ -363,12 +363,15 @@ function drop(event) {
         if(document.getElementById('popup_id')) {
             var offset = event.dataTransfer.getData("text/plain").split(',');
             var dm = document.getElementById(popup_id);
+
+            alert('EVENT ID: '+popup_id);
+            
             // console.log("drop: x="+parseInt(offset[0], 10)+", y="+parseInt(offset[1],10));
             dm.style.left = (event.clientX + parseInt(offset[0], 10)) + 'px';
             dm.style.top = (event.clientY + parseInt(offset[1], 10)) + 'px';
             event.preventDefault();
         }
-        
+
     return false;    
     }
 }
