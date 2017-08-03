@@ -349,13 +349,14 @@ function drag_over(event) {
 }
 
 function drop(event, obj_id) {
-    // alert('OBJ ID: '+obj_id);
+    alert('OBJ ID: '+event);
+    alert($(this).attr("id"));
     
-    if (!obj_id) {
-        $('.popup').live('click', function() {
-             alert($(this).attr("id"));
-        });
-    }
+    // if (!obj_id) {
+    //     $('.popup').live('click', function() {
+    //          alert($(this).attr("id"));
+    //     });
+    // }
         
 
     var offset = event.dataTransfer.getData("text/plain").split(',');
