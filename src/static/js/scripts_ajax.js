@@ -318,6 +318,14 @@ function removeSelectedItems() {
 }
 
 // For create movable info windows
+function myFunction(x, y, text) {
+    // console.log("MyFunction: x=" + x + ", y=" + y);
+    var popup = document.getElementById('myPopup');
+    popup.innerHTML = text;
+    popup.style.left = x + "px";
+    popup.style.top = y + "px";
+    popup.style.visibility = "visible";
+}
 
 function createDiv(obj_id) {
     var divNode = document.createElement("div");
@@ -375,17 +383,10 @@ function setPolygon(obj) {
                 var message = 'An unexpected error occurred. Try later.';
             },
             'success': function(data, status, xhr){
-                // alert('DATA: '+data);
+                alert('DATA: '+data);
                 
                 // When the user clicks on div, open the popup
-                function myFunction(x, y, text) {
-                    // console.log("MyFunction: x=" + x + ", y=" + y);
-                    var popup = document.getElementById('myPopup');
-                    popup.innerHTML = text;
-                    popup.style.left = x + "px";
-                    popup.style.top = y + "px";
-                    popup.style.visibility = "visible";
-                }
+                
 
                 var kml = new google.maps.KmlLayer({
                     url: data,
@@ -394,7 +395,7 @@ function setPolygon(obj) {
                 });
 
                 kml.addListener('click', function(kmlEvent) {
-                    // alert('KML Click addListener!');
+                    alert('KML Click addListener! '+data);
                     // var text = kmlEvent.featureData.description;
                     // showInContentWindow(text);
                     
