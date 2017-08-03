@@ -350,7 +350,7 @@ function drag_over(event) {
 
 function drop(event, obj_id) {
     // alert('EVENT ID: '+obj_id);
-    // alert('EVENT ID: '+this.id);
+    alert('EVENT ID: '+this.id);
     // alert('EVENT description: '+event.featureData.id);
     // var data = kmlEvent.featureData;
     
@@ -360,7 +360,7 @@ function drop(event, obj_id) {
         
 
     var offset = event.dataTransfer.getData("text/plain").split(',');
-    var dm = document.getElementById(obj_id);
+    var dm = document.getElementById('feat_7_iw');
     // console.log("drop: x="+parseInt(offset[0], 10)+", y="+parseInt(offset[1],10));
     dm.style.left = (event.clientX + parseInt(offset[0], 10)) + 'px';
     dm.style.top = (event.clientY + parseInt(offset[1], 10)) + 'px';
