@@ -406,7 +406,7 @@ function setPolygon(obj) {
                     // alert('KML Click addListener! '+data);
                     // var text = kmlEvent.featureData.description;
                     // showInContentWindow(text);
-                    info_window_id = kmlEvent.featureData.id
+                    info_window_id = kmlEvent.featureData.id + '_iw'
                     
                     alert("EVENT KML: "+info_window_id);
                     

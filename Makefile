@@ -58,7 +58,6 @@ deploy:
 	fab deploy
 
 static:
-	$(MANAGE) collectstatic
 	fab collectstatic
 
 restart:
