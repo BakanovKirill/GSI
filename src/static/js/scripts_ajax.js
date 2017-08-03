@@ -332,9 +332,14 @@ function createDiv(obj_id) {
     divNode.setAttribute("class", "popup");
     divNode.setAttribute("id", obj_id);
     divNode.setAttribute("draggable", "true");
+    divNode.setAttribute("onclick", "getPopup(this)");
 
     divNode.innerHTML = 'A <b>different</b> Popup!<br> with multiple lines</span>';
     document.body.appendChild(divNode);
+}
+
+function getPopup(obj) {
+    alert('getPopup: ');
 }
 
 function drag_start(event) {
@@ -350,13 +355,12 @@ function drag_over(event) {
 
 function drop(event) {
     alert('EVENT ID: '+this.id);
-    alert('EVENT ID: '+this.target);
-    alert('EVENT description: '+event.featureData);
+    alert('EVENT description: '+event.target.id);
     // var data = kmlEvent.featureData;
     
-    $(this).live('onmousedown', function() {
-         alert($(this).attr("id"));
-    });
+    // $(this).live('onmousedown', function() {
+    //      alert($(this).attr("id"));
+    // });
         
 
     var offset = event.dataTransfer.getData("text/plain").split(',');
