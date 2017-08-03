@@ -331,7 +331,7 @@ function createDiv(obj_id) {
 
 
 // When the user clicks on div, open the popup
-function myFunction(x,y,text) {
+function myFunction(x, y, text) {
     console.log("MyFunction: x="+x+", y="+y);
     var popup = document.getElementById('myPopup');
 //    var canvas = document.getElementById('canvas1');
@@ -398,12 +398,15 @@ function setPolygon(obj) {
                 });
 
                 kml.addListener('click', function(kmlEvent) {
-                    var divNode = document.createElement("div");
-                    divNode.setAttribute("class", "popup");
-                    divNode.setAttribute("id", "myPopup");
-                    divNode.setAttribute("draggable", "true");
-                    divNode.innerHTML = 'A <b>different</b> Popup!<br> with multiple lines</span>';
-                    document.body.appendChild(divNode);
+                    var info_window_id = kmlEvent.featureData.id + '_iw'
+                    createDiv('myPopup');
+
+                    // var divNode = document.createElement("div");
+                    // divNode.setAttribute("class", "popup");
+                    // divNode.setAttribute("id", "myPopup");
+                    // divNode.setAttribute("draggable", "true");
+                    // divNode.innerHTML = 'A <b>different</b> Popup!<br> with multiple lines</span>';
+                    // document.body.appendChild(divNode);
 
                     var dm = document.getElementById('myPopup'); 
                     dm.addEventListener('dragstart',drag_start,false); 
