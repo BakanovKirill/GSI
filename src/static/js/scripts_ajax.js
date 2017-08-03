@@ -366,9 +366,10 @@ function drop(event) {
 
         if(document.getElementById(popup_id)) {
             alert('EVENT ID 2: '+popup_id);
-            
+
             var offset = event.dataTransfer.getData("text/plain").split(',');
-            var dm = document.getElementById(popup_id);
+            // var dm = document.getElementById(popup_id);
+            var dm = document.getElementById('feat_7_iw');
 
             // console.log("drop: x="+parseInt(offset[0], 10)+", y="+parseInt(offset[1],10));
             dm.style.left = (event.clientX + parseInt(offset[0], 10)) + 'px';
@@ -421,6 +422,8 @@ function setPolygon(obj) {
                     // var text = kmlEvent.featureData.description;
                     // showInContentWindow(text);
                     info_window_id = kmlEvent.featureData.id + '_iw'
+
+                    info_window_id = 'feat_7_iw'
                     
                     alert("EVENT KML: "+info_window_id);
                     
