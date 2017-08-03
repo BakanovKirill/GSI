@@ -351,10 +351,12 @@ function drag_over(event) {
 function drop(event, obj_id) {
     // alert('OBJ ID: '+obj_id);
     
-    if (!obj_id):
+    if (!obj_id) {
         $('.popup').live('click', function() {
              alert($(this).attr("id"));
         });
+    }
+        
 
     var offset = event.dataTransfer.getData("text/plain").split(',');
     var dm = document.getElementById(obj_id);
