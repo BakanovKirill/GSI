@@ -418,10 +418,10 @@ function setPolygon(obj) {
                     
                     // alert('EVENT description: '+kmlEvent.featureData.id);
 
-                    createDiv(polygon_name);
+                    createDiv(info_window_id);
 
                     var dm = document.getElementById(info_window_id);
-                    dm.innerHTML = info_window_id;
+                    dm.innerHTML = data;
                     dm.addEventListener('dragstart', drag_start, false); 
                     document.body.addEventListener('dragover', drag_over, false); 
                     document.body.addEventListener('drop', function() {drop(info_window_id)}, false);
@@ -432,7 +432,7 @@ function setPolygon(obj) {
                     // document.body.addEventListener('dragover', drag_over, false); 
                     // document.body.addEventListener('drop', drop, false);
 
-                    myFunction(centerX, centerY, info_window_id, info_window_id);
+                    myFunction(centerX, centerY, data, info_window_id);
                 });
 
 
