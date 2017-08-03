@@ -318,15 +318,6 @@ function removeSelectedItems() {
 }
 
 // For create movable info windows
-function myFunction(x, y, text, obj_id) {
-    // console.log("MyFunction: x=" + x + ", y=" + y);
-    var popup = document.getElementById(obj_id);
-    popup.innerHTML = text;
-    popup.style.left = x + "px";
-    popup.style.top = y + "px";
-    popup.style.visibility = "visible";
-}
-
 function createDiv(obj_id) {
     var divNode = document.createElement("div");
     divNode.setAttribute("class", "popup");
@@ -338,50 +329,39 @@ function createDiv(obj_id) {
     document.body.appendChild(divNode);
 }
 
+
+// When the user clicks on div, open the popup
+function myFunction(x,y,text) {
+    console.log("MyFunction: x="+x+", y="+y);
+    var popup = document.getElementById('myPopup');
+//    var canvas = document.getElementById('canvas1');
+//    var rect = canvas.getBoundingClientRect();
+//    popup.style.left=x+rect.left+"px";
+//    popup.style.top=y+rect.top+"px";
+    popup.innerHTML = text;
+    popup.style.left=x+"px";
+    popup.style.top=y+"px";
+    popup.style.visibility="visible";
+}
+
 function drag_start(event) {
     var style = window.getComputedStyle(event.target, null);
     event.dataTransfer.setData("text/plain",
-    (parseInt(style.getPropertyValue("left"), 10) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top"), 10) - event.clientY));
-}
-
+    (parseInt(style.getPropertyValue("left"),10) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top"),10) - event.clientY));
+} 
 function drag_over(event) { 
     event.preventDefault(); 
     return false; 
-}
-
-function drop(event) {
-    // alert('EVENT ID: '+document.documentElement);
-    // alert('EVENT description: '+event.target.id);
-    // var data = kmlEvent.featureData;
-    
-    // $(this).live('onmousedown', function() {
-    //      alert($(this).attr("id"));
-    // });
-    
-    for (var i = 0; i < 100; i++) {
-        var popup_id = 'feat_' + i + '_iw';
-
-        alert('EVENT ID 1: '+popup_id);
-        alert('IS EVENT ID 1: '+document.getElementById(popup_id));
-
-        if(document.getElementById(popup_id)) {
-            alert('EVENT ID 2: '+popup_id);
-
-            var offset = event.dataTransfer.getData("text/plain").split(',');
-            // var dm = document.getElementById(popup_id);
-            var dm = document.getElementById('feat_7_iw');
-
-            // console.log("drop: x="+parseInt(offset[0], 10)+", y="+parseInt(offset[1],10));
-            dm.style.left = (event.clientX + parseInt(offset[0], 10)) + 'px';
-            dm.style.top = (event.clientY + parseInt(offset[1], 10)) + 'px';
-            event.preventDefault();
-
-            return false;
-        }
-    }
-
+} 
+function drop(event) { 
+    var offset = event.dataTransfer.getData("text/plain").split(',');
+    var dm = document.getElementById('myPopup');
+    console.log("drop: x="+parseInt(offset[0],10)+", y="+parseInt(offset[1],10));
+    dm.style.left = (event.clientX + parseInt(offset[0],10)) + 'px';
+    dm.style.top = (event.clientY + parseInt(offset[1],10)) + 'px';
+    event.preventDefault();
     return false;
-}
+} 
 
 
 function setPolygon(obj) {
@@ -418,38 +398,49 @@ function setPolygon(obj) {
                 });
 
                 kml.addListener('click', function(kmlEvent) {
-                    // alert('KML Click addListener! '+data);
-                    // var text = kmlEvent.featureData.description;
-                    // showInContentWindow(text);
-                    info_window_id = kmlEvent.featureData.id + '_iw'
+                    var divNode = document.createElement("div");
+                    divNode.setAttribute("class", "popup");
+                    divNode.setAttribute("id", "myPopup");
+                    divNode.setAttribute("draggable", "true");
+                    divNode.innerHTML = 'A <b>different</b> Popup!<br> with multiple lines</span>';
+                    document.body.appendChild(divNode);
 
-                    info_window_id = 'feat_7_iw'
+                    var dm = document.getElementById('myPopup'); 
+                    dm.addEventListener('dragstart',drag_start,false); 
+                    document.body.addEventListener('dragover',drag_over,false); 
+                    document.body.addEventListener('drop',drop,false); 
+                    // // alert('KML Click addListener! '+data);
+                    // // var text = kmlEvent.featureData.description;
+                    // // showInContentWindow(text);
+                    // info_window_id = kmlEvent.featureData.id + '_iw'
+
+                    // info_window_id = 'feat_7_iw'
                     
-                    alert("EVENT KML: "+info_window_id);
+                    // alert("EVENT KML: "+info_window_id);
                     
-                    var centerX = document.documentElement.clientWidth / 2;
-                    var centerY = document.documentElement.clientHeight / 2;
+                    // var centerX = document.documentElement.clientWidth / 2;
+                    // var centerY = document.documentElement.clientHeight / 2;
 
-                    // alert('COORD X: '+centerX);
-                    // alert('COORD Y: '+centerY);
+                    // // alert('COORD X: '+centerX);
+                    // // alert('COORD Y: '+centerY);
                     
-                    // alert('EVENT description: '+kmlEvent.featureData.id);
+                    // // alert('EVENT description: '+kmlEvent.featureData.id);
 
-                    createDiv(info_window_id);
+                    // createDiv(info_window_id);
 
-                    var dm = document.getElementById(info_window_id);
-                    dm.innerHTML = data;
-                    dm.addEventListener('dragstart', drag_start, false); 
-                    document.body.addEventListener('dragover', drag_over, false); 
-                    document.body.addEventListener('drop', drop, false);
-
-                    // var dm = document.getElementById('myPopup');
+                    // var dm = document.getElementById(info_window_id);
                     // dm.innerHTML = data;
                     // dm.addEventListener('dragstart', drag_start, false); 
                     // document.body.addEventListener('dragover', drag_over, false); 
                     // document.body.addEventListener('drop', drop, false);
 
-                    myFunction(centerX, centerY, data, info_window_id);
+                    // // var dm = document.getElementById('myPopup');
+                    // // dm.innerHTML = data;
+                    // // dm.addEventListener('dragstart', drag_start, false); 
+                    // // document.body.addEventListener('dragover', drag_over, false); 
+                    // // document.body.addEventListener('drop', drop, false);
+
+                    // myFunction(centerX, centerY, data, info_window_id);
                 });
 
 
