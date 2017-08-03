@@ -352,11 +352,9 @@ function drop(event, obj_id) {
     alert('EVENT: '+event);
     alert('OBJ ID: '+$(this).attr("id"));
     
-    // if (!obj_id) {
-    //     $('.popup').live('click', function() {
-    //          alert($(this).attr("id"));
-    //     });
-    // }
+    $('.popup').live('click', function() {
+         alert($(this).attr("id"));
+    });
         
 
     var offset = event.dataTransfer.getData("text/plain").split(',');
