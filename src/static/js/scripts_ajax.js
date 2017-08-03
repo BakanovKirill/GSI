@@ -354,7 +354,7 @@ function drop(event) {
     alert('EVENT description: '+event.featureData);
     // var data = kmlEvent.featureData;
     
-    $(this).live('click', function() {
+    $(this).live('onmousedown', function() {
          alert($(this).attr("id"));
     });
         
