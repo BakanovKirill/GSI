@@ -340,7 +340,7 @@ function createDiv(obj_id) {
 function drag_start(event) {
     var style = window.getComputedStyle(event.target, null);
     event.dataTransfer.setData("text/plain",
-    (parseInt(style.getPropertyValue("left"), 10) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top"),10) - event.clientY));
+    (parseInt(style.getPropertyValue("left"), 10) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top"), 10) - event.clientY));
 }
 
 function drag_over(event) { 
@@ -352,9 +352,9 @@ function drop(event, obj_id) {
     alert('EVENT: '+event);
     alert('OBJ ID: '+$(this).attr("id"));
     
-    $('.popup').live('click', function() {
-         alert($(this).attr("id"));
-    });
+    // $('.popup').live('click', function() {
+    //      alert($(this).attr("id"));
+    // });
         
 
     var offset = event.dataTransfer.getData("text/plain").split(',');
@@ -404,6 +404,8 @@ function setPolygon(obj) {
                     // alert('KML Click addListener! '+data);
                     // var text = kmlEvent.featureData.description;
                     // showInContentWindow(text);
+                    
+                    alert($(this).attr("id"));
                     
                     var centerX = document.documentElement.clientWidth / 2;
                     var centerY = document.documentElement.clientHeight / 2;
