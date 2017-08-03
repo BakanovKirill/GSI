@@ -443,7 +443,7 @@ function setPolygon(obj) {
                     // // document.body.addEventListener('drop', drop, false);
 
                     // myFunction(centerX, centerY, data, info_window_id);
-                    function myFunction(centerX, centerY, data);
+                    myFunction(centerX, centerY, data);
                 });
 
 
