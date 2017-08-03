@@ -1,6 +1,7 @@
 {% extends "base_customer.html" %}
 {% load static from staticfiles %}
 
+
 {% block content_customer %}
 	{% if not error_message %}
 		<form class="form-modal" id="customer_section" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data" role="form" class="form-horizontal">
