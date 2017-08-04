@@ -2168,11 +2168,14 @@ def customer_section(request):
 
                         is_lutfile = True
                     except AttributeError:
-                        return HttpResponseRedirect(u'%s?danger_message=%s' % (
-                                    reverse('customer_section'),
-                                    (u'The LUT File is not defined. Please specify the file for LUT File \
+                        error_message = u'The LUT File is not defined. Please specify the file for LUT File \
                                         "{0}" or exclude LUT File from ShelfData "{1}".'
-                                        .format(shelf_data_attr.lutfiles, shelf_data_attr))))
+                                        .format(shelf_data_attr.lutfiles, shelf_data_attr)
+                        # return HttpResponseRedirect(u'%s?danger_message=%s' % (
+                        #             reverse('customer_section'),
+                        #             (u'The LUT File is not defined. Please specify the file for LUT File \
+                        #                 "{0}" or exclude LUT File from ShelfData "{1}".'
+                        #                 .format(shelf_data_attr.lutfiles, shelf_data_attr))))
 
                 # Convert tif to png
                 # greyscale
@@ -2305,6 +2308,7 @@ def customer_section(request):
         'file_tif_path': file_tif_path,
 
         'warning_message': warning_message,
+        'error_message': error_message,
 
         'absolute_kml_url': absolute_kml_url,
 

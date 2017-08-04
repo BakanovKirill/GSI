@@ -3,852 +3,858 @@
 
 
 {% block content_customer %}
-	{% if not error_message %}
-		<form class="form-modal" id="customer_section" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data" role="form" class="form-horizontal">
-		{% csrf_token %}
+    {% if error_message %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ error_message }}
+        </div>
+    {% endif %}
+	<form class="form-modal" id="customer_section" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data" role="form" class="form-horizontal">
+	{% csrf_token %}
 
-			<!-- Draw Menu -->
-			<div class="row margin-top-20 ">
-				<div class="col-md-3 left">
-					<button type="button" class="btn btn-default" onclick="appliedMarkers();"><img class="img-draw" id="ap_marker" src="{% static 'img/map-marker-plus.png' %}" alt="hand" title="Applied Markers" class="area-draw"></button>
-					<button type="button" class="btn btn-default" onclick="drawPoligon();"><img class="img-draw" src="{% static 'img/vector-polygon.png' %}" alt="vector polygon" title="Draw a Poligon" class="area-draw"></button>
-					<button type="button" class="btn btn-default" onclick="removePoligon();"><img class="img-draw" src="{% static 'img/map-marker-off.png' %}" alt="hand" title="Remove Poligon" class="area-draw"></button>
-					<button type="button" class="btn btn-default" onclick="togglePlygonOverlays();"><img class="img-draw" src="{% static 'img/eye-off.png' %}" alt="hide/show" title="Hide/Show a Poligon" class="area-draw"></button>
-				</div>
+		<!-- Draw Menu -->
+		<div class="row margin-top-20 ">
+			<div class="col-md-3 left">
+				<button type="button" class="btn btn-default" onclick="appliedMarkers();"><img class="img-draw" id="ap_marker" src="{% static 'img/map-marker-plus.png' %}" alt="hand" title="Applied Markers" class="area-draw"></button>
+				<button type="button" class="btn btn-default" onclick="drawPoligon();"><img class="img-draw" src="{% static 'img/vector-polygon.png' %}" alt="vector polygon" title="Draw a Poligon" class="area-draw"></button>
+				<button type="button" class="btn btn-default" onclick="removePoligon();"><img class="img-draw" src="{% static 'img/map-marker-off.png' %}" alt="hand" title="Remove Poligon" class="area-draw"></button>
+				<button type="button" class="btn btn-default" onclick="togglePlygonOverlays();"><img class="img-draw" src="{% static 'img/eye-off.png' %}" alt="hide/show" title="Hide/Show a Poligon" class="area-draw"></button>
+			</div>
 
-				<div class="col-md-3 center">
-					<div class="row">
-						<div class="col-md-12">
-							<span id="slider_value">Visibility: 50%</span>
-						</div>
-
-						<div class="col-md-12 margin-top-4">
-							<input type="range" id="opacity" min="0" max="100" oninput="setOpacity();" alt="transparency" title="Transparency" value="50" class="center"/>
-						</div>
+			<div class="col-md-3 center">
+				<div class="row">
+					<div class="col-md-12">
+						<span id="slider_value">Visibility: 50%</span>
 					</div>
-				</div>
 
-				<div class="col-md-6 left">
-					<label class="btn btn-default btn-file">
-    					Chose File <input type="file" name="upload_file_customer" id="upload_file_customer" style="display: none;">
-					</label>
-					<span id='upload_file'>No file chosen</span>
-					<button type="submit" id="load" name="load_button" value="load" class="btn btn-primary"> Load</button>
-
-					<a href="{% url 'files_lister' %}" class="btn del-btn check-cur-delete" role="button" data-toggle="tooltip" data-placement="top" title="Mangage Files">
-						<img src="{% static 'img/settings-24.png' %}"/>
-					</a>
+					<div class="col-md-12 margin-top-4">
+						<input type="range" id="opacity" min="0" max="100" oninput="setOpacity();" alt="transparency" title="Transparency" value="50" class="center"/>
+					</div>
 				</div>
 			</div>
-			<!-- End Draw Menu -->
 
-			<!-- Google map -->
-			<div class="row margin-top-4">
-				<div class="col-md-12 col-lg-12 margin-010" id="map-block">
-					<!-- [START region_toolbar] -->
-					<!-- Add an input button to initiate the toggle method on the overlay. -->
-					<div id="floating-panel">
-						<input type="button" class="btn btn-default" value="Toggle visibility" onclick="overlay.toggle();"></input>
-						<input type="button" class="btn btn-default" value="Toggle DOM attachment" onclick="overlay.toggleDOM();"></input>
-					</div>
-					<!-- [END region_toolbar] -->
+			<div class="col-md-6 left">
+				<label class="btn btn-default btn-file">
+					Chose File <input type="file" name="upload_file_customer" id="upload_file_customer" style="display: none;">
+				</label>
+				<span id='upload_file'>No file chosen</span>
+				<button type="submit" id="load" name="load_button" value="load" class="btn btn-primary"> Load</button>
 
-					<!-- GSi MAP -->
-					<div id="map"></div>
-					<!-- END GSi MAP -->
-
-					<!-- GSi User Photo -->
-					<div id="user-photo">
-						<img src="{% static 'img/anonim.png' %}" class="img-circle circle">
-					</div>
-					<!-- END GSi User Photo -->
-
-					<!-- GSi LOGO -->
-					<div id="gsi-logo">
-						<a href="http://www.surfaceintelligence.com/" Target="_blank"><img src="{% static 'img/GSIlogo.jpg' %}" style="cursor: pointer;"></a>
-					</div>
-					<!-- End GSi LOGO -->
-
-					<!-- GSi Coordinates -->
-					<div id="lat-panel">
-						<input class="form-control placeholder" type="text" id="latitude" readonly>
-					</div>
-					<div id="lng-panel">
-						<input class="form-control placeholder" type="text" id="longitude" readonly>
-					</div>
-					<!-- GSi Coordinates -->
-
-					<!-- Start Footer -->
-					<div class="footer">
-	                    <span class="padding-top-15">&copy; {{ CURRENT_YEAR }} GSi Web Site</span>
-	                </div>
-		            <!-- End Footer -->
-				</div>
+				<a href="{% url 'files_lister' %}" class="btn del-btn check-cur-delete" role="button" data-toggle="tooltip" data-placement="top" title="Mangage Files">
+					<img src="{% static 'img/settings-24.png' %}"/>
+				</a>
 			</div>
-			<!-- End Google map -->
+		</div>
+		<!-- End Draw Menu -->
 
-			<!-- Modal Check Delete Items -->
-			{% include '_modal_check_delete_items.html' %}
-			<!-- End Modal Check Delete Items -->
+		<!-- Google map -->
+		<div class="row margin-top-4">
+			<div class="col-md-12 col-lg-12 margin-010" id="map-block">
+				<!-- [START region_toolbar] -->
+				<!-- Add an input button to initiate the toggle method on the overlay. -->
+				<div id="floating-panel">
+					<input type="button" class="btn btn-default" value="Toggle visibility" onclick="overlay.toggle();"></input>
+					<input type="button" class="btn btn-default" value="Toggle DOM attachment" onclick="overlay.toggleDOM();"></input>
+				</div>
+				<!-- [END region_toolbar] -->
 
-			<!-- Modal Edit Area -->
-			{% include '_modal_edit_polygons.html' %}
-			<!-- End Modal Edit Area -->
+				<!-- GSi MAP -->
+				<div id="map"></div>
+				<!-- END GSi MAP -->
 
-			<!-- Modal Waiting -->
-			{% include '_modal_waiting.html' %}
-			<!-- End Modal Waiting -->
+				<!-- GSi User Photo -->
+				<div id="user-photo">
+					<img src="{% static 'img/anonim.png' %}" class="img-circle circle">
+				</div>
+				<!-- END GSi User Photo -->
 
-            <!-- The Modal: You can not draw a polygon without selecting a dataset -->
-            <div id="myModal" class="modal-draw">
-                <!-- Modal content -->
-                <div class="modal-content">
-                    <span class="close" id="close">&times;</span>
-                    <p>It makes no sense to draw a polygon if the attribute is not selected.<br>Please select attribute from Info Panel before drawing Polygon.</p>
+				<!-- GSi LOGO -->
+				<div id="gsi-logo">
+					<a href="http://www.surfaceintelligence.com/" Target="_blank"><img src="{% static 'img/GSIlogo.jpg' %}" style="cursor: pointer;"></a>
+				</div>
+				<!-- End GSi LOGO -->
+
+				<!-- GSi Coordinates -->
+				<div id="lat-panel">
+					<input class="form-control placeholder" type="text" id="latitude" readonly>
+				</div>
+				<div id="lng-panel">
+					<input class="form-control placeholder" type="text" id="longitude" readonly>
+				</div>
+				<!-- GSi Coordinates -->
+
+				<!-- Start Footer -->
+				<div class="footer">
+                    <span class="padding-top-15">&copy; {{ CURRENT_YEAR }} GSi Web Site</span>
                 </div>
+	            <!-- End Footer -->
+			</div>
+		</div>
+		<!-- End Google map -->
+
+		<!-- Modal Check Delete Items -->
+		{% include '_modal_check_delete_items.html' %}
+		<!-- End Modal Check Delete Items -->
+
+		<!-- Modal Edit Area -->
+		{% include '_modal_edit_polygons.html' %}
+		<!-- End Modal Edit Area -->
+
+		<!-- Modal Waiting -->
+		{% include '_modal_waiting.html' %}
+		<!-- End Modal Waiting -->
+
+        <!-- The Modal: You can not draw a polygon without selecting a dataset -->
+        <div id="myModal" class="modal-draw">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close" id="close">&times;</span>
+                <p>It makes no sense to draw a polygon if the attribute is not selected.<br>Please select attribute from Info Panel before drawing Polygon.</p>
             </div>
-            <!-- End the Modal: You can not draw a polygon without selecting a dataset -->			
+        </div>
+        <!-- End the Modal: You can not draw a polygon without selecting a dataset -->			
 
-			<!-- The input field for the data Polygon -->
-			<p id="data_polygon" disable></p>
-			<input type="hidden" id="data_polygon" name="data_polygon" value="">
-		</form>
+		<!-- The input field for the data Polygon -->
+		<p id="data_polygon" disable></p>
+		<input type="hidden" id="data_polygon" name="data_polygon" value="">
+	</form>
 
 
-		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqRnPthP9_pygDbSG34MDKiJpXQkHm2ws&signed_in=true"></script
-		<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyANOITZIFVq0CxUycWsprMslU0sk9ipK5Y&callback=initMap"
-  type="text/javascript"></script>
-		<!-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyB4HosogGf9o2-Cnef_SiUR6jZYVszGkGY&sensor=false"></script> -->
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqRnPthP9_pygDbSG34MDKiJpXQkHm2ws&signed_in=true"></script
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyANOITZIFVq0CxUycWsprMslU0sk9ipK5Y&callback=initMap"
+type="text/javascript"></script>
+	<!-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyB4HosogGf9o2-Cnef_SiUR6jZYVszGkGY&sensor=false"></script> -->
 
-		<!-- AIzaSyDqRnPthP9_pygDbSG34MDKiJpXQkHm2ws -->
-		<!-- AIzaSyANOITZIFVq0CxUycWsprMslU0sk9ipK5Y -->
+	<!-- AIzaSyDqRnPthP9_pygDbSG34MDKiJpXQkHm2ws -->
+	<!-- AIzaSyANOITZIFVq0CxUycWsprMslU0sk9ipK5Y -->
 
-	    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false"></script>
 
-		<script src="http://www.google.com/jsapi"></script>
+	<script src="http://www.google.com/jsapi"></script>
 
-		<script>
-			// Get the modal
-			var modal = document.getElementById('myModal');
+	<script>
+		// Get the modal
+		var modal = document.getElementById('myModal');
 
-			// Get the <span> element that closes the modal
-			// var span = document.getElementsByClassName("close")[0];
-			var span = document.getElementById("close");
+		// Get the <span> element that closes the modal
+		// var span = document.getElementsByClassName("close")[0];
+		var span = document.getElementById("close");
 
-			// When the user clicks on <span> (x), close the modal
-			span.onclick = function() {
+		// When the user clicks on <span> (x), close the modal
+		span.onclick = function() {
+			modal.style.display = "none";
+		}
+
+		// When the user clicks anywhere outside of the modal, close it
+		window.onclick = function(event) {
+			if (event.target == modal) {
 				modal.style.display = "none";
 			}
+		}
+	</script>
 
-			// When the user clicks anywhere outside of the modal, close it
-			window.onclick = function(event) {
-				if (event.target == modal) {
-					modal.style.display = "none";
-				}
-			}
-		</script>
+	<script>
+		USGSOverlay.prototype = new google.maps.OverlayView();
 
-		<script>
-			USGSOverlay.prototype = new google.maps.OverlayView();
+		var map;
+		var center_map = {lat: {{ cLat }}, lng: {{ cLng }}};
 
-			var map;
-			var center_map = {lat: {{ cLat }}, lng: {{ cLng }}};
+		var coord = [];
+		var coord_area = [];
+		var markers = [];
+		var polygons = [];
+		var selectPolygon;
+		var selectArea;
+		var polygonVisible;
+		var mapTypesArr = [];
+		var count_pol;
+		var infowindow = new google.maps.InfoWindow();
 
-			var coord = [];
-			var coord_area = [];
-			var markers = [];
-			var polygons = [];
-			var selectPolygon;
-			var selectArea;
-			var polygonVisible;
-			var mapTypesArr = [];
-			var count_pol;
-			var infowindow = new google.maps.InfoWindow();
+		var units = '{{ units }}';
+		var attribute = '{{ attribute }}';
+		var data_polygon;
+		var statistic;
 
-			var units = '{{ units }}';
-			var attribute = '{{ attribute }}';
-			var data_polygon;
-			var statistic;
+		var select_image = '{{ absolute_url_png_file }}'
 
-			var select_image = '{{ absolute_url_png_file }}'
+		// var units = 'Tree';
+		// var attribute = 'UNITS';
 
-			// var units = 'Tree';
-			// var attribute = 'UNITS';
-
-			// var kml_layer = new google.maps.KmlLayer();
+		// var kml_layer = new google.maps.KmlLayer();
 
 
-			// alert('eLat_1: '+{{ eLat_1 }});
-			// alert('eLng_1: '+{{ eLng_1 }});
-			// alert('eLat_2: '+{{ eLat_2 }});
-			// alert('eLng_2: '+{{ eLng_2 }});
+		// alert('eLat_1: '+{{ eLat_1 }});
+		// alert('eLng_1: '+{{ eLng_1 }});
+		// alert('eLat_2: '+{{ eLat_2 }});
+		// alert('eLng_2: '+{{ eLng_2 }});
 
-			var MY_MAPTYPE_ID = 'mystyle';
+		var MY_MAPTYPE_ID = 'mystyle';
 
-			var mapobj = {
-				name: "OSM",
-				wms: "osm",
-				minzoom: 18,
-				maxzoom: 0,
-				url: "http://tile.openstreetmap.org/",
-				copy:"<a href=\"http://www.openstreetmap.org\" target=\"_blank\">Open Street Map</a>",
-				visible:true
-			};
-			mapTypesArr.push(mapobj);
-			var mapobj = {
-				name: "OSM Cycle",
-				wms: "osm",
-				minzoom: 18,
-				maxzoom: 0,
-				url: "http://b.tile.opencyclemap.org/cycle/",
-				copy:"<a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">Cycle OSM</a>",
-				visible:true
-			};
-			mapTypesArr.push(mapobj);
-			var mapobj = {
-				name: "Relief",
-				wms: "",
-				minzoom: 18,
-				maxzoom: 0,
-				url: "",
-				copy:"<a href=\"http://www.maps-for-free.com/html/about.html\" target=\"_blank\">maps-for-free</a>",
-				visible:true
-			};
-			mapTypesArr.push(mapobj);
-			var mapobj = {
-				name: "Demis",
-				wms: "wms",
-				minzoom: 13,
-				maxzoom: 1,
-				url: "http://www2.demis.nl/wms/wms.ashx?Service=WMS&WMS=BlueMarble&Version=1.1.0&Request=GetMap&Layers=Earth Image,Borders,Coastlines&Format=image/jpeg",
-				copy:"WMS demo by Demis",
-				visible:true
-			};
-			mapTypesArr.push(mapobj);
-			var mapobj = {
-				name: "ROADMAP",
-				wms: "",
-				minzoom: 13,
-				maxzoom: 10,
-				url: "",
-				copy:"",
-				visible:true
-			};
-			mapTypesArr.push(mapobj);
-			var mapobj = {
-				name: "SATELLITE",
-				wms: "",
-				minzoom: 13,
-				maxzoom: 10,
-				url: "",
-				copy:"",
-				visible:true
-			};
-			mapTypesArr.push(mapobj);
-			var mapobj = {
-				name: "HYBRID",
-				wms: "",
-				minzoom: 13,
-				maxzoom: 10,
-				url: "",
-				copy:"",
-				visible:true
-			};
-			mapTypesArr.push(mapobj);
-			var mapobj = {
-				name: "TERRAIN",
-				wms: "",
-				minzoom: 13,
-				maxzoom: 10,
-				url: "",
-				copy:"",
-				visible:true
-			};
-			mapTypesArr.push(mapobj);
+		var mapobj = {
+			name: "OSM",
+			wms: "osm",
+			minzoom: 18,
+			maxzoom: 0,
+			url: "http://tile.openstreetmap.org/",
+			copy:"<a href=\"http://www.openstreetmap.org\" target=\"_blank\">Open Street Map</a>",
+			visible:true
+		};
+		mapTypesArr.push(mapobj);
+		var mapobj = {
+			name: "OSM Cycle",
+			wms: "osm",
+			minzoom: 18,
+			maxzoom: 0,
+			url: "http://b.tile.opencyclemap.org/cycle/",
+			copy:"<a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">Cycle OSM</a>",
+			visible:true
+		};
+		mapTypesArr.push(mapobj);
+		var mapobj = {
+			name: "Relief",
+			wms: "",
+			minzoom: 18,
+			maxzoom: 0,
+			url: "",
+			copy:"<a href=\"http://www.maps-for-free.com/html/about.html\" target=\"_blank\">maps-for-free</a>",
+			visible:true
+		};
+		mapTypesArr.push(mapobj);
+		var mapobj = {
+			name: "Demis",
+			wms: "wms",
+			minzoom: 13,
+			maxzoom: 1,
+			url: "http://www2.demis.nl/wms/wms.ashx?Service=WMS&WMS=BlueMarble&Version=1.1.0&Request=GetMap&Layers=Earth Image,Borders,Coastlines&Format=image/jpeg",
+			copy:"WMS demo by Demis",
+			visible:true
+		};
+		mapTypesArr.push(mapobj);
+		var mapobj = {
+			name: "ROADMAP",
+			wms: "",
+			minzoom: 13,
+			maxzoom: 10,
+			url: "",
+			copy:"",
+			visible:true
+		};
+		mapTypesArr.push(mapobj);
+		var mapobj = {
+			name: "SATELLITE",
+			wms: "",
+			minzoom: 13,
+			maxzoom: 10,
+			url: "",
+			copy:"",
+			visible:true
+		};
+		mapTypesArr.push(mapobj);
+		var mapobj = {
+			name: "HYBRID",
+			wms: "",
+			minzoom: 13,
+			maxzoom: 10,
+			url: "",
+			copy:"",
+			visible:true
+		};
+		mapTypesArr.push(mapobj);
+		var mapobj = {
+			name: "TERRAIN",
+			wms: "",
+			minzoom: 13,
+			maxzoom: 10,
+			url: "",
+			copy:"",
+			visible:true
+		};
+		mapTypesArr.push(mapobj);
 
-			function initMap() {
-				// location.reload();
-				var my_styles =  [
-					{
-						featureType: "road.highway",
-						elementType: "geometry",
-						stylers: [
-								{ visibility: "on" },
-								{ hue: "#ff0000" }
-						]
-					},
-					{
-						featureType: "water",
-						elementType: "geometry",
-						stylers: [
+		function initMap() {
+			// location.reload();
+			var my_styles =  [
+				{
+					featureType: "road.highway",
+					elementType: "geometry",
+					stylers: [
 							{ visibility: "on" },
-							{ hue: "#0800ff" },
-							{ lightness: -41 }
-						]
-					}
-				];
+							{ hue: "#ff0000" }
+					]
+				},
+				{
+					featureType: "water",
+					elementType: "geometry",
+					stylers: [
+						{ visibility: "on" },
+						{ hue: "#0800ff" },
+						{ lightness: -41 }
+					]
+				}
+			];
 
-				map = new google.maps.Map(document.getElementById('map'), {
-					zoom: {{ GOOGLE_MAP_ZOOM }},
-					center: center_map,
-					mapTypeControl: true,
-					mapTypeControlOptions: {
-						style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-						mapTypeIds: [
-							google.maps.MapTypeId.ROADMAP,
-							google.maps.MapTypeId.TERRAIN,
-							google.maps.MapTypeId.SATELLITE,
-							google.maps.MapTypeId.HYBRID,
-							MY_MAPTYPE_ID
-						]
-					},
-				});
+			map = new google.maps.Map(document.getElementById('map'), {
+				zoom: {{ GOOGLE_MAP_ZOOM }},
+				center: center_map,
+				mapTypeControl: true,
+				mapTypeControlOptions: {
+					style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+					mapTypeIds: [
+						google.maps.MapTypeId.ROADMAP,
+						google.maps.MapTypeId.TERRAIN,
+						google.maps.MapTypeId.SATELLITE,
+						google.maps.MapTypeId.HYBRID,
+						MY_MAPTYPE_ID
+					]
+				},
+			});
 
-				var styledMapOptions = {name: "Road & Water"};
-				var jayzMapType = new google.maps.StyledMapType(my_styles, styledMapOptions);
+			var styledMapOptions = {name: "Road & Water"};
+			var jayzMapType = new google.maps.StyledMapType(my_styles, styledMapOptions);
 
-				map.mapTypes.set(MY_MAPTYPE_ID, jayzMapType);
-				map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
+			map.mapTypes.set(MY_MAPTYPE_ID, jayzMapType);
+			map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
 
-				// var min_marker = new google.maps.Marker({
-				//     position: {
-				//         'lat': {{ eLat_1 }},
-				//         'lng': {{ eLng_1 }}
-				//     },
-				//     map: map
-				// });
+			// var min_marker = new google.maps.Marker({
+			//     position: {
+			//         'lat': {{ eLat_1 }},
+			//         'lng': {{ eLng_1 }}
+			//     },
+			//     map: map
+			// });
 
-				// var max_marker = new google.maps.Marker({
-				//     position: {
-				//         'lat': {{ eLat_2 }},
-				//         'lng': {{ eLng_2 }}
-				//     },
-				//     map: map
-				// });
+			// var max_marker = new google.maps.Marker({
+			//     position: {
+			//         'lat': {{ eLat_2 }},
+			//         'lng': {{ eLng_2 }}
+			//     },
+			//     map: map
+			// });
 
-				var bounds = new google.maps.LatLngBounds(
-					new google.maps.LatLng({{ eLat_1 }}, {{ eLng_1 }}),
-					new google.maps.LatLng({{ eLat_2 }}, {{ eLng_2 }}));
+			var bounds = new google.maps.LatLngBounds(
+				new google.maps.LatLng({{ eLat_1 }}, {{ eLng_1 }}),
+				new google.maps.LatLng({{ eLat_2 }}, {{ eLng_2 }}));
 
-				// The source to image overlay
-				// var srcImage = '{{ absolute_url_png_file }}';
-				var srcImage = select_image;
+			// The source to image overlay
+			// var srcImage = '{{ absolute_url_png_file }}';
+			var srcImage = select_image;
 
-				var overlay = new USGSOverlay(bounds, srcImage, map);
+			var overlay = new USGSOverlay(bounds, srcImage, map);
 
-				// Show the lat and lng under the mouse cursor.
-				// latitude, longitude
+			// Show the lat and lng under the mouse cursor.
+			// latitude, longitude
 
-				// placeMarkerAndPanTo({{ eLat_1 }}, {{ eLng_1 }});
-				// placeMarkerAndPanTo({{ eLat_2 }}, {{ eLng_2 }});
+			// placeMarkerAndPanTo({{ eLat_1 }}, {{ eLng_1 }});
+			// placeMarkerAndPanTo({{ eLat_2 }}, {{ eLng_2 }});
 
-				// Add a listener for the click event.
-				// map.addListener('click', showInfoWindow);
-				// infoWindow = new google.maps.InfoWindow;
+			// Add a listener for the click event.
+			// map.addListener('click', showInfoWindow);
+			// infoWindow = new google.maps.InfoWindow;
 
-				// Add a listener for the mousemove event.
-				map.addListener('mousemove', showCoordinates);
+			// Add a listener for the mousemove event.
+			map.addListener('mousemove', showCoordinates);
 
-				// infoWindow = new google.maps.InfoWindow;
+			// infoWindow = new google.maps.InfoWindow;
 
-				// var latDiv = document.getElementById('latitude');
-				// var lngDiv = document.getElementById('longitude');
-				//
-				// map.controls[google.maps.ControlPosition.TOP_CENTER].push(latDiv);
-				// map.controls[google.maps.ControlPosition.TOP_CENTER].push(lngDiv);
-				// map.addListener('mousemove', function(event) {
-				//     latDiv.textContent =
-				//         'lat: ' + Math.round(event.latLng.lat());
-				//     }
-				// );
-				// map.addListener('mousemove', function(event) {
-				//     lngDiv.textContent =
-				//         'lng: ' + Math.round(event.latLng.lng());
-				//     }
-				// );
+			// var latDiv = document.getElementById('latitude');
+			// var lngDiv = document.getElementById('longitude');
+			//
+			// map.controls[google.maps.ControlPosition.TOP_CENTER].push(latDiv);
+			// map.controls[google.maps.ControlPosition.TOP_CENTER].push(lngDiv);
+			// map.addListener('mousemove', function(event) {
+			//     latDiv.textContent =
+			//         'lat: ' + Math.round(event.latLng.lat());
+			//     }
+			// );
+			// map.addListener('mousemove', function(event) {
+			//     lngDiv.textContent =
+			//         'lng: ' + Math.round(event.latLng.lng());
+			//     }
+			// );
 
+		}
+
+		/** @constructor */
+		function USGSOverlay(bounds, image, map) {
+			// Now initialize all properties.
+			this.bounds_ = bounds;
+			this.image_ = image;
+			this.map_ = map;
+
+			// Define a property to hold the image's div. We'll
+			// actually create this div upon receipt of the onAdd()
+			// method so we'll leave it null for now.
+			this.div_ = null;
+
+			// Explicitly call setMap on this overlay
+			this.setMap(map);
+		}
+
+		/**
+		 * onAdd is called when the map's panes are ready and the overlay has been
+		 * added to the map.
+		 */
+		USGSOverlay.prototype.onAdd = function() {
+			var div = document.createElement('div');
+			div.style.border = 'none';
+			div.style.borderWidth = '0px';
+			div.style.position = 'absolute';
+
+			// Create the img element and attach it to the div.
+			var img = document.createElement('img');
+			img.src = this.image_;
+			img.style.width = '100%';
+			img.style.height = '100%';
+			img.style.opacity = '0.5';
+			img.id = 'on_add';
+			div.appendChild(img);
+
+			this.div_ = div;
+
+			// Add the element to the "overlayImage" pane.
+			var panes = this.getPanes();
+			panes.overlayImage.appendChild(this.div_);
+		};
+
+		USGSOverlay.prototype.draw = function() {
+			// We use the south-west and north-east
+			// coordinates of the overlay to peg it to the correct position and size.
+			// To do this, we need to retrieve the projection from the overlay.
+			var overlayProjection = this.getProjection();
+
+			// Retrieve the south-west and north-east coordinates of this overlay
+			// in LatLngs and convert them to pixel coordinates.
+			// We'll use these coordinates to resize the div.
+			var sw = overlayProjection.fromLatLngToDivPixel(this.bounds_.getSouthWest());
+			var ne = overlayProjection.fromLatLngToDivPixel(this.bounds_.getNorthEast());
+
+			// Resize the image's div to fit the indicated dimensions.
+			var div = this.div_;
+			div.style.left = sw.x + 'px';
+			div.style.top = ne.y + 'px';
+			div.style.width = (ne.x - sw.x) + 'px';
+			div.style.height = (sw.y - ne.y) + 'px';
+		};
+
+		USGSOverlay.prototype.onRemove = function() {
+			this.div_.parentNode.removeChild(this.div_);
+		};
+
+		// [START region_hideshow]
+		// Set the visibility to 'hidden' or 'visible'.
+		USGSOverlay.prototype.hide = function() {
+			if (this.div_) {
+				// The visibility property must be a string enclosed in quotes.
+				this.div_.style.visibility = 'hidden';
 			}
+		};
 
-			/** @constructor */
-			function USGSOverlay(bounds, image, map) {
-				// Now initialize all properties.
-				this.bounds_ = bounds;
-				this.image_ = image;
-				this.map_ = map;
-
-				// Define a property to hold the image's div. We'll
-				// actually create this div upon receipt of the onAdd()
-				// method so we'll leave it null for now.
-				this.div_ = null;
-
-				// Explicitly call setMap on this overlay
-				this.setMap(map);
+		USGSOverlay.prototype.show = function() {
+			if (this.div_) {
+				this.div_.style.visibility = 'visible';
 			}
+		};
 
-			/**
-			 * onAdd is called when the map's panes are ready and the overlay has been
-			 * added to the map.
-			 */
-			USGSOverlay.prototype.onAdd = function() {
-				var div = document.createElement('div');
-				div.style.border = 'none';
-				div.style.borderWidth = '0px';
-				div.style.position = 'absolute';
-
-				// Create the img element and attach it to the div.
-				var img = document.createElement('img');
-				img.src = this.image_;
-				img.style.width = '100%';
-				img.style.height = '100%';
-				img.style.opacity = '0.5';
-				img.id = 'on_add';
-				div.appendChild(img);
-
-				this.div_ = div;
-
-				// Add the element to the "overlayImage" pane.
-				var panes = this.getPanes();
-				panes.overlayImage.appendChild(this.div_);
-			};
-
-			USGSOverlay.prototype.draw = function() {
-				// We use the south-west and north-east
-				// coordinates of the overlay to peg it to the correct position and size.
-				// To do this, we need to retrieve the projection from the overlay.
-				var overlayProjection = this.getProjection();
-
-				// Retrieve the south-west and north-east coordinates of this overlay
-				// in LatLngs and convert them to pixel coordinates.
-				// We'll use these coordinates to resize the div.
-				var sw = overlayProjection.fromLatLngToDivPixel(this.bounds_.getSouthWest());
-				var ne = overlayProjection.fromLatLngToDivPixel(this.bounds_.getNorthEast());
-
-				// Resize the image's div to fit the indicated dimensions.
-				var div = this.div_;
-				div.style.left = sw.x + 'px';
-				div.style.top = ne.y + 'px';
-				div.style.width = (ne.x - sw.x) + 'px';
-				div.style.height = (sw.y - ne.y) + 'px';
-			};
-
-			USGSOverlay.prototype.onRemove = function() {
-				this.div_.parentNode.removeChild(this.div_);
-			};
-
-			// [START region_hideshow]
-			// Set the visibility to 'hidden' or 'visible'.
-			USGSOverlay.prototype.hide = function() {
-				if (this.div_) {
-					// The visibility property must be a string enclosed in quotes.
-					this.div_.style.visibility = 'hidden';
-				}
-			};
-
-			USGSOverlay.prototype.show = function() {
-				if (this.div_) {
-					this.div_.style.visibility = 'visible';
-				}
-			};
-
-			USGSOverlay.prototype.toggle = function() {
-				if (this.div_) {
-					if (this.div_.style.visibility === 'hidden') {
-						this.show();
-					} else {
-						this.hide();
-					}
-				}
-			};
-
-			// Detach the map from the DOM via toggleDOM().
-			// Note that if we later reattach the map, it will be visible again,
-			// because the containing <div> is recreated in the overlay's onAdd() method.
-			USGSOverlay.prototype.toggleDOM = function() {
-				if (this.getMap()) {
-					// Note: setMap(null) calls OverlayView.onRemove()
-					this.setMap(null);
+		USGSOverlay.prototype.toggle = function() {
+			if (this.div_) {
+				if (this.div_.style.visibility === 'hidden') {
+					this.show();
 				} else {
-					this.setMap(this.map_);
+					this.hide();
 				}
-			};
-			// [END region_hideshow]
+			}
+		};
 
-			function placeMarkerAndPanTo(lat1, lng1) {
-				var image = "{% static 'img/circle-12.png' %}";
+		// Detach the map from the DOM via toggleDOM().
+		// Note that if we later reattach the map, it will be visible again,
+		// because the containing <div> is recreated in the overlay's onAdd() method.
+		USGSOverlay.prototype.toggleDOM = function() {
+			if (this.getMap()) {
+				// Note: setMap(null) calls OverlayView.onRemove()
+				this.setMap(null);
+			} else {
+				this.setMap(this.map_);
+			}
+		};
+		// [END region_hideshow]
 
-				var dict = {
-					'lat':   lat1,
-					'lng': lng1
-				}
-				coord.push(dict);
-				// sendDataToServer(dict);
+		function placeMarkerAndPanTo(lat1, lng1) {
+			var image = "{% static 'img/circle-12.png' %}";
 
-				var marker = new google.maps.Marker({
-					position: dict,
-					map: map,
-					icon: image
+			var dict = {
+				'lat':   lat1,
+				'lng': lng1
+			}
+			coord.push(dict);
+			// sendDataToServer(dict);
+
+			var marker = new google.maps.Marker({
+				position: dict,
+				map: map,
+				icon: image
+			});
+			//marker.setMap(map);
+			//map.panTo(marker);
+			markers.push(marker);
+		}
+
+		// applied markers on the map.
+		function appliedMarkers() {
+			// var select_infopanel = document.getElementById("show_file_arrea").value;
+			var img = document.getElementById("ap_marker");
+
+			// var select_views = $("input[name='attribute_viewlist']:checked").size();
+
+			// alert('select_image: '+select_image);
+
+			if (select_image) {
+				// alert('select_infopanel: NO: '+select_infopanel);
+				map.addListener('click', function(e) {
+					placeMarkerAndPanTo(e.latLng.lat(), e.latLng.lng());
 				});
-				//marker.setMap(map);
-				//map.panTo(marker);
-				markers.push(marker);
+				img.src = "{% static 'img/map-marker-plus-purple.png' %}";
+			} else {
+				// Get the modal
+				var modal = document.getElementById('myModal');
+
+				// When the user clicks on the button, open the modal
+				modal.style.display = "block";
 			}
 
-			// applied markers on the map.
-			function appliedMarkers() {
-				// var select_infopanel = document.getElementById("show_file_arrea").value;
-				var img = document.getElementById("ap_marker");
+		}
 
-				// var select_views = $("input[name='attribute_viewlist']:checked").size();
-
-				// alert('select_image: '+select_image);
-
-				if (select_image) {
-					// alert('select_infopanel: NO: '+select_infopanel);
-					map.addListener('click', function(e) {
-						placeMarkerAndPanTo(e.latLng.lat(), e.latLng.lng());
-					});
-					img.src = "{% static 'img/map-marker-plus-purple.png' %}";
-				} else {
-					// Get the modal
-					var modal = document.getElementById('myModal');
-
-					// When the user clicks on the button, open the modal
-					modal.style.display = "block";
-				}
-
-			}
-
-			// Removes the poligon from the map, but keeps them in the array.
-			function removePoligon() {
-				if (polygons) {
-					for (i in polygons) {
-						polygons[i].setMap(null);
-					}
-				}
-				coord = [];
-				polygons = [];
-				polygonVisible = false;
-
-				// Removes the markers
-				removeMarkers();
-			}
-
-			// Removes the markers from the map, but keeps them in the array.
-			function removeMarkers() {
-				// selectPolygon.fillOpacity = 1.0;
-				for (var i = 0; i < markers.length; i++) {
-					markers[i].setMap(null);
+		// Removes the poligon from the map, but keeps them in the array.
+		function removePoligon() {
+			if (polygons) {
+				for (i in polygons) {
+					polygons[i].setMap(null);
 				}
 			}
+			coord = [];
+			polygons = [];
+			polygonVisible = false;
 
-			function polygonCenter(poly) {
-			    var lowx,
-			        highx,
-			        lowy,
-			        highy,
-			        lats = [],
-			        lngs = [],
-			        vertices = poly.getPath();
+			// Removes the markers
+			removeMarkers();
+		}
 
-    			for(var i=0; i<vertices.length; i++) {
-					lngs.push(vertices.getAt(i).lng());
-					lats.push(vertices.getAt(i).lat());
-    			}
+		// Removes the markers from the map, but keeps them in the array.
+		function removeMarkers() {
+			// selectPolygon.fillOpacity = 1.0;
+			for (var i = 0; i < markers.length; i++) {
+				markers[i].setMap(null);
+			}
+		}
 
-			    lats.sort();
-			    lngs.sort();
-			    lowx = lats[0];
-			    highx = lats[vertices.length - 1];
-			    lowy = lngs[0];
-			    highy = lngs[vertices.length - 1];
-			    center_x = lowx + ((highx-lowx) / 2);
-			    center_y = lowy + ((highy - lowy) / 2);
+		function polygonCenter(poly) {
+		    var lowx,
+		        highx,
+		        lowy,
+		        highy,
+		        lats = [],
+		        lngs = [],
+		        vertices = poly.getPath();
 
-			    return (new google.maps.LatLng(center_x, center_y));
-  			}
+			for(var i=0; i<vertices.length; i++) {
+				lngs.push(vertices.getAt(i).lng());
+				lats.push(vertices.getAt(i).lat());
+			}
 
-			function drawPoligon() {
-				var report_list = [];
-				var stat_list = [];
+		    lats.sort();
+		    lngs.sort();
+		    lowx = lats[0];
+		    highx = lats[vertices.length - 1];
+		    lowy = lngs[0];
+		    highy = lngs[vertices.length - 1];
+		    center_x = lowx + ((highx-lowx) / 2);
+		    center_y = lowy + ((highy - lowy) / 2);
 
-				if (polygons) {
-					for (i in polygons) {
-						polygons[i].setMap(null);
-					}
+		    return (new google.maps.LatLng(center_x, center_y));
+			}
+
+		function drawPoligon() {
+			var report_list = [];
+			var stat_list = [];
+
+			if (polygons) {
+				for (i in polygons) {
+					polygons[i].setMap(null);
 				}
-				// removePoligon();
-				$('#report_attribute input:checkbox:checked').each(function(){
-			        // alert($(this).val());
-			        report_list.push($(this).val())
-			    });
-
-				$('#statictics_list input:radio:checked').each(function(){
-			        // alert($(this).val());
-			        stat_list.push($(this).val())
-			    });
-
-				// alert('REPORT: '+report_list);
-
-				var show_coord = coord;
-				sendDataToServer(show_coord, report_list, stat_list);
-				// setTimeout(sendGetToServer, 500);
 			}
+			// removePoligon();
+			$('#report_attribute input:checkbox:checked').each(function(){
+		        // alert($(this).val());
+		        report_list.push($(this).val())
+		    });
 
-			function sendGetToServer() {
-				// var x = new XMLHttpRequest();
-				// x.open("GET", "/customer/php?tif_path={{ file_tif_path }}", true);
-                
-				// x.open("GET", "/customer/php?tif_path={{ file_tif_path }}&ds={{ data_set_id }}", true);
-				// x.send(null);
+			$('#statictics_list input:radio:checked').each(function(){
+		        // alert($(this).val());
+		        stat_list.push($(this).val())
+		    });
 
-				deleteFile('{{ data_set_id }}');
+			// alert('REPORT: '+report_list);
 
-				// setTimeout(getTmpCSV, 3000);
+			var show_coord = coord;
+			sendDataToServer(show_coord, report_list, stat_list);
+			// setTimeout(sendGetToServer, 500);
+		}
+
+		function sendGetToServer() {
+			// var x = new XMLHttpRequest();
+			// x.open("GET", "/customer/php?tif_path={{ file_tif_path }}", true);
+            
+			// x.open("GET", "/customer/php?tif_path={{ file_tif_path }}&ds={{ data_set_id }}", true);
+			// x.send(null);
+
+			deleteFile('{{ data_set_id }}');
+
+			// setTimeout(getTmpCSV, 3000);
+		}
+
+		// function getTmpCSV(data_aoi, stat) {
+		// 	// alert('getTmpCSV: '+file_path);
+		// 	// httpRequest = new XMLHttpRequest();
+		// 	// httpRequest.open("GET", file_path, true);
+		// 	// httpRequest.onreadystatechange = OnRequestStateChange;
+		// 	// httpRequest.send(null);
+
+//              data_polygon = data_aoi;
+//              getPolygon(stat);
+
+		// 	// setTimeout(getPolygon, 100, stat);
+		// }
+
+		function getPolygon(data_aoi, stat) {
+			// alert('STAT: '+stat);
+			var modal = $('#modalWaiting');
+		    modal.modal('hide');
+			statistic = stat;
+            data_polygon = data_aoi;
+
+			// Construct the polygon.
+			selectPolygon = new google.maps.Polygon({
+				paths: coord,
+				strokeColor: '#ffffff',
+				//strokeOpacity: 0.8,
+				strokeWeight: 5,
+				fillColor: '#8bc53f',
+				fillOpacity: 0.5,
+				//editable: true
+			});
+			selectPolygon.setMap(map);
+			polygons.push(selectPolygon);
+			polygonVisible = true;
+
+			// remove all markers
+			for (var i = 0; i < markers.length; i++) {
+				markers[i].setMap(null);
 			}
+			infowindow.close();
 
-			// function getTmpCSV(data_aoi, stat) {
-			// 	// alert('getTmpCSV: '+file_path);
-			// 	// httpRequest = new XMLHttpRequest();
-			// 	// httpRequest.open("GET", file_path, true);
-			// 	// httpRequest.onreadystatechange = OnRequestStateChange;
-			// 	// httpRequest.send(null);
+			// sendDataToServer(show_coord);
 
-   //              data_polygon = data_aoi;
-   //              getPolygon(stat);
-
-			// 	// setTimeout(getPolygon, 100, stat);
+			// for (n in show_coord){
+			// 	for (k in show_coord[n]){
+			// 		// alert('NK: '+show_coord[n][k]);
+			// 	}
 			// }
 
-			function getPolygon(data_aoi, stat) {
-				// alert('STAT: '+stat);
-				var modal = $('#modalWaiting');
-			    modal.modal('hide');
-				statistic = stat;
-                data_polygon = data_aoi;
+			// Add a listener for the click event.
+			selectPolygon.addListener('click', showInfoWindow);
+			infoWindow = new google.maps.InfoWindow;
 
-				// Construct the polygon.
-				selectPolygon = new google.maps.Polygon({
-					paths: coord,
-					strokeColor: '#ffffff',
-					//strokeOpacity: 0.8,
-					strokeWeight: 5,
-					fillColor: '#8bc53f',
-					fillOpacity: 0.5,
-					//editable: true
-				});
-				selectPolygon.setMap(map);
-				polygons.push(selectPolygon);
-				polygonVisible = true;
+			// Add a listener for the mousemove event.
+			selectPolygon.addListener('mousemove', showCoordinates);
+			infoWindow = new google.maps.InfoWindow;
 
-				// remove all markers
-				for (var i = 0; i < markers.length; i++) {
-					markers[i].setMap(null);
-				}
-				infowindow.close();
+			var center_pol = polygonCenter(selectPolygon);
+			coord = [];
+			var list_data_draw = data_polygon.split('_');
+			count_pol = list_data_draw.length;
+            var new_array = []
 
-				// sendDataToServer(show_coord);
+			// alert('list_data_draw: '+list_data_draw);
+			// alert('list_data_draw 0: '+list_data_draw[0]);
+			// alert('list_data_draw 1: '+list_data_draw[1]);
+			// alert('list_data_draw 2: '+list_data_draw[2]);
+			// alert('list_data_draw 3: '+list_data_draw[3]);
+			//
+			// alert('data_polygon: '+data_polygon);
 
-				// for (n in show_coord){
-				// 	for (k in show_coord[n]){
-				// 		// alert('NK: '+show_coord[n][k]);
-				// 	}
-				// }
+			var contentString = '<h4 align="center"><b>Area Information</b></h4>';
+			contentString += '<p align="center"><span><b>Total Area:</b></span> ' + list_data_draw[0] + ' ha</p>';
+			contentString += '<input type="hidden" name="total_area" value="' + list_data_draw[0] + '">'
 
-				// Add a listener for the click event.
-				selectPolygon.addListener('click', showInfoWindow);
-				infoWindow = new google.maps.InfoWindow;
-
-				// Add a listener for the mousemove event.
-				selectPolygon.addListener('mousemove', showCoordinates);
-				infoWindow = new google.maps.InfoWindow;
-
-				var center_pol = polygonCenter(selectPolygon);
-				coord = [];
-				var list_data_draw = data_polygon.split('_');
-				count_pol = list_data_draw.length;
-                var new_array = []
-
-				// alert('list_data_draw: '+list_data_draw);
-				// alert('list_data_draw 0: '+list_data_draw[0]);
-				// alert('list_data_draw 1: '+list_data_draw[1]);
-				// alert('list_data_draw 2: '+list_data_draw[2]);
-				// alert('list_data_draw 3: '+list_data_draw[3]);
-				//
-				// alert('data_polygon: '+data_polygon);
-
-				var contentString = '<h4 align="center"><b>Area Information</b></h4>';
-				contentString += '<p align="center"><span><b>Total Area:</b></span> ' + list_data_draw[0] + ' ha</p>';
-				contentString += '<input type="hidden" name="total_area" value="' + list_data_draw[0] + '">'
-
-				if (statistic) {
-					contentString += '<p align="center"><span><b>Value:</b></span> ' + statistic + '</p>';
-					contentString += '<input type="hidden" name="statistic" value=' + statistic + '>'
-				}
-
-				if (count_pol >= 8) {
-					contentString += '<div style="height:400px;overflow:scroll;">';
-				} else {
-					contentString += '<div style="overflow:auto;">';
-				}
-
-				contentString += '<table class="table table-bordered">';
-				// contentString += '<caption align="center"><span><b>Total Area:</b></span> ' + list_data_draw[0] + ' ha</caption>'
-
-				contentString += '<thead>';
-				contentString += '<tr bgcolor="#CFCFCF">';
-				contentString += '<th align="left">Attribute</th>';
-				contentString += '<th>Value</th>';
-				contentString += '<th>Units</th>';
-				contentString += '<th>Total</th>';
-				contentString += '</tr>';
-				contentString += '</thead>';
-				contentString += '<tbody>';
-
-				for (var i = 1; i < count_pol; i++) {
-					new_array = list_data_draw[i].split(',')
-
-					if ( i & 1 ) {
-    					contentString += '<tr bgcolor="#F5F5F5">';
-					} else {
-    					contentString += '<tr>';
-					}
-
-					contentString += '<td align="left">' + new_array[0] + '</td>';
-					contentString += '<td>' + new_array[1] + '</td>';
-					contentString += '<td>' + new_array[2] + '</td>';
-					contentString += '<td>' + new_array[3] + '</td>';
-					contentString += '</tr>';
-					contentString += '<input type="hidden" name="attribute" value="' + new_array[0] + '">'
-					contentString += '<input type="hidden" name="value" value="' + new_array[1] + '">'
-					contentString += '<input type="hidden" name="units" value="' + new_array[2] + '">'
-					contentString += '<input type="hidden" name="total" value="' + new_array[3] + '">'
-				}
-
-				contentString += '</tbody>';
-				contentString += '</table>';
-				contentString += '</div>';
-
-
-				// contentString += '<p class="left">COORDINATE:</p>';
-				// for(n in show_coord) {
-				// 	contentString += '<p class="left">(Lat: ' + show_coord[n]['lat'] + '; Lng: ' + show_coord[n]['lng'] + ')</p>';
-			    // }
-
-				contentString += '<input type="text" id="input_area_name" class="margin-top-15" placeholder="Enter Area name" name="area_name" size="30" style="width:100%" onkeyup="changeAreaName();" autofocus><br>'
-				contentString += '<button type="submit" name="save_area" class="btn btn-success btn-block margin-top-15" value="save_area" disabled id="save_area">Save Area</button>';
-				contentString += '<button type="submit" name="cancel_download_file" class="btn btn-primary btn-block margin-top-15" value="cancel_download_file">Cancel</button>';
-
-                infowindow = new google.maps.InfoWindow({content: contentString, position: center_pol});
-				infowindow.open(map);
+			if (statistic) {
+				contentString += '<p align="center"><span><b>Value:</b></span> ' + statistic + '</p>';
+				contentString += '<input type="hidden" name="statistic" value=' + statistic + '>'
 			}
 
-			// function OnRequestStateChange()
-			// {
-			// 	if (httpRequest.readyState != 4)
-  	// 				return;
-			// 	if (httpRequest.status != 200)
-  	// 				return;
-
-   //              data_polygon = ''
-			// 	data_polygon = httpRequest.responseText;
-			// }
-
-			function showCoordinates(event) {
-				var lat = event.latLng.lat();
-				var lon = event.latLng.lng();
-
-				document.getElementById('latitude').value = 'Lat: ' + lat.toFixed(6);
-				document.getElementById('longitude').value = 'Lng: ' + lon.toFixed(6);
+			if (count_pol >= 8) {
+				contentString += '<div style="height:400px;overflow:scroll;">';
+			} else {
+				contentString += '<div style="overflow:auto;">';
 			}
 
-			function showInfoWindow(event) {
-				var lat = event.latLng.lat();
-				var lon = event.latLng.lng();
-				var list_data = data_polygon.split('_');
-                var new_array = []
+			contentString += '<table class="table table-bordered">';
+			// contentString += '<caption align="center"><span><b>Total Area:</b></span> ' + list_data_draw[0] + ' ha</caption>'
 
-				var contentString = '<h4 align="center"><b>Area Information</b></h4>';
-				contentString += '<p align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</p>';
-				contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
+			contentString += '<thead>';
+			contentString += '<tr bgcolor="#CFCFCF">';
+			contentString += '<th align="left">Attribute</th>';
+			contentString += '<th>Value</th>';
+			contentString += '<th>Units</th>';
+			contentString += '<th>Total</th>';
+			contentString += '</tr>';
+			contentString += '</thead>';
+			contentString += '<tbody>';
 
-				if (statistic) {
-					contentString += '<p align="center"><span><b>Value:</b></span> ' + statistic + '</p>';
-					contentString += '<input type="hidden" name="statistic" value=' + statistic + '>'
-				}
+			for (var i = 1; i < count_pol; i++) {
+				new_array = list_data_draw[i].split(',')
 
-				if (count_pol >= 8) {
-					contentString += '<div style="height:400px;overflow:scroll;">';
+				if ( i & 1 ) {
+					contentString += '<tr bgcolor="#F5F5F5">';
 				} else {
-					contentString += '<div style="overflow:auto;">';
-				}
-
-				contentString += '<table class="table table-bordered" style="height:50px;overflow:scroll;">';
-				// contentString += '<caption align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</caption>'
-
-				contentString += '<thead>';
-				contentString += '<tr bgcolor="#CFCFCF">';
-				contentString += '<th align="left">Attribute</th>';
-				contentString += '<th>Value</th>';
-				contentString += '<th>Units</th>';
-				contentString += '<th>Total</th>';
-				contentString += '</tr>';
-				contentString += '</thead>';
-				contentString += '<tbody>';
-
-				for (var i = 1; i < list_data.length; i++) {
-					new_array = list_data[i].split(',')
-
-					if ( i & 1 ) {
-						contentString += '<tr bgcolor="#F5F5F5">';
-					} else {
-						contentString += '<tr>';
-					}
-
 					contentString += '<tr>';
-					contentString += '<td align="left">' + new_array[0] + '</td>';
-					contentString += '<td>' + new_array[1] + '</td>';
-					contentString += '<td>' + new_array[2] + '</td>';
-					contentString += '<td>' + new_array[3] + '</td>';
-					contentString += '</tr>';
-					contentString += '<input type="hidden" name="attribute" value="' + new_array[0] + '">'
-					contentString += '<input type="hidden" name="value" value="' + new_array[1] + '">'
-					contentString += '<input type="hidden" name="units" value="' + new_array[2] + '">'
-					contentString += '<input type="hidden" name="total" value="' + new_array[3] + '">'
 				}
 
-				contentString += '</tbody>';
-				contentString += '</table>';
-				contentString += '</div>';
-
-				contentString += '<input type="text" id="input_area_name" class="margin-top-15" placeholder="Enter Area name" name="area_name" size="30" style="width:100%" onkeyup="changeAreaName();" autofocus><br>'
-				contentString += '<button type="submit" name="save_area" class="btn btn-success btn-block margin-top-15" value="save_area" disabled id="save_area">Save Area</button>';
-				contentString += '<button type="submit" name="cancel_download_file" class="btn btn-primary btn-block margin-top-15" value="cancel_download_file">Cancel</button>';
-
-				// Replace the info window's content and position.
-				infoWindow.setContent(contentString);
-				infoWindow.setPosition(event.latLng);
-
-				infoWindow.open(map);
+				contentString += '<td align="left">' + new_array[0] + '</td>';
+				contentString += '<td>' + new_array[1] + '</td>';
+				contentString += '<td>' + new_array[2] + '</td>';
+				contentString += '<td>' + new_array[3] + '</td>';
+				contentString += '</tr>';
+				contentString += '<input type="hidden" name="attribute" value="' + new_array[0] + '">'
+				contentString += '<input type="hidden" name="value" value="' + new_array[1] + '">'
+				contentString += '<input type="hidden" name="units" value="' + new_array[2] + '">'
+				contentString += '<input type="hidden" name="total" value="' + new_array[3] + '">'
 			}
 
-			function togglePlygonOverlays() {
-				if (polygonVisible) {
-					if (polygons) {
-						for (i in polygons) {
-							polygons[i].setMap(null);
-							polygonVisible = false;
-						}
-					}
+			contentString += '</tbody>';
+			contentString += '</table>';
+			contentString += '</div>';
+
+
+			// contentString += '<p class="left">COORDINATE:</p>';
+			// for(n in show_coord) {
+			// 	contentString += '<p class="left">(Lat: ' + show_coord[n]['lat'] + '; Lng: ' + show_coord[n]['lng'] + ')</p>';
+		    // }
+
+			contentString += '<input type="text" id="input_area_name" class="margin-top-15" placeholder="Enter Area name" name="area_name" size="30" style="width:100%" onkeyup="changeAreaName();" autofocus><br>'
+			contentString += '<button type="submit" name="save_area" class="btn btn-success btn-block margin-top-15" value="save_area" disabled id="save_area">Save Area</button>';
+			contentString += '<button type="submit" name="cancel_download_file" class="btn btn-primary btn-block margin-top-15" value="cancel_download_file">Cancel</button>';
+
+            infowindow = new google.maps.InfoWindow({content: contentString, position: center_pol});
+			infowindow.open(map);
+		}
+
+		// function OnRequestStateChange()
+		// {
+		// 	if (httpRequest.readyState != 4)
+	// 				return;
+		// 	if (httpRequest.status != 200)
+	// 				return;
+
+//              data_polygon = ''
+		// 	data_polygon = httpRequest.responseText;
+		// }
+
+		function showCoordinates(event) {
+			var lat = event.latLng.lat();
+			var lon = event.latLng.lng();
+
+			document.getElementById('latitude').value = 'Lat: ' + lat.toFixed(6);
+			document.getElementById('longitude').value = 'Lng: ' + lon.toFixed(6);
+		}
+
+		function showInfoWindow(event) {
+			var lat = event.latLng.lat();
+			var lon = event.latLng.lng();
+			var list_data = data_polygon.split('_');
+            var new_array = []
+
+			var contentString = '<h4 align="center"><b>Area Information</b></h4>';
+			contentString += '<p align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</p>';
+			contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
+
+			if (statistic) {
+				contentString += '<p align="center"><span><b>Value:</b></span> ' + statistic + '</p>';
+				contentString += '<input type="hidden" name="statistic" value=' + statistic + '>'
+			}
+
+			if (count_pol >= 8) {
+				contentString += '<div style="height:400px;overflow:scroll;">';
+			} else {
+				contentString += '<div style="overflow:auto;">';
+			}
+
+			contentString += '<table class="table table-bordered" style="height:50px;overflow:scroll;">';
+			// contentString += '<caption align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</caption>'
+
+			contentString += '<thead>';
+			contentString += '<tr bgcolor="#CFCFCF">';
+			contentString += '<th align="left">Attribute</th>';
+			contentString += '<th>Value</th>';
+			contentString += '<th>Units</th>';
+			contentString += '<th>Total</th>';
+			contentString += '</tr>';
+			contentString += '</thead>';
+			contentString += '<tbody>';
+
+			for (var i = 1; i < list_data.length; i++) {
+				new_array = list_data[i].split(',')
+
+				if ( i & 1 ) {
+					contentString += '<tr bgcolor="#F5F5F5">';
 				} else {
-					if (polygons) {
-						for (i in polygons) {
-							polygons[i].setMap(map);
-							polygonVisible = true;
-						}
+					contentString += '<tr>';
+				}
+
+				contentString += '<tr>';
+				contentString += '<td align="left">' + new_array[0] + '</td>';
+				contentString += '<td>' + new_array[1] + '</td>';
+				contentString += '<td>' + new_array[2] + '</td>';
+				contentString += '<td>' + new_array[3] + '</td>';
+				contentString += '</tr>';
+				contentString += '<input type="hidden" name="attribute" value="' + new_array[0] + '">'
+				contentString += '<input type="hidden" name="value" value="' + new_array[1] + '">'
+				contentString += '<input type="hidden" name="units" value="' + new_array[2] + '">'
+				contentString += '<input type="hidden" name="total" value="' + new_array[3] + '">'
+			}
+
+			contentString += '</tbody>';
+			contentString += '</table>';
+			contentString += '</div>';
+
+			contentString += '<input type="text" id="input_area_name" class="margin-top-15" placeholder="Enter Area name" name="area_name" size="30" style="width:100%" onkeyup="changeAreaName();" autofocus><br>'
+			contentString += '<button type="submit" name="save_area" class="btn btn-success btn-block margin-top-15" value="save_area" disabled id="save_area">Save Area</button>';
+			contentString += '<button type="submit" name="cancel_download_file" class="btn btn-primary btn-block margin-top-15" value="cancel_download_file">Cancel</button>';
+
+			// Replace the info window's content and position.
+			infoWindow.setContent(contentString);
+			infoWindow.setPosition(event.latLng);
+
+			infoWindow.open(map);
+		}
+
+		function togglePlygonOverlays() {
+			if (polygonVisible) {
+				if (polygons) {
+					for (i in polygons) {
+						polygons[i].setMap(null);
+						polygonVisible = false;
+					}
+				}
+			} else {
+				if (polygons) {
+					for (i in polygons) {
+						polygons[i].setMap(map);
+						polygonVisible = true;
 					}
 				}
 			}
-			google.maps.event.addDomListener(window, 'load', initMap);
-		</script>
-	{% endif %}
+		}
+		google.maps.event.addDomListener(window, 'load', initMap);
+	</script>
 {% endblock content_customer %}
