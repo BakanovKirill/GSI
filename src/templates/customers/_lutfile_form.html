@@ -17,7 +17,7 @@
 
     <div class="col-md-1 right">
         <div class="form-group {% if form.lut_file.errors %}has-error{% endif %}">
-            <label class="control-label font-normal">{{ form.lut_file.label }}</label>
+            <label class="control-label">{{ form.lut_file.label }}*</label>
         </div>
     </div>
     <div class="col-md-3">
@@ -75,10 +75,13 @@
     <div class="col-md-2">
         {% if not form.max_val.errors %}
             {{ form.max_val }}
+            <p class="help">{{ form.max_val.help_text }}</p>
         {% else %}
+            <p class="help">{{ form.max_val.help_text }}</p>
             <span class="field-error">{{ form.max_val }}</span>
             <b class="error-form">{{ form.max_val.errors }}</b>
-        {% endif %}
+        {% endif %}  
+
     </div>
 
     <div class="col-md-1 right">
@@ -89,7 +92,9 @@
     <div class="col-md-2">
         {% if not form.val_scale.errors %}
             {{ form.val_scale }}
+            <p class="help">{{ form.val_scale.help_text }}</p>
         {% else %}
+            <p class="help">{{ form.val_scale.help_text }}</p>
             <span class="field-error">{{ form.val_scale }}</span>
             <b class="error-form">{{ form.val_scale.errors }}</b>
         {% endif %}

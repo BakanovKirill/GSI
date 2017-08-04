@@ -22,16 +22,18 @@
                                     {% endif %}
                                 </a>
                             </th>
-                            <th>Filename</th>
+                            <th>LUT Files</th>
                             <th>
                                 <a href="{% url 'lutfiles' %}?order_by=max_val{% if order_by == 'max_val' and reverse != '1' %}&amp;reverse=1{% endif %}">
-                                    Max value
+                                    Max Value
                                     {% if order_by == 'max_val' and reverse != '1' %}&#9652;
                                     {% elif order_by == 'max_val' and reverse == '1' %}&#9662;
                                     {% endif %}
                                 </a>
                             </th>
-                            <th>legend</th>
+                            <th>Legend</th>
+                            <th>Units</th>
+                            <th>Val Scale</th>
                         </tr>
                     </thead>
                     {% endwith %}
@@ -40,9 +42,11 @@
                         <tr>
                             <td><input type="checkbox" name="lutfiles_select" value="{{ lf.id }}"></td>
                             <td>{{ lf.name }}</td>
-                            <td>{{ lf.filename }}</td>
+                            <td>{{ lf.lut_file }}</td>
                             <td>{{ lf.max_val }}</td>
                             <td>{{ lf.legend }}</td>
+                            <td>{{ lf.units }}</td>
+                            <td>{{ lf.val_scale }}</td>
                             <td>
                                 <a href="{% url 'lutfile_edit' lf.id %}" role="button" data-toggle="tooltip" data-placement="top" title="Edit">
                                     <img class="" src="{% static 'img/edit-18.png' %}"/>

@@ -1277,7 +1277,7 @@ def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute
     project_name = results_directory.split('/')[0]
     file_area_name = '{0}_{1}.{2}'.format(stat_file, root_filename, project_name)
     tif = '{0}.tif'.format(file_area_name)
-    png = '{0}.png'.format(file_area_name)
+    png = '{0}greyscale.png'.format(file_area_name)
     tif_path = os.path.join(PROJECTS_PATH, data_set.results_directory, root_filename, tif)
     png_path = os.path.join(PNG_PATH, png)
     url_png = '{0}/{1}'.format(absolute_png_url, png)
@@ -2119,29 +2119,38 @@ def customer_section(request):
                 # *************** COLOR EACH IMAGES ***************************************************************
 
                 attribute_name = cip_choice.attribute_name
-                attribute_name_shd = get_object_or_404(ShelfData, attribute_name=attribute_name)
+                shelf_data_attr = get_object_or_404(ShelfData, attribute_name=attribute_name)
 
-                if attribute_name_shd.lutfiles:
-                    filename = attribute_name_shd.lutfiles.filename
-                    max_val = attribute_name_shd.lutfiles.max_val
-                    legend = attribute_name_shd.lutfiles.legend
+                # print 'LUT ATTR NAME ========================= ', shelf_data_attr
+                # print 'LUT LUT NAME ========================= ', shelf_data_attr.lutfiles
 
-                    lut_1 = '.' + filename.split('.')[-1]
-                    lut_name = filename.replace(lut_1, '')
+                if shelf_data_attr.lutfiles:
+                    lut_file = shelf_data_attr.lutfiles.lut_file
+                    max_val = shelf_data_attr.lutfiles.max_val
+                    legend = shelf_data_attr.lutfiles.legend
+                    units = shelf_data_attr.lutfiles.units
+                    val_scale = shelf_data_attr.lutfiles.val_scale
+
+                    lut_1 = '.' + lut_file.split('.')[-1]
+                    lut_name = lut_file.replace(lut_1, '')
 
                     # print 'LUT NAME ========================= ', lut_name
 
                     tif_png_script = SCRIPT_TIFPNG
-                    lut_file = os.path.join(LUT_DIRECTORY, filename)
+                    lut_file = os.path.join(LUT_DIRECTORY, lut_file)
 
                     # Command Line
-                    # TifPng <InpTiff> <LUTfile> [<MaxVal>] [<Legend>]
+                    # TifPng <InpTiff> <LUTfile> [<MaxVal>] [<Legend>] [<Units>] [<ValScale>]
 
                     command_line = tif_png_script + ' '
                     command_line += file_tif + ' '
                     command_line += lut_file + ' '
                     command_line += str(max_val) + ' '
-                    command_line += str(legend)
+                    command_line += str(legend) + ' '
+                    command_line += '"' + str(units) + '"' + ' '
+                    command_line += str(val_scale)
+
+                    # print 'LUT COMMAND NAME ========================= ', command_line
 
                     new_color_file = file_area_name + lut_name + '.png'
                     url_png = '{0}/{1}'.format(absolute_png_url, new_color_file)
@@ -2209,6 +2218,7 @@ def customer_section(request):
                 # ******************************************************************************
 
                 # Convert tif to png
+                # greyscale
                 try:
                     # convert tif to png
                     if os.path.exists(file_tif):

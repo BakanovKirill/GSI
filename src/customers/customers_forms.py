@@ -4,7 +4,7 @@ from itertools import chain
 from django import forms
 from django.contrib.auth.models import User
 
-from core.validator_gsi import validate_order
+from core.validator_gsi import validate_order, validate_lutfile
 from core.utils import get_list_lutfiles
 from customers.models import (Category, ShelfData, DataSet, LutFiles,
                             CustomerAccess, CustomerPolygons, LUTFILES,
@@ -199,7 +199,8 @@ class LutFilesForm(forms.ModelForm):
         widget=forms.Select(
                 attrs={'class': 'form-control'},
                 choices=LUTFILES),
-        required=False,
+        # required=False,
+        validators=[validate_lutfile],
         label=u'LUT File'
     )
     max_val = forms.IntegerField(
@@ -240,3 +241,5 @@ class LutFilesForm(forms.ModelForm):
     class Meta:
         model = LutFiles
         fields = ['name', 'lut_file', 'max_val', 'legend', 'units', 'val_scale']
+
+
