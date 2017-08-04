@@ -2125,97 +2125,54 @@ def customer_section(request):
                 # print 'LUT LUT NAME ========================= ', shelf_data_attr.lutfiles
 
                 if shelf_data_attr.lutfiles:
-                    lut_file = shelf_data_attr.lutfiles.lut_file
-                    max_val = shelf_data_attr.lutfiles.max_val
-                    legend = shelf_data_attr.lutfiles.legend
-                    units = shelf_data_attr.lutfiles.units
-                    val_scale = shelf_data_attr.lutfiles.val_scale
+                    try:
+                        lut_file = shelf_data_attr.lutfiles.lut_file
+                        max_val = shelf_data_attr.lutfiles.max_val
+                        legend = shelf_data_attr.lutfiles.legend
+                        units = shelf_data_attr.lutfiles.units
+                        val_scale = shelf_data_attr.lutfiles.val_scale
 
-                    lut_1 = '.' + lut_file.split('.')[-1]
-                    lut_name = lut_file.replace(lut_1, '')
+                        lut_1 = '.' + lut_file.split('.')[-1]
+                        lut_name = lut_file.replace(lut_1, '')
 
-                    # print 'LUT NAME ========================= ', lut_name
+                        # print 'LUT NAME ========================= ', lut_name
 
-                    tif_png_script = SCRIPT_TIFPNG
-                    lut_file = os.path.join(LUT_DIRECTORY, lut_file)
+                        tif_png_script = SCRIPT_TIFPNG
+                        lut_file = os.path.join(LUT_DIRECTORY, lut_file)
 
-                    # Command Line
-                    # TifPng <InpTiff> <LUTfile> [<MaxVal>] [<Legend>] [<Units>] [<ValScale>]
+                        # Command Line
+                        # TifPng <InpTiff> <LUTfile> [<MaxVal>] [<Legend>] [<Units>] [<ValScale>]
 
-                    command_line = tif_png_script + ' '
-                    command_line += file_tif + ' '
-                    command_line += lut_file + ' '
-                    command_line += str(max_val) + ' '
-                    command_line += str(legend) + ' '
-                    command_line += '"' + str(units) + '"' + ' '
-                    command_line += str(val_scale)
+                        command_line = tif_png_script + ' '
+                        command_line += file_tif + ' '
+                        command_line += lut_file + ' '
+                        command_line += str(max_val) + ' '
+                        command_line += str(legend) + ' '
+                        command_line += '"' + str(units) + '"' + ' '
+                        command_line += str(val_scale)
 
-                    # print 'LUT COMMAND NAME ========================= ', command_line
+                        # print 'LUT COMMAND NAME ========================= ', command_line
 
-                    new_color_file = file_area_name + lut_name + '.png'
-                    url_png = '{0}/{1}'.format(absolute_png_url, new_color_file)
+                        new_color_file = file_area_name + lut_name + '.png'
+                        url_png = '{0}/{1}'.format(absolute_png_url, new_color_file)
 
-                    tmp_png = file_png.split('/')[-1]
-                    new_file_png = file_png.replace(tmp_png, new_color_file)
+                        tmp_png = file_png.split('/')[-1]
+                        new_file_png = file_png.replace(tmp_png, new_color_file)
 
-                    tmp_png = file_tif.split('/')[-1]
-                    old_file_png = file_tif.replace(tmp_png, new_color_file)
+                        tmp_png = file_tif.split('/')[-1]
+                        old_file_png = file_tif.replace(tmp_png, new_color_file)
 
-                    cip_choice.png_path = new_file_png
-                    cip_choice.url_png = url_png
-                    cip_choice.save()
+                        cip_choice.png_path = new_file_png
+                        cip_choice.url_png = url_png
+                        cip_choice.save()
 
-                    is_lutfile = True
-
-                # ***************** ONE COLOR ALL IMAGES *************************************************************
-
-                # ******************************************************************************
-
-                # print 'CIP NAME ========================= ', cip_choice
-
-                # if cip_choice.data_set.shelf_data:
-                #     shelf_data_choice = cip_choice.data_set.shelf_data
-
-                #     if shelf_data_choice.lutfiles:
-                #         filename = shelf_data_choice.lutfiles.filename
-                #         max_val = shelf_data_choice.lutfiles.max_val
-                #         legend = shelf_data_choice.lutfiles.legend
-
-                #         lut_1 = '.' + filename.split('.')[-1]
-                #         lut_name = filename.replace(lut_1, '')
-
-                #         # print 'LUT NAME ========================= ', lut_name
-
-                #         tif_png_script = SCRIPT_TIFPNG
-                #         lut_file = os.path.join(LUT_DIRECTORY, filename)
-
-                #         command_line = tif_png_script + ' '
-                #         command_line += file_tif + ' '
-                #         command_line += lut_file + ' '
-                #         command_line += str(max_val) + ' '
-                #         command_line += str(legend)
-
-                #         new_color_file = file_area_name + lut_name + '.png'
-                #         url_png = '{0}/{1}'.format(absolute_png_url, new_color_file)
-
-                #         tmp_png = file_png.split('/')[-1]
-                #         new_file_png = file_png.replace(tmp_png, new_color_file)
-
-                #         tmp_png = file_tif.split('/')[-1]
-                #         old_file_png = file_tif.replace(tmp_png, new_color_file)
-
-                #         cip_choice.png_path = new_file_png
-                #         cip_choice.url_png = url_png
-                #         cip_choice.save()
-
-                #         is_lutfile = True
-
-                        # print '================   new_file_png NAME ========================= ', new_file_png
-                        # print '================   old_file_png NAME ========================= ', file_png
-                        # print 'lut_name NAME ========================= ', lut_name
-                        # print 'NEW COLOR NAME ========================= ', new_color_file
-
-                # ******************************************************************************
+                        is_lutfile = True
+                    except AttributeError:
+                        return HttpResponseRedirect(u'%s?danger_message=%s' % (
+                                    reverse('customer_section'),
+                                    (u'The LUT File is not defined. Please specify the file for LUT File \
+                                        "{0}" or exclude LUT File from ShelfData "{1}".'
+                                        .format(shelf_data_attr.lutfiles, shelf_data_attr))))
 
                 # Convert tif to png
                 # greyscale
