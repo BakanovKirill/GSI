@@ -3,6 +3,15 @@
 
 
 {% block content_customer %}
+    {% if %}
+        <div class="alert alert-warning alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ warning_message }}
+        </div>
+    {% endif%}
+    
 	{% if not error_message %}
 		<form class="form-modal" id="customer_section" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data" role="form" class="form-horizontal">
 		{% csrf_token %}

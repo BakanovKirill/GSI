@@ -1472,6 +1472,7 @@ def customer_section(request):
     data_sets = []
     error_message = ''
     warning_message = ''
+    
     data_set_id = 0
     polygons = []
     attribute_list_infopanel = []
@@ -2168,7 +2169,7 @@ def customer_section(request):
 
                         is_lutfile = True
                     except AttributeError:
-                        error_message = u'The LUT File is not defined. Please specify the file for LUT File \
+                        warning_message = u'The LUT File is not defined. Please specify the file for LUT File \
                                         "{0}" or exclude LUT File from ShelfData "{1}".'\
                                         .format(shelf_data_attr.lutfiles, shelf_data_attr)
                         # return HttpResponseRedirect(u'%s?danger_message=%s' % (
@@ -2308,7 +2309,7 @@ def customer_section(request):
         'file_tif_path': file_tif_path,
 
         'warning_message': warning_message,
-        'error_message': error_message,
+        # 'error_message': error_message,
 
         'absolute_kml_url': absolute_kml_url,
 
