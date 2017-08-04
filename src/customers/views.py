@@ -2169,7 +2169,7 @@ def customer_section(request):
 
                         is_lutfile = True
                     except AttributeError:
-                        warning_message = u'<b>The LUT File is not defined!</b> Please specify the file for LUT File \
+                        warning_message = u'The LUT File is not defined! Please specify the file for LUT File \
                                         "{0}" or exclude LUT File from ShelfData "{1}".'\
                                         .format(shelf_data_attr.lutfiles, shelf_data_attr)
                         # return HttpResponseRedirect(u'%s?danger_message=%s' % (
