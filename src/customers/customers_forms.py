@@ -227,7 +227,7 @@ class LutFilesForm(forms.ModelForm):
         label=u'Units'
     )
     val_scale = forms.FloatField(
-        widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
         initial=1.0,
         min_value=0.0,
         validators=[validate_order],
