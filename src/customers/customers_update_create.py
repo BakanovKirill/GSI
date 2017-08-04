@@ -150,23 +150,27 @@ def lutfile_update_create(form, item_id=None):
 
     lut_filename = ''
 
-    if form.cleaned_data["filename"] != 'select':
-        lut_filename = form.cleaned_data["filename"]
+    if form.cleaned_data["lut_file"] != 'select':
+        lut_filename = form.cleaned_data["lut_file"]
 
     if item_id:
         LutFiles.objects.filter(id=item_id).update(
             name=form.cleaned_data["name"],
-            filename=lut_filename,
+            lut_file=lut_filename,
             max_val=form.cleaned_data["max_val"],
             legend=form.cleaned_data["legend"],
+            units=form.cleaned_data["units"],
+            val_scale=form.cleaned_data["val_scale"],
         )
         lut_file = LutFiles.objects.get(id=item_id)
     else:
         lut_file = LutFiles.objects.create(
             name=form.cleaned_data["name"],
-            filename=lut_filename,
+            lut_file=lut_filename,
             max_val=form.cleaned_data["max_val"],
             legend=form.cleaned_data["legend"],
+            units=form.cleaned_data["units"],
+            val_scale=form.cleaned_data["val_scale"],
         )
 
     return lut_file

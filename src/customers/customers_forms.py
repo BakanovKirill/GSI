@@ -7,7 +7,8 @@ from django.contrib.auth.models import User
 from core.validator_gsi import validate_order
 from core.utils import get_list_lutfiles
 from customers.models import (Category, ShelfData, DataSet, LutFiles,
-                            CustomerAccess, CustomerPolygons, LUTFILES)
+                            CustomerAccess, CustomerPolygons, LUTFILES,
+                            SCALE)
 
 
 class CategoryForm(forms.ModelForm):
@@ -192,32 +193,50 @@ class LutFilesForm(forms.ModelForm):
     name = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         # required=False,
-        label=u'Name')
-    # filename = forms.CharField(
-    #     widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'File name'}),
-    #     required=False,
-    #     label=u'FileName')
-
-    filename = forms.CharField(
+        label=u'Name'
+    )
+    lut_file = forms.CharField(
         widget=forms.Select(
                 attrs={'class': 'form-control'},
                 choices=LUTFILES),
         required=False,
-        label=u'FileName'
+        label=u'LUT File'
     )
-    max_val = forms.FloatField(
-        widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '1'}),
-        initial=0,
+    max_val = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        initial=100,
+        min_value=0,
         validators=[validate_order],
         error_messages={'required': 'Must be a positive number'},
         required=False,
-        label=u'Max value',)
+        label=u'Max value',
+        help_text=u'Maximum Value for colour scaling'
+    )
     legend = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        widget=forms.Select(
+                attrs={'class': 'form-control'},
+                choices=SCALE),
         required=False,
-        label=u'Legend')
+        label=u'Legend'
+    )
+    units = forms.CharField(
+        widget=forms.TextInput(
+                attrs={'class': 'form-control'}),
+        required=False,
+        label=u'Units'
+    )
+    val_scale = forms.FloatField(
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1'}),
+        initial=1.0,
+        min_value=0.0,
+        validators=[validate_order],
+        error_messages={'required': 'Must be a positive number'},
+        required=False,
+        label=u'Value Scale',
+        help_text=u'Pixel Scale Factor for units'
+    )
 
 
     class Meta:
         model = LutFiles
-        fields = ['name', 'filename', 'max_val', 'legend']
+        fields = ['name', 'lut_file', 'max_val', 'legend', 'units', 'val_scale']

@@ -83,9 +83,9 @@ class CountFilesAdmin(admin.ModelAdmin):
     
     
 class LutFilesAdmin(admin.ModelAdmin):
-    list_display = ('name', 'filename', 'max_val', 'legend')
-    search_fields = ['name', 'max_val']
-    list_filter = ('name', 'max_val')
+    list_display = ('name', 'lut_file', 'max_val', 'legend', 'units', 'val_scale')
+    search_fields = ['name', 'lut_file', 'max_val']
+    list_filter = ('name', 'lut_file', 'max_val')
 
 
 admin.site.register(Category, CategoryAdmin)

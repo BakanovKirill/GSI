@@ -5,29 +5,34 @@ from django.contrib.auth.models import User
 from core.utils import get_list_lutfiles
 
 
-# LUTFILES = (
-#     ('grey', 'Grey'),
-#     ('red', 'Red'),
-#     ('green', 'Green'),
-#     ('yellow', 'Yellow'),
-#     ('orange', 'Orange'), )
-
-
 LUTFILES = get_list_lutfiles()
+SCALE = (
+    ('1', 'simple scale png'),
+    ('2', 'annotated scale')
+)
 
 
 class LutFiles(models.Model):
-    # TifPng <InpTiff> <LUTfile> [<MaxVal>] [<Legend>]
+    # TifPng <InpTiff> <LUTfile> [<MaxVal>] [<Legend>] [<Units>] [<ValScale>]
     
     name = models.CharField(max_length=300, blank=True, null=True)
-    filename = models.CharField(max_length=300, blank=True, null=True, choices=LUTFILES)
+    lut_file = models.CharField(max_length=300, blank=True, null=True,
+                                choices=LUTFILES, verbose_name='LUT File')
     max_val = models.PositiveIntegerField(
                     default=100,
                     verbose_name='Maximum Value for colour scaling',)
     legend = models.CharField(
                     max_length=250,
                     blank=True, null=True,
+                    choices=SCALE,
                     verbose_name='Legend',)
+    units = models.CharField(
+                    max_length=250,
+                    blank=True, null=True,
+                    verbose_name='Units',)
+    val_scale = models.FloatField(
+                    default=1.0,
+                    verbose_name='Pixel Scale Factor for units',)
 
     class Meta:
         verbose_name_plural = 'LUTFiles'
