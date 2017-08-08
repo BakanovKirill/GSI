@@ -48,8 +48,9 @@
 					<!-- [START region_toolbar] -->
 					<!-- Add an input button to initiate the toggle method on the overlay. -->
 					<div id="floating-panel">
-						<input type="button" class="btn btn-default" value="Toggle visibility" onclick="overlay.toggle();"></input>
-						<input type="button" class="btn btn-default" value="Toggle DOM attachment" onclick="overlay.toggleDOM();"></input>
+						<!-- <input type="button" class="btn btn-default" value="Toggle visibility" onclick="overlay.toggle();"></input>
+						<input type="button" class="btn btn-default" value="Toggle DOM attachment" onclick="overlay.toggleDOM();"></input> -->
+                        <input type="button" class="btn btn-default" value="Toggle visibility scale" onclick="toggleScale();"></input>
 					</div>
 					<!-- [END region_toolbar] -->
 
@@ -125,9 +126,9 @@
 
 	    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false"></script>
 
-		<script src="http://www.google.com/jsapi"></script>
+		<script type="text/javascript" src="http://www.google.com/jsapi"></script>
 
-		<script>
+		<script type="text/javascript">
 			// Get the modal
 			var modal = document.getElementById('myModal');
 
@@ -148,7 +149,7 @@
 			}
 		</script>
 
-		<script>
+		<script type="text/javascript">
 			USGSOverlay.prototype = new google.maps.OverlayView();
 
 			var map;
@@ -266,8 +267,85 @@
 			};
 			mapTypesArr.push(mapobj);
 
+            function MyControl(map) {
+                map = map;
+
+                img = document.createElement('IMG');
+                img.src = 'http://indy41.epcc.ed.ac.uk/BCmain/BCmainKey.png';
+             
+                button = document.createElement('DIV');
+                button.style.margin = "5px";
+                button.style.padding = "5px";
+                button.style.backgroundColor = "#fff";
+                button.style.cursor = 'pointer';
+                button.title = 'Information about currently displayed image';
+                button.appendChild(img);
+             
+                div = document.createElement('DIV');
+                div.id = 'scale_id';
+                div.appendChild(button);
+
+                // controlText = document.createElement('div');
+                // controlText.style.color = 'rgb(25,25,25)';
+                // controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+                // controlText.style.fontSize = '12px';
+                // controlText.style.lineHeight = '24px';
+                // controlText.style.paddingLeft = '5px';
+                // controlText.style.paddingRight = '5px';
+                // controlText.innerHTML = 'Key';
+                // button.appendChild(controlText);
+
+                
+
+                // controlText.addEventListener('click', function() {
+                //     if (img.style.visibility == "hidden") {
+                //         img.style.visibility = "visible";
+                //     } else {
+                //         img.style.visibility = "hidden";
+                //     }
+
+                //     // if (controlText.innerHTML.length > 2) {
+                //     //     controlTextsav = controlText.innerHTML;
+                //     //     controlText.innerHTML = "Key";
+                //     // } else {
+                //     //     controlText.innerHTML = controlTextsav; 
+                //     // }
+                // });
+             
+                // var marker = new google.maps.Marker({
+                //     position : new google.maps.LatLng(center_map)
+                // });
+             
+                // google.maps.event.addDomListener(this.button, "click", function(e){
+                //     if (marker.getMap()){
+                //         marker.setMap(null);
+                //     } else {
+                //         marker.setMap(map);
+                //     }
+                // });
+            }
+ 
+            MyControl.prototype.getDiv = function() {
+                return div;
+            };
+             
+            MyControl.prototype.remove = function() {
+                div.removeChild(button);
+                div.parentNode.removeChild(div);
+            };
+
+            MyControl.prototype.toggle = function() {
+                if (div) {
+                    if (div.style.visibility === 'hidden') {
+                        show();
+                    } else {
+                        hide();
+                    }
+                }
+            };
+
+
 			function initMap() {
-				// location.reload();
 				var my_styles =  [
 					{
 						featureType: "road.highway",
@@ -348,6 +426,9 @@
 
 				// Add a listener for the mousemove event.
 				map.addListener('mousemove', showCoordinates);
+
+                var myControl = new MyControl(map);
+                map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(myControl.getDiv());
 
 				// infoWindow = new google.maps.InfoWindow;
 

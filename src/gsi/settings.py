@@ -328,6 +328,10 @@ KML_PATH = os.path.join(BASE_DIR, KML_DIRECTORY)
 TMP_DIRECTORY = 'media/temp_files'
 TMP_PATH = os.path.join(BASE_DIR, TMP_DIRECTORY)
 
+# Legends dir
+LEGENDS_DIRECTORY = 'media/legends'
+LEGENDS_PATH = os.path.join(BASE_DIR, LEGENDS_DIRECTORY)
+
 # Attributes
 ATTRIBUTES_NAME = ['Total Area', 'Area total']
 

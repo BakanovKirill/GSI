@@ -41,7 +41,8 @@ from gsi.settings import (BASE_DIR, RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM,
                         POLYGONS_DIRECTORY, MEDIA_ROOT, TMP_PATH, DAFAULT_LAT,
                         DAFAULT_LON, PNG_DIRECTORY, PNG_PATH, PROJECTS_PATH,
                         KML_DIRECTORY, KML_PATH, ATTRIBUTES_NAME, FTP_PATH,
-                        LUT_DIRECTORY, SCRIPT_TIFPNG, SCRIPT_GETPOLYINFO)
+                        LUT_DIRECTORY, SCRIPT_TIFPNG, SCRIPT_GETPOLYINFO,
+                        LEGENDS_DIRECTORY, LEGENDS_PATH)
 
 
 # categorys list
@@ -1141,13 +1142,16 @@ def lutfile_edit(request, lutfile_id):
     return data
 
 
-def remove_file_png(file_path):
+def remove_files(file_path):
     # Get the png file for the delete
+    
+    print '!!!!!!!!! FILE PNG ======================== ', file_path
+
     try:
         if os.path.exists(file_path):
             os.remove(file_path)
     except Exception, e:
-        print 'Exception remove file png ========================= ', e
+        print '!!!!!!!!!!! Exception remove file png ========================= ', e
 
 
 def check_current_dataset(request, data_post):
@@ -1499,6 +1503,7 @@ def customer_section(request):
     scheme = '{0}://'.format(request.scheme)
     absolute_png_url = os.path.join(scheme, request.get_host(), PNG_DIRECTORY)
     absolute_kml_url = os.path.join(scheme, request.get_host(), KML_DIRECTORY)
+    absolute_legend_url = os.path.join(scheme, request.get_host(), LEGENDS_DIRECTORY)
 
     # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     # Get the User DataSets
@@ -1850,7 +1855,8 @@ def customer_section(request):
             # print '!!!!!!!!! datasets_id ====================== \n'
             for ip in cip:
                 # print '!!!!!!!!! datasets_id ====================== ', ip.png_path
-                remove_file_png(ip.png_path)
+                remove_files(ip.png_path)
+                remove_files(ip.legend_path)
 
             status = check_current_dataset(request, data_get_ajax)
 
@@ -1861,7 +1867,8 @@ def customer_section(request):
                 data_set_id = request.session['select_data_set']
 
             # print 'data_set_id REQ ========================== ', request.session['select_data_set']
-            # print 'data_set_id ========================== ', data_set_id
+            # print '!!!!!!!!!! data_set_id ========================== ', data_set_id
+            # print '!!!!!!!!!! data_sets ========================== ', data_sets[0]
 
             if status:
                 data_set, data_set_id = getDataSet(data_set_id, data_sets[0])
@@ -1891,7 +1898,7 @@ def customer_section(request):
 
         if 'polygon' in data_get_ajax:
             # for ip in cip:
-            #     remove_file_png(ip.png_path)
+            #     remove_files(ip.png_path)
             #
             # CustomerInfoPanel.objects.filter(user=request.user).delete()
             
@@ -2116,17 +2123,13 @@ def customer_section(request):
                 file_png = cip_choice.png_path
                 url_png = cip_choice.url_png
                 file_area_name = cip_choice.file_area_name
+                attribute_name = cip_choice.attribute_name
 
                 # *************** COLOR EACH IMAGES ***************************************************************
+                try:
+                    shelf_data_attr = ShelfData.objects.get(attribute_name=attribute_name)
 
-                attribute_name = cip_choice.attribute_name
-                shelf_data_attr = get_object_or_404(ShelfData, attribute_name=attribute_name)
-
-                # print 'LUT ATTR NAME ========================= ', shelf_data_attr
-                # print 'LUT LUT NAME ========================= ', shelf_data_attr.lutfiles
-
-                if shelf_data_attr.lutfiles:
-                    try:
+                    if shelf_data_attr.lutfiles:
                         lut_file = shelf_data_attr.lutfiles.lut_file
                         max_val = shelf_data_attr.lutfiles.max_val
                         legend = shelf_data_attr.lutfiles.legend
@@ -2160,50 +2163,124 @@ def customer_section(request):
                         tmp_png = file_png.split('/')[-1]
                         new_file_png = file_png.replace(tmp_png, new_color_file)
 
-                        tmp_png = file_tif.split('/')[-1]
-                        old_file_png = file_tif.replace(tmp_png, new_color_file)
+                        tmp_tif = file_tif.split('/')[-1]
+                        old_file_png = file_tif.replace(tmp_tif, new_color_file)
+
+                        legend_path_old = file_tif.split('/')[:-1]
+                        legend_path_old = '/'.join(legend_path_old)
+                        old_legend_name = 'Legend_{0}.png'.format(lut_name)
+                        new_legend_name = '{0}_Legend_{1}.png'.format(customer, lut_name)
+                        old_color_legend = os.path.join(legend_path_old, old_legend_name)
+                        new_color_legend = os.path.join(LEGENDS_PATH, new_legend_name)
+                        url_legend = '{0}/{1}'.format(absolute_legend_url, new_legend_name)
+
+                        # print '!!!!!!!!! old_color_legend ================== ', old_color_legend
+                        # print '!!!!!!!!! new_color_legend ================== ', new_color_legend
+                        # print 'lut_name ========================= ', lut_name
 
                         cip_choice.png_path = new_file_png
                         cip_choice.url_png = url_png
+
+                        cip_choice.legend_path = new_color_legend
+                        cip_choice.url_legend = url_legend
                         cip_choice.save()
 
                         is_lutfile = True
-                    except AttributeError:
-                        warning_message = u'The LUT File is not defined! Please specify the file for LUT File \
-                                        "{0}" or exclude LUT File from ShelfData "{1}".'\
-                                        .format(shelf_data_attr.lutfiles, shelf_data_attr)
-                        # return HttpResponseRedirect(u'%s?danger_message=%s' % (
-                        #             reverse('customer_section'),
-                        #             (u'The LUT File is not defined. Please specify the file for LUT File \
-                        #                 "{0}" or exclude LUT File from ShelfData "{1}".'
-                        #                 .format(shelf_data_attr.lutfiles, shelf_data_attr))))
+                    else:
+                        pass
+                        # legend_path_old = file_tif.split('/')[:-1]
+                        # legend_path_old = '/'.join(legend_path_old)
+                        # old_legend_name = 'Legend_greyscale.png'
+                        # new_legend_name = '{0}_Legend_greyscale.png'.format(customer)
+                        # old_bw_legend = os.path.join(legend_path_old, old_legend_name)
+                        # new_bw_legend = os.path.join(LEGENDS_PATH, new_legend_name)
+                        # url_legend = '{0}/{1}'.format(absolute_legend_url, new_legend_name)
+
+                        # # print '!!!!!!!!! old_bw_legend ================== ', old_bw_legend
+                        # # print '!!!!!!!!! new_bw_legend ================== ', new_bw_legend
+
+                        # cip_choice.legend_path_old = old_bw_legend
+                        # cip_choice.legend_path = new_bw_legend
+                        # cip_choice.url_legend = url_legend
+                        # cip_choice.save()
+                except AttributeError:
+                    print '!!!!!!!!! ERROR AttributeError ================== ', e
+
+                    # legend_path_old = file_tif.split('/')[:-1]
+                    # legend_path_old = '/'.join(legend_path_old)
+                    # old_legend_name = 'Legend_greyscale.png'
+                    # new_legend_name = '{0}_Legend_greyscale.png'.format(customer)
+                    # old_bw_legend = os.path.join(legend_path_old, old_legend_name)
+                    # new_bw_legend = os.path.join(LEGENDS_PATH, new_legend_name)
+                    # url_legend = '{0}/{1}'.format(absolute_legend_url, new_legend_name)
+
+                    # print '!!!!!!!!! old_bw_legend ================== ', old_bw_legend
+                    # print '!!!!!!!!! new_bw_legend ================== ', new_bw_legend
+
+                    # cip_choice.legend_path_old = old_bw_legend
+                    # cip_choice.legend_path = new_bw_legend
+                    # cip_choice.url_legend = url_legend
+                    # cip_choice.save()
+
+                    warning_message = u'The LUT File is not defined! Please specify the file for LUT File \
+                                    "{0}" or exclude LUT File from ShelfData "{1}".'\
+                                    .format(shelf_data_attr.lutfiles, shelf_data_attr)
+                except ShelfData.DoesNotExist, e:
+                    print '!!!!!!!!! ERROR ShelfData.DoesNotExist ================== ', e
+
+                    # legend_path_old = file_tif.split('/')[:-1]
+                    # legend_path_old = '/'.join(legend_path_old)
+                    # old_legend_name = 'Legend_greyscale.png'
+                    # new_legend_name = '{0}_Legend_greyscale.png'.format(customer)
+                    # old_bw_legend = os.path.join(legend_path_old, old_legend_name)
+                    # new_bw_legend = os.path.join(LEGENDS_PATH, new_legend_name)
+                    # url_legend = '{0}/{1}'.format(absolute_legend_url, new_legend_name)
+
+                    # print '!!!!!!!!! old_bw_legend ================== ', old_bw_legend
+                    # print '!!!!!!!!! new_bw_legend ================== ', new_bw_legend
+
+                    # cip_choice.legend_path_old = old_bw_legend
+                    # cip_choice.legend_path = new_bw_legend
+                    # cip_choice.url_legend = url_legend
+                    # cip_choice.save()
+
+                    warning_message = u'Please specify the attribute name \
+                                    for the Customer Info Panel "{1}".'\
+                                    .format(cip_choice)
+                
+                        
 
                 # Convert tif to png
                 # greyscale
                 try:
                     # convert tif to png
                     if os.path.exists(file_tif):
+
+                        print '!!!!!!!!!!!!!!!!!!!!! is_lutfile ========================== ', is_lutfile
+
                         # to color
                         if is_lutfile:
-                            # print '!!!!!!!!   COMMAND LINE =============================== 2 ', command_line
+                            command_line_copy_png = 'cp {0} {1}'.format(old_file_png, new_file_png)
+                            command_line_copy_legend = 'cp {0} {1}'.format(old_color_legend, new_color_legend)
 
-                            command_line_copy = 'cp {0} {1}'.format(old_file_png, new_file_png)
-                            # command_set_outpudir = 'TIFPNG_OUTPUTDIR="{0}"'.format(PNG_PATH)
+                            print '!!!!!!!!   COMMAND LINE =============================== 0 ', command_line
+                            print '!!!!!!!!   COMMAND LINE PNG =============================== 1 ', command_line_copy_png
+                            print '!!!!!!!!   COMMAND LINE LEGEND =============================== 2 ', command_line_copy_legend
 
-                            # subprocess.call(command_set_outpudir, shell=True)
-
-                            # os.environ['RF_TRANSPARENT']='0'
                             os.environ.__setitem__('RF_TRANSPARENT', '0')
                             proc_script = Popen(command_line, shell=True)
                             proc_script.wait()
-                            subprocess.call(command_line_copy, shell=True)
+                            subprocess.call(command_line_copy_png, shell=True)
+                            subprocess.call(command_line_copy_legend, shell=True)
                         else:
-                            # to black-white
-
-                            # print '!!!!!!!!!!!!!!!!!!!!! 3 is_lutfile ========================== ', is_lutfile
+                            # command_line_copy_legend = 'cp {0} {1}'.format(old_bw_legend, new_bw_legend)
+                            # 
+                            # print '!!!!!!!!!!!!!!!!!!!!! file_tif ========================== ', file_tif
+                            # print '!!!!!!!!!!!!!!!!!!!!! file_png ========================== ', file_png
                             # print '!!!!!!!!!!!!!!!!!!!!! 3 file_png ========================== ', file_png
                             proc = Popen(['cat', file_tif], stdout=PIPE)
                             p2 = Popen(['convert', '-', file_png], stdin=proc.stdout)
+                            # subprocess.call(command_line_copy_legend, shell=True)
 
                         # while not os.path.exists(file_png):
                         #     pass

@@ -334,6 +334,16 @@ function get_file_name() {
     });
 }
 
+function toggleScale() {
+    var scale = document.getElementById('scale_id');
+
+    if (scale.style.visibility == "hidden") {
+        scale.style.visibility = "visible";
+    } else {
+        scale.style.visibility = "hidden";
+    }
+}
+
 
 // function drag() {
 //     $( ".draggable" ).draggable();

@@ -48,7 +48,8 @@ class CustomerAccessAdmin(admin.ModelAdmin):
 
 class CustomerInfoPanelAdmin(admin.ModelAdmin):
     list_display = ('user', 'data_set', 'attribute_name', 'statisctic',
-                    'file_area_name', 'tif_path', 'png_path', 'order', 'is_show')
+                    'file_area_name', 'tif_path', 'png_path', 'url_png',
+                    'legend_path', 'url_legend', 'order', 'is_show')
     search_fields = ['user', 'data_set', 'file_area_name']
     list_filter = ('user', 'data_set', 'file_area_name')
     

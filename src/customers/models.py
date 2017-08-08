@@ -94,30 +94,6 @@ class DataSet(models.Model):
     results_directory = models.CharField(max_length=150, blank=True, null=True)
     shelf_data = models.ForeignKey('ShelfData', blank=True, null=True)
 
-    # lutfile = models.CharField(max_length=50, choices=LUTFILES, default='grey')
-
-    # lut_file = models.CharField(
-    #                 max_length=250,
-    #                 blank=True, null=True,
-    #                 verbose_name='LUT file',)
-    # max_val = models.PositiveIntegerField(
-    #                 default=100,
-    #                 # blank=True, null=True,
-    #                 verbose_name='Maximum Value for colour scaling',)
-    # legend = models.CharField(
-    #                 max_length=250,
-    #                 blank=True, null=True,
-    #                 verbose_name='Legend',)
-
-
-    # set_color_png = models.ForeignKey(
-    #             SetColorPng,
-    #             verbose_name='SetColorPng',
-    #             blank=True, null=True, related_name='set_color_png',
-    #             on_delete=models.CASCADE
-    #         )
-
-
     def get_root_filename(self):
         if self.shelf_data:
             return self.shelf_data.root_filename
@@ -163,6 +139,10 @@ class CustomerInfoPanel(models.Model):
     tif_path = models.CharField(max_length=300, blank=True, null=True)
     png_path = models.CharField(max_length=300, blank=True, null=True)
     url_png = models.CharField(max_length=300, blank=True, null=True)
+
+    legend_path_old = models.CharField(max_length=300, blank=True, null=True)
+    legend_path = models.CharField(max_length=300, blank=True, null=True)
+    url_legend = models.CharField(max_length=300, blank=True, null=True)
 
     order = models.PositiveIntegerField(default=0)
     is_show = models.BooleanField(default=False)
