@@ -1144,9 +1144,6 @@ def lutfile_edit(request, lutfile_id):
 
 def remove_files(file_path):
     # Get the png file for the delete
-    
-    print '!!!!!!!!! FILE PNG ======================== ', file_path
-
     try:
         if os.path.exists(file_path):
             os.remove(file_path)
@@ -1448,6 +1445,7 @@ def customer_section(request):
     polygons_path = os.path.join(MEDIA_ROOT, 'kml')
     customer_access = CustomerAccess.objects.filter(user=customer)
     customer_access_ds = None
+    legend_scale = os.path.join(LEGENDS_PATH, 'Legend_greyscale.png')
 
     # COORDINATE
     in_coord_tmp = str(customer) + '_coord_tmp.kml'
@@ -2256,16 +2254,16 @@ def customer_section(request):
                     # convert tif to png
                     if os.path.exists(file_tif):
 
-                        print '!!!!!!!!!!!!!!!!!!!!! is_lutfile ========================== ', is_lutfile
+                        # print '!!!!!!!!!!!!!!!!!!!!! is_lutfile ========================== ', is_lutfile
 
                         # to color
                         if is_lutfile:
                             command_line_copy_png = 'cp {0} {1}'.format(old_file_png, new_file_png)
                             command_line_copy_legend = 'cp {0} {1}'.format(old_color_legend, new_color_legend)
 
-                            print '!!!!!!!!   COMMAND LINE =============================== 0 ', command_line
-                            print '!!!!!!!!   COMMAND LINE PNG =============================== 1 ', command_line_copy_png
-                            print '!!!!!!!!   COMMAND LINE LEGEND =============================== 2 ', command_line_copy_legend
+                            # print '!!!!!!!!   COMMAND LINE =============================== 0 ', command_line
+                            # print '!!!!!!!!   COMMAND LINE PNG =============================== 1 ', command_line_copy_png
+                            # print '!!!!!!!!   COMMAND LINE LEGEND =============================== 2 ', command_line_copy_legend
 
                             os.environ.__setitem__('RF_TRANSPARENT', '0')
                             proc_script = Popen(command_line, shell=True)
@@ -2348,6 +2346,9 @@ def customer_section(request):
 
         dirs_list = getResultDirectory(customer_info_panel_show[0].data_set, shelf_data_all)
 
+        if customer_info_panel_show[0].url_legend:
+            legend_scale = customer_info_panel_show[0].url_legend
+
         # png_name = customer_info_panel_show[0].png_path.split('/')[-1]
         # url_png = '{0}/{1}'.format(absolute_png_url, png_name)
     elif not customer_info_panel_show and data_set:
@@ -2388,6 +2389,7 @@ def customer_section(request):
         'warning_message': warning_message,
 
         'absolute_kml_url': absolute_kml_url,
+        'legend_scale': legend_scale,
 
         'cLng': cLng,
         'cLat': cLat,

@@ -172,6 +172,7 @@
 			var statistic;
 
 			var select_image = '{{ absolute_url_png_file }}'
+            var legend_scale = '{{ legend_scale }}'
 
 			// var units = 'Tree';
 			// var attribute = 'UNITS';
@@ -271,7 +272,8 @@
                 map = map;
 
                 img = document.createElement('IMG');
-                img.src = 'http://indy41.epcc.ed.ac.uk/BCmain/BCmainKey.png';
+                // img.src = 'http://indy41.epcc.ed.ac.uk/BCmain/BCmainKey.png';
+                img.src = legend_scale;
              
                 button = document.createElement('DIV');
                 button.style.margin = "5px";
