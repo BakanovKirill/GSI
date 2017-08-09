@@ -2202,7 +2202,7 @@ def customer_section(request):
                         # cip_choice.url_legend = url_legend
                         # cip_choice.save()
                 except AttributeError:
-                    print '!!!!!!!!! ERROR AttributeError ================== ', e
+                    print '!!!!!!!!! ERROR AttributeError ================== '
 
                     # legend_path_old = file_tif.split('/')[:-1]
                     # legend_path_old = '/'.join(legend_path_old)
