@@ -2170,8 +2170,8 @@ def customer_section(request):
 
                         legend_path_old = file_tif.split('/')[:-1]
                         legend_path_old = '/'.join(legend_path_old)
-                        old_legend_name = 'Legend_{0}.png'.format(lut_name)
-                        new_legend_name = '{0}_Legend_{1}.png'.format(customer, lut_name)
+                        old_legend_name = 'FullLegend_{0}.png'.format(lut_name)
+                        new_legend_name = '{0}_FullLegend_{1}.png'.format(customer, lut_name)
                         old_color_legend = os.path.join(legend_path_old, old_legend_name)
                         new_color_legend = os.path.join(LEGENDS_PATH, new_legend_name)
                         url_legend = '{0}/{1}'.format(absolute_legend_url, new_legend_name)
