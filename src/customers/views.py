@@ -1431,11 +1431,10 @@ def customer_section(request):
 
     ####################### write log file
     log_file = '/home/gsi/LOGS/customer_section.log'
-    customer_section = open(log_file, 'a+')
+    customer_section = open(log_file, 'w')
     now = datetime.now()
     customer_section.write('DATE: '+str(now))
     customer_section.write('\n')
-    log_var = ''
     #######################
 
     customer = request.user
@@ -1660,8 +1659,9 @@ def customer_section(request):
                                             'mean_ConditionalMean', absolute_png_url,
                                             True, order=0)
             except Exception, e:
+                ####################### write log file
                 customer_section.write('ERROR ATTR & STAT LIST: {0}\n'.format(e))
-                log_var += 'ERROR ATTR & STAT LIST: {0}\n'.format(e)
+                ####################### write log file
 
             return HttpResponse(data)
 
@@ -1707,8 +1707,9 @@ def customer_section(request):
                 # os.remove(ajax_file)
                 os.remove(file_path_coord)
             except Exception, e:
+                ####################### write log file
                 customer_section.write('ERROR DELETE TMP FILES: {0}\n'.format(e))
-                log_var += 'ERROR DELETE TMP FILES: {0}\n'.format(e)
+                ####################### write log file
                 pass
 
             for cip in cips:
@@ -1766,8 +1767,6 @@ def customer_section(request):
             ###################### LOG
             customer_section.write('LIST TIF FILES: {0}\n'.format(list_file_tif))
             customer_section.write('LIST DATA DB: {0}\n'.format(list_data_db))
-            log_var += 'LIST TIF FILES: {0}\n'.format(list_file_tif)
-            log_var += 'LIST DATA DB: {0}\n'.format(list_data_db)
             ###################### LOG
 
             # file_path_in_coord_tmp
@@ -1817,7 +1816,9 @@ def customer_section(request):
                 
                 db_file_open.close()
             except Exception, e:
+                ####################### write log file
                 customer_section.write('ERROR CREATE KML FILES: {0}\n'.format(e))
+                ####################### write log file
                 print '!!!! ERROR ALL ======================= ', e
                 pass
 
@@ -2153,6 +2154,10 @@ def customer_section(request):
                         command_line += str(val_scale)
 
                         # print 'LUT COMMAND NAME ========================= ', command_line
+                        
+                        ####################### write log file
+                        customer_section.write('COMMAND LINE: {0}\n'.format(command_line))
+                        ####################### write log file
 
                         new_color_file = file_area_name + lut_name + '.png'
                         url_png = '{0}/{1}'.format(absolute_png_url, new_color_file)
@@ -2366,7 +2371,6 @@ def customer_section(request):
             show_report_ap.append(ar.shelfdata.attribute_name)
 
     ####################### write log file
-    customer_section.write(log_var)
     customer_section.write('\n')
     customer_section.close()
     #######################
