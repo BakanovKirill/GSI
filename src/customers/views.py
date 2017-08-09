@@ -1445,7 +1445,6 @@ def customer_section(request):
     polygons_path = os.path.join(MEDIA_ROOT, 'kml')
     customer_access = CustomerAccess.objects.filter(user=customer)
     customer_access_ds = None
-    legend_scale = os.path.join(LEGENDS_PATH, 'Legend_greyscale.png')
 
     # COORDINATE
     in_coord_tmp = str(customer) + '_coord_tmp.kml'
@@ -2335,8 +2334,9 @@ def customer_section(request):
         pass
 
     customer_info_panel_show = CustomerInfoPanel.objects.filter(
-                                user=customer,
-                                is_show=True)
+                                user=customer, is_show=True)
+    legend_scale = os.path.join(absolute_legend_url, 'Legend_greyscale.png')
+
     if customer_info_panel_show:
         show_dataset_cip = customer_info_panel_show[0].data_set.name
         show_image_cip = customer_info_panel_show[0].attribute_name
