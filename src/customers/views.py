@@ -2247,7 +2247,7 @@ def customer_section(request):
                     # cip_choice.save()
 
                     warning_message = u'Please specify the attribute name \
-                                    for the Customer Info Panel "{1}".'\
+                                    for the Customer Info Panel "{0}".'\
                                     .format(cip_choice)
                 
                         
