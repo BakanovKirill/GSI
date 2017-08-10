@@ -228,7 +228,7 @@ def get_type_file(mime_type):
 def get_list_lutfiles():
     ####################### write log file
     log_file = '/home/gsi/LOGS/LUT_files.log'
-    lut_files = open(log_file, 'a+')
+    lut_files = open(log_file, 'w')
     now = datetime.now()
     lut_files.write('DATE: '+str(now))
     lut_files.write('\n')
@@ -237,7 +237,10 @@ def get_list_lutfiles():
     lutfiles = []
     
     root, dirs, files = os.walk(LUT_DIRECTORY).next()
-    files.remove('TifPng')
+
+    if 'TifPng' in files:
+        files.remove('TifPng')
+        
     files.insert(0, 'select')
 
     ####################### write log file
