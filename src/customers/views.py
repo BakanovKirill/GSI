@@ -1043,7 +1043,7 @@ def lutfile_add(request):
     form = None
     url_name = 'lutfiles'
     but_name = 'info_panel'
-    list_lutfiles = get_list_lutfiles()
+    # list_lutfiles = get_list_lutfiles()
 
     # Handling POST request
     if request.method == "POST":
@@ -1093,7 +1093,7 @@ def lutfile_edit(request, lutfile_id):
     form = None
     url_name = 'lutfiles'
     but_name = 'info_panel'
-    list_lutfiles = get_list_lutfiles()
+    # list_lutfiles = get_list_lutfiles()
 
     # get AJAX POST for KML files
     if request.is_ajax() and request.method == "GET":
@@ -2174,17 +2174,14 @@ def customer_section(request):
                         legend_path_old = '/'.join(legend_path_old)
 
                         # print '!!!!!!!!!! LEGEND ====================== ', legend
-                        
-                        old_legend_name = 'FullLegend_{0}.png'.format(lut_name)
-                        new_legend_name = '{0}_FullLegend_{1}.png'.format(customer, lut_name)
 
-                        # if legend == '2':
-                        #     old_legend_name = 'FullLegend_{0}.png'.format(lut_name)
-                        #     new_legend_name = '{0}_FullLegend_{1}.png'.format(customer, lut_name)
-                        # else:
-                        #     old_legend_name = 'Legend_{0}.png'.format(lut_name)
-                        #     new_legend_name = '{0}_Legend_{1}.png'.format(customer, lut_name)
-
+                        if legend == '2':
+                            old_legend_name = 'FullLegend_{0}.png'.format(lut_name)
+                            new_legend_name = '{0}_FullLegend_{1}.png'.format(customer, lut_name)
+                        else:
+                            old_legend_name = 'Legend_{0}.png'.format(lut_name)
+                            new_legend_name = '{0}_Legend_{1}.png'.format(customer, lut_name)
+                            
                         old_color_legend = os.path.join(legend_path_old, old_legend_name)
                         new_color_legend = os.path.join(LEGENDS_PATH, new_legend_name)
                         url_legend = '{0}/{1}'.format(absolute_legend_url, new_legend_name)
