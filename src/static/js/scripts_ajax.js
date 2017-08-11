@@ -403,10 +403,10 @@ function setPolygon(obj) {
             },
             'success': function(data, status, xhr){
                 alert('DATA: '+data);
-                var data_list = data.split('$$$')
+                var data_list = data.split('$$$');
 
-                alert('DATA URL: '+data[0]);
-                alert('DATA INFO: '+data[1]);
+                alert('DATA URL: '+data_list[0]);
+                alert('DATA INFO: '+data_list[1]);
                 
                 // When the user clicks on div, open the popup
                 var kml = new google.maps.KmlLayer({
