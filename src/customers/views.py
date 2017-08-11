@@ -42,7 +42,7 @@ from gsi.settings import (BASE_DIR, RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM,
                         DAFAULT_LON, PNG_DIRECTORY, PNG_PATH, PROJECTS_PATH,
                         KML_DIRECTORY, KML_PATH, ATTRIBUTES_NAME, FTP_PATH,
                         LUT_DIRECTORY, SCRIPT_TIFPNG, SCRIPT_GETPOLYINFO,
-                        LEGENDS_DIRECTORY, LEGENDS_PATH, DEBUG)
+                        LEGENDS_DIRECTORY, LEGENDS_PATH)
 
 
 # categorys list
@@ -1907,11 +1907,13 @@ def customer_section(request):
 
             polygon = data_get_ajax.get('polygon', '')
             # data = os.path.join(absolute_kml_url, polygon)
+            # 
+            # print '!!!!!!!! URL ====================== ', request.get_host()
             
-            if not DEBUG:
-                data = os.path.join(absolute_kml_url, polygon)
-            else:
+            if request.get_host() == '127.0.0.1:8000':
                 data = 'http://indy4.epcc.ed.ac.uk/media/kml/test-drap-1.kml'
+            else:
+                data = os.path.join(absolute_kml_url, polygon)
             
 
         if 'tab_active' in data_get_ajax:
@@ -2140,6 +2142,7 @@ def customer_section(request):
                         legend = shelf_data_attr.lutfiles.legend
                         units = shelf_data_attr.lutfiles.units
                         val_scale = shelf_data_attr.lutfiles.val_scale
+                        shd_attribute_name = shelf_data_attr.attribute_name
 
                         lut_1 = '.' + lut_file.split('.')[-1]
                         lut_name = lut_file.replace(lut_1, '')
@@ -2182,10 +2185,10 @@ def customer_section(request):
 
                         if legend == '2':
                             old_legend_name = 'FullLegend_{0}.png'.format(lut_name)
-                            new_legend_name = '{0}_FullLegend_{1}.png'.format(customer, lut_name)
+                            new_legend_name = '{0}_FullLegend_{1}_{2}.png'.format(customer, shd_attribute_name, lut_name)
                         else:
                             old_legend_name = 'Legend_{0}.png'.format(lut_name)
-                            new_legend_name = '{0}_Legend_{1}.png'.format(customer, lut_name)
+                            new_legend_name = '{0}_Legend_{1}_{2}.png'.format(customer, shd_attribute_name, lut_name)
                             
                         old_color_legend = os.path.join(legend_path_old, old_legend_name)
                         new_color_legend = os.path.join(LEGENDS_PATH, new_legend_name)
