@@ -42,7 +42,7 @@ from gsi.settings import (BASE_DIR, RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM,
                         DAFAULT_LON, PNG_DIRECTORY, PNG_PATH, PROJECTS_PATH,
                         KML_DIRECTORY, KML_PATH, ATTRIBUTES_NAME, FTP_PATH,
                         LUT_DIRECTORY, SCRIPT_TIFPNG, SCRIPT_GETPOLYINFO,
-                        LEGENDS_DIRECTORY, LEGENDS_PATH)
+                        LEGENDS_DIRECTORY, LEGENDS_PATH, DEBUG)
 
 
 # categorys list
@@ -1906,7 +1906,12 @@ def customer_section(request):
             # data = abs_path
 
             polygon = data_get_ajax.get('polygon', '')
-            data = os.path.join(absolute_kml_url, polygon)
+            # data = os.path.join(absolute_kml_url, polygon)
+            
+            if not DEBUG:
+                data = os.path.join(absolute_kml_url, polygon)
+            else:
+                data = 'http://indy4.epcc.ed.ac.uk/media/kml/test-drap-1.kml'
             
 
         if 'tab_active' in data_get_ajax:
