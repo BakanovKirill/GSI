@@ -1325,10 +1325,11 @@ def createKml(user, filename, info_window, url, data_set):
     # Create KML file for the draw polygon
     kml_filename = str(filename) + '.kml'
     tmp_file = str(user) + '_coord_kml.txt'
-    tmp_path = os.path.join(KML_PATH, tmp_file)
+    tmp_path = os.path.join(TMP_PATH, tmp_file)
     coord = getGeoCoord(tmp_path)
     kml_url = url + '/' + kml_filename
 
+    # print '!!!!!!!!!!! filename ======================== ', filename
     # print '!!!!!!!!!!! COORD ======================== ', coord
 
     kml = simplekml.Kml()
@@ -1764,6 +1765,9 @@ def customer_section(request):
                 # print '!!!!!!!!!!! COORD =================== ', str_coord
                 kml_file_coord.write(str_coord)
                 points_coord.append(tuple(coord_dict[n]))
+
+            # print '!!!!!!!!!!! file_path_out_coord_kml =================== ', file_path_out_coord_kml
+            # print '!!!!!!!!!!! COORD =================== ', points_coord
 
             kml_file_coord.close()
 

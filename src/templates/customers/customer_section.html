@@ -670,9 +670,8 @@
 			        stat_list.push($(this).val())
 			    });
 
-				// alert('REPORT: '+report_list);
-
-				var show_coord = coord;
+                var show_coord = coord;
+				
 				sendDataToServer(show_coord, report_list, stat_list);
 				// setTimeout(sendGetToServer, 500);
 			}
