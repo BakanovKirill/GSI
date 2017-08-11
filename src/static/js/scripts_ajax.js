@@ -402,16 +402,16 @@ function setPolygon(obj) {
                 var message = 'An unexpected error occurred. Try later.';
             },
             'success': function(data, status, xhr){
-                alert('DATA: '+data);
+                // alert('DATA: '+data);
                 var data_list = data.split('$$$');
 
-                alert('DATA URL: '+data_list[0]);
-                alert('DATA INFO: '+data_list[1]);
+                // alert('DATA URL: '+data_list[0]);
+                // alert('DATA INFO: '+data_list[1]);
                 
                 // When the user clicks on div, open the popup
                 var kml = new google.maps.KmlLayer({
                     url: data_list[0],
-                    suppressInfoWindows: true,
+                    suppressInfoWindows: false,
                     map: map
                 });
 
