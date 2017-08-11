@@ -325,7 +325,7 @@ function mOver(obj) {
 }
 
 
-function createDiv(obj_id) {
+function createDiv(obj_id, msg) {
     var divNode = document.createElement("div");
     divNode.setAttribute("class", "popup");
     divNode.setAttribute("id", obj_id);
@@ -333,7 +333,8 @@ function createDiv(obj_id) {
     divNode.setAttribute("onmouseover", "mOver(this)");
     // divNode.setAttribute("ondrop", "drop(event)");
 
-    divNode.innerHTML = 'A <b>different</b> Popup!<br> with multiple lines</span>';
+    // divNode.innerHTML = 'A <b>different</b> Popup!<br> with multiple lines</span>';
+    divNode.innerHTML = msg;
     document.body.appendChild(divNode);
 }
 
@@ -402,23 +403,21 @@ function setPolygon(obj) {
             },
             'success': function(data, status, xhr){
                 // alert('DATA: '+data);
+                var data_list = data.split('$$$')
                 
                 // When the user clicks on div, open the popup
-                
-
                 var kml = new google.maps.KmlLayer({
-                    url: data,
+                    url: data_list[0],
                     suppressInfoWindows: true,
                     map: map
                 });
 
                 kml.addListener('click', function(kmlEvent) {
                     // alert("KML DATA: "+data);
-
-                    // var info_window_id = kmlEvent.featureData.id + '_iw'
+                    
+                    var msg = data_list[1]
                     var info_window_id = kmlEvent.featureData.name
-                    // createDiv('myPopup');
-                    createDiv(info_window_id);
+                    createDiv(info_window_id, msg);
 
                     // alert("KML ID: "+info_window_id);
                     // alert("KML featureData: "+kmlEvent.featureData);
@@ -457,10 +456,10 @@ function setPolygon(obj) {
                     document.body.addEventListener('dragover', drag_over, false); 
                     document.body.addEventListener('drop', drop, false);
 
-                    myFunction(centerX, centerY, data, info_window_id);
+                    // myFunction(centerX, centerY, data, info_window_id);
+                    myFunction(centerX, centerY, msg, info_window_id);
                     // myFunction(centerX, centerY, data);
                 });
-
 
                 // kml.setMap(map);
             },

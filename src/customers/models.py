@@ -166,6 +166,7 @@ class CustomerPolygons(models.Model):
     kml_name = models.CharField(max_length=150, blank=True, null=True)
     kml_path = models.CharField(max_length=150, blank=True, null=True)
     kml_url = models.CharField(max_length=150, blank=True, null=True)
+    text_kml = models.TextField(blank=True, null=True)
 
 
     class Meta:

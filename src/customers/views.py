@@ -7,10 +7,15 @@ from PIL import Image
 from subprocess import check_call, Popen, PIPE
 from osgeo import osr, gdal
 import simplekml
+from simplekml import Kml
 import pickle
 from datetime import datetime
 import json
 import csv
+# import pykml
+# from pykml import parser
+# from pykml.parser import Schema
+# import urllib2
 
 # import Image, ImageDraw
 # from osgeo import gdal
@@ -1230,7 +1235,7 @@ def getGeoCoord(filename):
     return coord
 
 
-def addPolygonToDB(name, kml_name, user, kml_path, kml_url, ds):
+def addPolygonToDB(name, kml_name, user, kml_path, kml_url, ds, text_kml=''):
     customer_pol = CustomerPolygons.objects.none()
 
     if CustomerPolygons.objects.filter(name=name).exists():
@@ -1240,7 +1245,8 @@ def addPolygonToDB(name, kml_name, user, kml_path, kml_url, ds):
             user=user,
             data_set=ds,
             kml_path=kml_path,
-            kml_url=kml_url
+            kml_url=kml_url,
+            text_kml=text_kml
         )
         customer_pol = CustomerPolygons.objects.get(
                             name=name,
@@ -1248,7 +1254,8 @@ def addPolygonToDB(name, kml_name, user, kml_path, kml_url, ds):
                             user=user,
                             data_set=ds,
                             kml_path=kml_path,
-                            kml_url=kml_url
+                            kml_url=kml_url,
+                            text_kml=text_kml
                         )
     else:
         customer_pol = CustomerPolygons.objects.create(
@@ -1257,7 +1264,8 @@ def addPolygonToDB(name, kml_name, user, kml_path, kml_url, ds):
                             user=user,
                             data_set=ds,
                             kml_path=kml_path,
-                            kml_url=kml_url
+                            kml_url=kml_url,
+                            text_kml=text_kml
                         )
 
     return customer_pol
@@ -1337,7 +1345,7 @@ def createKml(user, filename, info_window, url, data_set):
     kml_path = os.path.join(KML_PATH, kml_filename)
     kml.save(kml_path)
 
-    polygon = addPolygonToDB(filename, kml_filename, user, kml_path, kml_url, data_set)
+    polygon = addPolygonToDB(filename, kml_filename, user, kml_path, kml_url, data_set, info_window)
 
     return polygon
 
@@ -1897,24 +1905,21 @@ def customer_section(request):
                 data = 'There is no such polygon.'
 
         if 'polygon' in data_get_ajax:
-            # for ip in cip:
-            #     remove_files(ip.png_path)
-            #
-            # CustomerInfoPanel.objects.filter(user=request.user).delete()
-            
-            # abs_path = 'http://indy4.epcc.ed.ac.uk/media/kml/lynne1.kml'
-            # data = abs_path
-
             polygon = data_get_ajax.get('polygon', '')
-            # data = os.path.join(absolute_kml_url, polygon)
-            # 
-            # print '!!!!!!!! URL ====================== ', request.get_host()
-            
+            polygon_path = os.path.join(KML_PATH, polygon)
+            polygon_text = ''
+
+            if CustomerPolygons.objects.filter(kml_name=polygon).exists():
+                select_polygon = CustomerPolygons.objects.get(kml_name=polygon)
+                polygon_text += str(select_polygon.text_kml)
+
             if request.get_host() == '127.0.0.1:8000':
                 data = 'http://indy4.epcc.ed.ac.uk/media/kml/test-drap-1.kml'
             else:
                 data = os.path.join(absolute_kml_url, polygon)
-            
+
+            data += '$$$'
+            data += polygon_text
 
         if 'tab_active' in data_get_ajax:
             tab_active = data_get_ajax.get('tab_active', '')

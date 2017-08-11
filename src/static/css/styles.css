@@ -1367,7 +1367,7 @@ hr {
     margin-bottom: 3px;
     padding: 3px;
     float: left;
-    border-radius: 6px;
+    /*border-radius: 6px;*/
     border-width: 1px;
     border-style: solid;
     border-color: #555 #555 #555 #555;
@@ -1376,10 +1376,11 @@ hr {
     cursor: pointer;
     width: auto;
     resize: both;
-    max-width: 500px;
-    max-height: 300px;
+    max-width: 600px;
+    /*min-height: 300px;*/
+    max-height: 800px;
     overflow: auto; 
-    background-color: #ffc;
+    background-color: white;
 }`;
 
 /* The actual popup */
