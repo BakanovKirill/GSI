@@ -2149,6 +2149,8 @@ def customer_section(request):
                         val_scale = shelf_data_attr.lutfiles.val_scale
                         shd_attribute_name = shelf_data_attr.attribute_name
 
+                        shd_attribute_name = shd_attribute_name.replace(" ", "_")
+
                         lut_1 = '.' + lut_file.split('.')[-1]
                         lut_name = lut_file.replace(lut_1, '')
 
