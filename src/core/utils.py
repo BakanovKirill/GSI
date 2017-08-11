@@ -238,8 +238,8 @@ def get_list_lutfiles():
     
     root, dirs, files = os.walk(LUT_DIRECTORY).next()
 
-    if 'TifPng' in files:
-        files.remove('TifPng')
+    # if 'TifPng' in files:
+    #     files.remove('TifPng')
         
     files.insert(0, 'select')
 
