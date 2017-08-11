@@ -2287,8 +2287,15 @@ def customer_section(request):
                             os.environ.__setitem__('RF_TRANSPARENT', '0')
                             proc_script = Popen(command_line, shell=True)
                             proc_script.wait()
-                            subprocess.call(command_line_copy_png, shell=True)
-                            subprocess.call(command_line_copy_legend, shell=True)
+
+                            proc_script_png = Popen(command_line_copy_png, shell=True)
+                            proc_script_png.wait()
+
+                            proc_script_legend = Popen(command_line_copy_legend, shell=True)
+                            proc_script_legend.wait()
+
+                            # subprocess.call(command_line_copy_png, shell=True)
+                            # subprocess.call(command_line_copy_legend, shell=True)
                         else:
                             # command_line_copy_legend = 'cp {0} {1}'.format(old_bw_legend, new_bw_legend)
                             # 
