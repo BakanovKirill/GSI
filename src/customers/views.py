@@ -1043,7 +1043,7 @@ def lutfile_add(request):
     form = None
     url_name = 'lutfiles'
     but_name = 'info_panel'
-    # list_lutfiles = get_list_lutfiles()
+    list_lutfiles = get_list_lutfiles()
 
     # Handling POST request
     if request.method == "POST":
@@ -1093,7 +1093,7 @@ def lutfile_edit(request, lutfile_id):
     form = None
     url_name = 'lutfiles'
     but_name = 'info_panel'
-    # list_lutfiles = get_list_lutfiles()
+    list_lutfiles = get_list_lutfiles()
 
     # get AJAX POST for KML files
     if request.is_ajax() and request.method == "GET":
