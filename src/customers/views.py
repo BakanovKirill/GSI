@@ -1884,20 +1884,25 @@ def customer_section(request):
             polygon = data_get_ajax.get('polygon', '')
             polygon_path = os.path.join(KML_PATH, polygon)
             polygon_text = ''
+            polygon_id = ''
 
             if CustomerPolygons.objects.filter(kml_name=polygon).exists():
                 select_polygon = CustomerPolygons.objects.get(kml_name=polygon)
+                polygon_id = 'close_' + str(select_polygon.id)
+                polygon_text += '<span class="close" id="{0}" onclick="closeIF();">&times;</span>'.format(polygon_id);
                 polygon_text += str(select_polygon.text_kml)
 
             # data = os.path.join(absolute_kml_url, polygon)
 
             if request.get_host() == '127.0.0.1:8000':
-                data = 'http://indy4.epcc.ed.ac.uk/media/kml/test-drap-1.kml'
+                data = 'http://indy4.epcc.ed.ac.uk/media/kml/woodland1.kml'
             else:
                 data = os.path.join(absolute_kml_url, polygon)
 
-            data += '$$$'
-            data += polygon_text
+            # print '!!!!!!!!!!!!!!! DATA URL =================== ', data
+
+            data += '$$$' + polygon_text + '$$$' + str(polygon_id)
+            # data += polygon_text
 
         if 'tab_active' in data_get_ajax:
             tab_active = data_get_ajax.get('tab_active', '')

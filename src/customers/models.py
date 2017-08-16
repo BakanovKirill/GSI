@@ -245,11 +245,10 @@ class CountFiles(models.Model):
     count = models.PositiveIntegerField(default=0)
 
 
-# class SetColorPng(models.Model):
+# class TimeSeriesResults(models.Model):
 #     name =  = models.CharField(max_length=250, blank=True, null=True)
-#     lut_file = models.CharField(max_length=250, blank=True, null=True)
-#     max_val = models.CharField(max_length=250, blank=True, null=True)
-#     legend = models.CharField(max_length=250, blank=True, null=True)
-#
+#     user = models.ForeignKey(User, verbose_name='User', blank=True, null=True)
+#     data_set = models.ForeignKey('DataSet', blank=True, null=True)
+
 #     def __unicode__(self):
 #         return u"{0}".format(self.name)

@@ -345,11 +345,6 @@ function toggleScale() {
 }
 
 
-// function drag() {
-//     $( ".draggable" ).draggable();
-// }
-
-
 $(document).ready(function(){
     //selectAll();
     onOffSubMenuSetupStaticData();

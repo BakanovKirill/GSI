@@ -319,23 +319,39 @@ function removeSelectedItems() {
 
 // For create movable info windows
 var div_id;
+var close_window_id;
 
 function mOver(obj) {
     div_id = obj.id;
 }
 
+// <span class="close" id="close">&times;</span>
 
 function createDiv(obj_id, msg) {
+    // var spanNode = document.createElement("span");
+    // spanNode.setAttribute("class", "close");
+    // spanNode.setAttribute("id", "close");
+    // spanNode.innerHTML = '&times;';
+
+    // var insert_text = msg + '<span class="close" id="close">&times;</span>';
+
     var divNode = document.createElement("div");
     divNode.setAttribute("class", "popup");
     divNode.setAttribute("id", obj_id);
     divNode.setAttribute("draggable", "true");
     divNode.setAttribute("onmouseover", "mOver(this)");
     // divNode.setAttribute("ondrop", "drop(event)");
+    // 
+    // alert('TEXT: '+insert_text);
 
-    // divNode.innerHTML = 'A <b>different</b> Popup!<br> with multiple lines</span>';
-    divNode.innerHTML = msg;
+    // divNode.innerHTML = msg;
+    
+    // divNode.appendChild(spanNode);
+    // document.body.appendChild(spanNode);
     document.body.appendChild(divNode);
+    // document.body.appendChild(spanNode);
+    // 
+    // divNode.appendChild(spanNode);
 }
 
 
@@ -357,13 +373,15 @@ function drag_start(event) {
     var style = window.getComputedStyle(event.target, null);
     event.dataTransfer.setData("text/plain",
     (parseInt(style.getPropertyValue("left"), 10) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top"), 10) - event.clientY));
-} 
+}
+
 function drag_over(event) { 
     event.preventDefault(); 
     return false; 
-} 
+}
+
 function drop(event) {
-    // alert('EVENT DROP 1: '+div_id);
+    // alert('CLOSE ID: '+close_window_id);
     // alert('EVENT DROP 1: '+event.target.id);
     // feat_4_iw
 
@@ -371,13 +389,19 @@ function drop(event) {
     // var dm = document.getElementById('feat_4_iw');
     var offset = event.dataTransfer.getData("text/plain").split(',');
     
-    console.log("drop: x="+parseInt(offset[0], 10)+", y="+parseInt(offset[1], 10));
+    // console.log("drop: x="+parseInt(offset[0], 10)+", y="+parseInt(offset[1], 10));
     dm.style.left = (event.clientX + parseInt(offset[0], 10)) + 'px';
     dm.style.top = (event.clientY + parseInt(offset[1], 10)) + 'px';
     event.preventDefault();
 
     return false;
-} 
+}
+
+function closeIF() {
+    // alert('closeIF');
+    var div_info = document.getElementById(div_id);
+    div_info.parentNode.removeChild(div_info);
+}
 
 
 function setPolygon(obj) {
@@ -406,20 +430,21 @@ function setPolygon(obj) {
                 var data_list = data.split('$$$');
 
                 // alert('DATA URL: '+data_list[0]);
-                // alert('DATA INFO: '+data_list[1]);
+                // alert('DATA ID: '+data_list[2]);
                 
                 // When the user clicks on div, open the popup
                 var kml = new google.maps.KmlLayer({
                     url: data_list[0],
-                    suppressInfoWindows: false,
+                    suppressInfoWindows: true,
                     map: map
                 });
 
                 kml.addListener('click', function(kmlEvent) {
                     // alert("KML DATA: "+data);
                     
-                    var msg = data_list[1]
-                    var info_window_id = kmlEvent.featureData.name
+                    var msg = data_list[1];
+                    var info_window_id = kmlEvent.featureData.name;
+                    close_window_id = data_list[2];
                     createDiv(info_window_id, msg);
 
                     // alert("KML ID: "+info_window_id);
@@ -458,8 +483,12 @@ function setPolygon(obj) {
                     dm.addEventListener('dragstart', drag_start, false); 
                     document.body.addEventListener('dragover', drag_over, false); 
                     document.body.addEventListener('drop', drop, false);
+                    
+
+                    // document.body.addEventListener('click', close, false);
 
                     // myFunction(centerX, centerY, data, info_window_id);
+                    // var insert_text = msg + '<span class="close" id="close">&times;</span>';
                     myFunction(centerX, centerY, msg, info_window_id);
                     // myFunction(centerX, centerY, data);
                 });
@@ -685,11 +714,11 @@ function selectTab(obj) {
     });
 }
 
-function movingInfoWindow() {
-    $('.gm-style-iw').click(function(){
-        alert('Вы нажали на элемент "foo"');
-    });
-}
+// function movingInfoWindow() {
+//     $('.gm-style-iw').click(function(){
+//         alert('Вы нажали на элемент "foo"');
+//     });
+// }
 
 // 
 // 
