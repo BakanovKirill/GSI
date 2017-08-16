@@ -247,8 +247,8 @@ class CountFiles(models.Model):
 
 # class TimeSeriesResults(models.Model):
 #     name =  = models.CharField(max_length=250, blank=True, null=True)
-#     user = models.ForeignKey(User, verbose_name='User', blank=True, null=True)
-#     data_set = models.ForeignKey('DataSet', blank=True, null=True)
+#     customer_polygons = models.ForeignKey(CustomerPolygons, verbose_name='User', blank=True, null=True)
+
 
 #     def __unicode__(self):
 #         return u"{0}".format(self.name)
