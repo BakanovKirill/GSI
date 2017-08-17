@@ -1975,10 +1975,12 @@ def customer_section(request):
                 info_window += '<p align="center"><span><b>Values:</b></span> ' + statistic + '</p>';
             # info_window += '<p align="left"><font size="2">{0}: {1} ha</p></font>\n'.format(ATTRIBUTES_NAME[0], total_area)
 
-            if len_attr >= 8:
-                info_window += '<div style="height:400px;overflow:scroll;" class="ui-widget-content">'
-            else:
-                info_window += '<div style="overflow:auto;" class="ui-widget-content">'
+            info_window += '<div style="overflow:auto;" class="ui-widget-content">'
+            
+            # if len_attr >= 8:
+            #     info_window += '<div style="height:400px;overflow:scroll;" class="ui-widget-content">'
+            # else:
+            #     info_window += '<div style="overflow:auto;" class="ui-widget-content">'
 
             info_window += '<table border="1" cellspacing="5" cellpadding="5" style="border-collapse:collapse;border:1px solid black;width:100%;">\n'
             # info_window += '<caption align="left" style="margin-bottom:15px"><span><b>Total Area:</b></span> ' + total_area + ' ha</caption>'
