@@ -1309,7 +1309,7 @@ def createCustomerInfoPanel(customer, data_set, shelf_data, stat_file, absolute_
                     user=customer,
                     data_set=data_set,
                     attribute_name=attribute_name,
-                    statisctic=stat_file,
+                    statistic=stat_file,
                     file_area_name=file_area_name,
                     tif_path=tif_path,
                     png_path=png_path,
@@ -1410,7 +1410,7 @@ def getListTifFiles(customer, dataset):
             name_1 = attr.shelfdata.root_filename
             name_2 = dataset.results_directory.split('/')[0]
             tif_path = os.path.join(PROJECTS_PATH, dataset.results_directory, name_1)
-            fl_tif = '{0}/{1}_{2}.{3}.tif'.format(tif_path, attr.statisctic, name_1, name_2)
+            fl_tif = '{0}/{1}_{2}.{3}.tif'.format(tif_path, attr.statistic, name_1, name_2)
             str_data_db = '{0},{1},'.format(attr.shelfdata.id, fl_tif)
 
             list_files_tif.append(fl_tif)
@@ -1487,7 +1487,7 @@ def customer_section(request):
     data_set_id = 0
     polygons = []
     attribute_list_infopanel = []
-    statisctics_infopanel = []
+    statistics_infopanel = []
     show_dataset_cip = ''
     show_image_cip = ''
     show_statistic_cip = ''
@@ -1600,7 +1600,7 @@ def customer_section(request):
 
                     if is_show_sip:
                         show_attribute_name = is_show_sip[0].attribute_name
-                        show_statistics_name = is_show_sip[0].statisctic
+                        show_statistics_name = is_show_sip[0].statistic
 
                     # print 'CIP count_obj ========================= ', count_obj
                     # print 'CIP ORDER ========================= ', is_show_sip[0].order
@@ -1649,7 +1649,7 @@ def customer_section(request):
 
                     # try:
                     #     show_cip = CustomerInfoPanel.objects.get(user=customer, is_show=True)
-                    #     data = '{0}${1}${2}'.format(show_cip.data_set.name, show_cip.attribute_name, show_cip.statisctic)
+                    #     data = '{0}${1}${2}'.format(show_cip.data_set.name, show_cip.attribute_name, show_cip.statistic)
                     # except CustomerInfoPanel.DoesNotExist:
                     #     pass
 
@@ -1717,7 +1717,7 @@ def customer_section(request):
                 pass
 
             for cip in cips:
-                cip.statisctic = statistic
+                cip.statistic = statistic
                 cip.save()
 
             for rs in reports_cip:
@@ -1725,7 +1725,7 @@ def customer_section(request):
                                         user=customer,
                                         data_set=data_set,
                                         shelfdata=rs,
-                                        statisctic=statistic
+                                        statistic=statistic
                                     )
             
             kml_file_coord = open(file_path_out_coord_kml, "w")
@@ -1857,14 +1857,14 @@ def customer_section(request):
             if status:
                 data_set, data_set_id = getDataSet(data_set_id, data_sets[0])
                 dirs_list = getResultDirectory(data_set, shelf_data_all)
-                statisctic = 'mean_ConditionalMean'
+                statistic = 'mean_ConditionalMean'
                 is_show = True
 
                 # print 'data_set ========================== ', data_set
                 # print 'dirs_list[0] ========================== ', dirs_list[0]
                 if dirs_list:
                     info_panel = createCustomerInfoPanel(
-                                    customer, data_set, dirs_list[0], statisctic,
+                                    customer, data_set, dirs_list[0], statistic,
                                     absolute_png_url, is_show
                                 )
                 else:
@@ -1913,6 +1913,8 @@ def customer_section(request):
 
     if request.method == "POST":
         data_post = request.POST
+
+        print '!!!!!!!!!!!! POST ====================== ', data_post
 
         if 'load_button' in data_post:
             path_ftp_user = os.path.join(FTP_PATH, customer.username)
@@ -2014,6 +2016,8 @@ def customer_section(request):
             ds = DataSet.objects.get(pk=data_set_id)
             cur_polygon = createKml(request.user, area_name, info_window, absolute_kml_url, ds)
 
+            print '!!!!!!!!! STAT ======================== ', statistic
+
             for n in xrange(len_attr):
                 if not DataPolygons.objects.filter(user=request.user, data_set=data_set,
                     customer_polygons=cur_polygon, attribute=attribute[n]).exists():
@@ -2022,6 +2026,7 @@ def customer_section(request):
                             customer_polygons=cur_polygon,
                             data_set=data_set,
                             attribute=attribute[n],
+                            statistic=statistic,
                             value=value[n],
                             units=units[n],
                             total=total[n],
@@ -2029,10 +2034,11 @@ def customer_section(request):
                         )
                 elif DataPolygons.objects.filter(user=request.user, data_set=data_set,
                     customer_polygons=cur_polygon, attribute=attribute[n]).exists():
-                        DataPolygons.objects.filter(
+                        DataPolygons.objects.filter(user=request.user, data_set=data_set,
                             customer_polygons=cur_polygon, attribute=attribute[n]
                         ).update(
                             # attribute=attribute[n],
+                            statistic=statistic,
                             value=value[n],
                             units=units[n],
                             total=total[n],
@@ -2065,30 +2071,30 @@ def customer_section(request):
                 new_kml_name = str(new_area_name) + '.kml'
                 old_path = old_area.kml_path
                 new_path = os.path.join(KML_PATH, new_kml_name)
+                new_kml_url = os.path.join(absolute_kml_url, new_kml_name)
 
                 os.rename(old_path, new_path)
 
                 area = CustomerPolygons.objects.filter(pk=area_id).update(
-                            name = new_area_name,
-                            kml_name = new_kml_name,
-                            kml_path = new_path)
+                            name=new_area_name,
+                            kml_url=new_kml_url,
+                            kml_name=new_kml_name,
+                            kml_path=new_path)
 
                 return HttpResponseRedirect(u'%s' % (reverse('customer_section')))
-
-
 
     customer_info_panel = CustomerInfoPanel.objects.filter(user=customer)
 
     # if not customer_info_panel and dirs_list:
     #     attribute_list_infopanel.append(dirs_list[0].attribute_name)
-    #     statisctics_infopanel.append('mean_ConditionalMean')
+    #     statistics_infopanel.append('mean_ConditionalMean')
     #     current_area_image = ''
     if customer_info_panel and dirs_list:
         cip = customer_info_panel.filter(user=customer).order_by('attribute_name')
 
         for n in cip:
             attribute_list_infopanel.append(n.attribute_name)
-            statisctics_infopanel.append(n.statisctic)
+            statistics_infopanel.append(n.statistic)
 
 
     # Get the polygons list from media folder
@@ -2362,7 +2368,7 @@ def customer_section(request):
     if customer_info_panel_show:
         show_dataset_cip = customer_info_panel_show[0].data_set.name
         show_image_cip = customer_info_panel_show[0].attribute_name
-        show_statistic_cip = customer_info_panel_show[0].statisctic
+        show_statistic_cip = customer_info_panel_show[0].statistic
         data_set_id = customer_info_panel_show[0].data_set.id
         request.session['select_data_set'] = data_set_id
 
@@ -2398,7 +2404,7 @@ def customer_section(request):
         'dirs_list': dirs_list,
         'polygons': polygons,
         'attribute_list_infopanel': attribute_list_infopanel,
-        'statisctics_infopanel': statisctics_infopanel,
+        'statistics_infopanel': statistics_infopanel,
         'show_dataset_cip': show_dataset_cip,
         'show_image_cip': show_image_cip,
         'show_statistic_cip': show_statistic_cip,
@@ -2570,7 +2576,7 @@ def customer_delete_file(request):
 
 
             cips = CustomerInfoPanel.objects.filter(user=customer)
-            select_static = cips[0].statisctic
+            select_static = cips[0].statistic
             # data = data_ajax
             # file_for_db =
 

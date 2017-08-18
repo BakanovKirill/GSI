@@ -47,7 +47,7 @@ class CustomerAccessAdmin(admin.ModelAdmin):
 
 
 class CustomerInfoPanelAdmin(admin.ModelAdmin):
-    list_display = ('user', 'data_set', 'attribute_name', 'statisctic',
+    list_display = ('user', 'data_set', 'attribute_name', 'statistic',
                     'file_area_name', 'tif_path', 'png_path', 'url_png',
                     'legend_path', 'url_legend', 'order', 'is_show')
     search_fields = ['user', 'data_set', 'file_area_name']
@@ -67,16 +67,16 @@ class DataTerraserverAdmin(admin.ModelAdmin):
     
     
 class DataPolygonsAdmin(admin.ModelAdmin):
-    list_display = ('user', 'data_set', 'customer_polygons', 'attribute', 'statisctic',
+    list_display = ('user', 'data_set', 'customer_polygons', 'attribute', 'statistic',
                     'value', 'units', 'total', 'total_area')
-    search_fields = ['user', 'data_set', 'customer_polygons', 'attribute', 'statisctic', 'units']
-    list_filter = ('user', 'data_set', 'customer_polygons', 'attribute', 'statisctic', 'units')
+    search_fields = ['user', 'data_set', 'customer_polygons', 'attribute', 'statistic', 'units']
+    list_filter = ('user', 'data_set', 'customer_polygons', 'attribute', 'statistic', 'units')
     
     
 class AttributesReportAdmin(admin.ModelAdmin):
-    list_display = ('user', 'data_set', 'shelfdata', 'statisctic')
-    search_fields = ['user', 'data_set', 'shelfdata', 'statisctic']
-    list_filter = ('user', 'data_set', 'shelfdata', 'statisctic')
+    list_display = ('user', 'data_set', 'shelfdata', 'statistic')
+    search_fields = ['user', 'data_set', 'shelfdata', 'statistic']
+    list_filter = ('user', 'data_set', 'shelfdata', 'statistic')
     
 
 class CountFilesAdmin(admin.ModelAdmin):

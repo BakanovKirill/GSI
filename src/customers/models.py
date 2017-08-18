@@ -133,7 +133,7 @@ class CustomerInfoPanel(models.Model):
     user = models.ForeignKey(User, verbose_name='User', blank=True, null=True)
     data_set = models.ForeignKey('DataSet', blank=True, null=True)
     attribute_name = models.CharField(max_length=300, blank=True, null=True)
-    statisctic = models.CharField(max_length=300, blank=True, null=True)
+    statistic = models.CharField(max_length=300, blank=True, null=True)
 
     file_area_name = models.CharField(max_length=300, blank=True, null=True)
     tif_path = models.CharField(max_length=300, blank=True, null=True)
@@ -213,7 +213,7 @@ class DataPolygons(models.Model):
                 on_delete=models.CASCADE
             )
     attribute = models.CharField(max_length=250, blank=True, null=True)
-    statisctic = models.CharField(max_length=250, blank=True, null=True)
+    statistic = models.CharField(max_length=250, blank=True, null=True)
     value = models.CharField(max_length=250, blank=True, null=True)
     units = models.CharField(max_length=250, blank=True, null=True)
     total = models.CharField(max_length=250, blank=True, null=True)
@@ -237,7 +237,7 @@ class AttributesReport(models.Model):
                     blank=True, null=True, related_name='attributes_shelfdata',
                     on_delete=models.CASCADE
                 )
-    statisctic = models.CharField(max_length=250, blank=True, null=True)
+    statistic = models.CharField(max_length=250, blank=True, null=True)
 
 
 class CountFiles(models.Model):
