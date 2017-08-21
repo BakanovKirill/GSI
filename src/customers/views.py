@@ -1582,9 +1582,13 @@ def customer_section(request):
 
         if 'button' in data_post_ajax:
             try:
-                if 'attr_list[]' in data_post_ajax and 'stat_list[]' in data_post_ajax:
+                if 'attr_list[]' in data_post_ajax:
+                    if not 'stat_list[]' in data_post_ajax:
+                        statistics_viewlist = ['mean_ConditionalMean']
+                    else:
+                        statistics_viewlist = data_post_ajax.getlist('stat_list[]')
+
                     attributes_viewlist = data_post_ajax.getlist('attr_list[]')
-                    statistics_viewlist = data_post_ajax.getlist('stat_list[]')
 
                     # print 'attributes_viewlist ========================= ', attributes_viewlist
                     # print 'statistics_viewlist ========================= ', statistics_viewlist
@@ -1670,6 +1674,7 @@ def customer_section(request):
                                             'mean_ConditionalMean', absolute_png_url,
                                             True, order=0)
             except Exception, e:
+                # print '!!!!!!!!!! ERROR NEXT ======================= ', e
                 ####################### write log file
                 customer_section.write('ERROR ATTR & STAT LIST: {0}\n'.format(e))
                 ####################### write log file
@@ -1680,7 +1685,7 @@ def customer_section(request):
             reports_cip = []
             statistic = ''
 
-            print '!!!!!!!!!!!!! COORD data_post_ajax ====================== ', data_post_ajax
+            # print '!!!!!!!!!!!!! COORD data_post_ajax ====================== ', data_post_ajax
 
             if 'reports[]' in data_post_ajax:
                 reports_ids = []
