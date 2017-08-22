@@ -195,6 +195,16 @@ class DataTerraserver(models.Model):
         return u"{0}".format(self.name)
 
 
+# Max, Min, Mean,LQ (Lower Quartile), UQ (Upper Quartile)
+STAT_SUB_DIRECTORIES = (
+    ('1', 'Max'),
+    ('2', 'Min'),
+    ('3', 'Mean'),
+    ('4', 'Lower Quartile'),
+    ('5', 'Upper Quartile'),
+)
+
+
 class DataPolygons(models.Model):
     data_set = models.ForeignKey(
                     DataSet,
@@ -218,6 +228,15 @@ class DataPolygons(models.Model):
     units = models.CharField(max_length=250, blank=True, null=True)
     total = models.CharField(max_length=250, blank=True, null=True)
     total_area = models.CharField(max_length=250, blank=True, null=True)
+
+    # add new field for the Time Series
+    # result year
+    # stat_code
+    # result_date
+    # value_of_time_series
+    
+    def __unicode__(self):
+        return u"data_{0}".format(self.customer_polygons)
 
 
 class AttributesReport(models.Model):

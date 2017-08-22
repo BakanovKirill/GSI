@@ -2057,12 +2057,14 @@ def customer_section(request):
             cur_area = get_object_or_404(
                 CustomerPolygons, kml_name=kml_file)
             os.remove(cur_area.kml_path)
-            cur_area.delete()
             cur_data_polygons = DataPolygons.objects.filter(
                                     customer_polygons=cur_area
                                 )
+            
             for data_pol in cur_data_polygons:
                 data_pol.delete()
+
+            cur_area.delete()
 
             return HttpResponseRedirect(u'%s' % (reverse('customer_section')))
 

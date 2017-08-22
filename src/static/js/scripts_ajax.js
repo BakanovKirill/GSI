@@ -714,42 +714,6 @@ function selectTab(obj) {
     });
 }
 
-// function movingInfoWindow() {
-//     $('.gm-style-iw').click(function(){
-//         alert('Вы нажали на элемент "foo"');
-//     });
-// }
-
-// 
-// 
-
-
-// function clickUpdate() {
-//     var values = [];
-//     var modal = $('#modalUpdate');
-//     var form_modal = $('.form-modal').attr('action');
-//     modal.modal('show');
-
-//     $.ajax({
-//         url: form_modal,
-//         type: 'GET',
-//         'async': true,
-//         'dataType': 'text',
-//         data: {
-//             'update': 'update',
-//             'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
-//         },
-//         'error': function(xhr, status, error){
-//             var message = 'An unexpected error occurred. Try later.';
-//             modal.find('.modal-body').html(message);
-//             modal.modal('show');
-//         },
-//         'success': function(data, status, xhr){
-//             setTimeout(modal.modal('hide'), 3000);
-//         },
-//     });
-// }
-
 
 $(document).ready(function(){
     initCheckDeleteItems();
