@@ -151,7 +151,7 @@ class CustomerInfoPanel(models.Model):
         verbose_name_plural = 'Customer Info Panel'
 
     def __unicode__(self):
-        return u"{0}_{1}".format(self.data_set)
+        return u"{0}_{1}".format(self.user, self.data_set)
 
 
 class CustomerPolygons(models.Model):
