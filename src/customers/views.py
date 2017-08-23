@@ -1679,7 +1679,7 @@ def customer_section(request):
             return HttpResponse(data)
 
         if 'coordinate_list[0][]' in data_post_ajax:
-            reports_cip = []
+            reports_cip = ShelfData.objects.none()
             statistic = ''
 
             # print '!!!!!!!!!!!!! COORD data_post_ajax ====================== ', data_post_ajax
@@ -1765,50 +1765,76 @@ def customer_section(request):
             customer_section.write('LIST TIF FILES: {0}\n'.format(list_file_tif))
             customer_section.write('LIST DATA DB: {0}\n'.format(list_data_db))
             ###################### LOG
+            
+            # print '!!!!!!! list_file_tif ========================== ', list_file_tif
+            # print '!!!!!!! list_data_db ========================== ', list_data_db
 
-            try:
-                count_data = 0
-                new_line = ''
-                db_file_open = open(tmp_db_file, 'w')
+            # try:
+            count_data = 0
+            new_line = ''
+            db_file_open = open(tmp_db_file, 'w')
 
-                for file_tif in list_file_tif:
-                    command_line = '{0} {1} {2} {3}'.format(
-                                        SCRIPT_GETPOLYINFO,
-                                        file_tif,
-                                        file_path_in_coord_tmp,
-                                        file_path_out_coord_tmp
-                                    )
+            # if reports_cip:
+            #     for rsip in reports_cip:
+            #         scale = rsip.scale
 
-                    # print '!!! COMMAND LINE =========================== ', command_line
-                    # print '!!! FILE =========================== ', f_tif
-                    proc_script = Popen(command_line, shell=True)
-                    proc_script.wait()
-                    time.sleep(1)
+            
 
-                    file_out_coord_open = open(file_path_out_coord_tmp)
+            for file_tif in list_file_tif:
+                shd_id = list_data_db[count_data].split(',')[0]
+                scale = ShelfData.objects.get(id=shd_id).scale
 
-                    for line in file_out_coord_open.readlines():
-                        new_line = line.replace(' ', '')
-                        new_line = new_line.replace('\n', '')
-                    
+                # print '!!!!!!! SCALE ========================== ', scale
+
+                command_line = '{0} {1} {2} {3}'.format(
+                                    SCRIPT_GETPOLYINFO,
+                                    file_tif,
+                                    file_path_in_coord_tmp,
+                                    file_path_out_coord_tmp
+                                )
+
+                # print '!!! COMMAND LINE =========================== ', command_line
+                # print '!!! FILE =========================== ', f_tif
+                proc_script = Popen(command_line, shell=True)
+                proc_script.wait()
+                time.sleep(1)
+
+                file_out_coord_open = open(file_path_out_coord_tmp)
+
+                for line in file_out_coord_open.readlines():
+                    new_line = line.replace(' ', '')
+                    new_line = new_line.replace('\n', '')
+
+                
+                    # print '!!!!!!! 1 NEW LINE ========================== ', new_line
+
+                    if new_line:
+                        new_line = new_line.split(',')[1:]
+
                         # print '!!!!!!! 1 NEW LINE ========================== ', new_line
 
-                        if new_line:
-                            new_line = new_line.split(',')[1:]
-                            new_line = ','.join(new_line)
-                            str_db_file = '{0}{1}'.format(list_data_db[count_data], new_line) 
-                            db_file_open.write('{0}\n'.format(str_db_file))
-                            count_data += 1
-                            # print '!!!!!!! 2 SPLIT TYPE NEW LINE ========================== ', new_line.split(',')
-                            # print '!!!!!!! str_DB_file ========================== ', str_db_file
-                
-                db_file_open.close()
-            except Exception, e:
-                ####################### write log file
-                customer_section.write('ERROR CREATE KML FILES: {0}\n'.format(e))
-                ####################### write log file
-                print '!!!! ERROR ALL ======================= ', e
-                pass
+                        if scale:
+                            new_line[1] = str(float(new_line[1]) / scale)
+
+                        # print '!!!!!!! 2 NEW LINE ========================== ', new_line
+                        # print '!!!!!!! 2 count_data ========================== ', count_data
+                        # print '!!!!!!! 2 list_data_db[count_data] ========================== ', list_data_db[count_data]
+                        # print '!!!!!!! 2 list_data_db ========================== ', list_data_db
+
+                        new_line = ','.join(new_line)
+                        str_db_file = '{0}{1}'.format(list_data_db[count_data], new_line) 
+                        db_file_open.write('{0}\n'.format(str_db_file))
+                        count_data += 1
+                        # print '!!!!!!! 3 NEW LINE ========================== ', new_line
+                        # print '!!!!!!! str_DB_file ========================== ', str_db_file
+            
+            db_file_open.close()
+            # except Exception, e:
+            #     ####################### write log file
+            #     customer_section.write('ERROR CREATE KML FILES: {0}\n'.format(e))
+            #     ####################### write log file
+            #     print '!!!! ERROR ALL ======================= ', e
+            #     pass
 
             # *************************************************************************************************
 
