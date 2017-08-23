@@ -151,7 +151,7 @@ class CustomerInfoPanel(models.Model):
         verbose_name_plural = 'Customer Info Panel'
 
     def __unicode__(self):
-        return u"{0}_{1}".format(self.user, self.data_set)
+        return u"{0}_{1}".format(self.data_set)
 
 
 class CustomerPolygons(models.Model):
@@ -173,7 +173,7 @@ class CustomerPolygons(models.Model):
         verbose_name_plural = 'Customer Polygons'
 
     def __unicode__(self):
-        return u"{0}_{1}".format(self.user, self.name)
+        return u"{0}".format(self.name)
 
 
 class DataTerraserver(models.Model):
@@ -193,16 +193,6 @@ class DataTerraserver(models.Model):
 
     def __unicode__(self):
         return u"{0}".format(self.name)
-
-
-# Max, Min, Mean,LQ (Lower Quartile), UQ (Upper Quartile)
-STAT_SUB_DIRECTORIES = (
-    ('1', 'Max'),
-    ('2', 'Min'),
-    ('3', 'Mean'),
-    ('4', 'Lower Quartile'),
-    ('5', 'Upper Quartile'),
-)
 
 
 class DataPolygons(models.Model):
@@ -228,12 +218,6 @@ class DataPolygons(models.Model):
     units = models.CharField(max_length=250, blank=True, null=True)
     total = models.CharField(max_length=250, blank=True, null=True)
     total_area = models.CharField(max_length=250, blank=True, null=True)
-
-    # add new field for the Time Series
-    # result year
-    # stat_code
-    # result_date
-    # value_of_time_series
     
     def __unicode__(self):
         return u"data_{0}".format(self.customer_polygons)
@@ -259,15 +243,46 @@ class AttributesReport(models.Model):
     statistic = models.CharField(max_length=250, blank=True, null=True)
 
 
-class CountFiles(models.Model):
-    user = models.ForeignKey(User, verbose_name='User', blank=True, null=True)
-    count = models.PositiveIntegerField(default=0)
+# Max, Min, Mean,LQ (Lower Quartile), UQ (Upper Quartile)
+STAT_SUB_DIRECTORIES = (
+    ('1', 'Max'),
+    ('2', 'Min'),
+    ('3', 'Mean'),
+    ('4', 'Lower Quartile'),
+    ('5', 'Upper Quartile'),
+)
 
 
-# class TimeSeriesResults(models.Model):
-#     name =  = models.CharField(max_length=250, blank=True, null=True)
-#     customer_polygons = models.ForeignKey(CustomerPolygons, verbose_name='User', blank=True, null=True)
+class TimeSeriesResults(models.Model):
+    name = models.CharField(max_length=250)
+    user = models.ForeignKey(User, verbose_name='User',
+                related_name='time_series_user',
+                on_delete=models.CASCADE
+            )
+    data_set = models.ForeignKey(
+                    DataSet,
+                    verbose_name='DataSet',
+                    related_name='ts_datasets',
+                    on_delete=models.CASCADE
+                )
+    customer_polygons = models.ForeignKey(
+                    CustomerPolygons,
+                    verbose_name='Customer Polygons',
+                    related_name='ts_attributes',
+                    on_delete=models.CASCADE
+                )
+    result_year = models.CharField(
+                    max_length=4,
+                    verbose_name='Result Year',)
+    stat_code = models.CharField(
+                    max_length=25,
+                    # choices=STAT_SUB_DIRECTORIES,
+                    verbose_name='Status Sub Directory',)
+    result_date = models.DateField(verbose_name='Result Date')
+    value_of_time_series = models.CharField(
+                            max_length=250,
+                            blank=True, null=True,
+                            verbose_name='Value',)
 
-
-#     def __unicode__(self):
-#         return u"{0}".format(self.name)
+    def __unicode__(self):
+        return u"{0}".format(self.name)

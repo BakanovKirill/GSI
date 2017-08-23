@@ -314,7 +314,6 @@ PROJECTS_PATH = '/lustre/w23/mattgsi/satdata/RF/Projects'
 LUT_DIRECTORY = '/lustre/w23/mattgsi/satdata/RF/LUTHOME'
 
 # Script TifPng
-# SCRIPT_TIFPNG = 'TifPng'
 SCRIPT_TIFPNG = os.path.join(BASE_DIR, "static/scripts_c/TifPng")
 
 # Script GetPolyInfo

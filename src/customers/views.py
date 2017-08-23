@@ -32,7 +32,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 
 from customers.models import (Category, ShelfData, DataSet, CustomerAccess,
                                 CustomerInfoPanel, CustomerPolygons, DataPolygons,
-                                AttributesReport, CountFiles, LutFiles)
+                                AttributesReport, LutFiles)
 from customers.customers_forms import (CategoryForm, ShelfDataForm, DataSetForm,
                                         CustomerAccessForm, CustomerPolygonsForm,
                                         LutFilesForm)
@@ -1469,10 +1469,7 @@ def customer_section(request):
 
     # TMP FILES
     customer_tmp_for_db = str(customer) + '_db.csv'
-    # result_ajax_file = str(customer) + '_ajax.csv'
-
     tmp_db_file = os.path.join(TMP_PATH, customer_tmp_for_db)
-    # ajax_file = os.path.join(TMP_PATH, result_ajax_file)
 
 
     if customer_access:
@@ -1900,7 +1897,7 @@ def customer_section(request):
             # data = os.path.join(absolute_kml_url, polygon)
 
             if request.get_host() == '127.0.0.1:8000':
-                data = 'http://indy4.epcc.ed.ac.uk/media/kml/woodland1.kml'
+                data = 'http://indy4.epcc.ed.ac.uk/media/kml/tree-count-1.kml'
             else:
                 data = os.path.join(absolute_kml_url, polygon)
 
@@ -2445,20 +2442,9 @@ def customer_section(request):
 def customer_delete_file(request):
     title = ''
     customer = request.user
-    # counts = 0
-    # count_files = CountFiles.objects.filter(user=customer)
     
     result_for_db = str(customer) + '_db.csv'
-    # result_ajax_file = str(customer) + '_ajax.csv'
-
     db_file_path = os.path.join(TMP_PATH, result_for_db)
-    # ajax_file_path = os.path.join(TMP_PATH, result_ajax_file)
-
-
-    # result_f_name = str(customer) + '_result.csv'
-    # count_items_file = str(customer) + '_count_items.csv'
-    # result_file_path = os.path.join(TMP_PATH, result_f_name)
-    # count_items_path = os.path.join(TMP_PATH, count_items_file)
 
     ####################### write log file
     log_file = '/home/gsi/LOGS/customer_delete_file.log'
@@ -2489,27 +2475,11 @@ def customer_delete_file(request):
             # customer_delete_f.write('***EXISTS result_file_path: {0} \n'.format(os.path.exists(result_file_path)))
             ####################### write log file
 
-            # while counts != count_files[0].count:
-            #     try:
-            #         cf = open(count_items_path).readlines()
-            #         counts = int(cf[0])
-            #         time.sleep(15)
-            #     except Exception, e:
-            #         time.sleep(5)
-            #         ####################### write log file
-            #         customer_delete_f.write('ERROR COUNTS === {0}\n'.format(e))
-            #         ####################### write log file
-
-            ####################### write log file
-            # customer_delete_f.write('COUNT DB === {0}\n'.format(count_files[0].count))
-            # customer_delete_f.write('COUNT FILES === {0}\n'.format(counts))
-            ####################### write log file
+            
             # print '****************** EXISTS db_file_path ========================================= ', os.path.exists(db_file_path)
             # print '****************** EXISTS result_file_path ========================================= ', os.path.exists(result_file_path)
 
-            # CountFiles.objects.filter(user=customer).delete()
 
-            # customer_ajax_file = open(ajax_file_path, 'w+')
             data_set_id = data_get_ajax.get('delete_file')
             data_set = DataSet.objects.get(id=data_set_id)
             shelf_data = ShelfData.objects.all()
@@ -2555,32 +2525,23 @@ def customer_delete_file(request):
 
             data_ajax = data_ajax.replace('\n', '_')
             data_ajax_total += data_ajax[0:-1]
-            # customer_ajax_file.write(data_ajax_total)
 
             # print ('!!!!!!!!!!! data_ajax_total ===================== '), data_ajax_total
 
             # time.sleep(10)
             f_db.close()
-            # customer_ajax_file.close()
 
             try:
                 os.remove(db_file_path)
             except Exception, e:
                 pass
 
-            # while not os.path.exists(ajax_file_path):
-            #     time.sleep(5)
-            #     customer_ajax_file.close()
-
-            # print '===========>>>> 8888888   data_ajax ====================================== ', data_ajax
+            
 
             ####################### write log file
             # customer_delete_f.write('1 DATA AJAX EXISTS: "{0}"\n'.format(os.path.exists(ajax_file_path)))
             customer_delete_f.write('DATA AJAX END: "{0}"\n'.format(data_ajax))
             ####################### write log file
-
-            # delete_file = '/media/temp_files/' + result_ajax_file
-
 
             cips = CustomerInfoPanel.objects.filter(user=customer)
             select_static = cips[0].statistic
