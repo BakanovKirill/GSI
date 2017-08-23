@@ -2292,9 +2292,10 @@ def customer_section(request):
                     # cip_choice.url_legend = url_legend
                     # cip_choice.save()
 
-                    warning_message = u'Please specify the attribute name \
-                                    for the Customer Info Panel "{0}".'\
-                                    .format(cip_choice)
+                    # WARNING: NO IMAGES
+                    # warning_message = u'Please specify the attribute name \
+                    #                 for the Customer Info Panel "{0}".'\
+                    #                 .format(cip_choice)
                 
                         
 
