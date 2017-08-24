@@ -112,6 +112,11 @@ class DataSetForm(forms.ModelForm):
         required=False,
         help_text='Enter only the project folder. For example: "WagnerB1/Scores_All"',
         label=u'Results Directory')
+    is_ts = forms.BooleanField(
+        initial=False,
+        required=False,
+        label=u'Time Series',
+    )
     # shelf_data = forms.ModelChoiceField(
     #     widget=forms.Select(attrs={
     #         'class': 'form-control',
@@ -136,7 +141,7 @@ class DataSetForm(forms.ModelForm):
 
     class Meta:
         model = DataSet
-        fields = ['name', 'description', 'results_directory',]
+        fields = ['name', 'description', 'results_directory', 'is_ts']
 
 
 class CustomerAccessForm(forms.ModelForm):

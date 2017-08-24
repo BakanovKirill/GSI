@@ -132,7 +132,9 @@
                                             <li role="presentation" {% if tab_active == 'view' %}class="active"{% endif %}><a href="#view" class="a-tab" aria-controls="view" role="tab" data-toggle="tab" value="view" onclick="selectTab(this)">View</a></li>
                                             <li role="presentation" {% if tab_active == 'report' %}class="active"{% endif %}><a href="#report" class="a-tab" aria-controls="report" role="tab" data-toggle="tab" value="report" onclick="selectTab(this)">Report</a></li>
                                             <li role="presentation" {% if tab_active == 'aoi' %}class="active"{% endif %}><a href="#aoi" class="a-tab" aria-controls="aoi" role="tab" data-toggle="tab" value="aoi" onclick="selectTab(this)">AOI</a></li>
+                                            <li role="presentation" {% if tab_active == 'ts' %}class="active"{% endif %}><a href="#ts" class="a-tab" aria-controls="ts" role="tab" data-toggle="tab" value="ts" onclick="selectTab(this)">Time Series</a></li>
                                         </ul>
+                                        <!-- END Navigational tabs -->
 
                                         <!-- Tabs Content -->
                                         <div class="tab-content tab-resize snap-parent">
@@ -216,6 +218,29 @@
                                                         </div>
                                                     {% endfor %}
                                                 </div>
+                                                <!-- END AOI -->
+
+                                                <!-- TIME SERIES -->
+                                                <div role="tabpanel" {% if tab_active == 'aoi' %}class="tab-pane fade margin-bottom-6 in active aoi-list"{% else %}class="tab-pane fade margin-bottom-6 aoi-list"{% endif %} id="aoi">
+                                                    {% for polygon in polygons%}
+                                                        <div class="col-md-8 margin-top-8 margin-bottom-4 margin-left-4">
+                                                            <input type="radio" name="polygon" value="{{ polygon.kml_name }}" onchange="setPolygon(this);"><a href="{{ absolute_kml_url }}/{{ polygon.kml_name }}"> {{ polygon.name }}</a>
+                                                        </div>
+
+                                                        <div class="col-md-1 margin-bottom-4">
+                                                            <button class="btn del-btn edit-area margin-top-07 left" type="button" name="save_area" value="{{ polygon.id }}" data-toggle="tooltip" data-placement="top" title="Edit">
+                                                                <img src="{% static 'img/edit-18.png' %}" class="margin-left-010"/>
+                                                            </button>
+                                                        </div>
+
+                                                        <div class="col-md-1 margin-bottom-4">
+                                                            <button class="btn del-btn check-cur-delete margin-top-07 right" type="button" name="del_current_btn" value="{{ polygon.kml_name }}" data-toggle="tooltip" data-placement="top" title="Delete">
+                                                                <img src="{% static 'img/delete-18.png' %}" class="margin-left-010"/>
+                                                            </button>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                                <!-- END TIME SERIES -->
                                             </div>
                                             <!-- END Tabs content -->
 

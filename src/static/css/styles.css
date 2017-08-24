@@ -145,7 +145,7 @@ a:focus, a:hover {
     text-decoration: none !important;
 }
 
-/* buttons */
+/* BUTTONS BOOTSTRAP customer section */
 .btn-primary {
     background-color: #283890 !important;
     background-image: none !important;
@@ -164,7 +164,7 @@ a:focus, a:hover {
     color: white !important;
 }
 
-.btn-default {
+input.btn-default, input.btn-default:hover, input.btn-default:focus {
     background-color: white !important;
     border-radius: 0px !important;
     background-image: none !important;
@@ -1189,8 +1189,6 @@ hr {
     cursor: pointer;
 }
 
-
-
 /* TABs BOOTSTRAP customer section */
 .nav-tabs > li > a.a-tab, .nav-tabs > li > a.a-tab:hover, .nav-tabs > li > a.a-tab:focus {
     margin: 1px !important;
@@ -1214,7 +1212,7 @@ hr {
     /*border-width:0.5px;*/
     border-bottom: 1px !important;
     background-color: #fff !important;
-    width: 60px;
+    width: auto !important;
     /*;*/
 
 }

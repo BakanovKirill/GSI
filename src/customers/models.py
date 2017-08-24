@@ -93,6 +93,7 @@ class DataSet(models.Model):
     description = models.CharField(max_length=150, blank=True, null=True)
     results_directory = models.CharField(max_length=150, blank=True, null=True)
     shelf_data = models.ForeignKey('ShelfData', blank=True, null=True)
+    is_ts = models.BooleanField(default=False, verbose_name='Is Time Series')
 
     def get_root_filename(self):
         if self.shelf_data:
@@ -144,6 +145,7 @@ class CustomerInfoPanel(models.Model):
     legend_path = models.CharField(max_length=300, blank=True, null=True)
     url_legend = models.CharField(max_length=300, blank=True, null=True)
 
+    is_ts = models.BooleanField(default=False, verbose_name='Is Time Series')
     order = models.PositiveIntegerField(default=0)
     is_show = models.BooleanField(default=False)
 

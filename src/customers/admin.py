@@ -10,15 +10,18 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class ShelfDataAdmin(admin.ModelAdmin):
-    list_display = ('category', 'attribute_name', 'root_filename', 'units', 'scale', 'show_totals',)
+    list_display = ('category', 'attribute_name', 'root_filename',
+                    'units', 'scale', 'show_totals',)
     search_fields = ['category', 'attribute_name', 'root_filename',]
     list_filter = ('category', 'attribute_name', 'root_filename',)
 
 
 class DataSetAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'results_directory', 'get_attribute_name', 'get_root_filename',)
+    list_display = ('name', 'description', 'results_directory',
+                    'get_attribute_name', 'get_root_filename', 'is_ts')
     search_fields = ['name', 'description', 'get_attribute_name',]
-    list_filter = ('name', 'description', 'shelf_data__attribute_name', 'shelf_data__root_filename',)
+    list_filter = ('name', 'description', 'shelf_data__attribute_name',
+                    'shelf_data__root_filename',)
 
     def get_attribute_name(self, obj):
         if obj.shelf_data:
@@ -49,9 +52,9 @@ class CustomerAccessAdmin(admin.ModelAdmin):
 class CustomerInfoPanelAdmin(admin.ModelAdmin):
     list_display = ('user', 'data_set', 'attribute_name', 'statistic',
                     'file_area_name', 'tif_path', 'png_path', 'url_png',
-                    'legend_path', 'url_legend', 'order', 'is_show')
-    search_fields = ['user', 'data_set', 'file_area_name']
-    list_filter = ('user', 'data_set', 'file_area_name')
+                    'legend_path', 'url_legend', 'is_ts', 'order', 'is_show')
+    search_fields = ['user', 'data_set', 'attribute_name']
+    list_filter = ('user', 'data_set', 'attribute_name', 'file_area_name')
     
     
 class CustomerPolygonsAdmin(admin.ModelAdmin):

@@ -30,6 +30,22 @@
 
 <div class="row margin-top-15">
     <div class="col-md-2 right">
+        <div class="form-group {% if form.is_ts.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.is_ts.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-1 margin-top-6 left">
+        {% if not form.is_ts.errors %}
+            {{ form.is_ts }}
+        {% else %}
+            <span class="field-error">{{ form.is_ts }}</span>
+            <b class="error-form">{{ form.is_ts.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row margin-top-15">
+    <div class="col-md-2 right">
         <div class="form-group {% if form.results_directory.errors %}has-error{% endif %}">
             <label class="control-label font-normal">{{ form.results_directory.label }}</label>
         </div>

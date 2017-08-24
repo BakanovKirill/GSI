@@ -50,6 +50,16 @@ from gsi.settings import (BASE_DIR, RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM,
                         LEGENDS_DIRECTORY, LEGENDS_PATH)
 
 
+SUB_DIRECTORIES = {
+    'mean_ConditionalMax': 'Max',
+    'mean_ConditionalMean': 'Mean',
+    'mean_ConditionalMedian': 'Median',
+    'mean_ConditionalMin': 'Min',
+    'mean_LowerQuartile': 'LQ',
+    'mean_Quantile': 'UQ',
+}
+
+
 # categorys list
 @user_passes_test(lambda u: u.is_superuser)
 @render_to('customers/categorys_list.html')
@@ -64,7 +74,7 @@ def categorys(request):
     url_name = 'categorys'
     but_name = 'info_panel'
 
-    categorys = Category.objects.all()
+    categorys = Category.objects.all().order_by('name')
     category_name = ''
 
     # Sorted by
@@ -185,7 +195,7 @@ def category_add(request):
         'url_form': url_form,
         'template_name': template_name,
         'form': form,
-        'available_tiles': available_tiles,
+        # 'available_tiles': available_tiles,
         'url_name': url_name,
         'but_name': but_name,
     }
@@ -263,7 +273,7 @@ def shelf_data(request):
     url_name = 'shelf_data'
     but_name = 'info_panel'
 
-    shelf_data = ShelfData.objects.all()
+    shelf_data = ShelfData.objects.all().order_by('attribute_name')
     shelf_data_name = ''
 
     # Sorted
@@ -463,7 +473,7 @@ def data_sets(request):
     url_name = 'data_sets'
     but_name = 'info_panel'
 
-    data_sets = DataSet.objects.all()
+    data_sets = DataSet.objects.all().order_by('name')
     data_set_name = ''
 
     # Sorted by name
@@ -745,7 +755,7 @@ def customer_access(request):
     url_name = 'customer_access'
     but_name = 'info_panel'
 
-    customers_access = CustomerAccess.objects.all()
+    customers_access = CustomerAccess.objects.all().order_by('user__username')
     customer_access_name = ''
 
     # Sorted by customer name
@@ -944,7 +954,7 @@ def lutfiles(request):
     url_name = 'lutfiles'
     but_name = 'info_panel'
 
-    lutfiles = LutFiles.objects.all()
+    lutfiles = LutFiles.objects.all().order_by('name')
     lutfiles_name = ''
 
     # Sorted by customer name
@@ -1271,7 +1281,7 @@ def addPolygonToDB(name, kml_name, user, kml_path, kml_url, ds, text_kml=''):
     return customer_pol
 
 
-def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute_png_url):
+def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute_png_url, is_ts=False):
     # print '================    shelf_data =========================== ', shelf_data
     # order_data_set = data_set.order_by('attribute_name')
     try:
@@ -1286,24 +1296,48 @@ def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute
 
     results_directory = data_set.results_directory
     project_name = results_directory.split('/')[0]
-    file_area_name = '{0}_{1}.{2}'.format(stat_file, root_filename, project_name)
-    tif = '{0}.tif'.format(file_area_name)
-    png = '{0}greyscale.png'.format(file_area_name)
-    tif_path = os.path.join(PROJECTS_PATH, data_set.results_directory, root_filename, tif)
-    png_path = os.path.join(PNG_PATH, png)
-    url_png = '{0}/{1}'.format(absolute_png_url, png)
+    year_dir = shelf_data.root_filename
+    sub_dir = SUB_DIRECTORIES[stat_file]
+
+    if is_ts:
+        files_list = []
+        file_area_name = ''
+        ts_directory = os.path.join(PROJECTS_PATH, results_directory, year_dir, sub_dir)
+
+        root, dirs, files = os.walk(ts_directory).next()
+        
+        if files:
+            for f in files:
+                files_list.append(f)
+            files_list.sort()
+        
+        file_area_name = files_list[0].split('.tif')[0]
+        tif = '{0}.tif'.format(file_area_name)
+        png = '{0}greyscale.png'.format(file_area_name)
+
+        tif_path = os.path.join(ts_directory, tif)
+        png_path = os.path.join(PNG_PATH, png)
+        url_png = '{0}/{1}'.format(absolute_png_url, png)
+    else:
+        file_area_name = '{0}_{1}.{2}'.format(stat_file, root_filename, project_name)
+        tif = '{0}.tif'.format(file_area_name)
+        png = '{0}greyscale.png'.format(file_area_name)
+
+        tif_path = os.path.join(PROJECTS_PATH, results_directory, root_filename, tif)
+        png_path = os.path.join(PNG_PATH, png)
+        url_png = '{0}/{1}'.format(absolute_png_url, png)
 
     return attribute_name, file_area_name, tif_path, png_path, url_png
 
 
 def createCustomerInfoPanel(customer, data_set, shelf_data, stat_file, absolute_png_url,
-                            is_show, order=0, delete=True):
+                            is_show, order=0, delete=True, is_ts=False):
     if delete:
         CustomerInfoPanel.objects.filter(user=customer).delete()
 
     attribute_name, file_area_name,\
     tif_path, png_path, url_png = get_parameters_customer_info_panel(data_set,
-                                    shelf_data, stat_file, absolute_png_url)
+                                    shelf_data, stat_file, absolute_png_url, is_ts)
 
     info_panel = CustomerInfoPanel.objects.create(
                     user=customer,
@@ -1315,7 +1349,8 @@ def createCustomerInfoPanel(customer, data_set, shelf_data, stat_file, absolute_
                     png_path=png_path,
                     url_png=url_png,
                     order=order,
-                    is_show=is_show)
+                    is_show=is_show,
+                    is_ts=is_ts)
     info_panel.save()
 
     return info_panel
@@ -1370,6 +1405,7 @@ def getAttributeUnits(user, show_file):
 
 def getResultDirectory(dataset, shelfdata):
     dirs_list = []
+    # is_ts = False
 
     try:
         project_directory = os.path.join(PROJECTS_PATH, dataset.results_directory)
@@ -1379,6 +1415,15 @@ def getResultDirectory(dataset, shelfdata):
         for sd in shelfdata:
             if str(sd.root_filename) in dirs:
                 dirs_list.append(sd)
+
+        # if 'TS_' in dataset.results_directory:
+        #     for dy in dirs:
+        #         dirs_list.append(dy)
+        #     is_ts = True
+        # else:
+        #     for sd in shelfdata:
+        #         if str(sd.root_filename) in dirs:
+        #             dirs_list.append(sd)
     except Exception, e:
         print '----->>>    Exception getResultDirectory ========================= ', e
         pass
@@ -1457,17 +1502,21 @@ def customer_section(request):
     customer_access_ds = None
 
     # COORDINATE
+    # in_ts_coord_tmp = str(customer) + '_ts_coord_tmp.kml'
+    out_ts_coord_tmp = str(customer) + '_ts_coord_tmp.txt'
     in_coord_tmp = str(customer) + '_coord_tmp.kml'
     out_coord_tmp = str(customer) + '_coord_tmp.txt'
-    out_coord_kml = str(customer) + '_coord_kml.txt'
-    coord_tmp = str(request.user) + '_coord_tmp.kml'
+    # out_coord_kml = str(customer) + '_coord_kml.txt'
+    # coord_tmp = str(request.user) + '_coord_tmp.kml'
     
+    # file_path_in_ts_coord_tmp = os.path.join(TMP_PATH, in_ts_coord_tmp)
+    file_path_out_ts_coord_tmp = os.path.join(TMP_PATH, out_ts_coord_tmp)
     file_path_in_coord_tmp = os.path.join(TMP_PATH, in_coord_tmp)
     file_path_out_coord_tmp = os.path.join(TMP_PATH, out_coord_tmp)
-    file_path_out_coord_kml = os.path.join(TMP_PATH, out_coord_kml)
-    file_path_coord = os.path.join(TMP_PATH, coord_tmp)
+    # file_path_out_coord_kml = os.path.join(TMP_PATH, out_coord_kml)
+    # file_path_coord = os.path.join(TMP_PATH, coord_tmp)
 
-    # TMP FILES
+    # DB TMP FILES
     customer_tmp_for_db = str(customer) + '_db.csv'
     tmp_db_file = os.path.join(TMP_PATH, customer_tmp_for_db)
 
@@ -1491,7 +1540,7 @@ def customer_section(request):
     show_report_ap = []
     file_tif_path = ''
     tab_active = 'view'
-    # current_area_image = ''
+    is_time_series = False
 
     # default GEOTIFF coordinates
     cLng = DAFAULT_LON
@@ -1550,8 +1599,11 @@ def customer_section(request):
     # Get the DataSet and DataSet ID select
     data_set, data_set_id = getDataSet(data_set_id, data_sets[0])
 
+    is_time_series = data_set.is_ts
+
     # Get the Statistics list
     dirs_list = getResultDirectory(data_set, shelf_data_all)
+
     if dirs_list:
         dl = dirs_list[0]
     else:
@@ -1563,7 +1615,7 @@ def customer_section(request):
     if not cip_is_show:
         new_cip = createCustomerInfoPanel(
                         customer, data_set, dl, 'mean_ConditionalMean',
-                        absolute_png_url, True, order=0
+                        absolute_png_url, True, order=0, is_ts=is_time_series
                     )
 
     # get AJAX POST for KML files
@@ -1571,7 +1623,7 @@ def customer_section(request):
         data_post_ajax = request.POST
         data = ''
 
-        # print '!!!!!!!!!!!!!!!!! data_post_ajax ===================== ', data_post_ajax
+        print '!!!!!!!!!!!!!!!!! data_post_ajax ===================== ', data_post_ajax
         # print '!!!!!!!!!!!!!!!!! data_post_ajax LIST ===================== ', data_post_ajax.lists()
         # print '!!!!!!!!!!!!!!!!! coordinate_list[0][] ===================== ', 'coordinate_list[0][]' in data_post_ajax
         # print '!!!!!!!!!!!!!!!!! BUTTON ===================== ', 'button' in data_post_ajax
@@ -1615,10 +1667,12 @@ def customer_section(request):
                         try:
                             shelf_data = ShelfData.objects.get(id=int(attr_id))
 
+                            is_time_series = data_set.is_ts
+
                             for st in statistics_viewlist:
                                 createCustomerInfoPanel(customer, data_set, shelf_data,
                                                         st, absolute_png_url,
-                                                        False, order=new_order, delete=False)
+                                                        False, order=new_order, delete=False, is_ts=is_time_series)
 
 
                                 if show_attribute_name == shelf_data.attribute_name and show_statistics_name == st:
@@ -1667,9 +1721,11 @@ def customer_section(request):
 
                     return HttpResponse(data)
                 elif 'attr_list[]' in data_post_ajax or not 'stat_list[]' in data_post_ajax:
+                    is_time_series = data_set.is_ts
+
                     createCustomerInfoPanel(customer, data_set, dirs_list[0],
                                             'mean_ConditionalMean', absolute_png_url,
-                                            True, order=0)
+                                            True, order=0, is_ts=is_time_series)
             except Exception, e:
                 # print '!!!!!!!!!! ERROR NEXT ======================= ', e
                 ####################### write log file
@@ -1707,11 +1763,12 @@ def customer_section(request):
             try:
                 os.remove(file_path_in_coord_tmp)
                 os.remove(file_path_out_coord_tmp)
-                os.remove(file_path_out_coord_kml)
+                # os.remove(file_path_in_ts_coord_tmp)
+                os.remove(file_path_out_ts_coord_tmp)
 
                 os.remove(tmp_db_file)
                 # os.remove(ajax_file)
-                os.remove(file_path_coord)
+                # os.remove(file_path_coord)
             except Exception, e:
                 ####################### write log file
                 customer_section.write('ERROR DELETE TMP FILES: {0}\n'.format(e))
@@ -1730,7 +1787,7 @@ def customer_section(request):
                                         statistic=statistic
                                     )
             
-            kml_file_coord = open(file_path_out_coord_kml, "w")
+            # kml_file_coord = open(file_path_out_coord_kml, "w")
             tmp = {}
             coord_dict = {}
             points_coord = []
@@ -1746,19 +1803,19 @@ def customer_section(request):
             for n in coord_dict:
                 str_coord = '{0},{1}\n'.format(coord_dict[n][0], coord_dict[n][1])
                 # print '!!!!!!!!!!! COORD =================== ', str_coord
-                kml_file_coord.write(str_coord)
+                # kml_file_coord.write(str_coord)
                 points_coord.append(tuple(coord_dict[n]))
 
             # print '!!!!!!!!!!! file_path_out_coord_kml =================== ', file_path_out_coord_kml
             # print '!!!!!!!!!!! COORD =================== ', points_coord
 
-            kml_file_coord.close()
+            # kml_file_coord.close()
 
             # *************************************************************************************************
             kml_name ='{0} {1} AREA COORDINATE'.format(request.user, data_set)
             kml = simplekml.Kml()
             kml.newpoint(name=kml_name, coords=points_coord)  # lon, lat, optional height
-            kml.save(file_path_coord)
+            kml.save(file_path_in_coord_tmp)
             list_file_tif, list_data_db = getListTifFiles(customer, data_set)
 
             ###################### LOG
@@ -1783,8 +1840,18 @@ def customer_section(request):
             for file_tif in list_file_tif:
                 shd_id = list_data_db[count_data].split(',')[0]
                 scale = ShelfData.objects.get(id=shd_id).scale
+                command_line_ts = ''
 
                 # print '!!!!!!! SCALE ========================== ', scale
+                # file_path_out_ts_coord_tmp
+                
+                if data_set.is_ts:
+                    command_line_ts = '{0} {1} {2} {3}'.format(
+                                        SCRIPT_GETPOLYINFO,
+                                        file_tif,
+                                        file_path_in_coord_tmp,
+                                        file_path_out_ts_coord_tmp
+                                    )
 
                 command_line = '{0} {1} {2} {3}'.format(
                                     SCRIPT_GETPOLYINFO,
@@ -1798,6 +1865,12 @@ def customer_section(request):
                 proc_script = Popen(command_line, shell=True)
                 proc_script.wait()
                 time.sleep(1)
+
+                if command_line_ts:
+                    proc_script = Popen(command_line_ts, shell=True)
+                    proc_script.wait()
+                    time.sleep(1)
+
 
                 file_out_coord_open = open(file_path_out_coord_tmp)
 
@@ -1887,13 +1960,12 @@ def customer_section(request):
                 dirs_list = getResultDirectory(data_set, shelf_data_all)
                 statistic = 'mean_ConditionalMean'
                 is_show = True
+                is_time_series = data_set.is_ts
 
-                # print 'data_set ========================== ', data_set
-                # print 'dirs_list[0] ========================== ', dirs_list[0]
                 if dirs_list:
                     info_panel = createCustomerInfoPanel(
                                     customer, data_set, dirs_list[0], statistic,
-                                    absolute_png_url, is_show
+                                    absolute_png_url, is_show, is_ts=is_time_series
                                 )
                 else:
                     data = 'error'
@@ -2044,7 +2116,7 @@ def customer_section(request):
             ds = DataSet.objects.get(pk=data_set_id)
             cur_polygon = createKml(request.user, area_name, info_window, absolute_kml_url, ds)
 
-            print '!!!!!!!!! STAT ======================== ', statistic
+            # print '!!!!!!!!! STAT ======================== ', statistic
 
             for n in xrange(len_attr):
                 if not DataPolygons.objects.filter(user=request.user, data_set=data_set,
