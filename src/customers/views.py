@@ -9,7 +9,7 @@ from osgeo import osr, gdal
 import simplekml
 from simplekml import Kml
 import pickle
-from datetime import datetime
+from datetime import datetime, date, timedelta
 import json
 import csv
 # import pykml
@@ -32,7 +32,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 
 from customers.models import (Category, ShelfData, DataSet, CustomerAccess,
                                 CustomerInfoPanel, CustomerPolygons, DataPolygons,
-                                AttributesReport, LutFiles)
+                                AttributesReport, LutFiles, TimeSeriesResults)
 from customers.customers_forms import (CategoryForm, ShelfDataForm, DataSetForm,
                                         CustomerAccessForm, CustomerPolygonsForm,
                                         LutFilesForm)
@@ -1305,11 +1305,16 @@ def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute
         ts_directory = os.path.join(PROJECTS_PATH, results_directory, year_dir, sub_dir)
 
         root, dirs, files = os.walk(ts_directory).next()
+        files.sort()
         
         if files:
             for f in files:
-                files_list.append(f)
-            files_list.sort()
+                fl, ext = os.path.splitext(f)
+
+                if ext == '.tif':
+                    files_list.append(f)
+                break
+        # files_list.sort()
         
         file_area_name = files_list[0].split('.tif')[0]
         tif = '{0}.tif'.format(file_area_name)
@@ -1327,6 +1332,8 @@ def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute
         png_path = os.path.join(PNG_PATH, png)
         url_png = '{0}/{1}'.format(absolute_png_url, png)
 
+    print '!!!!!!!!!!!!! get_parameters_customer_info_panel =================== ', tif_path
+
     return attribute_name, file_area_name, tif_path, png_path, url_png
 
 
@@ -1338,6 +1345,8 @@ def createCustomerInfoPanel(customer, data_set, shelf_data, stat_file, absolute_
     attribute_name, file_area_name,\
     tif_path, png_path, url_png = get_parameters_customer_info_panel(data_set,
                                     shelf_data, stat_file, absolute_png_url, is_ts)
+
+    print '!!!!!!!!!!!!! createCustomerInfoPanel =================== ', tif_path
 
     info_panel = CustomerInfoPanel.objects.create(
                     user=customer,
@@ -1452,16 +1461,139 @@ def getListTifFiles(customer, dataset):
 
     if attributes_reports:
         for attr in attributes_reports:
-            name_1 = attr.shelfdata.root_filename
-            name_2 = dataset.results_directory.split('/')[0]
-            tif_path = os.path.join(PROJECTS_PATH, dataset.results_directory, name_1)
-            fl_tif = '{0}/{1}_{2}.{3}.tif'.format(tif_path, attr.statistic, name_1, name_2)
-            str_data_db = '{0},{1},'.format(attr.shelfdata.id, fl_tif)
+            if dataset.is_ts:
+                sub_dir = attr.shelfdata.root_filename + '/' + SUB_DIRECTORIES[attr.statistic]
+                sub_dir_path = os.path.join(PROJECTS_PATH, dataset.results_directory, sub_dir)
 
-            list_files_tif.append(fl_tif)
-            list_data_db.append(str_data_db)
+                project_directory = os.path.join(sub_dir_path)
+                root, dirs, files = os.walk(project_directory).next()
+                dirs.sort()
+                files.sort()
 
-    # print '!!!!!!!!!! FILE ========================= ', list_files_tif
+                for f in files:
+                    fl, ext = os.path.splitext(f)
+
+                    if ext == '.tif':
+                        fl_tif = os.path.join(project_directory, f)
+                        str_data_db = '{0},{1},'.format(attr.shelfdata.id, fl_tif)
+
+                        list_files_tif.append(fl_tif)
+                        list_data_db.append(str_data_db)
+                        break
+            else:
+                name_1 = attr.shelfdata.root_filename
+                name_2 = dataset.results_directory.split('/')[0]
+                tif_path = os.path.join(PROJECTS_PATH, dataset.results_directory, name_1)
+                fl_tif = '{0}/{1}_{2}.{3}.tif'.format(tif_path, attr.statistic, name_1, name_2)
+                str_data_db = '{0},{1},'.format(attr.shelfdata.id, fl_tif)
+
+                list_files_tif.append(fl_tif)
+                list_data_db.append(str_data_db)
+
+    print '!!!!!!!!!! FILE ========================= ', list_files_tif
+    # print '!!!!!!!!!! DATA DB ========================= ', list_data_db
+
+    return list_files_tif, list_data_db
+
+
+def addTsToDB(name, customer, data_set, customer_polygons, result_year,
+                stat_code, result_date, value_of_time_series):
+    if TimeSeriesResults.objects.filter(name=name, user=customer, data_set=data_set).exists():
+        ts_obj = TimeSeriesResults.objects.filter(name=name).update(
+            customer_polygons=customer_polygons,
+            result_year=result_year, stat_code=stat_code,
+            result_date=result_date,
+            value_of_time_series=value_of_time_series
+        )
+    else:
+        ts_obj = TimeSeriesResults.objects.create(
+            name=name, user=customer, data_set=data_set,
+            customer_polygons=customer_polygons,
+            result_year=result_year, stat_code=stat_code,
+            result_date=result_date,
+            value_of_time_series=value_of_time_series
+        )
+        ts_obj.save()
+
+
+def createTimeSeriesResults(aoi, file_in, file_out):
+    list_files_tif = []
+    list_data_db = []
+
+    attributes_reports = AttributesReport.objects.filter(
+                            user=aoi.user, data_set=aoi.data_set
+                        ).order_by('shelfdata__attribute_name')
+
+    if attributes_reports:
+        for attr in attributes_reports:
+            result_year = attr.shelfdata.root_filename
+            sub_dir_name = SUB_DIRECTORIES[attr.statistic]
+            sub_dir = result_year + '/' + sub_dir_name
+            sub_dir_path = os.path.join(PROJECTS_PATH, aoi.data_set.results_directory, sub_dir)
+
+            project_directory = os.path.join(sub_dir_path)
+            root, dirs, files = os.walk(project_directory).next()
+            dirs.sort()
+            files.sort()
+
+            for f in files:
+                fl, ext = os.path.splitext(f)
+
+                if ext == '.tif':
+                    file_ts_tif = os.path.join(project_directory, f)
+                    
+                    ts_day = f.split(result_year+'_')[1]
+                    ts_day = ts_day.split('_')[0]
+                    ts_date = date(int(result_year), 1, 1)
+                    ts_delta = timedelta(days=int(ts_day)-1)
+                    result_date = ts_date + ts_delta
+                    ts_name = '{0}_{1}_{2}_{3}'.format(aoi.name, result_year, sub_dir_name, ts_day)
+                    ts_value = '0'
+
+                    command_line_ts = '{0} {1} {2} {3}'.format(
+                                            SCRIPT_GETPOLYINFO,
+                                            file_ts_tif,
+                                            file_in,
+                                            file_out
+                                        )
+
+                    proc_script = Popen(command_line_ts, shell=True)
+                    proc_script.wait()
+                    time.sleep(1)
+
+                    file_out_coord_open = open(file_out)
+
+                    for line in file_out_coord_open.readlines():
+                        new_line = line.replace(' ', '')
+                        new_line = new_line.replace('\n', '')
+                    
+                        # print '!!!!!!! 1 NEW LINE ========================== ', new_line
+
+                        if new_line:
+                            ts_value = new_line.split(',')[2]
+                            scale = attr.shelfdata.scale
+
+                            # print '!!!!!!! 1 NEW LINE ========================== ', new_line
+
+                            if scale:
+                                ts_value = str(float(ts_value) / scale)
+
+                            # print '!!!!!!! 2 NEW LINE ========================== ', new_line
+                    
+                    addTsToDB(ts_name, aoi.user, aoi.data_set, aoi, result_year,
+                                sub_dir_name, result_date, ts_value)
+
+                    # list_files_tif.append(fl_tif)
+                    # list_data_db.append(str_data_db)
+
+                    # print '!!!!!!!!!! DAY ========================= ', ts_day
+                    # print '!!!!!!!!!! DATE ========================= ', result_date
+            
+
+    # print '!!!!!!!!!! FILE createTimeSeriesResults ========================= ', list_files_tif
+    
+    # file_path_in_coord_tmp,
+    # file_path_out_ts_coord_tmp
 
     return list_files_tif, list_data_db
 
@@ -1506,14 +1638,14 @@ def customer_section(request):
     out_ts_coord_tmp = str(customer) + '_ts_coord_tmp.txt'
     in_coord_tmp = str(customer) + '_coord_tmp.kml'
     out_coord_tmp = str(customer) + '_coord_tmp.txt'
-    # out_coord_kml = str(customer) + '_coord_kml.txt'
+    out_coord_kml = str(customer) + '_coord_kml.txt'
     # coord_tmp = str(request.user) + '_coord_tmp.kml'
     
     # file_path_in_ts_coord_tmp = os.path.join(TMP_PATH, in_ts_coord_tmp)
     file_path_out_ts_coord_tmp = os.path.join(TMP_PATH, out_ts_coord_tmp)
     file_path_in_coord_tmp = os.path.join(TMP_PATH, in_coord_tmp)
     file_path_out_coord_tmp = os.path.join(TMP_PATH, out_coord_tmp)
-    # file_path_out_coord_kml = os.path.join(TMP_PATH, out_coord_kml)
+    file_path_out_coord_kml = os.path.join(TMP_PATH, out_coord_kml)
     # file_path_coord = os.path.join(TMP_PATH, coord_tmp)
 
     # DB TMP FILES
@@ -1623,7 +1755,7 @@ def customer_section(request):
         data_post_ajax = request.POST
         data = ''
 
-        print '!!!!!!!!!!!!!!!!! data_post_ajax ===================== ', data_post_ajax
+        # print '!!!!!!!!!!!!!!!!! data_post_ajax ===================== ', data_post_ajax
         # print '!!!!!!!!!!!!!!!!! data_post_ajax LIST ===================== ', data_post_ajax.lists()
         # print '!!!!!!!!!!!!!!!!! coordinate_list[0][] ===================== ', 'coordinate_list[0][]' in data_post_ajax
         # print '!!!!!!!!!!!!!!!!! BUTTON ===================== ', 'button' in data_post_ajax
@@ -1763,7 +1895,7 @@ def customer_section(request):
             try:
                 os.remove(file_path_in_coord_tmp)
                 os.remove(file_path_out_coord_tmp)
-                # os.remove(file_path_in_ts_coord_tmp)
+                os.remove(file_path_out_coord_kml)
                 os.remove(file_path_out_ts_coord_tmp)
 
                 os.remove(tmp_db_file)
@@ -1787,7 +1919,7 @@ def customer_section(request):
                                         statistic=statistic
                                     )
             
-            # kml_file_coord = open(file_path_out_coord_kml, "w")
+            kml_file_coord = open(file_path_out_coord_kml, "w")
             tmp = {}
             coord_dict = {}
             points_coord = []
@@ -1803,13 +1935,13 @@ def customer_section(request):
             for n in coord_dict:
                 str_coord = '{0},{1}\n'.format(coord_dict[n][0], coord_dict[n][1])
                 # print '!!!!!!!!!!! COORD =================== ', str_coord
-                # kml_file_coord.write(str_coord)
+                kml_file_coord.write(str_coord)
                 points_coord.append(tuple(coord_dict[n]))
 
             # print '!!!!!!!!!!! file_path_out_coord_kml =================== ', file_path_out_coord_kml
             # print '!!!!!!!!!!! COORD =================== ', points_coord
 
-            # kml_file_coord.close()
+            kml_file_coord.close()
 
             # *************************************************************************************************
             kml_name ='{0} {1} AREA COORDINATE'.format(request.user, data_set)
@@ -1831,12 +1963,6 @@ def customer_section(request):
             new_line = ''
             db_file_open = open(tmp_db_file, 'w')
 
-            # if reports_cip:
-            #     for rsip in reports_cip:
-            #         scale = rsip.scale
-
-            
-
             for file_tif in list_file_tif:
                 shd_id = list_data_db[count_data].split(',')[0]
                 scale = ShelfData.objects.get(id=shd_id).scale
@@ -1844,14 +1970,6 @@ def customer_section(request):
 
                 # print '!!!!!!! SCALE ========================== ', scale
                 # file_path_out_ts_coord_tmp
-                
-                if data_set.is_ts:
-                    command_line_ts = '{0} {1} {2} {3}'.format(
-                                        SCRIPT_GETPOLYINFO,
-                                        file_tif,
-                                        file_path_in_coord_tmp,
-                                        file_path_out_ts_coord_tmp
-                                    )
 
                 command_line = '{0} {1} {2} {3}'.format(
                                     SCRIPT_GETPOLYINFO,
@@ -1865,12 +1983,6 @@ def customer_section(request):
                 proc_script = Popen(command_line, shell=True)
                 proc_script.wait()
                 time.sleep(1)
-
-                if command_line_ts:
-                    proc_script = Popen(command_line_ts, shell=True)
-                    proc_script.wait()
-                    time.sleep(1)
-
 
                 file_out_coord_open = open(file_path_out_coord_tmp)
 
@@ -2014,7 +2126,7 @@ def customer_section(request):
     if request.method == "POST":
         data_post = request.POST
 
-        print '!!!!!!!!!!!! POST ====================== ', data_post
+        # print '!!!!!!!!!!!! POST ====================== ', data_post
 
         if 'load_button' in data_post:
             path_ftp_user = os.path.join(FTP_PATH, customer.username)
@@ -2044,6 +2156,8 @@ def customer_section(request):
             units = []
             total = []
             statistic = ''
+
+            root_filename = []
 
             for item in data_kml:
                 # total_area
@@ -2108,6 +2222,9 @@ def customer_section(request):
                 info_window += '<td style="padding:10px">{0}</td>\n'.format(total[n])
                 info_window += '</tr>\n'
 
+                ts_root_filename = ShelfData.objects.get(attribute_name=attribute[n]).root_filename
+                root_filename.append(ts_root_filename)
+
             info_window += '</tbody>\n'
             info_window += '</table>\n'
             info_window += '</div>'
@@ -2144,6 +2261,16 @@ def customer_section(request):
                             total=total[n],
                             total_area=total_area+' ha'
                         )
+
+            # GET DATA FOR THE TIME SERIES
+            if data_set.is_ts:
+                # file_path_in_coord_tmp,
+                # file_path_out_ts_coord_tmp
+                createTimeSeriesResults(cur_polygon, file_path_in_coord_tmp,
+                                        file_path_out_ts_coord_tmp)
+                # ts_path = os.path.join(PROJECTS_PATH, data_set.results_directory)
+
+                # print '!!!!!!!!!!!!!!! root_filename ======================= ', root_filename
 
         if 'delete_button' in data_post:
             kml_file = data_post.get('delete_button')
@@ -2230,6 +2357,8 @@ def customer_section(request):
                 file_area_name = cip_choice.file_area_name
                 attribute_name = cip_choice.attribute_name
 
+                # print '!!!!!!!!!!!! FILE TIF =========================== ', file_tif
+
                 # *************** COLOR EACH IMAGES ***************************************************************
                 try:
                     shelf_data_attr = ShelfData.objects.get(attribute_name=attribute_name)
@@ -2263,7 +2392,7 @@ def customer_section(request):
                         command_line += '"' + str(units) + '"' + ' '
                         command_line += str(val_scale)
 
-                        # print 'LUT COMMAND NAME ========================= ', command_line
+                        print 'LUT COMMAND NAME ========================= ', command_line
                         
                         ####################### write log file
                         customer_section.write('COMMAND LINE: {0}\n'.format(command_line))
@@ -2284,18 +2413,16 @@ def customer_section(request):
                         # print '!!!!!!!!!! LEGEND ====================== ', legend
 
                         if legend == '2':
-                            old_legend_name = 'FullLegend_{0}.png'.format(lut_name)
-                            new_legend_name = '{0}_FullLegend_{1}_{2}.png'.format(customer, shd_attribute_name, lut_name)
+                            legend_name = 'FullLegend_{0}.png'.format(lut_name)
                         else:
-                            old_legend_name = 'Legend_{0}.png'.format(lut_name)
-                            new_legend_name = '{0}_Legend_{1}_{2}.png'.format(customer, shd_attribute_name, lut_name)
+                            legend_name = 'Legend_{0}.png'.format(lut_name)
                             
-                        old_color_legend = os.path.join(legend_path_old, old_legend_name)
-                        new_color_legend = os.path.join(LEGENDS_PATH, new_legend_name)
-                        url_legend = '{0}/{1}'.format(absolute_legend_url, new_legend_name)
+                        old_color_legend = os.path.join(legend_path_old, legend_name)
+                        new_color_legend = os.path.join(LEGENDS_PATH, legend_name)
+                        url_legend = '{0}/{1}'.format(absolute_legend_url, legend_name)
 
-                        # print '!!!!!!!!! old_color_legend ================== ', old_color_legend
-                        # print '!!!!!!!!! new_color_legend ================== ', new_color_legend
+                        print '!!!!!!!!! old_color_legend ================== ', old_color_legend
+                        print '!!!!!!!!! new_color_legend ================== ', new_color_legend
                         # print 'lut_name ========================= ', lut_name
 
                         cip_choice.png_path = new_file_png
@@ -2310,9 +2437,9 @@ def customer_section(request):
                         pass
                         # legend_path_old = file_tif.split('/')[:-1]
                         # legend_path_old = '/'.join(legend_path_old)
-                        # old_legend_name = 'Legend_greyscale.png'
+                        # legend_name = 'Legend_greyscale.png'
                         # new_legend_name = '{0}_Legend_greyscale.png'.format(customer)
-                        # old_bw_legend = os.path.join(legend_path_old, old_legend_name)
+                        # old_bw_legend = os.path.join(legend_path_old, legend_name)
                         # new_bw_legend = os.path.join(LEGENDS_PATH, new_legend_name)
                         # url_legend = '{0}/{1}'.format(absolute_legend_url, new_legend_name)
 
@@ -2328,9 +2455,9 @@ def customer_section(request):
 
                     # legend_path_old = file_tif.split('/')[:-1]
                     # legend_path_old = '/'.join(legend_path_old)
-                    # old_legend_name = 'Legend_greyscale.png'
+                    # legend_name = 'Legend_greyscale.png'
                     # new_legend_name = '{0}_Legend_greyscale.png'.format(customer)
-                    # old_bw_legend = os.path.join(legend_path_old, old_legend_name)
+                    # old_bw_legend = os.path.join(legend_path_old, legend_name)
                     # new_bw_legend = os.path.join(LEGENDS_PATH, new_legend_name)
                     # url_legend = '{0}/{1}'.format(absolute_legend_url, new_legend_name)
 
@@ -2350,9 +2477,9 @@ def customer_section(request):
 
                     # legend_path_old = file_tif.split('/')[:-1]
                     # legend_path_old = '/'.join(legend_path_old)
-                    # old_legend_name = 'Legend_greyscale.png'
+                    # legend_name = 'Legend_greyscale.png'
                     # new_legend_name = '{0}_Legend_greyscale.png'.format(customer)
-                    # old_bw_legend = os.path.join(legend_path_old, old_legend_name)
+                    # old_bw_legend = os.path.join(legend_path_old, legend_name)
                     # new_bw_legend = os.path.join(LEGENDS_PATH, new_legend_name)
                     # url_legend = '{0}/{1}'.format(absolute_legend_url, new_legend_name)
 
@@ -2374,10 +2501,11 @@ def customer_section(request):
                 # Convert tif to png
                 # greyscale
                 try:
+                    print '!!!!!!!!!!!!!!!!! file_tif ================================ ', file_tif
                     # convert tif to png
                     if os.path.exists(file_tif):
 
-                        # print '!!!!!!!!!!!!!!!!!!!!! is_lutfile ========================== ', is_lutfile
+                        print '!!!!!!!!!!!!!!!!!!!!! is_lutfile ========================== ', is_lutfile
 
                         # to color
                         if is_lutfile:
@@ -2386,9 +2514,9 @@ def customer_section(request):
 
                             # print '!!!!!!!!   COMMAND LINE =============================== 0 ', command_line
                             # print '!!!!!!!!   COMMAND LINE PNG =============================== 1 ', command_line_copy_png
-                            # print '!!!!!!!!   COMMAND LINE LEGEND =============================== 2 ', command_line_copy_legend
+                            print '!!!!!!!!   COMMAND LINE LEGEND =============================== ', command_line_copy_legend
 
-                            os.environ.__setitem__('RF_TRANSPARENT', '0')
+                            # os.environ.__setitem__('RF_TRANSPARENT', '0')
                             proc_script = Popen(command_line, shell=True)
                             proc_script.wait()
 
@@ -2419,7 +2547,7 @@ def customer_section(request):
 
                     # print '!!!!!!!!   PNG_PATH =============================== ', PNG_PATH
                 except Exception, e:
-                    print 'Popen Exception =============================== '
+                    print 'Popen Exception =============================== ', e
 
                 # get the lat/lon values for a GeoTIFF files
                 try:
