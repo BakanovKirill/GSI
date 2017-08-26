@@ -546,8 +546,8 @@ function sendDataToServer(coord, reports, stats) {
 
             // var obj_status = status;
 
-            // sendGetToServer();
-            setTimeout(sendGetToServer, 1000);
+            sendGetToServer();
+            // setTimeout(sendGetToServer, 1000);
         },
     });
 }

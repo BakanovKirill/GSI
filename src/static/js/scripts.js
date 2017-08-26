@@ -344,6 +344,11 @@ function toggleScale() {
     }
 }
 
+function showWaiting() {
+    var modal = $('#modalWaiting');
+    modal.modal('show');
+}
+
 
 $(document).ready(function(){
     //selectAll();

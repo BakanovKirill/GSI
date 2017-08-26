@@ -1306,6 +1306,9 @@ def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute
 
         root, dirs, files = os.walk(ts_directory).next()
         files.sort()
+
+        
+        
         
         if files:
             for f in files:
@@ -1313,8 +1316,7 @@ def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute
 
                 if ext == '.tif':
                     files_list.append(f)
-                break
-        # files_list.sort()
+                    break
         
         file_area_name = files_list[0].split('.tif')[0]
         tif = '{0}.tif'.format(file_area_name)
@@ -1559,7 +1561,6 @@ def createTimeSeriesResults(aoi, file_in, file_out):
 
                     proc_script = Popen(command_line_ts, shell=True)
                     proc_script.wait()
-                    time.sleep(1)
 
                     file_out_coord_open = open(file_out)
 
@@ -1595,7 +1596,7 @@ def createTimeSeriesResults(aoi, file_in, file_out):
     # file_path_in_coord_tmp,
     # file_path_out_ts_coord_tmp
 
-    return list_files_tif, list_data_db
+    # return list_files_tif, list_data_db
 
 
 # view Customer Section
@@ -1982,7 +1983,7 @@ def customer_section(request):
                 # print '!!! FILE =========================== ', f_tif
                 proc_script = Popen(command_line, shell=True)
                 proc_script.wait()
-                time.sleep(1)
+                # time.sleep(1)
 
                 file_out_coord_open = open(file_path_out_coord_tmp)
 
@@ -2421,8 +2422,8 @@ def customer_section(request):
                         new_color_legend = os.path.join(LEGENDS_PATH, legend_name)
                         url_legend = '{0}/{1}'.format(absolute_legend_url, legend_name)
 
-                        print '!!!!!!!!! old_color_legend ================== ', old_color_legend
-                        print '!!!!!!!!! new_color_legend ================== ', new_color_legend
+                        # print '!!!!!!!!! old_color_legend ================== ', old_color_legend
+                        # print '!!!!!!!!! new_color_legend ================== ', new_color_legend
                         # print 'lut_name ========================= ', lut_name
 
                         cip_choice.png_path = new_file_png
@@ -2501,11 +2502,11 @@ def customer_section(request):
                 # Convert tif to png
                 # greyscale
                 try:
-                    print '!!!!!!!!!!!!!!!!! file_tif ================================ ', file_tif
+                    # print '!!!!!!!!!!!!!!!!! file_tif ================================ ', file_tif
                     # convert tif to png
                     if os.path.exists(file_tif):
 
-                        print '!!!!!!!!!!!!!!!!!!!!! is_lutfile ========================== ', is_lutfile
+                        # print '!!!!!!!!!!!!!!!!!!!!! is_lutfile ========================== ', is_lutfile
 
                         # to color
                         if is_lutfile:
@@ -2514,7 +2515,7 @@ def customer_section(request):
 
                             # print '!!!!!!!!   COMMAND LINE =============================== 0 ', command_line
                             # print '!!!!!!!!   COMMAND LINE PNG =============================== 1 ', command_line_copy_png
-                            print '!!!!!!!!   COMMAND LINE LEGEND =============================== ', command_line_copy_legend
+                            # print '!!!!!!!!   COMMAND LINE LEGEND =============================== ', command_line_copy_legend
 
                             # os.environ.__setitem__('RF_TRANSPARENT', '0')
                             proc_script = Popen(command_line, shell=True)
