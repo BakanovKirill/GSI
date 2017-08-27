@@ -91,7 +91,6 @@ function setOpacity() {
     // alert('setOpacity: '+opacity);
 }
 
-
 function changeAreaName() {
     // var input_area_name = document.getElementById('input_area_name');
 	// var save_area = document.getElementById('save_area');
@@ -108,4 +107,5 @@ $(document).ready(function(){
     hideStatistics();
     hidePolygons();
     changeAreaName();
+    // toogleVisibleDrawPlot();
 });

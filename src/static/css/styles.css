@@ -1342,7 +1342,7 @@ hr {
     margin: 0px -50px 40px -50px;
 }
 
-.view-list, .report-list, .aoi-list {
+.view-list, .report-list, .aoi-list, .ts-list {
     resize: vertical;
     overflow-y: auto;
 }
@@ -1357,6 +1357,10 @@ hr {
 
 .aoi-list {
     height: 345px;
+}
+
+.ts-list {
+    height: 295px;
 }
 
 /* PopUp InfoWindow */

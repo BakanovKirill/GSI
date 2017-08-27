@@ -2094,13 +2094,14 @@ def customer_section(request):
                 data = 'There is no such polygon.'
 
         if 'polygon' in data_get_ajax:
-            polygon = data_get_ajax.get('polygon', '')
-            polygon_path = os.path.join(KML_PATH, polygon)
+            # polygon = data_get_ajax.get('polygon', '')
+            polygon = CustomerPolygons.objects.none()
+            poly_id = data_get_ajax.get('polygon', '')
             polygon_text = ''
             polygon_id = ''
 
-            if CustomerPolygons.objects.filter(kml_name=polygon).exists():
-                select_polygon = CustomerPolygons.objects.get(kml_name=polygon)
+            if CustomerPolygons.objects.filter(id=poly_id).exists():
+                select_polygon = CustomerPolygons.objects.get(id=poly_id)
                 polygon_id = 'close_' + str(select_polygon.id)
                 polygon_text += '<span class="close" id="{0}" onclick="closeIF();">&times;</span>'.format(polygon_id);
                 polygon_text += str(select_polygon.text_kml)
@@ -2393,7 +2394,7 @@ def customer_section(request):
                         command_line += '"' + str(units) + '"' + ' '
                         command_line += str(val_scale)
 
-                        print 'LUT COMMAND NAME ========================= ', command_line
+                        # print 'LUT COMMAND NAME ========================= ', command_line
                         
                         ####################### write log file
                         customer_section.write('COMMAND LINE: {0}\n'.format(command_line))
@@ -2593,6 +2594,8 @@ def customer_section(request):
     except Exception:
         pass
 
+    is_ts = False
+    time_series_show = TimeSeriesResults.objects.none()
     customer_info_panel_show = CustomerInfoPanel.objects.filter(
                                 user=customer, is_show=True)
     legend_scale = os.path.join(absolute_legend_url, 'Legend_greyscale.png')
@@ -2602,6 +2605,7 @@ def customer_section(request):
         show_image_cip = customer_info_panel_show[0].attribute_name
         show_statistic_cip = customer_info_panel_show[0].statistic
         data_set_id = customer_info_panel_show[0].data_set.id
+        is_ts = customer_info_panel_show[0].data_set.is_ts
         request.session['select_data_set'] = data_set_id
 
         dirs_list = getResultDirectory(customer_info_panel_show[0].data_set, shelf_data_all)
@@ -2625,11 +2629,16 @@ def customer_section(request):
         for ar in attribute_report:
             show_report_ap.append(ar.shelfdata.attribute_name)
 
+    time_series_show = TimeSeriesResults.objects.order_by('result_year', 'stat_code').distinct(
+                            'result_year', 'stat_code')
+
+
+
     ####################### write log file
     customer_section.write('\n')
     customer_section.close()
     #######################
-
+    
     data = {
         'data_sets': data_sets,
         'data_set_id': data_set_id,
@@ -2642,6 +2651,8 @@ def customer_section(request):
         'show_statistic_cip': show_statistic_cip,
         'show_report_ap': show_report_ap,
         'tab_active': tab_active,
+        'is_ts': is_ts,
+        'time_series_show': time_series_show,
 
         'file_tif_path': file_tif_path,
 
@@ -2791,6 +2802,21 @@ def customer_delete_file(request):
     # customer_delete_f.write('1 DATA AJAX EXISTS: "{0}"\n'.format(os.path.exists(ajax_file_path)))
     customer_delete_f.close()
     #######################
+
+    return data
+
+
+# Delete TMP file
+# @user_passes_test(lambda u: u.is_superuser)
+@login_required
+@render_to('customers/customer_time_series.html')
+def customer_time_series(request):
+    customer = request.user
+    title = u'"{0}"" Time Series'.format(customer)
+
+    data = {
+        'title': title,
+    }
 
     return data
 

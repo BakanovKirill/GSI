@@ -132,7 +132,10 @@
                                             <li role="presentation" {% if tab_active == 'view' %}class="active"{% endif %}><a href="#view" class="a-tab" aria-controls="view" role="tab" data-toggle="tab" value="view" onclick="selectTab(this)">View</a></li>
                                             <li role="presentation" {% if tab_active == 'report' %}class="active"{% endif %}><a href="#report" class="a-tab" aria-controls="report" role="tab" data-toggle="tab" value="report" onclick="selectTab(this)">Report</a></li>
                                             <li role="presentation" {% if tab_active == 'aoi' %}class="active"{% endif %}><a href="#aoi" class="a-tab" aria-controls="aoi" role="tab" data-toggle="tab" value="aoi" onclick="selectTab(this)">AOI</a></li>
-                                            <li role="presentation" {% if tab_active == 'ts' %}class="active"{% endif %}><a href="#ts" class="a-tab" aria-controls="ts" role="tab" data-toggle="tab" value="ts" onclick="selectTab(this)">Time Series</a></li>
+
+                                            {% if is_ts %}
+                                                <li role="presentation" {% if tab_active == 'ts' %}class="active"{% endif %}><a href="#ts" class="a-tab" aria-controls="ts" role="tab" data-toggle="tab" value="ts" onclick="selectTab(this)">Time Series</a></li>
+                                            {% endif %}
                                         </ul>
                                         <!-- END Navigational tabs -->
 
@@ -158,7 +161,7 @@
                                                     </div>
 
                                                     <div class="col-md-12 left margin-top-15 view-list" id="view_attribute">
-                                                        {% for dl in dirs_list%}
+                                                        {% for dl in dirs_list %}
                                                             <label class="normal"><input class="margin-bottom-6" name="attribute_viewlist" type="checkbox" value="view_{{ dl.id }}" {% if dl.attribute_name in attribute_list_infopanel %}checked="checked"{% endif %}> {{ dl.attribute_name }}</label><br>
                                                         {% endfor %}
                                                     </div>
@@ -202,7 +205,7 @@
                                                 <div role="tabpanel" {% if tab_active == 'aoi' %}class="tab-pane fade margin-bottom-6 in active aoi-list"{% else %}class="tab-pane fade margin-bottom-6 aoi-list"{% endif %} id="aoi">
                                                     {% for polygon in polygons%}
                                                         <div class="col-md-8 margin-top-8 margin-bottom-4 margin-left-4">
-                                                            <input type="radio" name="polygon" value="{{ polygon.kml_name }}" onchange="setPolygon(this);"><a href="{{ absolute_kml_url }}/{{ polygon.kml_name }}"> {{ polygon.name }}</a>
+                                                            <input type="radio" name="polygon" value="{{ polygon.id }}" onchange="setPolygon(this);"><a href="{{ absolute_kml_url }}/{{ polygon.kml_name }}"> {{ polygon.name }}</a>
                                                         </div>
 
                                                         <div class="col-md-1 margin-bottom-4">
@@ -221,24 +224,18 @@
                                                 <!-- END AOI -->
 
                                                 <!-- TIME SERIES -->
-                                                <div role="tabpanel" {% if tab_active == 'aoi' %}class="tab-pane fade margin-bottom-6 in active aoi-list"{% else %}class="tab-pane fade margin-bottom-6 aoi-list"{% endif %} id="aoi">
-                                                    {% for polygon in polygons%}
+                                                <div role="tabpanel" {% if tab_active == 'ts' %}class="tab-pane fade margin-bottom-6 in active ts-list"{% else %}class="tab-pane fade margin-bottom-6 ts-list"{% endif %} id="ts">
+                                                    {% for ts in time_series_show %}
                                                         <div class="col-md-8 margin-top-8 margin-bottom-4 margin-left-4">
-                                                            <input type="radio" name="polygon" value="{{ polygon.kml_name }}" onchange="setPolygon(this);"><a href="{{ absolute_kml_url }}/{{ polygon.kml_name }}"> {{ polygon.name }}</a>
-                                                        </div>
-
-                                                        <div class="col-md-1 margin-bottom-4">
-                                                            <button class="btn del-btn edit-area margin-top-07 left" type="button" name="save_area" value="{{ polygon.id }}" data-toggle="tooltip" data-placement="top" title="Edit">
-                                                                <img src="{% static 'img/edit-18.png' %}" class="margin-left-010"/>
-                                                            </button>
-                                                        </div>
-
-                                                        <div class="col-md-1 margin-bottom-4">
-                                                            <button class="btn del-btn check-cur-delete margin-top-07 right" type="button" name="del_current_btn" value="{{ polygon.kml_name }}" data-toggle="tooltip" data-placement="top" title="Delete">
-                                                                <img src="{% static 'img/delete-18.png' %}" class="margin-left-010"/>
-                                                            </button>
+                                                            <input type="checkbox" name="time_series" value="{{ ts.id }}" onclick="toogleVisibleDrawPlot(this);"> {{ ts.customer_polygons }}_{{ ts.result_year }}_{{ ts.stat_code }}
                                                         </div>
                                                     {% endfor %}
+                                                </div>
+
+                                                <div class="col-md-6 left margin-top-15 snap-bottom-left">
+                                                    <button type="button" name="draw-plot" id="draw_plot" class="btn btn-success btn-block" value="draw_plot" onclick="sendDataTsToServer(this);" disabled="disabled">
+                                                        Draw Plot
+                                                    </button>
                                                 </div>
                                                 <!-- END TIME SERIES -->
                                             </div>

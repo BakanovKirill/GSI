@@ -296,7 +296,7 @@ function resizeScreen() {
 
 function getUrlVars() {
     var vars = {};
-    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
         vars[key] = value;
     });
     return vars;
@@ -347,6 +347,19 @@ function toggleScale() {
 function showWaiting() {
     var modal = $('#modalWaiting');
     modal.modal('show');
+}
+
+function toogleVisibleDrawPlot() {
+    var is_ts_checked = $('#ts input:checkbox:checked');
+
+    if (is_ts_checked.val()) {
+        $('#ts input:checkbox:checked').each(function(){
+            // alert($(this).val());
+            $('#draw_plot').removeAttr('disabled');
+        });
+    } else {
+        $('#draw_plot').attr('disabled','disable');
+    }
 }
 
 

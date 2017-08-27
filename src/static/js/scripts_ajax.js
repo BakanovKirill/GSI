@@ -687,6 +687,63 @@ function sendDataAttrStatToServer(obj) {
     });
 }
 
+function sendDataTsToServer(obj) {
+    var form_url = $('#customer_section').attr('action');
+    var ts_list = [];
+
+    // alert('BUT: '+$(obj).val());
+
+    $('#ts input:checkbox:checked').each(function(){
+        // alert($(this).val());
+        ts_list.push($(this).val())
+    });
+
+    alert('ts_list: '+ts_list);
+    alert('button: '+$(obj).val());
+
+    $.ajax({
+        url: form_url,
+        type: 'POST',
+        'async': true,
+        'dataType': 'text',
+        data: {
+            'button': $(obj).val(),
+            'ts_list': ts_list,
+            'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+        },
+        'error': function(xhr, status, error){
+            // alert('error: '+error);
+            var message = 'An unexpected error occurred. Try later.';
+            alert(message);
+        },
+        'success': function(data, status, xhr){
+            // alert('URL DATA: '+data);
+            // var new_data = data.split('$');
+
+            // function reload() {
+            //     alert('URL DATA: '+data);
+            //     window.location.href = form_url;
+            // }
+            //
+            // setTimeout(reload, 100);
+
+            window.location.href = form_url;
+
+
+            // $("#ds_show span").text('new_data[0]');
+            // $("#ds_show span").text(new_data[0]);
+            // $("span#img_show").text(new_data[1]);
+            // $("span#stat_show").text(new_data[2]);
+            //
+            // alert('URL DATA: '+data);
+            // sendGetToServer();
+            // window.location.href = form_url;
+
+
+        },
+    });
+}
+
 function selectTab(obj) {
     var form_url = $('#customer_section').attr('action');
     var tab_name = $(obj).attr('value');
