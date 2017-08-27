@@ -1,0 +1,42 @@
+{% extends "base_customer.html" %}
+{% load static from staticfiles %}
+
+
+{% block content_customer %}
+	{% if not error_message %}
+		<form class="form-modal" id="customer_section" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data" role="form" class="form-horizontal">
+		{% csrf_token %}
+
+			
+
+			<!-- Modal Check Delete Items -->
+			{% include '_modal_check_delete_items.html' %}
+			<!-- End Modal Check Delete Items -->
+
+			<!-- Modal Edit Area -->
+			{% include '_modal_edit_polygons.html' %}
+			<!-- End Modal Edit Area -->
+
+			<!-- Modal Waiting -->
+			{% include '_modal_waiting.html' %}
+			<!-- End Modal Waiting -->
+
+            <!-- The Modal: You can not draw a polygon without selecting a dataset -->
+            <div id="myModal" class="modal-draw">
+                <!-- Modal content -->
+                <div class="modal-content">
+                    <span class="close" id="close">&times;</span>
+                    <p>It makes no sense to draw a polygon if the attribute is not selected.<br>Please select attribute from Info Panel before drawing Polygon.</p>
+                </div>
+            </div>
+            <!-- End the Modal: You can not draw a polygon without selecting a dataset -->			
+
+			<!-- The input field for the data Polygon -->
+			<p id="data_polygon" disable></p>
+			<input type="hidden" id="data_polygon" name="data_polygon" value="">
+		</form>
+
+
+		
+	{% endif %}
+{% endblock content_customer %}
