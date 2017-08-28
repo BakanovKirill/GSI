@@ -1334,7 +1334,7 @@ def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute
         png_path = os.path.join(PNG_PATH, png)
         url_png = '{0}/{1}'.format(absolute_png_url, png)
 
-    print '!!!!!!!!!!!!! get_parameters_customer_info_panel =================== ', tif_path
+    # print '!!!!!!!!!!!!! get_parameters_customer_info_panel =================== ', tif_path
 
     return attribute_name, file_area_name, tif_path, png_path, url_png
 
@@ -1348,7 +1348,7 @@ def createCustomerInfoPanel(customer, data_set, shelf_data, stat_file, absolute_
     tif_path, png_path, url_png = get_parameters_customer_info_panel(data_set,
                                     shelf_data, stat_file, absolute_png_url, is_ts)
 
-    print '!!!!!!!!!!!!! createCustomerInfoPanel =================== ', tif_path
+    # print '!!!!!!!!!!!!! createCustomerInfoPanel =================== ', tif_path
 
     info_panel = CustomerInfoPanel.objects.create(
                     user=customer,
@@ -1674,6 +1674,7 @@ def customer_section(request):
     file_tif_path = ''
     tab_active = 'view'
     is_time_series = False
+    time_series_list = []
 
     # default GEOTIFF coordinates
     cLng = DAFAULT_LON
@@ -1710,7 +1711,7 @@ def customer_section(request):
         return data
     # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    # GET SESSIONS !!!!!!!!!!!!!!!!!!!!!!!!!
+    # GET SESSIONS
     # Get select data_set sessions
     if request.session.get('select_data_set', False):
         data_set_id = int(request.session['select_data_set'])
@@ -1726,6 +1727,13 @@ def customer_section(request):
         tab_active = request.session['tab_active']
     else:
         request.session['tab_active'] = tab_active
+
+    # Get Time Series active
+    if request.session.get('time_series_list', False):
+        time_series_list = request.session['time_series_list']
+    else:
+        request.session['time_series_list'] = ''
+    
 
     # print '!!!!!!!!!!!!!!!!!!!! data_set_id ==================== ', data_set_id
     # print '!!!!!!!!!!!!!!!!!!!! data_set ==================== ', data_sets[0]
@@ -1758,11 +1766,11 @@ def customer_section(request):
 
         # print '!!!!!!!!!!!!!!!!! data_post_ajax ===================== ', data_post_ajax
         # print '!!!!!!!!!!!!!!!!! data_post_ajax LIST ===================== ', data_post_ajax.lists()
-        # print '!!!!!!!!!!!!!!!!! coordinate_list[0][] ===================== ', 'coordinate_list[0][]' in data_post_ajax
+        print '!!!!!!!!!!!!!!!!! ts_list ===================== ', ('ts_list[]' in data_post_ajax)
         # print '!!!!!!!!!!!!!!!!! BUTTON ===================== ', 'button' in data_post_ajax
 
 
-        if 'button' in data_post_ajax:
+        if 'button' in data_post_ajax and (data_post_ajax['button'] == 'next' or data_post_ajax['button'] == 'previous'):
             try:
                 if 'attr_list[]' in data_post_ajax:
                     if not 'stat_list[]' in data_post_ajax:
@@ -1866,6 +1874,13 @@ def customer_section(request):
                 ####################### write log file
 
             return HttpResponse(data)
+
+        if 'ts_list[]' in data_post_ajax:
+            request.session['time_series_list'] = data_post_ajax.getlist('ts_list[]')
+            # reports_cip = TimeSeriesResults.objects.filter(id__in=data_post_ajax.getlist('ts_list[]'))
+            
+            # print '!!!!!!!!!!!!!!!!! TS LIST 1 ============================== '
+            # print '!!!!!!!!!!!!!!!!! TS LIST 2 ============================== ', data_post_ajax.getlist('ts_list[]')
 
         if 'coordinate_list[0][]' in data_post_ajax:
             reports_cip = ShelfData.objects.none()
@@ -2621,7 +2636,7 @@ def customer_section(request):
     # print 'show_dataset_cip ===================================== ', show_dataset_cip
     # print 'show_image_cip ===================================== ', show_image_cip
     # print 'show_statistic_cip  ===================================== ', show_statistic_cip
-    # print 'dirs_list  ===================================== ', dirs_list
+    print '!!!!!!!!!!!!!!!! tab_active  ===================================== ', tab_active
 
     attribute_report = AttributesReport.objects.filter(user=customer)
 
@@ -2632,7 +2647,9 @@ def customer_section(request):
     time_series_show = TimeSeriesResults.objects.order_by('result_year', 'stat_code').distinct(
                             'result_year', 'stat_code')
 
-
+    # if request.session['time_series_list']:
+    #     for ts in request.session['time_series_list']:
+    #         time_series_list.append(int(ts))
 
     ####################### write log file
     customer_section.write('\n')
@@ -2653,6 +2670,7 @@ def customer_section(request):
         'tab_active': tab_active,
         'is_ts': is_ts,
         'time_series_show': time_series_show,
+        'time_series_list': request.session['time_series_list'],
 
         'file_tif_path': file_tif_path,
 

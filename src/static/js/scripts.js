@@ -313,6 +313,17 @@ function selectAllCheck(field, flag) {
             field[i].checked = false;
         }
     }
+
+    var is_ts_checked = $('#ts input:checkbox:checked');
+
+    if (is_ts_checked.val()) {
+        $('#ts input:checkbox:checked').each(function(){
+            // alert($(this).val());
+            $('#draw_plot').removeAttr('disabled');
+        });
+    } else {
+        $('#draw_plot').attr('disabled','disable');
+    }
 }
 
 function setStatic() {

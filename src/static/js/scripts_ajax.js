@@ -695,11 +695,12 @@ function sendDataTsToServer(obj) {
 
     $('#ts input:checkbox:checked').each(function(){
         // alert($(this).val());
+        
         ts_list.push($(this).val())
     });
 
-    alert('ts_list: '+ts_list);
-    alert('button: '+$(obj).val());
+    // alert('ts_list: '+ts_list);
+    // alert('button: '+$(obj).val());
 
     $.ajax({
         url: form_url,

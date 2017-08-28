@@ -167,17 +167,18 @@
                                                     </div>
 
                                                     <div class="col-md-6 left margin-top-15 snap-bottom-left">
-                                                        <button type="button" name="next-view" id="next" class="btn btn-success btn-block" value="next" onclick="sendDataAttrStatToServer(this);">
+                                                        <button type="button" name="next-view" id="next" class="btn btn-success btn-block margin-top-10" value="next" onclick="sendDataAttrStatToServer(this);">
                                                             Next
                                                         </button>
                                                     </div>
 
                                                     <div class="col-md-6 left margin-top-15 snap-bottom-right">
-                                                        <button type="button" name="previous-view" id="previous" class="btn btn-success btn-block margin-right-10" value="previous"  onclick="sendDataAttrStatToServer(this);">
+                                                        <button type="button" name="previous-view" id="previous" class="btn btn-success btn-block margin-right-10 margin-top-10" value="previous"  onclick="sendDataAttrStatToServer(this);">
                                                             Previous
                                                         </button>
                                                     </div>
                                                 </div>
+                                                <!-- END VIEW -->
 
                                                 <!-- REPORT -->
                                                 <div role="tabpanel" {% if tab_active == 'report' %}class="tab-pane fade in active"{% else %}class="tab-pane fade"{% endif %} id="report">
@@ -224,19 +225,37 @@
                                                 <!-- END AOI -->
 
                                                 <!-- TIME SERIES -->
-                                                <div role="tabpanel" {% if tab_active == 'ts' %}class="tab-pane fade margin-bottom-6 in active ts-list"{% else %}class="tab-pane fade margin-bottom-6 ts-list"{% endif %} id="ts">
-                                                    {% for ts in time_series_show %}
-                                                        <div class="col-md-8 margin-top-8 margin-bottom-4 margin-left-4">
-                                                            <input type="checkbox" name="time_series" value="{{ ts.id }}" onclick="toogleVisibleDrawPlot(this);"> {{ ts.customer_polygons }}_{{ ts.result_year }}_{{ ts.stat_code }}
+                                                {% if time_series_show %}
+                                                    <div role="tabpanel" {% if tab_active == 'ts' %}class="tab-pane fade in active"{% else %}class="tab-pane fade"{% endif %} id="ts">
+                                                        <div class="col-md-5 left">
+                                                            <div class="snap-top-child-left">
+                                                                <button type="button" class="btn btn-link" name="select-all-ts" onclick="selectAllCheck(this.form.time_series, 1);">
+                                                                    Select All
+                                                                </button>
+                                                            </div>
                                                         </div>
-                                                    {% endfor %}
-                                                </div>
 
-                                                <div class="col-md-6 left margin-top-15 snap-bottom-left">
-                                                    <button type="button" name="draw-plot" id="draw_plot" class="btn btn-success btn-block" value="draw_plot" onclick="sendDataTsToServer(this);" disabled="disabled">
-                                                        Draw Plot
-                                                    </button>
-                                                </div>
+                                                        <div class="col-md-5 right">
+                                                            <div class="snap-top-child-right">
+                                                                <button type="button" class="btn btn-link" name="select-none-ts" onclick="selectAllCheck(this.form.time_series, 0);">
+                                                                    Select None
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-12 left margin-top-15 view-list" id="view_attribute">
+                                                            {% for ts in time_series_show %}
+                                                                <label class="normal"><input class="margin-bottom-6" name="time_series" type="checkbox" value="{{ ts.id }}" onclick="toogleVisibleDrawPlot(this);" {% if ts.id in time_series_list %}checked="checked"{% endif %}> {{ ts.customer_polygons }}_{{ ts.result_year }}_{{ ts.stat_code }}</label><br>
+                                                            {% endfor %}
+                                                        </div>
+
+                                                        <div class="col-md-6 left margin-top-15 snap-bottom-left">
+                                                            <button type="button" name="draw-plot" id="draw_plot" class="btn btn-success btn-block margin-top-10" value="draw_plot" onclick="sendDataTsToServer(this);" disabled="disabled">
+                                                                Draw Plot
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
                                                 <!-- END TIME SERIES -->
                                             </div>
                                             <!-- END Tabs content -->
