@@ -59,6 +59,15 @@ SUB_DIRECTORIES = {
     'mean_Quantile': 'UQ',
 }
 
+SUB_DIRECTORIES_REVERCE = {
+    'Max': 'mean_ConditionalMax',
+    'Mean': 'mean_ConditionalMean',
+    'Median': 'mean_ConditionalMedian',
+    'Min': 'mean_ConditionalMin',
+    'LQ': 'mean_LowerQuartile',
+    'UQ': 'mean_Quantile',
+}
+
 
 # categorys list
 @user_passes_test(lambda u: u.is_superuser)
@@ -2697,7 +2706,22 @@ def customer_section(request):
             # print '!!!!!!!!!!!!!!!! TS DATE ===================================== ', d.result_date
             ts_title = 'Time Series diagram'
             ts_subtitle = '{0}'.format(d.customer_polygons.name)
+            ts_statistic = SUB_DIRECTORIES_REVERCE[d.stat_code]
             ts_units = 'Ha'
+            
+            ts_data_polygons = DataPolygons.objects.filter(
+                            customer_polygons=d.customer_polygons,
+                            data_set=d.data_set,
+                            statistic=ts_statistic
+                        )
+
+            for tdp in ts_data_polygons:
+                try:
+                    ts_attribute = tdp.attribute
+                    shelf_data_attr = ShelfData.objects.get(attribute_name=ts_attribute)
+                    ts_units = shelf_data_attr.units
+                except Exception:
+                    pass
             
             all_ts_selection = TimeSeriesResults.objects.filter(
                                     customer_polygons=d.customer_polygons,
