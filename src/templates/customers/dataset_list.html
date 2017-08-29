@@ -55,6 +55,7 @@
                                     {% endif %}
                                 </a>
                             </th>
+                            <th>Time Series</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -68,6 +69,7 @@
                             <td>{{ ds.results_directory }}</td>
                             <td>{{ ds.get_attribute_name }}</td>
                             <td>{{ ds.get_root_filename }}</td>
+                            <td>{{ ds.is_ts }}</td>
                             <td>
                                 <a href="{% url 'data_set_edit' ds.id %}" role="button" data-toggle="tooltip" data-placement="top" title="Edit">
                                     <img class="" src="{% static 'img/edit-18.png' %}"/>
