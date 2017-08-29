@@ -1296,19 +1296,16 @@ def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute
 
     results_directory = data_set.results_directory
     project_name = results_directory.split('/')[0]
-    year_dir = shelf_data.root_filename
+    # year_dir = shelf_data.root_filename
     sub_dir = SUB_DIRECTORIES[stat_file]
 
     if is_ts:
         files_list = []
         file_area_name = ''
-        ts_directory = os.path.join(PROJECTS_PATH, results_directory, year_dir, sub_dir)
+        ts_directory = os.path.join(PROJECTS_PATH, results_directory, root_filename, sub_dir)
 
         root, dirs, files = os.walk(ts_directory).next()
         files.sort()
-
-        
-        
         
         if files:
             for f in files:
