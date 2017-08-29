@@ -7,6 +7,9 @@
 		<form class="form-modal" id="customer_section" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data" role="form" class="form-horizontal">
 		{% csrf_token %}
 
+
+            <div id="container"></div>
+
 			
 
 			<!-- Modal Check Delete Items -->
@@ -40,3 +43,9 @@
 		
 	{% endif %}
 {% endblock content_customer %}
+
+{% block extra_js %}
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script type="text/javascript" src="{% static 'js/scripts_highcharts.js' %}"></script>
+{% endblock extra_js %}

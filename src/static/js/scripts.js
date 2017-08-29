@@ -395,6 +395,7 @@ $(document).ready(function(){
     resizeScreen();
     setStatic();
     get_file_name();
+    toogleVisibleDrawPlot();
     // drag();
     // tabsCustomerMenu();
     // showCheckboxes();

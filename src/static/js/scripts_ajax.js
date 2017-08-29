@@ -767,7 +767,7 @@ function selectTab(obj) {
             // alert('URL DATA: '+data);
             // var obj_status = status;
             // sendGetToServer();
-            // window.location.href = form_url;
+            window.location.href = form_url;
         },
     });
 }

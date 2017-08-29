@@ -1686,6 +1686,16 @@ def customer_section(request):
     google_map_zoom = 6
     url_png = ''
 
+    # Data for the TS Diagramm
+    ts_title = ''
+    ts_subtitle = ''
+    ts_units = 'UNITS, ha'
+    ts_series_name = ''
+    ts_stat_code = ''
+    ts_data = ''
+    # ts_data = []
+    # ts_data = {}
+
     # The url to are PNG, KML urls
     scheme = '{0}://'.format(request.scheme)
     absolute_png_url = os.path.join(scheme, request.get_host(), PNG_DIRECTORY)
@@ -1725,8 +1735,14 @@ def customer_section(request):
     # Get select active tab sessions
     if request.session.get('tab_active', False):
         tab_active = request.session['tab_active']
+
+        # if tab_active == 'ts':
+        #     request.session['time_series_view'] = True
+        # else:
+        #     request.session['time_series_view'] = False
     else:
         request.session['tab_active'] = tab_active
+        # request.session['time_series_view'] = False
 
     # Get Time Series active
     if request.session.get('time_series_list', False):
@@ -1766,7 +1782,7 @@ def customer_section(request):
 
         # print '!!!!!!!!!!!!!!!!! data_post_ajax ===================== ', data_post_ajax
         # print '!!!!!!!!!!!!!!!!! data_post_ajax LIST ===================== ', data_post_ajax.lists()
-        print '!!!!!!!!!!!!!!!!! ts_list ===================== ', ('ts_list[]' in data_post_ajax)
+        # print '!!!!!!!!!!!!!!!!! ts_list ===================== ', ('ts_list[]' in data_post_ajax)
         # print '!!!!!!!!!!!!!!!!! BUTTON ===================== ', 'button' in data_post_ajax
 
 
@@ -1876,10 +1892,14 @@ def customer_section(request):
             return HttpResponse(data)
 
         if 'ts_list[]' in data_post_ajax:
+            ts_ids = data_post_ajax.getlist('ts_list[]')
             request.session['time_series_list'] = data_post_ajax.getlist('ts_list[]')
-            # reports_cip = TimeSeriesResults.objects.filter(id__in=data_post_ajax.getlist('ts_list[]'))
+            ts_diagram = TimeSeriesResults.objects.filter(id__in=ts_ids)
+            # request.session['time_series_view'] = True
+            # time_series_view = True
             
-            # print '!!!!!!!!!!!!!!!!! TS LIST 1 ============================== '
+            
+            # print '!!!!!!!!!!!!!!!!! TS VIEW 1 ============================== ', request.session['time_series_view']
             # print '!!!!!!!!!!!!!!!!! TS LIST 2 ============================== ', data_post_ajax.getlist('ts_list[]')
 
         if 'coordinate_list[0][]' in data_post_ajax:
@@ -2065,7 +2085,11 @@ def customer_section(request):
 
         # When user celect a new DataSet, the previous celected DataSet to remove
         if 'datasets_id' in data_get_ajax:
-            # print '!!!!!!!!! datasets_id ====================== \n'
+            request.session['tab_active'] = 'view'
+            # request.session['time_series_view'] = False
+            tab_active = request.session['tab_active']
+            # time_series_view = request.session['time_series_view']
+            
             for ip in cip:
                 # print '!!!!!!!!! datasets_id ====================== ', ip.png_path
                 remove_files(ip.png_path)
@@ -2137,6 +2161,11 @@ def customer_section(request):
             tab_active = data_get_ajax.get('tab_active', '')
             request.session['tab_active'] = tab_active
             # print 'tab_active ================================ ', tab_active
+            
+            # if tab_active == 'ts':
+            #     request.session['time_series_view'] = True
+            # else:
+            #     request.session['time_series_view'] = False
 
         return HttpResponse(data)
 
@@ -2636,7 +2665,8 @@ def customer_section(request):
     # print 'show_dataset_cip ===================================== ', show_dataset_cip
     # print 'show_image_cip ===================================== ', show_image_cip
     # print 'show_statistic_cip  ===================================== ', show_statistic_cip
-    print '!!!!!!!!!!!!!!!! tab_active  ===================================== ', tab_active
+    # print '!!!!!!!!!!!!!!!! tab_active  ===================================== ', tab_active
+    # print '!!!!!!!!!!!!!!!! time_series_list  ===================================== ', request.session['time_series_list']
 
     attribute_report = AttributesReport.objects.filter(user=customer)
 
@@ -2647,14 +2677,66 @@ def customer_section(request):
     time_series_show = TimeSeriesResults.objects.order_by('result_year', 'stat_code').distinct(
                             'result_year', 'stat_code')
 
-    # if request.session['time_series_list']:
-    #     for ts in request.session['time_series_list']:
-    #         time_series_list.append(int(ts))
+    if request.session['time_series_list']:
+        for ts in request.session['time_series_list']:
+            time_series_list = [t.id for t in TimeSeriesResults.objects.filter(id__in=request.session['time_series_list'])] 
+        # print '!!!!!!!!!!!!!!!! TS  ===================================== ', time_series_list
+    
+    if request.session['time_series_list']:
+        # ts_title
+        # ts_subtitle
+        # ts_units
+        # ts_data
+        ts_ids = request.session['time_series_list']
+        ts_selected = TimeSeriesResults.objects.filter(id__in=ts_ids).order_by('result_year')
+
+        for d in ts_selected:
+            # print '!!!!!!!!!!!!!!!! TS DATE ===================================== ', d.result_date
+            ts_title = 'Time Series diagram'
+            ts_subtitle = '{0}'.format(d.customer_polygons.name)
+            ts_units = 'Ha'
+            
+            all_ts_selection = TimeSeriesResults.objects.filter(
+                                    customer_polygons=d.customer_polygons,
+                                    result_year=d.result_year,
+                                    stat_code=d.stat_code).order_by('result_date')
+
+            for tsr in all_ts_selection:
+                tsr_date = str(tsr.result_date).split('-')
+
+                # print '!!!!!!!!!!!!!!!! tsr_date[0] ===================================== ', tsr_date[0]
+                # print '!!!!!!!!!!!!!!!! ts_series_name ===================================== ', ts_series_name
+
+                # print '!!!!!!!!!!!!!!!! d.stat_code ===================================== ', d.stat_code
+                # print '!!!!!!!!!!!!!!!! ts_stat_code ===================================== ', ts_stat_code
+
+                if tsr_date[0] != ts_series_name or ts_stat_code != d.stat_code:
+                    ts_data = ts_data[0:-1]
+                    ts_data += '$$$'
+                    tmp = '{0},{1},{2},{3}$'.format(tsr_date[0], int(tsr_date[1])-1, tsr_date[2], tsr.value_of_time_series)
+                else:
+                    tmp = '{0},{1},{2},{3}$'.format(tsr_date[0], int(tsr_date[1])-1, tsr_date[2], tsr.value_of_time_series)
+
+                ts_data += tmp
+                ts_series_name = d.result_year
+                ts_stat_code = d.stat_code
+
+                # print '!!!!!!!!!!!!!!!! tsr_date[0] ===================================== ', tsr_date[0]
+                # print '!!!!!!!!!!!!!!!! ts_series_name ===================================== ', ts_series_name
+                
+        ts_data = ts_data[0:-1]
 
     ####################### write log file
     customer_section.write('\n')
     customer_section.close()
     #######################
+    
+    # time_series_view = request.session['time_series_view']
+    
+    # print '!!!!!!!!!!!!!!!! ts_data ===================================== ', ts_data
+    # print '!!!!!!!!!!!!!!!! TS VIEW SESS ===================================== ', request.session['time_series_view']
+    # print '!!!!!!!!!!!!!!!! TS VIEW ===================================== ', time_series_view
+    
     
     data = {
         'data_sets': data_sets,
@@ -2670,7 +2752,9 @@ def customer_section(request):
         'tab_active': tab_active,
         'is_ts': is_ts,
         'time_series_show': time_series_show,
-        'time_series_list': request.session['time_series_list'],
+        'time_series_list': time_series_list,
+        # 'time_series_view': request.session['time_series_view'],
+        # 'time_series_view': time_series_view,
 
         'file_tif_path': file_tif_path,
 
@@ -2678,6 +2762,12 @@ def customer_section(request):
 
         'absolute_kml_url': absolute_kml_url,
         'legend_scale': legend_scale,
+
+        'ts_title': ts_title,
+        'ts_subtitle': ts_subtitle,
+        'ts_units': ts_units,
+        'ts_data': ts_data,
+        # 'ts_series_name': ts_series_name,
 
         'cLng': cLng,
         'cLat': cLat,

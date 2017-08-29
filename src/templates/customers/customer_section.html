@@ -6,113 +6,117 @@
 	{% if not error_message %}
 		<form class="form-modal" id="customer_section" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data" role="form" class="form-horizontal">
 		{% csrf_token %}
+            {% if tab_active == 'ts' %}
+                <div id="container"></div>
+            {% else %}
+    			<!-- Draw Menu -->
+    			<div class="row margin-top-20 ">
+    				<div class="col-md-3 left">
+    					<button type="button" class="btn btn-default" onclick="appliedMarkers();"><img class="img-draw" id="ap_marker" src="{% static 'img/map-marker-plus.png' %}" alt="hand" title="Applied Markers" class="area-draw"></button>
+    					<button type="button" class="btn btn-default" onclick="drawPoligon();"><img class="img-draw" src="{% static 'img/vector-polygon.png' %}" alt="vector polygon" title="Draw a Poligon" class="area-draw"></button>
+    					<button type="button" class="btn btn-default" onclick="removePoligon();"><img class="img-draw" src="{% static 'img/map-marker-off.png' %}" alt="hand" title="Remove Poligon" class="area-draw"></button>
+    					<button type="button" class="btn btn-default" onclick="togglePlygonOverlays();"><img class="img-draw" src="{% static 'img/eye-off.png' %}" alt="hide/show" title="Hide/Show a Poligon" class="area-draw"></button>
+    				</div>
 
-			<!-- Draw Menu -->
-			<div class="row margin-top-20 ">
-				<div class="col-md-3 left">
-					<button type="button" class="btn btn-default" onclick="appliedMarkers();"><img class="img-draw" id="ap_marker" src="{% static 'img/map-marker-plus.png' %}" alt="hand" title="Applied Markers" class="area-draw"></button>
-					<button type="button" class="btn btn-default" onclick="drawPoligon();"><img class="img-draw" src="{% static 'img/vector-polygon.png' %}" alt="vector polygon" title="Draw a Poligon" class="area-draw"></button>
-					<button type="button" class="btn btn-default" onclick="removePoligon();"><img class="img-draw" src="{% static 'img/map-marker-off.png' %}" alt="hand" title="Remove Poligon" class="area-draw"></button>
-					<button type="button" class="btn btn-default" onclick="togglePlygonOverlays();"><img class="img-draw" src="{% static 'img/eye-off.png' %}" alt="hide/show" title="Hide/Show a Poligon" class="area-draw"></button>
-				</div>
+    				<div class="col-md-3 center">
+    					<div class="row">
+    						<div class="col-md-12">
+    							<span id="slider_value">Visibility: 50%</span>
+    						</div>
 
-				<div class="col-md-3 center">
-					<div class="row">
-						<div class="col-md-12">
-							<span id="slider_value">Visibility: 50%</span>
-						</div>
+    						<div class="col-md-12 margin-top-4">
+    							<input type="range" id="opacity" min="0" max="100" oninput="setOpacity();" alt="transparency" title="Transparency" value="50" class="center"/>
+    						</div>
+    					</div>
+    				</div>
 
-						<div class="col-md-12 margin-top-4">
-							<input type="range" id="opacity" min="0" max="100" oninput="setOpacity();" alt="transparency" title="Transparency" value="50" class="center"/>
-						</div>
-					</div>
-				</div>
+    				<div class="col-md-6 left">
+    					<label class="btn btn-default btn-file">
+        					Chose File <input type="file" name="upload_file_customer" id="upload_file_customer" style="display: none;">
+    					</label>
+    					<span id='upload_file'>No file chosen</span>
+    					<button type="submit" id="load" name="load_button" value="load" class="btn btn-primary"> Load</button>
 
-				<div class="col-md-6 left">
-					<label class="btn btn-default btn-file">
-    					Chose File <input type="file" name="upload_file_customer" id="upload_file_customer" style="display: none;">
-					</label>
-					<span id='upload_file'>No file chosen</span>
-					<button type="submit" id="load" name="load_button" value="load" class="btn btn-primary"> Load</button>
+    					<a href="{% url 'files_lister' %}" class="btn del-btn check-cur-delete" role="button" data-toggle="tooltip" data-placement="top" title="Mangage Files">
+    						<img src="{% static 'img/settings-24.png' %}"/>
+    					</a>
+    				</div>
+    			</div>
+    			<!-- End Draw Menu -->
 
-					<a href="{% url 'files_lister' %}" class="btn del-btn check-cur-delete" role="button" data-toggle="tooltip" data-placement="top" title="Mangage Files">
-						<img src="{% static 'img/settings-24.png' %}"/>
-					</a>
-				</div>
-			</div>
-			<!-- End Draw Menu -->
 
-			<!-- Google map -->
-			<div class="row margin-top-4">
-				<div class="col-md-12 col-lg-12 margin-010" id="map-block">
-					<!-- [START region_toolbar] -->
-					<!-- Add an input button to initiate the toggle method on the overlay. -->
-					<div id="floating-panel">
-						<!-- <input type="button" class="btn btn-default" value="Toggle visibility" onclick="overlay.toggle();"></input>
-						<input type="button" class="btn btn-default" value="Toggle DOM attachment" onclick="overlay.toggleDOM();"></input> -->
-                        <input type="button" class="btn btn-default" value="Toggle visibility Legend scale" onclick="toggleScale();"></input>
-					</div>
-					<!-- [END region_toolbar] -->
+    			<!-- Google map -->
+    			<div class="row margin-top-4">
+    				<div class="col-md-12 col-lg-12 margin-010" id="map-block">
+    					<!-- [START region_toolbar] -->
+    					<!-- Add an input button to initiate the toggle method on the overlay. -->
+    					<div id="floating-panel">
+    						<!-- <input type="button" class="btn btn-default" value="Toggle visibility" onclick="overlay.toggle();"></input>
+    						<input type="button" class="btn btn-default" value="Toggle DOM attachment" onclick="overlay.toggleDOM();"></input> -->
+                            <input type="button" class="btn btn-default" value="Toggle visibility Legend scale" onclick="toggleScale();"></input>
+    					</div>
+    					<!-- [END region_toolbar] -->
 
-					<!-- GSi MAP -->
-					<div id="map"></div>
-					<!-- END GSi MAP -->
+    					<!-- GSi MAP -->
+    					<div id="map"></div>
+    					<!-- END GSi MAP -->
 
-					<!-- GSi User Photo -->
-					<div id="user-photo">
-						<img src="{% static 'img/anonim.png' %}" class="img-circle circle">
-					</div>
-					<!-- END GSi User Photo -->
+    					<!-- GSi User Photo -->
+    					<div id="user-photo">
+    						<img src="{% static 'img/anonim.png' %}" class="img-circle circle">
+    					</div>
+    					<!-- END GSi User Photo -->
 
-					<!-- GSi LOGO -->
-					<div id="gsi-logo">
-						<a href="http://www.surfaceintelligence.com/" Target="_blank"><img src="{% static 'img/GSIlogo.jpg' %}" style="cursor: pointer;"></a>
-					</div>
-					<!-- End GSi LOGO -->
+    					<!-- GSi LOGO -->
+    					<div id="gsi-logo">
+    						<a href="http://www.surfaceintelligence.com/" Target="_blank"><img src="{% static 'img/GSIlogo.jpg' %}" style="cursor: pointer;"></a>
+    					</div>
+    					<!-- End GSi LOGO -->
 
-					<!-- GSi Coordinates -->
-					<div id="lat-panel">
-						<input class="form-control placeholder" type="text" id="latitude" readonly>
-					</div>
-					<div id="lng-panel">
-						<input class="form-control placeholder" type="text" id="longitude" readonly>
-					</div>
-					<!-- GSi Coordinates -->
+    					<!-- GSi Coordinates -->
+    					<div id="lat-panel">
+    						<input class="form-control placeholder" type="text" id="latitude" readonly>
+    					</div>
+    					<div id="lng-panel">
+    						<input class="form-control placeholder" type="text" id="longitude" readonly>
+    					</div>
+    					<!-- GSi Coordinates -->
 
-					<!-- Start Footer -->
-					<div class="footer">
-	                    <span class="padding-top-15">&copy; {{ CURRENT_YEAR }} GSi Web Site</span>
-	                </div>
-		            <!-- End Footer -->
-				</div>
-			</div>
-			<!-- End Google map -->
+    					<!-- Start Footer -->
+    					<div class="footer">
+    	                    <span class="padding-top-15">&copy; {{ CURRENT_YEAR }} GSi Web Site</span>
+    	                </div>
+    		            <!-- End Footer -->
+    				</div>
+    			</div>
+    			<!-- End Google map -->
 
-			<!-- Modal Check Delete Items -->
-			{% include '_modal_check_delete_items.html' %}
-			<!-- End Modal Check Delete Items -->
+    			<!-- Modal Check Delete Items -->
+    			{% include '_modal_check_delete_items.html' %}
+    			<!-- End Modal Check Delete Items -->
 
-			<!-- Modal Edit Area -->
-			{% include '_modal_edit_polygons.html' %}
-			<!-- End Modal Edit Area -->
+    			<!-- Modal Edit Area -->
+    			{% include '_modal_edit_polygons.html' %}
+    			<!-- End Modal Edit Area -->
 
-			<!-- Modal Waiting -->
-			{% include '_modal_waiting.html' %}
-			<!-- End Modal Waiting -->
+    			<!-- Modal Waiting -->
+    			{% include '_modal_waiting.html' %}
+    			<!-- End Modal Waiting -->
 
-            <!-- The Modal: You can not draw a polygon without selecting a dataset -->
-            <div id="myModal" class="modal-draw">
-                <!-- Modal content -->
-                <div class="modal-content">
-                    <span class="close" id="close">&times;</span>
-                    <p>It makes no sense to draw a polygon if the attribute is not selected.<br>Please select attribute from Info Panel before drawing Polygon.</p>
+                <!-- The Modal: You can not draw a polygon without selecting a dataset -->
+                <div id="myModal" class="modal-draw">
+                    <!-- Modal content -->
+                    <div class="modal-content">
+                        <span class="close" id="close">&times;</span>
+                        <p>It makes no sense to draw a polygon if the attribute is not selected.<br>Please select attribute from Info Panel before drawing Polygon.</p>
+                    </div>
                 </div>
-            </div>
-            <!-- End the Modal: You can not draw a polygon without selecting a dataset -->			
+                <!-- End the Modal: You can not draw a polygon without selecting a dataset -->			
 
-			<!-- The input field for the data Polygon -->
-			<p id="data_polygon" disable></p>
-			<input type="hidden" id="data_polygon" name="data_polygon" value="">
+    			<!-- The input field for the data Polygon -->
+    			<p id="data_polygon" disable></p>
+    			<input type="hidden" id="data_polygon" name="data_polygon" value="">
+            {% endif %}
 		</form>
 
 
@@ -137,9 +141,12 @@
 			var span = document.getElementById("close");
 
 			// When the user clicks on <span> (x), close the modal
-			span.onclick = function() {
-				modal.style.display = "none";
-			}
+            if (span) {
+                span.onclick = function() {
+                    modal.style.display = "none";
+                }
+            }      
+			
 
 			// When the user clicks anywhere outside of the modal, close it
 			window.onclick = function(event) {
@@ -171,8 +178,18 @@
 			var data_polygon;
 			var statistic;
 
-			var select_image = '{{ absolute_url_png_file }}'
-            var legend_scale = '{{ legend_scale }}'
+			var select_image = '{{ absolute_url_png_file }}';
+            var legend_scale = '{{ legend_scale }}';
+
+            // ighcharts
+            var title = '{{ ts_title }}';
+            var subtitle = '{{ ts_subtitle }}';
+            var ts_units = '{{ ts_units }}';
+            var ts_data = '{{ ts_data }}';
+            var ts_series = [];
+
+            var ts_data = '{{ ts_data }}';
+            var highcharts = getDataSeries();
 
 			// var units = 'Tree';
 			// var attribute = 'UNITS';
@@ -934,3 +951,12 @@
 		</script>
 	{% endif %}
 {% endblock content_customer %}
+
+{% if time_series_view %}
+    {% block extra_js %}
+    <script type="text/javascript" src="{% static 'js/scripts_highcharts.js' %}"></script>
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        
+    {% endblock extra_js %}
+{% endif %}
