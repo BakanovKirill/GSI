@@ -1161,6 +1161,7 @@ def lutfile_edit(request, lutfile_id):
 
 def remove_files(file_path):
     # Get the png file for the delete
+    
     try:
         if os.path.exists(file_path):
             os.remove(file_path)
@@ -1680,7 +1681,7 @@ def customer_section(request):
     eLng_1 = 0
     eLat_2 = 0
     eLng_2 = 0
-    google_map_zoom = 6
+    google_map_zoom = 0
     url_png = ''
 
     # Data for the TS Diagramm
@@ -2611,7 +2612,12 @@ def customer_section(request):
                     eLng_1 = minx
                     eLat_2 = maxy
                     eLng_2 = maxx
-                    google_map_zoom = GOOGLE_MAP_ZOOM
+
+                    if cip_choice.data_set.name != 'Wheat Demo':
+                        google_map_zoom = GOOGLE_MAP_ZOOM
+
+                    # print '!!!!!!!!!!!!!!!!! google_map_zoom =============================== ', google_map_zoom
+
                 except AttributeError, e:
                     print 'GDAL AttributeError =============================== ', e
         except CustomerInfoPanel.DoesNotExist, e:
@@ -2772,7 +2778,7 @@ def customer_section(request):
         'eLng_1': eLng_1,
         'eLat_2': eLat_2,
         'eLng_2': eLng_2,
-        'GOOGLE_MAP_ZOOM': GOOGLE_MAP_ZOOM,
+        'GOOGLE_MAP_ZOOM': google_map_zoom,
         'absolute_url_png_file': url_png,
     }
 

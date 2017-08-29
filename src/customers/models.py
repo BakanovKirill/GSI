@@ -77,8 +77,8 @@ class ShelfData(models.Model):
                 on_delete=models.CASCADE
             )
 
-    scale = models.PositiveIntegerField(
-                    default=0,
+    scale = models.FloatField(
+                    default=0.0,
                     verbose_name='Scale',)
 
     class Meta:

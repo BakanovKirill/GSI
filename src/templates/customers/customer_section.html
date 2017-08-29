@@ -189,7 +189,10 @@
             var ts_series = [];
 
             var ts_data = '{{ ts_data }}';
-            var highcharts = getDataSeries();
+
+            {% if time_series_view %}
+                var highcharts = getDataSeries();
+            {% endif %}
 
 			// var units = 'Tree';
 			// var attribute = 'UNITS';
@@ -719,7 +722,10 @@
 			// }
 
 			function getPolygon(data_aoi, stat) {
+                // alert('AOI: '+data_aoi);
 				// alert('STAT: '+stat);
+
+
 				var modal = $('#modalWaiting');
 			    modal.modal('hide');
 				statistic = stat;

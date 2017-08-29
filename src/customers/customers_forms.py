@@ -52,8 +52,9 @@ class ShelfDataForm(forms.ModelForm):
         required=False,
         label=u'Units')
     scale = forms.FloatField(
-        widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '1'}),
-        initial=0,
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '0.0001'}),
+        initial=0.0,
+        min_value=0.0,
         validators=[validate_order],
         error_messages={'required': 'Must be a positive number'},
         required=False,
