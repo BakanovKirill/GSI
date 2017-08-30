@@ -1294,6 +1294,9 @@ def addPolygonToDB(name, kml_name, user, kml_path, kml_url, ds, text_kml=''):
 def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute_png_url, is_ts=False):
     # print '================    shelf_data =========================== ', shelf_data
     # order_data_set = data_set.order_by('attribute_name')
+    
+    warning_message = ''
+
     try:
         attribute_name = shelf_data.attribute_name
     except Exception:
@@ -1312,26 +1315,29 @@ def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute
     if is_ts:
         files_list = []
         file_area_name = ''
-        ts_directory = os.path.join(PROJECTS_PATH, results_directory, root_filename, sub_dir)
 
-        root, dirs, files = os.walk(ts_directory).next()
-        files.sort()
-        
-        if files:
-            for f in files:
-                fl, ext = os.path.splitext(f)
+        try:
+            ts_directory = os.path.join(PROJECTS_PATH, results_directory, root_filename, sub_dir)
+            root, dirs, files = os.walk(ts_directory).next()
+            files.sort()
+            
+            if files:
+                for f in files:
+                    fl, ext = os.path.splitext(f)
 
-                if ext == '.tif':
-                    files_list.append(f)
-                    break
-        
-        file_area_name = files_list[0].split('.tif')[0]
-        tif = '{0}.tif'.format(file_area_name)
-        png = '{0}greyscale.png'.format(file_area_name)
+                    if ext == '.tif':
+                        files_list.append(f)
+                        break
+            
+            file_area_name = files_list[0].split('.tif')[0]
+            tif = '{0}.tif'.format(file_area_name)
+            png = '{0}greyscale.png'.format(file_area_name)
 
-        tif_path = os.path.join(ts_directory, tif)
-        png_path = os.path.join(PNG_PATH, png)
-        url_png = '{0}/{1}'.format(absolute_png_url, png)
+            tif_path = os.path.join(ts_directory, tif)
+            png_path = os.path.join(PNG_PATH, png)
+            url_png = '{0}/{1}'.format(absolute_png_url, png)
+        except StopIteration:
+            warning_message = u'The path "{0}" does not exist.'.format(ts_directory)
     else:
         file_area_name = '{0}_{1}.{2}'.format(stat_file, root_filename, project_name)
         tif = '{0}.tif'.format(file_area_name)
@@ -2694,8 +2700,11 @@ def customer_section(request):
         for ar in attribute_report:
             show_report_ap.append(ar.shelfdata.attribute_name)
 
-    time_series_show = TimeSeriesResults.objects.order_by('result_year', 'stat_code').distinct(
+    ts_all = TimeSeriesResults.objects.all().order_by('name', 'stat_code')
+    time_series_show = ts_all.order_by('result_year', 'stat_code').distinct(
                             'result_year', 'stat_code')
+    # time_series_show = TimeSeriesResults.objects.order_by('result_year', 'stat_code').distinct(
+    #                         'result_year', 'stat_code')
 
     if request.session['time_series_list']:
         for ts in request.session['time_series_list']:

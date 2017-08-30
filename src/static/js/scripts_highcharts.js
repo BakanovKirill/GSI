@@ -22,8 +22,8 @@ function getDataSeries() {
             var data_value = data_sub_list[m].split(',');
 
             // var tmp = [
-            //     Date.UTC(parseInt(data_value[0]), parseInt(data_value[1]), parseInt(data_value[2])),
-            //     parseFloat(data_value[3])
+            //     Date.UTC(parseInt(data_value[2]), parseInt(data_value[3]), parseInt(data_value[4])),
+            //     parseFloat(data_value[5])
             // ];
             var tmp = [
                 Date.UTC(2010, parseInt(data_value[3]), parseInt(data_value[4])),
