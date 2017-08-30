@@ -2762,6 +2762,11 @@ def customer_section(request):
     customer_section.close()
     #######################
     
+    if tab_active == 'ts':
+        time_series_view = True
+    else:
+        time_series_view = False
+        
     # time_series_view = request.session['time_series_view']
     
     # print '!!!!!!!!!!!!!!!! ts_data ===================================== ', ts_data
@@ -2785,7 +2790,7 @@ def customer_section(request):
         'time_series_show': time_series_show,
         'time_series_list': time_series_list,
         # 'time_series_view': request.session['time_series_view'],
-        # 'time_series_view': time_series_view,
+        'time_series_view': time_series_view,
 
         'file_tif_path': file_tif_path,
 

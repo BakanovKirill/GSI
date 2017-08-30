@@ -429,8 +429,8 @@ function setPolygon(obj) {
                 // alert('DATA: '+data);
                 var data_list = data.split('$$$');
 
-                alert('DATA URL: '+data_list[0]);
-                alert('DATA ID: '+data_list[2]);
+                // alert('DATA URL: '+data_list[0]);
+                // alert('DATA ID: '+data_list[2]);
                 
                 // When the user clicks on div, open the popup
                 var kml = new google.maps.KmlLayer({
