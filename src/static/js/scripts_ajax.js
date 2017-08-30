@@ -405,10 +405,13 @@ function closeIF() {
 
 
 function setPolygon(obj) {
-    // alert(obj.checked);
+    alert('CHECKED: '+obj.checked);
+
     var checked = obj.checked;
     var form_url = $('#customer_section').attr('action');
     var polygon_name = obj.value;
+
+    alert('AOI NAME: '+polygon_name);
 
     if (checked) {
         $.ajax({
