@@ -425,8 +425,8 @@ function setPolygon(obj) {
                 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
             },
             'error': function(xhr, status, error){
-                // alert('status 1: '+status);
-                // alert('error: '+error);
+                alert('status 1: '+status);
+                alert('error: '+error);
                 var message = 'An unexpected error occurred. Try later.';
             },
             'success': function(data, status, xhr){
