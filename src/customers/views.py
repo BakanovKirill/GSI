@@ -2141,7 +2141,7 @@ def customer_section(request):
 
         if 'polygon' in data_get_ajax:
             # polygon = data_get_ajax.get('polygon', '')
-            polygon = CustomerPolygons.objects.none()
+            select_polygon = CustomerPolygons.objects.none()
             poly_id = data_get_ajax.get('polygon', '')
             polygon_text = ''
             polygon_id = ''
@@ -2157,7 +2157,7 @@ def customer_section(request):
             if request.get_host() == '127.0.0.1:8000':
                 data = 'http://indy4.epcc.ed.ac.uk/media/kml/tree-count-1.kml'
             else:
-                data = os.path.join(absolute_kml_url, polygon)
+                data = os.path.join(absolute_kml_url, select_polygon)
 
             # print '!!!!!!!!!!!!!!! DATA URL =================== ', data
 
@@ -2771,7 +2771,7 @@ def customer_section(request):
     
     # print '!!!!!!!!!!!!!!!! ts_data ===================================== ', ts_data
     # print '!!!!!!!!!!!!!!!! TS VIEW SESS ===================================== ', request.session['time_series_view']
-    print '!!!!!!!!!!!!!!!! TS VIEW ===================================== ', time_series_view
+    # print '!!!!!!!!!!!!!!!! TS VIEW ===================================== ', time_series_view
     
     
     data = {
