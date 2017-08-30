@@ -1546,7 +1546,6 @@ def createTimeSeriesResults(aoi, file_in, file_out):
 
     if attributes_reports:
         for attr in attributes_reports:
-            # try:
             result_year = attr.shelfdata.root_filename
             sub_dir_name = SUB_DIRECTORIES[attr.statistic]
             sub_dir = result_year + '/' + sub_dir_name
@@ -1565,62 +1564,54 @@ def createTimeSeriesResults(aoi, file_in, file_out):
                     if ext == '.tif':
                         file_ts_tif = os.path.join(project_directory, f)
                         
-                        ts_day = f.split(result_year+'_')[1]
-                        ts_day = ts_day.split('_')[0]
-                        ts_date = date(int(result_year), 1, 1)
-                        ts_delta = timedelta(days=int(ts_day)-1)
-                        result_date = ts_date + ts_delta
-                        ts_name = '{0}_{1}_{2}_{3}'.format(aoi.name, result_year, sub_dir_name, ts_day)
-                        ts_value = '0'
+                        try:
+                            ts_day = f.split(result_year+'_')[1]
+                            ts_day = ts_day.split('_')[0]
+                            ts_date = date(int(result_year), 1, 1)
+                            ts_delta = timedelta(days=int(ts_day)-1)
+                            result_date = ts_date + ts_delta
+                            ts_name = '{0}_{1}_{2}_{3}'.format(aoi.name, result_year, sub_dir_name, ts_day)
+                            ts_value = '0'
 
-                        command_line_ts = '{0} {1} {2} {3}'.format(
-                                                SCRIPT_GETPOLYINFO,
-                                                file_ts_tif,
-                                                file_in,
-                                                file_out
-                                            )
+                            command_line_ts = '{0} {1} {2} {3}'.format(
+                                                    SCRIPT_GETPOLYINFO,
+                                                    file_ts_tif,
+                                                    file_in,
+                                                    file_out
+                                                )
 
-                        proc_script = Popen(command_line_ts, shell=True)
-                        proc_script.wait()
+                            proc_script = Popen(command_line_ts, shell=True)
+                            proc_script.wait()
 
-                        file_out_coord_open = open(file_out)
+                            file_out_coord_open = open(file_out)
 
-                        for line in file_out_coord_open.readlines():
-                            new_line = line.replace(' ', '')
-                            new_line = new_line.replace('\n', '')
-                        
-                            # print '!!!!!!! 1 NEW LINE ========================== ', new_line
-
-                            if new_line:
-                                ts_value = new_line.split(',')[2]
-                                scale = attr.shelfdata.scale
-
+                            for line in file_out_coord_open.readlines():
+                                new_line = line.replace(' ', '')
+                                new_line = new_line.replace('\n', '')
+                            
                                 # print '!!!!!!! 1 NEW LINE ========================== ', new_line
 
-                                if scale:
-                                    ts_value = str(float(ts_value) / scale)
+                                if new_line:
+                                    ts_value = new_line.split(',')[2]
+                                    scale = attr.shelfdata.scale
 
-                                # print '!!!!!!! 2 NEW LINE ========================== ', new_line
-                        
-                        addTsToDB(ts_name, aoi.user, aoi.data_set, aoi, result_year,
-                                    sub_dir_name, result_date, ts_value)
+                                    # print '!!!!!!! 1 NEW LINE ========================== ', new_line
 
-                        # list_files_tif.append(fl_tif)
-                        # list_data_db.append(str_data_db)
+                                    if scale:
+                                        ts_value = str(float(ts_value) / scale)
 
-                        # print '!!!!!!!!!! DAY ========================= ', ts_day
-                        # print '!!!!!!!!!! DATE ========================= ', result_date
-            # except Exception, e:
-            #     pass
+                                    # print '!!!!!!! 2 NEW LINE ========================== ', new_line
+                            
+                            addTsToDB(ts_name, aoi.user, aoi.data_set, aoi, result_year,
+                                        sub_dir_name, result_date, ts_value)
 
-            
+                            # list_files_tif.append(fl_tif)
+                            # list_data_db.append(str_data_db)
 
-    # print '!!!!!!!!!! FILE createTimeSeriesResults ========================= ', list_files_tif
-    
-    # file_path_in_coord_tmp,
-    # file_path_out_ts_coord_tmp
-
-    # return list_files_tif, list_data_db
+                            # print '!!!!!!!!!! DAY ========================= ', ts_day
+                            # print '!!!!!!!!!! DATE ========================= ', result_date
+                        except IndexError:
+                            pass
 
 
 # view Customer Section
