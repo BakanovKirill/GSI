@@ -2158,7 +2158,8 @@ def customer_section(request):
                 if request.get_host() == '127.0.0.1:8000':
                     data = 'http://indy4.epcc.ed.ac.uk/media/kml/tree-count-1.kml'
                 else:
-                    data = os.path.join(absolute_kml_url, select_polygon)
+                    # data = os.path.join(absolute_kml_url, select_polygon)
+                    data = select_polygon.kml_url
 
                 # print '!!!!!!!!!!!!!!! DATA URL =================== ', data
 
