@@ -1695,7 +1695,7 @@ def customer_section(request):
 
     # Data for the TS Diagramm
     ts_title = ''
-    ts_subtitle = ''
+    # ts_subtitle = ''
     ts_units = 'UNITS, ha'
     ts_series_name = ''
     ts_stat_code = ''
@@ -2705,7 +2705,7 @@ def customer_section(request):
         for d in ts_selected:
             # print '!!!!!!!!!!!!!!!! TS DATE ===================================== ', d.result_date
             ts_title = 'Time Series diagram'
-            ts_subtitle = '{0}'.format(d.customer_polygons.name)
+            # ts_subtitle = '{0}'.format(d.customer_polygons.name)
             ts_statistic = SUB_DIRECTORIES_REVERCE[d.stat_code]
             ts_units = 'Ha'
             
@@ -2740,11 +2740,13 @@ def customer_section(request):
                 if tsr_date[0] != ts_series_name or ts_stat_code != d.stat_code:
                     ts_data = ts_data[0:-1]
                     ts_data += '$$$'
-                    tmp = '{0},{1},{2},{3},{4}$'.format(
-                                tsr.stat_code, tsr_date[0], int(tsr_date[1])-1, tsr_date[2], tsr.value_of_time_series)
+                    tmp = '{0},{1},{2},{3},{4},{5}$'.format(
+                                d.customer_polygons.name, tsr.stat_code, tsr_date[0],
+                                int(tsr_date[1])-1, tsr_date[2], tsr.value_of_time_series)
                 else:
-                    tmp = '{0},{1},{2},{3},{4}$'.format(
-                                tsr.stat_code, tsr_date[0], int(tsr_date[1])-1, tsr_date[2], tsr.value_of_time_series)
+                    tmp = '{0},{1},{2},{3},{4},{5}$'.format(
+                                d.customer_polygons.name, tsr.stat_code, tsr_date[0],
+                                int(tsr_date[1])-1, tsr_date[2], tsr.value_of_time_series)
 
                 ts_data += tmp
                 ts_series_name = d.result_year
@@ -2793,7 +2795,7 @@ def customer_section(request):
         'legend_scale': legend_scale,
 
         'ts_title': ts_title,
-        'ts_subtitle': ts_subtitle,
+        # 'ts_subtitle': ts_subtitle,
         'ts_units': ts_units,
         'ts_data': ts_data,
         # 'ts_series_name': ts_series_name,

@@ -7,6 +7,9 @@ function getDataSeries() {
 
         var ts_select_name = '';
         var ts_select_data = [];
+        var ts_select_subtitle = '';
+        // ts_subtitle = '';
+
         
         // var ts_tmp_dict;
         var data_sub_list = data_list[n].split('$');
@@ -23,26 +26,35 @@ function getDataSeries() {
             //     parseFloat(data_value[3])
             // ];
             var tmp = [
-                Date.UTC(2010, parseInt(data_value[2]), parseInt(data_value[3])),
-                parseFloat(data_value[4])
+                Date.UTC(2010, parseInt(data_value[3]), parseInt(data_value[4])),
+                parseFloat(data_value[5])
             ];
 
             ts_select_data.push(tmp);
-            ts_select_name = data_value[1] + '-' + data_value[0];
+            ts_select_name = data_value[2] + '-' + data_value[1];
+            ts_select_subtitle = data_value[0] + ', ';
             // tmp = '';
         }
 
-        // alert('getDataSeries DATA: '+ts_select_data);
+        // alert('ts_select_subtitle: '+ts_select_subtitle);
 
         // alert('NAME: '+ts_select_name);
-
+        ts_subtitle = ts_subtitle + ts_select_subtitle;
+        ts_select_subtitle = '';
         var ts_tmp_dict = {
             'name': ts_select_name,
             'data': ts_select_data
         }
 
         ts_series.push(ts_tmp_dict);
+
+        // alert('ts_subtitle: '+ts_subtitle);
     }
+
+    ts_subtitle = ts_subtitle.split(', ').filter(function (e, i, arr) {
+                return arr.lastIndexOf(e) === i;
+            }).join(', ');
+    ts_subtitle = 'AOI: ' + ts_subtitle.substring(0, ts_subtitle.length - 2);
 
     initHighcharts(ts_series);
 
@@ -66,7 +78,7 @@ function initHighcharts(ts_series) {
             text: title
         },
         subtitle: {
-            text: subtitle
+            text: ts_subtitle
         },
         xAxis: {
             type: 'datetime',
