@@ -1481,20 +1481,25 @@ def getListTifFiles(customer, dataset):
                 sub_dir_path = os.path.join(PROJECTS_PATH, dataset.results_directory, sub_dir)
 
                 project_directory = os.path.join(sub_dir_path)
-                root, dirs, files = os.walk(project_directory).next()
-                dirs.sort()
-                files.sort()
 
-                for f in files:
-                    fl, ext = os.path.splitext(f)
+                # print '!!!!!!!!!! sub_dir_path ========================= ', sub_dir_path
+                # print '!!!!!!!!!! project_directory ========================= ', project_directory
 
-                    if ext == '.tif':
-                        fl_tif = os.path.join(project_directory, f)
-                        str_data_db = '{0},{1},'.format(attr.shelfdata.id, fl_tif)
+                if os.path.exists(project_directory):
+                    root, dirs, files = os.walk(project_directory).next()
+                    dirs.sort()
+                    files.sort()
 
-                        list_files_tif.append(fl_tif)
-                        list_data_db.append(str_data_db)
-                        break
+                    for f in files:
+                        fl, ext = os.path.splitext(f)
+
+                        if ext == '.tif':
+                            fl_tif = os.path.join(project_directory, f)
+                            str_data_db = '{0},{1},'.format(attr.shelfdata.id, fl_tif)
+
+                            list_files_tif.append(fl_tif)
+                            list_data_db.append(str_data_db)
+                            break
             else:
                 name_1 = attr.shelfdata.root_filename
                 name_2 = dataset.results_directory.split('/')[0]
@@ -1505,7 +1510,7 @@ def getListTifFiles(customer, dataset):
                 list_files_tif.append(fl_tif)
                 list_data_db.append(str_data_db)
 
-    print '!!!!!!!!!! FILE ========================= ', list_files_tif
+    # print '!!!!!!!!!! FILE ========================= ', list_files_tif
     # print '!!!!!!!!!! DATA DB ========================= ', list_data_db
 
     return list_files_tif, list_data_db
@@ -1541,13 +1546,15 @@ def createTimeSeriesResults(aoi, file_in, file_out):
 
     if attributes_reports:
         for attr in attributes_reports:
-            try:
-                result_year = attr.shelfdata.root_filename
-                sub_dir_name = SUB_DIRECTORIES[attr.statistic]
-                sub_dir = result_year + '/' + sub_dir_name
-                sub_dir_path = os.path.join(PROJECTS_PATH, aoi.data_set.results_directory, sub_dir)
+            # try:
+            result_year = attr.shelfdata.root_filename
+            sub_dir_name = SUB_DIRECTORIES[attr.statistic]
+            sub_dir = result_year + '/' + sub_dir_name
+            sub_dir_path = os.path.join(PROJECTS_PATH, aoi.data_set.results_directory, sub_dir)
 
-                project_directory = os.path.join(sub_dir_path)
+            project_directory = os.path.join(sub_dir_path)
+
+            if os.path.exists(project_directory):
                 root, dirs, files = os.walk(project_directory).next()
                 dirs.sort()
                 files.sort()
@@ -1603,8 +1610,8 @@ def createTimeSeriesResults(aoi, file_in, file_out):
 
                         # print '!!!!!!!!!! DAY ========================= ', ts_day
                         # print '!!!!!!!!!! DATE ========================= ', result_date
-            except Exception, e:
-                pass
+            # except Exception, e:
+            #     pass
 
             
 
