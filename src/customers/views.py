@@ -2700,7 +2700,7 @@ def customer_section(request):
         for ar in attribute_report:
             show_report_ap.append(ar.shelfdata.attribute_name)
 
-    ts_all = TimeSeriesResults.objects.all().order_by('name', 'stat_code')
+    ts_all = TimeSeriesResults.objects.filter(user=customer, data_set=data_set).order_by('stat_code')
     time_series_show = ts_all.order_by('result_year', 'stat_code').distinct(
                             'result_year', 'stat_code')
     # time_series_show = TimeSeriesResults.objects.order_by('result_year', 'stat_code').distinct(
