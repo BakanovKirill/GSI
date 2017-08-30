@@ -2740,9 +2740,11 @@ def customer_section(request):
                 if tsr_date[0] != ts_series_name or ts_stat_code != d.stat_code:
                     ts_data = ts_data[0:-1]
                     ts_data += '$$$'
-                    tmp = '{0},{1},{2},{3}$'.format(tsr_date[0], int(tsr_date[1])-1, tsr_date[2], tsr.value_of_time_series)
+                    tmp = '{0},{1},{2},{3},{4}$'.format(
+                                tsr.stat_code, tsr_date[0], int(tsr_date[1])-1, tsr_date[2], tsr.value_of_time_series)
                 else:
-                    tmp = '{0},{1},{2},{3}$'.format(tsr_date[0], int(tsr_date[1])-1, tsr_date[2], tsr.value_of_time_series)
+                    tmp = '{0},{1},{2},{3},{4}$'.format(
+                                tsr.stat_code, tsr_date[0], int(tsr_date[1])-1, tsr_date[2], tsr.value_of_time_series)
 
                 ts_data += tmp
                 ts_series_name = d.result_year

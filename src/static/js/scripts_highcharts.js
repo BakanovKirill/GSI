@@ -18,12 +18,17 @@ function getDataSeries() {
             
             var data_value = data_sub_list[m].split(',');
 
+            // var tmp = [
+            //     Date.UTC(parseInt(data_value[0]), parseInt(data_value[1]), parseInt(data_value[2])),
+            //     parseFloat(data_value[3])
+            // ];
             var tmp = [
-                Date.UTC(parseInt(data_value[0]),parseInt(data_value[1]), parseInt(data_value[2])),
-                parseFloat(data_value[3])
+                Date.UTC(2010, parseInt(data_value[2]), parseInt(data_value[3])),
+                parseFloat(data_value[4])
             ];
+
             ts_select_data.push(tmp);
-            ts_select_name = data_value[0];
+            ts_select_name = data_value[1] + '-' + data_value[0];
             // tmp = '';
         }
 
@@ -66,7 +71,7 @@ function initHighcharts(ts_series) {
         xAxis: {
             type: 'datetime',
             dateTimeLabelFormats: {
-                month: '%e/%b/%Y'
+                month: '%e/%b'
             },
             title: {
                 text: 'Date'
@@ -91,7 +96,8 @@ function initHighcharts(ts_series) {
             }
         },
 
-        series: ts_series
+        series: ts_series,
+        pointInterval: 24 * 3600 * 1000 // one day
     });
 }
 
