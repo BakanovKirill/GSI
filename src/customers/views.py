@@ -2101,6 +2101,7 @@ def customer_section(request):
             request.session['tab_active'] = 'view'
             # request.session['time_series_view'] = False
             tab_active = request.session['tab_active']
+            request.session['time_series_list'] = ''
             # time_series_view = request.session['time_series_view']
             
             for ip in cip:
