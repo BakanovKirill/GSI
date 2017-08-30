@@ -411,10 +411,10 @@ function setPolygon(obj) {
     var form_url = $('#customer_section').attr('action');
     var polygon_name = obj.value;
 
-    alert('AOI NAME: '+polygon_name);
+    // alert('AOI NAME: '+polygon_name);
 
     if (checked) {
-        alert('CHECKED: '+checked);
+        // alert('CHECKED: '+checked);
         $.ajax({
             url: form_url,
             type: 'GET',
@@ -426,15 +426,16 @@ function setPolygon(obj) {
             },
             'error': function(xhr, status, error){
                 // alert('status 1: '+status);
-                alert('error: '+error);
+                // alert('error: '+error);
                 var message = 'An unexpected error occurred. Try later.';
+                alert(message);
             },
             'success': function(data, status, xhr){
-                alert('DATA: '+data);
+                // alert('DATA: '+data);
                 var data_list = data.split('$$$');
 
-                alert('DATA URL: '+data_list[0]);
-                alert('DATA ID: '+data_list[2]);
+                // alert('DATA URL: '+data_list[0]);
+                // alert('DATA ID: '+data_list[2]);
                 
                 // When the user clicks on div, open the popup
                 var kml = new google.maps.KmlLayer({
