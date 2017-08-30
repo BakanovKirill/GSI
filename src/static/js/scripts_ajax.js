@@ -405,7 +405,7 @@ function closeIF() {
 
 
 function setPolygon(obj) {
-    alert('CHECKED: '+obj.checked);
+    // alert('CHECKED: '+obj.checked);
 
     var checked = obj.checked;
     var form_url = $('#customer_section').attr('action');
@@ -414,6 +414,7 @@ function setPolygon(obj) {
     alert('AOI NAME: '+polygon_name);
 
     if (checked) {
+        alert('CHECKED: '+checked);
         $.ajax({
             url: form_url,
             type: 'GET',
