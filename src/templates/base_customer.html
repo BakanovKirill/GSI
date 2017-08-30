@@ -133,7 +133,7 @@
                                             <li role="presentation" {% if tab_active == 'report' %}class="active"{% endif %}><a href="#report" class="a-tab" aria-controls="report" role="tab" data-toggle="tab" value="report" onclick="selectTab(this)">Report</a></li>
                                             <li role="presentation" {% if tab_active == 'aoi' %}class="active"{% endif %}><a href="#aoi" class="a-tab" aria-controls="aoi" role="tab" data-toggle="tab" value="aoi" onclick="selectTab(this)">AOI</a></li>
 
-                                            {% if is_ts %}
+                                            {% if time_series_show %}
                                                 <li role="presentation" {% if tab_active == 'ts' %}class="active"{% endif %}><a href="#ts" class="a-tab" aria-controls="ts" role="tab" data-toggle="tab" value="ts" onclick="selectTab(this)">Time Series</a></li>
                                             {% endif %}
                                         </ul>
@@ -230,7 +230,7 @@
                                                         <div class="col-md-5 left">
                                                             <div class="snap-top-child-left">
                                                                 <button type="button" class="btn btn-link" name="select-all-ts" onclick="selectAllCheck(this.form.time_series, 1);">
-                                                                    Select All == {{ time_series_show }}
+                                                                    Select All
                                                                 </button>
                                                             </div>
                                                         </div>
