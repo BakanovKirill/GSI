@@ -115,5 +115,5 @@ function initHighcharts(ts_series) {
 
 
 $(document).ready(function(){
-    // getDataSeries();
+    getDataSeries();
 });
