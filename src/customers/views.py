@@ -2771,7 +2771,7 @@ def customer_section(request):
     
     # print '!!!!!!!!!!!!!!!! ts_data ===================================== ', ts_data
     # print '!!!!!!!!!!!!!!!! TS VIEW SESS ===================================== ', request.session['time_series_view']
-    # print '!!!!!!!!!!!!!!!! TS VIEW ===================================== ', time_series_view
+    print '!!!!!!!!!!!!!!!! TS VIEW ===================================== ', time_series_view
     
     
     data = {
