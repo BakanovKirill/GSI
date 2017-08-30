@@ -2094,15 +2094,18 @@ def customer_section(request):
         data_get_ajax = request.GET
         cip = CustomerInfoPanel.objects.filter(user=customer)
 
-        # print 'GET customer_section ====================== ', data_get_ajax
+        # print 'GET customer_section ====================== ', data_get_ajax['datasets_id']
 
         # When user celect a new DataSet, the previous celected DataSet to remove
         if 'datasets_id' in data_get_ajax:
+            request.session['select_data_set'] = data_get_ajax['datasets_id']
+            data_set_id = request.session['select_data_set']
+
             request.session['tab_active'] = 'view'
             # request.session['time_series_view'] = False
             tab_active = request.session['tab_active']
             request.session['time_series_list'] = [m.id for m in TimeSeriesResults.objects.filter(
-                                                    user=customer, data_set=data_set)]
+                                                    user=customer, data_set__id=data_set_id)]
             # time_series_view = request.session['time_series_view']
             
             for ip in cip:
@@ -2112,11 +2115,11 @@ def customer_section(request):
 
             status = check_current_dataset(request, data_get_ajax)
 
-            if request.session.get('select_data_set', False):
-                data_set_id = int(request.session['select_data_set'])
-            else:
-                request.session['select_data_set'] = data_sets[0].id
-                data_set_id = request.session['select_data_set']
+            # if request.session.get('select_data_set', False):
+            #     data_set_id = int(request.session['select_data_set'])
+            # else:
+            #     request.session['select_data_set'] = data_sets[0].id
+            #     data_set_id = request.session['select_data_set']
 
             # print 'data_set_id REQ ========================== ', request.session['select_data_set']
             # print '!!!!!!!!!! data_set_id ========================== ', data_set_id
