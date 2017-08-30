@@ -1,8 +1,8 @@
 function getDataSeries() {
     // alert('getDataSeries: '+ts_data);
     
-    if (message) {
-        var data_list = message.split('$$$');
+    if (ts_data) {
+        var data_list = ts_data.split('$$$');
 
         for (var n = 1; n < data_list.length; n++) {
             // alert('$$$ getDataSeries: '+data_list[n]);
