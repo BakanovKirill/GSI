@@ -2140,29 +2140,36 @@ def customer_section(request):
                 data = 'There is no such polygon.'
 
         if 'polygon' in data_get_ajax:
-            # polygon = data_get_ajax.get('polygon', '')
-            select_polygon = CustomerPolygons.objects.none()
-            poly_id = data_get_ajax.get('polygon', '')
-            polygon_text = ''
-            polygon_id = ''
+            try:
+                # polygon = data_get_ajax.get('polygon', '')
+                select_polygon = CustomerPolygons.objects.none()
+                poly_id = data_get_ajax.get('polygon', '')
+                polygon_text = ''
+                polygon_id = ''
 
-            if CustomerPolygons.objects.filter(id=poly_id).exists():
-                select_polygon = CustomerPolygons.objects.get(id=poly_id)
-                polygon_id = 'close_' + str(select_polygon.id)
-                polygon_text += '<span class="close" id="{0}" onclick="closeIF();">&times;</span>'.format(polygon_id);
-                polygon_text += str(select_polygon.text_kml)
+                if CustomerPolygons.objects.filter(id=poly_id).exists():
+                    select_polygon = CustomerPolygons.objects.get(id=poly_id)
+                    polygon_id = 'close_' + str(select_polygon.id)
+                    polygon_text += '<span class="close" id="{0}" onclick="closeIF();">&times;</span>'.format(polygon_id);
+                    polygon_text += str(select_polygon.text_kml)
 
-            # data = os.path.join(absolute_kml_url, polygon)
+                # data = os.path.join(absolute_kml_url, polygon)
 
-            if request.get_host() == '127.0.0.1:8000':
-                data = 'http://indy4.epcc.ed.ac.uk/media/kml/tree-count-1.kml'
-            else:
-                data = os.path.join(absolute_kml_url, select_polygon)
+                if request.get_host() == '127.0.0.1:8000':
+                    data = 'http://indy4.epcc.ed.ac.uk/media/kml/tree-count-1.kml'
+                else:
+                    data = os.path.join(absolute_kml_url, select_polygon)
 
-            # print '!!!!!!!!!!!!!!! DATA URL =================== ', data
+                # print '!!!!!!!!!!!!!!! DATA URL =================== ', data
 
-            data += '$$$' + polygon_text + '$$$' + str(polygon_id)
-            # data += polygon_text
+                data += '$$$' + polygon_text + '$$$' + str(polygon_id)
+                # data += polygon_text
+            except Exception, e:
+                print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! AOI ERROR ============================ ', e
+                # ############ WRITE LOG ##############################
+                customer_section.write('AOI ERROR: '+str(e))
+                customer_section.write('\n')
+                # ############ WRITE LOG ##############################
 
         if 'tab_active' in data_get_ajax:
             tab_active = data_get_ajax.get('tab_active', '')
@@ -2256,7 +2263,7 @@ def customer_section(request):
             info_window += '<thead>\n'
             info_window += '<tr bgcolor="#CFCFCF">\n'
             info_window += '<th align="left" style="padding:10px">Attribute</th>\n'
-            info_window += '<th style="padding:10px">Value</th>\n'
+            info_window += '<th style="padding:10px">Units per Hectare</th>\n'
             info_window += '<th style="padding:10px">Units</th>\n'
             info_window += '<th style="padding:10px">Total</th>\n'
             info_window += '</tr>\n'
@@ -2766,7 +2773,7 @@ def customer_section(request):
         time_series_view = True
     else:
         time_series_view = False
-        
+
     # time_series_view = request.session['time_series_view']
     
     # print '!!!!!!!!!!!!!!!! ts_data ===================================== ', ts_data
