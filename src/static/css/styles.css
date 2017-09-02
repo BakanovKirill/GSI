@@ -88,7 +88,9 @@ input, textarea {
 }
 
 input[type="file"] {
-    display: inline;
+    display: none;
+
+    /*display: inline;*/
 }
 
 input[type="text"]:disabled {
@@ -102,6 +104,16 @@ input:focus, textarea:focus {
     /*box-shadow: inset 0 1px 1px rgba(0,0,0,.075);*/
     /*webkit-box-shadow: inset 0 1px 1px rgba(255,255,255,.075);*/
 }
+
+/*div.upload-button {
+    background:url('../img/upload-network.png') no-repeat;
+
+    overflow: hidden;
+    width: 195px;
+    height: 137px;
+    cursor: pointer;
+
+}*/
 
 #opacity {
     border: none !important;
@@ -219,11 +231,13 @@ th {
 
 /* Uploads file */
 .upload-file {
-    position: relative;
-    left: 18%;
-    width: 50%;
+    position: relative !important;
+    left: 18% !important;
+    width: 50% !important;
     border-style: none none !important;
     box-shadow: 0 0 0px rgba(0,0,0,0) !important;
+    border: none !important;
+    height: auto;
     /*float: left;*/
     /*text-align: center !important;*/
     /*padding: 0;*/
@@ -858,7 +872,7 @@ li.active-main-menu, li.active-main-menu a:hover, li.li-menu > a:hover, .title:h
 /* Select styles */
 .form-control {
     background: transparent !important;
-    border: 1px solid #283890 !important;
+    /*border: 1px solid #283890 !important;*/
     border-radius: 0px !important;
     color: #283890 !important;
 }

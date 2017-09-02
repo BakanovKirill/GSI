@@ -48,6 +48,7 @@ from gsi.settings import (BASE_DIR, RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM,
                         KML_DIRECTORY, KML_PATH, ATTRIBUTES_NAME, FTP_PATH,
                         LUT_DIRECTORY, SCRIPT_TIFPNG, SCRIPT_GETPOLYINFO,
                         LEGENDS_DIRECTORY, LEGENDS_PATH)
+from gsi.gsi_forms import UploadFileForm
 
 
 SUB_DIRECTORIES = {
@@ -2974,21 +2975,6 @@ def customer_delete_file(request):
     return data
 
 
-# Delete TMP file
-# @user_passes_test(lambda u: u.is_superuser)
-@login_required
-@render_to('customers/customer_time_series.html')
-def customer_time_series(request):
-    customer = request.user
-    title = u'"{0}"" Time Series'.format(customer)
-
-    data = {
-        'title': title,
-    }
-
-    return data
-
-
 # Lister files
 @login_required
 @render_to('customers/files_lister.html')
@@ -3017,6 +3003,7 @@ def files_lister(request):
 
     if request.method == "POST":
         data_post = request.POST
+        form = UploadFileForm(request.POST, request.FILES)
 
         # print '!!!!!!!!!! POST ================== ', data_post
 
@@ -3024,12 +3011,14 @@ def files_lister(request):
             filename_customer = data_post['delete_button']
             path_filename = os.path.join(path_ftp_user, filename_customer)
             os.remove(path_filename)
+    else:
+        form = UploadFileForm()
 
     dirs, files, info_message = get_files_dirs(url_path, path_ftp_user)
 
     data = {
         'files': files,
-        # 'dirs': dirs,
+        'form': form,
     }
 
     return data
