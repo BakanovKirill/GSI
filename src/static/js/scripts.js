@@ -333,15 +333,11 @@ function setStatic() {
     });
 }
 
-function get_file_name() {
-    // alert('GET FILE NAME');
-    // var file_name = document.getElementById('upload_file_customer').files.name;
-    // alert('FILE 1: '+file_name);
-    
+function getFileName() {
     $('input[type="file"]').on('change', function (event, files, label) {
-        var file_name = document.getElementById('upload_file_customer').files[0].name;
-        var span_obj = document.getElementById('upload_file').innerHTML = file_name;
-        // alert('FILE 2: '+file_name);
+        var file_name = document.getElementById('id_test_data').files[0].name;
+        $('span.file-selected').text(file_name);
+        // alert('FILE 2: '+span_obj);
     });
 }
 
@@ -373,6 +369,20 @@ function toogleVisibleDrawPlot() {
     }
 }
 
+// function getFileNames() {
+//     var upload = document.getElementsByClassName("no-file-selected");
+
+//     return Array.prototype.map.call(upload.files, function(file) {
+//         return file.name;
+//     });
+
+//     upload.onchange = function() {
+//         alert(getFileNames());
+//     }
+// }
+
+
+
 
 $(document).ready(function(){
     //selectAll();
@@ -394,9 +404,9 @@ $(document).ready(function(){
     setImageInfoPanel();
     resizeScreen();
     setStatic();
-    get_file_name();
+    // get_file_name();
     toogleVisibleDrawPlot();
-    // drag();
+    getFileName();
     // tabsCustomerMenu();
     // showCheckboxes();
 });

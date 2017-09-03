@@ -12,6 +12,8 @@ import pickle
 from datetime import datetime, date, timedelta
 import json
 import csv
+from pykml import parser
+
 # import pykml
 # from pykml import parser
 # from pykml.parser import Schema
@@ -1297,6 +1299,9 @@ def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute
     # order_data_set = data_set.order_by('attribute_name')
     
     warning_message = ''
+    tif_path = ''
+    png_path = ''
+    url_png = ''
 
     try:
         attribute_name = shelf_data.attribute_name
@@ -1312,6 +1317,8 @@ def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute
     project_name = results_directory.split('/')[0]
     # year_dir = shelf_data.root_filename
     sub_dir = SUB_DIRECTORIES[stat_file]
+
+    # print '!!!!!!!!!!!!! is_ts ========================= ', is_ts
 
     if is_ts:
         files_list = []
@@ -1649,6 +1656,8 @@ def customer_section(request):
     polygons_path = os.path.join(MEDIA_ROOT, 'kml')
     customer_access = CustomerAccess.objects.filter(user=customer)
     customer_access_ds = None
+
+    path_ftp_user = os.path.join(FTP_PATH, customer.username)
 
     # COORDINATE
     # in_ts_coord_tmp = str(customer) + '_ts_coord_tmp.kml'
@@ -2349,11 +2358,17 @@ def customer_section(request):
 
         if 'delete_button' in data_post:
             kml_file = data_post.get('delete_button')
-
-            # print 'kml_file ======================================== ', kml_file
             cur_area = get_object_or_404(
                 CustomerPolygons, kml_name=kml_file)
+            ftp_kml = os.path.join(path_ftp_user, cur_area.kml_name)
+
             os.remove(cur_area.kml_path)
+
+            try:
+                os.remove(ftp_kml)
+            except Exception:
+                pass
+            
             cur_data_polygons = DataPolygons.objects.filter(
                                     customer_polygons=cur_area
                                 )
@@ -2368,6 +2383,10 @@ def customer_section(request):
         if 'area_name' in data_post:
             area_id = data_post.get('save_area_name', '')
 
+            # print 'area_id ======================================== ', area_id
+
+            # path_ftp_user
+
             if area_id:
                 old_area = CustomerPolygons.objects.get(pk=area_id)
                 new_area_name = data_post.get('area_name')
@@ -2377,7 +2396,18 @@ def customer_section(request):
                 new_path = os.path.join(KML_PATH, new_kml_name)
                 new_kml_url = os.path.join(absolute_kml_url, new_kml_name)
 
-                os.rename(old_path, new_path)
+                old_ftp_kml = os.path.join(path_ftp_user, old_area.kml_name)
+                new_ftp_kml = os.path.join(path_ftp_user, new_kml_name)
+
+                try:
+                    os.rename(old_path, new_path)
+                except Exception:
+                    pass
+
+                try:
+                    os.rename(old_ftp_kml, new_ftp_kml)
+                except Exception:
+                    pass
 
                 area = CustomerPolygons.objects.filter(pk=area_id).update(
                             name=new_area_name,
@@ -2975,14 +3005,35 @@ def customer_delete_file(request):
     return data
 
 
+def copy_file_kml(old_path, new_path):
+    command_line = 'cp {0} {1}'.format(old_path, new_path)
+    proc = Popen(command_line, shell=True)
+    proc.wait()
+
+    with open(old_path) as f:
+        doc = parser.parse(f)
+
+    doc = doc.getroot()
+
+    return doc
+
 # Lister files
 @login_required
 @render_to('customers/files_lister.html')
 def files_lister(request):
     customer = request.user
+    data_set = DataSet.objects.none()
     path_ftp_user = os.path.join(FTP_PATH, customer.username)
     files_list = os.listdir(path_ftp_user)
     url_path = os.path.join('/media/CUSTOMER_FTP_AREA', customer.username)
+
+    scheme = '{0}://'.format(request.scheme)
+    absolute_kml_url = os.path.join(scheme, request.get_host(), KML_DIRECTORY)
+
+    try:
+        data_set = CustomerInfoPanel.objects.get(user=customer).data_set
+    except CustomerInfoPanel.DoesNotExist:
+        pass
 
     # Ajax when deleting objects
     if request.method == "POST" and request.is_ajax():
@@ -3006,11 +3057,41 @@ def files_lister(request):
         form = UploadFileForm(request.POST, request.FILES)
 
         # print '!!!!!!!!!! POST ================== ', data_post
+        
+        if 'load_button' in data_post:
+            if form.is_valid():
+                file_name = str(request.FILES['test_data']).decode('utf-8')
+                path_test_data = os.path.join(path_ftp_user, file_name)
+                name = str(file_name).split('.')[:-1]
+                ext = str(file_name).split('.')[-1]
+
+                handle_uploaded_file(request.FILES['test_data'],
+                                     path_test_data)
+
+                if ext == 'kml':
+                    kml_url = os.path.join(absolute_kml_url, file_name)
+                    new_path = os.path.join(KML_PATH, file_name)
+                    doc_kml = copy_file_kml(path_test_data, new_path)
+                    info_window = '<h4 align="center">Name: {0}</h4>\n'.format(doc_kml.Document.Placemark.name)
+                    info_window += '<p align="center"><span><b>Description: {0}</b></span></p>'.format(
+                                        doc_kml.Document.Placemark.description)
+
+                    addPolygonToDB(name[0], file_name, customer, new_path, kml_url, data_set, text_kml=info_window)
 
         if 'delete_button' in data_post:
             filename_customer = data_post['delete_button']
-            path_filename = os.path.join(path_ftp_user, filename_customer)
-            os.remove(path_filename)
+            path_filename_ftp = os.path.join(path_ftp_user, filename_customer)
+            path_filename_kml = os.path.join(KML_PATH, filename_customer)
+            os.remove(path_filename_ftp)
+
+            try:
+                if os.path.exists(path_filename_kml):
+                    os.remove(path_filename_kml)
+                    CustomerPolygons.objects.filter(kml_path=path_filename_kml).delete()
+            except Exception, e:
+                print '!!!!! ERROR FTP KML FILE ================ ', e
+
+
     else:
         form = UploadFileForm()
 

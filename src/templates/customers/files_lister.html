@@ -11,21 +11,19 @@
                       role="form" class="form-horizontal">
                     {% csrf_token %}
 
-                    <div class="row margin-top-15">
-                        <div class="form-group upload-button center col-md-3">
-                            <span class="right">Select test data to upload:</span>
-                            <label for="id_test_data">
-                                <img src="{% static 'img/upload-network.png' %}" />
-                            </label>
-                            {{ form.test_data }}
-                            <button type="submit" id="load" name="load_button" class="btn btn-primary btn-xs">Load</button>
-                            {% if form.test_data.errors %}
-                                <b class="error-form">{{ form.test_data.errors }}</b>
-                            {% endif %}
-                        </div>
+                    <div class="margin-top-20 margin-bottom-30 right col-md-4 col-md-offset-8">
+                        <span class="right">Select test data to upload:</span>
+                        <label for="id_test_data">
+                            <img src="{% static 'img/upload-network.png' %}" />
+                        </label>
+                        {{ form.test_data }} <span class="file-selected" id="file-selected">No file selected.</span>
+                        <button type="submit" id="load" name="load_button" class="btn btn-primary btn-xs">Load</button>
+                        {% if form.test_data.errors %}
+                            <b class="error-form">{{ form.test_data.errors }}</b>
+                        {% endif %}
                     </div>
 
-                    <table class="table table-striped table-hover margin-top-10">
+                    <table class="table table-striped table-hover">
                         <thead>
                             <tr>
                                 <th class="left">File</th>

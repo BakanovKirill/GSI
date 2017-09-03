@@ -307,7 +307,7 @@ class SatelliteForm(forms.ModelForm):
 
 
 class UploadFileForm(forms.Form):
-    test_data = forms.FileField(label='Load Test Data')
+    test_data = forms.FileField(label='Load Test Data', required=False,)
 
     def __init__(self, *args, **kwargs):
         super(UploadFileForm, self).__init__(*args, **kwargs)

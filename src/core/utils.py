@@ -27,7 +27,6 @@ def handle_uploaded_file(f, path):
         * *f*: File name
         * *path*: Path where to save the file
     """
-
     with open(path, 'a') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
