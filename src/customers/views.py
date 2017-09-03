@@ -3030,10 +3030,10 @@ def files_lister(request):
     scheme = '{0}://'.format(request.scheme)
     absolute_kml_url = os.path.join(scheme, request.get_host(), KML_DIRECTORY)
 
-    try:
-        data_set = CustomerInfoPanel.objects.get(user=customer).data_set
-    except CustomerInfoPanel.DoesNotExist:
-        pass
+    cip_ds = CustomerInfoPanel.objects.filter(user=customer)
+
+    if cip_ds:
+        data_set = cip_ds[0].data_set
 
     # Ajax when deleting objects
     if request.method == "POST" and request.is_ajax():
