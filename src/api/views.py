@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
+from django.http import Http404
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -28,9 +29,11 @@ from core.utils import (validate_status, write_log, get_path_folder_run, execute
 from gsi.models import Run, RunStep, CardSequence, OrderedCardItem, SubCardItem
 from gsi.settings import EXECUTE_FE_COMMAND, KML_PATH
 from cards.models import CardItem
-from customers.models import CustomerPolygons, DataTerraserver, DataSet, CustomerAccess, DataPolygons
-from api.serializers import (CustomerPolygonsSerializer, UserSerializer, CustomerPolygonSerializer,
-                            DataPolygonsSerializer, DataSetsSerializer, DataSetSerializer)
+from customers.models import (CustomerPolygons, DataTerraserver, DataSet, CustomerAccess,
+                                DataPolygons, CustomerInfoPanel, TimeSeriesResults)
+from api.serializers import (CustomerPolygonsSerializer, CustomerPolygonSerializer, 
+                            DataPolygonsSerializer, DataSetsSerializer, DataSetSerializer,
+                            TimeSeriesResultSerializer)
 
 
 def is_finished(run_id, card_id, cur_counter, last, run_parallel):
@@ -147,7 +150,7 @@ def update_run(request, run_id):
     finished = False
     
     ####################### write log file
-    log_update_run.write('STATUS: '+data['status'])
+    log_update_run.write('STATUS: '+str(data['status']))
     log_update_run.write('\n')
     #######################
 
@@ -310,9 +313,9 @@ def update_run(request, run_id):
     
 
 # Example
-class UserListAPIView(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+# class UserListAPIView(generics.ListAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
         
 
 @api_view(['POST'])
@@ -330,180 +333,174 @@ def external_auth_api(request):
     #     return Response(content, status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
     return Response(content, status=url_status)
+
+
+class DataSetList(APIView):
+    """
+    List DataSets.
+    """
+
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    # authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+    data = {'auth': 'Need YOUR ACCESS TOKEN'}
+
+    def get(self, request, format=None):
+        if request.auth:
+            customer_access = CustomerAccess.objects.get(user=request.user)
+            queryset = DataSet.objects.filter(customer_access=customer_access).order_by('id')
+            serializer = DataSetsSerializer(queryset, many=True)
+            data = serializer.data
+
+        return Response(data)
+
+
+class DataSetDetail(APIView):
+    """
+    Retrieve a DataSet instance.
+    """
+
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    # authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+    data = {'auth': 'Need YOUR ACCESS TOKEN'}
+
+    def get_object(self, ds_id):
+        try:
+            return DataSet.objects.get(pk=ds_id)
+        except DataSet.DoesNotExist:
+            raise Http404
+
+    def get(self, request, ds_id, format=None):
+        if request.auth:
+            dataset = self.get_object(ds_id)
+            serializer = DataSetsSerializer(dataset)
+            data = serializer.data
+
+        return Response(data)
+
+
+class ShapeFileDetail(APIView):
+    """
+    Retrieve a DataSet instance.
+    """
+
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    # authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+    data = {'auth': 'Need YOUR ACCESS TOKEN'}
+
+    def get_object(self, sf_id):
+        try:
+            return CustomerPolygons.objects.get(pk=sf_id)
+        except CustomerPolygons.DoesNotExist:
+            raise Http404
+
+    def get(self, request, sf_id, format=None):
+        if request.auth:
+            cip = self.get_object(sf_id)
+            serializer = CustomerPolygonSerializer(cip)
+            data = serializer.data
+
+        return Response(data)
+
+
+class TimeSeriesDetail(APIView):
+    """
+    Retrieve a DataSet instance.
+    """
+
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    # authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+    data = {'auth': 'Need YOUR ACCESS TOKEN'}
+
+    def get_object(self, ts_id):
+        try:
+            return TimeSeriesResults.objects.get(pk=ts_id)
+        except TimeSeriesResults.DoesNotExist:
+            raise Http404
+
+    def get(self, request, ts_id, format=None):
+        if request.auth:
+            timeseries = self.get_object(ts_id)
+            serializer = TimeSeriesResultSerializer(timeseries)
+            data = serializer.data
+
+        return Response(data)
         
         
-# class CustomerPolygonsList(APIView):
+# class DataSetsList(APIView):
 #     """
 #     View to list all users in the system.
-#
+
 #     * Requires token authentication.
 #     * Only admin users are able to access this view.
 #     """
-#
-#     authentication_classes = (SessionAuthentication, BasicAuthentication)
-#     # authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    
+#     authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+#     # authentication_classes = (SessionAuthentication, BasicAuthentication)
 #     permission_classes = (IsAuthenticated,)
 #     data = None
-#
+    
+#     def get_queryset(self):
+#         queryset = DataSet.objects.all()
+#         return queryset
+
 #     def get(self, request, format=None):
+#         # print 'GET auth ===================================== ', request.auth
+#         # print 'GET request shapefile ===================================== ', request.query_params
+#         content = {}
+#         error = False
+        
 #         if request.auth:
-#             queryset = CustomerPolygons.objects.filter(user=request.user).order_by('id')
-#             serializer = CustomerPolygonsSerializer(queryset, many=True)
-#             content = serializer.data
+#             if request.query_params:
+#                 try:
+#                     if not 'shapefile' in request.query_params or not 'timeseries' in request.query_params:
+#                         content = {'message error': 'Invalid or missing the parameters for request.'}
+
+#                     if 'shapefile' in request.query_params:
+#                         # dataset_id = request.query_params['dataset']
+#                         shapefile_id = request.query_params['shapefile']
+                        
+#                         # if not DataSet.objects.filter(id=dataset_id).exists():
+#                         #     content['error the parameter "dataset"'] = 'Invalid or missing the parameters "dataset".'
+#                         #     error = True
+#                         # shapefile = CustomerPolygons.objects.get(id=shapefile_id)
+#                         # url_status = status.HTTP_200_OK
+#                         if not CustomerPolygons.objects.filter(id=shapefile_id).exists():
+#                             content['error the parameter "shapefile"'] = 'Invalid or missing the parameters "shapefile".'
+#                         else:
+#                             if not error:
+#                                 data = CustomerPolygons.objects.get(id=shapefile_id)
+#                                 # data = DataSet.objects.get(id=dataset_id, shapefiles=shapefile_id)
+#                                 # serializer = DataSetSerializer(data)
+#                                 serializer = CustomerPolygonSerializer(data)
+#                                 content = serializer.data
+
+#                     if 'timeseries' in request.query_params:
+#                         pass
+#                 except CustomerPolygons.DoesNotExist:
+#                     content = {'message error': 'Invalid or missing the parameters for request.'}
+#             else:
+#                 customer_access = CustomerAccess.objects.get(user=request.user)
+#                 queryset = DataSet.objects.filter(customer_access=customer_access).order_by('id')
+#                 serializer = DataSetsSerializer(queryset, many=True)
+#                 content = serializer.data
 #         else:
 #             content = {
 #                 'auth': 'Need YOUR ACCESS TOKEN',
 #             }
-#
+        
 #         # content = {
 #         #     'user': unicode(request.user),  # `django.contrib.auth.User` instance.
 #         #     'auth': unicode(request.auth),  # None
 #         # }
 #         # print 'request.user ======================== ', request.user
-#
+        
 #         return Response(content)
         
         
-class DataSetsList(APIView):
-    """
-    View to list all users in the system.
-
-    * Requires token authentication.
-    * Only admin users are able to access this view.
-    """
-    
-    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
-    # authentication_classes = (SessionAuthentication, BasicAuthentication)
-    permission_classes = (IsAuthenticated,)
-    data = None
-    
-    def get_queryset(self):
-        queryset = DataSet.objects.all()
-        return queryset
-
-    def get(self, request, format=None):
-        # print 'GET auth ===================================== ', request.auth
-        # print 'GET request shapefile ===================================== ', request.query_params
-        content = {}
-        error = False
-        
-        if request.auth:
-            if request.query_params:
-                try:
-                    if 'dataset' in request.query_params and 'shapefile' in request.query_params:
-                        dataset_id = request.query_params['dataset']
-                        shapefile_id = request.query_params['shapefile']
-                        
-                        if not DataSet.objects.filter(id=dataset_id).exists():
-                            content['error the parameter "dataset"'] = 'Invalid or missing the parameters "dataset".'
-                            error = True
-                        # shapefile = CustomerPolygons.objects.get(id=shapefile_id)
-                        # url_status = status.HTTP_200_OK
-                        if not CustomerPolygons.objects.filter(id=shapefile_id).exists():
-                            content['error the parameter "shapefile"'] = 'Invalid or missing the parameters "shapefile".'
-                        else:
-                            if not error:
-                                data = CustomerPolygons.objects.get(id=shapefile_id)
-                                # data = DataSet.objects.get(id=dataset_id, shapefiles=shapefile_id)
-                                # serializer = DataSetSerializer(data)
-                                serializer = CustomerPolygonSerializer(data)
-                                content = serializer.data
-                    else:
-                        content = {'message error': 'Invalid or missing the parameters for request.'}
-                except CustomerPolygons.DoesNotExist:
-                    content = {'message error': 'Invalid or missing the parameters for request.'}
-            else:
-                customer_access = CustomerAccess.objects.get(user=request.user)
-                queryset = DataSet.objects.filter(customer_access=customer_access).order_by('id')
-                serializer = DataSetsSerializer(queryset, many=True)
-                content = serializer.data
-        else:
-            content = {
-                'auth': 'Need YOUR ACCESS TOKEN',
-            }
-        
-        # content = {
-        #     'user': unicode(request.user),  # `django.contrib.auth.User` instance.
-        #     'auth': unicode(request.auth),  # None
-        # }
-        # print 'request.user ======================== ', request.user
-        
-        return Response(content)
-        
-        
-class DataSetList(APIView):
-    # authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
-    authentication_classes = (SessionAuthentication, BasicAuthentication)
-    permission_classes = (IsAuthenticated,)
-    data = None
-
-    def get(self, request, format=None):
-        customer_access = CustomerAccess.objects.get(user=request.user)
-        customer_access_list = CustomerAccess.data_set.through.objects.filter(
-                        customeraccess_id=customer_access.id).order_by('dataset_id')
-    
-        customer_data_sets_id = customer_access_list.values_list('id', flat=True).order_by('id')
-        queryset = DataSet.objects.filter(id__in=customer_data_sets_id)
-    
-        print 'queryset ===================================== ', queryset
-    
-        serializer = DataSetsSerializer(queryset, many=True)
-        content = serializer.data
-        print 'GET auth ===================================== ', request.auth
-        print 'GET request dataset ===================================== ', self.request.GET.get('dataset')
-        
-        
-        # if request.auth:
-        #     # Entry.objects.values_list('id', flat=True).order_by('id')
-        #     # Entry.objects.filter(id__in=[1, 3, 4])
-        #     customer_access = CustomerAccess.objects.get(user=request.user)
-        #     customer_access_list = CustomerAccess.data_set.through.objects.filter(
-        #                     customeraccess_id=customer_access.id).order_by('dataset_id')
-        #
-        #     customer_data_sets_id = customer_access_list.values_list('id', flat=True).order_by('id')
-        #     queryset = DataSet.objects.filter(id__in=customer_data_sets_id)
-        #
-        #     print 'queryset ===================================== ', queryset
-        #
-        #     serializer = DataSetsSerializer(queryset, many=True)
-        #     content = serializer.data
-        # else:
-        #     content = {
-        #         'auth': 'Need YOUR ACCESS TOKEN',
-        #     }
-        
-        # content = {
-        #     'user': unicode(request.user),  # `django.contrib.auth.User` instance.
-        #     'auth': unicode(request.auth),  # None
-        # }
-        # print 'request.user ======================== ', request.user
-        
-        return Response(content)
-    
-    
-# @api_view(['GET'])
-# @authentication_classes((SessionAuthentication, BasicAuthentication, TokenAuthentication))
-# @permission_classes((IsAuthenticated,))
-# def dataset(request):
-#     # print 'ds_id ================================ ', ds_id
-#     # print 'request ================================ ', request
-#
-#     if request.method == 'GET':
-#         data_get = request.GET
-#         dataset_id = data_get.get('dataset', '')
-#         shapefile_id = data_get.get('shapefile', '')
-#         shapefile = CustomerPolygons.objects.get(id=shapefile_id)
-#
-#         print 'dataset_id ================================ ', dataset_id
-#         print 'shapefile_id ================================ ', shapefile_id
-#
-#         url_status = status.HTTP_200_OK
-#         data = DataSet.objects.get(id=dataset_id, shapefiles=shapefile_id)
-#         serializer = DataSetSerializer(data)
-#
-#     return Response(serializer.data, status=url_status)
-    
-    
 @api_view(['GET',])
 @authentication_classes((SessionAuthentication, BasicAuthentication))
 @permission_classes((IsAuthenticated,))

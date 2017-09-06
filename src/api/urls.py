@@ -6,7 +6,7 @@ from rest_framework.authtoken import views
 from django.views.generic import TemplateView
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from api.views import DataSetsList
+from api.views import DataSetList, DataSetDetail, ShapeFileDetail, TimeSeriesDetail
 
 
 urlpatterns = [
@@ -23,8 +23,12 @@ urlpatterns = [
 	url(r'^terraserver', 'api.views.terraserver', name='terraserver'),
 	# url(r'^datasets/', 'api.views.datasets_list', name='datasets_list'),
 	# url(r'^polygons/', CustomerPolygonsList.as_view()),
-	url(r'^datasets/', DataSetsList.as_view()),
+    url(r'^datasets/$', DataSetList.as_view()),
+	url(r'^datasets/(?P<ds_id>[0-9]+)/$', DataSetDetail.as_view()),
 	# url(r'^dataset/', 'api.views.dataset', name='dataset'),
+   
+   url(r'^shapefile/(?P<sf_id>[0-9]+)/$', ShapeFileDetail.as_view()), 
+   url(r'^timeseries/(?P<ts_id>[0-9]+)/$', TimeSeriesDetail.as_view()), 
 	
 	url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 	url(r'^api-token-auth/', views.obtain_auth_token),

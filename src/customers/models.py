@@ -264,13 +264,13 @@ class TimeSeriesResults(models.Model):
     data_set = models.ForeignKey(
                     DataSet,
                     verbose_name='DataSet',
-                    related_name='ts_datasets',
+                    related_name='timeseries',
                     on_delete=models.CASCADE
                 )
     customer_polygons = models.ForeignKey(
                     CustomerPolygons,
                     verbose_name='Customer Polygons',
-                    related_name='ts_attributes',
+                    related_name='timeseries_attributes',
                     on_delete=models.CASCADE
                 )
     result_year = models.CharField(
