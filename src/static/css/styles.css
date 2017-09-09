@@ -1086,13 +1086,17 @@ hr {
 }
 
 #map {
+    height: 100%;
+
+    
+    /*float: left;
+    height: 100%;
+    width: 100% !important;
+    margin: 0px;*/
+
     /*width: 890px;*/
-    float: left;
-    height: 1200px;
     /*max-height: 1200px;*/
-    width: 101%;
     /*max-width: 101%;*/
-    margin: 0px;
 }
 
 #map-block {

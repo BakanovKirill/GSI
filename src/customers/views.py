@@ -5,7 +5,7 @@ import os.path, time
 import subprocess
 from PIL import Image
 from subprocess import check_call, Popen, PIPE
-from osgeo import osr, gdal
+from osgeo import osr, gdal, ogr
 import simplekml
 from simplekml import Kml
 import pickle
@@ -13,6 +13,9 @@ from datetime import datetime, date, timedelta
 import json
 import csv
 from pykml import parser
+
+import numpy as np
+
 
 # import pykml
 # from pykml import parser
@@ -1174,6 +1177,7 @@ def lutfile_edit(request, lutfile_id):
 def remove_files(file_path):
     # Get the png file for the delete
     
+    print '!!!!!!!!!!!!! FILE PATH ====================== ', file_path    
     try:
         if os.path.exists(file_path):
             os.remove(file_path)
@@ -2647,7 +2651,7 @@ def customer_section(request):
                         #     pass
                     else:
                         warning_message = u'The images "{0}" does not exist!'.\
-                                            format(customer_info_panel_file.file_area_name)
+                                            format(file_tif)
 
 
                     # print '!!!!!!!!   PNG_PATH =============================== ', PNG_PATH
@@ -2656,28 +2660,123 @@ def customer_section(request):
 
                 # get the lat/lon values for a GeoTIFF files
                 try:
-                    ds = gdal.Open(file_tif)
-                    width = ds.RasterXSize
-                    height = ds.RasterYSize
-                    gt = ds.GetGeoTransform()
-                    minx = gt[0]
-                    miny = gt[3] + width*gt[4] + height*gt[5]
-                    maxx = gt[0] + width*gt[1] + height*gt[2]
-                    maxy = gt[3]
-                    centery = (maxy + miny) / 2
-                    centerx = (maxx + minx) / 2
+                    # print '!!!!!!!!!! FILE TIF  =============================== ', file_tif
 
-                    cLng = centerx
-                    cLat = centery
-                    eLat_1 = miny
-                    eLng_1 = minx
-                    eLat_2 = maxy
-                    eLng_2 = maxx
+                    ds = gdal.Open(file_tif)
+                    # width = ds.RasterXSize
+                    # height = ds.RasterYSize
+                    transform = ds.GetGeoTransform()
+
+                    print '!!!!!!!!!!!!!!! transform =============================== ', transform
+
+
+                    # *********************************************************************
+                    # transform=ds.GetGeoTransform()
+                    # cols = ds.RasterXSize
+                    # rows = ds.RasterYSize
+                    # ext=GetExtent(transform,cols,rows)
+
+                    # src_srs=osr.SpatialReference()
+                    # src_srs.ImportFromWkt(ds.GetProjection())
+                    # #tgt_srs=osr.SpatialReference()
+                    # #tgt_srs.ImportFromEPSG(4326)
+                    # tgt_srs = src_srs.CloneGeogCS()
+
+                    # geo_ext = ReprojectCoords(ext, src_srs, tgt_srs)
+
+                    # print '!!!!!!!!!!!!!!! geo_ext =============================== ', geo_ext
+
+                    # ********************************************************************
+
+                    minX, Xres, Xskew, maxY, Yskew, Yres = ds.GetGeoTransform()
+                    
+                    maxX = minX + (ds.RasterXSize * Xres)
+                    minY = maxY + (ds.RasterYSize * Yres)
+
+                    print '!!!!!!!!!! 1 MIN Y =============================== ', minY
+                    print '!!!!!!!!!! 1 MIN X =============================== ', minX
+
+                    print '!!!!!!!!!! 1 MAX Y =============================== ', maxY
+                    print '!!!!!!!!!! 1 MAX X =============================== ', maxX
+
+                    # miny = miny + 15
+                    # minx = minx + 38
+
+                    # maxy = maxy - 15
+                    # maxx = maxx - 38
+
+                    # print '!!!!!!!!!! 2 MIN Y =============================== ', miny
+                    # print '!!!!!!!!!! 2 MIN X =============================== ', minx
+
+                    # print '!!!!!!!!!! 2 MAX Y =============================== ', maxy
+                    # print '!!!!!!!!!! 2 MAX X =============================== ', maxx
+                    
+                    # # ********************************************************************
+
+                    # p= subprocess.Popen(["gdalinfo", "%s"%file_tif], stdout=subprocess.PIPE)
+                    # out,err= p.communicate()
+                    # ul= out[out.find("Upper Left")+15:out.find("Upper Left")+38]
+                    # lr= out[out.find("Lower Right")+15:out.find("Lower Right")+38]
+
+                    # print '!!!!!!!!!! UL  =============================== ', ul
+                    # print '!!!!!!!!!! LR   =============================== ', lr
+                    # print '!!!!!!!!!! GetGeoTransform =============================== ', gt
+                    # print '!!!!!!!!!! width =============================== ', width
+                    # print '!!!!!!!!!! height =============================== ', height
+                    
+
+                    # minx = transform[0]
+                    # miny = transform[3] + (width * transform[4]) + (height * transform[5])
+                    # maxx = transform[0] + (width * transform[1]) + (height * transform[2])
+                    # maxy = transform[3]
+
+
+                    # minY = -90.0
+                    # minX = -179.9999
+                    # maxY = 90.0
+                    # maxX = 180.0
+                    
+                    minY = -85.0
+                    minX = -179.9999
+                    maxY = 85.0
+                    maxX = 180.0
+                    
+                    # minY = -76.9999
+                    # minX = -179.9999
+                    # maxY = 76.9999
+                    # maxX = 180.0
+
+                    centerY = (maxY + minY) / 2
+                    centerX = (maxX + minX) / 2
+
+                    cLng = centerX
+                    cLat = centerY
+
+                    eLat_1 = minY
+                    eLng_1 = minX
+                    eLat_2 = maxY
+                    eLng_2 = maxX
+
+                    print '!!!!!!!!!! E centerY =============================== ', centerY
+                    print '!!!!!!!!!! E centerX =============================== ', centerX
+
+                    print '!!!!!!!!!! E LAT 1 =============================== ', eLat_1
+                    print '!!!!!!!!!! E LNG 1 =============================== ', eLng_1
+                    print '!!!!!!!!!! E LAT 2 =============================== ', eLat_2
+                    print '!!!!!!!!!! E LNG 2 =============================== ', eLng_2
+
+
 
                     if cip_choice.data_set.name != 'Wheat Demo':
                         google_map_zoom = GOOGLE_MAP_ZOOM
 
-                    # print '!!!!!!!!!!!!!!!!! google_map_zoom =============================== ', google_map_zoom
+                    if cip_choice.data_set.name == 'Wheat Demo':
+                        google_map_zoom = 2
+
+                    # google_map_zoom = 3
+
+                    print '!!!!!!!!!!!!!!!!! data_set =============================== ', cip_choice.data_set.name
+                    print '!!!!!!!!!!!!!!!!! google_map_zoom =============================== ', google_map_zoom
 
                 except AttributeError, e:
                     print 'GDAL AttributeError =============================== ', e
