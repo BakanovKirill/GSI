@@ -2669,25 +2669,6 @@ def customer_section(request):
 
                     # print '!!!!!!!!!!!!!!! transform =============================== ', transform
 
-
-                    # *********************************************************************
-                    # transform=ds.GetGeoTransform()
-                    # cols = ds.RasterXSize
-                    # rows = ds.RasterYSize
-                    # ext=GetExtent(transform,cols,rows)
-
-                    # src_srs=osr.SpatialReference()
-                    # src_srs.ImportFromWkt(ds.GetProjection())
-                    # #tgt_srs=osr.SpatialReference()
-                    # #tgt_srs.ImportFromEPSG(4326)
-                    # tgt_srs = src_srs.CloneGeogCS()
-
-                    # geo_ext = ReprojectCoords(ext, src_srs, tgt_srs)
-
-                    # print '!!!!!!!!!!!!!!! geo_ext =============================== ', geo_ext
-
-                    # ********************************************************************
-
                     minX, Xres, Xskew, maxY, Yskew, Yres = ds.GetGeoTransform()
                     
                     maxX = minX + (ds.RasterXSize * Xres)
