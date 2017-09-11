@@ -2663,9 +2663,9 @@ def customer_section(request):
                     # print '!!!!!!!!!! FILE TIF  =============================== ', file_tif
 
                     ds = gdal.Open(file_tif)
-                    # width = ds.RasterXSize
-                    # height = ds.RasterYSize
-                    transform = ds.GetGeoTransform()
+                    width = ds.RasterXSize
+                    height = ds.RasterYSize
+                    # transform = ds.GetGeoTransform()
 
                     # print '!!!!!!!!!!!!!!! transform =============================== ', transform
 
@@ -2674,8 +2674,8 @@ def customer_section(request):
                     maxX = minX + (ds.RasterXSize * Xres)
                     minY = maxY + (ds.RasterYSize * Yres)
 
-                    # print '!!!!!!!!!! 1 MIN Y =============================== ', minY
-                    # print '!!!!!!!!!! 1 MIN X =============================== ', minX
+                    print '!!!!!!!!!! WIDTH =============================== ', width
+                    print '!!!!!!!!!! HIGHT =============================== ', height
 
                     # print '!!!!!!!!!! 1 MAX Y =============================== ', maxY
                     # print '!!!!!!!!!! 1 MAX X =============================== ', maxX
@@ -2722,21 +2722,23 @@ def customer_section(request):
                     # maxY = 90.0
                     # maxX = 179.9999
                     
+                    centerY = (maxY + minY) / 2
+                    centerX = (maxX + minX) / 2
+                    
                     if cip_choice.data_set.name != 'Wheat Demo':
                         google_map_zoom = GOOGLE_MAP_ZOOM
 
                     if cip_choice.data_set.name == 'Wheat Demo':
-                        minY = -76.9999
-                        minX = -179.9999
-                        maxY = 76.9999
-                        maxX = 180.0
-                    
                         google_map_zoom = 2
 
-                    
+                        if minX <= -179.9999:
+                            minX = -179.9999
+                        
 
-                    centerY = (maxY + minY) / 2
-                    centerX = (maxX + minX) / 2
+                    # centerX = 10
+                    # centerY = -10
+
+                    
 
                     cLng = centerX
                     cLat = centerY
@@ -2746,13 +2748,13 @@ def customer_section(request):
                     eLat_2 = maxY
                     eLng_2 = maxX
 
-                    # print '!!!!!!!!!! E centerY =============================== ', centerY
-                    # print '!!!!!!!!!! E centerX =============================== ', centerX
+                    print '!!!!!!!!!! E centerY =============================== ', centerY
+                    print '!!!!!!!!!! E centerX =============================== ', centerX
 
-                    # print '!!!!!!!!!! E LAT 1 =============================== ', eLat_1
-                    # print '!!!!!!!!!! E LNG 1 =============================== ', eLng_1
-                    # print '!!!!!!!!!! E LAT 2 =============================== ', eLat_2
-                    # print '!!!!!!!!!! E LNG 2 =============================== ', eLng_2
+                    print '!!!!!!!!!! MIN Y LAT 1 =============================== ', eLat_1
+                    print '!!!!!!!!!! MIN X LNG 1 =============================== ', eLng_1
+                    print '!!!!!!!!!! MAX Y LAT 2 =============================== ', eLat_2
+                    print '!!!!!!!!!! MAX X LNG 2 =============================== ', eLng_2
 
 
 

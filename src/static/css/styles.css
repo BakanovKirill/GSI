@@ -1005,7 +1005,7 @@ input[type="checkbox"]:checked + span {
 
 #gsi-logo {
   position: absolute;
-  bottom: 10px;
+  bottom: 40px;
   left: 100px;
   z-index: 5;
   /*background-color: #fff;*/
@@ -1017,7 +1017,7 @@ input[type="checkbox"]:checked + span {
 
 #lat-panel {
   position: absolute;
-  bottom: 10px;
+  bottom: 40px;
   left: 220px;
   z-index: 3;
   /*background-color: #fff;*/
@@ -1030,7 +1030,7 @@ input[type="checkbox"]:checked + span {
 
 #lng-panel {
   position: absolute;
-  bottom: 10px;
+  bottom: 40px;
   left: 380px;
   z-index: 3;
   /*background-color: #fff;
@@ -1086,16 +1086,14 @@ hr {
 }
 
 #map {
-    height: 100%;
+    height: 1200px !important;
 
-    
+    /*height: 100%;*/
     /*float: left;
     height: 100%;
     width: 100% !important;
     margin: 0px;*/
-
     /*width: 890px;*/
-    /*max-height: 1200px;*/
     /*max-width: 101%;*/
 }
 
