@@ -2667,15 +2667,15 @@ def customer_section(request):
                     height = ds.RasterYSize
                     # transform = ds.GetGeoTransform()
 
-                    # print '!!!!!!!!!!!!!!! transform =============================== ', transform
+                    # print '!!!!!!!!!!!!!!! transform =============================== ', ds.GetGeoTransform()
 
                     minX, Xres, Xskew, maxY, Yskew, Yres = ds.GetGeoTransform()
                     
                     maxX = minX + (ds.RasterXSize * Xres)
                     minY = maxY + (ds.RasterYSize * Yres)
 
-                    print '!!!!!!!!!! WIDTH =============================== ', width
-                    print '!!!!!!!!!! HIGHT =============================== ', height
+                    # print '!!!!!!!!!! WIDTH =============================== ', width
+                    # print '!!!!!!!!!! HIGHT =============================== ', height
 
                     # print '!!!!!!!!!! 1 MAX Y =============================== ', maxY
                     # print '!!!!!!!!!! 1 MAX X =============================== ', maxX
@@ -2725,21 +2725,52 @@ def customer_section(request):
                     centerY = (maxY + minY) / 2
                     centerX = (maxX + minX) / 2
                     
-                    if cip_choice.data_set.name != 'Wheat Demo':
-                        google_map_zoom = GOOGLE_MAP_ZOOM
+                    # if cip_choice.data_set.name != 'Wheat Demo':
+                    #     google_map_zoom = GOOGLE_MAP_ZOOM
 
                     if cip_choice.data_set.name == 'Wheat Demo':
-                        google_map_zoom = 2
-
                         if minX <= -179.9999:
                             minX = -179.9999
-                        
+
+                    scaleY = minY - centerY
+                    scaleX = minX - centerX
+                    scaleY = scaleY if scaleY >= 0 else scaleY * -1
+                    scaleX = scaleX if scaleX >= 0 else scaleX * -1
+
+                    scale = scaleY if scaleY > scaleX else scaleX
+
+                    if scale >= 0.965 and scale <= 3:
+                        google_map_zoom = 8
+                    elif scale >= 0.6 and scale < 0.965:
+                        google_map_zoom = 9
+                    elif scale >= 0.435 and scale < 0.6:
+                        google_map_zoom = 10
+                    elif scale >= 0.17 and scale < 0.434:
+                        google_map_zoom = 11
+                    elif scale >= 0.095 and scale < 0.16:
+                        google_map_zoom = 12
+                    else:
+                        google_map_zoom = 2
+
+
+                    # print '!!!!!!!!!! SCALE Y =============================== ', scaleY
+                    # print '!!!!!!!!!! SCALE X =============================== ', scaleX
+                    # print '!!!!!!!!!! SCALE =============================== ', scale
 
                     # centerX = 10
                     # centerY = -10
-
                     
+                    # minY = 30.12409
+                    # minX = -85.5001
+                    # maxY = 30.12599
+                    # maxX = -85.4999
 
+                    # centerY = 30.125
+                    # centerX = -85.5
+
+                    # centerY = (maxY + minY) / 2
+                    # centerX = (maxX + minX) / 2
+                    
                     cLng = centerX
                     cLat = centerY
 
@@ -2748,22 +2779,16 @@ def customer_section(request):
                     eLat_2 = maxY
                     eLng_2 = maxX
 
-                    print '!!!!!!!!!! E centerY =============================== ', centerY
-                    print '!!!!!!!!!! E centerX =============================== ', centerX
+                    # print '!!!!!!!!!! E centerY =============================== ', centerY
+                    # print '!!!!!!!!!! E centerX =============================== ', centerX
 
-                    print '!!!!!!!!!! MIN Y LAT 1 =============================== ', eLat_1
-                    print '!!!!!!!!!! MIN X LNG 1 =============================== ', eLng_1
-                    print '!!!!!!!!!! MAX Y LAT 2 =============================== ', eLat_2
-                    print '!!!!!!!!!! MAX X LNG 2 =============================== ', eLng_2
+                    # print '!!!!!!!!!! MIN Y LAT 1 =============================== ', eLat_1
+                    # print '!!!!!!!!!! MIN X LNG 1 =============================== ', eLng_1
+                    # print '!!!!!!!!!! MAX Y LAT 2 =============================== ', eLat_2
+                    # print '!!!!!!!!!! MAX X LNG 2 =============================== ', eLng_2
 
-
-
-                    
-
-                    # google_map_zoom = 3
-
-                    print '!!!!!!!!!!!!!!!!! data_set =============================== ', cip_choice.data_set.name
-                    print '!!!!!!!!!!!!!!!!! google_map_zoom =============================== ', google_map_zoom
+                    # print '!!!!!!!!!!!!!!!!! data_set =============================== ', cip_choice.data_set.name
+                    # print '!!!!!!!!!!!!!!!!! google_map_zoom =============================== ', google_map_zoom
 
                 except AttributeError, e:
                     print 'GDAL AttributeError =============================== ', e

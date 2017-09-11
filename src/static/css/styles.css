@@ -1107,7 +1107,7 @@ hr {
     z-index: 10;
     margin-top: -50px;
     /*height: 1800px;*/
-    height: 1285px;
+    height: 1285px !important;
     float: left;
     /*box-shadow: inset -5px 0 0 #283890;*/
 

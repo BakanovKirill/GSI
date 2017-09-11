@@ -80,10 +80,14 @@ function hideElem(cont, checkb){
     });
 }
 
-function setOpacity() {
+function setOpacity(obj) {
     var opacity = document.getElementById("opacity").value;
-    var img = document.getElementById("on_add");
-    img.style.opacity = opacity / 100;
+    // var img = document.getElementById("on_add");
+    // obj.style.opacity = opacity / 100;
+    var opacity_val = opacity / 100;
+
+    // alert(opacity_val);
+    overlay.setOpacity(opacity_val);
     
     var slider_value = $("#slider_value");
     $(slider_value).text('Visibility: '+opacity+' %');
