@@ -462,9 +462,9 @@
                 overlay = new google.maps.GroundOverlay(srcImage, bounds);
                 // overlay = new GOverlay(srcImage, bounds);
 
-                overlay.preserveViewport = true;
-                overlay.setMap(map);
+                // overlay.preserveViewport = true;
                 overlay.setOpacity(0.5);
+                overlay.setMap(map);
                 overlay.addListener('mousemove', showCoordinates);
 
 
