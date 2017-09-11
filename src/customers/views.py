@@ -2667,7 +2667,7 @@ def customer_section(request):
                     # height = ds.RasterYSize
                     transform = ds.GetGeoTransform()
 
-                    print '!!!!!!!!!!!!!!! transform =============================== ', transform
+                    # print '!!!!!!!!!!!!!!! transform =============================== ', transform
 
 
                     # *********************************************************************
@@ -2693,11 +2693,11 @@ def customer_section(request):
                     maxX = minX + (ds.RasterXSize * Xres)
                     minY = maxY + (ds.RasterYSize * Yres)
 
-                    print '!!!!!!!!!! 1 MIN Y =============================== ', minY
-                    print '!!!!!!!!!! 1 MIN X =============================== ', minX
+                    # print '!!!!!!!!!! 1 MIN Y =============================== ', minY
+                    # print '!!!!!!!!!! 1 MIN X =============================== ', minX
 
-                    print '!!!!!!!!!! 1 MAX Y =============================== ', maxY
-                    print '!!!!!!!!!! 1 MAX X =============================== ', maxX
+                    # print '!!!!!!!!!! 1 MAX Y =============================== ', maxY
+                    # print '!!!!!!!!!! 1 MAX X =============================== ', maxX
 
                     # miny = miny + 15
                     # minx = minx + 38
@@ -2736,15 +2736,23 @@ def customer_section(request):
                     # maxY = 90.0
                     # maxX = 180.0
                     
-                    minY = -85.0
-                    minX = -179.9999
-                    maxY = 85.0
-                    maxX = 180.0
-                    
-                    # minY = -76.9999
+                    # minY = -90.0
                     # minX = -179.9999
-                    # maxY = 76.9999
-                    # maxX = 180.0
+                    # maxY = 90.0
+                    # maxX = 179.9999
+                    
+                    if cip_choice.data_set.name != 'Wheat Demo':
+                        google_map_zoom = GOOGLE_MAP_ZOOM
+
+                    if cip_choice.data_set.name == 'Wheat Demo':
+                        minY = -76.9999
+                        minX = -179.9999
+                        maxY = 76.9999
+                        maxX = 180.0
+                    
+                        google_map_zoom = 2
+
+                    
 
                     centerY = (maxY + minY) / 2
                     centerX = (maxX + minX) / 2
@@ -2757,21 +2765,17 @@ def customer_section(request):
                     eLat_2 = maxY
                     eLng_2 = maxX
 
-                    print '!!!!!!!!!! E centerY =============================== ', centerY
-                    print '!!!!!!!!!! E centerX =============================== ', centerX
+                    # print '!!!!!!!!!! E centerY =============================== ', centerY
+                    # print '!!!!!!!!!! E centerX =============================== ', centerX
 
-                    print '!!!!!!!!!! E LAT 1 =============================== ', eLat_1
-                    print '!!!!!!!!!! E LNG 1 =============================== ', eLng_1
-                    print '!!!!!!!!!! E LAT 2 =============================== ', eLat_2
-                    print '!!!!!!!!!! E LNG 2 =============================== ', eLng_2
+                    # print '!!!!!!!!!! E LAT 1 =============================== ', eLat_1
+                    # print '!!!!!!!!!! E LNG 1 =============================== ', eLng_1
+                    # print '!!!!!!!!!! E LAT 2 =============================== ', eLat_2
+                    # print '!!!!!!!!!! E LNG 2 =============================== ', eLng_2
 
 
 
-                    if cip_choice.data_set.name != 'Wheat Demo':
-                        google_map_zoom = GOOGLE_MAP_ZOOM
-
-                    if cip_choice.data_set.name == 'Wheat Demo':
-                        google_map_zoom = 2
+                    
 
                     # google_map_zoom = 3
 
