@@ -766,7 +766,9 @@
                 contentString += '<tbody>';
 
                 for (var i = 1; i < count_pol; i++) {
-                    new_array = list_data_draw[i].split(',')
+                    new_array = list_data_draw[i].split(';');
+
+                    // alert('NEW ARAY: '+new_array);
 
                     if ( i & 1 ) {
                         contentString += '<tr bgcolor="#F5F5F5">';

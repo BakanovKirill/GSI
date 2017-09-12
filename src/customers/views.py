@@ -1506,7 +1506,7 @@ def getListTifFiles(customer, dataset):
 
                         if ext == '.tif':
                             fl_tif = os.path.join(project_directory, f)
-                            str_data_db = '{0},{1},'.format(attr.shelfdata.id, fl_tif)
+                            str_data_db = '{0}$$${1}$$$'.format(attr.shelfdata.id, fl_tif)
 
                             list_files_tif.append(fl_tif)
                             list_data_db.append(str_data_db)
@@ -1516,7 +1516,7 @@ def getListTifFiles(customer, dataset):
                 name_2 = dataset.results_directory.split('/')[0]
                 tif_path = os.path.join(PROJECTS_PATH, dataset.results_directory, name_1)
                 fl_tif = '{0}/{1}_{2}.{3}.tif'.format(tif_path, attr.statistic, name_1, name_2)
-                str_data_db = '{0},{1},'.format(attr.shelfdata.id, fl_tif)
+                str_data_db = '{0}$$${1}$$$'.format(attr.shelfdata.id, fl_tif)
 
                 list_files_tif.append(fl_tif)
                 list_data_db.append(str_data_db)
@@ -2028,7 +2028,7 @@ def customer_section(request):
             db_file_open = open(tmp_db_file, 'w')
 
             for file_tif in list_file_tif:
-                shd_id = list_data_db[count_data].split(',')[0]
+                shd_id = list_data_db[count_data].split('$$$')[0]
                 scale = ShelfData.objects.get(id=shd_id).scale
                 command_line_ts = ''
 
@@ -2053,24 +2053,32 @@ def customer_section(request):
                 for line in file_out_coord_open.readlines():
                     new_line = line.replace(' ', '')
                     new_line = new_line.replace('\n', '')
+                    new_line = new_line.replace(',', '$$$')
 
                 
                     # print '!!!!!!! 1 NEW LINE ========================== ', new_line
 
                     if new_line:
-                        new_line = new_line.split(',')[1:]
+                        new_line = new_line.split('$$$')[1:]
+                        total_aoi = int(new_line[2])
+                        units_per_hectare_aoi = float(new_line[0])
+                        new_line[0] = '{0:,}'.format(units_per_hectare_aoi).replace(',', ',')
+                        new_line[2] = '{0:,}'.format(total_aoi).replace(',', ',')
+                        # new_line[2] = str(total_aoi)
 
-                        # print '!!!!!!! 1 NEW LINE ========================== ', new_line
+                        # print '!!!!!!! TOTAL========================== ', total_aoi
+                        # print '!!!!!!! [0] NEW LINE ========================== ', new_line[0]
+                        # print '!!!!!!! [2] NEW LINE ========================== ', new_line[2]
 
                         if scale:
                             new_line[1] = str(float(new_line[1]) / scale)
 
-                        # print '!!!!!!! 2 NEW LINE ========================== ', new_line
+                        # print '!!!!!!! 3 NEW LINE ========================== ', new_line
                         # print '!!!!!!! 2 count_data ========================== ', count_data
-                        # print '!!!!!!! 2 list_data_db[count_data] ========================== ', list_data_db[count_data]
+                        # print '!!!!!!! 3 list_data_db[count_data] ========================== ', list_data_db[count_data]
                         # print '!!!!!!! 2 list_data_db ========================== ', list_data_db
 
-                        new_line = ','.join(new_line)
+                        new_line = '$$$'.join(new_line)
                         str_db_file = '{0}{1}'.format(list_data_db[count_data], new_line) 
                         db_file_open.write('{0}\n'.format(str_db_file))
                         count_data += 1
@@ -3013,14 +3021,6 @@ def customer_delete_file(request):
         # print 'DELETES FILE COUNT ============================= ', count_files
 
         if data_get_ajax.get('delete_file'):
-            # while not os.path.exists(db_file_path):
-            #     time.sleep(5)
-
-            # while not os.path.exists(result_file_path):
-            #     time.sleep(10)
-
-            # while not os.path.exists(count_items_path):
-            #     time.sleep(5)
 
             ####################### write log file
             customer_delete_f.write('***EXISTS db_file_path: {0} \n'.format(os.path.exists(db_file_path)))
@@ -3032,7 +3032,7 @@ def customer_delete_file(request):
             # print '****************** EXISTS result_file_path ========================================= ', os.path.exists(result_file_path)
 
 
-            data_set_id = data_get_ajax.get('delete_file')
+            data_set_id = int(data_get_ajax.get('delete_file'))
             data_set = DataSet.objects.get(id=data_set_id)
             shelf_data = ShelfData.objects.all()
             data_ajax = ''
@@ -3052,11 +3052,13 @@ def customer_delete_file(request):
             f_db = open(db_file_path)
 
             for l in f_db:
-                line = l.split(',')
+                line = l.split('$$$')
 
                 ####################### write log file
                 customer_delete_f.write('LINE: "{0}"\n'.format(line))
                 ####################### write log file
+                
+                # print '!!!!!!!!!!!! LINE ============================= ', line
 
                 shd_id = line[0]
                 shelf_data = ShelfData.objects.get(id=shd_id)
@@ -3065,10 +3067,10 @@ def customer_delete_file(request):
                 if shelf_data.show_totals:
                     # ha = line[4].replace('\n', ' ha')
                     # ha = '{0}\n'.format(ha)
-                    data_ajax += '{0},{1},{2},{3}'.\
+                    data_ajax += '{0};{1};{2};{3}'.\
                                 format(shelf_data.attribute_name, line[3], shelf_data.units, line[4])
                 else:
-                    data_ajax += '{0},{1},{2}, - \n'.\
+                    data_ajax += '{0};{1};{2}; - \n'.\
                                 format(shelf_data.attribute_name, line[3], shelf_data.units)
 
                 ####################### write log file
@@ -3078,6 +3080,7 @@ def customer_delete_file(request):
             data_ajax = data_ajax.replace('\n', '_')
             data_ajax_total += data_ajax[0:-1]
 
+            # print ('!!!!!!!!!!! data_ajax ===================== '), data_ajax
             # print ('!!!!!!!!!!! data_ajax_total ===================== '), data_ajax_total
 
             # time.sleep(10)
@@ -3092,7 +3095,8 @@ def customer_delete_file(request):
 
             ####################### write log file
             # customer_delete_f.write('1 DATA AJAX EXISTS: "{0}"\n'.format(os.path.exists(ajax_file_path)))
-            customer_delete_f.write('DATA AJAX END: "{0}"\n'.format(data_ajax))
+            customer_delete_f.write('DATA AJAX END: "{0}"\n\n\n'.format(data_ajax))
+            customer_delete_f.write('DATA AJAX TOTAL: "{0}"\n'.format(data_ajax_total))
             ####################### write log file
 
             cips = CustomerInfoPanel.objects.filter(user=customer)
