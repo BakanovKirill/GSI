@@ -405,6 +405,14 @@
                     }
                 ];
 
+                var srcImage = select_image;
+                var bounds = new google.maps.LatLngBounds(
+                    new google.maps.LatLng({{ eLat_1 }}, {{ eLng_1 }}),
+                    new google.maps.LatLng({{ eLat_2 }}, {{ eLng_2 }})
+                );
+                overlay = new google.maps.GroundOverlay(srcImage, bounds);
+                overlay.setOpacity(0.5);
+
                 map = new google.maps.Map(document.getElementById('map'), {
                     zoom: {{ GOOGLE_MAP_ZOOM }},
                     center: center_map,
@@ -421,11 +429,16 @@
                     },
                 });
 
+                overlay.setMap(map);
+                overlay.addListener('mousemove', showCoordinates);
+
                 var styledMapOptions = {name: "Road & Water"};
                 var jayzMapType = new google.maps.StyledMapType(my_styles, styledMapOptions);
 
                 map.mapTypes.set(MY_MAPTYPE_ID, jayzMapType);
                 map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
+
+
 
                 // var min_marker = new google.maps.Marker({
                 //     position: {
@@ -443,10 +456,7 @@
                 //     map: map
                 // });
 
-                var bounds = new google.maps.LatLngBounds(
-                    new google.maps.LatLng({{ eLat_1 }}, {{ eLng_1 }}),
-                    new google.maps.LatLng({{ eLat_2 }}, {{ eLng_2 }})
-                );
+                
                 
                 // var bounds = new google.maps.LatLngBounds(
                 //     new google.maps.LatLng(-89.0, -179.0),
@@ -456,16 +466,21 @@
                 // The source to image overlay
                 // var srcImage = '{{ absolute_url_png_file }}';
                 
-                var srcImage = select_image;
+                
+
+                // alert('OVERLAY SATART: '+srcImage);
 
                 // overlay = new USGSOverlay(bounds, srcImage, map);
-                overlay = new google.maps.GroundOverlay(srcImage, bounds);
+                
                 // overlay = new GOverlay(srcImage, bounds);
 
                 // overlay.preserveViewport = true;
-                overlay.setOpacity(0.5);
-                overlay.setMap(map);
-                overlay.addListener('mousemove', showCoordinates);
+                
+                
+
+                // alert('OVERLAY END');
+
+                
 
 
                 // setOpacity(srcImage);
