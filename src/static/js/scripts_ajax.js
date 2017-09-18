@@ -512,7 +512,7 @@ function setPolygon(obj) {
 function go_progress(){
     // alert('GO progress: '+progress);
 
-    if(progress != 100) {
+    if(progress < 100) {
         // alert('GO progress: '+progress);
 
         progress += time_section;
@@ -542,7 +542,7 @@ function sendDataToServer(coord, reports, stats) {
     var modal = $('#modalWaiting');
     modal.modal('show');
 
-    var count_reports = reports.length * 10;
+    var count_reports = reports.length * 15;
     time_section = parseInt(100 / reports.length)
 
     interval_id = setInterval(go_progress, count_reports);
