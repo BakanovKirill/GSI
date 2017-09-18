@@ -1784,6 +1784,12 @@ def customer_section(request):
         time_series_list = request.session['time_series_list']
     else:
         request.session['time_series_list'] = ''
+
+    # Get Zoom Google Maps
+    if request.session.get('zoom_map', False):
+        google_map_zoom = request.session['zoom_map']
+    else:
+        request.session['zoom_map'] = GOOGLE_MAP_ZOOM
     
 
     # print '!!!!!!!!!!!!!!!!!!!! data_set_id ==================== ', data_set_id
@@ -1823,6 +1829,9 @@ def customer_section(request):
 
         if 'button' in data_post_ajax and (data_post_ajax['button'] == 'next' or data_post_ajax['button'] == 'previous'):
             try:
+                if 'zoom_map' in data_post_ajax:
+                    request.session['zoom_map'] = data_post_ajax['zoom_map']
+
                 if 'attr_list[]' in data_post_ajax:
                     if not 'stat_list[]' in data_post_ajax:
                         statistics_viewlist = ['mean_ConditionalMean']
@@ -2143,12 +2152,13 @@ def customer_section(request):
         else:
             return HttpResponse(data)
 
-
     # get AJAX GET
     if request.is_ajax() and request.method == "GET":
         data = ''
         data_get_ajax = request.GET
         cip = CustomerInfoPanel.objects.filter(user=customer)
+
+        # print '!!!!!!!!!!!!!! AJAX GET ========================= ', request.GET
 
         # print 'GET customer_section ====================== ', data_get_ajax['datasets_id']
 
@@ -2156,6 +2166,7 @@ def customer_section(request):
         if 'datasets_id' in data_get_ajax:
             request.session['select_data_set'] = data_get_ajax['datasets_id']
             data_set_id = request.session['select_data_set']
+            request.session['zoom_map'] = 0
 
             request.session['tab_active'] = 'view'
             # request.session['time_series_view'] = False
@@ -2771,38 +2782,44 @@ def customer_section(request):
                     
                     centerY = (maxY + minY) / 2
                     centerX = (maxX + minX) / 2
+
+                    # print '!!!!!!!!!!!!!!!! ZOOM =========================== ', request.session['zoom_map']
+                    # print '!!!!!!!!!!!!!!!! ZOOM google_map_zoom =========================== ', google_map_zoom
                     
                     # if cip_choice.data_set.name != 'Wheat Demo':
                     #     google_map_zoom = GOOGLE_MAP_ZOOM
 
-                    if cip_choice.data_set.name == 'Wheat Demo':
-                        if minX <= -179.9999:
-                            minX = -179.9999
+                    # if cip_choice.data_set.name == 'Wheat Demo':
+                    if minX <= -179.9999:
+                        minX = -179.9999
 
-                    scaleY = minY - centerY
-                    scaleX = minX - centerX
-                    scaleY = scaleY if scaleY >= 0 else scaleY * -1
-                    scaleX = scaleX if scaleX >= 0 else scaleX * -1
+                    if google_map_zoom == '0' or google_map_zoom == 0:
+                        scaleY = minY - centerY
+                        scaleX = minX - centerX
+                        scaleY = scaleY if scaleY >= 0 else scaleY * -1
+                        scaleX = scaleX if scaleX >= 0 else scaleX * -1
 
-                    scale = scaleY if scaleY > scaleX else scaleX
+                        scale = scaleY if scaleY > scaleX else scaleX
 
-                    if scale >= 0.965 and scale <= 3:
-                        google_map_zoom = 8
-                    elif scale >= 0.6 and scale < 0.965:
-                        google_map_zoom = 9
-                    elif scale >= 0.435 and scale < 0.6:
-                        google_map_zoom = 10
-                    elif scale >= 0.17 and scale < 0.434:
-                        google_map_zoom = 11
-                    elif scale >= 0.095 and scale < 0.16:
-                        google_map_zoom = 12
-                    else:
-                        google_map_zoom = 2
+                        if scale >= 0.965 and scale <= 3:
+                            google_map_zoom = 8
+                        elif scale >= 0.6 and scale < 0.965:
+                            google_map_zoom = 9
+                        elif scale >= 0.435 and scale < 0.6:
+                            google_map_zoom = 10
+                        elif scale >= 0.17 and scale < 0.434:
+                            google_map_zoom = 11
+                        elif scale >= 0.095 and scale < 0.16:
+                            google_map_zoom = 12
+                        else:
+                            google_map_zoom = 2
 
 
-                    # print '!!!!!!!!!! SCALE Y =============================== ', scaleY
-                    # print '!!!!!!!!!! SCALE X =============================== ', scaleX
-                    # print '!!!!!!!!!! SCALE =============================== ', scale
+                        # print '!!!!!!!!!! SCALE Y =============================== ', scaleY
+                        # print '!!!!!!!!!! SCALE X =============================== ', scaleX
+                    #     print '!!!!!!!!!! SCALE =============================== ', scale
+                    
+                    # print '!!!!!!!!!!!!!!!! 2 ZOOM google_map_zoom =========================== ', google_map_zoom
 
                     # centerX = 10
                     # centerY = -10

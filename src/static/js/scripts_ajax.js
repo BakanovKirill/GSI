@@ -698,6 +698,8 @@ function sendDataAttrStatToServer(obj) {
 
     // alert('attr_list: '+attr_list);
     // alert('stat_list: '+stat_list);
+    
+    // alert('Zoom: ' + map.getZoom());
 
     $.ajax({
         url: form_url,
@@ -708,6 +710,7 @@ function sendDataAttrStatToServer(obj) {
             'button': $(obj).val(),
             'attr_list': attr_list,
             'stat_list': stat_list,
+            'zoom_map': map.getZoom(),
             'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
         },
         'error': function(xhr, status, error){
@@ -812,6 +815,33 @@ function selectTab(obj) {
         'dataType': 'text',
         data: {
             'tab_active': tab_name,
+            'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+        },
+        'error': function(xhr, status, error){
+            // alert('error: '+error);
+            var message = 'An unexpected error occurred. Try later.';
+            alert(message);
+        },
+        'success': function(data, status, xhr){
+            // alert('URL DATA: '+data);
+            // var obj_status = status;
+            // sendGetToServer();
+            window.location.href = form_url;
+        },
+    });
+}
+
+function getZoomGoogleMap(zoom) {
+    // alert('getZoomGoogleMap');
+    // alert('Zoom: ' + zoom);
+
+    $.ajax({
+        url: form_url,
+        type: 'GET',
+        'async': true,
+        'dataType': 'text',
+        data: {
+            'zoom_map': zoom,
             'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
         },
         'error': function(xhr, status, error){
