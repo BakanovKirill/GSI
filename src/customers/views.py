@@ -1651,6 +1651,12 @@ def customer_section(request):
     now = datetime.now()
     customer_section.write('DATE: '+str(now))
     customer_section.write('\n')
+
+    log_file_timer = '/home/gsi/LOGS/timer_script.log'
+    timer_script = open(log_file_timer, 'w')
+    now = datetime.now()
+    timer_script.write('DATE: '+str(now))
+    timer_script.write('\n')
     #######################
 
     customer = request.user
@@ -2116,6 +2122,9 @@ def customer_section(request):
             
             #################### END START TIME.TIME
             startTime_end = time.time() - startTime_start
+
+            timer_script.write('ALL TIME CUSTOMER SECTION: {0}\n'.format(startTime_end))
+            timer_script.write('ONE TIME SCRIPT: {0}\n'.format(startTime_script_end))
             #################### START TIME.TIME
             
             print '!!!!!!!!!!!!!! TIME =================== ', startTime_end
@@ -2964,6 +2973,9 @@ def customer_section(request):
     ####################### write log file
     customer_section.write('\n')
     customer_section.close()
+
+    timer_script.write('\n')
+    timer_script.close()
     #######################
     
     if tab_active == 'ts':
