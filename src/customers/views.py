@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Views for the customers app."""
+import time
 import os
 import os.path, time
 import subprocess
@@ -1931,6 +1932,10 @@ def customer_section(request):
             # print '!!!!!!!!!!!!!!!!! TS LIST 2 ============================== ', data_post_ajax.getlist('ts_list[]')
 
         if 'coordinate_list[0][]' in data_post_ajax:
+            #################### START TIME.TIME
+            startTime_start = time.time()
+            #################### START TIME.TIME
+
             reports_cip = ShelfData.objects.none()
             statistic = ''
 
@@ -1951,7 +1956,7 @@ def customer_section(request):
                     statistic = stat
 
             # print '!!!!!!!!!!!!! statistic ====================== ', statistic
-            # print '!!!!!!!!!!!!! reports_cip ====================== ', reports_cip
+            print '!!!!!!!!!!!!! reports_cip ====================== ', reports_cip
 
             AttributesReport.objects.filter(user=customer).delete()
             cips = CustomerInfoPanel.objects.filter(user=customer)
@@ -2034,6 +2039,10 @@ def customer_section(request):
 
                 # print '!!!!!!! SCALE ========================== ', scale
                 # file_path_out_ts_coord_tmp
+                
+                #################### 2 START TIME.TIME
+                startTime_script_start = time.time()
+                #################### START TIME.TIME
 
                 command_line = '{0} {1} {2} {3}'.format(
                                     SCRIPT_GETPOLYINFO,
@@ -2047,6 +2056,12 @@ def customer_section(request):
                 proc_script = Popen(command_line, shell=True)
                 proc_script.wait()
                 # time.sleep(1)
+                
+                #################### END 2 START TIME.TIME
+                startTime_script_end = time.time() - startTime_script_start
+                # data = startTime_script_end
+                # return HttpResponse(data)
+                #################### START TIME.TIME
 
                 file_out_coord_open = open(file_path_out_coord_tmp)
 
@@ -2098,6 +2113,15 @@ def customer_section(request):
             # print '!!!!!!!!!!! LIST F ======================== ', list_file_tif
             # print '!!!!!!!!!!! LIST DB ======================== ', list_data_db
             # print '!!!!!!!!!!! POINTS_coord ======================== ', points_coord
+            
+            #################### END START TIME.TIME
+            startTime_end = time.time() - startTime_start
+            #################### START TIME.TIME
+            
+            print '!!!!!!!!!!!!!! TIME =================== ', startTime_end
+            print '!!!!!!!!!!!!!! TIME SCRIPT =================== ', startTime_script_end
+
+            # data = 'end'
 
             return HttpResponse(data)
 
@@ -2628,7 +2652,7 @@ def customer_section(request):
                             # to color
                             if is_lutfile:
                                 command_line_copy_png = 'cp {0} {1}'.format(old_file_png, new_file_png)
-                                # command_line_copy_legend = 'cp {0} {1}'.format(old_color_legend, new_color_legend)
+                                command_line_copy_legend = 'cp {0} {1}'.format(old_color_legend, new_color_legend)
 
                                 # print '!!!!!!!!   COMMAND LINE =============================== 0 ', command_line
                                 # print '!!!!!!!!   COMMAND LINE PNG =============================== 1 ', command_line_copy_png
@@ -2641,10 +2665,13 @@ def customer_section(request):
                                 proc_script_png = Popen(command_line_copy_png, shell=True)
                                 proc_script_png.wait()
 
-                                if not os.path.exists(new_color_legend):
-                                    command_line_copy_legend = 'cp {0} {1}'.format(old_color_legend, new_color_legend)
-                                    proc_script_legend = Popen(command_line_copy_legend, shell=True)
-                                    proc_script_legend.wait()
+                                proc_script_legend = Popen(command_line_copy_legend, shell=True)
+                                proc_script_legend.wait()
+
+                                # if not os.path.exists(new_color_legend):
+                                #     command_line_copy_legend = 'cp {0} {1}'.format(old_color_legend, new_color_legend)
+                                #     proc_script_legend = Popen(command_line_copy_legend, shell=True)
+                                #     proc_script_legend.wait()
 
                                 # proc_script_legend = Popen(command_line_copy_legend, shell=True)
                                 # proc_script_legend.wait()

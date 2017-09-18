@@ -1,3 +1,7 @@
+var progress = 0;
+var interval_id;
+var time_section = 0;
+
 function initCheckDeleteItems() {
     $('button.check-delete').click(function(event){
         var values = [];
@@ -505,6 +509,29 @@ function setPolygon(obj) {
     }
 }
 
+function go_progress(){
+    // alert('GO progress: '+progress);
+
+    if(progress != 100) {
+        // alert('GO progress: '+progress);
+
+        progress += time_section;
+        document.getElementById('progress_bar').innerHTML = progress + ' %';
+        document.getElementById('progress_bar').style.width = progress + '%';
+        // document.getElementById('progress_bar').style.width = progress * 5 + 'px';
+    }
+    else{
+        // alert('GO progress: '+progress);
+        document.getElementById('progress_bar').innerHTML = '100 %';
+        document.getElementById('progress_bar').style.width = 100 + ' %';
+        clearInterval(interval_id);
+        progress = 0;
+        time_section = 0;
+        // document.getElementById('progress_bar').innerHTML = progress + ' %';
+        // document.getElementById('progress_bar').style.margin = '15px 0 0 186px';
+    }
+}
+
 function sendDataToServer(coord, reports, stats) {
     // alert('sendDataToServer REP: '+reports);
     // alert('sendDataToServer STAT: '+stats);
@@ -515,7 +542,16 @@ function sendDataToServer(coord, reports, stats) {
     var modal = $('#modalWaiting');
     modal.modal('show');
 
-    for(n in coord) {
+    var count_reports = reports.length * 10;
+    time_section = parseInt(100 / reports.length)
+
+    interval_id = setInterval(go_progress, count_reports);
+
+    // alert('reports.length: '+reports.length);
+    // alert('count_reports: '+count_reports);
+    // alert('time_section: '+time_section);
+
+    for (n in coord) {
         var temp = [];
         var reverce_list = [];
         for(k in coord[n]) {
@@ -543,15 +579,30 @@ function sendDataToServer(coord, reports, stats) {
             var message = 'An unexpected error occurred. Try later.';
             alert(message);
         },
+        beforeSend: function(){
+            // alert('beforeSend');
+            // interval_id = setInterval(go_progress, count_reports);
+        },
         'success': function(data, status, xhr){
+            clearInterval(interval_id);
+            progress = 0;
+            time_section = 0;
+
+            // alert('success progress: '+progress);
+
             // var message = JSON.parse(data);
             // var message = data['message'];
 
             // alert('sendDataToServer: '+data);
 
             // var obj_status = status;
+            
+            // if (data = 'end') {
+            //     sendGetToServer();
+            // }
 
             sendGetToServer();
+            
             // setTimeout(sendGetToServer, 1000);
         },
     });

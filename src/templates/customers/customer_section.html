@@ -189,6 +189,8 @@
             var count_pol;
             var infowindow = new google.maps.InfoWindow();
 
+            var count_reports = 0;
+
             var units = '{{ units }}';
             var attribute = '{{ attribute }}';
             var data_polygon;
@@ -644,9 +646,17 @@
                     stat_list.push($(this).val())
                 });
 
+                if (report_list == 0) {
+                    // alert('NO report_list');
+                    $('#report_attribute input:checkbox').each(function(){
+                        // alert($(this).val());
+                        report_list.push($(this).val())
+                    });
+                }
+
                 var show_coord = coord;
 
-                // alert(show_coord);
+                // alert(report_list);
                 
                 sendDataToServer(show_coord, report_list, stat_list);
                 // setTimeout(sendGetToServer, 500);
