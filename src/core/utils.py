@@ -1116,6 +1116,7 @@ def check_exist_collate_files(path, collate_card):
 	from gsi.models import ListTestFiles
 	
 	f_list = []
+
 	try:
 		files_list = Collate.input_files.through.objects.filter(collate=collate_card)
 		

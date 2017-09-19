@@ -120,7 +120,7 @@ input:focus, textarea:focus {
 }
 
 /* link styles */
-a {
+a, .btn-legend {
     color: #283890 !important;
     /*border-bottom: 1px dotted #283890 !important;*/
     /*text-decoration: underline;*/
@@ -151,11 +151,12 @@ a.a-select, .btn-link {
     outline: none;
 }
 
-a:focus, a:hover {
+a:focus, a:hover, .btn-legend {
     color: #283890 !important;
     border-bottom: 0px !important;
     text-decoration: none !important;
 }
+
 
 /* BUTTONS BOOTSTRAP customer section */
 .btn-primary {
@@ -607,12 +608,17 @@ li.li-menu > a, li.active-main-menu > a {
 
 }
 
-div.li-menu > a {
+.btn-legend {
+    text-decoration: none !important;
+    border-bottom: none !important;
+}
+
+div.li-menu > a, .btn-legend {
     color: #283890 !important;
     background-color: white !important;
 }
 
-div.li-menu > a:hover {
+div.li-menu > a:hover, .btn-legend:hover {
     color: #283890 !important;
     background-color: #80d0f4 !important;
 }
@@ -767,7 +773,7 @@ li.active-main-menu, li.active-main-menu a:hover, li.li-menu > a:hover, .title:h
 
 .dropdown-content-user {
     min-width: 100px;
-    width: 136px;
+    width: 256px;
     display: none;
     position: absolute;
 }

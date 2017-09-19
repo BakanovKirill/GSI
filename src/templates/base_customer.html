@@ -80,7 +80,7 @@
                         <!-- End Show Statistic in the InfoPanel -->
 
                         <!-- Show User DropDown Menu in the InfoPanel -->
-                        <div class="col-md-1 left">
+                        <div class="col-md-2 left">
                             <div class="dropdown user-profile" id="dropUser">
                                 <button class="dropbtn-user dropdown-toggle white" id="titleUser" onclick="showSubMenuUser()">
                                     <b class="purple">User:</b> {{ request.user }}
@@ -96,6 +96,14 @@
                                         <img class="right-indent-10" src="{% static 'img/settings.png' %}">
                                         Settings
                                     </a>
+
+                                    {% if user.is_superuser%}
+                                        <button type="button" class="btn btn-legend btn-link right-indent-10" onclick="regenerateLegend()">
+                                            <img class="right-indent-10" src="{% static 'img/legend_update_24.png' %}" >
+                                            Regenerate Legend
+                                        </button>
+                                    {% endif %}
+
                                     <a href="{% url 'auth_logout' %}">
                                         <img class="right-indent-10" src="{% static 'img/logout.png' %}">
                                         Log Out
