@@ -1179,10 +1179,10 @@ def remove_files(file_path):
     # Get the png file for the delete
     
     try:
-        if os.path.exists(file_path):
-            os.remove(file_path)
+        os.remove(file_path)
     except Exception, e:
         print '!!!!!!!!!!! Exception remove file png ========================= ', e
+        pass
 
 
 def check_current_dataset(request, data_post):
@@ -2204,8 +2204,20 @@ def customer_section(request):
             for ip in cip:
                 # print '!!!!!!!!! png_path ====================== ', ip.png_path
                 # print '!!!!!!!!! legend_path ====================== ', ip.legend_path
-                remove_files(ip.png_path)
-                remove_files(ip.legend_path)
+                # remove_files(ip.png_path)
+                # remove_files(ip.legend_path)
+
+                try:
+                    os.remove(ip.png_path)
+                except Exception, e:
+                    print '!!!!!!! ERROR remove file png ===================== ', e
+                    pass
+
+                try:
+                    os.remove(ip.legend_path)
+                except Exception, e:
+                    print '!!!!!!! ERROR remove file legend ===================== ', e
+                    pass
 
             status = check_current_dataset(request, data_get_ajax)
 
