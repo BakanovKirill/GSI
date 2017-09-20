@@ -1855,8 +1855,8 @@ def customer_section(request):
                     request.session['center_lat'] = data_post_ajax['center_lat']
                     request.session['center_lng'] = data_post_ajax['center_lng']
 
-                    print '!!!!!!!!!! CENTER LAT =================== ', request.session['center_lat']
-                    print '!!!!!!!!!! CENTER LNG =================== ', request.session['center_lng']
+                    # print '!!!!!!!!!! CENTER LAT =================== ', request.session['center_lat']
+                    # print '!!!!!!!!!! CENTER LNG =================== ', request.session['center_lng']
 
                 if 'attr_list[]' in data_post_ajax:
                     if not 'stat_list[]' in data_post_ajax:
@@ -2605,8 +2605,8 @@ def customer_section(request):
                         lut_1 = '.' + lut_file.split('.')[-1]
                         lut_name = lut_file.replace(lut_1, '')
 
-                        print 'LUT SD ========================= ', shelf_data_attr
-                        print 'LUT UNITS ========================= ', units
+                        # print 'LUT SD ========================= ', shelf_data_attr
+                        # print 'LUT UNITS ========================= ', units
 
                         tif_png_script = SCRIPT_TIFPNG
                         lut_file = os.path.join(LUT_DIRECTORY, lut_file)
