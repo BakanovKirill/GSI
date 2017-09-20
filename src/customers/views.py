@@ -2599,14 +2599,15 @@ def customer_section(request):
                         units = shelf_data_attr.lutfiles.units
                         val_scale = shelf_data_attr.lutfiles.val_scale
                         shd_attribute_name = shelf_data_attr.attribute_name
+                        root_filename = shelf_data_attr.root_filename
 
                         shd_attribute_name = shd_attribute_name.replace(" ", "_")
 
                         lut_1 = '.' + lut_file.split('.')[-1]
                         lut_name = lut_file.replace(lut_1, '')
 
-                        # print 'LUT SD ========================= ', shelf_data_attr
-                        # print 'LUT UNITS ========================= ', units
+                        print 'LUT SD ========================= ', shelf_data_attr
+                        print 'LUT UNITS ========================= ', units
 
                         tif_png_script = SCRIPT_TIFPNG
                         lut_file = os.path.join(LUT_DIRECTORY, lut_file)
@@ -2622,7 +2623,7 @@ def customer_section(request):
                         command_line += '"' + str(units) + '"' + ' '
                         command_line += str(val_scale)
 
-                        # print 'LUT COMMAND NAME ========================= ', command_line
+                        print 'LUT COMMAND NAME ========================= ', command_line
                         
                         ####################### write log file
                         customer_section.write('COMMAND LINE: {0}\n'.format(command_line))
@@ -2641,15 +2642,18 @@ def customer_section(request):
                         legend_path_old = '/'.join(legend_path_old)
 
                         # print '!!!!!!!!!! LEGEND ====================== ', legend
+                        # root_filename
 
                         if legend == '2':
-                            legend_name = 'FullLegend_{0}.png'.format(lut_name)
+                            legend_name_proj = 'FullLegend_{0}.png'.format(lut_name)
+                            legend_name_map = '{0}_FullLegend_{1}.png'.format(root_filename, lut_name)
                         else:
-                            legend_name = 'Legend_{0}.png'.format(lut_name)
+                            legend_name_proj = 'Legend_{0}.png'.format(lut_name)
+                            legend_name_map = '{0}_Legend_{1}.png'.format(root_filename, lut_name)
                             
-                        old_color_legend = os.path.join(legend_path_old, legend_name)
-                        new_color_legend = os.path.join(LEGENDS_PATH, legend_name)
-                        url_legend = '{0}/{1}'.format(absolute_legend_url, legend_name)
+                        old_color_legend = os.path.join(legend_path_old, legend_name_proj)
+                        new_color_legend = os.path.join(LEGENDS_PATH, legend_name_map)
+                        url_legend = '{0}/{1}'.format(absolute_legend_url, legend_name_map)
 
                         # print '!!!!!!!!! old_color_legend ================== ', old_color_legend
                         # print '!!!!!!!!! new_color_legend ================== ', new_color_legend
