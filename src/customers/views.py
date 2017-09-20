@@ -2605,7 +2605,8 @@ def customer_section(request):
                         lut_1 = '.' + lut_file.split('.')[-1]
                         lut_name = lut_file.replace(lut_1, '')
 
-                        # print 'LUT NAME ========================= ', lut_name
+                        print 'LUT SD ========================= ', shelf_data_attr
+                        print 'LUT UNITS ========================= ', units
 
                         tif_png_script = SCRIPT_TIFPNG
                         lut_file = os.path.join(LUT_DIRECTORY, lut_file)
@@ -2759,10 +2760,10 @@ def customer_section(request):
                                 proc_script_png = Popen(command_line_copy_png, shell=True)
                                 proc_script_png.wait()
 
-                                proc_script_legend = Popen(command_line_copy_legend, shell=True)
-                                proc_script_legend.wait()
+                            proc_script_legend = Popen(command_line_copy_legend, shell=True)
+                            proc_script_legend.wait()
 
-                                time_convert_end = time.time() - time_convert_start
+                            time_convert_end = time.time() - time_convert_start
 
                             print '!!!!!!!! TIME CONVERT =============================== ', time_convert_end
 
