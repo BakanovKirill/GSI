@@ -2725,15 +2725,15 @@ def customer_section(request):
                                 proc_script = Popen(command_line, shell=True)
                                 proc_script.wait()
 
-                                time_convert_end = time.time() - time_convert_start
-
                                 proc_script_png = Popen(command_line_copy_png, shell=True)
                                 proc_script_png.wait()
 
-                            proc_script_legend = Popen(command_line_copy_legend, shell=True)
-                            proc_script_legend.wait()
+                                proc_script_legend = Popen(command_line_copy_legend, shell=True)
+                                proc_script_legend.wait()
 
-                            # print '!!!!!!!! TIME CONVERT =============================== ', time_convert_end
+                                time_convert_end = time.time() - time_convert_start
+
+                            print '!!!!!!!! TIME CONVERT =============================== ', time_convert_end
 
                             # if not os.path.exists(new_color_legend):
                             #     command_line_copy_legend = 'cp {0} {1}'.format(old_color_legend, new_color_legend)
