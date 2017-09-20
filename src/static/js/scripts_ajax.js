@@ -683,6 +683,7 @@ function sendDataAttrStatToServer(obj) {
     var form_url = $('#customer_section').attr('action');
     var attr_list = [];
     var stat_list = [];
+    var center_map = map.getCenter();
 
     // alert('BUT: '+$(obj).val());
 
@@ -699,7 +700,8 @@ function sendDataAttrStatToServer(obj) {
     // alert('attr_list: '+attr_list);
     // alert('stat_list: '+stat_list);
     
-    // alert('Zoom: ' + map.getZoom());
+    // alert('CENTER LAT: ' + center_map.lat());
+    // alert('CENTER LNG: ' + center_map.lng());
 
     $.ajax({
         url: form_url,
@@ -711,6 +713,8 @@ function sendDataAttrStatToServer(obj) {
             'attr_list': attr_list,
             'stat_list': stat_list,
             'zoom_map': map.getZoom(),
+            'center_lat': center_map.lat(),
+            'center_lng': center_map.lng(),
             'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
         },
         'error': function(xhr, status, error){

@@ -1799,6 +1799,18 @@ def customer_section(request):
         google_map_zoom = request.session['zoom_map']
     else:
         request.session['zoom_map'] = GOOGLE_MAP_ZOOM
+
+    # Get Center LAT Google Maps
+    if request.session.get('center_lat', False):
+        cLat = request.session['center_lat']
+    else:
+        request.session['center_lat'] = 0.001
+
+    # Get Center LNG Google Maps
+    if request.session.get('center_lng', False):
+        cLat = request.session['center_lng']
+    else:
+        request.session['center_lng'] = 0.001
     
 
     # print '!!!!!!!!!!!!!!!!!!!! data_set_id ==================== ', data_set_id
@@ -1840,6 +1852,11 @@ def customer_section(request):
             try:
                 if 'zoom_map' in data_post_ajax:
                     request.session['zoom_map'] = data_post_ajax['zoom_map']
+                    request.session['center_lat'] = data_post_ajax['center_lat']
+                    request.session['center_lng'] = data_post_ajax['center_lng']
+
+                    print '!!!!!!!!!! CENTER LAT =================== ', request.session['center_lat']
+                    print '!!!!!!!!!! CENTER LNG =================== ', request.session['center_lng']
 
                 if 'attr_list[]' in data_post_ajax:
                     if not 'stat_list[]' in data_post_ajax:
@@ -2191,6 +2208,8 @@ def customer_section(request):
             request.session['select_data_set'] = data_get_ajax['datasets_id']
             data_set_id = request.session['select_data_set']
             request.session['zoom_map'] = 0.001
+            request.session['center_lat'] = 0.001
+            request.session['center_lng'] = 0.001
 
             request.session['tab_active'] = 'view'
             # request.session['time_series_view'] = False
@@ -2839,8 +2858,15 @@ def customer_section(request):
                     # maxY = 90.0
                     # maxX = 179.9999
                     
-                    centerY = (maxY + minY) / 2
-                    centerX = (maxX + minX) / 2
+                    c_Y = request.session['center_lat']
+                    c_X = request.session['center_lng']
+                    
+                    if (c_Y == 0.001 or c_Y == '0.001') or (c_X == 0.001 or c_X == '0.001'):
+                        centerY = (maxY + minY) / 2
+                        centerX = (maxX + minX) / 2
+                    else:
+                        centerY = c_Y
+                        centerX = c_X
 
                     # print '!!!!!!!!!!!!!!!! ZOOM =========================== ', request.session['zoom_map']
                     # print '!!!!!!!!!!!!!!!! ZOOM google_map_zoom =========================== ', google_map_zoom
