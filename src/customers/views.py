@@ -2486,7 +2486,10 @@ def customer_section(request):
                 CustomerPolygons, kml_name=kml_file)
             ftp_kml = os.path.join(path_ftp_user, cur_area.kml_name)
 
-            os.remove(cur_area.kml_path)
+            try:
+                os.remove(cur_area.kml_path)
+            except OSError:
+                pass
 
             try:
                 os.remove(ftp_kml)
@@ -3342,6 +3345,8 @@ def files_lister(request):
                     info_window = '<h4 align="center">Name: {0}</h4>\n'.format(doc_kml.Document.Placemark.name)
                     info_window += '<p align="center"><span><b>Description: {0}</b></span></p>'.format(
                                         doc_kml.Document.Placemark.description)
+
+                    # print '!!!!!!!!!!!! COORDINATE ======================== ', doc_kml.Document.Polygon.outerBoundaryIs.LinearRing.coordinates
 
                     addPolygonToDB(name[0], file_name, customer, new_path, kml_url, data_set, text_kml=info_window)
 

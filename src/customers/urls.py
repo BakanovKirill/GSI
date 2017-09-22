@@ -41,7 +41,7 @@ urlpatterns = [
 	url(r'^lutfile/(?P<lutfile_id>\d+)/edit$', 'customers.views.lutfile_edit', name='lutfile_edit'),
 
 	# the Customer Section
-	url(r'^section', 'customers.views.customer_section', name='customer_section'),
+	url(r'^section/', 'customers.views.customer_section', name='customer_section'),
 	
 	# PHP url
 	# url(r'^php', 'customers.views.customer_section_php', name='customer_section_php'),
