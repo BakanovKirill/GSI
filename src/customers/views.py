@@ -1570,9 +1570,10 @@ def createTimeSeriesResults(aoi, file_in, file_out):
     if attributes_reports:
         for attr in attributes_reports:
             result_year = attr.shelfdata.root_filename
-            sub_dir_name = SUB_DIRECTORIES[attr.statistic]
-            sub_dir = result_year + '/' + sub_dir_name
-            project_directory = os.path.join(PROJECTS_PATH, aoi.data_set.results_directory, sub_dir)
+            # sub_dir_name = SUB_DIRECTORIES[attr.statistic]
+            # sub_dir = result_year + '/' + sub_dir_name
+            project_directory = os.path.join(PROJECTS_PATH, aoi.data_set.results_directory, result_year)
+            # project_directory = os.path.join(PROJECTS_PATH, aoi.data_set.results_directory, sub_dir)
 
             # print '!!!!!!! YEAR ========================== ', result_year
             # print '!!!!!!! DIR YEAR ========================== ', project_directory
@@ -1581,66 +1582,73 @@ def createTimeSeriesResults(aoi, file_in, file_out):
             # project_directory = os.path.join(sub_dir_path)
 
             if os.path.exists(project_directory):
-                root, dirs, files = os.walk(project_directory).next()
-                dirs.sort()
-                files.sort()
+                root_year, dirs_year, files_year = os.walk(project_directory).next()
+                dirs_year.sort()
+                # files.sort()
 
-                for f in files:
-                    fl, ext = os.path.splitext(f)
+                for d in dirs_year:
+                    sub_dir_name = d
+                    project_directory_year = os.path.join(project_directory, d)
+                    sub_root, sub_dirs, sub_files = os.walk(project_directory_year).next()
+                    sub_dirs.sort()
+                    sub_files.sort()
 
-                    # print '!!!!!!! FILE ========================== ', f
+                    for f in sub_files:
+                        fl, ext = os.path.splitext(f)
 
-                    if ext == '.tif':
-                        file_ts_tif = os.path.join(project_directory, f)
-                        
-                        try:
-                            ts_day = f.split(result_year+'_')[1]
-                            ts_day = ts_day.split('_')[0]
-                            ts_date = date(int(result_year), 1, 1)
-                            ts_delta = timedelta(days=int(ts_day)-1)
-                            result_date = ts_date + ts_delta
-                            ts_name = '{0}_{1}_{2}_{3}'.format(aoi.name, result_year, sub_dir_name, ts_day)
-                            ts_value = '0'
+                        # print '!!!!!!! FILE ========================== ', f
 
-                            command_line_ts = '{0} {1} {2} {3}'.format(
-                                                    SCRIPT_GETPOLYINFO,
-                                                    file_ts_tif,
-                                                    file_in,
-                                                    file_out
-                                                )
-
-                            proc_script = Popen(command_line_ts, shell=True)
-                            proc_script.wait()
-
-                            file_out_coord_open = open(file_out)
-
-                            for line in file_out_coord_open.readlines():
-                                new_line = line.replace(' ', '')
-                                new_line = new_line.replace('\n', '')
+                        if ext == '.tif':
+                            file_ts_tif = os.path.join(project_directory_year, f)
                             
-                                # print '!!!!!!! 1 NEW LINE ========================== ', new_line
+                            try:
+                                ts_day = f.split(result_year+'_')[1]
+                                ts_day = ts_day.split('_')[0]
+                                ts_date = date(int(result_year), 1, 1)
+                                ts_delta = timedelta(days=int(ts_day)-1)
+                                result_date = ts_date + ts_delta
+                                ts_name = '{0}_{1}_{2}_{3}'.format(aoi.name, result_year, sub_dir_name, ts_day)
+                                ts_value = '0'
 
-                                if new_line:
-                                    ts_value = new_line.split(',')[2]
-                                    scale = attr.shelfdata.scale
+                                command_line_ts = '{0} {1} {2} {3}'.format(
+                                                        SCRIPT_GETPOLYINFO,
+                                                        file_ts_tif,
+                                                        file_in,
+                                                        file_out
+                                                    )
 
+                                proc_script = Popen(command_line_ts, shell=True)
+                                proc_script.wait()
+
+                                file_out_coord_open = open(file_out)
+
+                                for line in file_out_coord_open.readlines():
+                                    new_line = line.replace(' ', '')
+                                    new_line = new_line.replace('\n', '')
+                                
                                     # print '!!!!!!! 1 NEW LINE ========================== ', new_line
 
-                                    if scale:
-                                        ts_value = str(float(ts_value) / scale)
+                                    if new_line:
+                                        ts_value = new_line.split(',')[2]
+                                        scale = attr.shelfdata.scale
 
-                                    # print '!!!!!!! 2 NEW LINE ========================== ', new_line
-                                    
-                            addTsToDB(ts_name, aoi.user, aoi.data_set, aoi, result_year,
-                                        sub_dir_name, result_date, ts_value, attr.shelfdata.attribute_name)
+                                        # print '!!!!!!! 1 NEW LINE ========================== ', new_line
 
-                            # list_files_tif.append(fl_tif)
-                            # list_data_db.append(str_data_db)
+                                        if scale:
+                                            ts_value = str(float(ts_value) / scale)
 
-                            # print '!!!!!!!!!! DAY ========================= ', ts_day
-                            # print '!!!!!!!!!! DATE ========================= ', result_date
-                        except IndexError:
-                            pass
+                                        # print '!!!!!!! 2 NEW LINE ========================== ', new_line
+                                        
+                                addTsToDB(ts_name, aoi.user, aoi.data_set, aoi, result_year,
+                                            sub_dir_name, result_date, ts_value, attr.shelfdata.attribute_name)
+
+                                # list_files_tif.append(fl_tif)
+                                # list_data_db.append(str_data_db)
+
+                                # print '!!!!!!!!!! DAY ========================= ', ts_day
+                                # print '!!!!!!!!!! DATE ========================= ', result_date
+                            except IndexError:
+                                pass
 
 
 # view Customer Section
