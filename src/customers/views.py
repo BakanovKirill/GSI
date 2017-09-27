@@ -1844,6 +1844,7 @@ def customer_section(request):
 
         # print '!!!!!!!!!!!!!!!!! data_post_ajax ===================== ', data_post_ajax
         # print '!!!!!!!!!!!!!!!!! data_post_ajax LIST ===================== ', data_post_ajax.lists()
+        # print '!!!!!!!!!!!!!!!!! ts_list ===================== ', data_post_ajax['ts_list']
         # print '!!!!!!!!!!!!!!!!! ts_list ===================== ', ('ts_list[]' in data_post_ajax)
         # print '!!!!!!!!!!!!!!!!! BUTTON ===================== ', 'button' in data_post_ajax
 
@@ -1973,7 +1974,7 @@ def customer_section(request):
             # time_series_view = True
             
             
-            # print '!!!!!!!!!!!!!!!!! TS VIEW 1 ============================== ', request.session['time_series_view']
+            print '!!!!!!!!!!!!!!!!! TS VIEW 1 ============================== ', ts_ids
             # print '!!!!!!!!!!!!!!!!! TS LIST 2 ============================== ', data_post_ajax.getlist('ts_list[]')
 
         if 'coordinate_list[0][]' in data_post_ajax:
@@ -2609,8 +2610,8 @@ def customer_section(request):
                         lut_1 = '.' + lut_file.split('.')[-1]
                         lut_name = lut_file.replace(lut_1, '')
 
-                        print 'LUT SD ========================= ', shelf_data_attr
-                        print 'LUT UNITS ========================= ', units
+                        # print 'LUT SD ========================= ', shelf_data_attr
+                        # print 'LUT UNITS ========================= ', units
 
                         tif_png_script = SCRIPT_TIFPNG
                         lut_file = os.path.join(LUT_DIRECTORY, lut_file)
@@ -2626,7 +2627,7 @@ def customer_section(request):
                         command_line += '"' + str(units) + '"' + ' '
                         command_line += str(val_scale)
 
-                        print 'LUT COMMAND NAME ========================= ', command_line
+                        # print 'LUT COMMAND NAME ========================= ', command_line
                         
                         ####################### write log file
                         customer_section.write('COMMAND LINE: {0}\n'.format(command_line))
