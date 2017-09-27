@@ -1,5 +1,6 @@
 function getDataSeries() {
     // alert('getDataSeries: '+ts_data);
+    // alert('ts_subtitle: '+ts_subtitle);
     
     if (ts_data) {
         var data_list = ts_data.split('$$$');
@@ -78,7 +79,7 @@ function initHighcharts(ts_series) {
             type: 'spline'
         },
         title: {
-            text: title
+            text: ts_subtitle
         },
         subtitle: {
             text: ts_subtitle

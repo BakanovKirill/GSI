@@ -1535,13 +1535,14 @@ def getListTifFiles(customer, dataset):
 
 
 def addTsToDB(name, customer, data_set, customer_polygons, result_year,
-                stat_code, result_date, value_of_time_series):
+                stat_code, result_date, value_of_time_series, attribute):
     if TimeSeriesResults.objects.filter(name=name, user=customer, data_set=data_set).exists():
         ts_obj = TimeSeriesResults.objects.filter(name=name).update(
             customer_polygons=customer_polygons,
             result_year=result_year, stat_code=stat_code,
             result_date=result_date,
-            value_of_time_series=value_of_time_series
+            value_of_time_series=value_of_time_series,
+            attribute=attribute
         )
     else:
         ts_obj = TimeSeriesResults.objects.create(
@@ -1549,27 +1550,35 @@ def addTsToDB(name, customer, data_set, customer_polygons, result_year,
             customer_polygons=customer_polygons,
             result_year=result_year, stat_code=stat_code,
             result_date=result_date,
-            value_of_time_series=value_of_time_series
+            value_of_time_series=value_of_time_series,
+            attribute=attribute
         )
         ts_obj.save()
 
 
 def createTimeSeriesResults(aoi, file_in, file_out):
-    list_files_tif = []
-    list_data_db = []
+    # list_files_tif = []
+    # list_data_db = []
 
+    project_directory = os.path.join(PROJECTS_PATH, aoi.data_set.results_directory)
     attributes_reports = AttributesReport.objects.filter(
                             user=aoi.user, data_set=aoi.data_set
                         ).order_by('shelfdata__attribute_name')
+
+    # print '!!!!!!!!!!!!!!!!!! ATTRIBUTES REPORTS ================================ ', attributes_reports
 
     if attributes_reports:
         for attr in attributes_reports:
             result_year = attr.shelfdata.root_filename
             sub_dir_name = SUB_DIRECTORIES[attr.statistic]
             sub_dir = result_year + '/' + sub_dir_name
-            sub_dir_path = os.path.join(PROJECTS_PATH, aoi.data_set.results_directory, sub_dir)
+            project_directory = os.path.join(PROJECTS_PATH, aoi.data_set.results_directory, sub_dir)
 
-            project_directory = os.path.join(sub_dir_path)
+            # print '!!!!!!! YEAR ========================== ', result_year
+            # print '!!!!!!! DIR YEAR ========================== ', project_directory
+            # print '!!!!!!! YES DIR YEAR ========================== ', os.path.exists(project_directory)
+
+            # project_directory = os.path.join(sub_dir_path)
 
             if os.path.exists(project_directory):
                 root, dirs, files = os.walk(project_directory).next()
@@ -1578,6 +1587,8 @@ def createTimeSeriesResults(aoi, file_in, file_out):
 
                 for f in files:
                     fl, ext = os.path.splitext(f)
+
+                    # print '!!!!!!! FILE ========================== ', f
 
                     if ext == '.tif':
                         file_ts_tif = os.path.join(project_directory, f)
@@ -1619,9 +1630,9 @@ def createTimeSeriesResults(aoi, file_in, file_out):
                                         ts_value = str(float(ts_value) / scale)
 
                                     # print '!!!!!!! 2 NEW LINE ========================== ', new_line
-                            
+                                    
                             addTsToDB(ts_name, aoi.user, aoi.data_set, aoi, result_year,
-                                        sub_dir_name, result_date, ts_value)
+                                        sub_dir_name, result_date, ts_value, attr.shelfdata.attribute_name)
 
                             # list_files_tif.append(fl_tif)
                             # list_data_db.append(str_data_db)
@@ -1735,6 +1746,7 @@ def customer_section(request):
     ts_series_name = ''
     ts_stat_code = ''
     ts_data = ''
+    time_series_clear = False
     # ts_data = []
     # ts_data = {}
 
@@ -1779,14 +1791,15 @@ def customer_section(request):
     # Get select active tab sessions
     if request.session.get('tab_active', False):
         tab_active = request.session['tab_active']
-
-        # if tab_active == 'ts':
-        #     request.session['time_series_view'] = True
-        # else:
-        #     request.session['time_series_view'] = False
     else:
         request.session['tab_active'] = tab_active
         # request.session['time_series_view'] = False
+        
+    # # Get Report active
+    # if request.session.get('report_list', False):
+    #     report_list = request.session['report_list']
+    # else:
+    #     request.session['report_list'] = report_list
 
     # Get Time Series active
     if request.session.get('time_series_list', False):
@@ -1811,6 +1824,12 @@ def customer_section(request):
         cLat = request.session['center_lng']
     else:
         request.session['center_lng'] = 0.001
+
+    # Get Clear TS View
+    if request.session.get('time_series_clear', False):
+        time_series_clear = request.session['time_series_clear']
+    else:
+        request.session['time_series_clear'] = time_series_clear
     
 
     # print '!!!!!!!!!!!!!!!!!!!! data_set_id ==================== ', data_set_id
@@ -1970,11 +1989,11 @@ def customer_section(request):
             ts_ids = data_post_ajax.getlist('ts_list[]')
             request.session['time_series_list'] = data_post_ajax.getlist('ts_list[]')
             ts_diagram = TimeSeriesResults.objects.filter(id__in=ts_ids)
-            # request.session['time_series_view'] = True
+            request.session['time_series_clear'] = False
             # time_series_view = True
             
             
-            print '!!!!!!!!!!!!!!!!! TS VIEW 1 ============================== ', ts_ids
+            # print '!!!!!!!!!!!!!!!!! TS VIEW 1 ============================== ', ts_ids
             # print '!!!!!!!!!!!!!!!!! TS LIST 2 ============================== ', data_post_ajax.getlist('ts_list[]')
 
         if 'coordinate_list[0][]' in data_post_ajax:
@@ -2196,6 +2215,11 @@ def customer_section(request):
             # active_cip = cip.get(is_show=True)
             is_convert_tif_png = True
 
+        if 'clear_ts' in data_get_ajax:
+            request.session['time_series_clear'] = True
+
+            # print '!!!!!!!!!!!!!! AJAX GET CLEAR ========================= ', time_series_clear
+
         if 'zoom' in data_get_ajax:
             # active_cip = cip.get(is_show=True)
             request.session['zoom_map'] = data_get_ajax['zoom']
@@ -2269,7 +2293,7 @@ def customer_section(request):
                     
             # data = request.session['zoom_map']
 
-            print '!!!!!!!!! REQ ZOOM ====================== ', request.session['zoom_map']
+            # print '!!!!!!!!! REQ ZOOM ====================== ', request.session['zoom_map']
 
             return HttpResponse(data)
 
@@ -2313,7 +2337,7 @@ def customer_section(request):
                 data += '$$$' + polygon_text + '$$$' + str(polygon_id)
                 # data += polygon_text
             except Exception, e:
-                print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! AOI ERROR ============================ ', e
+                print '!!!!!!!!!!!!!!!!!!!!!!!!!!! AOI ERROR ============================ ', e
                 # ############ WRITE LOG ##############################
                 customer_section.write('AOI ERROR: '+str(e))
                 customer_section.write('\n')
@@ -2321,14 +2345,11 @@ def customer_section(request):
             return HttpResponse(data)
 
         if 'tab_active' in data_get_ajax:
+            data = request.session['tab_active']
             tab_active = data_get_ajax.get('tab_active', '')
             request.session['tab_active'] = tab_active
-            # print 'tab_active ================================ ', tab_active
-            
-            # if tab_active == 'ts':
-            #     request.session['time_series_view'] = True
-            # else:
-            #     request.session['time_series_view'] = False
+
+            # print '!!!!!!!!!!!!!!!!!!! tab_active ================================ ', tab_active
 
             return HttpResponse(data)
 
@@ -3101,7 +3122,7 @@ def customer_section(request):
     # print '!!!!!!!!!!!!!!!! ZOOM ===================================== ', google_map_zoom
     # print '!!!!!!!!!!!!!!!! ZOOM MAP ===================================== ', request.session['zoom_map']
     # print '!!!!!!!!!!!!!!!! TS VIEW SESS ===================================== ', request.session['time_series_view']
-    # print '!!!!!!!!!!!!!!!! TS VIEW ===================================== ', time_series_view
+    # print '!!!!!!!!!!!!!!!! TS CLEAR ===================================== ', request.session['time_series_clear']
     
     
     data = {
@@ -3121,6 +3142,7 @@ def customer_section(request):
         'time_series_list': time_series_list,
         # 'time_series_view': request.session['time_series_view'],
         'time_series_view': time_series_view,
+        'time_series_clear': request.session['time_series_clear'],
 
         'file_tif_path': file_tif_path,
 

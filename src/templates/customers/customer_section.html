@@ -6,8 +6,11 @@
     {% if not error_message %}
         <form class="form-modal" id="customer_section" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data" role="form" class="form-horizontal">
         {% csrf_token %}
-            {% if time_series_view %}
+            {% if time_series_view  and not time_series_clear %}
+                <h3>Time Series</h3>
                 <div id="container"></div>
+            {% elif time_series_clear %}
+                <h3>Time Series</h3>
             {% else %}
                 <!-- Draw Menu -->
                 <div class="row margin-top-20 ">
@@ -207,9 +210,7 @@
             var ts_data = '{{ ts_data }}';
             var ts_series = [];
 
-            var ts_data = '{{ ts_data }}';
-
-            {% if time_series_view %}
+            {% if time_series_view and not time_series_clear %}
                 var highcharts = getDataSeries();
             {% endif %}
 

@@ -89,11 +89,11 @@ class LutFilesAdmin(admin.ModelAdmin):
 
 
 class TimeSeriesResultsAdmin(admin.ModelAdmin):
-    list_display = ('user', 'name', 'data_set', 'customer_polygons', 'result_year',
+    list_display = ('user', 'name', 'data_set', 'attribute', 'customer_polygons', 'result_year',
                     'stat_code', 'result_date', 'value_of_time_series')
-    search_fields = ['user', 'name', 'data_set', 'customer_polygons', 'result_year',
+    search_fields = ['user', 'name', 'data_set', 'attribute', 'customer_polygons', 'result_year',
                     'stat_code', 'result_date']
-    list_filter = ('user', 'name', 'data_set', 'customer_polygons', 'result_year',
+    list_filter = ('user', 'name', 'data_set', 'attribute', 'customer_polygons', 'result_year',
                     'stat_code', 'result_date', 'value_of_time_series')
 
 

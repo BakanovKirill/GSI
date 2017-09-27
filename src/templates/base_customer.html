@@ -217,14 +217,14 @@
                                                             <input type="radio" name="polygon" value="{{ polygon.id }}" onchange="setPolygon(this);"><a href="{{ absolute_kml_url }}/{{ polygon.kml_name }}"> {{ polygon.name }}</a>
                                                         </div>
 
-                                                        <div class="col-md-1 margin-bottom-4">
-                                                            <button class="btn del-btn edit-area margin-top-07 left" type="button" name="save_area" value="{{ polygon.id }}" data-toggle="tooltip" data-placement="top" title="Edit">
+                                                        <div class="col-md-1">
+                                                            <button class="btn del-btn edit-area margin-top-6 left" type="button" name="save_area" value="{{ polygon.id }}" data-toggle="tooltip" data-placement="top" title="Edit">
                                                                 <img src="{% static 'img/edit-18.png' %}" class="margin-left-010"/>
                                                             </button>
                                                         </div>
 
-                                                        <div class="col-md-1 margin-bottom-4">
-                                                            <button class="btn del-btn check-cur-delete margin-top-07 right" type="button" name="del_current_btn" value="{{ polygon.kml_name }}" data-toggle="tooltip" data-placement="top" title="Delete">
+                                                        <div class="col-md-1">
+                                                            <button class="btn del-btn check-cur-delete margin-top-6 right" type="button" name="del_current_btn" value="{{ polygon.kml_name }}" data-toggle="tooltip" data-placement="top" title="Delete">
                                                                 <img src="{% static 'img/delete-18.png' %}" class="margin-left-010"/>
                                                             </button>
                                                         </div>
@@ -253,13 +253,19 @@
 
                                                         <div class="col-md-12 left margin-top-15 view-list" id="view_attribute">
                                                             {% for ts in time_series_show %}
-                                                                <label class="normal"><input class="margin-bottom-6" name="time_series" type="checkbox" value="{{ ts.id }}" onclick="toogleVisibleDrawPlot(this);" {% if ts.id in time_series_list %}checked="checked"{% endif %}> {{ ts.customer_polygons }}_{{ ts.result_year }}_{{ ts.stat_code }}</label><br>
+                                                                <label class="normal"><input class="margin-bottom-6" name="time_series" type="checkbox" value="{{ ts.id }}" onclick="toogleVisibleDrawPlot(this);" {% if ts.id in time_series_list and not time_series_clear %}checked="checked"{% endif %}> {{ ts.customer_polygons }}_{{ ts.result_year }}_{{ ts.stat_code }}</label><br>
                                                             {% endfor %}
                                                         </div>
 
                                                         <div class="col-md-6 left margin-top-15 snap-bottom-left">
                                                             <button type="button" name="draw-plot" id="draw_plot" class="btn btn-success btn-block margin-top-10" value="draw_plot" onclick="sendDataTsToServer(this);" disabled="disabled">
                                                                 Draw Plot
+                                                            </button>
+                                                        </div>
+
+                                                        <div class="col-md-6 left margin-top-15 snap-bottom-left">
+                                                            <button type="button" name="draw-plot" id="draw_plot" class="btn btn-success btn-block margin-top-10" value="draw_plot" onclick="clearTs();">
+                                                                Clear
                                                             </button>
                                                         </div>
                                                     </div>
@@ -321,11 +327,13 @@
 
 
     <!-- jQuery -->
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.form.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery-latest.min.js' %}"></script>
+    
+    <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script> -->
+    <!-- <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> -->
 
     <!-- JQUERY UI -->
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>

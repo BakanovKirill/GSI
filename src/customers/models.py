@@ -285,10 +285,10 @@ class TimeSeriesResults(models.Model):
                             max_length=250,
                             blank=True, null=True,
                             verbose_name='Value',)
-    # attribute = models.CharField(
-    #                         max_length=250,
-    #                         blank=True, null=True,
-    #                         verbose_name='Attribute',)
+    attribute = models.CharField(
+                            max_length=250,
+                            blank=True, null=True,
+                            verbose_name='Attribute',)
 
     def __unicode__(self):
         return u"{0}".format(self.name)

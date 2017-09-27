@@ -819,6 +819,7 @@ function selectTab(obj) {
         'dataType': 'text',
         data: {
             'tab_active': tab_name,
+            // 'report_list': report_list,
             'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
         },
         'error': function(xhr, status, error){
@@ -828,9 +829,11 @@ function selectTab(obj) {
         },
         'success': function(data, status, xhr){
             // alert('URL DATA: '+data);
-            // var obj_status = status;
             // sendGetToServer();
-            window.location.href = form_url;
+            
+            if (data == 'ts' || tab_name == 'ts') {
+                window.location.href = form_url;
+            }
         },
     });
 }
@@ -889,6 +892,34 @@ function getZoomGoogleMap(zoom) {
         },
     });
 }
+
+function clearTs() {
+    var form_url = $('#customer_section').attr('action');
+
+    $.ajax({
+        url: form_url,
+        type: 'GET',
+        'async': true,
+        'dataType': 'text',
+        data: {
+            'clear_ts': 'clear_ts',
+            'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+        },
+        'error': function(xhr, status, error){
+            // alert('error: '+error);
+            var message = 'An unexpected error occurred. Try later.';
+            alert(message);
+        },
+        'success': function(data, status, xhr){
+            window.location.href = form_url;
+            // alert('URL DATA: '+data);
+            // var obj_status = status;
+            // sendGetToServer();
+            // window.location.href = form_url;
+        },
+    });
+}
+
 
 
 $(document).ready(function(){
