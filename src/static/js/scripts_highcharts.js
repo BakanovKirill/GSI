@@ -87,9 +87,6 @@ function initHighcharts(ts_series) {
         title: {
             text: ts_subtitle
         },
-        subtitle: {
-            text: ts_subtitle
-        },
         xAxis: {
             type: 'datetime',
             dateTimeLabelFormats: {
