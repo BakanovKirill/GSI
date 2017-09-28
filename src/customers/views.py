@@ -3039,14 +3039,13 @@ def customer_section(request):
             show_report_ap.append(ar.shelfdata.attribute_name)
 
     ts_all = TimeSeriesResults.objects.filter(user=customer, data_set=data_set).order_by('stat_code')
-    time_series_show = ts_all.order_by('result_year', 'stat_code').distinct(
-                            'result_year', 'stat_code')
+    time_series_show = ts_all.order_by('result_year').distinct('result_year')
     # time_series_show = TimeSeriesResults.objects.order_by('result_year', 'stat_code').distinct(
     #                         'result_year', 'stat_code')
 
-    if request.session['time_series_list']:
-        for ts in request.session['time_series_list']:
-            time_series_list = [t.id for t in TimeSeriesResults.objects.filter(id__in=request.session['time_series_list'])] 
+    # if request.session['time_series_list']:
+    #     for ts in request.session['time_series_list']:
+    #         time_series_list = [t.id for t in TimeSeriesResults.objects.filter(id__in=request.session['time_series_list'])] 
         # print '!!!!!!!!!!!!!!!! TS  ===================================== ', time_series_list
     
     if request.session['time_series_list']:
@@ -3057,13 +3056,16 @@ def customer_section(request):
         ts_ids = request.session['time_series_list']
         ts_selected = TimeSeriesResults.objects.filter(id__in=ts_ids).order_by('result_year')
 
+        for ts in request.session['time_series_list']:
+            time_series_list = [t.id for t in TimeSeriesResults.objects.filter(id__in=request.session['time_series_list'])]
+
         for d in ts_selected:
             # print '!!!!!!!!!!!!!!!! TS DATE ===================================== ', d.result_date
             ts_title = 'Time Series diagram'
-            # ts_subtitle = '{0}'.format(d.customer_polygons.name)
             ts_statistic = SUB_DIRECTORIES_REVERCE[d.stat_code]
             ts_units = 'Ha'
-            
+
+
             ts_data_polygons = DataPolygons.objects.filter(
                             customer_polygons=d.customer_polygons,
                             data_set=d.data_set,
@@ -3078,36 +3080,49 @@ def customer_section(request):
                 except Exception:
                     pass
             
+            # all_ts_selection = TimeSeriesResults.objects.filter(
+            #                         customer_polygons=d.customer_polygons,
+            #                         result_year=d.result_year,
+            #                         stat_code=d.stat_code).order_by('result_date')
+
             all_ts_selection = TimeSeriesResults.objects.filter(
                                     customer_polygons=d.customer_polygons,
-                                    result_year=d.result_year,
-                                    stat_code=d.stat_code).order_by('result_date')
+                                    result_year=d.result_year).order_by('stat_code', 'result_date')
+
+            # all_ts_selection = TimeSeriesResults.objects.filter(result_year=d.result_year).order_by('stat_code')
+
 
             for tsr in all_ts_selection:
-                tsr_date = str(tsr.result_date).split('-')
+                tsr_data = str(tsr.result_date).split('-')
 
-                # print '!!!!!!!!!!!!!!!! tsr_date[0] ===================================== ', tsr_date[0]
+                # print '!!!!!!!!!!!!!!!! tsr_data[0] ===================================== ', tsr_data[0]
                 # print '!!!!!!!!!!!!!!!! ts_series_name ===================================== ', ts_series_name
 
-                # print '!!!!!!!!!!!!!!!! d.stat_code ===================================== ', d.stat_code
+                # print '!!!!!!!!!!!!!!!! stat_code ===================================== ', tsr.stat_code
+                # print '!!!!!!!!!!!!!!!! result_date ===================================== ', tsr.result_date
+                
+                # print '!!!!!!!!!!!!!!!! d.stat_code ===================================== ', tsr.stat_code
                 # print '!!!!!!!!!!!!!!!! ts_stat_code ===================================== ', ts_stat_code
+                # 
+                # if tsr_data[0] != ts_series_name or ts_stat_code != d.stat_code:
+                
 
-                if tsr_date[0] != ts_series_name or ts_stat_code != d.stat_code:
+                if ts_stat_code != tsr.stat_code:
                     ts_data = ts_data[0:-1]
                     ts_data += '$$$'
                     tmp = '{0},{1},{2},{3},{4},{5}$'.format(
-                                d.customer_polygons.name, tsr.stat_code, tsr_date[0],
-                                int(tsr_date[1])-1, tsr_date[2], tsr.value_of_time_series)
+                                tsr.customer_polygons.name, tsr.stat_code, tsr_data[0],
+                                int(tsr_data[1])-1, tsr_data[2], tsr.value_of_time_series)
                 else:
                     tmp = '{0},{1},{2},{3},{4},{5}$'.format(
-                                d.customer_polygons.name, tsr.stat_code, tsr_date[0],
-                                int(tsr_date[1])-1, tsr_date[2], tsr.value_of_time_series)
+                                tsr.customer_polygons.name, tsr.stat_code, tsr_data[0],
+                                int(tsr_data[1])-1, tsr_data[2], tsr.value_of_time_series)
 
                 ts_data += tmp
                 ts_series_name = d.result_year
-                ts_stat_code = d.stat_code
+                ts_stat_code = tsr.stat_code
 
-                # print '!!!!!!!!!!!!!!!! tsr_date[0] ===================================== ', tsr_date[0]
+                # print '!!!!!!!!!!!!!!!! tsr_data[0] ===================================== ', tsr_data[0]
                 # print '!!!!!!!!!!!!!!!! ts_series_name ===================================== ', ts_series_name
                 
         ts_data = ts_data[0:-1]
@@ -3127,7 +3142,8 @@ def customer_section(request):
 
     # time_series_view = request.session['time_series_view']
     
-    # print '!!!!!!!!!!!!!!!! ZOOM ===================================== ', google_map_zoom
+    # print '!!!!!!!!!!!!!!!! ts_units ===================================== ', ts_units
+    # print '!!!!!!!!!!!!!!!! ts_data ===================================== ', ts_data
     # print '!!!!!!!!!!!!!!!! ZOOM MAP ===================================== ', request.session['zoom_map']
     # print '!!!!!!!!!!!!!!!! TS VIEW SESS ===================================== ', request.session['time_series_view']
     # print '!!!!!!!!!!!!!!!! TS CLEAR ===================================== ', request.session['time_series_clear']

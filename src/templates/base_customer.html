@@ -253,7 +253,7 @@
 
                                                         <div class="col-md-12 left margin-top-15 view-list" id="view_attribute">
                                                             {% for ts in time_series_show %}
-                                                                <label class="normal"><input class="margin-bottom-6" name="time_series" type="checkbox" value="{{ ts.id }}" onclick="toogleVisibleDrawPlot(this);" {% if ts.id in time_series_list and not time_series_clear %}checked="checked"{% endif %}> {{ ts.customer_polygons }}_{{ ts.result_year }}_{{ ts.stat_code }}</label><br>
+                                                                <label class="normal"><input class="margin-bottom-6" name="time_series" type="checkbox" value="{{ ts.id }}" onclick="toogleVisibleDrawPlot(this);" {% if ts.id in time_series_list and not time_series_clear %}checked="checked"{% endif %}> {{ ts.result_year }}</label><br>
                                                             {% endfor %}
                                                         </div>
 

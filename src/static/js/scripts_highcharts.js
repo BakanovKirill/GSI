@@ -37,11 +37,17 @@ function getDataSeries() {
                 ts_select_name = data_value[2] + '-' + data_value[1];
                 ts_select_subtitle = data_value[0] + ', ';
                 // tmp = '';
+                
+                // alert('ts_select_name: '+ts_select_name);
+                // alert('ts_select_data: '+ts_select_data);
             }
+
+            // alert('NAME: '+ts_select_name);
+            // alert('ts_select_data: '+ts_select_data);
 
             // alert('ts_select_subtitle: '+ts_select_subtitle);
 
-            // alert('NAME: '+ts_select_name);
+            
             ts_subtitle = ts_subtitle + ts_select_subtitle;
             ts_select_subtitle = '';
             var ts_tmp_dict = {
@@ -51,7 +57,7 @@ function getDataSeries() {
 
             ts_series.push(ts_tmp_dict);
 
-            // alert('ts_subtitle: '+ts_subtitle);
+            // alert('ts_series: '+ts_series);
         }
 
         ts_subtitle = ts_subtitle.split(', ').filter(function (e, i, arr) {
