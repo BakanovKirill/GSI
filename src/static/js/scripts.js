@@ -369,6 +369,15 @@ function toogleVisibleDrawPlot() {
     }
 }
 
+function selectAoi() {
+    var aoi_list = select_aoi.split(',')
+    // for (i = 0; i < select_aoi.length; i++) {
+    //     alert('selectedAoi: '+select_aoi[i]);
+    // }
+    
+    $('#select_aoi').selectpicker('val', aoi_list);
+}
+
 // function getFileNames() {
 //     var upload = document.getElementsByClassName("no-file-selected");
 
@@ -407,6 +416,7 @@ $(document).ready(function(){
     // get_file_name();
     toogleVisibleDrawPlot();
     getFileName();
+    selectAoi();
     // tabsCustomerMenu();
     // showCheckboxes();
 });

@@ -34,7 +34,7 @@ function getDataSeries() {
                 ];
 
                 ts_select_data.push(tmp);
-                ts_select_name = data_value[2] + '-' + data_value[1];
+                ts_select_name = data_value[2] + '-' + data_value[1] + '-' + data_value[0];
                 ts_select_subtitle = data_value[0] + ', ';
                 // tmp = '';
                 
@@ -85,7 +85,7 @@ function initHighcharts(ts_series) {
             type: 'spline'
         },
         title: {
-            text: ts_subtitle
+            text: ''
         },
         xAxis: {
             type: 'datetime',

@@ -1748,15 +1748,20 @@ def customer_section(request):
     url_png = ''
 
     # Data for the TS Diagramm
+    aoi_list = []
     ts_title = ''
-    # ts_subtitle = ''
+    ts_subtitle = ''
     ts_units = 'UNITS, ha'
-    ts_series_name = ''
+    ts_aoi_name = ''
+    ts_series_year = ''
     ts_stat_code = ''
     ts_data = ''
     time_series_clear = False
     # ts_data = []
     # ts_data = {}
+    
+    select_diagram = 'line'
+    select_aoi = 0.0001
 
     # The url to are PNG, KML urls
     scheme = '{0}://'.format(request.scheme)
@@ -1838,6 +1843,18 @@ def customer_section(request):
         time_series_clear = request.session['time_series_clear']
     else:
         request.session['time_series_clear'] = time_series_clear
+
+    # Get Select Diagram
+    if request.session.get('select_diagram', False):
+        select_diagram = request.session['select_diagram']
+    else:
+        request.session['select_diagram'] = select_diagram
+
+    # Get Select AOI
+    if request.session.get('select_aoi', False):
+        select_aoi = request.session['select_aoi']
+    else:
+        request.session['select_aoi'] = select_aoi
     
 
     # print '!!!!!!!!!!!!!!!!!!!! data_set_id ==================== ', data_set_id
@@ -1869,7 +1886,7 @@ def customer_section(request):
         data_post_ajax = request.POST
         data = ''
 
-        # print '!!!!!!!!!!!!!!!!! data_post_ajax ===================== ', data_post_ajax
+        print '!!!!!!!!!!!!!!!!! data_post_ajax ===================== ', data_post_ajax
         # print '!!!!!!!!!!!!!!!!! data_post_ajax LIST ===================== ', data_post_ajax.lists()
         # print '!!!!!!!!!!!!!!!!! ts_list ===================== ', data_post_ajax['ts_list']
         # print '!!!!!!!!!!!!!!!!! ts_list ===================== ', ('ts_list[]' in data_post_ajax)
@@ -2000,9 +2017,14 @@ def customer_section(request):
             request.session['time_series_clear'] = False
             # time_series_view = True
             
-            
             # print '!!!!!!!!!!!!!!!!! TS VIEW 1 ============================== ', ts_ids
             # print '!!!!!!!!!!!!!!!!! TS LIST 2 ============================== ', data_post_ajax.getlist('ts_list[]')
+            
+        if 'select_diagram' in data_post_ajax:
+            request.session['select_diagram'] = data_post_ajax['select_diagram']
+
+        if 'select_aoi[]' in data_post_ajax:
+            request.session['select_aoi'] = data_post_ajax.getlist('select_aoi[]')
 
         if 'coordinate_list[0][]' in data_post_ajax:
             #################### START TIME.TIME
@@ -2225,6 +2247,8 @@ def customer_section(request):
 
         if 'clear_ts' in data_get_ajax:
             request.session['time_series_clear'] = True
+            request.session['select_diagram'] = 'line'
+            request.session['select_aoi'] = 0.0001
 
             # print '!!!!!!!!!!!!!! AJAX GET CLEAR ========================= ', time_series_clear
 
@@ -3047,24 +3071,43 @@ def customer_section(request):
     #     for ts in request.session['time_series_list']:
     #         time_series_list = [t.id for t in TimeSeriesResults.objects.filter(id__in=request.session['time_series_list'])] 
         # print '!!!!!!!!!!!!!!!! TS  ===================================== ', time_series_list
+        # 
+        # request.session['select_diagram'] = 'line'
+            # request.session['select_aoi'] = 0.0001
+    
+    print '!!!!!!!!!!!!!!!! SELECT AOI  ===================================== ', request.session['select_aoi']
     
     if request.session['time_series_list']:
+        count_1 = 0
+        count_2 = 0
         # ts_title
         # ts_subtitle
         # ts_units
         # ts_data
-        ts_ids = request.session['time_series_list']
-        ts_selected = TimeSeriesResults.objects.filter(id__in=ts_ids).order_by('result_year')
+        aoi_list = []
+        ts_years = request.session['time_series_list']
 
-        for ts in request.session['time_series_list']:
-            time_series_list = [t.id for t in TimeSeriesResults.objects.filter(id__in=request.session['time_series_list'])]
+        ts_selected = TimeSeriesResults.objects.filter(result_year__in=ts_years).order_by(
+                                                'customer_polygons', 'result_year', 'stat_code', 'result_date')
+
+        if request.session['select_aoi'] != 0.0001:
+            aoi_ids = request.session['select_aoi']
+            ts_selected = ts_selected.filter(customer_polygons__in=aoi_ids).order_by(
+                                                'customer_polygons', 'result_year', 'stat_code', 'result_date')
+
+        # print '!!!!!!!!!!!!! ts_selected COUNT ======================== ', ts_selected.count()
+
+        # for ts in request.session['time_series_list']:
+        #     time_series_list = [t.id for t in TimeSeriesResults.objects.filter(id__in=request.session['time_series_list'])]
+        time_series_list = [t.id for t in TimeSeriesResults.objects.filter(result_year__in=ts_years).order_by('customer_polygons')]
 
         for d in ts_selected:
-            # print '!!!!!!!!!!!!!!!! TS DATE ===================================== ', d.result_date
+            # print '!!!!!!!!!!!!!!!! TS CUSTOMER ===================================== ', d.customer_polygons
+            # print '!!!!!!!!!!!!!!!! TS stat_code ===================================== ', d.stat_code
+            # print '!!!!!!!!!!!!!!!! TS result_year ===================================== ', d.result_year
             ts_title = 'Time Series diagram'
             ts_statistic = SUB_DIRECTORIES_REVERCE[d.stat_code]
             ts_units = 'Ha'
-
 
             ts_data_polygons = DataPolygons.objects.filter(
                             customer_polygons=d.customer_polygons,
@@ -3085,47 +3128,58 @@ def customer_section(request):
             #                         result_year=d.result_year,
             #                         stat_code=d.stat_code).order_by('result_date')
 
-            all_ts_selection = TimeSeriesResults.objects.filter(
-                                    customer_polygons=d.customer_polygons,
-                                    result_year=d.result_year).order_by('stat_code', 'result_date')
+            # all_ts_selection = TimeSeriesResults.objects.filter(
+            #                         customer_polygons=d.customer_polygons,
+            #                         result_year=d.result_year).order_by('stat_code', 'result_date')
 
             # all_ts_selection = TimeSeriesResults.objects.filter(result_year=d.result_year).order_by('stat_code')
 
 
-            for tsr in all_ts_selection:
-                tsr_data = str(tsr.result_date).split('-')
+            # for tsr in all_ts_selection:
+            aoi_list.append(d.customer_polygons)
+            tsr_date = str(d.result_date).split('-')
 
-                # print '!!!!!!!!!!!!!!!! tsr_data[0] ===================================== ', tsr_data[0]
-                # print '!!!!!!!!!!!!!!!! ts_series_name ===================================== ', ts_series_name
+            # print '!!!!!!!!!!!!!!!! tsr_date[0] ===================================== ', tsr_date[0]
+            # print '!!!!!!!!!!!!!!!! ts_series_year ===================================== ', ts_series_year
 
-                # print '!!!!!!!!!!!!!!!! stat_code ===================================== ', tsr.stat_code
-                # print '!!!!!!!!!!!!!!!! result_date ===================================== ', tsr.result_date
-                
-                # print '!!!!!!!!!!!!!!!! d.stat_code ===================================== ', tsr.stat_code
-                # print '!!!!!!!!!!!!!!!! ts_stat_code ===================================== ', ts_stat_code
-                # 
-                # if tsr_data[0] != ts_series_name or ts_stat_code != d.stat_code:
-                
+            # print '!!!!!!!!!!!!!!!! customer_polygons ===================================== ', tsr.customer_polygons
+            # print '!!!!!!!!!!!!!!!! result_date ===================================== ', tsr.result_date
+            
+            # print '!!!!!!!!!!!!!!!! d.stat_code ===================================== ', tsr.stat_code
+            # print '!!!!!!!!!!!!!!!! ts_stat_code ===================================== ', ts_stat_code
+            # 
+            # if tsr_date[0] != ts_series_year or ts_stat_code != d.stat_code:
+            
 
-                if ts_stat_code != tsr.stat_code:
-                    ts_data = ts_data[0:-1]
-                    ts_data += '$$$'
-                    tmp = '{0},{1},{2},{3},{4},{5}$'.format(
-                                tsr.customer_polygons.name, tsr.stat_code, tsr_data[0],
-                                int(tsr_data[1])-1, tsr_data[2], tsr.value_of_time_series)
-                else:
-                    tmp = '{0},{1},{2},{3},{4},{5}$'.format(
-                                tsr.customer_polygons.name, tsr.stat_code, tsr_data[0],
-                                int(tsr_data[1])-1, tsr_data[2], tsr.value_of_time_series)
+            if ts_stat_code != d.stat_code or ts_aoi_name != d.customer_polygons or ts_series_year != d.result_year:
+                # print '$$$$$$$$$$$$$$$$$$$$$$ STAT CODE ===================================== ', ts_stat_code
+                # print '$$$$$$$$$$$$$$$$$$$$$$ AOI ===================================== ', ts_aoi_name
+                ts_data = ts_data[0:-1]
+                ts_data += '$$$'
+                tmp = '{0},{1},{2},{3},{4},{5}$'.format(
+                            d.customer_polygons.name, d.stat_code, tsr_date[0],
+                            int(tsr_date[1])-1, tsr_date[2], d.value_of_time_series)
+            else:
+                tmp = '{0},{1},{2},{3},{4},{5}$'.format(
+                            d.customer_polygons.name, d.stat_code, tsr_date[0],
+                            int(tsr_date[1])-1, tsr_date[2], d.value_of_time_series)
 
-                ts_data += tmp
-                ts_series_name = d.result_year
-                ts_stat_code = tsr.stat_code
+            ts_data += tmp
+            ts_series_year = d.result_year
+            ts_stat_code = d.stat_code
+            ts_aoi_name = d.customer_polygons
 
-                # print '!!!!!!!!!!!!!!!! tsr_data[0] ===================================== ', tsr_data[0]
-                # print '!!!!!!!!!!!!!!!! ts_series_name ===================================== ', ts_series_name
+            # print '!!!!!!!!!!!!!!!! ts_data ===================================== ', ts_data
+            # print '!!!!!!!!!!!!!!!! tsr_data[0] ===================================== ', tsr_data[0]
+            # print '!!!!!!!!!!!!!!!! ts_series_year ===================================== ', ts_series_year
                 
         ts_data = ts_data[0:-1]
+        aoi_list = list(set(aoi_list))
+
+        for al in aoi_list:
+            ts_subtitle += al.name + ', '
+
+        ts_subtitle = ts_subtitle[0:-2]
 
     ####################### write log file
     customer_section.write('\n')
@@ -3139,6 +3193,13 @@ def customer_section(request):
         time_series_view = True
     else:
         time_series_view = False
+
+    show_aoi = ''
+
+    for n in request.session['select_aoi']:
+        show_aoi += n + ','
+
+    show_aoi = show_aoi[0:-1]
 
     # time_series_view = request.session['time_series_view']
     
@@ -3167,6 +3228,8 @@ def customer_section(request):
         # 'time_series_view': request.session['time_series_view'],
         'time_series_view': time_series_view,
         'time_series_clear': request.session['time_series_clear'],
+        'select_diagram': request.session['select_diagram'],
+        'select_aoi': show_aoi,
 
         'file_tif_path': file_tif_path,
 
@@ -3176,10 +3239,11 @@ def customer_section(request):
         'legend_scale': legend_scale,
 
         'ts_title': ts_title,
-        # 'ts_subtitle': ts_subtitle,
+        'ts_subtitle': ts_subtitle,
         'ts_units': ts_units,
         'ts_data': ts_data,
-        # 'ts_series_name': ts_series_name,
+        'aoi_list': aoi_list,
+        # 'ts_series_year': ts_series_year,
 
         'cLng': cLng,
         'cLat': cLat,

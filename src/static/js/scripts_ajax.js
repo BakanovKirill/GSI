@@ -754,7 +754,23 @@ function sendDataTsToServer(obj) {
     var form_url = $('#customer_section').attr('action');
     var ts_list = [];
 
-    // alert('BUT: '+$(obj).val());
+    var select_diagram = $("#select_diagram").val();
+    // var select_aoi = $("#select_aoi");
+    var select_aoi = $('#select_aoi').val();
+
+
+
+
+    
+    // $('#select_aoi').on('show.bs.select', function (e) {
+    //     alert('1: '+$(this).val());
+    // });
+
+    // $('#select_aoi').selectpicker('selectAll').each(function() {
+    //     alert('2: '+$(this).val());
+    // });
+
+    // alert('AOI: '+select_aoi);
 
     $('#ts input:checkbox:checked').each(function(){
         // alert($(this).val());
@@ -773,6 +789,8 @@ function sendDataTsToServer(obj) {
         data: {
             'button': $(obj).val(),
             'ts_list': ts_list,
+            'select_diagram': select_diagram,
+            'select_aoi': select_aoi,
             'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
         },
         'error': function(xhr, status, error){

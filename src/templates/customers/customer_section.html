@@ -6,11 +6,48 @@
     {% if not error_message %}
         <form class="form-modal" id="customer_section" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data" role="form" class="form-horizontal">
         {% csrf_token %}
-            {% if time_series_view  and not time_series_clear %}
-                <h3>Time Series</h3>
-                <div id="container"></div>
-            {% elif time_series_clear %}
-                <h3>Time Series</h3>
+            {% if tab_active == 'ts' %}
+                <h3>Time Series diagram</h3>
+                <h4 class="margin-bottom-30">AOI: {{ ts_subtitle }}</h4>
+
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <div class="col-md-4 right margin-top-6">
+                            <label for="sel1">Choose one of the following:</label>
+                        </div>
+
+                        <div class="col-md-4 margin-bottom-30">
+                            <select class="selectpicker" id="select_diagram" name="select-diagram">
+                                <option value="line" {% if select_diagram == 'line' %}selected{% endif %}>Line Diagram</option>
+                                <option value="box" {% if select_diagram == 'box' %}selected{% endif %}>Box Plot</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <select class="selectpicker" multiple title="One or more of AOI" id="select_aoi" name="select-aoi">
+                                {% for aoi in aoi_list %}
+                                    <option value="{{ aoi.id}}">{{ aoi }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-2 left">
+                    <button type="button" name="draw-plot" id="draw_plot" class="btn btn-success btn-block margin-bottom-6" value="draw_plot" onclick="sendDataTsToServer(this);" disabled="disabled">
+                        Draw Plot
+                    </button>
+                </div>
+
+                <div class="col-md-2 left">
+                    <button type="button" name="draw-plot" id="draw_plot" class="btn btn-success btn-block margin-bottom-6" value="draw_plot" onclick="clearTs();">
+                        Clear
+                    </button>
+                </div>
+
+                {% if time_series_view  and not time_series_clear %}
+                    <div id="container"></div>
+                {% endif %}
             {% else %}
                 <!-- Draw Menu -->
                 <div class="row margin-top-20 ">
@@ -209,6 +246,7 @@
             var ts_units = '{{ ts_units }}';
             var ts_data = '{{ ts_data }}';
             var ts_series = [];
+            var select_aoi = '{{ select_aoi }}';
 
             {% if time_series_view and not time_series_clear %}
                 var highcharts = getDataSeries();

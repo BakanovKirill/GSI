@@ -24,6 +24,9 @@
     <!-- JQUERY UI -->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
+    <!-- BOOTSTRAP SELECT -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap-select.min.css' %}" type="text/css" >
+
     <!-- Formstone Select -->
     <!-- <link rel="stylesheet" href="{% static 'css/jquery.fs.selecter.css' %}"> -->
     <!--<link rel="stylesheet" href="{% static 'css/dropdown.css' %}">-->
@@ -253,21 +256,11 @@
 
                                                         <div class="col-md-12 left margin-top-15 view-list" id="view_attribute">
                                                             {% for ts in time_series_show %}
-                                                                <label class="normal"><input class="margin-bottom-6" name="time_series" type="checkbox" value="{{ ts.id }}" onclick="toogleVisibleDrawPlot(this);" {% if ts.id in time_series_list and not time_series_clear %}checked="checked"{% endif %}> {{ ts.result_year }}</label><br>
+                                                                <label class="normal"><input class="margin-bottom-6" name="time_series" type="checkbox" value="{{ ts.result_year }}" onclick="toogleVisibleDrawPlot(this);" {% if ts.id in time_series_list and not time_series_clear %}checked="checked"{% endif %}> {{ ts.result_year }}</label><br>
                                                             {% endfor %}
                                                         </div>
 
-                                                        <div class="col-md-6 left margin-top-15 snap-bottom-left">
-                                                            <button type="button" name="draw-plot" id="draw_plot" class="btn btn-success btn-block margin-top-10" value="draw_plot" onclick="sendDataTsToServer(this);" disabled="disabled">
-                                                                Draw Plot
-                                                            </button>
-                                                        </div>
-
-                                                        <div class="col-md-6 left margin-top-15 snap-bottom-left">
-                                                            <button type="button" name="draw-plot" id="draw_plot" class="btn btn-success btn-block margin-top-10" value="draw_plot" onclick="clearTs();">
-                                                                Clear
-                                                            </button>
-                                                        </div>
+                                                        
                                                     </div>
                                                 {% endif %}
                                                 <!-- END TIME SERIES -->
@@ -338,6 +331,9 @@
     <!-- JQUERY UI -->
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <!-- BOOTSTRAP SELECT -->
+    <script type="text/javascript" src="{% static 'js/bootstrap-select.min.js' %}"></script>
 
     <!-- Formstone Select JavaScript -->
     <!-- <script src="{% static 'js/modernizr.js' %}"></script>
