@@ -1886,7 +1886,7 @@ def customer_section(request):
         data_post_ajax = request.POST
         data = ''
 
-        print '!!!!!!!!!!!!!!!!! data_post_ajax ===================== ', data_post_ajax
+        # print '!!!!!!!!!!!!!!!!! data_post_ajax ===================== ', data_post_ajax
         # print '!!!!!!!!!!!!!!!!! data_post_ajax LIST ===================== ', data_post_ajax.lists()
         # print '!!!!!!!!!!!!!!!!! ts_list ===================== ', data_post_ajax['ts_list']
         # print '!!!!!!!!!!!!!!!!! ts_list ===================== ', ('ts_list[]' in data_post_ajax)
@@ -2023,8 +2023,14 @@ def customer_section(request):
         if 'select_diagram' in data_post_ajax:
             request.session['select_diagram'] = data_post_ajax['select_diagram']
 
-        if 'select_aoi[]' in data_post_ajax:
-            request.session['select_aoi'] = data_post_ajax.getlist('select_aoi[]')
+        if 'button' in data_post_ajax:
+            if data_post_ajax['button'] == 'draw_plot':
+                if 'select_aoi[]' in data_post_ajax:
+                    print '!!!!!!!!!!!!! select_aoi[] ========================== '
+                    request.session['select_aoi'] = data_post_ajax.getlist('select_aoi[]')
+                else:
+                    print '!!!!!!!!!!!!! NO select_aoi[] ========================== '
+                    request.session['select_aoi'] = 0.0001
 
         if 'coordinate_list[0][]' in data_post_ajax:
             #################### START TIME.TIME
@@ -3075,7 +3081,7 @@ def customer_section(request):
         # request.session['select_diagram'] = 'line'
             # request.session['select_aoi'] = 0.0001
     
-    print '!!!!!!!!!!!!!!!! SELECT AOI  ===================================== ', request.session['select_aoi']
+    # print '!!!!!!!!!!!!!!!! SELECT AOI  ===================================== ', request.session['select_aoi']
     
     if request.session['time_series_list']:
         count_1 = 0
@@ -3090,16 +3096,23 @@ def customer_section(request):
         ts_selected = TimeSeriesResults.objects.filter(result_year__in=ts_years).order_by(
                                                 'customer_polygons', 'result_year', 'stat_code', 'result_date')
 
+        # time_series_list = [t.id for t in TimeSeriesResults.objects.filter(result_year__in=ts_years).order_by('customer_polygons')]
+        time_series_list = [t.id for t in ts_selected]
+        aoi_list = [n.customer_polygons for n in ts_selected]
+        aoi_list = list(set(aoi_list))
+        time_series_list = list(set(time_series_list))
+
         if request.session['select_aoi'] != 0.0001:
             aoi_ids = request.session['select_aoi']
             ts_selected = ts_selected.filter(customer_polygons__in=aoi_ids).order_by(
                                                 'customer_polygons', 'result_year', 'stat_code', 'result_date')
 
-        # print '!!!!!!!!!!!!! ts_selected COUNT ======================== ', ts_selected.count()
+        # print '!!!!!!!!!!!!! ts_selected ======================== ', ts_selected
+        # print '!!!!!!!!!!!!! AOI ======================== ', request.session['select_aoi']
 
         # for ts in request.session['time_series_list']:
         #     time_series_list = [t.id for t in TimeSeriesResults.objects.filter(id__in=request.session['time_series_list'])]
-        time_series_list = [t.id for t in TimeSeriesResults.objects.filter(result_year__in=ts_years).order_by('customer_polygons')]
+        
 
         for d in ts_selected:
             # print '!!!!!!!!!!!!!!!! TS CUSTOMER ===================================== ', d.customer_polygons
@@ -3136,7 +3149,7 @@ def customer_section(request):
 
 
             # for tsr in all_ts_selection:
-            aoi_list.append(d.customer_polygons)
+            # aoi_list.append(d.customer_polygons)
             tsr_date = str(d.result_date).split('-')
 
             # print '!!!!!!!!!!!!!!!! tsr_date[0] ===================================== ', tsr_date[0]
@@ -3169,12 +3182,12 @@ def customer_section(request):
             ts_stat_code = d.stat_code
             ts_aoi_name = d.customer_polygons
 
-            # print '!!!!!!!!!!!!!!!! ts_data ===================================== ', ts_data
+            # print '!!!!!!!!!!!!!!!! aoi_list ===================================== ', aoi_list
             # print '!!!!!!!!!!!!!!!! tsr_data[0] ===================================== ', tsr_data[0]
             # print '!!!!!!!!!!!!!!!! ts_series_year ===================================== ', ts_series_year
                 
         ts_data = ts_data[0:-1]
-        aoi_list = list(set(aoi_list))
+        # aoi_list = list(set(aoi_list))
 
         for al in aoi_list:
             ts_subtitle += al.name + ', '
@@ -3196,13 +3209,15 @@ def customer_section(request):
 
     show_aoi = ''
 
-    for n in request.session['select_aoi']:
-        show_aoi += n + ','
+    if request.session['select_aoi'] != 0.0001:
+        for n in request.session['select_aoi']:
+            show_aoi += n + ','
 
-    show_aoi = show_aoi[0:-1]
+        show_aoi = show_aoi[0:-1]
 
     # time_series_view = request.session['time_series_view']
     
+    # print '!!!!!!!!!!!!!!!! select_diagram ===================================== ', request.session['select_diagram']
     # print '!!!!!!!!!!!!!!!! ts_units ===================================== ', ts_units
     # print '!!!!!!!!!!!!!!!! ts_data ===================================== ', ts_data
     # print '!!!!!!!!!!!!!!!! ZOOM MAP ===================================== ', request.session['zoom_map']

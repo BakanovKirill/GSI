@@ -247,6 +247,9 @@
             var ts_data = '{{ ts_data }}';
             var ts_series = [];
             var select_aoi = '{{ select_aoi }}';
+            var select_diagram = '{{ select_diagram }}';
+
+            // alert('select_diagram: '+select_diagram);
 
             {% if time_series_view and not time_series_clear %}
                 var highcharts = getDataSeries();
