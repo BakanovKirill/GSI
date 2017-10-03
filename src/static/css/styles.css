@@ -1414,9 +1414,18 @@ hr {
 /* The actual popup */
 
 /* Diagram Highcharts*/
-#container {
-    min-width: 310px;
-    max-width: 800px;
+#container_line {
+    width:100%;
+    /*min-width: 310px;*/
+    /*max-width: 800px;*/
+    height: 400px;
+    margin: 0 auto
+}
+
+#container_box {
+    width:100%;
+    /*min-width: 310px;*/
+    /*max-width: 800px;*/
     height: 400px;
     margin: 0 auto
 }

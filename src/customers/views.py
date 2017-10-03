@@ -1756,6 +1756,7 @@ def customer_section(request):
     ts_series_year = ''
     ts_stat_code = ''
     ts_data = ''
+    ts_result_date = ''
     time_series_clear = False
     # ts_data = []
     # ts_data = {}
@@ -2026,10 +2027,10 @@ def customer_section(request):
         if 'button' in data_post_ajax:
             if data_post_ajax['button'] == 'draw_plot':
                 if 'select_aoi[]' in data_post_ajax:
-                    print '!!!!!!!!!!!!! select_aoi[] ========================== '
+                    # print '!!!!!!!!!!!!! select_aoi[] ========================== '
                     request.session['select_aoi'] = data_post_ajax.getlist('select_aoi[]')
                 else:
-                    print '!!!!!!!!!!!!! NO select_aoi[] ========================== '
+                    # print '!!!!!!!!!!!!! NO select_aoi[] ========================== '
                     request.session['select_aoi'] = 0.0001
 
         if 'coordinate_list[0][]' in data_post_ajax:
@@ -3084,19 +3085,35 @@ def customer_section(request):
     # print '!!!!!!!!!!!!!!!! SELECT AOI  ===================================== ', request.session['select_aoi']
     
     if request.session['time_series_list']:
-        count_1 = 0
-        count_2 = 0
+        # count_1 = 0
+        # count_2 = 0
         # ts_title
         # ts_subtitle
         # ts_units
         # ts_data
+        # 
+        #  LQ
+        # Max
+        # Mean
+        # Median
+        # Min
+        # UQ
         aoi_list = []
         ts_years = request.session['time_series_list']
+        box_date = []
+        box_aoi = []
+        box_Min = []
+        box_LQ = []
+        box_Median = []
+        box_UQ = []
+        box_Max = []
+        box_Mean = []
+
+        # ts_selected = TimeSeriesResults.objects.filter(result_year__in=ts_years)
 
         ts_selected = TimeSeriesResults.objects.filter(result_year__in=ts_years).order_by(
                                                 'customer_polygons', 'result_year', 'stat_code', 'result_date')
 
-        # time_series_list = [t.id for t in TimeSeriesResults.objects.filter(result_year__in=ts_years).order_by('customer_polygons')]
         time_series_list = [t.id for t in ts_selected]
         aoi_list = [n.customer_polygons for n in ts_selected]
         aoi_list = list(set(aoi_list))
@@ -3112,12 +3129,15 @@ def customer_section(request):
 
         # for ts in request.session['time_series_list']:
         #     time_series_list = [t.id for t in TimeSeriesResults.objects.filter(id__in=request.session['time_series_list'])]
-        
+            
 
+        # request.session['select_diagram']
+        
         for d in ts_selected:
             # print '!!!!!!!!!!!!!!!! TS CUSTOMER ===================================== ', d.customer_polygons
             # print '!!!!!!!!!!!!!!!! TS stat_code ===================================== ', d.stat_code
             # print '!!!!!!!!!!!!!!!! TS result_year ===================================== ', d.result_year
+            # print '!!!!!!!!!!!!!!!! TS result_date ===================================== ', d.result_date
             ts_title = 'Time Series diagram'
             ts_statistic = SUB_DIRECTORIES_REVERCE[d.stat_code]
             ts_units = 'Ha'
@@ -3135,24 +3155,12 @@ def customer_section(request):
                     ts_units = shelf_data_attr.units
                 except Exception:
                     pass
-            
-            # all_ts_selection = TimeSeriesResults.objects.filter(
-            #                         customer_polygons=d.customer_polygons,
-            #                         result_year=d.result_year,
-            #                         stat_code=d.stat_code).order_by('result_date')
 
-            # all_ts_selection = TimeSeriesResults.objects.filter(
-            #                         customer_polygons=d.customer_polygons,
-            #                         result_year=d.result_year).order_by('stat_code', 'result_date')
-
-            # all_ts_selection = TimeSeriesResults.objects.filter(result_year=d.result_year).order_by('stat_code')
-
-
-            # for tsr in all_ts_selection:
-            # aoi_list.append(d.customer_polygons)
             tsr_date = str(d.result_date).split('-')
 
             # print '!!!!!!!!!!!!!!!! tsr_date[0] ===================================== ', tsr_date[0]
+            # print '!!!!!!!!!!!!!!!! tsr_date[1] ===================================== ', tsr_date[1]
+            # print '!!!!!!!!!!!!!!!! tsr_date[2] ===================================== ', tsr_date[2]
             # print '!!!!!!!!!!!!!!!! ts_series_year ===================================== ', ts_series_year
 
             # print '!!!!!!!!!!!!!!!! customer_polygons ===================================== ', tsr.customer_polygons
@@ -3162,32 +3170,113 @@ def customer_section(request):
             # print '!!!!!!!!!!!!!!!! ts_stat_code ===================================== ', ts_stat_code
             # 
             # if tsr_date[0] != ts_series_year or ts_stat_code != d.stat_code:
+                
+            if request.session['select_diagram'] == 'line':
+                if ts_stat_code != d.stat_code or ts_aoi_name != d.customer_polygons or ts_series_year != d.result_year:
+                    # print '$$$$$$$$$$$$$$$$$$$$$$ STAT CODE ===================================== ', ts_stat_code
+                    # print '$$$$$$$$$$$$$$$$$$$$$$ AOI ===================================== ', ts_aoi_name
+                    ts_data = ts_data[0:-1]
+                    ts_data += '$$$'
+                    
+
+                tmp = '{0},{1},{2},{3},{4},{5}$'.format(
+                                d.customer_polygons.name, d.stat_code, tsr_date[0],
+                                int(tsr_date[1])-1, tsr_date[2], d.value_of_time_series)
+                ts_data += tmp
+                ts_series_year = d.result_year
+                ts_stat_code = d.stat_code
+                ts_aoi_name = d.customer_polygons
+                ts_result_date = d.result_date
+
+                # print '!!!!!!!!!!!!!!!! aoi_list ===================================== ', aoi_list
+                # print '!!!!!!!!!!!!!!!! tsr_data[0] ===================================== ', tsr_data[0]
+                # print '!!!!!!!!!!!!!!!! ts_series_year ===================================== ', ts_series_year
+                
+            if request.session['select_diagram'] == 'box':
+                #  LQ
+                # Max
+                # Mean
+                # Median
+                # Min
+                # UQ
+                # 
+                # box_Min = []
+                # box_LQ = []
+                # box_Median = []
+                # box_UQ = []
+                # box_Max = []
+                # box_Mean = []
+                
+                # box_aoi.append(str(d.customer_polygons.name))
+
+                # if ts_result_date != d.result_date:
+                #     split_date = tsr_date[2]+'/'+tsr_date[1]+'/'+tsr_date[0]
+                #     box_date.append(split_date)
+
+                    # if split_date not in box_date:
+                    #     box_date.append(split_date)
+                        # box_aoi.append(str(d.customer_polygons.name))
+                
+                if d.stat_code == 'LQ':
+                    box_LQ.append(d.value_of_time_series)
+
+                if d.stat_code == 'Max':
+                    box_Max.append(d.value_of_time_series)
+
+                if d.stat_code == 'Mean':
+                    box_Mean.append(float(d.value_of_time_series))
+
+                if d.stat_code == 'Median':
+                    box_Median.append(d.value_of_time_series)
+
+                if d.stat_code == 'Min':
+                    box_aoi.append(str(d.customer_polygons.name))
+                    box_Min.append(d.value_of_time_series)
+                    split_date = tsr_date[2]+'/'+tsr_date[1]+'/'+tsr_date[0]
+                    box_date.append(split_date)
+
+                if d.stat_code == 'UQ':
+                    box_UQ.append(d.value_of_time_series)
+
+                # print '!!!!!!!!!!!!!!!! box_date ===================================== ', len(box_date)
+                # print '!!!!!!!!!!!!!!!! box_LQ ===================================== ', len(box_LQ)
+                # print '!!!!!!!!!!!!!!!! box_aoi ===================================== ', len(box_aoi)
+
+            # ts_data += tmp
             
 
-            if ts_stat_code != d.stat_code or ts_aoi_name != d.customer_polygons or ts_series_year != d.result_year:
-                # print '$$$$$$$$$$$$$$$$$$$$$$ STAT CODE ===================================== ', ts_stat_code
-                # print '$$$$$$$$$$$$$$$$$$$$$$ AOI ===================================== ', ts_aoi_name
-                ts_data = ts_data[0:-1]
-                ts_data += '$$$'
-                tmp = '{0},{1},{2},{3},{4},{5}$'.format(
-                            d.customer_polygons.name, d.stat_code, tsr_date[0],
-                            int(tsr_date[1])-1, tsr_date[2], d.value_of_time_series)
-            else:
-                tmp = '{0},{1},{2},{3},{4},{5}$'.format(
-                            d.customer_polygons.name, d.stat_code, tsr_date[0],
-                            int(tsr_date[1])-1, tsr_date[2], d.value_of_time_series)
+        # print '!!!!!!!!!!!!!!!! box_date ===================================== ', box_date
+        # print '!!!!!!!!!!!!!!!! box_Max ===================================== ', box_Max
 
-            ts_data += tmp
-            ts_series_year = d.result_year
-            ts_stat_code = d.stat_code
-            ts_aoi_name = d.customer_polygons
+        box_aoi_name = ''
+        box_year = ''
 
-            # print '!!!!!!!!!!!!!!!! aoi_list ===================================== ', aoi_list
-            # print '!!!!!!!!!!!!!!!! tsr_data[0] ===================================== ', tsr_data[0]
-            # print '!!!!!!!!!!!!!!!! ts_series_year ===================================== ', ts_series_year
-                
-        ts_data = ts_data[0:-1]
-        # aoi_list = list(set(aoi_list))
+        if request.session['select_diagram'] == 'line':
+            ts_data = ts_data[0:-1]
+
+        if request.session['select_diagram'] == 'box':
+            size_box_ts = len(box_date)
+            tmp_box = ''
+            sum_box_Mean = sum(box_Mean) / len(box_Mean)
+
+            for n in xrange(size_box_ts):
+                current_year = box_date[n].split('/')[2]
+                if box_aoi_name != box_aoi[n] or box_year != current_year:
+                    tmp_box = tmp_box[0:-1]
+                    tmp_box += '$$$'
+                tmp_box += box_aoi[n] + ','
+                tmp_box += box_date[n] + ','
+                tmp_box += str(sum_box_Mean) + ','
+                tmp_box += box_Min[n] + ','
+                tmp_box += box_LQ[n] + ','
+                tmp_box += box_Median[n] + ','
+                tmp_box += box_UQ[n] + ','
+                tmp_box += box_Max[n] + '$'
+
+                box_aoi_name = box_aoi[n]
+                box_year = current_year
+            
+            ts_data = tmp_box[0:-1]
 
         for al in aoi_list:
             ts_subtitle += al.name + ', '
@@ -3208,15 +3297,20 @@ def customer_section(request):
         time_series_view = False
 
     show_aoi = ''
+    sub_title_aoi_select = ''
 
     if request.session['select_aoi'] != 0.0001:
         for n in request.session['select_aoi']:
             show_aoi += n + ','
 
         show_aoi = show_aoi[0:-1]
+        show_aoi_select = [d.name for d in CustomerPolygons.objects.filter(id__in=request.session['select_aoi'])]
+        sub_title_aoi_select = (', ').join(show_aoi_select)
 
     # time_series_view = request.session['time_series_view']
     
+    # print '!!!!!!!!!!!!!!!! show_aoi ===================================== ', request.session['select_aoi']
+    # print '!!!!!!!!!!!!!!!! show_aoi_select ===================================== ', show_aoi_select
     # print '!!!!!!!!!!!!!!!! select_diagram ===================================== ', request.session['select_diagram']
     # print '!!!!!!!!!!!!!!!! ts_units ===================================== ', ts_units
     # print '!!!!!!!!!!!!!!!! ts_data ===================================== ', ts_data
@@ -3245,6 +3339,7 @@ def customer_section(request):
         'time_series_clear': request.session['time_series_clear'],
         'select_diagram': request.session['select_diagram'],
         'select_aoi': show_aoi,
+        'sub_title_aoi_select': sub_title_aoi_select,
 
         'file_tif_path': file_tif_path,
 

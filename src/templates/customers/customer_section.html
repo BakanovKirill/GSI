@@ -8,22 +8,23 @@
         {% csrf_token %}
             {% if tab_active == 'ts' %}
                 <h3>Time Series diagram</h3>
-                <h4 class="margin-bottom-30">AOI: {{ ts_subtitle }}</h4>
+                <h4 class="margin-bottom-30"><b>AOI list:</b> {{ ts_subtitle }} <b>AOI select:</b> {{ sub_title_aoi_select }}
+                </h4>
 
-                <div class="col-md-8">
+                <div class="col-md-9">
                     <div class="form-group">
-                        <div class="col-md-4 right margin-top-6">
-                            <label for="sel1">Choose one of the following:</label>
+                        <div class="col-md-5 right margin-top-6">
+                            <label for="sel1">Choose you want options for viewing graphs::</label>
                         </div>
 
-                        <div class="col-md-4 margin-bottom-30">
+                        <div class="col-md-3 margin-bottom-30">
                             <select class="selectpicker" id="select_diagram" name="select-diagram">
                                 <option value="line" {% if select_diagram == 'line' %}selected{% endif %}>Line Diagram</option>
                                 <option value="box" {% if select_diagram == 'box' %}selected{% endif %}>Box Plot</option>
                             </select>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <select class="selectpicker" multiple title="One or more of AOI" id="select_aoi" name="select-aoi">
                                 {% for aoi in aoi_list %}
                                     <option value="{{ aoi.id}}">{{ aoi }}</option>
@@ -33,20 +34,21 @@
                     </div>
                 </div>
 
-                <div class="col-md-2 left">
-                    <button type="button" name="draw-plot" id="draw_plot" class="btn btn-success btn-block margin-bottom-6" value="draw_plot" onclick="sendDataTsToServer(this);" disabled="disabled">
+                <div class="col-md-1 left">
+                    <button type="button" name="draw-plot" id="draw_plot" class="btn btn-primary btn-block margin-bottom-6" value="draw_plot" onclick="sendDataTsToServer(this);" disabled="disabled" data-toggle="tooltip" data-placement="top" title="To start viewing the graphs, you need to select one or several years in the menu on the left">
                         Draw Plot
                     </button>
                 </div>
 
-                <div class="col-md-2 left">
-                    <button type="button" name="draw-plot" id="draw_plot" class="btn btn-success btn-block margin-bottom-6" value="draw_plot" onclick="clearTs();">
+                <div class="col-md-1 left">
+                    <button type="button" name="draw-plot" id="draw_plot" class="btn btn-danger btn-block margin-bottom-6" value="draw_plot" onclick="clearTs();">
                         Clear
                     </button>
                 </div>
 
                 {% if time_series_view  and not time_series_clear %}
-                    <div id="container"></div>
+                    <div id="container_line"></div>
+                    <div id="container_box"></div>
                 {% endif %}
             {% else %}
                 <!-- Draw Menu -->
@@ -172,7 +174,9 @@
 
         <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApoguiUJyNLI5uy0zOqU9fSDfPgkZH3R0&signed_in=true"></script> -->
 
-        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsygPfGOqFRltEUKkiAhr3cdMZtxN2Rm0&callback=initMap" type="text/javascript"></script>
+        {% if tab_active != 'ts' %}
+            <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsygPfGOqFRltEUKkiAhr3cdMZtxN2Rm0&callback=initMap" type="text/javascript"></script>
+        {% endif %}
         <!-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyB4HosogGf9o2-Cnef_SiUR6jZYVszGkGY&sensor=false"></script> -->
 
         <!-- AIzaSyDqRnPthP9_pygDbSG34MDKiJpXQkHm2ws -->
@@ -218,6 +222,9 @@
             var map;
             var center_map = {lat: {{ cLat }}, lng: {{ cLng }}};
 
+            var chartLine;
+            var chartBox;
+
             var coord = [];
             var coord_area = [];
             var markers = [];
@@ -239,7 +246,8 @@
             var select_image = '{{ absolute_url_png_file }}';
             var legend_scale = '{{ legend_scale }}';
 
-            // ighcharts
+            // higcharts
+            var ts_show = false;
             var title = '{{ ts_title }}';
             // var subtitle = '{{ ts_subtitle }}';
             var ts_subtitle = '';
@@ -249,10 +257,15 @@
             var select_aoi = '{{ select_aoi }}';
             var select_diagram = '{{ select_diagram }}';
 
+            // BOX PLOT DIAGRAM
+            var categories = [];
+            var series_data_box = [];
+            var plotLines_value;
+
             // alert('select_diagram: '+select_diagram);
 
             {% if time_series_view and not time_series_clear %}
-                var highcharts = getDataSeries();
+                ts_show = true;
             {% endif %}
 
             // var units = 'Tree';
@@ -983,9 +996,13 @@
 {% endblock content_customer %}
 
 {% if time_series_view %}
-    {% block extra_js %}
-        <script src="https://code.highcharts.com/highcharts.js"></script>
-        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    {% block highcharts_js %}
+        <!-- Highcharts BOXPLOT JavaScript -->
+        <script type="text/javascript" src="{% static 'highcharts/highcharts.js' %}"></script>
+        <script type="text/javascript" src="{% static 'highcharts/highcharts-more.js' %}"></script>
+        <script type="text/javascript" src="{% static 'highcharts/series-label.js' %}"></script>
+        <script type="text/javascript" src="{% static 'highcharts/exporting.js' %}"></script>
+        
         <script type="text/javascript" src="{% static 'js/scripts_highcharts.js' %}"></script>
-    {% endblock extra_js %}
+    {% endblock highcharts_js %}
 {% endif %}
