@@ -3312,6 +3312,11 @@ def customer_section(request):
         show_aoi_select = [d.name for d in CustomerPolygons.objects.filter(id__in=request.session['select_aoi'])]
         sub_title_aoi_select = (', ').join(show_aoi_select)
 
+    if not sub_title_aoi_select and ts_subtitle:
+        # sub_title_aoi_select = ts_subtitle
+        sub_title_aoi_select = 'All'
+
+
     # time_series_view = request.session['time_series_view']
     
     # print '!!!!!!!!!!!!!!!! show_aoi ===================================== ', request.session['select_aoi']
