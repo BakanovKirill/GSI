@@ -3250,6 +3250,7 @@ def customer_section(request):
 
         box_aoi_name = ''
         box_year = ''
+        sum_box_Mean = 0
 
         if request.session['select_diagram'] == 'line':
             ts_data = ts_data[0:-1]
@@ -3257,7 +3258,9 @@ def customer_section(request):
         if request.session['select_diagram'] == 'box':
             size_box_ts = len(box_date)
             tmp_box = ''
-            sum_box_Mean = sum(box_Mean) / len(box_Mean)
+
+            if box_Mean:
+                sum_box_Mean = sum(box_Mean) / len(box_Mean)
 
             for n in xrange(size_box_ts):
                 current_year = box_date[n].split('/')[2]
