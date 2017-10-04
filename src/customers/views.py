@@ -1675,12 +1675,14 @@ def customer_section(request):
     customer_section = open(log_file, 'w')
     now = datetime.now()
     customer_section.write('DATE: '+str(now))
+    customer_section.write('USER: '+str(request.user))
     customer_section.write('\n')
 
     log_file_timer = '/home/gsi/LOGS/timer_script.log'
     timer_script = open(log_file_timer, 'w')
     now = datetime.now()
     timer_script.write('DATE: '+str(now))
+    customer_section.write('USER: '+str(request.user))
     timer_script.write('\n')
     #######################
 
