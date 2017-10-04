@@ -3385,6 +3385,8 @@ def customer_delete_file(request):
     ####################### write log file
     log_file = '/home/gsi/LOGS/customer_delete_file.log'
     customer_delete_f = open(log_file, 'w+')
+    now = datetime.now()
+    customer_delete_f.write('DATE: '+str(now))
     customer_delete_f.write('USER: {0}\n'.format(customer))
     customer_delete_f.write('DB FILE: {0}\n'.format(os.path.exists(db_file_path)))
     #######################
