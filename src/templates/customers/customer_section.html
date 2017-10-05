@@ -470,8 +470,38 @@
                 overlay = new google.maps.GroundOverlay(srcImage, bounds);
                 overlay.setOpacity(0.5);
 
+                // SET ZOOM
+                var curent_zoom = {{ GOOGLE_MAP_ZOOM }};
+
+                // console.log('GOOGLE_MAP_ZOOM: ', curent_zoom);
+                
+                if ({{ GOOGLE_MAP_ZOOM }} == '0.001' || {{ GOOGLE_MAP_ZOOM }} == 0.001) {
+                    var sw = new google.maps.LatLng({{ eLat_1 }}, {{ eLng_1 }});
+                    var ne = new google.maps.LatLng({{ eLat_2 }}, {{ eLng_2 }});
+                    var pixelWidth = document.body.clientHeight;
+
+                    var GLOBE_WIDTH = 256; // a constant in Google's map projection
+                    var west = sw.lng();
+                    var east = ne.lng();
+                    var angle = east - west;
+
+                    if (angle < 0) {
+                        angle += 360;
+                    }
+                    var curent_zoom = Math.round(Math.log(1024 * 360 / angle / GLOBE_WIDTH) / Math.LN2);
+                }
+                
+                // END SET ZOOM
+                
+                // zoom: {{ GOOGLE_MAP_ZOOM }},
+                
+                // console.log('ZOOM: ', curent_zoom);
+                // console.log('document.body.clientHeight: ', document.body.clientHeight);
+                // console.log('window.innerWidth: ', window.innerWidth);
+                // console.log('window.screen.availWidth: ', window.screen.availWidth);
+
                 map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: {{ GOOGLE_MAP_ZOOM }},
+                    zoom: curent_zoom,
                     center: center_map,
                     mapTypeControl: true,
                     mapTypeControlOptions: {
