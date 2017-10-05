@@ -2970,7 +2970,7 @@ def customer_section(request):
                         elif scale >= 0.095 and scale < 0.16:
                             google_map_zoom = 12
                         else:
-                            google_map_zoom = 2
+                            google_map_zoom = 3
 
 
                         # print '!!!!!!!!!! SCALE Y =============================== ', scaleY

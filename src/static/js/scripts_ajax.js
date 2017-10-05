@@ -725,27 +725,9 @@ function sendDataAttrStatToServer(obj) {
         'success': function(data, status, xhr){
             // alert('URL DATA: '+data);
             // var new_data = data.split('$');
-
-            // function reload() {
-            //     alert('URL DATA: '+data);
-            //     window.location.href = form_url;
-            // }
-            //
             // setTimeout(reload, 100);
 
             window.location.href = form_url;
-
-
-            // $("#ds_show span").text('new_data[0]');
-            // $("#ds_show span").text(new_data[0]);
-            // $("span#img_show").text(new_data[1]);
-            // $("span#stat_show").text(new_data[2]);
-            //
-            // alert('URL DATA: '+data);
-            // sendGetToServer();
-            // window.location.href = form_url;
-
-
         },
     });
 }
