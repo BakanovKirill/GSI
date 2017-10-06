@@ -2944,10 +2944,16 @@ def customer_section(request):
                     
                     # if cip_choice.data_set.name != 'Wheat Demo':
                     #     google_map_zoom = GOOGLE_MAP_ZOOM
+                        
 
                     # if cip_choice.data_set.name == 'Wheat Demo':
                     if minX <= -179.9999:
                         minX = -179.9999
+                        # minX = -160.0
+                        # maxX = 160.0
+
+                        # minY = -70.0
+                        # maxY = 70.0
 
                     google_map_zoom = request.session['zoom_map']
 

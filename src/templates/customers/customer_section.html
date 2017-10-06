@@ -473,7 +473,8 @@
                 // SET ZOOM
                 var curent_zoom = {{ GOOGLE_MAP_ZOOM }};
 
-                // console.log('GOOGLE_MAP_ZOOM: ', curent_zoom);
+                console.log('GOOGLE_MAP_ZOOM: ', curent_zoom);
+                // alert('GOOGLE_MAP_ZOOM: '+curent_zoom);
                 
                 if ({{ GOOGLE_MAP_ZOOM }} == '0.001' || {{ GOOGLE_MAP_ZOOM }} == 0.001) {
                     var sw = new google.maps.LatLng({{ eLat_1 }}, {{ eLng_1 }});
@@ -525,6 +526,35 @@
                 map.mapTypes.set(MY_MAPTYPE_ID, jayzMapType);
                 map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
 
+                // GET CENTER WHEN CHANGE ZOOM
+                // var c_map = map.getCenter();
+                // var c_map_lat = c_map.lat();
+                // var c_map_lng = c_map.lng();
+
+                // alert('CENTER LAT 1: '+c_map_lat);
+                // alert('CENTER LNG 1: '+c_map_lng);
+                // {lat: {{ cLat }}, lng: {{ cLng }}};
+
+                // console.log('CENTER LAT 1: ', c_map_lat);
+                // console.log('CENTER LNG 1: ', c_map_lng);
+
+                // var center_marker = new google.maps.Marker({
+                //     position: {
+                //         'lat': {{ cLat }},
+                //         'lng': {{ cLng }}
+                //     },
+                //     map: map
+                // });
+
+                // google.maps.event.addListener(map, 'center_changed', function() {
+                //     // map.panTo(new google.maps.LatLng(c_map_lat, c_map_lng));
+                //     // map.setCenter({lat: c_map_lat, lng: c_map_lng});
+                //     console.log('GOOGLE_MAP_ZOOM 2: ', map.getZoom());
+                //     console.log('CENTER LAT 2: ', c_map_lat);
+                //     console.log('CENTER LNG 2: ', c_map_lng);
+                // });
+
+                
 
                 // alert('CENTER 1: '+map.getCenter());
 
@@ -536,6 +566,7 @@
                 //     },
                 //     map: map
                 // });
+
 
                 // var max_marker = new google.maps.Marker({
                 //     position: {
