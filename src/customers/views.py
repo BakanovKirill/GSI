@@ -1746,7 +1746,7 @@ def customer_section(request):
     eLng_1 = 0
     eLat_2 = 0
     eLng_2 = 0
-    google_map_zoom = 0
+    google_map_zoom = 0.001
     url_png = ''
 
     # Data for the TS Diagramm
@@ -1828,7 +1828,7 @@ def customer_section(request):
     if request.session.get('zoom_map', False):
         google_map_zoom = request.session['zoom_map']
     else:
-        request.session['zoom_map'] = GOOGLE_MAP_ZOOM
+        request.session['zoom_map'] = google_map_zoom
 
     # Get Center LAT Google Maps
     if request.session.get('center_lat', False):
@@ -2977,26 +2977,26 @@ def customer_section(request):
 
                     google_map_zoom = request.session['zoom_map']
 
-                    if google_map_zoom == '0.001' or google_map_zoom == 0.001:
-                        scaleY = minY - centerY
-                        scaleX = minX - centerX
-                        scaleY = scaleY if scaleY >= 0 else scaleY * -1
-                        scaleX = scaleX if scaleX >= 0 else scaleX * -1
+                    # if google_map_zoom == '0.001' or google_map_zoom == 0.001:
+                    #     scaleY = minY - centerY
+                    #     scaleX = minX - centerX
+                    #     scaleY = scaleY if scaleY >= 0 else scaleY * -1
+                    #     scaleX = scaleX if scaleX >= 0 else scaleX * -1
 
-                        scale = scaleY if scaleY > scaleX else scaleX
+                    #     scale = scaleY if scaleY > scaleX else scaleX
 
-                        if scale >= 0.965 and scale <= 3:
-                            google_map_zoom = 8
-                        elif scale >= 0.6 and scale < 0.965:
-                            google_map_zoom = 9
-                        elif scale >= 0.435 and scale < 0.6:
-                            google_map_zoom = 10
-                        elif scale >= 0.17 and scale < 0.434:
-                            google_map_zoom = 11
-                        elif scale >= 0.095 and scale < 0.16:
-                            google_map_zoom = 12
-                        else:
-                            google_map_zoom = 3
+                    #     if scale >= 0.965 and scale <= 3:
+                    #         google_map_zoom = 8
+                    #     elif scale >= 0.6 and scale < 0.965:
+                    #         google_map_zoom = 9
+                    #     elif scale >= 0.435 and scale < 0.6:
+                    #         google_map_zoom = 10
+                    #     elif scale >= 0.17 and scale < 0.434:
+                    #         google_map_zoom = 11
+                    #     elif scale >= 0.095 and scale < 0.16:
+                    #         google_map_zoom = 12
+                    #     else:
+                    #         google_map_zoom = 3
 
 
                         # print '!!!!!!!!!! SCALE Y =============================== ', scaleY
