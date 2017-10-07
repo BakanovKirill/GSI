@@ -473,7 +473,7 @@
                 // SET ZOOM
                 var curent_zoom = {{ GOOGLE_MAP_ZOOM }};
 
-                console.log('GOOGLE_MAP_ZOOM: ', curent_zoom);
+                console.log('GOOGLE_MAP_ZOOM before: ', curent_zoom);
                 // alert('GOOGLE_MAP_ZOOM: '+curent_zoom);
                 
                 if ({{ GOOGLE_MAP_ZOOM }} == '0.001' || {{ GOOGLE_MAP_ZOOM }} == 0.001) {
@@ -491,6 +491,8 @@
                     }
                     var curent_zoom = Math.round(Math.log(1024 * 360 / angle / GLOBE_WIDTH) / Math.LN2);
                 }
+
+                console.log('GOOGLE_MAP_ZOOM after: ', curent_zoom);
                 
                 // END SET ZOOM
                 
