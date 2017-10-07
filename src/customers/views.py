@@ -3162,7 +3162,7 @@ def customer_section(request):
             # print '!!!!!!!!!!!!!!!! TS stat_code ===================================== ', d.stat_code
             # print '!!!!!!!!!!!!!!!! TS result_year ===================================== ', d.result_year
             # print '!!!!!!!!!!!!!!!! TS result_date ===================================== ', d.result_date
-            ts_title = 'Time Series diagram'
+            ts_title = '"{0}" Time Series diagram'.format(DataSet.objects.get(id=data_set_id))
             ts_statistic = SUB_DIRECTORIES_REVERCE[d.stat_code]
             ts_units = 'Ha'
 

@@ -7,7 +7,7 @@
         <form class="form-modal" id="customer_section" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data" role="form" class="form-horizontal">
         {% csrf_token %}
             {% if tab_active == 'ts' %}
-                <h3>Time Series diagram</h3>
+                <h3>{{ ts_title }}</h3>
                 <h4 class="margin-bottom-30"><b>AOI list:</b> {{ ts_subtitle }} <b>AOI select:</b> {{ sub_title_aoi_select }}
                 </h4>
 
