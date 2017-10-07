@@ -1765,6 +1765,7 @@ def customer_section(request):
     
     select_diagram = 'line'
     select_aoi = 0.0001
+    select_year = None
 
     # The url to are PNG, KML urls
     scheme = '{0}://'.format(request.scheme)
@@ -1858,6 +1859,14 @@ def customer_section(request):
         select_aoi = request.session['select_aoi']
     else:
         request.session['select_aoi'] = select_aoi
+
+    # Get Select YEAR
+    if request.session.get('select_year', False):
+        select_year = request.session['select_year']
+    else:
+        request.session['select_year'] = select_year
+
+    # time_series_list = ''
     
 
     # print '!!!!!!!!!!!!!!!!!!!! data_set_id ==================== ', data_set_id
@@ -2023,11 +2032,14 @@ def customer_section(request):
             # print '!!!!!!!!!!!!!!!!! TS VIEW 1 ============================== ', ts_ids
             # print '!!!!!!!!!!!!!!!!! TS LIST 2 ============================== ', data_post_ajax.getlist('ts_list[]')
             
-        if 'select_diagram' in data_post_ajax:
-            request.session['select_diagram'] = data_post_ajax['select_diagram']
+        # if 'select_diagram' in data_post_ajax:
+        #     request.session['select_diagram'] = data_post_ajax['select_diagram']
 
         if 'button' in data_post_ajax:
             if data_post_ajax['button'] == 'draw_plot':
+                if 'select_diagram' in data_post_ajax:
+                    request.session['select_diagram'] = data_post_ajax['select_diagram']
+
                 if 'select_aoi[]' in data_post_ajax:
                     # print '!!!!!!!!!!!!! select_aoi[] ========================== '
                     request.session['select_aoi'] = data_post_ajax.getlist('select_aoi[]')
@@ -2276,12 +2288,14 @@ def customer_section(request):
             request.session['zoom_map'] = 0.001
             request.session['center_lat'] = 0.001
             request.session['center_lng'] = 0.001
+            request.session['select_aoi'] = 0.0001
 
             request.session['tab_active'] = 'view'
             # request.session['time_series_view'] = False
             tab_active = request.session['tab_active']
             request.session['time_series_list'] = [m.id for m in TimeSeriesResults.objects.filter(
                                                     user=customer, data_set__id=data_set_id)]
+            # request.session['time_series_list'] = ''
             # time_series_view = request.session['time_series_view']
             
             # print '!!!!!!!!! CIP ====================== ', cip
@@ -3093,6 +3107,7 @@ def customer_section(request):
     # print '!!!!!!!!!!!!!!!! SELECT AOI  ===================================== ', request.session['select_aoi']
     
     if request.session['time_series_list']:
+        # print '!!!!!!!!!!!!!!!!! IF ts_selected ========================= '
         # count_1 = 0
         # count_2 = 0
         # ts_title
@@ -3106,7 +3121,7 @@ def customer_section(request):
         # Median
         # Min
         # UQ
-        aoi_list = []
+        # aoi_list = []
         ts_years = request.session['time_series_list']
         box_date = []
         box_aoi = []
@@ -3119,8 +3134,9 @@ def customer_section(request):
 
         # ts_selected = TimeSeriesResults.objects.filter(result_year__in=ts_years)
 
-        ts_selected = TimeSeriesResults.objects.filter(result_year__in=ts_years).order_by(
-                                                'customer_polygons', 'result_year', 'stat_code', 'result_date')
+        ts_selected = TimeSeriesResults.objects.filter(result_year__in=ts_years, user=customer,
+                                                        data_set=DataSet.objects.get(id=data_set_id)).order_by(
+                                                        'customer_polygons', 'result_year', 'stat_code', 'result_date')
 
         time_series_list = [t.id for t in ts_selected]
         aoi_list = [n.customer_polygons for n in ts_selected]
@@ -3289,10 +3305,33 @@ def customer_section(request):
             
             ts_data = tmp_box[0:-1]
 
+
         for al in aoi_list:
             ts_subtitle += al.name + ', '
 
         ts_subtitle = ts_subtitle[0:-2]
+    
+    # print '!!!!!!!!!!!!!!!!! ELSE ts_selected ========================= '
+    time_series_user = TimeSeriesResults.objects.filter(user=customer, data_set=DataSet.objects.get(id=data_set_id)).order_by(
+                                            'customer_polygons', 'result_year', 'stat_code', 'result_date')
+
+    aoi_list = [n.customer_polygons for n in time_series_user]
+    aoi_list = list(set(aoi_list))
+    is_delete_comma_aoi = False
+
+    # print '!!!!!!!!!!!!!! DataSet 1 ============================== ', DataSet.objects.get(id=data_set_id)
+    # print '!!!!!!!!!!!!!! time_series_user 1 ============================== ', time_series_user
+    # print '!!!!!!!!!!!!!! ts_subtitle 1 ============================== ', ts_subtitle
+    for al in aoi_list:
+        # print '!!!!!!!!!!!!!! al.name ============================== ', al.name
+        if al.name not in ts_subtitle:
+            ts_subtitle += al.name + ', '
+            is_delete_comma_aoi = True
+
+    if is_delete_comma_aoi:
+        ts_subtitle = ts_subtitle[0:-2]
+
+    # print '!!!!!!!!!!!!!! ts_subtitle 2 ============================== ', ts_subtitle
 
     ####################### write log file
     customer_section.write('\n')
@@ -3321,6 +3360,11 @@ def customer_section(request):
     if not sub_title_aoi_select and ts_subtitle:
         # sub_title_aoi_select = ts_subtitle
         sub_title_aoi_select = 'All'
+        # sub_title_aoi_select = 'France'
+
+
+    # time_series_list = ''
+    # ts_data = ''
 
 
     # time_series_view = request.session['time_series_view']
@@ -3333,6 +3377,8 @@ def customer_section(request):
     # print '!!!!!!!!!!!!!!!! ZOOM MAP ===================================== ', request.session['zoom_map']
     # print '!!!!!!!!!!!!!!!! TS VIEW SESS ===================================== ', request.session['time_series_view']
     # print '!!!!!!!!!!!!!!!! TS CLEAR ===================================== ', request.session['time_series_clear']
+    # print '!!!!!!!!!!!!!!!! TS aoi_list ===================================== ', aoi_list
+    # print '!!!!!!!!!!!!!!!! TS time_series_list ===================================== ', time_series_list
     
     
     data = {
@@ -3347,9 +3393,11 @@ def customer_section(request):
         'show_statistic_cip': show_statistic_cip,
         'show_report_ap': show_report_ap,
         'tab_active': tab_active,
+        # 'tab_active': 'aoi',
         'is_ts': is_ts,
         'time_series_show': time_series_show,
         'time_series_list': time_series_list,
+        # 'time_series_list': '',
         # 'time_series_view': request.session['time_series_view'],
         'time_series_view': time_series_view,
         'time_series_clear': request.session['time_series_clear'],
@@ -3369,6 +3417,7 @@ def customer_section(request):
         'ts_units': ts_units,
         'ts_data': ts_data,
         'aoi_list': aoi_list,
+        # 'aoi_list': '',
         # 'ts_series_year': ts_series_year,
 
         'cLng': cLng,

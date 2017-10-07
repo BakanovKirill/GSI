@@ -739,9 +739,7 @@ function sendDataTsToServer(obj) {
     var select_diagram = $("#select_diagram").val();
     // var select_aoi = $("#select_aoi");
     var select_aoi = $('#select_aoi').val();
-
-
-
+    var select_year = $('#select_year').val();
 
     
     // $('#select_aoi').on('show.bs.select', function (e) {
@@ -752,7 +750,8 @@ function sendDataTsToServer(obj) {
     //     alert('2: '+$(this).val());
     // });
 
-    // alert('AOI: '+select_aoi);
+    console.log('YEAR: ', select_year);
+    // alert('YEAR: '+select_year);
 
     $('#ts input:checkbox:checked').each(function(){
         // alert($(this).val());
