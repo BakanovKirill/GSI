@@ -2293,9 +2293,9 @@ def customer_section(request):
             request.session['tab_active'] = 'view'
             # request.session['time_series_view'] = False
             tab_active = request.session['tab_active']
-            request.session['time_series_list'] = [m.id for m in TimeSeriesResults.objects.filter(
-                                                    user=customer, data_set__id=data_set_id)]
-            # request.session['time_series_list'] = ''
+            # request.session['time_series_list'] = [m.id for m in TimeSeriesResults.objects.filter(
+            #                                         user=customer, data_set__id=data_set_id)]
+            request.session['time_series_list'] = ''
             # time_series_view = request.session['time_series_view']
             
             # print '!!!!!!!!! CIP ====================== ', cip
@@ -3361,6 +3361,8 @@ def customer_section(request):
         # sub_title_aoi_select = ts_subtitle
         sub_title_aoi_select = 'All'
         # sub_title_aoi_select = 'France'
+        
+    ts_title = '"{0}" Time Series diagram'.format(DataSet.objects.get(id=data_set_id))
 
 
     # time_series_list = ''
@@ -3396,7 +3398,9 @@ def customer_section(request):
         # 'tab_active': 'aoi',
         'is_ts': is_ts,
         'time_series_show': time_series_show,
-        'time_series_list': time_series_list,
+        
+        'time_series_list': request.session['time_series_list'],
+        # 'time_series_list': time_series_list,
         # 'time_series_list': '',
         # 'time_series_view': request.session['time_series_view'],
         'time_series_view': time_series_view,
