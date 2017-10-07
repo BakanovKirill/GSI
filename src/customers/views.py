@@ -1898,7 +1898,7 @@ def customer_section(request):
         data_post_ajax = request.POST
         data = ''
 
-        # print '!!!!!!!!!!!!!!!!! data_post_ajax ===================== ', data_post_ajax
+        print '!!!!!!!!!!!!!!!!! data_post_ajax ===================== ', data_post_ajax
         # print '!!!!!!!!!!!!!!!!! data_post_ajax LIST ===================== ', data_post_ajax.lists()
         # print '!!!!!!!!!!!!!!!!! ts_list ===================== ', data_post_ajax['ts_list']
         # print '!!!!!!!!!!!!!!!!! ts_list ===================== ', ('ts_list[]' in data_post_ajax)
@@ -2037,6 +2037,12 @@ def customer_section(request):
 
         if 'button' in data_post_ajax:
             if data_post_ajax['button'] == 'draw_plot':
+                if 'ts_list[]' in data_post_ajax:
+                    ts_ids = data_post_ajax.getlist('ts_list[]')
+                    request.session['time_series_list'] = data_post_ajax.getlist('ts_list[]')
+                    ts_diagram = TimeSeriesResults.objects.filter(id__in=ts_ids)
+                    request.session['time_series_clear'] = False
+
                 if 'select_diagram' in data_post_ajax:
                     request.session['select_diagram'] = data_post_ajax['select_diagram']
 
@@ -3319,6 +3325,11 @@ def customer_section(request):
     aoi_list = list(set(aoi_list))
     is_delete_comma_aoi = False
 
+    year_list = request.session['time_series_list']
+    time_series_list = [n.id for n in TimeSeriesResults.objects.filter(
+                            user=customer, data_set=DataSet.objects.get(id=data_set_id), result_year__in=year_list)]
+    time_series_list = list(set(time_series_list))
+
     # print '!!!!!!!!!!!!!! DataSet 1 ============================== ', DataSet.objects.get(id=data_set_id)
     # print '!!!!!!!!!!!!!! time_series_user 1 ============================== ', time_series_user
     # print '!!!!!!!!!!!!!! ts_subtitle 1 ============================== ', ts_subtitle
@@ -3371,7 +3382,7 @@ def customer_section(request):
 
     # time_series_view = request.session['time_series_view']
     
-    # print '!!!!!!!!!!!!!!!! show_aoi ===================================== ', request.session['select_aoi']
+    print '!!!!!!!!!!!!!!!! time_series_list ===================================== ', request.session['time_series_list']
     # print '!!!!!!!!!!!!!!!! show_aoi_select ===================================== ', show_aoi_select
     # print '!!!!!!!!!!!!!!!! select_diagram ===================================== ', request.session['select_diagram']
     # print '!!!!!!!!!!!!!!!! ts_units ===================================== ', ts_units
@@ -3398,9 +3409,9 @@ def customer_section(request):
         # 'tab_active': 'aoi',
         'is_ts': is_ts,
         'time_series_show': time_series_show,
-        
-        'time_series_list': request.session['time_series_list'],
-        # 'time_series_list': time_series_list,
+
+        # 'time_series_list': request.session['time_series_list'],
+        'time_series_list': time_series_list,
         # 'time_series_list': '',
         # 'time_series_view': request.session['time_series_view'],
         'time_series_view': time_series_view,
