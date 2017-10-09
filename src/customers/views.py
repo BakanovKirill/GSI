@@ -1794,6 +1794,8 @@ def customer_section(request):
         return data
     # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+    # print '!!!!!!!!!!!!!!!!!!! 1 request.session[time_series_list] ================================== ', request.session['time_series_list']
+
     # GET SESSIONS
     # Get select data_set sessions
     if request.session.get('select_data_set', False):
@@ -1898,7 +1900,7 @@ def customer_section(request):
         data_post_ajax = request.POST
         data = ''
 
-        print '!!!!!!!!!!!!!!!!! data_post_ajax ===================== ', data_post_ajax
+        # print '!!!!!!!!!!!!!!!!! data_post_ajax ===================== ', data_post_ajax
         # print '!!!!!!!!!!!!!!!!! data_post_ajax LIST ===================== ', data_post_ajax.lists()
         # print '!!!!!!!!!!!!!!!!! ts_list ===================== ', data_post_ajax['ts_list']
         # print '!!!!!!!!!!!!!!!!! ts_list ===================== ', ('ts_list[]' in data_post_ajax)
@@ -2029,6 +2031,7 @@ def customer_section(request):
             request.session['time_series_clear'] = False
             # time_series_view = True
             
+            print '!!!!!!!!!!!!!!!!! ts_list[] request.session[time_series_list] ============================== ', request.session['time_series_list']
             # print '!!!!!!!!!!!!!!!!! TS VIEW 1 ============================== ', ts_ids
             # print '!!!!!!!!!!!!!!!!! TS LIST 2 ============================== ', data_post_ajax.getlist('ts_list[]')
             
@@ -2265,7 +2268,7 @@ def customer_section(request):
         data_get_ajax = request.GET
         cip = CustomerInfoPanel.objects.filter(user=customer)
 
-        # print '!!!!!!!!!!!!!! AJAX GET ========================= ', request.GET
+        # print '!!!!!!!!!!!!!! AJAX GET ========================= ', data_get_ajax
 
         # print 'GET customer_section ====================== ', data_get_ajax['datasets_id']
         if 'regenerate_legend' in data_get_ajax:
@@ -3325,6 +3328,7 @@ def customer_section(request):
     aoi_list = list(set(aoi_list))
     is_delete_comma_aoi = False
 
+    # print '!!!!!!!!!!!!!!!! year_list ===================================== ', request.session['time_series_list']
     year_list = request.session['time_series_list']
     time_series_list = [n.id for n in TimeSeriesResults.objects.filter(
                             user=customer, data_set=DataSet.objects.get(id=data_set_id), result_year__in=year_list)]
@@ -3383,6 +3387,7 @@ def customer_section(request):
     # time_series_view = request.session['time_series_view']
     
     print '!!!!!!!!!!!!!!!! time_series_list ===================================== ', request.session['time_series_list']
+    # print '!!!!!!!!!!!!!!!! time_series_list ===================================== ', time_series_list
     # print '!!!!!!!!!!!!!!!! show_aoi_select ===================================== ', show_aoi_select
     # print '!!!!!!!!!!!!!!!! select_diagram ===================================== ', request.session['select_diagram']
     # print '!!!!!!!!!!!!!!!! ts_units ===================================== ', ts_units

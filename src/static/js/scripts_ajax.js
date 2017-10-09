@@ -865,6 +865,34 @@ function regenerateLegend() {
     });
 }
 
+function resetSessionData() {
+    // alert('regenerateLegend');
+    // alert('Zoom: ' + zoom);
+    var form_url = $('#reset_session').attr('action');
+
+    $.ajax({
+        url: form_url,
+        type: 'GET',
+        'async': true,
+        'dataType': 'text',
+        data: {
+            'reset_session': 'reset_session',
+            'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+        },
+        'error': function(xhr, status, error){
+            // alert('error: '+error);
+            var message = 'An unexpected error occurred. Try later.';
+            alert(message);
+        },
+        'success': function(data, status, xhr){
+            // alert('URL DATA: '+data);
+            // var obj_status = status;
+            // sendGetToServer();
+            window.location.href = form_url;
+        },
+    });
+}
+
 function getZoomGoogleMap(zoom) {
     // alert('Zoom IN: ' + zoom);
     var form_url = $('#customer_section').attr('action');

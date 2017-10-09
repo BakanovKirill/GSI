@@ -70,10 +70,19 @@
                                                     <img class="right-indent-10" src="{% static 'img/profile-18.png' %}">
                                                     Profile
                                                 </a>
+
                                                 <a href="{% url 'index' %}">
                                                     <img class="right-indent-10" src="{% static 'img/settings.png' %}">
                                                     Settings
                                                 </a>
+
+                                                <form id="reset_session" action="{% url 'index' %}" method="get" enctype="multipart/form-data" role="form">
+                                                    {% csrf_token %}
+                                                    <button type="button" class="btn btn-legend btn-link right-indent-10" onclick="resetSessionData()">
+                                                        <img class="right-indent-10" src="{% static 'img/legend_update_24.png' %}" >
+                                                        Reset data
+                                                    </button>
+                                                </form>
 
                                                 <a href="{% url 'auth_logout' %}">
                                                     <img class="right-indent-10" src="{% static 'img/logout.png' %}">
@@ -328,6 +337,8 @@
         </div>
     </div>
     <!-- End Modal of Wiki -->
+
+    <script type="text/javascript">var select_aoi = '';</script>
 
     <!-- jQuery -->
     <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>

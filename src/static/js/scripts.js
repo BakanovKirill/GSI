@@ -370,12 +370,15 @@ function toogleVisibleDrawPlot() {
 }
 
 function selectAoi() {
-    var aoi_list = select_aoi.split(',')
-    // for (i = 0; i < select_aoi.length; i++) {
-    //     alert('selectedAoi: '+select_aoi[i]);
-    // }
-    
-    $('#select_aoi').selectpicker('val', aoi_list);
+    // console.log('select_aoi: ', select_aoi);
+    if (select_aoi) {
+        var aoi_list = select_aoi.split(',')
+        // for (i = 0; i < select_aoi.length; i++) {
+        //     alert('selectedAoi: '+select_aoi[i]);
+        // }
+        
+        $('#select_aoi').selectpicker('val', aoi_list);
+    }
 }
 
 // function getFileNames() {
@@ -416,7 +419,11 @@ $(document).ready(function(){
     // get_file_name();
     toogleVisibleDrawPlot();
     getFileName();
-    selectAoi();
+
+    if (select_aoi) {
+        selectAoi();
+    }
+    
     // tabsCustomerMenu();
     // showCheckboxes();
 });

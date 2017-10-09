@@ -271,6 +271,25 @@ def index(request):
 
     development_mode = DevelopmentPage.objects.all()
 
+    # print '!!!!!!!!!!!!!!!!! 1 INDEX request.session[time_series_list] ============================== ', request.session['time_series_list']
+
+    if request.session.get('time_series_list', False):
+        request.session['time_series_list'] = ''
+
+    # print '!!!!!!!!!!!!!!!!! 3 INDEX request.session[time_series_list] ============================== ', request.session['time_series_list']
+
+    # get AJAX GET
+    if request.is_ajax() and request.method == "GET":
+        data = ''
+        data_get_ajax = request.GET
+
+        if 'reset_session' in data_get_ajax:
+            request.session['time_series_list'] = ''
+
+            # print '!!!!!!!!!!!!!!!!! 2 INDEX request.session[time_series_list] ============================== ', request.session['time_series_list']
+
+        return HttpResponse(data)
+
     if development_mode:
         is_development = development_mode[0].is_development
 
