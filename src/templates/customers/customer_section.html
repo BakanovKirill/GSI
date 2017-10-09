@@ -8,7 +8,7 @@
         {% csrf_token %}
             {% if tab_active == 'ts' %}
                 <h3>{{ ts_title }}</h3>
-                <h4 class="margin-bottom-30"><b>AOI list:</b> {{ ts_subtitle }} <b>AOI select:</b> {{ sub_title_aoi_select }}
+                <h4 class="margin-bottom-30" id="aoi_selected"><b>AOI selected:</b> <span>{{ sub_title_aoi_select }}</span>
                 </h4>
 
                 <div class="col-md-9">
@@ -25,9 +25,9 @@
                         </div>
 
                         <div class="col-md-3">
-                            <select class="selectpicker" multiple title="All AOI" id="select_aoi" name="select-aoi">
+                            <select class="selectpicker" multiple title="None" id="select_aoi" name="select-aoi" onchange="selectedAoi()">
                                 {% for aoi in aoi_list %}
-                                    <option value="{{ aoi.id}}">{{ aoi }}</option>
+                                    <option value="{{ aoi.name}}_{{ aoi.id}}">{{ aoi }}</option>
                                 {% endfor %}
                             </select>
                         </div>

@@ -370,6 +370,7 @@ function toogleVisibleDrawPlot() {
 }
 
 function selectAoi() {
+    // alert('select_aoi: '+select_aoi);
     // console.log('select_aoi: ', select_aoi);
     if (select_aoi) {
         var aoi_list = select_aoi.split(',')
@@ -377,8 +378,43 @@ function selectAoi() {
         //     alert('selectedAoi: '+select_aoi[i]);
         // }
         
+        console.log('aoi_list: ', aoi_list);
+        
         $('#select_aoi').selectpicker('val', aoi_list);
     }
+}
+
+function selectedAoi() {
+    if ($('#select_aoi').val()) {
+        console.log('YES');
+        var list_aoi = $('#select_aoi').val();
+        var start_title = '';
+
+        for (var m = 0; m < list_aoi.length; m++) {
+            console.log('list_aoi: ', list_aoi[m]);
+
+            var aoi_tmp = list_aoi[m].split('_');
+            
+            start_title += aoi_tmp[0] + ', ';
+        }
+
+        console.log('start_title: ', start_title);
+
+        start_title = start_title.substring(0, start_title.length - 1);
+        start_title = start_title.substring(0, start_title.length - 1);
+
+        console.log('start_title: ', start_title);
+    } else {
+        console.log('NO');
+        var start_title = 'None';
+    }
+
+    console.log('start_title: ', start_title);
+
+    $('#aoi_selected span').text(start_title);
+
+    // alert('select_aoi: '+list_aoi);
+    console.log('selectedAoi select_aoi: ', list_aoi);
 }
 
 // function getFileNames() {
@@ -423,6 +459,8 @@ $(document).ready(function(){
     if (select_aoi) {
         selectAoi();
     }
+
+    // selectedAoi();
     
     // tabsCustomerMenu();
     // showCheckboxes();

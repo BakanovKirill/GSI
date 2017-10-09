@@ -735,11 +735,23 @@ function sendDataAttrStatToServer(obj) {
 function sendDataTsToServer(obj) {
     var form_url = $('#customer_section').attr('action');
     var ts_list = [];
+    var aoi_list = [];
 
     var select_diagram = $("#select_diagram").val();
     // var select_aoi = $("#select_aoi");
     var select_aoi = $('#select_aoi').val();
     var select_year = $('#select_year').val();
+
+    for (var m = 0; m < select_aoi.length; m++) {
+        console.log('AOI: ', select_aoi[m]);
+
+        var aoi_tmp = select_aoi[m].split('_');
+        
+        aoi_list.push(aoi_tmp[1]);
+    }
+
+    console.log('select_aoi: ', select_aoi);
+    console.log('aoi_list: ', aoi_list);
 
     
     // $('#select_aoi').on('show.bs.select', function (e) {
@@ -759,6 +771,7 @@ function sendDataTsToServer(obj) {
         ts_list.push($(this).val())
     });
 
+    // alert('select_aoi: '+aoi_list);
     // alert('ts_list: '+ts_list);
     // alert('button: '+$(obj).val());
 
@@ -771,7 +784,8 @@ function sendDataTsToServer(obj) {
             'button': $(obj).val(),
             'ts_list': ts_list,
             'select_diagram': select_diagram,
-            'select_aoi': select_aoi,
+            // 'select_aoi': select_aoi,
+            'select_aoi': aoi_list,
             'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
         },
         'error': function(xhr, status, error){
@@ -781,28 +795,10 @@ function sendDataTsToServer(obj) {
         },
         'success': function(data, status, xhr){
             // alert('URL DATA: '+data);
-            // var new_data = data.split('$');
-
-            // function reload() {
-            //     alert('URL DATA: '+data);
-            //     window.location.href = form_url;
-            // }
-            //
+            
             // setTimeout(reload, 100);
 
             window.location.href = form_url;
-
-
-            // $("#ds_show span").text('new_data[0]');
-            // $("#ds_show span").text(new_data[0]);
-            // $("span#img_show").text(new_data[1]);
-            // $("span#stat_show").text(new_data[2]);
-            //
-            // alert('URL DATA: '+data);
-            // sendGetToServer();
-            // window.location.href = form_url;
-
-
         },
     });
 }

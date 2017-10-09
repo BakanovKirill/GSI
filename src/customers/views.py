@@ -3365,16 +3365,19 @@ def customer_section(request):
     sub_title_aoi_select = ''
 
     if request.session['select_aoi'] != 0.0001:
-        for n in request.session['select_aoi']:
-            show_aoi += n + ','
+        # for n in request.session['select_aoi']:
+        #     show_aoi += n + ','
 
-        show_aoi = show_aoi[0:-1]
+        # show_aoi = show_aoi[0:-1]
         show_aoi_select = [d.name for d in CustomerPolygons.objects.filter(id__in=request.session['select_aoi'])]
         sub_title_aoi_select = (', ').join(show_aoi_select)
 
+        aoi_select = ['{0}_{1}'.format(d.name, d.id) for d in CustomerPolygons.objects.filter(id__in=request.session['select_aoi'])]
+        show_aoi = (',').join(aoi_select)
+
     if not sub_title_aoi_select and ts_subtitle:
         # sub_title_aoi_select = ts_subtitle
-        sub_title_aoi_select = 'All'
+        sub_title_aoi_select = 'None'
         # sub_title_aoi_select = 'France'
         
     ts_title = '"{0}" Time Series diagram'.format(DataSet.objects.get(id=data_set_id))
@@ -3386,7 +3389,7 @@ def customer_section(request):
 
     # time_series_view = request.session['time_series_view']
     
-    print '!!!!!!!!!!!!!!!! time_series_list ===================================== ', request.session['time_series_list']
+    # print '!!!!!!!!!!!!!!!! time_series_list ===================================== ', request.session['time_series_list']
     # print '!!!!!!!!!!!!!!!! time_series_list ===================================== ', time_series_list
     # print '!!!!!!!!!!!!!!!! show_aoi_select ===================================== ', show_aoi_select
     # print '!!!!!!!!!!!!!!!! select_diagram ===================================== ', request.session['select_diagram']
