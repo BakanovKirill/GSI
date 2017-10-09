@@ -3171,7 +3171,18 @@ def customer_section(request):
             # print '!!!!!!!!!!!!!!!! TS stat_code ===================================== ', d.stat_code
             # print '!!!!!!!!!!!!!!!! TS result_year ===================================== ', d.result_year
             # print '!!!!!!!!!!!!!!!! TS result_date ===================================== ', d.result_date
-            ts_title = '"{0}" Time Series diagram'.format(DataSet.objects.get(id=data_set_id))
+            
+            cur_ds = DataSet.objects.get(id=data_set_id)
+
+            if cur_ds.name_ts:
+                print '!!!!!!!!!!!!!!!! TS NAME ===================================== ', cur_ds.name_ts
+                ts_title = '"{0}"'.format(cur_ds.name_ts)
+            else:
+                print '!!!!!!!!!!!!!!!! DS NAME ===================================== ', cur_ds.name
+                ts_title = '"{0}" Time Series diagram'.format(cur_ds.name)
+
+
+
             ts_statistic = SUB_DIRECTORIES_REVERCE[d.stat_code]
             ts_units = 'Ha'
 
@@ -3380,7 +3391,14 @@ def customer_section(request):
         sub_title_aoi_select = 'None'
         # sub_title_aoi_select = 'France'
         
-    ts_title = '"{0}" Time Series diagram'.format(DataSet.objects.get(id=data_set_id))
+    cur_ds = DataSet.objects.get(id=data_set_id)
+
+    if cur_ds.name_ts:
+        # print '!!!!!!!!!!!!!!!! TS NAME ===================================== ', cur_ds.name_ts
+        ts_title = '"{0}"'.format(cur_ds.name_ts)
+    else:
+        # print '!!!!!!!!!!!!!!!! DS NAME ===================================== ', cur_ds.name
+        ts_title = '"{0}" Time Series diagram'.format(cur_ds.name)
 
 
     # time_series_list = ''

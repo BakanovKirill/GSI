@@ -76,7 +76,7 @@ def data_set_update_create(form, item_id=None):
             description=form.cleaned_data["description"],
             results_directory=form.cleaned_data["results_directory"],
             is_ts=form.cleaned_data["is_ts"],
-            # shelf_data=form.cleaned_data["shelf_data"],
+            name_ts=form.cleaned_data["name_ts"],
         )
         data_set = DataSet.objects.get(id=item_id)
     else:
@@ -85,7 +85,7 @@ def data_set_update_create(form, item_id=None):
             description=form.cleaned_data["description"],
             results_directory=form.cleaned_data["results_directory"],
             is_ts=form.cleaned_data["is_ts"],
-            # shelf_data=form.cleaned_data["shelf_data"],
+            name_ts=form.cleaned_data["name_ts"],
         )
 
     if form.cleaned_data["root_filename"] and form.cleaned_data["attribute_name"]:
@@ -94,6 +94,7 @@ def data_set_update_create(form, item_id=None):
                             root_filename=form.cleaned_data["root_filename"],
                             attribute_name=form.cleaned_data["attribute_name"],
                             is_ts=form.cleaned_data["is_ts"],
+                            name_ts=form.cleaned_data["name_ts"],
                         )
             data_set.shelf_data = shelf_data
             data_set.save()

@@ -44,6 +44,22 @@
     </div>
 </div>
 
+<div class="row margin-top-15" id="ts_name" disabled="disabled">
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.name_ts.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.name_ts.label }} <span data-toggle="tooltip" data-placement="top" title="This field is active if 'Time Series' is selected"><b>?</b></span></label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if not form.name_ts.errors %}
+            {{ form.name_ts }}
+        {% else %}
+            <span class="field-error">{{ form.name_ts }}</span>
+            <b class="error-form">{{ form.name_ts.errors }}</b>
+        {% endif %}
+    </div>
+</div>
+
 <div class="row margin-top-15">
     <div class="col-md-2 right">
         <div class="form-group {% if form.results_directory.errors %}has-error{% endif %}">

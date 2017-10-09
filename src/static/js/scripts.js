@@ -369,6 +369,33 @@ function toogleVisibleDrawPlot() {
     }
 }
 
+function toogleHidenTsName(obj) {
+    console.log('toogleHidenTsName: ', obj.checked);
+    var is_check = obj.checked;
+
+    if (is_check) {
+        console.log('YES');
+        $('#id_name_ts').removeAttr('disabled');
+    } else {
+        console.log('NO');
+        $('#id_name_ts').attr('disabled','disable');
+    }
+}
+
+function checkIsCheck() {
+    var is_check = $('#id_is_ts').attr('checked');
+
+    console.log('IS CHECK: ', is_check);
+
+    if (is_check) {
+        console.log('YES');
+        $('#id_name_ts').removeAttr('disabled');
+    } else {
+        console.log('NO');
+        $('#id_name_ts').attr('disabled','disable');
+    }
+}
+
 function selectAoi() {
     // alert('select_aoi: '+select_aoi);
     // console.log('select_aoi: ', select_aoi);
@@ -459,6 +486,8 @@ $(document).ready(function(){
     if (select_aoi) {
         selectAoi();
     }
+
+    checkIsCheck();
 
     // selectedAoi();
     

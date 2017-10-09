@@ -114,10 +114,17 @@ class DataSetForm(forms.ModelForm):
         help_text='Enter only the project folder. For example: "WagnerB1/Scores_All"',
         label=u'Results Directory')
     is_ts = forms.BooleanField(
+        widget=forms.CheckboxInput(attrs={'class': 'form-control', 'onclick': 'toogleHidenTsName(this);'}),
         initial=False,
         required=False,
         label=u'Time Series',
     )
+    name_ts = forms.CharField(
+        widget=forms.TextInput(attrs={
+                                'class': 'form-control',
+                                'disabled': 'disable'}),
+        required=False,
+        label=u'Time Series Name')
     # shelf_data = forms.ModelChoiceField(
     #     widget=forms.Select(attrs={
     #         'class': 'form-control',
@@ -127,6 +134,7 @@ class DataSetForm(forms.ModelForm):
     #     queryset=ShelfData.objects.all(),
     #     empty_label='Select',
     #     label=u'Shelf Data', )
+    #     
     root_filename = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'form-control',
@@ -142,7 +150,7 @@ class DataSetForm(forms.ModelForm):
 
     class Meta:
         model = DataSet
-        fields = ['name', 'description', 'results_directory', 'is_ts']
+        fields = ['name', 'description', 'results_directory', 'is_ts', 'name_ts']
 
 
 class CustomerAccessForm(forms.ModelForm):

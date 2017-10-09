@@ -55,6 +55,14 @@
                                     {% endif %}
                                 </a>
                             </th>
+                            <th>
+                                <a href="{% url 'data_sets' %}?order_by=name_ts{% if order_by == 'name_ts' and reverse != '1' %}&amp;reverse=1{% endif %}">
+                                    Time Series Name
+                                    {% if order_by == 'name_ts' and reverse != '1' %}&#9652;
+                                    {% elif order_by == 'name_ts' and reverse == '1' %}&#9662;
+                                    {% endif %}
+                                </a>
+                            </th>
                             <th>Time Series</th>
                             <th>Action</th>
                         </tr>
@@ -69,6 +77,7 @@
                             <td>{{ ds.results_directory }}</td>
                             <td>{{ ds.get_attribute_name }}</td>
                             <td>{{ ds.get_root_filename }}</td>
+                            <td>{{ ds.name_ts }}</td>
                             <td>{{ ds.is_ts }}</td>
                             <td>
                                 <a href="{% url 'data_set_edit' ds.id %}" role="button" data-toggle="tooltip" data-placement="top" title="Edit">
