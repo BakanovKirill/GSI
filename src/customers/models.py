@@ -94,7 +94,7 @@ class DataSet(models.Model):
     results_directory = models.CharField(max_length=150, blank=True, null=True)
     shelf_data = models.ForeignKey('ShelfData', blank=True, null=True)
     is_ts = models.BooleanField(default=False, verbose_name='Is Time Series')
-    name_ts = models.CharField(max_length=300, blank=True, null=True)
+    name_ts = models.CharField(max_length=300, blank=True, null=True, verbose_name='Time Series Name')
 
     def get_root_filename(self):
         if self.shelf_data:
