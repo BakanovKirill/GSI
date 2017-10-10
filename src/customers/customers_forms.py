@@ -124,7 +124,7 @@ class DataSetForm(forms.ModelForm):
                                 'class': 'form-control',
                                 'disabled': 'disable'}),
         required=False,
-        label=u'Time Series Name')
+        label=u'Chart Title')
     # shelf_data = forms.ModelChoiceField(
     #     widget=forms.Select(attrs={
     #         'class': 'form-control',
