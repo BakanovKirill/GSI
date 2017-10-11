@@ -351,9 +351,68 @@ function toggleScale() {
     }
 }
 
+function go_progress_ts() {
+    console.log('showWaiting COUNT TS: '+count_ts);
+
+    progress = parseFloat((progress + time_section).toFixed(1));
+
+    // console.log('1 GO progress TS: ', progress);
+    // console.log('1 GO time_section: ', time_section);
+
+    if (progress < 100) {
+        document.getElementById('progress_bar').innerHTML = progress + ' %';
+        document.getElementById('progress_bar').style.width = progress + '%';
+        
+        // console.log('< 100 GO progress TS: ', progress);
+    }
+    else {
+        document.getElementById('progress_bar').innerHTML = '100 %';
+        document.getElementById('progress_bar').style.width = 100 + '%';
+
+        // console.log('> 100 GO progress TS: ', progress);
+
+        // stopTimeout();
+
+        clearInterval(timerId);
+        progress = 0;
+        time_section = 0;
+    }
+
+    // console.log('2 GO progress TS: ', progress);
+    // console.log('2 GO time_section: ', time_section);
+}
+
+function setToZero() {
+    document.getElementById('progress_bar').innerHTML = '0 %';
+    document.getElementById('progress_bar').style.width = 0 + '%';
+}
+
 function showWaiting() {
+    // console.log('showWaiting COUNT TS: '+count_ts);
+    // debugger;
+    // console.time('test');
+
+    // clearInterval(timerId);
+    // progress = 0;
+    // time_section = 0;
+
     var modal = $('#modalWaiting');
+    // var modal = document.getElementById('modalWaiting_1');
     modal.modal('show');
+
+    // var count_timeseries = count_ts * 5;
+    var time_interval = 400;
+    time_section = parseFloat((100 / count_ts).toFixed(1));
+    setToZero();
+
+    // console.log('progress START: ', progress);
+    // console.log('time_section: ', time_section);
+
+    timerId = setInterval(function() {
+        go_progress_ts();
+    }, time_interval);
+
+    // console.timeEnd('showWaiting: ', count_ts);
 }
 
 function toogleVisibleDrawPlot() {
@@ -374,10 +433,10 @@ function toogleHidenTsName(obj) {
     var is_check = obj.checked;
 
     if (is_check) {
-        console.log('YES');
+        // console.log('YES');
         $('#id_name_ts').removeAttr('disabled');
     } else {
-        console.log('NO');
+        // console.log('NO');
         $('#id_name_ts').attr('disabled','disable');
     }
 }
@@ -385,13 +444,13 @@ function toogleHidenTsName(obj) {
 function checkIsCheck() {
     var is_check = $('#id_is_ts').attr('checked');
 
-    console.log('IS CHECK: ', is_check);
+    // console.log('IS CHECK: ', is_check);
 
     if (is_check) {
-        console.log('YES');
+        // console.log('YES');
         $('#id_name_ts').removeAttr('disabled');
     } else {
-        console.log('NO');
+        // console.log('NO');
         $('#id_name_ts').attr('disabled','disable');
     }
 }
@@ -405,7 +464,7 @@ function selectAoi() {
         //     alert('selectedAoi: '+select_aoi[i]);
         // }
         
-        console.log('aoi_list: ', aoi_list);
+        // console.log('aoi_list: ', aoi_list);
         
         $('#select_aoi').selectpicker('val', aoi_list);
     }

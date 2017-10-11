@@ -1,6 +1,6 @@
-var progress = 0;
-var interval_id;
-var time_section = 0;
+// var progress = 0;
+// var interval_id;
+// var time_section = 0;
 
 function initCheckDeleteItems() {
     $('button.check-delete').click(function(event){
@@ -509,43 +509,52 @@ function setPolygon(obj) {
     }
 }
 
-function go_progress(){
+function go_progress() {
     // alert('GO progress: '+progress);
+    
+    progress += time_section;
 
-    if(progress < 100) {
-        // alert('GO progress: '+progress);
+    // console.log('GO progress: ', progress);
+    // console.log('GO time_section: ', time_section);
 
-        progress += time_section;
+    if (progress < 100) {
+        // console.log('< 100 GO progress TS: ', progress);
+        
         document.getElementById('progress_bar').innerHTML = progress + ' %';
         document.getElementById('progress_bar').style.width = progress + '%';
-        // document.getElementById('progress_bar').style.width = progress * 5 + 'px';
-    }
-    else{
-        // alert('GO progress: '+progress);
+    } else {
+        // console.log('> 100 GO progress TS: ', progress);
+
         document.getElementById('progress_bar').innerHTML = '100 %';
         document.getElementById('progress_bar').style.width = 100 + ' %';
-        clearInterval(interval_id);
+
+        clearInterval(timerId);
         progress = 0;
         time_section = 0;
-        // document.getElementById('progress_bar').innerHTML = progress + ' %';
-        // document.getElementById('progress_bar').style.margin = '15px 0 0 186px';
     }
 }
 
 function sendDataToServer(coord, reports, stats) {
-    // alert('sendDataToServer REP: '+reports);
+    // console.log('sendDataToServer REP: '+reports);
     // alert('sendDataToServer STAT: '+stats);
 
     var form_url = $('#customer_section').attr('action');
     var coord_list = []
-    var count = 0;
+    // var count = 0;
     var modal = $('#modalWaiting');
     modal.modal('show');
 
-    var count_reports = reports.length * 15;
-    time_section = parseInt(100 / reports.length)
+    var count_reports = reports.length * 10;
+    var time_interval = 200 / count_reports;
+    time_section = parseInt(100 / count_reports);
 
-    interval_id = setInterval(go_progress, count_reports);
+    // timerId = setInterval(go_progress(), count_reports);
+
+    timerId = setInterval(function() {
+        go_progress();
+    }, time_interval);
+
+    // console.log('sendDataToServer COUNT REP: '+count_reports);
 
     // alert('reports.length: '+reports.length);
     // alert('count_reports: '+count_reports);
@@ -584,11 +593,12 @@ function sendDataToServer(coord, reports, stats) {
             // interval_id = setInterval(go_progress, count_reports);
         },
         'success': function(data, status, xhr){
-            clearInterval(interval_id);
-            progress = 0;
-            time_section = 0;
+            // clearInterval(timerId);
+            count_ts = data;
+            // progress = 0;
+            // time_section = 0;
 
-            // alert('success progress: '+progress);
+            // console.log('success progress: ', progress);
 
             // var message = JSON.parse(data);
             // var message = data['message'];

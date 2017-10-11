@@ -1651,6 +1651,33 @@ def createTimeSeriesResults(aoi, file_in, file_out):
                                 pass
 
 
+def getCountTs(dataset, subdir):
+    count_ts = 0
+    path_cur_proj = dataset.results_directory
+    path_to_subdir = os.path.join(RESULTS_DIRECTORY, path_cur_proj, subdir)
+
+    # print '!!!!!!!!!!!!!!!!! path_to_subdir ===================== ', path_to_subdir
+
+    if os.path.exists(path_to_subdir):
+        root, dirs, files = os.walk(path_to_subdir).next()
+
+        for d in dirs:
+            sub_dir = os.path.join(path_to_subdir, d)
+            root, dirs, files = os.walk(sub_dir).next()
+
+            for f in files:
+                fl, ext = os.path.splitext(f)
+
+                if ext == '.tif':
+                    count_ts += 1
+
+            # print '!!!!!!!!!!!!!!!!! sub_dir ===================== ', sub_dir
+
+    # print '!!!!!!!!!!!!!!!!! getCountTs ===================== ', count_ts
+
+    return count_ts
+
+
 # view Customer Section
 @login_required
 @render_to('customers/customer_section.html')
@@ -1767,6 +1794,8 @@ def customer_section(request):
     select_aoi = 0.0001
     select_year = None
 
+    # count_ts = 0
+
     # The url to are PNG, KML urls
     scheme = '{0}://'.format(request.scheme)
     absolute_png_url = os.path.join(scheme, request.get_host(), PNG_DIRECTORY)
@@ -1867,6 +1896,12 @@ def customer_section(request):
         select_year = request.session['select_year']
     else:
         request.session['select_year'] = select_year
+
+    # Get Select TS
+    if request.session.get('count_ts', False):
+        count_ts = request.session['count_ts']
+    else:
+        request.session['count_ts'] = 0
 
     # time_series_list = ''
     
@@ -2031,7 +2066,7 @@ def customer_section(request):
             request.session['time_series_clear'] = False
             # time_series_view = True
             
-            print '!!!!!!!!!!!!!!!!! ts_list[] request.session[time_series_list] ============================== ', request.session['time_series_list']
+            # print '!!!!!!!!!!!!!!!!! ts_list[] request.session[time_series_list] ============================== ', request.session['time_series_list']
             # print '!!!!!!!!!!!!!!!!! TS VIEW 1 ============================== ', ts_ids
             # print '!!!!!!!!!!!!!!!!! TS LIST 2 ============================== ', data_post_ajax.getlist('ts_list[]')
             
@@ -2064,15 +2099,29 @@ def customer_section(request):
             reports_cip = ShelfData.objects.none()
             statistic = ''
 
-            # print '!!!!!!!!!!!!! COORD data_post_ajax ====================== ', data_post_ajax
+            # print '!!!!!!!!!!!!! 22 COORD data_post_ajax ====================== ', data_post_ajax
 
             if 'reports[]' in data_post_ajax:
+                count_ts = 0
+                # request.session['count_ts'] = 0
                 reports_ids = []
+                cur_ds = DataSet.objects.get(id=data_set_id)
+
                 for rep_id in data_post_ajax.getlist('reports[]'):
                     reports_ids.append(rep_id.split('report_')[1])
 
                 reports_cip = ShelfData.objects.filter(
                                 id__in=reports_ids).order_by('attribute_name')
+
+                # print '!!!!!!!!!!!!!!!!! 12 request count_ts =========================== ', request.session['count_ts']
+
+                for rs in reports_cip:
+                    count_ts += getCountTs(cur_ds, rs.root_filename)
+
+                request.session['count_ts'] = count_ts
+
+                print '!!!!!!!!!!!!!!!!! 2 request count_ts =========================== ', request.session['count_ts']
+                # print '!!!!!!!!!!!!!!!!! COUNT TS =========================== ', count_ts
             else:
                 reports_cip = dirs_list
 
@@ -2081,7 +2130,7 @@ def customer_section(request):
                     statistic = stat
 
             # print '!!!!!!!!!!!!! statistic ====================== ', statistic
-            print '!!!!!!!!!!!!! reports_cip ====================== ', reports_cip
+            # print '!!!!!!!!!!!!! reports_cip ====================== ', reports_cip
 
             AttributesReport.objects.filter(user=customer).delete()
             cips = CustomerInfoPanel.objects.filter(user=customer)
@@ -2249,7 +2298,7 @@ def customer_section(request):
             print '!!!!!!!!!!!!!! TIME =================== ', startTime_end
             print '!!!!!!!!!!!!!! TIME SCRIPT =================== ', startTime_script_end
 
-            # data = 'end'
+            data = count_ts
 
             return HttpResponse(data)
 
@@ -3175,10 +3224,10 @@ def customer_section(request):
             cur_ds = DataSet.objects.get(id=data_set_id)
 
             if cur_ds.name_ts:
-                print '!!!!!!!!!!!!!!!! TS NAME ===================================== ', cur_ds.name_ts
+                # print '!!!!!!!!!!!!!!!! TS NAME ===================================== ', cur_ds.name_ts
                 ts_title = '"{0}"'.format(cur_ds.name_ts)
             else:
-                print '!!!!!!!!!!!!!!!! DS NAME ===================================== ', cur_ds.name
+                # print '!!!!!!!!!!!!!!!! DS NAME ===================================== ', cur_ds.name
                 ts_title = '"{0}" Time Series diagram'.format(cur_ds.name)
 
 
@@ -3400,6 +3449,8 @@ def customer_section(request):
         # print '!!!!!!!!!!!!!!!! DS NAME ===================================== ', cur_ds.name
         ts_title = '"{0}" Time Series diagram'.format(cur_ds.name)
 
+    count_ts = request.session['count_ts']
+
 
     # time_series_list = ''
     # ts_data = ''
@@ -3407,7 +3458,7 @@ def customer_section(request):
 
     # time_series_view = request.session['time_series_view']
     
-    # print '!!!!!!!!!!!!!!!! time_series_list ===================================== ', request.session['time_series_list']
+    print '!!!!!!!!!!!!!!!! count_ts ===================================== ', count_ts
     # print '!!!!!!!!!!!!!!!! time_series_list ===================================== ', time_series_list
     # print '!!!!!!!!!!!!!!!! show_aoi_select ===================================== ', show_aoi_select
     # print '!!!!!!!!!!!!!!!! select_diagram ===================================== ', request.session['select_diagram']
@@ -3435,6 +3486,7 @@ def customer_section(request):
         # 'tab_active': 'aoi',
         'is_ts': is_ts,
         'time_series_show': time_series_show,
+        'count_ts': count_ts,
 
         # 'time_series_list': request.session['time_series_list'],
         'time_series_list': time_series_list,

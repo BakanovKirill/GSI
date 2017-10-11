@@ -261,8 +261,13 @@
             var categories = [];
             var series_data_box = [];
             var plotLines_value;
+            var count_ts = {{ count_ts }};
 
-            // alert('select_diagram: '+select_diagram);
+            var progress = 0;
+            var timerId;
+            var time_section = 0;
+
+            console.log('count_ts: ', count_ts);
 
             {% if time_series_view and not time_series_clear %}
                 ts_show = true;
@@ -933,12 +938,6 @@
                 contentString += '</table>';
                 contentString += '</div>';
 
-
-                // contentString += '<p class="left">COORDINATE:</p>';
-                // for(n in show_coord) {
-                //  contentString += '<p class="left">(Lat: ' + show_coord[n]['lat'] + '; Lng: ' + show_coord[n]['lng'] + ')</p>';
-                // }
-
                 contentString += '<input type="text" id="input_area_name" class="margin-top-15" placeholder="Enter Area name" name="area_name" size="30" style="width:100%" onkeyup="changeAreaName();" autofocus><br>'
                 contentString += '<button type="submit" name="save_area" class="btn btn-success btn-block margin-top-15" value="save_area" disabled id="save_area" onclick="showWaiting()">Save Area</button>';
                 contentString += '<button type="submit" name="cancel_download_file" class="btn btn-primary btn-block margin-top-15" value="cancel_download_file">Cancel</button>';
@@ -946,17 +945,6 @@
                 infowindow = new google.maps.InfoWindow({content: contentString, position: center_pol});
                 infowindow.open(map);
             }
-
-            // function OnRequestStateChange()
-            // {
-            //  if (httpRequest.readyState != 4)
-    //              return;
-            //  if (httpRequest.status != 200)
-    //              return;
-
-   //              data_polygon = ''
-            //  data_polygon = httpRequest.responseText;
-            // }
 
             function showCoordinates(event) {
                 var lat = event.latLng.lat();
