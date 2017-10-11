@@ -511,19 +511,21 @@ function setPolygon(obj) {
 
 function go_progress() {
     // alert('GO progress: '+progress);
+    // console.log('go_progress time_interval: ', time_interval);
     
-    progress += time_section;
+    // progress += time_section;
+    progress = parseFloat((progress + time_section).toFixed(1));
 
     // console.log('GO progress: ', progress);
     // console.log('GO time_section: ', time_section);
 
     if (progress < 100) {
-        // console.log('< 100 GO progress TS: ', progress);
+        console.log('< 100 GO progress: ', progress);
         
         document.getElementById('progress_bar').innerHTML = progress + ' %';
         document.getElementById('progress_bar').style.width = progress + '%';
     } else {
-        // console.log('> 100 GO progress TS: ', progress);
+        console.log('> 100 GO progress: ', progress);
 
         document.getElementById('progress_bar').innerHTML = '100 %';
         document.getElementById('progress_bar').style.width = 100 + ' %';
@@ -536,17 +538,27 @@ function go_progress() {
 
 function sendDataToServer(coord, reports, stats) {
     // console.log('sendDataToServer REP: '+reports);
-    // alert('sendDataToServer STAT: '+stats);
+    // alert('sendDataToServer REP: '+reports);
 
     var form_url = $('#customer_section').attr('action');
     var coord_list = []
     // var count = 0;
     var modal = $('#modalWaiting');
     modal.modal('show');
+    count_rep = reports.length
 
-    var count_reports = reports.length * 10;
-    var time_interval = 200 / count_reports;
-    time_section = parseInt(100 / count_reports);
+    var count_reports = count_rep * 10;
+    // var time_interval = 200 / count_reports;
+    // var time_interval = parseFloat((100 / count_reports).toFixed(1));
+    var time_interval = 60;
+
+
+    time_section = parseInt(100 / count_rep);
+
+    // alert('sendDataToServer REP: '+count_reports);
+    // alert('sendDataToServer time_interval: '+time_interval);
+    console.log('sendDataToServer count_reports: ', count_rep);
+    console.log('sendDataToServer time_section: ', time_section);
 
     // timerId = setInterval(go_progress(), count_reports);
 

@@ -352,12 +352,12 @@ function toggleScale() {
 }
 
 function go_progress_ts() {
-    console.log('showWaiting COUNT TS: '+count_ts);
+    // console.log('showWaiting COUNT TS: '+count_ts);
 
     progress = parseFloat((progress + time_section).toFixed(1));
 
     // console.log('1 GO progress TS: ', progress);
-    // console.log('1 GO time_section: ', time_section);
+    console.log('1 GO time_section: ', time_section);
 
     if (progress < 100) {
         document.getElementById('progress_bar').innerHTML = progress + ' %';
@@ -400,10 +400,16 @@ function showWaiting() {
     // var modal = document.getElementById('modalWaiting_1');
     modal.modal('show');
 
-    // var count_timeseries = count_ts * 5;
-    var time_interval = 400;
-    time_section = parseFloat((100 / count_ts).toFixed(1));
-    setToZero();
+    if (count_ts) {
+        // var count_timeseries = count_ts * 5;
+        var time_interval = 400;
+        time_section = parseFloat((100 / count_ts).toFixed(1));
+        setToZero();
+    } else {
+        var time_interval = 60;
+        time_section = parseInt(100 / count_rep);
+        setToZero();
+    }
 
     // console.log('progress START: ', progress);
     // console.log('time_section: ', time_section);
