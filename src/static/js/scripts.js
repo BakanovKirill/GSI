@@ -402,7 +402,7 @@ function showWaiting() {
 
     if (count_ts) {
         // var count_timeseries = count_ts * 5;
-        var time_interval = 400;
+        var time_interval = 100;
         time_section = parseFloat((100 / count_ts).toFixed(1));
         setToZero();
     } else {
