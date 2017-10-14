@@ -150,9 +150,10 @@
                 {% include '_modal_edit_polygons.html' %}
                 <!-- End Modal Edit Area -->
 
-                <!-- Modal Waiting -->
+                <!-- Modal Waiting
                 {% include '_modal_waiting.html' %}
-                <!-- End Modal Waiting -->
+                {% include '_modal_waiting_normal.html' %}
+                End Modal Waiting -->
 
                 <!-- The Modal: You can not draw a polygon without selecting a dataset -->
                 <div id="myModal" class="modal-draw">
@@ -168,6 +169,11 @@
                 <p id="data_polygon" disable></p>
                 <input type="hidden" id="data_polygon" name="data_polygon" value="">
             {% endif %}
+
+            <!-- Modal Waiting -->
+            {% include '_modal_waiting.html' %}
+            {% include '_modal_waiting_normal.html' %}
+            <!-- End Modal Waiting -->
         </form>
         
         <!-- AIzaSyApoguiUJyNLI5uy0zOqU9fSDfPgkZH3R0 -->

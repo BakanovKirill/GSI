@@ -236,6 +236,9 @@ function showDataSets(obj) {
     var datasets_id = $(select_dataset).val();
     var form_url = $('#customer_section').attr('action');
 
+    var modal = $('#modalWaitingNormal');
+    modal.modal('show');
+
     $.ajax({
         url: form_url,
         type: 'GET',
@@ -763,6 +766,7 @@ function sendDataTsToServer(obj) {
     // var select_aoi = $("#select_aoi");
     var select_aoi = $('#select_aoi').val();
     var select_year = $('#select_year').val();
+    var modal = $('#modalWaitingNormal');
 
     for (var m = 0; m < select_aoi.length; m++) {
         console.log('AOI: ', select_aoi[m]);
@@ -774,6 +778,11 @@ function sendDataTsToServer(obj) {
 
     console.log('select_aoi: ', select_aoi);
     console.log('aoi_list: ', aoi_list);
+
+    if ($(obj).val() === 'draw_plot') {
+        modal.modal('show');
+        // alert('button: '+$(obj).val());
+    }
 
     
     // $('#select_aoi').on('show.bs.select', function (e) {
@@ -820,7 +829,21 @@ function sendDataTsToServer(obj) {
             
             // setTimeout(reload, 100);
 
+            
+
+            // var modal = $('#modalWaitingNormal');
+            // modal.modal('show');
+
             window.location.href = form_url;
+
+            // if ($(obj).val() === 'draw_plot') {
+                
+
+                
+            //     modal.modal('show');
+
+            //     alert('button: '+$(obj).val());
+            // }
         },
     });
 }
@@ -850,6 +873,8 @@ function selectTab(obj) {
             
             if (data == 'ts' || tab_name == 'ts') {
                 window.location.href = form_url;
+                var modal = $('#modalWaitingNormal');
+                modal.modal('show');
             }
         },
     });
