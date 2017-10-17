@@ -2618,10 +2618,10 @@ def customer_section(request):
         if 'delete_button' in data_post:
             kml_file = data_post.get('delete_button')
             cur_area = CustomerPolygons.objects.filter(kml_name=kml_file)
+            # cur_area = get_object_or_404(
+                #     CustomerPolygons, kml_name=kml_file)
 
             if cur_area:
-                # cur_area = get_object_or_404(
-                #     CustomerPolygons, kml_name=kml_file)
                 ftp_kml = os.path.join(path_ftp_user, cur_area[0].kml_name)
 
                 try:
