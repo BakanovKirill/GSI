@@ -2617,28 +2617,31 @@ def customer_section(request):
 
         if 'delete_button' in data_post:
             kml_file = data_post.get('delete_button')
-            cur_area = get_object_or_404(
-                CustomerPolygons, kml_name=kml_file)
-            ftp_kml = os.path.join(path_ftp_user, cur_area.kml_name)
+            cur_area = CustomerPolygons.objects.filter(kml_name=kml_file)
 
-            try:
-                os.remove(cur_area.kml_path)
-            except OSError:
-                pass
+            if cur_area:
+                # cur_area = get_object_or_404(
+                #     CustomerPolygons, kml_name=kml_file)
+                ftp_kml = os.path.join(path_ftp_user, cur_area[0].kml_name)
 
-            try:
-                os.remove(ftp_kml)
-            except Exception:
-                pass
-            
-            cur_data_polygons = DataPolygons.objects.filter(
-                                    customer_polygons=cur_area
-                                )
-            
-            for data_pol in cur_data_polygons:
-                data_pol.delete()
+                try:
+                    os.remove(cur_area[0].kml_path)
+                except OSError:
+                    pass
 
-            cur_area.delete()
+                try:
+                    os.remove(ftp_kml)
+                except Exception:
+                    pass
+                
+                cur_data_polygons = DataPolygons.objects.filter(
+                                        customer_polygons=cur_area[0]
+                                    )
+                
+                for data_pol in cur_data_polygons:
+                    data_pol.delete()
+
+                cur_area[0].delete()
 
             return HttpResponseRedirect(u'%s' % (reverse('customer_section')))
 
