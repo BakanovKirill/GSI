@@ -1300,7 +1300,7 @@ def addPolygonToDB(name, kml_name, user, kml_path, kml_url, ds, text_kml=''):
 
 
 def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute_png_url, is_ts=False):
-    print '!!!!!!!!!!!!!!!!!!!!!!  11 shelf_data =========================== ', shelf_data
+    # print '!!!!!!!!!!!!!!!!!!!!!!  11 shelf_data =========================== ', shelf_data
     # order_data_set = data_set.order_by('attribute_name')
     
     warning_message = ''
@@ -1371,7 +1371,7 @@ def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute
                             files_list.append(f)
                             break
             
-                    print '!!!!!!!!!!!!!!!! files_list ============================= ', files_list
+                    # print '!!!!!!!!!!!!!!!! files_list ============================= ', files_list
 
                     if files_list:
                         file_area_name = files_list[0].split('.tif')[0]
