@@ -1555,6 +1555,8 @@ def getListTifFiles(customer, dataset):
     attributes_reports = AttributesReport.objects.filter(
                             user=customer, data_set=dataset)
 
+    print '!!!!!!!!!!!!!!!!!!! attributes_reports ====================== ', attributes_reports
+
     if attributes_reports:
         if dataset.is_ts:
             attributes_reports = attributes_reports.order_by('attribute')
@@ -2235,6 +2237,7 @@ def customer_section(request):
 
             reports_cip = ShelfData.objects.none()
             cur_ds = DataSet.objects.get(id=data_set_id)
+            is_time_series = cur_ds.is_ts
             statistic = ''
             data = ''
 
@@ -2244,18 +2247,21 @@ def customer_section(request):
                 count_ts = 0
                 # request.session['count_ts'] = 0
                 reports_ids = []
-                is_time_series = cur_ds.is_ts
+                # is_time_series = cur_ds.is_ts
 
                 for rep_id in data_post_ajax.getlist('reports[]'):
                     reports_ids.append(rep_id.split('report_')[1])
 
-                # print '!!!!!!!!!!!!! 22 reports_ids ====================== ', reports_ids
+                print '!!!!!!!!!!!!! 22 reports_ids ====================== ', reports_ids
 
                 if is_time_series:
                     reports_cip = reports_ids
 
                     for rs in reports_cip:
                         count_ts += getCountTs(cur_ds, rs)
+                else:
+                    reports_cip = ShelfData.objects.filter(
+                                id__in=reports_ids).order_by('attribute_name')
 
                 # print '!!!!!!!!!!!!! 22 reports_cip ====================== ', reports_cip
 
@@ -2303,13 +2309,22 @@ def customer_section(request):
                 cip.save()
 
             for rs in reports_cip:
-                attribute_report = AttributesReport.objects.create(
-                                        user=customer,
-                                        data_set=data_set,
-                                        shelfdata=cur_ds.shelf_data,
-                                        statistic=statistic,
-                                        attribute=rs
-                                    )
+                if is_time_series:
+                    attribute_report = AttributesReport.objects.create(
+                                            user=customer,
+                                            data_set=data_set,
+                                            shelfdata=cur_ds.shelf_data,
+                                            statistic=statistic,
+                                            attribute=rs
+                                        )
+                else:
+                    attribute_report = AttributesReport.objects.create(
+                                            user=customer,
+                                            data_set=data_set,
+                                            shelfdata=rs,
+                                            statistic=statistic,
+                                            attribute=rs
+                                        )
             
             kml_file_coord = open(file_path_out_coord_kml, "w")
             tmp = {}

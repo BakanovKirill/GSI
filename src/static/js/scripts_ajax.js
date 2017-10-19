@@ -553,7 +553,13 @@ function sendDataToServer(coord, reports, stats) {
     modal.modal('show');
     count_rep = reports.length
 
-    var count_reports = count_rep * 10;
+    if (count_rep <= 2) {
+        var count_reports = count_rep * 10;
+    }
+    else {
+        var count_reports = count_rep;
+    }
+    
     // var time_interval = 200 / count_reports;
     // var time_interval = parseFloat((100 / count_reports).toFixed(1));
     var time_interval = 60;
