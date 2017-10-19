@@ -2655,7 +2655,7 @@ def customer_section(request):
                     (u'Please select a file to upload to the server!')))
 
         if 'save_area' in data_post:
-            print '!!!!!!!!!!!!! SAVE AREA ========================='
+            # print '!!!!!!!!!!!!! SAVE AREA ========================='
 
             try:
                 data_kml = data_post.lists()
@@ -2784,9 +2784,9 @@ def customer_section(request):
             except Exception, e:
                 pass
 
-            return HttpResponseRedirect(u'%s?danger_message=%s' % (
-                        reverse('customer_section'),
-                        (u'Please add the GEO data to create Time Series.')))
+                return HttpResponseRedirect(u'%s?danger_message=%s' % (
+                            reverse('customer_section'),
+                            (u'Please add the GEO data to create Time Series.')))
                 
             # return redirect('customer_section')
 
