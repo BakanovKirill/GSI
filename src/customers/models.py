@@ -244,6 +244,7 @@ class AttributesReport(models.Model):
                     on_delete=models.CASCADE
                 )
     statistic = models.CharField(max_length=250, blank=True, null=True)
+    attribute = models.CharField(max_length=300, blank=True, null=True)
 
 
 # Max, Min, Mean,LQ (Lower Quartile), UQ (Upper Quartile)

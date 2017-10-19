@@ -58,6 +58,20 @@
             <b class="error-form">{{ form.name_ts.errors }}</b>
         {% endif %}
     </div>
+
+    <div class="col-md-2 right">
+        <div class="form-group {% if form.shelf_data.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.shelf_data.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if not form.shelf_data.errors %}
+            {{ form.shelf_data }}
+        {% else %}
+            <span class="field-error">{{ form.shelf_data }}</span>
+            <b class="error-form">{{ form.shelf_data.errors }}</b>
+        {% endif %}
+    </div>
 </div>
 
 <div class="row margin-top-15">

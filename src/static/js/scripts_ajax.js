@@ -214,6 +214,9 @@ function initAddOverrideMaping() {
                 var root_filename = $('#id_root_filename');
                 var attribute_name = $('#id_attribute_name');
 
+                // alert('DATA 1: '+data_list[0]);
+                // alert('DATA 2: '+data_list[1]);
+
                 $(root_filename).val(data_list[0]);
                 $(attribute_name).val(data_list[1]);
             },
@@ -556,18 +559,18 @@ function sendDataToServer(coord, reports, stats) {
     var time_interval = 60;
 
 
-    time_section = parseInt(100 / count_rep);
+    time_section = parseInt(100 / count_reports);
 
     // alert('sendDataToServer REP: '+count_reports);
     // alert('sendDataToServer time_interval: '+time_interval);
-    console.log('sendDataToServer count_reports: ', count_rep);
+    console.log('sendDataToServer count_reports: ', count_reports);
     console.log('sendDataToServer time_section: ', time_section);
 
     // timerId = setInterval(go_progress(), count_reports);
 
     timerId = setInterval(function() {
         go_progress();
-    }, time_interval);
+    }, time_section);
 
     // console.log('sendDataToServer COUNT REP: '+count_reports);
 
@@ -608,6 +611,7 @@ function sendDataToServer(coord, reports, stats) {
             // interval_id = setInterval(go_progress, count_reports);
         },
         'success': function(data, status, xhr){
+            // alert(data);
             // clearInterval(timerId);
             count_ts = data;
             // progress = 0;

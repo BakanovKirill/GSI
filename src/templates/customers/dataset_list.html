@@ -38,6 +38,14 @@
                                     {% endif %}
                                 </a>
                             </th>
+                            <th>
+                                <a href="{% url 'data_sets' %}?order_by=shelf_data{% if order_by == 'shelf_data' and reverse != '1' %}&amp;reverse=1{% endif %}">
+                                    Shelf Data
+                                    {% if order_by == 'shelf_data' and reverse != '1' %}&#9652;
+                                    {% elif order_by == 'shelf_data' and reverse == '1' %}&#9662;
+                                    {% endif %}
+                                </a>
+                            </th>
 
                             <th>
                                 <a href="{% url 'data_sets' %}?order_by=shelf_data__attribute_name{% if order_by == 'shelf_data__attribute_name' and reverse != '1' %}&amp;reverse=1{% endif %}">
@@ -75,6 +83,7 @@
                             <td>{{ ds.name }}</td>
                             <td>{{ ds.description }}</td>
                             <td>{{ ds.results_directory }}</td>
+                            <td>{{ ds.shelf_data }}</td>
                             <td>{{ ds.get_attribute_name }}</td>
                             <td>{{ ds.get_root_filename }}</td>
                             <td>{{ ds.name_ts }}</td>

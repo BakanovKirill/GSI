@@ -108,6 +108,14 @@ class DataSetForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         required=False,
         label=u'Description')
+    shelf_data = forms.ModelChoiceField(
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+        }),
+        required=False,
+        queryset=ShelfData.objects.all().order_by('attribute_name'),
+        empty_label='Select',
+        label=u'Shelf Data', )
     results_directory = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         required=False,
@@ -150,7 +158,7 @@ class DataSetForm(forms.ModelForm):
 
     class Meta:
         model = DataSet
-        fields = ['name', 'description', 'results_directory', 'is_ts', 'name_ts']
+        fields = ['name', 'description', 'results_directory', 'is_ts', 'name_ts', 'shelf_data']
 
 
 class CustomerAccessForm(forms.ModelForm):

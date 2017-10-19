@@ -35,6 +35,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.utils.datastructures import MultiValueDictKeyError
+from django.shortcuts import redirect
 
 from customers.models import (Category, ShelfData, DataSet, CustomerAccess,
                                 CustomerInfoPanel, CustomerPolygons, DataPolygons,
@@ -342,7 +343,7 @@ def shelf_data(request):
                 cur_shelf_data.delete()
 
             return HttpResponseRedirect(u'%s?status_message=%s' % (
-                reverse('shelf_data_list'),
+                reverse('shelf_data'),
                 (u'Shelf Data: {0} deleted.'.format(shelf_data_name))))
         elif request.POST.get('delete_button'):
             cur_shelf_data = get_object_or_404(ShelfData, pk=request.POST.get('delete_button'))
@@ -350,10 +351,10 @@ def shelf_data(request):
             cur_shelf_data.delete()
 
             return HttpResponseRedirect(u'%s?status_message=%s' % (
-                reverse('shelf_data_list'), (u'Shelf Data: {0} deleted.'.format(shelf_data_name))))
+                reverse('shelf_data'), (u'Shelf Data: {0} deleted.'.format(shelf_data_name))))
         else:
             return HttpResponseRedirect(u'%s?warning_message=%s' % (
-                reverse('shelf_data_list'), (u"To delete, select Shelf Data or more Shelf Data.")))
+                reverse('shelf_data'), (u"To delete, select Shelf Data or more Shelf Data.")))
 
     # paginations
     model_name = paginations(request, shelf_data)
@@ -1299,7 +1300,7 @@ def addPolygonToDB(name, kml_name, user, kml_path, kml_url, ds, text_kml=''):
 
 
 def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute_png_url, is_ts=False):
-    # print '================    shelf_data =========================== ', shelf_data
+    print '!!!!!!!!!!!!!!!!!!!!!!  11 shelf_data =========================== ', shelf_data
     # order_data_set = data_set.order_by('attribute_name')
     
     warning_message = ''
@@ -1329,33 +1330,62 @@ def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute
     sub_dir = SUB_DIRECTORIES[stat_file]
 
     # print '!!!!!!!!!!!!! is_ts ========================= ', is_ts
+    # print '!!!!!!!!!!!!! attribute_name ========================= ', attribute_name
 
     if is_ts:
-        files_list = []
-        file_area_name = ''
-
         try:
-            ts_directory = os.path.join(PROJECTS_PATH, results_directory, root_filename, sub_dir)
-            root, dirs, files = os.walk(ts_directory).next()
-            files.sort()
-            
-            if files:
-                for f in files:
-                    fl, ext = os.path.splitext(f)
+            files_list = []
+            file_area_name = ''
+            attribute_name = shelf_data
+            png_pref = str(data_set.shelf_data.lutfiles.lut_file).split('.txt')[0]
 
-                    if ext == '.tif':
-                        files_list.append(f)
-                        break
-            
-            file_area_name = files_list[0].split('.tif')[0]
-            tif = '{0}.tif'.format(file_area_name)
-            png = '{0}{1}.png'.format(file_area_name, png_pref)
+            project_directory = os.path.join(PROJECTS_PATH, results_directory)
+            # ts_directory = os.path.join(PROJECTS_PATH, results_directory, root_filename, sub_dir)
+            pr_root, pr_dirs, pr_files = os.walk(project_directory).next()
+            pr_dirs.sort()
 
-            tif_path = os.path.join(ts_directory, tif)
-            png_path = os.path.join(PNG_PATH, png)
-            url_png = '{0}/{1}'.format(absolute_png_url, png)
+            # print '!!!!!!!!!!!!!!!! project_directory ============================= ', project_directory
+            # print '!!!!!!!!!!!!!!!! pr_dirs ============================= ', pr_dirs
+
+            
+            for sub_dir_1 in pr_dirs:
+                if str(sub_dir_1) in attribute_name:
+                    ts_directory = os.path.join(project_directory, sub_dir_1, sub_dir)
+                    ts_root, ts_dirs, ts_files = os.walk(ts_directory).next()
+                    ts_files.sort()
+
+                    # print '!!!!!!!!!!!!!!!! ts_directory ============================= ', ts_directory
+
+                    # for sub_dir_2 in ts_dirs:
+                    #     ts_sub_directory = os.path.join(ts_directory, sub_dir_2)
+                    #     ts_sub_root, ts_sub_dirs, ts_sub_files = os.walk(ts_sub_directory).next()
+                    #     ts_sub_files.sort()
+
+                    #     print '!!!!!!!!!!!!!!!! ts_sub_directory ============================= ', ts_sub_directory
+
+
+                    for f in ts_files:
+                        fl, ext = os.path.splitext(f)
+
+                        if ext == '.tif':
+                            files_list.append(f)
+                            break
+            
+                    print '!!!!!!!!!!!!!!!! files_list ============================= ', files_list
+
+                    if files_list:
+                        file_area_name = files_list[0].split('.tif')[0]
+                        tif = '{0}.tif'.format(file_area_name)
+                        png = '{0}{1}.png'.format(file_area_name, png_pref)
+
+                        tif_path = os.path.join(ts_directory, tif)
+                        png_path = os.path.join(PNG_PATH, png)
+                        url_png = '{0}/{1}'.format(absolute_png_url, png)
+                    # break
         except StopIteration:
             warning_message = u'The path "{0}" does not exist.'.format(ts_directory)
+        except AttributeError:
+            warning_message = u'Please set Shelf Data for "{0}" Dataset'.format(data_set)
     else:
         file_area_name = '{0}_{1}.{2}'.format(stat_file, root_filename, project_name)
         tif = '{0}.tif'.format(file_area_name)
@@ -1365,9 +1395,9 @@ def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute
         png_path = os.path.join(PNG_PATH, png)
         url_png = '{0}/{1}'.format(absolute_png_url, png)
 
-    # print '!!!!!!!!!!!!! get_parameters_customer_info_panel =================== ', tif_path
+    # print '!!!!!!!!!!!!! attribute_name =================== ', attribute_name
 
-    return attribute_name, file_area_name, tif_path, png_path, url_png
+    return attribute_name, file_area_name, tif_path, png_path, url_png, warning_message
 
 
 def createCustomerInfoPanel(customer, data_set, shelf_data, stat_file, absolute_png_url,
@@ -1376,10 +1406,10 @@ def createCustomerInfoPanel(customer, data_set, shelf_data, stat_file, absolute_
         CustomerInfoPanel.objects.filter(user=customer).delete()
 
     attribute_name, file_area_name,\
-    tif_path, png_path, url_png = get_parameters_customer_info_panel(data_set,
+    tif_path, png_path, url_png, warning_message = get_parameters_customer_info_panel(data_set,
                                     shelf_data, stat_file, absolute_png_url, is_ts)
 
-    # print '!!!!!!!!!!!!! createCustomerInfoPanel =================== ', tif_path
+    # print '!!!!!!!!!!!!! stat_file =================== ', stat_file
 
     info_panel = CustomerInfoPanel.objects.create(
                     user=customer,
@@ -1395,7 +1425,7 @@ def createCustomerInfoPanel(customer, data_set, shelf_data, stat_file, absolute_
                     is_ts=is_ts)
     info_panel.save()
 
-    return info_panel
+    return info_panel, warning_message
 
 
 def createKml(user, filename, info_window, url, data_set):
@@ -1447,7 +1477,7 @@ def getAttributeUnits(user, show_file):
 
 def getResultDirectory(dataset, shelfdata):
     dirs_list = []
-    # is_ts = False
+    # is_ts = dataset.is_ts
 
     try:
         project_directory = os.path.join(PROJECTS_PATH, dataset.results_directory)
@@ -1470,6 +1500,40 @@ def getResultDirectory(dataset, shelfdata):
         print '----->>>    Exception getResultDirectory ========================= ', e
         pass
 
+    # print '!!!!!!!!!!!!!!!!!!!! DIRS LIST ========================= ', dirs_list
+    # print '!!!!!!!!!!!!!!!!!!!! TS ========================= ', is_ts
+
+    return dirs_list
+
+
+def getTsResultDirectory(dataset):
+    dirs_list = []
+    shelf_data = dataset.shelf_data
+
+    try:
+        project_directory = os.path.join(PROJECTS_PATH, dataset.results_directory)
+        root, dirs, files = os.walk(project_directory).next()
+        dirs.sort()
+
+        for d in dirs:
+            name = '{0} {1}'.format(shelf_data, d)
+            dirs_list.append(name)
+
+        # if 'TS_' in dataset.results_directory:
+        #     for dy in dirs:
+        #         dirs_list.append(dy)
+        #     is_ts = True
+        # else:
+        #     for sd in shelfdata:
+        #         if str(sd.root_filename) in dirs:
+        #             dirs_list.append(sd)
+    except Exception, e:
+        print '----->>>    Exception getTsResultDirectory ========================= ', e
+        pass
+
+    # print '!!!!!!!!!!!!!!!!!!!! DIRS LIST ========================= ', dirs_list
+    # print '!!!!!!!!!!!!!!!!!!!! TS ========================= ', is_ts
+
     return dirs_list
 
 
@@ -1489,36 +1553,54 @@ def getListTifFiles(customer, dataset):
     list_files_tif = []
     list_data_db = []
     attributes_reports = AttributesReport.objects.filter(
-                            user=customer, data_set=dataset
-                        ).order_by('shelfdata__attribute_name')
+                            user=customer, data_set=dataset)
 
     if attributes_reports:
-        for attr in attributes_reports:
-            if dataset.is_ts:
-                sub_dir = attr.shelfdata.root_filename + '/' + SUB_DIRECTORIES[attr.statistic]
-                sub_dir_path = os.path.join(PROJECTS_PATH, dataset.results_directory, sub_dir)
+        if dataset.is_ts:
+            attributes_reports = attributes_reports.order_by('attribute')
 
-                project_directory = os.path.join(sub_dir_path)
+            for attr in attributes_reports:
+                # sub_dir = attr.shelfdata.root_filename + '/' + SUB_DIRECTORIES[attr.statistic]
+                # sub_dir_path = os.path.join(PROJECTS_PATH, dataset.results_directory, sub_dir)
+                # sub_dir_path = os.path.join(PROJECTS_PATH, dataset.results_directory)
+
+                project_directory = os.path.join(PROJECTS_PATH, dataset.results_directory)
 
                 # print '!!!!!!!!!! sub_dir_path ========================= ', sub_dir_path
                 # print '!!!!!!!!!! project_directory ========================= ', project_directory
 
                 if os.path.exists(project_directory):
-                    root, dirs, files = os.walk(project_directory).next()
-                    dirs.sort()
-                    files.sort()
+                    pr_root, pr_dirs, pr_files = os.walk(project_directory).next()
+                    pr_dirs.sort()
 
-                    for f in files:
-                        fl, ext = os.path.splitext(f)
+                    # print '!!!!!!!!!! project_directory ========================= ', project_directory
+                    # print '!!!!!!!!!! attr.attribute ========================= ', attr.attribute
 
-                        if ext == '.tif':
-                            fl_tif = os.path.join(project_directory, f)
-                            str_data_db = '{0}$$${1}$$$'.format(attr.shelfdata.id, fl_tif)
+                    for pd in pr_dirs:
+                        if pd in attr.attribute:
+                            sub_directory = os.path.join(project_directory, pd, SUB_DIRECTORIES[attr.statistic])
+                            sub_root, sub_dirs, sub_files = os.walk(sub_directory).next()
+                            sub_files.sort()
 
-                            list_files_tif.append(fl_tif)
-                            list_data_db.append(str_data_db)
+                            # print '!!!!!!!!!! sub_directory ========================= ', sub_directory
+
+                            for f in sub_files:
+                                fl, ext = os.path.splitext(f)
+
+                                if ext == '.tif':
+                                    fl_tif = os.path.join(sub_directory, f)
+                                    str_data_db = '{0}$$${1}$$$'.format(attr.shelfdata.id, fl_tif)
+
+                                    list_files_tif.append(fl_tif)
+                                    list_data_db.append(str_data_db)
+                                    break
                             break
-            else:
+                    # print '!!!!!!!!!! list_data_db ========================= ', list_data_db
+                    # print '!!!!!!!!!! list_files_tif ========================= ', list_files_tif
+        else:
+            attributes_reports = attributes_reports.order_by('shelfdata__attribute_name')
+
+            for attr in attributes_reports:
                 name_1 = attr.shelfdata.root_filename
                 name_2 = dataset.results_directory.split('/')[0]
                 tif_path = os.path.join(PROJECTS_PATH, dataset.results_directory, name_1)
@@ -1563,16 +1645,24 @@ def createTimeSeriesResults(aoi, file_in, file_out):
     project_directory = os.path.join(PROJECTS_PATH, aoi.data_set.results_directory)
     attributes_reports = AttributesReport.objects.filter(
                             user=aoi.user, data_set=aoi.data_set
-                        ).order_by('shelfdata__attribute_name')
+                        ).order_by('attribute')
+    # attributes_reports = AttributesReport.objects.filter(
+    #                         user=aoi.user, data_set=aoi.data_set
+    #                     ).order_by('shelfdata__attribute_name')
 
     # print '!!!!!!!!!!!!!!!!!! ATTRIBUTES REPORTS ================================ ', attributes_reports
 
     if attributes_reports:
         for attr in attributes_reports:
-            result_year = attr.shelfdata.root_filename
+            result_year = (attr.attribute).split(' ')[-1]
+
+            # result_year = attr.shelfdata.root_filename
             # sub_dir_name = SUB_DIRECTORIES[attr.statistic]
             # sub_dir = result_year + '/' + sub_dir_name
+            
             project_directory = os.path.join(PROJECTS_PATH, aoi.data_set.results_directory, result_year)
+
+            # project_directory = os.path.join(PROJECTS_PATH, aoi.data_set.results_directory, result_year)
             # project_directory = os.path.join(PROJECTS_PATH, aoi.data_set.results_directory, sub_dir)
 
             # print '!!!!!!! YEAR ========================== ', result_year
@@ -1640,7 +1730,7 @@ def createTimeSeriesResults(aoi, file_in, file_out):
                                         # print '!!!!!!! 2 NEW LINE ========================== ', new_line
                                         
                                 addTsToDB(ts_name, aoi.user, aoi.data_set, aoi, result_year,
-                                            sub_dir_name, result_date, ts_value, attr.shelfdata.attribute_name)
+                                            sub_dir_name, result_date, ts_value, attr.attribute)
 
                                 # list_files_tif.append(fl_tif)
                                 # list_data_db.append(str_data_db)
@@ -1651,27 +1741,50 @@ def createTimeSeriesResults(aoi, file_in, file_out):
                                 pass
 
 
-def getCountTs(dataset, subdir):
+def getCountTs(dataset, shd):
+    # print '!!!!!!!!!!!!!!!!! SHD ===================== ', shd
+
+    is_ts = dataset.is_ts
     count_ts = 0
+
     path_cur_proj = dataset.results_directory
-    path_to_subdir = os.path.join(RESULTS_DIRECTORY, path_cur_proj, subdir)
+    path_to_proj = os.path.join(RESULTS_DIRECTORY, path_cur_proj)
 
-    # print '!!!!!!!!!!!!!!!!! path_to_subdir ===================== ', path_to_subdir
+    # print '!!!!!!!!!!!!!!!!! path_to_proj ===================== ', path_to_proj
 
-    if os.path.exists(path_to_subdir):
-        root, dirs, files = os.walk(path_to_subdir).next()
+    try:
+        if os.path.exists(path_to_proj):
+            pr_root, pr_dirs, pr_files = os.walk(path_to_proj).next()
+            pr_dirs.sort()
 
-        for d in dirs:
-            sub_dir = os.path.join(path_to_subdir, d)
-            root, dirs, files = os.walk(sub_dir).next()
+            # print '!!!!!!!!!!!!!!!!! pr_dirs ===================== ', pr_dirs
 
-            for f in files:
-                fl, ext = os.path.splitext(f)
 
-                if ext == '.tif':
-                    count_ts += 1
+            for d in pr_dirs:
+                # print '!!!!!!!!!!!!!!!!! d ===================== ', d
+                # print '!!!!!!!!!!!!!!!!! IN SHD ===================== ', shd
+                # print '!!!!!!!!!!!!!!!!! d in shd ===================== ', d in shd
+                if d in shd:
+                    path_to_subdir = os.path.join(path_to_proj, d)
+                    sub_root, sub_dirs, sub_files = os.walk(path_to_subdir).next()
+                    sub_dirs.sort()
 
-            # print '!!!!!!!!!!!!!!!!! sub_dir ===================== ', sub_dir
+                    # print '!!!!!!!!!!!!!!!!! path_to_subdir ===================== ', path_to_subdir
+
+                    for sd in sub_dirs:
+                        attr_dir = os.path.join(path_to_subdir, sd)
+                        attr_root, attr_dirs, attr_files = os.walk(attr_dir).next()
+                        attr_files.sort()
+
+                        # print '!!!!!!!!!!!!!!!!! attr_dir ===================== ', attr_dir
+
+                        for f in attr_files:
+                            fl, ext = os.path.splitext(f)
+
+                            if ext == '.tif':
+                                count_ts += 1
+    except Exception:
+        pass
 
     # print '!!!!!!!!!!!!!!!!! getCountTs ===================== ', count_ts
 
@@ -1912,23 +2025,35 @@ def customer_section(request):
     data_set, data_set_id = getDataSet(data_set_id, data_sets[0])
 
     is_time_series = data_set.is_ts
+    dir_l = ''
 
     # Get the Statistics list
-    dirs_list = getResultDirectory(data_set, shelf_data_all)
+    # dirs_list = getResultDirectory(data_set, shelf_data_all)
+
+    if not is_time_series:
+        dirs_list = getResultDirectory(data_set, shelf_data_all)
+    else:
+        dirs_list = getTsResultDirectory(data_set)
+        
+    # print '!!!!!!!!!!!!!!!!!!!! dirs_list ==================== ', dirs_list
 
     if dirs_list:
-        dl = dirs_list[0]
+        dir_l = dirs_list[0]
     else:
-        dl = ''
+        dir_l = ''
 
     cip_is_show = CustomerInfoPanel.objects.filter(
                                 user=customer,
                                 is_show=True)
     if not cip_is_show:
-        new_cip = createCustomerInfoPanel(
-                        customer, data_set, dl, 'mean_ConditionalMean',
+        new_cip, warning_message = createCustomerInfoPanel(
+                        customer, data_set, dir_l, 'mean_ConditionalMean',
                         absolute_png_url, True, order=0, is_ts=is_time_series
                     )
+        if warning_message:
+            return HttpResponseRedirect(u'%s?status_message=%s' % (
+                reverse('customer_section'),
+                (warning_message)))
 
     # get AJAX POST for KML files
     if request.is_ajax() and request.method == "POST":
@@ -1976,6 +2101,7 @@ def customer_section(request):
                         show_attribute_name = is_show_sip[0].attribute_name
                         show_statistics_name = is_show_sip[0].statistic
 
+                    # print '!!!!!!!!!!!!!!!! show_attribute_name ========================= ', show_attribute_name
                     # print 'CIP count_obj ========================= ', count_obj
                     # print 'CIP ORDER ========================= ', is_show_sip[0].order
                     # print 'show_statistics_name ========================= ', show_statistics_name
@@ -1983,14 +2109,16 @@ def customer_section(request):
                     CustomerInfoPanel.objects.filter(user=customer).delete()
 
                     for attr in attributes_viewlist:
-                        attr_id = int(attr.split('view_')[1])
-
-                        # print '!!!!!!!!!! attr_id ========================= ', attr_id
-
                         try:
-                            shelf_data = ShelfData.objects.get(id=int(attr_id))
+                            if is_time_series:
+                                attr_id = attr.split('view_')[1]
+                                shelf_data = attr_id
+                            else:
+                                attr_id = int(attr.split('view_')[1])
+                                shelf_data = ShelfData.objects.get(id=int(attr_id))
 
                             # print '!!!!!!!!!! shelf_data ========================= ', shelf_data
+                            # print '!!!!!!!!!! attr_id ========================= ', attr_id
 
                             is_time_series = data_set.is_ts
 
@@ -2000,11 +2128,19 @@ def customer_section(request):
                                                         False, order=new_order, delete=False, is_ts=is_time_series)
 
 
-                                if show_attribute_name == shelf_data.attribute_name and show_statistics_name == st:
-                                    if data_post_ajax['button'] == 'next':
-                                        show_order = new_order + 1
-                                    elif data_post_ajax['button'] == 'previous':
-                                        show_order = new_order - 1
+                                if is_time_series:
+                                    pass
+                                    if show_attribute_name == shelf_data and show_statistics_name == st:
+                                        if data_post_ajax['button'] == 'next':
+                                            show_order = new_order + 1
+                                        elif data_post_ajax['button'] == 'previous':
+                                            show_order = new_order - 1
+                                else:
+                                    if show_attribute_name == shelf_data.attribute_name and show_statistics_name == st:
+                                        if data_post_ajax['button'] == 'next':
+                                            show_order = new_order + 1
+                                        elif data_post_ajax['button'] == 'previous':
+                                            show_order = new_order - 1
 
                                 new_order += 1
                                 # print '**************************************************************************************'
@@ -2015,7 +2151,8 @@ def customer_section(request):
                                 # print 'statistics ========================= ', st
                                 # print '!!!!!!!!!!!!! show_order ========================= ', show_order
                                 # print '**************************************************************************************'
-                        except ShelfData.DoesNotExist:
+                        except ShelfData.DoesNotExist, e:
+                            print '!!!!!!!!!!!! ShelfData.DoesNotExist ========================= ', e
                             pass
 
                     if is_show_sip:
@@ -2052,7 +2189,7 @@ def customer_section(request):
                                             'mean_ConditionalMean', absolute_png_url,
                                             True, order=0, is_ts=is_time_series)
             except Exception, e:
-                # print '!!!!!!!!!! ERROR NEXT ======================= ', e
+                print '!!!!!!!!!! ERROR NEXT ======================= ', e
                 ####################### write log file
                 customer_section.write('ERROR ATTR & STAT LIST: {0}\n'.format(e))
                 ####################### write log file
@@ -2097,7 +2234,9 @@ def customer_section(request):
             #################### START TIME.TIME
 
             reports_cip = ShelfData.objects.none()
+            cur_ds = DataSet.objects.get(id=data_set_id)
             statistic = ''
+            data = ''
 
             # print '!!!!!!!!!!!!! 22 COORD data_post_ajax ====================== ', data_post_ajax
 
@@ -2105,22 +2244,31 @@ def customer_section(request):
                 count_ts = 0
                 # request.session['count_ts'] = 0
                 reports_ids = []
-                cur_ds = DataSet.objects.get(id=data_set_id)
+                is_time_series = cur_ds.is_ts
 
                 for rep_id in data_post_ajax.getlist('reports[]'):
                     reports_ids.append(rep_id.split('report_')[1])
 
-                reports_cip = ShelfData.objects.filter(
-                                id__in=reports_ids).order_by('attribute_name')
+                # print '!!!!!!!!!!!!! 22 reports_ids ====================== ', reports_ids
+
+                if is_time_series:
+                    reports_cip = reports_ids
+
+                    for rs in reports_cip:
+                        count_ts += getCountTs(cur_ds, rs)
+
+                # print '!!!!!!!!!!!!! 22 reports_cip ====================== ', reports_cip
+
+                # reports_cip = ShelfData.objects.filter(
+                #                 id__in=reports_ids).order_by('attribute_name')
 
                 # print '!!!!!!!!!!!!!!!!! 12 request count_ts =========================== ', request.session['count_ts']
 
-                for rs in reports_cip:
-                    count_ts += getCountTs(cur_ds, rs.root_filename)
+                
 
                 request.session['count_ts'] = count_ts
 
-                print '!!!!!!!!!!!!!!!!! 2 request count_ts =========================== ', request.session['count_ts']
+                # print '!!!!!!!!!!!!!!!!! 2 request count_ts =========================== ', request.session['count_ts']
                 # print '!!!!!!!!!!!!!!!!! COUNT TS =========================== ', count_ts
             else:
                 reports_cip = dirs_list
@@ -2158,8 +2306,9 @@ def customer_section(request):
                 attribute_report = AttributesReport.objects.create(
                                         user=customer,
                                         data_set=data_set,
-                                        shelfdata=rs,
-                                        statistic=statistic
+                                        shelfdata=cur_ds.shelf_data,
+                                        statistic=statistic,
+                                        attribute=rs
                                     )
             
             kml_file_coord = open(file_path_out_coord_kml, "w")
@@ -2206,6 +2355,12 @@ def customer_section(request):
             new_line = ''
             db_file_open = open(tmp_db_file, 'w')
 
+            print '!!!!!!!!!!!!!!! list_file_tif =========================== ', list_file_tif
+
+            # if not list_file_tif:
+            #     data = 'Please add the GEO data to create the report.'
+            #     return HttpResponse(data)
+
             for file_tif in list_file_tif:
                 shd_id = list_data_db[count_data].split('$$$')[0]
                 scale = ShelfData.objects.get(id=shd_id).scale
@@ -2235,6 +2390,9 @@ def customer_section(request):
                 startTime_script_end = time.time() - startTime_script_start
                 # data = startTime_script_end
                 # return HttpResponse(data)
+                
+                print '!!!!!!!!!!!!!! TIME GETPOLYINFO SCRIPT =================== ', startTime_script_end
+                timer_script.write('ONE TIME GETPOLYINFO SCRIPT: {0}\n'.format(startTime_script_end))
                 #################### START TIME.TIME
 
                 file_out_coord_open = open(file_path_out_coord_tmp)
@@ -2292,11 +2450,10 @@ def customer_section(request):
             startTime_end = time.time() - startTime_start
 
             timer_script.write('ALL TIME CUSTOMER SECTION: {0}\n'.format(startTime_end))
-            timer_script.write('ONE TIME SCRIPT: {0}\n'.format(startTime_script_end))
             #################### START TIME.TIME
             
             print '!!!!!!!!!!!!!! TIME =================== ', startTime_end
-            print '!!!!!!!!!!!!!! TIME SCRIPT =================== ', startTime_script_end
+            
 
             data = count_ts
 
@@ -2390,10 +2547,17 @@ def customer_section(request):
 
             if status:
                 data_set, data_set_id = getDataSet(data_set_id, data_sets[0])
-                dirs_list = getResultDirectory(data_set, shelf_data_all)
+                # dirs_list = getResultDirectory(data_set, shelf_data_all)
                 statistic = 'mean_ConditionalMean'
                 is_show = True
                 is_time_series = data_set.is_ts
+
+                if not is_time_series:
+                    dirs_list = getResultDirectory(data_set, shelf_data_all)
+                else:
+                    dirs_list = getTsResultDirectory(data_set)
+
+                # print '!!!!!!!!!!!!!!!!!!!! DIRRR LISTTT ============================ ', dirs_list
 
                 if dirs_list:
                     info_panel = createCustomerInfoPanel(
@@ -2491,129 +2655,140 @@ def customer_section(request):
                     (u'Please select a file to upload to the server!')))
 
         if 'save_area' in data_post:
-            data_kml = data_post.lists()
-            area_name = ''
-            total_area = ''
-            attribute = []
-            value = []
-            units = []
-            total = []
-            statistic = ''
+            print '!!!!!!!!!!!!! SAVE AREA ========================='
 
-            root_filename = []
+            try:
+                data_kml = data_post.lists()
+                area_name = ''
+                total_area = ''
+                attribute = []
+                value = []
+                units = []
+                total = []
+                statistic = ''
 
-            for item in data_kml:
-                # total_area
-                if 'total_area' in item:
-                    total_area = item[1][0]
+                root_filename = []
 
-                if 'area_name' in item:
-                    area_name = item[1][0].replace(' ', '-')
+                for item in data_kml:
+                    # total_area
+                    if 'total_area' in item:
+                        total_area = item[1][0]
 
-                if 'attribute' in item:
-                    attribute = item[1]
+                    if 'area_name' in item:
+                        area_name = item[1][0].replace(' ', '-')
 
-                if 'value' in item:
-                    value = item[1]
+                    if 'attribute' in item:
+                        attribute = item[1]
 
-                if 'units' in item:
-                    units = item[1]
+                    if 'value' in item:
+                        value = item[1]
 
-                if 'total' in item:
-                    total = item[1]
+                    if 'units' in item:
+                        units = item[1]
 
-                if 'statistic' in item:
-                    statistic = item[1][0]
+                    if 'total' in item:
+                        total = item[1]
 
-            len_attr = len(attribute)
-            
-            info_window = '<h4 align="center">Attribute report: {0}</h4>\n'.format(area_name)
-            info_window += '<p align="center"><span><b>Total Area:</b></span> ' + total_area + ' ha</p>';
+                    if 'statistic' in item:
+                        statistic = item[1][0]
 
-            if statistic:
-                info_window += '<p align="center"><span><b>Values:</b></span> ' + statistic + '</p>';
-            # info_window += '<p align="left"><font size="2">{0}: {1} ha</p></font>\n'.format(ATTRIBUTES_NAME[0], total_area)
+                len_attr = len(attribute)
+                
+                info_window = '<h4 align="center">Attribute report: {0}</h4>\n'.format(area_name)
+                info_window += '<p align="center"><span><b>Total Area:</b></span> ' + total_area + ' ha</p>';
 
-            info_window += '<div style="overflow:auto;" class="ui-widget-content">'
-            
-            # if len_attr >= 8:
-            #     info_window += '<div style="height:400px;overflow:scroll;" class="ui-widget-content">'
-            # else:
-            #     info_window += '<div style="overflow:auto;" class="ui-widget-content">'
+                if statistic:
+                    info_window += '<p align="center"><span><b>Values:</b></span> ' + statistic + '</p>';
+                # info_window += '<p align="left"><font size="2">{0}: {1} ha</p></font>\n'.format(ATTRIBUTES_NAME[0], total_area)
 
-            info_window += '<table border="1" cellspacing="5" cellpadding="5" style="border-collapse:collapse;border:1px solid black;width:100%;">\n'
-            # info_window += '<caption align="left" style="margin-bottom:15px"><span><b>Total Area:</b></span> ' + total_area + ' ha</caption>'
-            info_window += '<thead>\n'
-            info_window += '<tr bgcolor="#CFCFCF">\n'
-            info_window += '<th align="left" style="padding:10px">Attribute</th>\n'
-            info_window += '<th style="padding:10px">Units per Hectare</th>\n'
-            info_window += '<th style="padding:10px">Units</th>\n'
-            info_window += '<th style="padding:10px">Total</th>\n'
-            info_window += '</tr>\n'
-            info_window += '</thead>\n'
-            info_window += '<tbody>\n'
+                info_window += '<div style="overflow:auto;" class="ui-widget-content">'
+                
+                # if len_attr >= 8:
+                #     info_window += '<div style="height:400px;overflow:scroll;" class="ui-widget-content">'
+                # else:
+                #     info_window += '<div style="overflow:auto;" class="ui-widget-content">'
 
-            for n in xrange(len_attr):
-                if n % 2 == 0:
-                    info_window += '<tr bgcolor="#F5F5F5">\n'
-                else:
-                    info_window += '<tr>';
-
-                info_window += '<td align="left" style="padding:10px">{0}</td>\n'.format(attribute[n])
-                info_window += '<td style="padding:10px">{0}</td>\n'.format(value[n])
-                info_window += '<td style="padding:10px">{0}</td>\n'.format(units[n])
-                info_window += '<td style="padding:10px">{0}</td>\n'.format(total[n])
+                info_window += '<table border="1" cellspacing="5" cellpadding="5" style="border-collapse:collapse;border:1px solid black;width:100%;">\n'
+                # info_window += '<caption align="left" style="margin-bottom:15px"><span><b>Total Area:</b></span> ' + total_area + ' ha</caption>'
+                info_window += '<thead>\n'
+                info_window += '<tr bgcolor="#CFCFCF">\n'
+                info_window += '<th align="left" style="padding:10px">Attribute</th>\n'
+                info_window += '<th style="padding:10px">Units per Hectare</th>\n'
+                info_window += '<th style="padding:10px">Units</th>\n'
+                info_window += '<th style="padding:10px">Total</th>\n'
                 info_window += '</tr>\n'
+                info_window += '</thead>\n'
+                info_window += '<tbody>\n'
 
-                ts_root_filename = ShelfData.objects.get(attribute_name=attribute[n]).root_filename
-                root_filename.append(ts_root_filename)
+                for n in xrange(len_attr):
+                    if n % 2 == 0:
+                        info_window += '<tr bgcolor="#F5F5F5">\n'
+                    else:
+                        info_window += '<tr>';
 
-            info_window += '</tbody>\n'
-            info_window += '</table>\n'
-            info_window += '</div>'
+                    info_window += '<td align="left" style="padding:10px">{0}</td>\n'.format(attribute[n])
+                    info_window += '<td style="padding:10px">{0}</td>\n'.format(value[n])
+                    info_window += '<td style="padding:10px">{0}</td>\n'.format(units[n])
+                    info_window += '<td style="padding:10px">{0}</td>\n'.format(total[n])
+                    info_window += '</tr>\n'
 
-            # Create KML file for the draw polygon
-            ds = DataSet.objects.get(pk=data_set_id)
-            cur_polygon = createKml(request.user, area_name, info_window, absolute_kml_url, ds)
+                    # ts_root_filename = ShelfData.objects.get(attribute_name=attribute[n]).root_filename
+                    # root_filename.append(ts_root_filename)
 
-            # print '!!!!!!!!! STAT ======================== ', statistic
+                info_window += '</tbody>\n'
+                info_window += '</table>\n'
+                info_window += '</div>'
 
-            for n in xrange(len_attr):
-                if not DataPolygons.objects.filter(user=request.user, data_set=data_set,
-                    customer_polygons=cur_polygon, attribute=attribute[n]).exists():
-                        DataPolygons.objects.create(
-                            user=request.user,
-                            customer_polygons=cur_polygon,
-                            data_set=data_set,
-                            attribute=attribute[n],
-                            statistic=statistic,
-                            value=value[n],
-                            units=units[n],
-                            total=total[n],
-                            total_area=total_area+' ha'
-                        )
-                elif DataPolygons.objects.filter(user=request.user, data_set=data_set,
-                    customer_polygons=cur_polygon, attribute=attribute[n]).exists():
-                        DataPolygons.objects.filter(user=request.user, data_set=data_set,
-                            customer_polygons=cur_polygon, attribute=attribute[n]
-                        ).update(
-                            # attribute=attribute[n],
-                            statistic=statistic,
-                            value=value[n],
-                            units=units[n],
-                            total=total[n],
-                            total_area=total_area+' ha'
-                        )
+                # Create KML file for the draw polygon
+                ds = DataSet.objects.get(pk=data_set_id)
+                cur_polygon = createKml(request.user, area_name, info_window, absolute_kml_url, ds)
 
-            # GET DATA FOR THE TIME SERIES
-            if data_set.is_ts:
-                # file_path_in_coord_tmp,
-                # file_path_out_ts_coord_tmp
-                createTimeSeriesResults(cur_polygon, file_path_in_coord_tmp,
-                                        file_path_out_ts_coord_tmp)
-                # ts_path = os.path.join(PROJECTS_PATH, data_set.results_directory)
+                # print '!!!!!!!!! STAT ======================== ', statistic
 
-                # print '!!!!!!!!!!!!!!! root_filename ======================= ', root_filename
+                for n in xrange(len_attr):
+                    if not DataPolygons.objects.filter(user=request.user, data_set=data_set,
+                        customer_polygons=cur_polygon, attribute=attribute[n]).exists():
+                            DataPolygons.objects.create(
+                                user=request.user,
+                                customer_polygons=cur_polygon,
+                                data_set=data_set,
+                                attribute=attribute[n],
+                                statistic=statistic,
+                                value=value[n],
+                                units=units[n],
+                                total=total[n],
+                                total_area=total_area+' ha'
+                            )
+                    elif DataPolygons.objects.filter(user=request.user, data_set=data_set,
+                        customer_polygons=cur_polygon, attribute=attribute[n]).exists():
+                            DataPolygons.objects.filter(user=request.user, data_set=data_set,
+                                customer_polygons=cur_polygon, attribute=attribute[n]
+                            ).update(
+                                # attribute=attribute[n],
+                                statistic=statistic,
+                                value=value[n],
+                                units=units[n],
+                                total=total[n],
+                                total_area=total_area+' ha'
+                            )
+
+                # GET DATA FOR THE TIME SERIES
+                if data_set.is_ts:
+                    # file_path_in_coord_tmp,
+                    # file_path_out_ts_coord_tmp
+                    createTimeSeriesResults(cur_polygon, file_path_in_coord_tmp,
+                                            file_path_out_ts_coord_tmp)
+                    # ts_path = os.path.join(PROJECTS_PATH, data_set.results_directory)
+
+                    # print '!!!!!!!!!!!!!!! root_filename ======================= ', root_filename
+            except Exception, e:
+                pass
+
+            return HttpResponseRedirect(u'%s?danger_message=%s' % (
+                        reverse('customer_section'),
+                        (u'Please add the GEO data to create Time Series.')))
+                
+            # return redirect('customer_section')
 
         if 'delete_button' in data_post:
             kml_file = data_post.get('delete_button')
@@ -2721,6 +2896,7 @@ def customer_section(request):
                     
             if customer_info_panel_data:
                 cip_choice = customer_info_panel_data[0]
+                data_set = cip_choice.data_set
                 file_tif = cip_choice.tif_path
                 file_png = cip_choice.png_path
                 url_png = cip_choice.url_png
@@ -2731,7 +2907,10 @@ def customer_section(request):
                 
                 # *************** COLOR EACH IMAGES ***************************************************************
                 try:
-                    shelf_data_attr = ShelfData.objects.get(attribute_name=attribute_name)
+                    if data_set.is_ts:
+                        shelf_data_attr = data_set.shelf_data
+                    else:
+                        shelf_data_attr = ShelfData.objects.get(attribute_name=attribute_name)
 
                     if shelf_data_attr.lutfiles:
                         lut_file = shelf_data_attr.lutfiles.lut_file
@@ -2740,7 +2919,13 @@ def customer_section(request):
                         units = shelf_data_attr.lutfiles.units
                         val_scale = shelf_data_attr.lutfiles.val_scale
                         shd_attribute_name = shelf_data_attr.attribute_name
+
                         root_filename = shelf_data_attr.root_filename
+
+                        # if data_set.is_ts:
+                        #     root_filename = shelf_data_attr.root_filename
+                        # else:
+                        #     root_filename = shelf_data_attr.root_filename
 
                         shd_attribute_name = shd_attribute_name.replace(" ", "_")
 
@@ -2796,6 +2981,7 @@ def customer_section(request):
                         new_color_legend = os.path.join(LEGENDS_PATH, legend_name_map)
                         url_legend = '{0}/{1}'.format(absolute_legend_url, legend_name_map)
 
+                        # print '!!!!!!!!! legend_name_map ================== ', legend_name_map
                         # print '!!!!!!!!! old_color_legend ================== ', old_color_legend
                         # print '!!!!!!!!! new_color_legend ================== ', new_color_legend
                         # print 'lut_name ========================= ', lut_name
@@ -2844,9 +3030,10 @@ def customer_section(request):
                     # cip_choice.url_legend = url_legend
                     # cip_choice.save()
 
-                    warning_message = u'The LUT File is not defined! Please specify the file for LUT File \
-                                    "{0}" or exclude LUT File from ShelfData "{1}".'\
-                                    .format(shelf_data_attr.lutfiles, shelf_data_attr)
+                    warning_message = u'The LUT File is not defined! \
+                                        Please specify the LUT File \
+                                        for "{0}" Dataset'\
+                                        .format(data_set)
                 except ShelfData.DoesNotExist, e:
                     print '!!!!!!!!! ERROR ShelfData.DoesNotExist ================== ', e
 
@@ -2874,6 +3061,7 @@ def customer_section(request):
 
                 # Convert tif to png
                 # greyscale
+                
                 try:
                     # print '!!!!!!!!!!!!!!!!! file_tif ================================ ', file_tif
                     # convert tif to png
@@ -2910,7 +3098,7 @@ def customer_section(request):
 
                             time_convert_end = time.time() - time_convert_start
 
-                            print '!!!!!!!! TIME CONVERT =============================== ', time_convert_end
+                            print '!!!!!!!! TIME SCRIPT_TIFPNG CONVERT =============================== ', time_convert_end
 
                             # if not os.path.exists(new_color_legend):
                             #     command_line_copy_legend = 'cp {0} {1}'.format(old_color_legend, new_color_legend)
@@ -2932,8 +3120,9 @@ def customer_section(request):
                             p2 = Popen(['convert', '-', file_png], stdin=proc.stdout)
                             # subprocess.call(command_line_copy_legend, shell=True)
                     else:
-                        warning_message = u'The images "{0}" does not exist!'.\
-                                            format(file_tif)
+                        warning_message = u'The GEO images does not exist! \
+                                            Please set Shelf Data for "{0}" Dataset'\
+                                            .format(data_set)
 
 
                     # print '!!!!!!!!   PNG_PATH =============================== ', PNG_PATH
@@ -3150,7 +3339,10 @@ def customer_section(request):
 
     if attribute_report:
         for ar in attribute_report:
-            show_report_ap.append(ar.shelfdata.attribute_name)
+            if data_set.is_ts:
+                show_report_ap.append(ar.attribute)
+            else:
+                show_report_ap.append(ar.shelfdata.attribute_name)
 
     ts_all = TimeSeriesResults.objects.filter(user=customer, data_set=data_set).order_by('stat_code')
     time_series_show = ts_all.order_by('result_year').distinct('result_year')
@@ -3444,6 +3636,8 @@ def customer_section(request):
         # sub_title_aoi_select = 'France'
         
     cur_ds = DataSet.objects.get(id=data_set_id)
+    dirs_list_ts = []
+    shelf_data_ts = cur_ds.shelf_data
 
     if cur_ds.name_ts:
         # print '!!!!!!!!!!!!!!!! TS NAME ===================================== ', cur_ds.name_ts
@@ -3451,6 +3645,9 @@ def customer_section(request):
     else:
         # print '!!!!!!!!!!!!!!!! DS NAME ===================================== ', cur_ds.name
         ts_title = '"{0}" Time Series diagram'.format(cur_ds.name)
+
+    if cur_ds.is_ts:
+        dirs_list_ts = getTsResultDirectory(cur_ds)
 
     count_ts = request.session['count_ts']
 
@@ -3461,7 +3658,7 @@ def customer_section(request):
 
     # time_series_view = request.session['time_series_view']
     
-    print '!!!!!!!!!!!!!!!! count_ts ===================================== ', count_ts
+    # print '!!!!!!!!!!!!!!!! count_ts ===================================== ', count_ts
     # print '!!!!!!!!!!!!!!!! time_series_list ===================================== ', time_series_list
     # print '!!!!!!!!!!!!!!!! show_aoi_select ===================================== ', show_aoi_select
     # print '!!!!!!!!!!!!!!!! select_diagram ===================================== ', request.session['select_diagram']
@@ -3490,6 +3687,8 @@ def customer_section(request):
         'is_ts': is_ts,
         'time_series_show': time_series_show,
         'count_ts': count_ts,
+        'dirs_list_ts': dirs_list_ts,
+        'shelf_data_ts': shelf_data_ts,
 
         # 'time_series_list': request.session['time_series_list'],
         'time_series_list': time_series_list,
@@ -3571,9 +3770,11 @@ def customer_delete_file(request):
 
             data_set_id = int(data_get_ajax.get('delete_file'))
             data_set = DataSet.objects.get(id=data_set_id)
-            shelf_data = ShelfData.objects.all()
+            # shelf_data = ShelfData.objects.all()
+            is_ts = data_set.is_ts
             data_ajax = ''
             data_ajax_total = ''
+            count = 0
 
             # db_file = False
             # while not db_file:
@@ -3604,11 +3805,24 @@ def customer_delete_file(request):
                 if shelf_data.show_totals:
                     # ha = line[4].replace('\n', ' ha')
                     # ha = '{0}\n'.format(ha)
-                    data_ajax += '{0};{1};{2};{3}'.\
-                                format(shelf_data.attribute_name, line[3], shelf_data.units, line[4])
+                    
+                    if is_ts:
+                        attr_rep = AttributesReport.objects.filter(user=customer, shelfdata=shelf_data)[count]
+                        data_ajax += '{0};{1};{2};{3}'.\
+                                    format(attr_rep.attribute, line[3], shelf_data.units, line[4])
+                    else:
+                        data_ajax += '{0};{1};{2};{3}'.\
+                                    format(shelf_data.attribute_name, line[3], shelf_data.units, line[4])
                 else:
-                    data_ajax += '{0};{1};{2}; - \n'.\
-                                format(shelf_data.attribute_name, line[3], shelf_data.units)
+                    if is_ts:
+                        attr_rep = AttributesReport.objects.filter(user=customer, shelfdata=shelf_data)[count]
+                        data_ajax += '{0};{1};{2}; - \n'.\
+                                    format(attr_rep.attribute, line[3], shelf_data.units)
+                    else:
+                        data_ajax += '{0};{1};{2}; - \n'.\
+                                    format(shelf_data.attribute_name, line[3], shelf_data.units)
+
+                count += 1
 
                 ####################### write log file
                 # customer_delete_f.write('data_ajax: "{0}"\n'.format(data_ajax))

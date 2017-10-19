@@ -17,10 +17,10 @@ class ShelfDataAdmin(admin.ModelAdmin):
 
 
 class DataSetAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'results_directory',
+    list_display = ('name', 'description', 'results_directory', 'shelf_data',
                     'get_attribute_name', 'get_root_filename', 'name_ts', 'is_ts')
-    search_fields = ['name', 'description', 'get_attribute_name', 'name_ts']
-    list_filter = ('name', 'description', 'shelf_data__attribute_name',
+    search_fields = ['name', 'shelf_data', 'description', 'get_attribute_name', 'name_ts']
+    list_filter = ('name', 'shelf_data', 'description', 'shelf_data__attribute_name',
                     'shelf_data__root_filename', 'name_ts',)
 
     def get_attribute_name(self, obj):
@@ -77,9 +77,9 @@ class DataPolygonsAdmin(admin.ModelAdmin):
     
     
 class AttributesReportAdmin(admin.ModelAdmin):
-    list_display = ('user', 'data_set', 'shelfdata', 'statistic')
-    search_fields = ['user', 'data_set', 'shelfdata', 'statistic']
-    list_filter = ('user', 'data_set', 'shelfdata', 'statistic')
+    list_display = ('user', 'data_set', 'shelfdata', 'statistic', 'attribute')
+    search_fields = ['user', 'data_set', 'shelfdata', 'statistic', 'attribute']
+    list_filter = ('user', 'data_set', 'shelfdata', 'statistic', 'attribute')
     
     
 class LutFilesAdmin(admin.ModelAdmin):

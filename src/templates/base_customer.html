@@ -182,9 +182,15 @@
                                                     </div>
 
                                                     <div class="col-md-12 left margin-top-15 view-list" id="view_attribute">
-                                                        {% for dl in dirs_list %}
-                                                            <label class="normal"><input class="margin-bottom-6" name="attribute_viewlist" type="checkbox" value="view_{{ dl.id }}" {% if dl.attribute_name in attribute_list_infopanel %}checked="checked"{% endif %}> {{ dl.attribute_name }}</label><br>
-                                                        {% endfor %}
+                                                        {% if is_ts %}
+                                                            {% for dl in dirs_list_ts %}
+                                                                <label class="normal"><input class="margin-bottom-6" name="attribute_viewlist" type="checkbox" value="view_{{ dl }}" {% if dl in attribute_list_infopanel %}checked="checked"{% endif %}> {{ dl }}</label><br>
+                                                            {% endfor %}
+                                                        {% else %}
+                                                            {% for dl in dirs_list %}
+                                                                <label class="normal"><input class="margin-bottom-6" name="attribute_viewlist" type="checkbox" value="view_{{ dl.id }}" {% if dl.attribute_name in attribute_list_infopanel %}checked="checked"{% endif %}> {{ dl.attribute_name }}</label><br>
+                                                            {% endfor %}
+                                                        {% endif %}
                                                     </div>
 
                                                     <div class="col-md-6 left margin-top-15 snap-bottom-right">
@@ -216,9 +222,15 @@
                                                     </div>
 
                                                     <div class="col-md-12 left margin-top-15 report-list" id="report_attribute">
-                                                        {% for dl in dirs_list%}
-                                                            <label class="normal"><input class="margin-bottom-6" name="viewreport" type="checkbox" value="report_{{ dl.id }}" {% if dl.attribute_name in show_report_ap %}checked="checked"{% endif %}> {{ dl.attribute_name }}</label><br>
-                                                        {% endfor %}
+                                                        {% if is_ts %}
+                                                            {% for dl in dirs_list_ts %}
+                                                                <label class="normal"><input class="margin-bottom-6" name="viewreport" type="checkbox" value="report_{{ dl }}" {% if dl in show_report_ap %}checked="checked"{% endif %}> {{ dl }}</label><br>
+                                                            {% endfor %}
+                                                        {% else %}
+                                                            {% for dl in dirs_list %}
+                                                                <label class="normal"><input class="margin-bottom-6" name="viewreport" type="checkbox" value="report_{{ dl.id }}" {% if dl.attribute_name in show_report_ap %}checked="checked"{% endif %}> {{ dl }}</label><br>
+                                                            {% endfor %}
+                                                        {% endif %}
                                                     </div>
                                                 </div>
                                                 <!-- END REPORT -->
