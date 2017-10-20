@@ -449,17 +449,30 @@ function setPolygon(obj) {
                 // alert('DATA 0: '+data_list[0]);
                 // alert('DATA 1: '+data_list[1]);
                 // alert('DATA 2: '+data_list[2]);
+                
+                console.log('DATA 1: ', data_list[1]);
 
                 // alert('DATA URL: '+data_list[0]);
                 // alert('DATA ID: '+data_list[2]);
                 
                 // When the user clicks on div, open the popup
-                var kml = new google.maps.KmlLayer({
-                    url: data_list[0],
-                    suppressInfoWindows: true,
-                    // suppressInfoWindows: false,
-                    map: map
-                });
+                
+                if (data_list[1] == 'false') {
+                    var kml = new google.maps.KmlLayer({
+                        url: data_list[0],
+                        // suppressInfoWindows: true,
+                        suppressInfoWindows: false,
+                        map: map
+                    });
+                } else {
+                    var kml = new google.maps.KmlLayer({
+                        url: data_list[0],
+                        suppressInfoWindows: true,
+                        // suppressInfoWindows: false,
+                        map: map
+                    });
+                }
+                
 
                 // alert('URL: '+data_list[0]);
 

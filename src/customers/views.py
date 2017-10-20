@@ -2611,8 +2611,13 @@ def customer_section(request):
                 if CustomerPolygons.objects.filter(id=poly_id).exists():
                     select_polygon = CustomerPolygons.objects.get(id=poly_id)
                     polygon_id = 'close_' + str(select_polygon.id)
-                    polygon_text += '<span class="close" id="{0}" onclick="closeIF();">&times;</span>'.format(polygon_id);
-                    polygon_text += str(select_polygon.text_kml)
+                    
+
+                    if select_polygon.text_kml:
+                        polygon_text += '<span class="close" id="{0}" onclick="closeIF();">&times;</span>'.format(polygon_id);
+                        polygon_text += str(select_polygon.text_kml)
+                    else:
+                        polygon_text += 'false'
 
                 # data = os.path.join(absolute_kml_url, polygon)
 
