@@ -421,7 +421,7 @@ function setPolygon(obj) {
     var form_url = $('#customer_section').attr('action');
     var polygon_name = obj.value;
 
-    alert('AOI NAME: '+polygon_name);
+    // alert('AOI NAME: '+polygon_name);
 
     if (checked) {
         // alert('CHECKED: '+checked);
