@@ -423,7 +423,7 @@ function setPolygon(obj) {
     var form_url = $('#customer_section').attr('action');
     var polygon_name = obj.value;
 
-    alert('AOI NAME: '+polygon_name);
+    // alert('AOI NAME: '+polygon_name);
 
     if (checked) {
         // alert('CHECKED: '+checked);
@@ -461,7 +461,7 @@ function setPolygon(obj) {
                     map: map
                 });
 
-                alert('URL: '+data_list[0]);
+                // alert('URL: '+data_list[0]);
 
                 // kml.addListener('click', function(kmlEvent) {
                 //     // alert("KML DATA: "+data);
