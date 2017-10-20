@@ -454,71 +454,71 @@ function setPolygon(obj) {
                 // alert('DATA ID: '+data_list[2]);
                 
                 // When the user clicks on div, open the popup
-                var kml = new google.maps.KmlLayer(data_list[0], {
-                    // url: data_list[0],
-                    // suppressInfoWindows: true,
-                    suppressInfoWindows: false,
+                var kml = new google.maps.KmlLayer({
+                    url: data_list[0],
+                    suppressInfoWindows: true,
+                    // suppressInfoWindows: false,
                     map: map
                 });
 
                 // alert('URL: '+data_list[0]);
 
-                // kml.addListener('click', function(kmlEvent) {
-                //     // alert("KML DATA: "+data);
-                //     console.log("KML DATA: "+data);
+                kml.addListener('click', function(kmlEvent) {
+                    // alert("KML DATA: "+data);
+                    console.log("KML DATA: "+data);
                     
-                //     var msg = data_list[1];
-                //     var info_window_id = kmlEvent.featureData.name;
-                //     close_window_id = data_list[2];
-                //     createDiv(info_window_id, msg);
+                    var msg = data_list[1];
+                    var info_window_id = kmlEvent.featureData.name;
+                    close_window_id = data_list[2];
+                    createDiv(info_window_id, msg);
 
-                //     // alert("KML ID: "+info_window_id);
-                //     // alert("KML featureData: "+kmlEvent.featureData);
-                //     // alert("KML NAME: "+kmlEvent.featureData.name);
-                    
-
-                //     // ***********************************************************************************
-
-                //     // var divNode = document.createElement("div");
-                //     // divNode.setAttribute("class", "popup");
-                //     // divNode.setAttribute("id", "myPopup");
-                //     // divNode.setAttribute("draggable", "true");
-                //     // divNode.innerHTML = 'A <b>different</b> Popup!<br> with multiple lines</span>';
-                //     // document.body.appendChild(divNode);
-
-                //     // var dm = document.getElementById('myPopup'); 
-                //     // dm.addEventListener('dragstart',drag_start,false); 
-                //     // document.body.addEventListener('dragover',drag_over,false); 
-                //     // document.body.addEventListener('drop',drop,false);
-                //     // 
-                //     // ***********************************************************************************
-                    
-                //     var centerX = document.documentElement.clientWidth / 2;
-                //     var centerY = document.documentElement.clientHeight / 2;
-
-                //     // // alert('COORD X: '+centerX);
-                //     // // alert('COORD Y: '+centerY);
-                    
-                //     // alert('EVENT addListener ID: '+info_window_id);
-
-                //     // createDiv(info_window_id);
-
-                //     var dm = document.getElementById(info_window_id);
-                //     // dm.innerHTML = data;
-                //     dm.addEventListener('dragstart', drag_start, false); 
-                //     document.body.addEventListener('dragover', drag_over, false); 
-                //     document.body.addEventListener('drop', drop, false);
+                    // alert("KML ID: "+info_window_id);
+                    // alert("KML featureData: "+kmlEvent.featureData);
+                    // alert("KML NAME: "+kmlEvent.featureData.name);
                     
 
-                //     // document.body.addEventListener('click', close, false);
+                    // ***********************************************************************************
 
-                //     // myFunction(centerX, centerY, data, info_window_id);
-                //     // var insert_text = msg + '<span class="close" id="close">&times;</span>';
-                //     myFunction(centerX, centerY, msg, info_window_id);
-                //     // myFunction(centerX, centerY, data);
-                // });
+                    // var divNode = document.createElement("div");
+                    // divNode.setAttribute("class", "popup");
+                    // divNode.setAttribute("id", "myPopup");
+                    // divNode.setAttribute("draggable", "true");
+                    // divNode.innerHTML = 'A <b>different</b> Popup!<br> with multiple lines</span>';
+                    // document.body.appendChild(divNode);
 
-                // kml.setMap(map);
+                    // var dm = document.getElementById('myPopup'); 
+                    // dm.addEventListener('dragstart',drag_start,false); 
+                    // document.body.addEventListener('dragover',drag_over,false); 
+                    // document.body.addEventListener('drop',drop,false);
+                    // 
+                    // ***********************************************************************************
+                    
+                    var centerX = document.documentElement.clientWidth / 2;
+                    var centerY = document.documentElement.clientHeight / 2;
+
+                    // // alert('COORD X: '+centerX);
+                    // // alert('COORD Y: '+centerY);
+                    
+                    // alert('EVENT addListener ID: '+info_window_id);
+
+                    // createDiv(info_window_id);
+
+                    var dm = document.getElementById(info_window_id);
+                    // dm.innerHTML = data;
+                    dm.addEventListener('dragstart', drag_start, false); 
+                    document.body.addEventListener('dragover', drag_over, false); 
+                    document.body.addEventListener('drop', drop, false);
+                    
+
+                    // document.body.addEventListener('click', close, false);
+
+                    // myFunction(centerX, centerY, data, info_window_id);
+                    // var insert_text = msg + '<span class="close" id="close">&times;</span>';
+                    myFunction(centerX, centerY, msg, info_window_id);
+                    // myFunction(centerX, centerY, data);
+                });
+
+                kml.setMap(map);
             },
         });
         return false;
