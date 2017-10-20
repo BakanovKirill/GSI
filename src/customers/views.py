@@ -2625,7 +2625,7 @@ def customer_section(request):
                 data = select_polygon.kml_url
 
                 # url_kml = 'https://doc-0s-b8-docs.googleusercontent.com/docs/securesc/t2e26pal3cvqhgci00iokqk6s7mn29k8/npdqs37ivknd5no63g2s59sujo7ea4cq/1508486400000/08805881789186013635/08805881789186013635/0B306OTCpD7KOOGpLRmUxMFo0eHc?e=download&gd=true&access_token=ya29.Gl3qBI_oyJOnMvXyhievRlD-Ir3mcdjWDBxVaZUT0ECADsYKqcqLxlljpQVJt5EOspboz53JzNPu_w5XwsEpc19Cy1p-WZTpPPvzyqz3uT465cmw4pyrhQf6fkBaypk'
-                url_kml = 'http://indy4.epcc.ed.ac.uk/media/kml/Scotland.kml'
+                # url_kml = 'http://indy4.epcc.ed.ac.uk/media/kml/Scotland.kml'
                 data = url_kml
                 # print '!!!!!!!!!!!!!!! DATA URL =================== ', data
 
