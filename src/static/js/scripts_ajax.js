@@ -482,9 +482,11 @@ function setPolygon(obj) {
                     
                     var msg = data_list[1];
                     var info_window_id = kmlEvent.featureData.name;
+                    close_window_id = data_list[2];
 
-                    if (data_list[1] != 'false') {
-                        close_window_id = data_list[2];
+                    if (data_list[1] == 'false') {
+                        createDiv(info_window_id);
+                    } else {
                         createDiv(info_window_id, msg);
                     }
                     
