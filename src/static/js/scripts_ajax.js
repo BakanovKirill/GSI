@@ -421,7 +421,7 @@ function setPolygon(obj) {
     var form_url = $('#customer_section').attr('action');
     var polygon_name = obj.value;
 
-    // alert('AOI NAME: '+polygon_name);
+    alert('AOI NAME: '+polygon_name);
 
     if (checked) {
         // alert('CHECKED: '+checked);
@@ -444,6 +444,10 @@ function setPolygon(obj) {
                 // alert('DATA: '+data);
                 var data_list = data.split('$$$');
 
+                // alert('DATA 0: '+data_list[0]);
+                alert('DATA 1: '+data_list[1]);
+                alert('DATA 2: '+data_list[2]);
+
                 // alert('DATA URL: '+data_list[0]);
                 // alert('DATA ID: '+data_list[2]);
                 
@@ -454,15 +458,17 @@ function setPolygon(obj) {
                     map: map
                 });
 
+                alert('URL: '+data_list[0]);
+
                 kml.addListener('click', function(kmlEvent) {
-                    // alert("KML DATA: "+data);
+                    alert("KML DATA: "+data);
                     
                     var msg = data_list[1];
                     var info_window_id = kmlEvent.featureData.name;
                     close_window_id = data_list[2];
                     createDiv(info_window_id, msg);
 
-                    // alert("KML ID: "+info_window_id);
+                    alert("KML ID: "+info_window_id);
                     // alert("KML featureData: "+kmlEvent.featureData);
                     // alert("KML NAME: "+kmlEvent.featureData.name);
                     
