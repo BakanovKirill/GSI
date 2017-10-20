@@ -3420,10 +3420,10 @@ def customer_section(request):
         time_series_list = list(set(time_series_list))
 
         if request.session['select_aoi'] != 0.0001:
-            aoi_ids = request.session['select_aoi']
-            # aoi_ids = [241]
+            # aoi_ids = request.session['select_aoi']
+            aoi_ids = [241]
 
-            # print '!!!!!!!!!!!!!!!!!!! aoi_ids ============================= ', aoi_ids
+            print '!!!!!!!!!!!!!!!!!!! aoi_ids ============================= ', aoi_ids
 
             ts_selected = ts_selected.filter(customer_polygons__in=aoi_ids).order_by(
                                                 'customer_polygons', 'result_year', 'stat_code', 'result_date')
@@ -3651,12 +3651,12 @@ def customer_section(request):
         #     show_aoi += n + ','
 
         # show_aoi = show_aoi[0:-1]
-        show_aoi_select = [d.name for d in CustomerPolygons.objects.filter(id__in=request.session['select_aoi'])]
-        # show_aoi_select = [d.name for d in CustomerPolygons.objects.filter(id__in=[241])]
+        # show_aoi_select = [d.name for d in CustomerPolygons.objects.filter(id__in=request.session['select_aoi'])]
+        show_aoi_select = [d.name for d in CustomerPolygons.objects.filter(id__in=[241])]
         sub_title_aoi_select = (', ').join(show_aoi_select)
 
-        aoi_select = ['{0}_{1}'.format(d.name, d.id) for d in CustomerPolygons.objects.filter(id__in=request.session['select_aoi'])]
-        # aoi_select = ['{0}_{1}'.format(d.name, d.id) for d in CustomerPolygons.objects.filter(id__in=[241])]
+        # aoi_select = ['{0}_{1}'.format(d.name, d.id) for d in CustomerPolygons.objects.filter(id__in=request.session['select_aoi'])]
+        aoi_select = ['{0}_{1}'.format(d.name, d.id) for d in CustomerPolygons.objects.filter(id__in=[241])]
         show_aoi = (',').join(aoi_select)
 
     if not sub_title_aoi_select and ts_subtitle:
