@@ -825,7 +825,7 @@ function sendDataTsToServer(obj) {
         
         aoi_list.push(aoi_tmp[aoi_tmp.length-1]);
 
-        // alert('AOIs: '+aoi_list);
+        alert('AOIs: '+aoi_list);
         console.log('AOIs: ', aoi_list);
     }
 
