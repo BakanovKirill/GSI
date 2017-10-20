@@ -487,6 +487,16 @@ function setPolygon(obj) {
 
                     if (data_list[1] != 'false') {
                         createDiv(info_window_id, msg);
+
+                        var centerX = document.documentElement.clientWidth / 2;
+                        var centerY = document.documentElement.clientHeight / 2;
+
+                        var dm = document.getElementById(info_window_id);
+                        dm.addEventListener('dragstart', drag_start, false); 
+                        document.body.addEventListener('dragover', drag_over, false); 
+                        document.body.addEventListener('drop', drop, false);
+                        
+                        myFunction(centerX, centerY, msg, info_window_id);
                     }
                     
 
@@ -511,8 +521,7 @@ function setPolygon(obj) {
                     // 
                     // ***********************************************************************************
                     
-                    var centerX = document.documentElement.clientWidth / 2;
-                    var centerY = document.documentElement.clientHeight / 2;
+                    
 
                     // // alert('COORD X: '+centerX);
                     // // alert('COORD Y: '+centerY);
@@ -520,20 +529,22 @@ function setPolygon(obj) {
                     // alert('EVENT addListener ID: '+info_window_id);
 
                     // createDiv(info_window_id);
+                    // 
+                    // 
 
-                    var dm = document.getElementById(info_window_id);
-                    // dm.innerHTML = data;
-                    dm.addEventListener('dragstart', drag_start, false); 
-                    document.body.addEventListener('dragover', drag_over, false); 
-                    document.body.addEventListener('drop', drop, false);
+                    // var dm = document.getElementById(info_window_id);
+                    // // dm.innerHTML = data;
+                    // dm.addEventListener('dragstart', drag_start, false); 
+                    // document.body.addEventListener('dragover', drag_over, false); 
+                    // document.body.addEventListener('drop', drop, false);
                     
 
-                    // document.body.addEventListener('click', close, false);
+                    // // document.body.addEventListener('click', close, false);
 
-                    // myFunction(centerX, centerY, data, info_window_id);
-                    // var insert_text = msg + '<span class="close" id="close">&times;</span>';
-                    myFunction(centerX, centerY, msg, info_window_id);
-                    // myFunction(centerX, centerY, data);
+                    // // myFunction(centerX, centerY, data, info_window_id);
+                    // // var insert_text = msg + '<span class="close" id="close">&times;</span>';
+                    // myFunction(centerX, centerY, msg, info_window_id);
+                    // // myFunction(centerX, centerY, data);
                 });
 
                 kml.setMap(map);
