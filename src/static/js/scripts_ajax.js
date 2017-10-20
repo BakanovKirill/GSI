@@ -454,7 +454,7 @@ function setPolygon(obj) {
                 // alert('DATA ID: '+data_list[2]);
                 
                 // When the user clicks on div, open the popup
-                var kml = new google.maps.KmlLayer(url: data_list[0], {
+                var kml = new google.maps.KmlLayer(data_list[0], {
                     // url: data_list[0],
                     // suppressInfoWindows: true,
                     suppressInfoWindows: false,
