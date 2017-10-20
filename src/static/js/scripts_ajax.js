@@ -473,6 +473,7 @@ function setPolygon(obj) {
                     });
                 }
                 
+                console.log('URL: ', data_list[0]);
 
                 // alert('URL: '+data_list[0]);
 
