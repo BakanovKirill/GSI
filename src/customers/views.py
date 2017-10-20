@@ -3890,16 +3890,22 @@ def customer_delete_file(request):
 
 
 def copy_file_kml(old_path, new_path):
+    error = ''
+    doc = ''
     command_line = 'cp {0} {1}'.format(old_path, new_path)
     proc = Popen(command_line, shell=True)
     proc.wait()
 
-    with open(old_path) as f:
-        doc = parser.parse(f)
+    try:
+        with open(old_path) as f:
+            doc = parser.parse(f)
 
-    doc = doc.getroot()
+        doc = doc.getroot()
+    except Exception:
+        error = 'error'
 
-    return doc
+    return doc, error
+
 
 # Lister files
 @login_required
@@ -3944,6 +3950,7 @@ def files_lister(request):
         
         if 'load_button' in data_post:
             if form.is_valid():
+                info_window = ''
                 file_name = str(request.FILES['test_data']).decode('utf-8')
                 path_test_data = os.path.join(path_ftp_user, file_name)
                 name = str(file_name).split('.')[:-1]
@@ -3955,10 +3962,12 @@ def files_lister(request):
                 if ext == 'kml':
                     kml_url = os.path.join(absolute_kml_url, file_name)
                     new_path = os.path.join(KML_PATH, file_name)
-                    doc_kml = copy_file_kml(path_test_data, new_path)
-                    info_window = '<h4 align="center">Name: {0}</h4>\n'.format(doc_kml.Document.Placemark.name)
-                    info_window += '<p align="center"><span><b>Description: {0}</b></span></p>'.format(
-                                        doc_kml.Document.Placemark.description)
+                    doc_kml, error = copy_file_kml(path_test_data, new_path)
+
+                    if not error:
+                        info_window = '<h4 align="center">Name: {0}</h4>\n'.format(doc_kml.Document.Placemark.name)
+                        info_window += '<p align="center"><span><b>Description: {0}</b></span></p>'.format(
+                                            doc_kml.Document.Placemark.description)
 
                     # print '!!!!!!!!!!!! COORDINATE ======================== ', doc_kml.Document.Polygon.outerBoundaryIs.LinearRing.coordinates
 
