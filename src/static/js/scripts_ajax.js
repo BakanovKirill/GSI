@@ -55,6 +55,8 @@ function initCheckCurDeleteItems() {
         var form_modal = $('.form-modal').attr('action');
         var cur_delete = $(this).val();
 
+        // alert('cur_delete: '+cur_delete);
+
         $.ajax({
             url: form_modal,
             type: 'POST',
@@ -468,7 +470,7 @@ function setPolygon(obj) {
                     close_window_id = data_list[2];
                     createDiv(info_window_id, msg);
 
-                    alert("KML ID: "+info_window_id);
+                    // alert("KML ID: "+info_window_id);
                     // alert("KML featureData: "+kmlEvent.featureData);
                     // alert("KML NAME: "+kmlEvent.featureData.name);
                     

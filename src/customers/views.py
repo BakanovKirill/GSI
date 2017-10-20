@@ -2624,6 +2624,9 @@ def customer_section(request):
 
                 data = select_polygon.kml_url
 
+                # url_kml = 'https://doc-0s-b8-docs.googleusercontent.com/docs/securesc/t2e26pal3cvqhgci00iokqk6s7mn29k8/npdqs37ivknd5no63g2s59sujo7ea4cq/1508486400000/08805881789186013635/08805881789186013635/0B306OTCpD7KOOGpLRmUxMFo0eHc?e=download&gd=true&access_token=ya29.Gl3qBI_oyJOnMvXyhievRlD-Ir3mcdjWDBxVaZUT0ECADsYKqcqLxlljpQVJt5EOspboz53JzNPu_w5XwsEpc19Cy1p-WZTpPPvzyqz3uT465cmw4pyrhQf6fkBaypk'
+                url_kml = 'http://indy4.epcc.ed.ac.uk/media/kml/Scotland.kml'
+                data = url_kml
                 # print '!!!!!!!!!!!!!!! DATA URL =================== ', data
 
                 data += '$$$' + polygon_text + '$$$' + str(polygon_id)
@@ -3892,16 +3895,21 @@ def customer_delete_file(request):
 def copy_file_kml(old_path, new_path):
     error = ''
     doc = ''
-    command_line = 'cp {0} {1}'.format(old_path, new_path)
-    proc = Popen(command_line, shell=True)
-    proc.wait()
+    
 
     try:
+        command_line = 'cp {0} {1}'.format(old_path, new_path)
+        proc = Popen(command_line, shell=True)
+        proc.wait()
+
         with open(old_path) as f:
             doc = parser.parse(f)
 
         doc = doc.getroot()
     except Exception:
+        command_line = 'cp {0} {1}'.format(old_path, new_path)
+        proc = Popen(command_line, shell=True)
+        proc.wait()
         error = 'error'
 
     return doc, error
@@ -3929,7 +3937,7 @@ def files_lister(request):
     if request.method == "POST" and request.is_ajax():
         data_post_ajax = request.POST
 
-        # print '!!!!!!!!!!! POST ====================== ', data_post_ajax
+        print '!!!!!!!!!!! AJAX POST ====================== ', data_post_ajax
 
         if 'cur_run_id' in data_post_ajax:
             message = u'Are you sure you want to remove this objects:'
@@ -3953,6 +3961,10 @@ def files_lister(request):
                 info_window = ''
                 file_name = str(request.FILES['test_data']).decode('utf-8')
                 path_test_data = os.path.join(path_ftp_user, file_name)
+
+                if os.path.exists(path_test_data):
+                    os.remove(path_test_data)
+
                 name = str(file_name).split('.')[:-1]
                 ext = str(file_name).split('.')[-1]
 
@@ -3964,10 +3976,13 @@ def files_lister(request):
                     new_path = os.path.join(KML_PATH, file_name)
                     doc_kml, error = copy_file_kml(path_test_data, new_path)
 
-                    if not error:
-                        info_window = '<h4 align="center">Name: {0}</h4>\n'.format(doc_kml.Document.Placemark.name)
-                        info_window += '<p align="center"><span><b>Description: {0}</b></span></p>'.format(
-                                            doc_kml.Document.Placemark.description)
+                    try:
+                        if not error:
+                            info_window = '<h4 align="center">Name: {0}</h4>\n'.format(doc_kml.Document.Placemark.name)
+                            info_window += '<p align="center"><span><b>Description: {0}</b></span></p>'.format(
+                                                doc_kml.Document.Placemark.description)
+                    except Exception:
+                        pass
 
                     # print '!!!!!!!!!!!! COORDINATE ======================== ', doc_kml.Document.Polygon.outerBoundaryIs.LinearRing.coordinates
 
@@ -3977,9 +3992,10 @@ def files_lister(request):
             filename_customer = data_post['delete_button']
             path_filename_ftp = os.path.join(path_ftp_user, filename_customer)
             path_filename_kml = os.path.join(KML_PATH, filename_customer)
-            os.remove(path_filename_ftp)
 
             try:
+                os.remove(path_filename_ftp)
+                
                 if os.path.exists(path_filename_kml):
                     os.remove(path_filename_kml)
                     CustomerPolygons.objects.filter(kml_path=path_filename_kml).delete()
