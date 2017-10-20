@@ -445,8 +445,8 @@ function setPolygon(obj) {
                 var data_list = data.split('$$$');
 
                 // alert('DATA 0: '+data_list[0]);
-                alert('DATA 1: '+data_list[1]);
-                alert('DATA 2: '+data_list[2]);
+                // alert('DATA 1: '+data_list[1]);
+                // alert('DATA 2: '+data_list[2]);
 
                 // alert('DATA URL: '+data_list[0]);
                 // alert('DATA ID: '+data_list[2]);
@@ -458,7 +458,7 @@ function setPolygon(obj) {
                     map: map
                 });
 
-                alert('URL: '+data_list[0]);
+                // alert('URL: '+data_list[0]);
 
                 kml.addListener('click', function(kmlEvent) {
                     alert("KML DATA: "+data);
