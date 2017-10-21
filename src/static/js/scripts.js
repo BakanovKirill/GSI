@@ -421,17 +421,23 @@ function showWaiting() {
     // console.timeEnd('showWaiting: ', count_ts);
 }
 
-function toogleVisibleDrawPlot() {
+function toogleVisibleDrawPlot(obj) {
+    // alert('OBJ: '+obj.val);
+    // var form_url = $('#customer_section').attr('action');
     var is_ts_checked = $('#ts input:checkbox:checked');
 
     if (is_ts_checked.val()) {
         $('#ts input:checkbox:checked').each(function(){
             // alert($(this).val());
             $('#draw_plot').removeAttr('disabled');
+            // window.location.href = form_url;
         });
     } else {
         $('#draw_plot').attr('disabled','disable');
+        // window.location.href = form_url;
     }
+
+
 }
 
 function toogleHidenTsName(obj) {

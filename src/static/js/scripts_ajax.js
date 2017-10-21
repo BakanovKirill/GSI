@@ -855,6 +855,8 @@ function sendDataTsToServer(obj) {
         ts_list.push($(this).val())
     });
 
+    // window.location.href = form_url;
+
     // alert('select_aoi: '+aoi_list);
     // alert('ts_list: '+ts_list);
     // alert('button: '+$(obj).val());
@@ -1018,6 +1020,8 @@ function getZoomGoogleMap(zoom) {
 
 function clearTs() {
     var form_url = $('#customer_section').attr('action');
+    var modal = $('#modalWaitingNormal');
+    modal.modal('show');
 
     $.ajax({
         url: form_url,

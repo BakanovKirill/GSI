@@ -2501,7 +2501,9 @@ def customer_section(request):
             request.session['select_diagram'] = 'line'
             request.session['select_aoi'] = 0.0001
 
-            # print '!!!!!!!!!!!!!! AJAX GET CLEAR ========================= ', time_series_clear
+            print '!!!!!!!!!!!!!! AJAX GET CLEAR ========================= ', time_series_clear
+
+            return HttpResponse(data)
 
         if 'zoom' in data_get_ajax:
             # active_cip = cip.get(is_show=True)
@@ -3085,228 +3087,231 @@ def customer_section(request):
                 # Convert tif to png
                 # greyscale
                 
-                try:
-                    # print '!!!!!!!!!!!!!!!!! file_tif ================================ ', file_tif
-                    # convert tif to png
-                    if os.path.exists(file_tif):
+                # print '!!!!!!!!!!!!!!!!! time_series_clear ================================ ', request.session['time_series_clear']
 
-                        # print '!!!!!!!!!!!!!!!!!!!!! is_lutfile ========================== ', is_lutfile
+                if not request.session['time_series_clear']:
+                    try:
+                        # print '!!!!!!!!!!!!!!!!! file_tif ================================ ', file_tif
+                        # convert tif to png
+                        if os.path.exists(file_tif):
 
-                        # to color
-                        if is_lutfile:
-                            command_line_copy_png = 'cp {0} {1}'.format(old_file_png, new_file_png)
-                            command_line_copy_legend = 'cp {0} {1}'.format(old_color_legend, new_color_legend)
+                            # print '!!!!!!!!!!!!!!!!!!!!! is_lutfile ========================== ', is_lutfile
 
-                            # print '!!!!!!!!   COMMAND LINE =============================== 0 ', command_line
-                            # print '!!!!!!!!   COMMAND LINE PNG =============================== 1 ', command_line_copy_png
-                            # print '!!!!!!!!   COMMAND LINE LEGEND =============================== ', command_line_copy_legend
+                            # to color
+                            if is_lutfile:
+                                command_line_copy_png = 'cp {0} {1}'.format(old_file_png, new_file_png)
+                                command_line_copy_legend = 'cp {0} {1}'.format(old_color_legend, new_color_legend)
 
-                            # os.environ.__setitem__('RF_TRANSPARENT', '0')
-                            
-                            time_convert_start = time.time()
-                            time_convert_end = 0
+                                # print '!!!!!!!!   COMMAND LINE =============================== 0 ', command_line
+                                # print '!!!!!!!!   COMMAND LINE PNG =============================== 1 ', command_line_copy_png
+                                # print '!!!!!!!!   COMMAND LINE LEGEND =============================== ', command_line_copy_legend
 
-                            # print '!!!!!!!! IS CONVERT =============================== ', is_convert_tif_png
+                                # os.environ.__setitem__('RF_TRANSPARENT', '0')
+                                
+                                time_convert_start = time.time()
+                                time_convert_end = 0
 
-                            if not os.path.exists(file_png) or is_convert_tif_png:
-                                # print '!!!!!!!! IS CONVERT =============================== '
-                                proc_script = Popen(command_line, shell=True)
-                                proc_script.wait()
+                                # print '!!!!!!!! IS CONVERT =============================== ', is_convert_tif_png
 
-                                proc_script_png = Popen(command_line_copy_png, shell=True)
-                                proc_script_png.wait()
+                                if not os.path.exists(file_png) or is_convert_tif_png:
+                                    # print '!!!!!!!! IS CONVERT =============================== '
+                                    proc_script = Popen(command_line, shell=True)
+                                    proc_script.wait()
 
-                            proc_script_legend = Popen(command_line_copy_legend, shell=True)
-                            proc_script_legend.wait()
+                                    proc_script_png = Popen(command_line_copy_png, shell=True)
+                                    proc_script_png.wait()
 
-                            time_convert_end = time.time() - time_convert_start
+                                proc_script_legend = Popen(command_line_copy_legend, shell=True)
+                                proc_script_legend.wait()
 
-                            print '!!!!!!!! TIME SCRIPT_TIFPNG CONVERT =============================== ', time_convert_end
+                                time_convert_end = time.time() - time_convert_start
 
-                            # if not os.path.exists(new_color_legend):
-                            #     command_line_copy_legend = 'cp {0} {1}'.format(old_color_legend, new_color_legend)
-                            #     proc_script_legend = Popen(command_line_copy_legend, shell=True)
-                            #     proc_script_legend.wait()
+                                print '!!!!!!!! TIME SCRIPT_TIFPNG CONVERT =============================== ', time_convert_end
 
-                            # proc_script_legend = Popen(command_line_copy_legend, shell=True)
-                            # proc_script_legend.wait()
+                                # if not os.path.exists(new_color_legend):
+                                #     command_line_copy_legend = 'cp {0} {1}'.format(old_color_legend, new_color_legend)
+                                #     proc_script_legend = Popen(command_line_copy_legend, shell=True)
+                                #     proc_script_legend.wait()
 
-                            # subprocess.call(command_line_copy_png, shell=True)
-                            # subprocess.call(command_line_copy_legend, shell=True)
+                                # proc_script_legend = Popen(command_line_copy_legend, shell=True)
+                                # proc_script_legend.wait()
+
+                                # subprocess.call(command_line_copy_png, shell=True)
+                                # subprocess.call(command_line_copy_legend, shell=True)
+                            else:
+                                # command_line_copy_legend = 'cp {0} {1}'.format(old_bw_legend, new_bw_legend)
+                                # 
+                                # print '!!!!!!!!!!!!!!!!!!!!! file_tif ========================== ', file_tif
+                                # print '!!!!!!!!!!!!!!!!!!!!! file_png ========================== ', file_png
+                                # print '!!!!!!!!!!!!!!!!!!!!! 3 file_png ========================== ', file_png
+                                proc = Popen(['cat', file_tif], stdout=PIPE)
+                                p2 = Popen(['convert', '-', file_png], stdin=proc.stdout)
+                                # subprocess.call(command_line_copy_legend, shell=True)
                         else:
-                            # command_line_copy_legend = 'cp {0} {1}'.format(old_bw_legend, new_bw_legend)
-                            # 
-                            # print '!!!!!!!!!!!!!!!!!!!!! file_tif ========================== ', file_tif
-                            # print '!!!!!!!!!!!!!!!!!!!!! file_png ========================== ', file_png
-                            # print '!!!!!!!!!!!!!!!!!!!!! 3 file_png ========================== ', file_png
-                            proc = Popen(['cat', file_tif], stdout=PIPE)
-                            p2 = Popen(['convert', '-', file_png], stdin=proc.stdout)
-                            # subprocess.call(command_line_copy_legend, shell=True)
-                    else:
-                        warning_message = u'The GEO images does not exist! \
-                                            Please set Shelf Data for "{0}" Dataset'\
-                                            .format(data_set)
+                            warning_message = u'The GEO images does not exist! \
+                                                Please set Shelf Data for "{0}" Dataset'\
+                                                .format(data_set)
 
 
-                    # print '!!!!!!!!   PNG_PATH =============================== ', PNG_PATH
-                except Exception, e:
-                    print 'Popen Exception =============================== ', e
+                        # print '!!!!!!!!   PNG_PATH =============================== ', PNG_PATH
+                    except Exception, e:
+                        print 'Popen Exception =============================== ', e
 
-                # get the lat/lon values for a GeoTIFF files
-                try:
-                    # print '!!!!!!!!!! FILE TIF  =============================== ', file_tif
+                    # get the lat/lon values for a GeoTIFF files
+                    try:
+                        # print '!!!!!!!!!! FILE TIF  =============================== ', file_tif
 
-                    ds = gdal.Open(file_tif)
-                    width = ds.RasterXSize
-                    height = ds.RasterYSize
-                    # transform = ds.GetGeoTransform()
+                        ds = gdal.Open(file_tif)
+                        width = ds.RasterXSize
+                        height = ds.RasterYSize
+                        # transform = ds.GetGeoTransform()
 
-                    # print '!!!!!!!!!!!!!!! transform =============================== ', ds.GetGeoTransform()
+                        # print '!!!!!!!!!!!!!!! transform =============================== ', ds.GetGeoTransform()
 
-                    minX, Xres, Xskew, maxY, Yskew, Yres = ds.GetGeoTransform()
-                    
-                    maxX = minX + (ds.RasterXSize * Xres)
-                    minY = maxY + (ds.RasterYSize * Yres)
+                        minX, Xres, Xskew, maxY, Yskew, Yres = ds.GetGeoTransform()
+                        
+                        maxX = minX + (ds.RasterXSize * Xres)
+                        minY = maxY + (ds.RasterYSize * Yres)
 
-                    # print '!!!!!!!!!! WIDTH =============================== ', width
-                    # print '!!!!!!!!!! HIGHT =============================== ', height
+                        # print '!!!!!!!!!! WIDTH =============================== ', width
+                        # print '!!!!!!!!!! HIGHT =============================== ', height
 
-                    # print '!!!!!!!!!! 1 MAX Y =============================== ', maxY
-                    # print '!!!!!!!!!! 1 MAX X =============================== ', maxX
+                        # print '!!!!!!!!!! 1 MAX Y =============================== ', maxY
+                        # print '!!!!!!!!!! 1 MAX X =============================== ', maxX
 
-                    # miny = miny + 15
-                    # minx = minx + 38
+                        # miny = miny + 15
+                        # minx = minx + 38
 
-                    # maxy = maxy - 15
-                    # maxx = maxx - 38
+                        # maxy = maxy - 15
+                        # maxx = maxx - 38
 
-                    # print '!!!!!!!!!! 2 MIN Y =============================== ', miny
-                    # print '!!!!!!!!!! 2 MIN X =============================== ', minx
+                        # print '!!!!!!!!!! 2 MIN Y =============================== ', miny
+                        # print '!!!!!!!!!! 2 MIN X =============================== ', minx
 
-                    # print '!!!!!!!!!! 2 MAX Y =============================== ', maxy
-                    # print '!!!!!!!!!! 2 MAX X =============================== ', maxx
-                    
-                    # # ********************************************************************
+                        # print '!!!!!!!!!! 2 MAX Y =============================== ', maxy
+                        # print '!!!!!!!!!! 2 MAX X =============================== ', maxx
+                        
+                        # # ********************************************************************
 
-                    # p= subprocess.Popen(["gdalinfo", "%s"%file_tif], stdout=subprocess.PIPE)
-                    # out,err= p.communicate()
-                    # ul= out[out.find("Upper Left")+15:out.find("Upper Left")+38]
-                    # lr= out[out.find("Lower Right")+15:out.find("Lower Right")+38]
+                        # p= subprocess.Popen(["gdalinfo", "%s"%file_tif], stdout=subprocess.PIPE)
+                        # out,err= p.communicate()
+                        # ul= out[out.find("Upper Left")+15:out.find("Upper Left")+38]
+                        # lr= out[out.find("Lower Right")+15:out.find("Lower Right")+38]
 
-                    # print '!!!!!!!!!! UL  =============================== ', ul
-                    # print '!!!!!!!!!! LR   =============================== ', lr
-                    # print '!!!!!!!!!! GetGeoTransform =============================== ', gt
-                    # print '!!!!!!!!!! width =============================== ', width
-                    # print '!!!!!!!!!! height =============================== ', height
-                    
-
-                    # minx = transform[0]
-                    # miny = transform[3] + (width * transform[4]) + (height * transform[5])
-                    # maxx = transform[0] + (width * transform[1]) + (height * transform[2])
-                    # maxy = transform[3]
-
-
-                    # minY = -90.0
-                    # minX = -179.9999
-                    # maxY = 90.0
-                    # maxX = 180.0
-                    
-                    # minY = -90.0
-                    # minX = -179.9999
-                    # maxY = 90.0
-                    # maxX = 179.9999
-                    
-                    c_Y = request.session['center_lat']
-                    c_X = request.session['center_lng']
-                    
-                    if (c_Y == 0.001 or c_Y == '0.001') or (c_X == 0.001 or c_X == '0.001'):
-                        centerY = (maxY + minY) / 2
-                        centerX = (maxX + minX) / 2
-                    else:
-                        centerY = c_Y
-                        centerX = c_X
-
-                    # print '!!!!!!!!!!!!!!!! ZOOM =========================== ', request.session['zoom_map']
-                    # print '!!!!!!!!!!!!!!!! ZOOM google_map_zoom =========================== ', google_map_zoom
-                    
-                    # if cip_choice.data_set.name != 'Wheat Demo':
-                    #     google_map_zoom = GOOGLE_MAP_ZOOM
+                        # print '!!!!!!!!!! UL  =============================== ', ul
+                        # print '!!!!!!!!!! LR   =============================== ', lr
+                        # print '!!!!!!!!!! GetGeoTransform =============================== ', gt
+                        # print '!!!!!!!!!! width =============================== ', width
+                        # print '!!!!!!!!!! height =============================== ', height
                         
 
-                    # if cip_choice.data_set.name == 'Wheat Demo':
-                    if minX <= -179.9999:
-                        minX = -179.9999
-                        # minX = -160.0
-                        # maxX = 160.0
-
-                        # minY = -70.0
-                        # maxY = 70.0
-
-                    google_map_zoom = request.session['zoom_map']
-
-                    # if google_map_zoom == '0.001' or google_map_zoom == 0.001:
-                    #     scaleY = minY - centerY
-                    #     scaleX = minX - centerX
-                    #     scaleY = scaleY if scaleY >= 0 else scaleY * -1
-                    #     scaleX = scaleX if scaleX >= 0 else scaleX * -1
-
-                    #     scale = scaleY if scaleY > scaleX else scaleX
-
-                    #     if scale >= 0.965 and scale <= 3:
-                    #         google_map_zoom = 8
-                    #     elif scale >= 0.6 and scale < 0.965:
-                    #         google_map_zoom = 9
-                    #     elif scale >= 0.435 and scale < 0.6:
-                    #         google_map_zoom = 10
-                    #     elif scale >= 0.17 and scale < 0.434:
-                    #         google_map_zoom = 11
-                    #     elif scale >= 0.095 and scale < 0.16:
-                    #         google_map_zoom = 12
-                    #     else:
-                    #         google_map_zoom = 3
+                        # minx = transform[0]
+                        # miny = transform[3] + (width * transform[4]) + (height * transform[5])
+                        # maxx = transform[0] + (width * transform[1]) + (height * transform[2])
+                        # maxy = transform[3]
 
 
-                        # print '!!!!!!!!!! SCALE Y =============================== ', scaleY
-                        # print '!!!!!!!!!! SCALE X =============================== ', scaleX
-                    #     print '!!!!!!!!!! SCALE =============================== ', scale
-                    
-                    # print '!!!!!!!!!!!!!!!! 2 ZOOM google_map_zoom =========================== ', google_map_zoom
+                        # minY = -90.0
+                        # minX = -179.9999
+                        # maxY = 90.0
+                        # maxX = 180.0
+                        
+                        # minY = -90.0
+                        # minX = -179.9999
+                        # maxY = 90.0
+                        # maxX = 179.9999
+                        
+                        c_Y = request.session['center_lat']
+                        c_X = request.session['center_lng']
+                        
+                        if (c_Y == 0.001 or c_Y == '0.001') or (c_X == 0.001 or c_X == '0.001'):
+                            centerY = (maxY + minY) / 2
+                            centerX = (maxX + minX) / 2
+                        else:
+                            centerY = c_Y
+                            centerX = c_X
 
-                    # centerX = 10
-                    # centerY = -10
-                    
-                    # minY = 30.12409
-                    # minX = -85.5001
-                    # maxY = 30.12599
-                    # maxX = -85.4999
+                        # print '!!!!!!!!!!!!!!!! ZOOM =========================== ', request.session['zoom_map']
+                        # print '!!!!!!!!!!!!!!!! ZOOM google_map_zoom =========================== ', google_map_zoom
+                        
+                        # if cip_choice.data_set.name != 'Wheat Demo':
+                        #     google_map_zoom = GOOGLE_MAP_ZOOM
+                            
 
-                    # centerY = 30.125
-                    # centerX = -85.5
+                        # if cip_choice.data_set.name == 'Wheat Demo':
+                        if minX <= -179.9999:
+                            minX = -179.9999
+                            # minX = -160.0
+                            # maxX = 160.0
 
-                    # centerY = (maxY + minY) / 2
-                    # centerX = (maxX + minX) / 2
-                    
-                    cLng = centerX
-                    cLat = centerY
+                            # minY = -70.0
+                            # maxY = 70.0
 
-                    eLat_1 = minY
-                    eLng_1 = minX
-                    eLat_2 = maxY
-                    eLng_2 = maxX
+                        google_map_zoom = request.session['zoom_map']
 
-                    # print '!!!!!!!!!! E centerY =============================== ', centerY
-                    # print '!!!!!!!!!! E centerX =============================== ', centerX
+                        # if google_map_zoom == '0.001' or google_map_zoom == 0.001:
+                        #     scaleY = minY - centerY
+                        #     scaleX = minX - centerX
+                        #     scaleY = scaleY if scaleY >= 0 else scaleY * -1
+                        #     scaleX = scaleX if scaleX >= 0 else scaleX * -1
 
-                    # print '!!!!!!!!!! MIN Y LAT 1 =============================== ', eLat_1
-                    # print '!!!!!!!!!! MIN X LNG 1 =============================== ', eLng_1
-                    # print '!!!!!!!!!! MAX Y LAT 2 =============================== ', eLat_2
-                    # print '!!!!!!!!!! MAX X LNG 2 =============================== ', eLng_2
+                        #     scale = scaleY if scaleY > scaleX else scaleX
 
-                    # print '!!!!!!!!!!!!!!!!! data_set =============================== ', cip_choice.data_set.name
-                    # print '!!!!!!!!!!!!!!!!! google_map_zoom =============================== ', google_map_zoom
+                        #     if scale >= 0.965 and scale <= 3:
+                        #         google_map_zoom = 8
+                        #     elif scale >= 0.6 and scale < 0.965:
+                        #         google_map_zoom = 9
+                        #     elif scale >= 0.435 and scale < 0.6:
+                        #         google_map_zoom = 10
+                        #     elif scale >= 0.17 and scale < 0.434:
+                        #         google_map_zoom = 11
+                        #     elif scale >= 0.095 and scale < 0.16:
+                        #         google_map_zoom = 12
+                        #     else:
+                        #         google_map_zoom = 3
 
-                except AttributeError, e:
-                    print 'GDAL AttributeError =============================== ', e
+
+                            # print '!!!!!!!!!! SCALE Y =============================== ', scaleY
+                            # print '!!!!!!!!!! SCALE X =============================== ', scaleX
+                        #     print '!!!!!!!!!! SCALE =============================== ', scale
+                        
+                        # print '!!!!!!!!!!!!!!!! 2 ZOOM google_map_zoom =========================== ', google_map_zoom
+
+                        # centerX = 10
+                        # centerY = -10
+                        
+                        # minY = 30.12409
+                        # minX = -85.5001
+                        # maxY = 30.12599
+                        # maxX = -85.4999
+
+                        # centerY = 30.125
+                        # centerX = -85.5
+
+                        # centerY = (maxY + minY) / 2
+                        # centerX = (maxX + minX) / 2
+                        
+                        cLng = centerX
+                        cLat = centerY
+
+                        eLat_1 = minY
+                        eLng_1 = minX
+                        eLat_2 = maxY
+                        eLng_2 = maxX
+
+                        # print '!!!!!!!!!! E centerY =============================== ', centerY
+                        # print '!!!!!!!!!! E centerX =============================== ', centerX
+
+                        # print '!!!!!!!!!! MIN Y LAT 1 =============================== ', eLat_1
+                        # print '!!!!!!!!!! MIN X LNG 1 =============================== ', eLng_1
+                        # print '!!!!!!!!!! MAX Y LAT 2 =============================== ', eLat_2
+                        # print '!!!!!!!!!! MAX X LNG 2 =============================== ', eLng_2
+
+                        # print '!!!!!!!!!!!!!!!!! data_set =============================== ', cip_choice.data_set.name
+                        # print '!!!!!!!!!!!!!!!!! google_map_zoom =============================== ', google_map_zoom
+
+                    except AttributeError, e:
+                        print 'GDAL AttributeError =============================== ', e
         except CustomerInfoPanel.DoesNotExist, e:
             print 'CustomerInfoPanel.DoesNotExist =============================== ', e
             warning_message = u'The file "{0}" does not exist. Perhaps the data is outdated. Please refresh the page and try again.'.format(show_file)
@@ -3423,7 +3428,7 @@ def customer_section(request):
             aoi_ids = request.session['select_aoi']
             # aoi_ids = [241]
 
-            print '!!!!!!!!!!!!!!!!!!! aoi_ids ============================= ', aoi_ids
+            # print '!!!!!!!!!!!!!!!!!!! aoi_ids ============================= ', aoi_ids
 
             ts_selected = ts_selected.filter(customer_polygons__in=aoi_ids).order_by(
                                                 'customer_polygons', 'result_year', 'stat_code', 'result_date')
@@ -3603,22 +3608,25 @@ def customer_section(request):
         ts_subtitle = ts_subtitle[0:-2]
     
     # print '!!!!!!!!!!!!!!!!! ELSE ts_selected ========================= '
-    time_series_user = TimeSeriesResults.objects.filter(user=customer, data_set=DataSet.objects.get(id=data_set_id)).order_by(
-                                            'customer_polygons', 'result_year', 'stat_code', 'result_date')
+    year_list = request.session['time_series_list']
+
+    time_series_user = TimeSeriesResults.objects.filter(
+                            user=customer, data_set=DataSet.objects.get(id=data_set_id)).order_by(
+                                'customer_polygons', 'result_year', 'stat_code', 'result_date')
 
     aoi_list = [n.customer_polygons for n in time_series_user]
     aoi_list = list(set(aoi_list))
     is_delete_comma_aoi = False
-
-    # print '!!!!!!!!!!!!!!!! year_list ===================================== ', request.session['time_series_list']
-    year_list = request.session['time_series_list']
+    
     time_series_list = [n.id for n in TimeSeriesResults.objects.filter(
                             user=customer, data_set=DataSet.objects.get(id=data_set_id), result_year__in=year_list)]
     time_series_list = list(set(time_series_list))
 
+    # print '!!!!!!!!!!!!!!!! year_list ===================================== ', request.session['time_series_list']
     # print '!!!!!!!!!!!!!! DataSet 1 ============================== ', DataSet.objects.get(id=data_set_id)
     # print '!!!!!!!!!!!!!! time_series_user 1 ============================== ', time_series_user
     # print '!!!!!!!!!!!!!! ts_subtitle 1 ============================== ', ts_subtitle
+    
     for al in aoi_list:
         # print '!!!!!!!!!!!!!! al.name ============================== ', al.name
         if al.name not in ts_subtitle:
