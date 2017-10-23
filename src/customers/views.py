@@ -3915,7 +3915,7 @@ def customer_delete_file(request):
 
                 # return HttpResponse(data)
             except Exception:
-                error = 'Please set the points to draw a polygon'
+                error = 'Please set the points to draw a AOI'
 
             return HttpResponse(json.dumps({'data_aoi': data_ajax_total, 'static': select_static, 'error': error}))
 
