@@ -25,7 +25,7 @@
                         </div>
 
                         <div class="col-md-3">
-                            <select class="selectpicker" multiple title="None" id="select_aoi" name="select-aoi" onchange="selectedAoi()">
+                            <select class="selectpicker" multiple title="AOIs" id="select_aoi" name="select-aoi" onchange="selectedAoi()">
                                 {% for aoi in aoi_list %}
                                     <option value="{{ aoi.name}}_{{ aoi.id}}">{{ aoi }}</option>
                                 {% endfor %}
@@ -35,7 +35,7 @@
                 </div>
 
                 <div class="col-md-1 left">
-                    <button type="button" name="draw-plot" id="draw_plot" class="btn btn-primary btn-block margin-bottom-6" value="draw_plot" onclick="sendDataTsToServer(this);" disabled="disabled" data-toggle="tooltip" data-placement="top" title="To start viewing the graphs, you need to select one or several years in the menu on the left">
+                    <button type="button" name="draw-plot" id="draw_plot" class="btn btn-primary btn-block margin-bottom-6" value="draw_plot" onclick="sendDataTsToServer(this);" disabled="disabled" data-toggle="tooltip" data-placement="top" title="To draw a graph, please select year(s) and AOI(s)">
                         Draw Plot
                     </button>
                 </div>
@@ -55,9 +55,9 @@
                 <div class="row margin-top-20 ">
                     <div class="col-md-3 left">
                         <button type="button" class="btn btn-default" onclick="appliedMarkers();"><img class="img-draw" id="ap_marker" src="{% static 'img/map-marker-plus.png' %}" alt="hand" title="Applied Markers" class="area-draw"></button>
-                        <button type="button" class="btn btn-default" onclick="drawPoligon();"><img class="img-draw" src="{% static 'img/vector-polygon.png' %}" alt="vector polygon" title="Draw a Poligon" class="area-draw"></button>
-                        <button type="button" class="btn btn-default" onclick="removePoligon();"><img class="img-draw" src="{% static 'img/map-marker-off.png' %}" alt="hand" title="Remove Poligon" class="area-draw"></button>
-                        <button type="button" class="btn btn-default" onclick="togglePlygonOverlays();"><img class="img-draw" src="{% static 'img/eye-off.png' %}" alt="hide/show" title="Hide/Show a Poligon" class="area-draw"></button>
+                        <button type="button" id="draw_aoi" class="btn btn-default" disabled="disabled" onclick="drawPoligon();"><img class="img-draw" src="{% static 'img/vector-polygon.png' %}" alt="vector polygon" title="Draw a Poligon" class="area-draw"></button>
+                        <button type="button" id="remove_aoi" class="btn btn-default" disabled="disabled" onclick="removePoligon();"><img class="img-draw" src="{% static 'img/map-marker-off.png' %}" alt="hand" title="Remove Poligon" class="area-draw"></button>
+                        <button type="button" id="hide_aoi" class="btn btn-default" disabled="disabled" onclick="togglePlygonOverlays();"><img class="img-draw" src="{% static 'img/eye-off.png' %}" alt="hide/show" title="Hide/Show a Poligon" class="area-draw"></button>
                     </div>
 
                     <div class="col-md-3 center">
@@ -703,6 +703,10 @@
                 // alert('select_image: '+select_image);
 
                 if (select_image) {
+                    $('#draw_aoi').removeAttr('disabled');
+                    $('#remove_aoi').removeAttr('disabled');
+                    $('#hide_aoi').removeAttr('disabled');
+
                     // alert('select_infopanel: NO: '+select_infopanel);
                     overlay.addListener('click', function(e) {
                         placeMarkerAndPanTo(e.latLng.lat(), e.latLng.lng());

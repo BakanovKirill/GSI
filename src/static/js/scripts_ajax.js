@@ -747,9 +747,18 @@ function deleteFile(ds) {
             var obj_status = status;
             var data_aoi = data['data_aoi'];
             var stat = data['static'];
+            var error = data['error'];
+
+            if (error) {
+                alert(error);
+                var modal = $('#modalWaiting');
+                modal.modal('hide');
+            } else {
+                getPolygon(data_aoi, stat);
+            }
             
             // setTimeout(getTmpCSV, 100, data_aoi, stat);
-            getPolygon(data_aoi, stat);
+            // getPolygon(data_aoi, stat);
         },
     });
 }
@@ -847,7 +856,7 @@ function sendDataTsToServer(obj) {
     // });
 
     console.log('YEAR: ', select_year);
-    // alert('YEAR: '+select_year);
+    console.log('AOIs: ', aoi_list);
 
     $('#ts input:checkbox:checked').each(function(){
         // alert($(this).val());

@@ -315,8 +315,9 @@ function selectAllCheck(field, flag) {
     }
 
     var is_ts_checked = $('#ts input:checkbox:checked');
+    var list_aoi = $('#select_aoi').val();
 
-    if (is_ts_checked.val()) {
+    if (is_ts_checked.val() && list_aoi) {
         $('#ts input:checkbox:checked').each(function(){
             // alert($(this).val());
             $('#draw_plot').removeAttr('disabled');
@@ -425,8 +426,9 @@ function toogleVisibleDrawPlot(obj) {
     // alert('OBJ: '+obj.val);
     // var form_url = $('#customer_section').attr('action');
     var is_ts_checked = $('#ts input:checkbox:checked');
+    var list_aoi = $('#select_aoi').val();
 
-    if (is_ts_checked.val()) {
+    if (is_ts_checked.val() && list_aoi) {
         $('#ts input:checkbox:checked').each(function(){
             // alert($(this).val());
             $('#draw_plot').removeAttr('disabled');
@@ -436,8 +438,6 @@ function toogleVisibleDrawPlot(obj) {
         $('#draw_plot').attr('disabled','disable');
         // window.location.href = form_url;
     }
-
-
 }
 
 function toogleHidenTsName(obj) {
@@ -483,16 +483,28 @@ function selectAoi() {
 }
 
 function selectedAoi() {
+    var list_aoi = '';
+    var select_aoi = $('#select_aoi').val();
+    var is_ts_checked = $('#ts input:checkbox:checked');
+
+    if (is_ts_checked.val() && select_aoi) {
+        $('#ts input:checkbox:checked').each(function(){
+            // alert($(this).val());
+            $('#draw_plot').removeAttr('disabled');
+        });
+    } else {
+        $('#draw_plot').attr('disabled','disable');
+    }
+
     if ($('#select_aoi').val()) {
         console.log('YES');
-        var list_aoi = $('#select_aoi').val();
+        list_aoi = $('#select_aoi').val();
         var start_title = '';
 
         for (var m = 0; m < list_aoi.length; m++) {
             console.log('list_aoi: ', list_aoi[m]);
 
             var aoi_tmp = list_aoi[m].split('_');
-            
             start_title += aoi_tmp[0] + ', ';
         }
 

@@ -1409,7 +1409,12 @@ def createCustomerInfoPanel(customer, data_set, shelf_data, stat_file, absolute_
     tif_path, png_path, url_png, warning_message = get_parameters_customer_info_panel(data_set,
                                     shelf_data, stat_file, absolute_png_url, is_ts)
 
-    # print '!!!!!!!!!!!!! stat_file =================== ', stat_file
+    # print '!!!!!!!!!!!!! tif_path =================== ', tif_path
+    # print '!!!!!!!!!!!!! file_area_name =================== ', file_area_name
+    # print '!!!!!!!!!!!!! tif_path =================== ', tif_path
+    # print '!!!!!!!!!!!!! png_path =================== ', png_path
+    # print '!!!!!!!!!!!!! url_png =================== ', url_png
+    # print '!!!!!!!!!!!!! warning_message =================== ', warning_message
 
     info_panel = CustomerInfoPanel.objects.create(
                     user=customer,
@@ -2020,6 +2025,12 @@ def customer_section(request):
 
     # time_series_list = ''
     
+    if tab_active != 'ts':
+        request.session['time_series_clear'] = False
+        request.session['select_aoi'] = 0.0001
+        request.session['time_series_list'] = ''
+        
+    
 
     # print '!!!!!!!!!!!!!!!!!!!! data_set_id ==================== ', data_set_id
     # print '!!!!!!!!!!!!!!!!!!!! data_set ==================== ', data_sets[0]
@@ -2224,7 +2235,7 @@ def customer_section(request):
                     request.session['select_diagram'] = data_post_ajax['select_diagram']
 
                 if 'select_aoi[]' in data_post_ajax:
-                    # print '!!!!!!!!!!!!! select_aoi[] ========================== ', data_post_ajax.getlist('select_aoi[]')
+                    print '!!!!!!!!!!!!! select_aoi[] ========================== ', data_post_ajax.getlist('select_aoi[]')
                     request.session['select_aoi'] = data_post_ajax.getlist('select_aoi[]')
                 else:
                     # print '!!!!!!!!!!!!! NO select_aoi[] ========================== '
@@ -2521,6 +2532,7 @@ def customer_section(request):
             request.session['center_lat'] = 0.001
             request.session['center_lng'] = 0.001
             request.session['select_aoi'] = 0.0001
+            request.session['time_series_clear'] = False
 
             request.session['tab_active'] = 'view'
             # request.session['time_series_view'] = False
@@ -3087,7 +3099,7 @@ def customer_section(request):
                 # Convert tif to png
                 # greyscale
                 
-                # print '!!!!!!!!!!!!!!!!! time_series_clear ================================ ', request.session['time_series_clear']
+                print '!!!!!!!!!!!!!!!!! time_series_clear ================================ ', request.session['time_series_clear']
 
                 if not request.session['time_series_clear']:
                     try:
@@ -3433,7 +3445,7 @@ def customer_section(request):
             ts_selected = ts_selected.filter(customer_polygons__in=aoi_ids).order_by(
                                                 'customer_polygons', 'result_year', 'stat_code', 'result_date')
 
-        # print '!!!!!!!!!!!!! ts_selected ======================== ', ts_selected
+        print '!!!!!!!!!!!!! ts_selected ======================== ', ts_selected
         # print '!!!!!!!!!!!!! AOI ======================== ', request.session['select_aoi']
 
         # for ts in request.session['time_series_list']:
@@ -3650,6 +3662,8 @@ def customer_section(request):
         time_series_view = True
     else:
         time_series_view = False
+        request.session['time_series_clear'] = False
+        time_series_list = []
 
     show_aoi = ''
     sub_title_aoi_select = ''
@@ -3811,7 +3825,9 @@ def customer_delete_file(request):
             is_ts = data_set.is_ts
             data_ajax = ''
             data_ajax_total = ''
+            select_static = ''
             count = 0
+            error = ''
 
             # db_file = False
             # while not db_file:
@@ -3824,80 +3840,84 @@ def customer_delete_file(request):
             #     print '!!!!!!!!!! ERROR OPEN DB FILE ======================= ', e
             #     pass
 
-            f_db = open(db_file_path)
-
-            for l in f_db:
-                line = l.split('$$$')
-
-                ####################### write log file
-                customer_delete_f.write('LINE: "{0}"\n'.format(line))
-                ####################### write log file
-                
-                # print '!!!!!!!!!!!! LINE ============================= ', line
-
-                shd_id = line[0]
-                shelf_data = ShelfData.objects.get(id=shd_id)
-                data_ajax_total = '{0}_'.format(line[2])
-
-                if shelf_data.show_totals:
-                    # ha = line[4].replace('\n', ' ha')
-                    # ha = '{0}\n'.format(ha)
-                    
-                    if is_ts:
-                        attr_rep = AttributesReport.objects.filter(user=customer, shelfdata=shelf_data)[count]
-                        data_ajax += '{0};{1};{2};{3}'.\
-                                    format(attr_rep.attribute, line[3], shelf_data.units, line[4])
-                    else:
-                        data_ajax += '{0};{1};{2};{3}'.\
-                                    format(shelf_data.attribute_name, line[3], shelf_data.units, line[4])
-                else:
-                    if is_ts:
-                        attr_rep = AttributesReport.objects.filter(user=customer, shelfdata=shelf_data)[count]
-                        data_ajax += '{0};{1};{2}; - \n'.\
-                                    format(attr_rep.attribute, line[3], shelf_data.units)
-                    else:
-                        data_ajax += '{0};{1};{2}; - \n'.\
-                                    format(shelf_data.attribute_name, line[3], shelf_data.units)
-
-                count += 1
-
-                ####################### write log file
-                # customer_delete_f.write('data_ajax: "{0}"\n'.format(data_ajax))
-                ####################### write log file
-
-            data_ajax = data_ajax.replace('\n', '_')
-            data_ajax_total += data_ajax[0:-1]
-
-            # print ('!!!!!!!!!!! data_ajax ===================== '), data_ajax
-            # print ('!!!!!!!!!!! data_ajax_total ===================== '), data_ajax_total
-
-            # time.sleep(10)
-            f_db.close()
-
             try:
-                os.remove(db_file_path)
-            except Exception, e:
-                pass
+                f_db = open(db_file_path)
 
-            
+                for l in f_db:
+                    line = l.split('$$$')
 
-            ####################### write log file
-            # customer_delete_f.write('1 DATA AJAX EXISTS: "{0}"\n'.format(os.path.exists(ajax_file_path)))
-            customer_delete_f.write('DATA AJAX END: "{0}"\n\n\n'.format(data_ajax))
-            customer_delete_f.write('DATA AJAX TOTAL: "{0}"\n'.format(data_ajax_total))
-            ####################### write log file
+                    ####################### write log file
+                    customer_delete_f.write('LINE: "{0}"\n'.format(line))
+                    ####################### write log file
+                    
+                    # print '!!!!!!!!!!!! LINE ============================= ', line
 
-            cips = CustomerInfoPanel.objects.filter(user=customer)
-            select_static = cips[0].statistic
-            # data = data_ajax
-            # file_for_db =
+                    shd_id = line[0]
+                    shelf_data = ShelfData.objects.get(id=shd_id)
+                    data_ajax_total = '{0}_'.format(line[2])
 
-            # print 'DATA data_ajax_total ======================= ', data_ajax_total
-            # print 'DATA delete_file ======================= ', delete_file
-            # print 'DATA select_static ======================= ', select_static
+                    if shelf_data.show_totals:
+                        # ha = line[4].replace('\n', ' ha')
+                        # ha = '{0}\n'.format(ha)
+                        
+                        if is_ts:
+                            attr_rep = AttributesReport.objects.filter(user=customer, shelfdata=shelf_data)[count]
+                            data_ajax += '{0};{1};{2};{3}'.\
+                                        format(attr_rep.attribute, line[3], shelf_data.units, line[4])
+                        else:
+                            data_ajax += '{0};{1};{2};{3}'.\
+                                        format(shelf_data.attribute_name, line[3], shelf_data.units, line[4])
+                    else:
+                        if is_ts:
+                            attr_rep = AttributesReport.objects.filter(user=customer, shelfdata=shelf_data)[count]
+                            data_ajax += '{0};{1};{2}; - \n'.\
+                                        format(attr_rep.attribute, line[3], shelf_data.units)
+                        else:
+                            data_ajax += '{0};{1};{2}; - \n'.\
+                                        format(shelf_data.attribute_name, line[3], shelf_data.units)
 
-            # return HttpResponse(data)
-            return HttpResponse(json.dumps({'data_aoi': data_ajax_total, 'static': select_static}))
+                    count += 1
+
+                    ####################### write log file
+                    # customer_delete_f.write('data_ajax: "{0}"\n'.format(data_ajax))
+                    ####################### write log file
+
+                data_ajax = data_ajax.replace('\n', '_')
+                data_ajax_total += data_ajax[0:-1]
+
+                # print ('!!!!!!!!!!! data_ajax ===================== '), data_ajax
+                # print ('!!!!!!!!!!! data_ajax_total ===================== '), data_ajax_total
+
+                # time.sleep(10)
+                f_db.close()
+
+                try:
+                    os.remove(db_file_path)
+                except Exception, e:
+                    pass
+
+                
+
+                ####################### write log file
+                # customer_delete_f.write('1 DATA AJAX EXISTS: "{0}"\n'.format(os.path.exists(ajax_file_path)))
+                customer_delete_f.write('DATA AJAX END: "{0}"\n\n\n'.format(data_ajax))
+                customer_delete_f.write('DATA AJAX TOTAL: "{0}"\n'.format(data_ajax_total))
+                ####################### write log file
+
+                cips = CustomerInfoPanel.objects.filter(user=customer)
+                select_static = cips[0].statistic
+                # data = data_ajax
+                # file_for_db =
+
+                # print 'DATA data_ajax_total ======================= ', data_ajax_total
+                # print 'DATA delete_file ======================= ', delete_file
+                # print 'DATA select_static ======================= ', select_static
+
+                # return HttpResponse(data)
+            except Exception:
+                error = 'Please set the points to draw a polygon'
+
+            return HttpResponse(json.dumps({'data_aoi': data_ajax_total, 'static': select_static, 'error': error}))
 
     data = {
         'title': title,
