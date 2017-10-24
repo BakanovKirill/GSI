@@ -498,13 +498,21 @@
                     var east = ne.lng();
                     var angle = east - west;
 
-                    if (angle < 0) {
+                    if (angle <= 0) {
                         angle += 360;
                     }
+
+                    console.log('GOOGLE_MAP angle: ', angle);
+
                     var curent_zoom = Math.round(Math.log(1024 * 360 / angle / GLOBE_WIDTH) / Math.LN2);
                 }
 
                 console.log('GOOGLE_MAP_ZOOM after: ', curent_zoom);
+
+                console.log('GOOGLE_MAP eLat_1: ', {{ eLat_1 }});
+                console.log('GOOGLE_MAP eLng_1: ', {{ eLng_1 }});
+                console.log('GOOGLE_MAP eLat_2: ', {{ eLat_2 }});
+                console.log('GOOGLE_MAP eLng_2: ', {{ eLng_2 }});
                 
                 // END SET ZOOM
                 

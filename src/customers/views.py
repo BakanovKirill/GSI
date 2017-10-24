@@ -16,7 +16,7 @@ import csv
 from pykml import parser
 
 import numpy as np
-
+import requests
 
 # import pykml
 # from pykml import parser
@@ -1329,7 +1329,7 @@ def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute
     # year_dir = shelf_data.root_filename
     sub_dir = SUB_DIRECTORIES[stat_file]
 
-    # print '!!!!!!!!!!!!! is_ts ========================= ', is_ts
+    print '!!!!!!!!!!!!! is_ts ========================= ', is_ts
     # print '!!!!!!!!!!!!! attribute_name ========================= ', attribute_name
 
     if is_ts:
@@ -1343,6 +1343,8 @@ def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute
             # ts_directory = os.path.join(PROJECTS_PATH, results_directory, root_filename, sub_dir)
             pr_root, pr_dirs, pr_files = os.walk(project_directory).next()
             pr_dirs.sort()
+
+            # print '!!!!!!!!!!!!! attribute_name ========================= ', attribute_name
 
             # print '!!!!!!!!!!!!!!!! project_directory ============================= ', project_directory
             # print '!!!!!!!!!!!!!!!! pr_dirs ============================= ', pr_dirs
@@ -1409,12 +1411,13 @@ def createCustomerInfoPanel(customer, data_set, shelf_data, stat_file, absolute_
     tif_path, png_path, url_png, warning_message = get_parameters_customer_info_panel(data_set,
                                     shelf_data, stat_file, absolute_png_url, is_ts)
 
-    # print '!!!!!!!!!!!!! tif_path =================== ', tif_path
-    # print '!!!!!!!!!!!!! file_area_name =================== ', file_area_name
-    # print '!!!!!!!!!!!!! tif_path =================== ', tif_path
-    # print '!!!!!!!!!!!!! png_path =================== ', png_path
-    # print '!!!!!!!!!!!!! url_png =================== ', url_png
-    # print '!!!!!!!!!!!!! warning_message =================== ', warning_message
+    print '!!!!!!!!!!!!! attribute_name =================== ', attribute_name
+    print '!!!!!!!!!!!!! tif_path =================== ', tif_path
+    print '!!!!!!!!!!!!! file_area_name =================== ', file_area_name
+    print '!!!!!!!!!!!!! tif_path =================== ', tif_path
+    print '!!!!!!!!!!!!! png_path =================== ', png_path
+    print '!!!!!!!!!!!!! url_png =================== ', url_png
+    print '!!!!!!!!!!!!! warning_message =================== ', warning_message
 
     info_panel = CustomerInfoPanel.objects.create(
                     user=customer,
@@ -1519,6 +1522,9 @@ def getTsResultDirectory(dataset):
         project_directory = os.path.join(PROJECTS_PATH, dataset.results_directory)
         root, dirs, files = os.walk(project_directory).next()
         dirs.sort()
+
+        # print '!!!!!!!!!!!! project_directory ======================= ', project_directory
+        # print '!!!!!!!!!!!! DIRS ======================= ', dirs
 
         for d in dirs:
             name = '{0} {1}'.format(shelf_data, d)
@@ -2586,7 +2592,7 @@ def customer_section(request):
                 else:
                     dirs_list = getTsResultDirectory(data_set)
 
-                # print '!!!!!!!!!!!!!!!!!!!! DIRRR LISTTT ============================ ', dirs_list
+                print '!!!!!!!!!!!!!!!!!!!! DIRRR LISTTT ============================ ', dirs_list
 
                 if dirs_list:
                     info_panel = createCustomerInfoPanel(
@@ -3100,6 +3106,7 @@ def customer_section(request):
                 # greyscale
                 
                 print '!!!!!!!!!!!!!!!!! time_series_clear ================================ ', request.session['time_series_clear']
+                print '!!!!!!!!!!!!!!!!! file_tif ================================ ', file_tif
 
                 if not request.session['time_series_clear']:
                     try:
@@ -3191,17 +3198,11 @@ def customer_section(request):
                         # print '!!!!!!!!!! 1 MAX Y =============================== ', maxY
                         # print '!!!!!!!!!! 1 MAX X =============================== ', maxX
 
-                        # miny = miny + 15
-                        # minx = minx + 38
+                        # print '!!!!!!!!!! 2 MIN Y =============================== ', minY
+                        # print '!!!!!!!!!! 2 MIN X =============================== ', minX
 
-                        # maxy = maxy - 15
-                        # maxx = maxx - 38
-
-                        # print '!!!!!!!!!! 2 MIN Y =============================== ', miny
-                        # print '!!!!!!!!!! 2 MIN X =============================== ', minx
-
-                        # print '!!!!!!!!!! 2 MAX Y =============================== ', maxy
-                        # print '!!!!!!!!!! 2 MAX X =============================== ', maxx
+                        # print '!!!!!!!!!! 2 MAX Y =============================== ', maxY
+                        # print '!!!!!!!!!! 2 MAX X =============================== ', maxX
                         
                         # # ********************************************************************
 
@@ -3311,13 +3312,22 @@ def customer_section(request):
                         eLat_2 = maxY
                         eLng_2 = maxX
 
-                        # print '!!!!!!!!!! E centerY =============================== ', centerY
-                        # print '!!!!!!!!!! E centerX =============================== ', centerX
+                        if (cLat > 180 or cLat < -180) or (cLng > 180 or cLng < -180):
+                            url = "http://maps.googleapis.com/maps/api/geocode/json?latlng={0},{1}\
+                                    &sensor=false&language=en".format(cLat, cLng)
+                            req = str(requests.get(url))
 
-                        # print '!!!!!!!!!! MIN Y LAT 1 =============================== ', eLat_1
-                        # print '!!!!!!!!!! MIN X LNG 1 =============================== ', eLng_1
-                        # print '!!!!!!!!!! MAX Y LAT 2 =============================== ', eLat_2
-                        # print '!!!!!!!!!! MAX X LNG 2 =============================== ', eLng_2
+                            if '400' in req:
+                                cLat = 0
+                                cLng = 0
+
+                        print '!!!!!!!!!! E centerY =============================== ', cLat
+                        print '!!!!!!!!!! E centerX =============================== ', cLng
+
+                        print '!!!!!!!!!! MIN Y LAT 1 =============================== ', eLat_1
+                        print '!!!!!!!!!! MIN X LNG 1 =============================== ', eLng_1
+                        print '!!!!!!!!!! MAX Y LAT 2 =============================== ', eLat_2
+                        print '!!!!!!!!!! MAX X LNG 2 =============================== ', eLng_2
 
                         # print '!!!!!!!!!!!!!!!!! data_set =============================== ', cip_choice.data_set.name
                         # print '!!!!!!!!!!!!!!!!! google_map_zoom =============================== ', google_map_zoom
@@ -3701,6 +3711,9 @@ def customer_section(request):
         dirs_list_ts = getTsResultDirectory(cur_ds)
 
     count_ts = request.session['count_ts']
+
+    # if google_map_zoom == 0.001:
+    #     google_map_zoom = 1
 
 
     # time_series_list = ''
