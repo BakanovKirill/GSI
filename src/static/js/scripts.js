@@ -334,13 +334,14 @@ function setStatic() {
     });
 }
 
-function getFileName() {
-    $('input[type="file"]').on('change', function (event, files, label) {
-        var file_name = document.getElementById('id_test_data').files[0].name;
-        $('span.file-selected').text(file_name);
-        // alert('FILE 2: '+span_obj);
-    });
-}
+// function getFileName() {
+//     // alert('getFileName');
+//     $('input[type="file"]').on('change', function (event, files, label) {
+//         var file_name = document.getElementById('id_test_data').files[0].name;
+//         $('span.file-selected').text(file_name);
+//         // alert('FILE 2: '+file_name);
+//     });
+// }
 
 function toggleScale() {
     var scale = document.getElementById('scale_id');
@@ -564,7 +565,7 @@ $(document).ready(function(){
     setStatic();
     // get_file_name();
     toogleVisibleDrawPlot();
-    getFileName();
+    // getFileName();
 
     if (select_aoi) {
         selectAoi();
