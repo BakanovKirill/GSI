@@ -2993,7 +2993,7 @@ def customer_section(request):
                                 if 'MAX' in n:
                                     line = n.split(' : ')
                                     max_val = line[-1]
-                                    # print '!!!!!!!!!!!!!!!!!!!!!!! OUT MAX ======================= ', line[-1]
+                                    print '!!!!!!!!!!!!!!!!!!!!!!! OUT MAX ======================= ', line[-1]
 
                         # Command Line
                         # TifPng <InpTiff> <LUTfile> [<MaxVal>] [<Legend>] [<Units>] [<ValScale>]

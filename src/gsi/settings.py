@@ -320,7 +320,7 @@ SCRIPT_TIFPNG = os.path.join(BASE_DIR, "static/scripts_c/TifPng")
 SCRIPT_GETPOLYINFO = os.path.join(BASE_DIR, "static/scripts_c/GetPolyInfo")
 
 # Script GetPolyInfo
-SCRIPT_MAXSIZE = os.path.join(BASE_DIR, "static/scripts_c/msize")
+SCRIPT_MAXSIZE = os.path.join(BASE_DIR, "static/scripts_c/msize.sh")
 
 # KML files
 KML_DIRECTORY = 'media/kml'
