@@ -563,7 +563,6 @@ $(document).ready(function(){
     setImageInfoPanel();
     resizeScreen();
     setStatic();
-    // get_file_name();
     toogleVisibleDrawPlot();
     // getFileName();
 

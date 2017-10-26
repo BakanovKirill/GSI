@@ -2631,7 +2631,8 @@ def customer_section(request):
                 if CustomerPolygons.objects.filter(id=poly_id).exists():
                     select_polygon = CustomerPolygons.objects.get(id=poly_id)
                     polygon_id = 'close_' + str(select_polygon.id)
-                    
+
+                    # print '!!!!!!!!!!!!!!! NAME ===================== ', select_polygon.name
 
                     if select_polygon.text_kml:
                         polygon_text += '<span class="close" id="{0}" onclick="closeIF();">&times;</span>'.format(polygon_id);

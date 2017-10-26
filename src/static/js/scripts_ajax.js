@@ -474,17 +474,19 @@ function setPolygon(obj) {
                 }
                 
                 console.log('URL: ', data_list[0]);
+                console.log('DATA LIST 11: ', data_list[1]);
 
-                // alert('URL: '+data_list[0]);
+                // alert('URL: '+data_list[1]);
 
                 kml.addListener('click', function(kmlEvent) {
                     // alert("KML DATA: "+data);
-                    console.log("KML DATA: "+data);
-                    console.log("KML MSG: "+msg);
                     
                     var msg = data_list[1];
                     var info_window_id = kmlEvent.featureData.name;
                     close_window_id = data_list[2];
+
+                    console.log("KML DATA: "+data);
+                    console.log("KML MSG: "+msg);
 
                     if (data_list[1] != 'false') {
                         createDiv(info_window_id, msg);
