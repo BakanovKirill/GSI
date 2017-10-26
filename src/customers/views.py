@@ -54,7 +54,7 @@ from gsi.settings import (BASE_DIR, RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM,
                         DAFAULT_LON, PNG_DIRECTORY, PNG_PATH, PROJECTS_PATH,
                         KML_DIRECTORY, KML_PATH, ATTRIBUTES_NAME, FTP_PATH,
                         LUT_DIRECTORY, SCRIPT_TIFPNG, SCRIPT_GETPOLYINFO,
-                        LEGENDS_DIRECTORY, LEGENDS_PATH)
+                        LEGENDS_DIRECTORY, LEGENDS_PATH, SCRIPT_MAXSIZE)
 from gsi.gsi_forms import UploadFileForm
 
 
@@ -1329,7 +1329,7 @@ def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute
     # year_dir = shelf_data.root_filename
     sub_dir = SUB_DIRECTORIES[stat_file]
 
-    print '!!!!!!!!!!!!! is_ts ========================= ', is_ts
+    # print '!!!!!!!!!!!!! is_ts ========================= ', is_ts
     # print '!!!!!!!!!!!!! attribute_name ========================= ', attribute_name
 
     if is_ts:
@@ -1411,13 +1411,13 @@ def createCustomerInfoPanel(customer, data_set, shelf_data, stat_file, absolute_
     tif_path, png_path, url_png, warning_message = get_parameters_customer_info_panel(data_set,
                                     shelf_data, stat_file, absolute_png_url, is_ts)
 
-    print '!!!!!!!!!!!!! attribute_name =================== ', attribute_name
-    print '!!!!!!!!!!!!! tif_path =================== ', tif_path
-    print '!!!!!!!!!!!!! file_area_name =================== ', file_area_name
-    print '!!!!!!!!!!!!! tif_path =================== ', tif_path
-    print '!!!!!!!!!!!!! png_path =================== ', png_path
-    print '!!!!!!!!!!!!! url_png =================== ', url_png
-    print '!!!!!!!!!!!!! warning_message =================== ', warning_message
+    # print '!!!!!!!!!!!!! attribute_name =================== ', attribute_name
+    # print '!!!!!!!!!!!!! tif_path =================== ', tif_path
+    # print '!!!!!!!!!!!!! file_area_name =================== ', file_area_name
+    # print '!!!!!!!!!!!!! tif_path =================== ', tif_path
+    # print '!!!!!!!!!!!!! png_path =================== ', png_path
+    # print '!!!!!!!!!!!!! url_png =================== ', url_png
+    # print '!!!!!!!!!!!!! warning_message =================== ', warning_message
 
     info_panel = CustomerInfoPanel.objects.create(
                     user=customer,
@@ -2981,6 +2981,20 @@ def customer_section(request):
                         tif_png_script = SCRIPT_TIFPNG
                         lut_file = os.path.join(LUT_DIRECTORY, lut_file)
 
+                        max_size_command = '{0} {1}'.format(SCRIPT_MAXSIZE, file_tif)
+
+                        if os.path.exists(file_tif):
+                            out, err = Popen(max_size_command, shell=True, stdout=PIPE).communicate()
+                            out = out.split('\n')
+
+                            # print '!!!!!!!!!!!!!!!!!!!!!!! OUT ALL: ', out
+
+                            for n in out:
+                                if 'MAX' in n:
+                                    line = n.split(' : ')
+                                    max_val = line[-1]
+                                    # print '!!!!!!!!!!!!!!!!!!!!!!! OUT MAX ======================= ', line[-1]
+
                         # Command Line
                         # TifPng <InpTiff> <LUTfile> [<MaxVal>] [<Legend>] [<Units>] [<ValScale>]
 
@@ -2992,7 +3006,7 @@ def customer_section(request):
                         command_line += '"' + str(units) + '"' + ' '
                         command_line += str(val_scale)
 
-                        # print 'LUT COMMAND NAME ========================= ', command_line
+                        # print '!!!!!!!!!!!!!!!!!!! LUT COMMAND NAME ========================= ', command_line
                         
                         ####################### write log file
                         customer_section.write('COMMAND LINE: {0}\n'.format(command_line))
@@ -3105,8 +3119,8 @@ def customer_section(request):
                 # Convert tif to png
                 # greyscale
                 
-                print '!!!!!!!!!!!!!!!!! time_series_clear ================================ ', request.session['time_series_clear']
-                print '!!!!!!!!!!!!!!!!! file_tif ================================ ', file_tif
+                # print '!!!!!!!!!!!!!!!!! time_series_clear ================================ ', request.session['time_series_clear']
+                # print '!!!!!!!!!!!!!!!!! file_tif ================================ ', file_tif
 
                 if not request.session['time_series_clear']:
                     try:
@@ -3321,13 +3335,13 @@ def customer_section(request):
                                 cLat = 0
                                 cLng = 0
 
-                        print '!!!!!!!!!! E centerY =============================== ', cLat
-                        print '!!!!!!!!!! E centerX =============================== ', cLng
+                        # print '!!!!!!!!!! E centerY =============================== ', cLat
+                        # print '!!!!!!!!!! E centerX =============================== ', cLng
 
-                        print '!!!!!!!!!! MIN Y LAT 1 =============================== ', eLat_1
-                        print '!!!!!!!!!! MIN X LNG 1 =============================== ', eLng_1
-                        print '!!!!!!!!!! MAX Y LAT 2 =============================== ', eLat_2
-                        print '!!!!!!!!!! MAX X LNG 2 =============================== ', eLng_2
+                        # print '!!!!!!!!!! MIN Y LAT 1 =============================== ', eLat_1
+                        # print '!!!!!!!!!! MIN X LNG 1 =============================== ', eLng_1
+                        # print '!!!!!!!!!! MAX Y LAT 2 =============================== ', eLat_2
+                        # print '!!!!!!!!!! MAX X LNG 2 =============================== ', eLng_2
 
                         # print '!!!!!!!!!!!!!!!!! data_set =============================== ', cip_choice.data_set.name
                         # print '!!!!!!!!!!!!!!!!! google_map_zoom =============================== ', google_map_zoom
