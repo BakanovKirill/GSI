@@ -14,7 +14,8 @@ from datetime import datetime, date, timedelta
 import json
 import csv
 from pykml import parser
-
+from pykml.parser import Schema
+from lxml import html
 import numpy as np
 import requests
 
@@ -3962,24 +3963,69 @@ def customer_delete_file(request):
 def copy_file_kml(old_path, new_path):
     error = ''
     doc = ''
-    
 
     try:
-        command_line = 'cp {0} {1}'.format(old_path, new_path)
-        proc = Popen(command_line, shell=True)
-        proc.wait()
-
         with open(old_path) as f:
-            doc = parser.parse(f)
+            doc = parser.parse(f).getroot()
 
-        doc = doc.getroot()
-    except Exception:
+        error = validation_kml(doc, old_path)
+
+        print '!!!!!!!!!!!!!!! 1 ERROR copy_file_kml =================== ', error
+
+        if error:
+            if os.path.exists(old_path):
+                os.remove(old_path)
+            return doc, error
+
+        print '!!!!!!!!!!!!!!! 2 ERROR copy_file_kml =================== ', error
+
         command_line = 'cp {0} {1}'.format(old_path, new_path)
         proc = Popen(command_line, shell=True)
         proc.wait()
-        error = 'error'
+    except Exception, e:
+        print '!!!!!!!!!!!!!!! ERROR copy_file_kml =================== ', e
+        # command_line = 'cp {0} {1}'.format(old_path, new_path)
+        # proc = Popen(command_line, shell=True)
+        # proc.wait()
+        # error = str(e)
 
     return doc, error
+
+
+def validation_kml(kml_name, kml_path):
+    error_msg = ''
+    file_name = kml_path.split('/')[-1]
+    file_size = os.path.getsize(kml_path)
+    xml = html.parse(kml_path)
+
+    xml_extendeddata = len(xml.xpath("//extendeddata")) / 2
+    xml_coordinates = len(xml.xpath("//coordinates")) / 2
+    xml_point = len(xml.xpath("//point")) / 2
+    xml_polygon = len(xml.xpath("//polygon")) / 2
+    xml_placemark = len(xml.xpath("//placemark")) / 2
+
+    if file_size >= 10000000:
+        error_msg = 'Error!! An error occurred while loading the file "{0}". \
+                    The file size is more than 10Mb'.format(file_name)
+        return error_msg
+
+    if xml_extendeddata >= 1000 or xml_coordinates >= 1000 \
+        or xml_point >= 1000 or xml_polygon >= 1000 or xml_placemark >= 1000:
+
+        error_msg = 'Error!! An error occurred while loading the file "{0}". \
+                    The file has more than 1000 objects'.format(file_name)
+        return error_msg
+
+    try:
+        schema_ogc = Schema("ogckml22.xsd")
+        schema_gx = Schema("kml22gx.xsd")
+
+        schema_ogc.assertValid(kml_name)
+        schema_ogc.assertValid(kml_name)
+    except Exception, e:
+        return str(e)
+
+    return error_msg
 
 
 # Lister files
@@ -4004,7 +4050,7 @@ def files_lister(request):
     if request.method == "POST" and request.is_ajax():
         data_post_ajax = request.POST
 
-        print '!!!!!!!!!!! AJAX POST ====================== ', data_post_ajax
+        # print '!!!!!!!!!!! AJAX POST ====================== ', data_post_ajax
 
         if 'cur_run_id' in data_post_ajax:
             message = u'Are you sure you want to remove this objects:'
@@ -4043,12 +4089,20 @@ def files_lister(request):
                     new_path = os.path.join(KML_PATH, file_name)
                     doc_kml, error = copy_file_kml(path_test_data, new_path)
 
+                    if error:
+                        print '!!!!!!!!!!!!!!! ERROR  ===================== ', error
+
+                        return HttpResponseRedirect(u'%s?warning_message=%s' % (
+                                reverse('files_lister'),
+                                (u'{0}'.format(error))))
+
                     try:
                         if not error:
                             info_window = '<h4 align="center">Name: {0}</h4>\n'.format(doc_kml.Document.Placemark.name)
                             info_window += '<p align="center"><span><b>Description: {0}</b></span></p>'.format(
                                                 doc_kml.Document.Placemark.description)
-                    except Exception:
+                    except Exception, e:
+                        print '!!!!!!!!!!!!!!! ERROR COPY KML ===================== ', e
                         pass
 
                     # print '!!!!!!!!!!!! COORDINATE ======================== ', doc_kml.Document.Polygon.outerBoundaryIs.LinearRing.coordinates
