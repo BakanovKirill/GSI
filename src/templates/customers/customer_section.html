@@ -54,10 +54,13 @@
                 <!-- Draw Menu -->
                 <div class="row margin-top-20 ">
                     <div class="col-md-3 left">
-                        <button type="button" class="btn btn-default" onclick="appliedMarkers();"><img class="img-draw" id="ap_marker" src="{% static 'img/map-marker-plus.png' %}" alt="hand" title="Applied Markers" class="area-draw"></button>
-                        <button type="button" id="draw_aoi" class="btn btn-default" disabled="disabled" onclick="drawPoligon();"><img class="img-draw" src="{% static 'img/vector-polygon.png' %}" alt="vector polygon" title="Draw a Poligon" class="area-draw"></button>
-                        <button type="button" id="remove_aoi" class="btn btn-default" disabled="disabled" onclick="removePoligon();"><img class="img-draw" src="{% static 'img/map-marker-off.png' %}" alt="hand" title="Remove Poligon" class="area-draw"></button>
-                        <button type="button" id="hide_aoi" class="btn btn-default" disabled="disabled" onclick="togglePlygonOverlays();"><img class="img-draw" src="{% static 'img/eye-off.png' %}" alt="hide/show" title="Hide/Show a Poligon" class="area-draw"></button>
+                        <button type="button" class="btn btn-default" onclick="appliedMarkers();" data-toggle="tooltip" data-placement="top" title="Markers add"><img class="img-draw" id="ap_marker" src="{% static 'img/map-marker-plus.png' %}" alt="hand" title="Add Markers" class="area-draw"></button>
+
+                        <button type="button" id="draw_aoi" class="btn btn-default" disabled="disabled" onclick="drawPoligon();" data-toggle="tooltip" data-placement="top" title="Create AOI"><img class="img-draw" src="{% static 'img/shape-polygon-plus.png' %}" alt="vector polygon" title="Draw a Poligon" class="area-draw"></button>
+
+                        <button type="button" id="remove_aoi" class="btn btn-default" disabled="disabled" onclick="removePoligon();" data-toggle="tooltip" data-placement="top" title="Delete AOI"><img class="img-draw" src="{% static 'img/polygon-delete.png' %}" alt="hand" title="Remove Poligon" class="area-draw"></button>
+
+                        <button type="button" id="hide_aoi" class="btn btn-default" disabled="disabled" onclick="togglePlygonOverlays();" data-toggle="tooltip" data-placement="top" title="Hide/Show AOI"><img class="img-draw" src="{% static 'img/eye-off.png' %}" alt="hide/show" title="Hide/Show a Poligon" class="area-draw"></button>
                     </div>
 
                     <div class="col-md-3 center">
