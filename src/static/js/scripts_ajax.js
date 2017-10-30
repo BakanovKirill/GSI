@@ -474,7 +474,7 @@ function setPolygon(obj) {
                 }
                 
                 console.log('URL: ', data_list[0]);
-                console.log('DATA LIST 11: ', data_list[1]);
+                // console.log('DATA LIST 11: ', data_list[1]);
 
                 // alert('URL: '+data_list[1]);
 
