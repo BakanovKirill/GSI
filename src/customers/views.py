@@ -1464,7 +1464,7 @@ def createKml(user, filename, info_window, url, data_set, count_color):
     # pol.style.balloonstyle.bgcolor = simplekml.Color.lightgreen
     pol.style.balloonstyle.bgcolor = simplekml.Color.hex(COLOR_KML[count_color])
     # pol.style.balloonstyle.textcolor = simplekml.Color.hex(COLOR_KML[count_color])
-    # pol.style.balloonstyle.textcolor = simplekml.Color.hex('#283890')
+    pol.style.balloonstyle.textcolor = simplekml.Color.hex('#283890')
 
     kml_path = os.path.join(KML_PATH, kml_filename)
     kml.save(kml_path)
