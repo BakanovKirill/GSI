@@ -485,7 +485,7 @@ function setPolygon(obj) {
                     var info_window_id = kmlEvent.featureData.name;
                     close_window_id = data_list[2];
 
-                    console.log("KML DATA: "+data);
+                    // console.log("KML DATA: "+data);
                     console.log("KML MSG: "+msg);
 
                     if (data_list[1] != 'false') {
