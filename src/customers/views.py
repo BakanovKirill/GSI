@@ -55,7 +55,7 @@ from gsi.settings import (BASE_DIR, RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM,
                         DAFAULT_LON, PNG_DIRECTORY, PNG_PATH, PROJECTS_PATH,
                         KML_DIRECTORY, KML_PATH, ATTRIBUTES_NAME, FTP_PATH,
                         LUT_DIRECTORY, SCRIPT_TIFPNG, SCRIPT_GETPOLYINFO,
-                        LEGENDS_DIRECTORY, LEGENDS_PATH, SCRIPT_MAXSIZE)
+                        LEGENDS_DIRECTORY, LEGENDS_PATH, SCRIPT_MAXSIZE, ATTRIBUTE_CONFIG)
 from gsi.gsi_forms import UploadFileForm
 
 
@@ -2942,11 +2942,15 @@ def customer_section(request):
             if customer_info_panel_data:
                 cip_choice = customer_info_panel_data[0]
                 data_set = cip_choice.data_set
+                dataset_root = data_set.results_directory
                 file_tif = cip_choice.tif_path
                 file_png = cip_choice.png_path
                 url_png = cip_choice.url_png
                 file_area_name = cip_choice.file_area_name
                 attribute_name = cip_choice.attribute_name
+
+                project_root_path = os.path.join(PROJECTS_PATH, dataset_root)
+                attr_dict = {}
 
                 # print '!!!!!!!!!!!! FILE TIF =========================== ', file_tif
                 
@@ -2962,8 +2966,32 @@ def customer_section(request):
                         max_val = shelf_data_attr.lutfiles.max_val
                         legend = shelf_data_attr.lutfiles.legend
                         units = shelf_data_attr.lutfiles.units
-                        val_scale = shelf_data_attr.lutfiles.val_scale
                         shd_attribute_name = shelf_data_attr.attribute_name
+
+                        if os.path.exists(project_root_path):
+                            root, dirs, files = os.walk(project_root_path).next()
+                            files.sort()
+
+                            for f in files:
+                                if f in ATTRIBUTE_CONFIG:
+                                    f_path = os.path.join(project_root_path, f)
+                                    fl = open(f_path)
+                                    
+                                    for line in fl.readlines():
+                                        # print (line)
+                                        line_tmp = line.split()
+                                        attr_dict[line_tmp[0]] = line_tmp[1]
+
+                        # print '!!!!!!!!!!!!!!!!!! attr_dict ======================= ', attr_dict
+
+                        if attr_dict:
+                            val_scale = attr_dict[shelf_data_attr.root_filename]
+                        else:
+                            val_scale = shelf_data_attr.lutfiles.val_scale
+
+                        # val_scale = shelf_data_attr.lutfiles.val_scale
+
+                        # print '!!!!!!!!!!!!!!!!!! val_scale ======================= ', val_scale
 
                         root_filename = shelf_data_attr.root_filename
 

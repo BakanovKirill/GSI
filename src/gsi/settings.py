@@ -322,6 +322,9 @@ SCRIPT_GETPOLYINFO = os.path.join(BASE_DIR, "static/scripts_c/GetPolyInfo")
 # Script GetPolyInfo
 SCRIPT_MAXSIZE = os.path.join(BASE_DIR, "static/scripts_c/msize.sh")
 
+# ATTRIBUTE_CONFIG
+ATTRIBUTE_CONFIG = ['ATTRIBUTE_CONFIG.txt']
+
 # KML files
 KML_DIRECTORY = 'media/kml'
 KML_PATH = os.path.join(BASE_DIR, KML_DIRECTORY)
