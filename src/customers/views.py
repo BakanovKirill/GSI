@@ -1457,14 +1457,14 @@ def createKml(user, filename, info_window, url, data_set, count_color):
     pol.outerboundaryis.coords = coord
     pol.style.linestyle.color = simplekml.Color.hex('#ffffff')
     pol.style.linestyle.width = 5
-    pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex('#8bc53f'))
-    # pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex(COLOR_KML[count_color]))
+    # pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex('#8bc53f'))
+    pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex(COLOR_KML[count_color]))
 
     pol.style.balloonstyle.text = info_window
     # pol.style.balloonstyle.bgcolor = simplekml.Color.lightgreen
     pol.style.balloonstyle.bgcolor = simplekml.Color.hex(COLOR_KML[count_color])
-    # pol.style.balloonstyle.textcolor = simplekml.Color.hex(COLOR_KML[count_color])
-    pol.style.balloonstyle.textcolor = simplekml.Color.hex('#283890')
+    pol.style.balloonstyle.textcolor = simplekml.Color.hex(COLOR_KML[count_color])
+    # pol.style.balloonstyle.textcolor = simplekml.Color.hex('#283890')
 
     kml_path = os.path.join(KML_PATH, kml_filename)
     kml.save(kml_path)
