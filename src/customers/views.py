@@ -54,8 +54,8 @@ from gsi.settings import (BASE_DIR, RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM,
                         POLYGONS_DIRECTORY, MEDIA_ROOT, TMP_PATH, DAFAULT_LAT,
                         DAFAULT_LON, PNG_DIRECTORY, PNG_PATH, PROJECTS_PATH,
                         KML_DIRECTORY, KML_PATH, ATTRIBUTES_NAME, FTP_PATH,
-                        LUT_DIRECTORY, SCRIPT_TIFPNG, SCRIPT_GETPOLYINFO,
-                        LEGENDS_DIRECTORY, LEGENDS_PATH, SCRIPT_MAXSIZE, ATTRIBUTE_CONFIG)
+                        LUT_DIRECTORY, SCRIPT_TIFPNG, SCRIPT_GETPOLYINFO, LEGENDS_DIRECTORY,
+                        LEGENDS_PATH, SCRIPT_MAXSIZE, ATTRIBUTE_CONFIG, COLOR_KML)
 from gsi.gsi_forms import UploadFileForm
 
 
@@ -76,7 +76,6 @@ SUB_DIRECTORIES_REVERCE = {
     'LQ': 'mean_LowerQuartile',
     'UQ': 'mean_Quantile',
 }
-
 
 # categorys list
 @user_passes_test(lambda u: u.is_superuser)
@@ -1437,14 +1436,19 @@ def createCustomerInfoPanel(customer, data_set, shelf_data, stat_file, absolute_
     return info_panel, warning_message
 
 
-def createKml(user, filename, info_window, url, data_set):
+def createKml(user, filename, info_window, url, data_set, count_color):
     # Create KML file for the draw polygon
+    
+    
     kml_filename = str(filename) + '.kml'
     tmp_file = str(user) + '_coord_kml.txt'
     tmp_path = os.path.join(TMP_PATH, tmp_file)
     coord = getGeoCoord(tmp_path)
     kml_url = url + '/' + kml_filename
 
+    # print '!!!!!!!!!!! LAST COUNT AOI ======================== ', cip_last_id
+    # print '!!!!!!!!!!! LAST ID COUNT AOI ======================== ', cip_last_id.id
+    # print '!!!!!!!!!!! %%%%%%%% ======================== ', count_color
     # print '!!!!!!!!!!! filename ======================== ', filename
     # print '!!!!!!!!!!! COORD ======================== ', coord
 
@@ -1456,11 +1460,14 @@ def createKml(user, filename, info_window, url, data_set):
     pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex('#8bc53f'))
 
     pol.style.balloonstyle.text = info_window
-    pol.style.balloonstyle.bgcolor = simplekml.Color.lightgreen
+    # pol.style.balloonstyle.bgcolor = simplekml.Color.lightgreen
+    pol.style.balloonstyle.bgcolor = simplekml.Color.hex(COLOR_KML[count_color])
     pol.style.balloonstyle.textcolor = simplekml.Color.hex('#283890')
 
     kml_path = os.path.join(KML_PATH, kml_filename)
     kml.save(kml_path)
+
+    # count += 1
 
     polygon = addPolygonToDB(filename, kml_filename, user, kml_path, kml_url, data_set, info_window)
 
@@ -1823,6 +1830,7 @@ def customer_section(request):
     # PNG_DIRECTORY = 'media/png'
     # PNG_PATH = os.path.join(BASE_DIR, PNG_DIRECTORY)
     # PROJECTS_PATH = '/lustre/w23/mattgsi/satdata/RF/Projects'
+    
 
     ####################### write log file
     log_file = '/home/gsi/LOGS/customer_section.log'
@@ -2643,13 +2651,13 @@ def customer_section(request):
 
                 # data = os.path.join(absolute_kml_url, polygon)
 
-                # if request.get_host() == '127.0.0.1:8000':
-                #     data = 'http://indy4.epcc.ed.ac.uk/media/kml/tree-count-1.kml'
-                # else:
-                #     # data = os.path.join(absolute_kml_url, select_polygon)
-                #     data = select_polygon.kml_url
+                if request.get_host() == '127.0.0.1:8000':
+                    data = 'http://indy4.epcc.ed.ac.uk/media/kml/tree-count-1.kml'
+                else:
+                    # data = os.path.join(absolute_kml_url, select_polygon)
+                    data = select_polygon.kml_url
 
-                data = select_polygon.kml_url
+                # data = select_polygon.kml_url
 
                 # url_kml = 'https://doc-0s-b8-docs.googleusercontent.com/docs/securesc/t2e26pal3cvqhgci00iokqk6s7mn29k8/npdqs37ivknd5no63g2s59sujo7ea4cq/1508486400000/08805881789186013635/08805881789186013635/0B306OTCpD7KOOGpLRmUxMFo0eHc?e=download&gd=true&access_token=ya29.Gl3qBI_oyJOnMvXyhievRlD-Ir3mcdjWDBxVaZUT0ECADsYKqcqLxlljpQVJt5EOspboz53JzNPu_w5XwsEpc19Cy1p-WZTpPPvzyqz3uT465cmw4pyrhQf6fkBaypk'
                 # url_kml = 'http://indy4.epcc.ed.ac.uk/media/kml/Scotland.kml'
@@ -2703,6 +2711,12 @@ def customer_section(request):
             # print '!!!!!!!!!!!!! SAVE AREA ========================='
 
             try:
+                cip_last_id = CustomerPolygons.objects.all().last()
+                count_color = cip_last_id.id % 40
+
+                if count_color > 39:
+                    count_color = 0
+
                 data_kml = data_post.lists()
                 area_name = ''
                 total_area = ''
@@ -2739,7 +2753,7 @@ def customer_section(request):
 
                 len_attr = len(attribute)
                 
-                info_window = '<h4 align="center">Attribute report: {0}</h4>\n'.format(area_name)
+                info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(COLOR_KML[count_color], area_name)
                 info_window += '<p align="center"><span><b>Total Area:</b></span> ' + total_area + ' ha</p>';
 
                 if statistic:
@@ -2786,7 +2800,8 @@ def customer_section(request):
 
                 # Create KML file for the draw polygon
                 ds = DataSet.objects.get(pk=data_set_id)
-                cur_polygon = createKml(request.user, area_name, info_window, absolute_kml_url, ds)
+
+                cur_polygon = createKml(request.user, area_name, info_window, absolute_kml_url, ds, count_color)
 
                 # print '!!!!!!!!! STAT ======================== ', statistic
 
@@ -2827,7 +2842,7 @@ def customer_section(request):
 
                     # print '!!!!!!!!!!!!!!! root_filename ======================= ', root_filename
             except Exception, e:
-                pass
+                print '!!!!!!!!!!!!!!!!!!!! ERROR GEO =========================== ', e
 
                 return HttpResponseRedirect(u'%s?danger_message=%s' % (
                             reverse('customer_section'),
@@ -3499,7 +3514,7 @@ def customer_section(request):
             ts_selected = ts_selected.filter(customer_polygons__in=aoi_ids).order_by(
                                                 'customer_polygons', 'result_year', 'stat_code', 'result_date')
 
-        print '!!!!!!!!!!!!! ts_selected ======================== ', ts_selected
+        # print '!!!!!!!!!!!!! ts_selected ======================== ', ts_selected
         # print '!!!!!!!!!!!!! AOI ======================== ', request.session['select_aoi']
 
         # for ts in request.session['time_series_list']:
