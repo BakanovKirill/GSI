@@ -8,7 +8,7 @@ from PIL import Image
 from subprocess import check_call, Popen, PIPE
 from osgeo import osr, gdal, ogr
 import simplekml
-from simplekml import Kml
+from simplekml import Kml, ColorMode, AltitudeMode, Style
 import pickle
 from datetime import datetime, date, timedelta
 import json
@@ -1459,7 +1459,8 @@ def createKml(user, filename, info_window, url, data_set, count_color):
     pol.style.linestyle.width = 5
     # pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex('#8bc53f'))
     # pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex(COLOR_KML[count_color]))
-    pol.style.polystyle.color = simplekml.Color.red
+    pol.style.polystyle.colormode = ColorMode.random
+    pol.style.polystyle.color = COLOR_KML[count_color]
 
     pol.style.balloonstyle.text = info_window
     # pol.style.balloonstyle.bgcolor = simplekml.Color.lightgreen
