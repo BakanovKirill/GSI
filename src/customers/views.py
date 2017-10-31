@@ -1839,7 +1839,7 @@ def customer_section(request):
 
     ####################### write log file
     log_file = '/home/gsi/LOGS/customer_section.log'
-    customer_section = open(log_file, 'w')
+    customer_section = open(log_file, 'w+')
     now = datetime.now()
     customer_section.write('DATE: {0}\n'.format(str(now)))
     customer_section.write('USER: {0}\n'.format(str(request.user)))
