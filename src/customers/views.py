@@ -1849,13 +1849,15 @@ def customer_section(request):
     timer_script = open(log_file_timer, 'w')
     now = datetime.now()
     timer_script.write('DATE: '+str(now))
+    error_save_kml.write('\n')
     customer_section.write('USER: '+str(request.user))
     timer_script.write('\n')
 
     log_save_kml = '/home/gsi/LOGS/error_save_kml.log'
-    error_save_kml = open(log_save_kml, 'w')
+    error_save_kml = open(log_save_kml, 'a+')
     now = datetime.now()
     error_save_kml.write('DATE: '+str(now))
+    error_save_kml.write('\n')
     error_save_kml.write('USER: '+str(request.user))
     error_save_kml.write('\n')
     #######################
