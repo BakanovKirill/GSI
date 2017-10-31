@@ -354,11 +354,20 @@ CARD_TYPE = {
     'calcstats': 'CalcStats'
 }
 
-COLOR_KML = [
-    '#93011b', '#f5022d', '#13d1cf', '#fd720f', '#7e9495',
-    '#009e73', '#e69f00', '#ceac41', '#7e9495', '#56b4e9',
-    '#009e73', '#0083d7', '#340e62', '#3e2427', '#a9c41e',
-    '#ff0000', '#744378', '#9ea849', '#1a423a', '#fa2758'
+COLOR_HEX_NAME = [
+    'Aqua', 'Blue', 'BlueViolet', 'Brown', 'BurlyWood',
+    'CadetBlue', 'Chartreuse', 'Chocolate', 'Coral', 'CornflowerBlue',
+    'Crimson', 'DarkBlue', 'DarkCyan', 'DarkGoldenRod', 'DarkGreen',
+    'DarkMagenta', 'DarkRed', 'DarkSlateGray', 'GoldenRod', 'HotPink',
+    'Indigo', 'LawnGreen', 'LightSeaGreen', 'LightSlateGray', 'OrangeRed'
+]
+
+COLOR_HEX = [
+    '#00FFFF', '#0000FF', '#8A2BE2', '#A52A2A', '#DEB887',
+    '#5F9EA0', '#7FFF00', '#D2691E', '#FF7F50', '#6495ED',
+    '#DC143C', '#00008B', '#008B8B', '#B8860B', '#006400',
+    '#8B008B', '#8B0000', '#2F4F4F', '#DAA520', '#FF69B4',
+    '#4B0082', '#7CFC00', '#20B2AA', '#778899', '#FF4500'
 ]
 
 try:

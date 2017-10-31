@@ -55,7 +55,7 @@ from gsi.settings import (BASE_DIR, RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM,
                         DAFAULT_LON, PNG_DIRECTORY, PNG_PATH, PROJECTS_PATH,
                         KML_DIRECTORY, KML_PATH, ATTRIBUTES_NAME, FTP_PATH,
                         LUT_DIRECTORY, SCRIPT_TIFPNG, SCRIPT_GETPOLYINFO, LEGENDS_DIRECTORY,
-                        LEGENDS_PATH, SCRIPT_MAXSIZE, ATTRIBUTE_CONFIG, COLOR_KML)
+                        LEGENDS_PATH, SCRIPT_MAXSIZE, ATTRIBUTE_CONFIG, COLOR_HEX_NAME, COLOR_HEX)
 from gsi.gsi_forms import UploadFileForm
 
 
@@ -1445,7 +1445,7 @@ def createKml(user, filename, info_window, url, data_set, count_color):
     coord = getGeoCoord(tmp_path)
     kml_url = url + '/' + kml_filename
 
-    print '!!!!!!!!!!! 2 COUNT ======================== ', COLOR_KML[count_color]
+    # print '!!!!!!!!!!! 2 COUNT ======================== ', COLOR_HEX[count_color]
     # print '!!!!!!!!!!! COLOR ======================== ', COLOR_KML[count_color]
     # print '!!!!!!!!!!! LAST ID COUNT AOI ======================== ', cip_last_id.id
     # print '!!!!!!!!!!! %%%%%%%% ======================== ', count_color
@@ -1460,13 +1460,13 @@ def createKml(user, filename, info_window, url, data_set, count_color):
     # pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex('#8bc53f'))
     # pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex(COLOR_KML[count_color]))
     # pol.style.polystyle.colormode = ColorMode.random
-    pol.style.polystyle.color = simplekml.Color.hex(COLOR_KML[count_color])
+    pol.style.polystyle.color = simplekml.Color.hex(COLOR_HEX[count_color])
 
     pol.style.balloonstyle.text = info_window
     # pol.style.balloonstyle.bgcolor = simplekml.Color.lightgreen
     # pol.style.balloonstyle.bgcolor = simplekml.Color.red
-    pol.style.balloonstyle.bgcolor = simplekml.Color.hex(COLOR_KML[count_color])
-    pol.style.balloonstyle.textcolor = simplekml.Color.hex(COLOR_KML[count_color])
+    pol.style.balloonstyle.bgcolor = simplekml.Color.hex(COLOR_HEX[count_color])
+    pol.style.balloonstyle.textcolor = simplekml.Color.hex(COLOR_HEX[count_color])
     # pol.style.balloonstyle.textcolor = simplekml.Color.hex('#283890')
 
     kml_path = os.path.join(KML_PATH, kml_filename)
@@ -2726,12 +2726,10 @@ def customer_section(request):
 
             try:
                 cip_last_id = CustomerPolygons.objects.all().last()
-                count_color = cip_last_id.id % 20
+                count_color = cip_last_id.id % 25
 
-                if count_color > 19:
+                if count_color > 24:
                     count_color = 0
-
-                print '!!!!!!!!!!! 0 COUNT ======================== ', COLOR_KML[count_color]
 
                 data_kml = data_post.lists()
                 area_name = ''
@@ -2769,7 +2767,7 @@ def customer_section(request):
 
                 len_attr = len(attribute)
                 
-                info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(COLOR_KML[count_color], area_name)
+                info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(COLOR_HEX_NAME[count_color], area_name)
                 info_window += '<p align="center"><span><b>Total Area:</b></span> ' + total_area + ' ha</p>';
 
                 if statistic:
@@ -2816,8 +2814,6 @@ def customer_section(request):
 
                 # Create KML file for the draw polygon
                 ds = DataSet.objects.get(pk=data_set_id)
-
-                print '!!!!!!!!!!! 1 COUNT ======================== ', COLOR_KML[count_color]
 
                 cur_polygon = createKml(request.user, area_name, info_window, absolute_kml_url, ds, count_color)
 
