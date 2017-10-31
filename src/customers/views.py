@@ -2850,7 +2850,8 @@ def customer_section(request):
                 print '!!!!!!!!!!!!!!!!!!!! ERROR GEO =========================== ', e
 
                 ###########   log ###############################################################
-                customer_section.write('ERROR GEO: {0}\n'.format(str(e)))
+                customer_section.write('ERROR GEO: {0}\n'.format(e))
+                customer_section.close()
                 ############################################################################
 
                 return HttpResponseRedirect(u'%s?danger_message=%s' % (
