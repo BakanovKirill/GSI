@@ -18,6 +18,7 @@ from pykml.parser import Schema
 from lxml import html
 import numpy as np
 import requests
+from random import randint
 
 # import pykml
 # from pykml import parser
@@ -2729,11 +2730,15 @@ def customer_section(request):
             # print '!!!!!!!!!!!!! SAVE AREA ========================='
 
             try:
-                cip_last_id = CustomerPolygons.objects.all().last()
-                count_color = cip_last_id.id % 25
+                divider = len(COLOR_HEX_NAME)
+                count_color = randint(0, divider)
 
-                if count_color > 24:
-                    count_color = 0
+                print '!!!!!!!!!!!!!!! divider ===================== ', divider
+                print '!!!!!!!!!!!!!!! count_color ===================== ', count_color
+                print '!!!!!!!!!!!!!!! HEX NAME ===================== ', COLOR_HEX_NAME[count_color]
+
+                # if count_color > (divider-1):
+                #     count_color = 0
 
                 data_kml = data_post.lists()
                 area_name = ''
