@@ -1439,7 +1439,6 @@ def createCustomerInfoPanel(customer, data_set, shelf_data, stat_file, absolute_
 def createKml(user, filename, info_window, url, data_set, count_color):
     # Create KML file for the draw polygon
     
-    
     kml_filename = str(filename) + '.kml'
     tmp_file = str(user) + '_coord_kml.txt'
     tmp_path = os.path.join(TMP_PATH, tmp_file)
@@ -2767,7 +2766,7 @@ def customer_section(request):
 
                 len_attr = len(attribute)
                 
-                info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(COLOR_KML[count_color], area_name)
+                info_window = '<h4 align="center"><b>Attribute report: {0}</b></h4>\n'.format(area_name)
                 info_window += '<p align="center"><span><b>Total Area:</b></span> ' + total_area + ' ha</p>';
 
                 if statistic:
