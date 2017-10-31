@@ -1458,9 +1458,9 @@ def createKml(user, filename, info_window, url, data_set, count_color):
     pol.style.linestyle.color = simplekml.Color.hex('#ffffff')
     pol.style.linestyle.width = 5
     # pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex('#8bc53f'))
-    # pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex(COLOR_KML[count_color]))
+    pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex(COLOR_HEX[count_color]))
     # pol.style.polystyle.colormode = ColorMode.random
-    pol.style.polystyle.color = simplekml.Color.hex(COLOR_HEX[count_color])
+    # pol.style.polystyle.color = simplekml.Color.hex(COLOR_HEX[count_color])
 
     pol.style.balloonstyle.text = info_window
     # pol.style.balloonstyle.bgcolor = simplekml.Color.lightgreen
