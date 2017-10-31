@@ -2728,7 +2728,7 @@ def customer_section(request):
                 cip_last_id = CustomerPolygons.objects.all().last()
                 count_color = cip_last_id.id % 40
 
-                if count_color > 39:
+                if count_color > 19:
                     count_color = 0
 
                 data_kml = data_post.lists()
