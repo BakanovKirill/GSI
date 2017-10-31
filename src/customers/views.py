@@ -1851,6 +1851,13 @@ def customer_section(request):
     timer_script.write('DATE: '+str(now))
     customer_section.write('USER: '+str(request.user))
     timer_script.write('\n')
+
+    log_save_kml = '/home/gsi/LOGS/error_save_kml.log'
+    error_save_kml = open(log_save_kml, 'w')
+    now = datetime.now()
+    error_save_kml.write('DATE: '+str(now))
+    error_save_kml.write('USER: '+str(request.user))
+    error_save_kml.write('\n')
     #######################
 
     customer = request.user
@@ -2850,8 +2857,8 @@ def customer_section(request):
                 print '!!!!!!!!!!!!!!!!!!!! ERROR GEO =========================== ', e
 
                 ###########   log ###############################################################
-                customer_section.write('ERROR GEO: {0}\n'.format(e))
-                customer_section.close()
+                error_save_kml.write('ERROR GEO: {0}\n'.format(e))
+                error_save_kml.close()
                 ############################################################################
 
                 return HttpResponseRedirect(u'%s?danger_message=%s' % (
@@ -3735,6 +3742,8 @@ def customer_section(request):
 
     timer_script.write('\n')
     timer_script.close()
+
+    error_save_kml.close()
     #######################
     
     if tab_active == 'ts':
