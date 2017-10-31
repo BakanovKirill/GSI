@@ -1849,7 +1849,7 @@ def customer_section(request):
     timer_script = open(log_file_timer, 'w')
     now = datetime.now()
     timer_script.write('DATE: '+str(now))
-    error_save_kml.write('\n')
+    timer_script.write('\n')
     customer_section.write('USER: '+str(request.user))
     timer_script.write('\n')
 
