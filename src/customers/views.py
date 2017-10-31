@@ -1457,7 +1457,7 @@ def createKml(user, filename, info_window, url, data_set, count_color):
     pol = kml.newpolygon(name=filename)
     pol.outerboundaryis.coords = coord
     pol.style.linestyle.color = simplekml.Color.hex('#ffffff')
-    pol.style.linestyle.width = 5
+    pol.style.linestyle.width = 2
     # pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex('#8bc53f'))
     # pol.style.polystyle.color = simplekml.Color.changealphaint(50, simplekml.Color.hex(COLOR_HEX[count_color]))
 
@@ -2733,9 +2733,9 @@ def customer_section(request):
                 divider = len(COLOR_HEX_NAME)
                 count_color = randint(0, divider)
 
-                print '!!!!!!!!!!!!!!! divider ===================== ', divider
-                print '!!!!!!!!!!!!!!! count_color ===================== ', count_color
-                print '!!!!!!!!!!!!!!! HEX NAME ===================== ', COLOR_HEX_NAME[count_color]
+                # print '!!!!!!!!!!!!!!! divider ===================== ', divider
+                # print '!!!!!!!!!!!!!!! count_color ===================== ', count_color
+                # print '!!!!!!!!!!!!!!! HEX NAME ===================== ', COLOR_HEX_NAME[count_color]
 
                 # if count_color > (divider-1):
                 #     count_color = 0
