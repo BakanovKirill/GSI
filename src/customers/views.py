@@ -1445,6 +1445,7 @@ def createKml(user, filename, info_window, url, data_set, count_color):
     coord = getGeoCoord(tmp_path)
     kml_url = url + '/' + kml_filename
 
+    print '!!!!!!!!!!! 2 COUNT ======================== ', COLOR_KML[count_color]
     # print '!!!!!!!!!!! COLOR ======================== ', COLOR_KML[count_color]
     # print '!!!!!!!!!!! LAST ID COUNT AOI ======================== ', cip_last_id.id
     # print '!!!!!!!!!!! %%%%%%%% ======================== ', count_color
@@ -2730,6 +2731,8 @@ def customer_section(request):
                 if count_color > 19:
                     count_color = 0
 
+                print '!!!!!!!!!!! 0 COUNT ======================== ', COLOR_KML[count_color]
+
                 data_kml = data_post.lists()
                 area_name = ''
                 total_area = ''
@@ -2766,7 +2769,7 @@ def customer_section(request):
 
                 len_attr = len(attribute)
                 
-                info_window = '<h4 align="center"><b>Attribute report: {0}</b></h4>\n'.format(area_name)
+                info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(COLOR_KML[count_color], area_name)
                 info_window += '<p align="center"><span><b>Total Area:</b></span> ' + total_area + ' ha</p>';
 
                 if statistic:
@@ -2813,6 +2816,8 @@ def customer_section(request):
 
                 # Create KML file for the draw polygon
                 ds = DataSet.objects.get(pk=data_set_id)
+
+                print '!!!!!!!!!!! 1 COUNT ======================== ', COLOR_KML[count_color]
 
                 cur_polygon = createKml(request.user, area_name, info_window, absolute_kml_url, ds, count_color)
 
