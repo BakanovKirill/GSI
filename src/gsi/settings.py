@@ -354,20 +354,70 @@ CARD_TYPE = {
     'calcstats': 'CalcStats'
 }
 
+# COLOR_HEX_NAME = [
+#     'Aqua', 'Blue', 'BlueViolet', 'Brown', 'BurlyWood',
+#     'CadetBlue', 'Chartreuse', 'Chocolate', 'Coral', 'CornflowerBlue',
+#     'Crimson', 'DarkBlue', 'DarkCyan', 'DarkGoldenRod', 'DarkGreen',
+#     'DarkMagenta', 'DarkRed', 'DarkSlateGray', 'GoldenRod', 'HotPink',
+#     'Indigo', 'LawnGreen', 'LightSeaGreen', 'LightSlateGray', 'OrangeRed'
+# ]
+
+# COLOR_HEX = [
+#     '#00FFFF', '#0000FF', '#8A2BE2', '#A52A2A', '#DEB887',
+#     '#5F9EA0', '#7FFF00', '#D2691E', '#FF7F50', '#6495ED',
+#     '#DC143C', '#00008B', '#008B8B', '#B8860B', '#006400',
+#     '#8B008B', '#8B0000', '#2F4F4F', '#DAA520', '#FF69B4',
+#     '#4B0082', '#7CFC00', '#20B2AA', '#778899', '#FF4500'
+# ]
+
 COLOR_HEX_NAME = [
-    'Aqua', 'Blue', 'BlueViolet', 'Brown', 'BurlyWood',
-    'CadetBlue', 'Chartreuse', 'Chocolate', 'Coral', 'CornflowerBlue',
-    'Crimson', 'DarkBlue', 'DarkCyan', 'DarkGoldenRod', 'DarkGreen',
-    'DarkMagenta', 'DarkRed', 'DarkSlateGray', 'GoldenRod', 'HotPink',
-    'Indigo', 'LawnGreen', 'LightSeaGreen', 'LightSlateGray', 'OrangeRed'
+    'aqua', 'aquamarine', 'blue', 'blueviolet', 'brown',
+    'burlywood', 'cadetblue', 'chartreuse', 'chocolate', 'coral',
+    'cornflowerblue', 'crimson', 'cyan', 'darkblue', 'darkcyan',
+    'darkgoldenrod', 'darkgray', 'darkgreen', 'darkgrey', 'darkkhaki',
+    'darkmagenta', 'darkolivegreen', 'darkorange', 'darkorchid', 'darkred',
+    'darksalmon', 'darkseagreen', 'darkslateblue', 'darkslategray', 'darkslategrey',
+    'darkturquoise', 'darkviolet', 'deeppink', 'deepskyblue', 'dimgray',
+    'dimgrey', 'dodgerblue', 'firebrick', 'floralwhite', 'forestgreen',
+    'fuchsia', 'gainsboro', 'ghostwhite', 'gold', 'goldenrod',
+    'gray', 'green', 'greenyellow', 'honeydew', 'hotpink',
+    'indianred', 'indigo', 'lawngreen', 'lightblue', 'lightcoral',
+    'lightgreen', 'lightsalmon', 'lightseagreen', 'lightskyblue', 'lightslategray',
+    'lightsteelblue', 'lime', 'limegreen', 'magenta', 'maroon',
+    'mediumaquamarine', 'mediumblue', 'mediumorchid', 'mediumpurple', 'mediumseagreen',
+    'mediumslateblue', 'mediumspringgreen', 'mediumturquoise', 'mediumvioletred', 'midnightblue',
+    'navy', 'olive', 'olivedrab', 'orange', 'orangered',
+    'orchid', 'palevioletred', 'peru', 'plum', 'purple',
+    'red', 'rosybrown', 'royalblue', 'saddlebrown', 'salmon',
+    'sandybrown', 'seagreen', 'sienna', 'silver', 'skyblue',
+    'slateblue', 'slategray', 'springgreen', 'steelblue', 'tan',
+    'teal', 'tomato', 'turquoise', 'violet', 'yellow',
+    'yellowgreen'
 ]
 
 COLOR_HEX = [
-    '#00FFFF', '#0000FF', '#8A2BE2', '#A52A2A', '#DEB887',
-    '#5F9EA0', '#7FFF00', '#D2691E', '#FF7F50', '#6495ED',
-    '#DC143C', '#00008B', '#008B8B', '#B8860B', '#006400',
-    '#8B008B', '#8B0000', '#2F4F4F', '#DAA520', '#FF69B4',
-    '#4B0082', '#7CFC00', '#20B2AA', '#778899', '#FF4500'
+    'ffffff00', 'ffd4ff7f', 'ffff0000', 'ffe22b8a', 'ff2a2aa5',
+    'ff87b8de', 'ffa09e5f', 'ff00ff7f', 'ff1e69d2', 'ff507fff',
+    'ffed9564', 'ff3c14dc', 'ffffff00', 'ff8b0000', 'ff8b8b00',
+    'ff0b86b8', 'ffa9a9a9', 'ff006400', 'ffa9a9a9', 'ff6bb7bd',
+    'ff8b008b', 'ff2f6b55', 'ff008cff', 'ffcc3299', 'ff00008b',
+    'ff7a96e9', 'ff8fbc8f', 'ff8b3d48', 'ff4f4f2f', 'ff4f4f2f',
+    'ffd1ce00', 'ffd30094', 'ff9314ff', 'ffffbf00', 'ff696969',
+    'ff696969', 'ffff901e', 'ff2222b2', 'fff0faff', 'ff228b22',
+    'ffff00ff', 'ffdcdcdc', 'fffff8f8', 'ff00d7ff', 'ff20a5da',
+    'ff808080', 'ff008000', 'ff2fffad', 'fff0fff0', 'ffb469ff',
+    'ff5c5ccd', 'ff82004b', 'ff00fc7c', 'ffe6d8ad', 'ff8080f0',
+    'ff90ee90', 'ff7aa0ff', 'ffaab220', 'ffface87', 'ff998877',
+    'ffdec4b0', 'ff00ff00', 'ff32cd32', 'ffff00ff', 'ff000080',
+    'ffaacd66', 'ffcd0000', 'ffd355ba', 'ffd87093', 'ff71b33c',
+    'ffee687b', 'ff9afa00', 'ffccd148', 'ff8515c7', 'ff701919',
+    'ff800000', 'ff008080', 'ff238e6b', 'ff00a5ff', 'ff0045ff',
+    'ffd670da', 'ff9370d8', 'ff3f85cd', 'ffdda0dd', 'ff800080',
+    'ff0000ff', 'ff8f8fbc', 'ffe16941', 'ff13458b', 'ff7280fa',
+    'ff60a4f4', 'ff578b2e', 'ff2d52a0', 'ffc0c0c0', 'ffebce87',
+    'ffcd5a6a', 'ff908070', 'ff7fff00', 'ffb48246', 'ff8cb4d2',
+    'ff808000', 'ff4763ff', 'ffd0e040', 'ffee82ee', 'ff00ffff',
+    'ff32cd9a'
 ]
 
 try:

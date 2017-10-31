@@ -1458,15 +1458,19 @@ def createKml(user, filename, info_window, url, data_set, count_color):
     pol.style.linestyle.color = simplekml.Color.hex('#ffffff')
     pol.style.linestyle.width = 5
     # pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex('#8bc53f'))
-    pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex(COLOR_HEX[count_color]))
+    # pol.style.polystyle.color = simplekml.Color.changealphaint(50, simplekml.Color.hex(COLOR_HEX[count_color]))
+
+    pol.style.polystyle.color = simplekml.Color.changealphaint(100, COLOR_HEX[count_color])
+    # pol.style.polystyle.color = simplekml.Color.changealphaint(100, 'ff3c14dc')
     # pol.style.polystyle.colormode = ColorMode.random
     # pol.style.polystyle.color = simplekml.Color.hex(COLOR_HEX[count_color])
+    # pol.style.polystyle.color = 'ff3c14dc'
 
     pol.style.balloonstyle.text = info_window
     # pol.style.balloonstyle.bgcolor = simplekml.Color.lightgreen
     # pol.style.balloonstyle.bgcolor = simplekml.Color.red
-    pol.style.balloonstyle.bgcolor = simplekml.Color.hex(COLOR_HEX[count_color])
-    pol.style.balloonstyle.textcolor = simplekml.Color.hex(COLOR_HEX[count_color])
+    pol.style.balloonstyle.bgcolor = COLOR_HEX[count_color]
+    pol.style.balloonstyle.textcolor = COLOR_HEX[count_color]
     # pol.style.balloonstyle.textcolor = simplekml.Color.hex('#283890')
 
     kml_path = os.path.join(KML_PATH, kml_filename)
@@ -1579,7 +1583,7 @@ def getListTifFiles(customer, dataset):
     attributes_reports = AttributesReport.objects.filter(
                             user=customer, data_set=dataset)
 
-    print '!!!!!!!!!!!!!!!!!!! attributes_reports ====================== ', attributes_reports
+    # print '!!!!!!!!!!!!!!!!!!! attributes_reports ====================== ', attributes_reports
 
     if attributes_reports:
         if dataset.is_ts:
@@ -2292,7 +2296,7 @@ def customer_section(request):
                 for rep_id in data_post_ajax.getlist('reports[]'):
                     reports_ids.append(rep_id.split('report_')[1])
 
-                print '!!!!!!!!!!!!! 22 reports_ids ====================== ', reports_ids
+                # print '!!!!!!!!!!!!! 22 reports_ids ====================== ', reports_ids
 
                 if is_time_series:
                     reports_cip = reports_ids
@@ -2410,7 +2414,7 @@ def customer_section(request):
             new_line = ''
             db_file_open = open(tmp_db_file, 'w')
 
-            print '!!!!!!!!!!!!!!! list_file_tif =========================== ', list_file_tif
+            # print '!!!!!!!!!!!!!!! list_file_tif =========================== ', list_file_tif
 
             # if not list_file_tif:
             #     data = 'Please add the GEO data to create the report.'
@@ -2767,6 +2771,7 @@ def customer_section(request):
 
                 len_attr = len(attribute)
                 
+                # info_window = '<h4 align="center" style="color:darkgreen;"><b>Attribute report: {0}</b></h4>\n'.format(area_name)
                 info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(COLOR_HEX_NAME[count_color], area_name)
                 info_window += '<p align="center"><span><b>Total Area:</b></span> ' + total_area + ' ha</p>';
 
@@ -2780,6 +2785,8 @@ def customer_section(request):
                 #     info_window += '<div style="height:400px;overflow:scroll;" class="ui-widget-content">'
                 # else:
                 #     info_window += '<div style="overflow:auto;" class="ui-widget-content">'
+                #     
+                #     Aqua
 
                 info_window += '<table border="1" cellspacing="5" cellpadding="5" style="border-collapse:collapse;border:1px solid black;width:100%;">\n'
                 # info_window += '<caption align="left" style="margin-bottom:15px"><span><b>Total Area:</b></span> ' + total_area + ' ha</caption>'
