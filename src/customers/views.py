@@ -1446,7 +1446,7 @@ def createKml(user, filename, info_window, url, data_set, count_color):
     coord = getGeoCoord(tmp_path)
     kml_url = url + '/' + kml_filename
 
-    print '!!!!!!!!!!! COLOR ======================== ', COLOR_KML[count_color]
+    # print '!!!!!!!!!!! COLOR ======================== ', COLOR_KML[count_color]
     # print '!!!!!!!!!!! LAST ID COUNT AOI ======================== ', cip_last_id.id
     # print '!!!!!!!!!!! %%%%%%%% ======================== ', count_color
     # print '!!!!!!!!!!! filename ======================== ', filename
@@ -2726,7 +2726,7 @@ def customer_section(request):
 
             try:
                 cip_last_id = CustomerPolygons.objects.all().last()
-                count_color = cip_last_id.id % 40
+                count_color = cip_last_id.id % 20
 
                 if count_color > 19:
                     count_color = 0
