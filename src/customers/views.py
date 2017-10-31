@@ -1459,13 +1459,13 @@ def createKml(user, filename, info_window, url, data_set, count_color):
     pol.style.linestyle.width = 5
     # pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex('#8bc53f'))
     # pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex(COLOR_KML[count_color]))
-    pol.style.polystyle.colormode = ColorMode.random
-    pol.style.polystyle.color = COLOR_KML[count_color]
+    # pol.style.polystyle.colormode = ColorMode.random
+    pol.style.polystyle.color = simplekml.Color.hex(COLOR_KML[count_color])
 
     pol.style.balloonstyle.text = info_window
     # pol.style.balloonstyle.bgcolor = simplekml.Color.lightgreen
-    pol.style.balloonstyle.bgcolor = simplekml.Color.red
-    # pol.style.balloonstyle.bgcolor = simplekml.Color.hex(COLOR_KML[count_color])
+    # pol.style.balloonstyle.bgcolor = simplekml.Color.red
+    pol.style.balloonstyle.bgcolor = simplekml.Color.hex(COLOR_KML[count_color])
     pol.style.balloonstyle.textcolor = simplekml.Color.hex(COLOR_KML[count_color])
     # pol.style.balloonstyle.textcolor = simplekml.Color.hex('#283890')
 
@@ -2848,6 +2848,10 @@ def customer_section(request):
                     # print '!!!!!!!!!!!!!!! root_filename ======================= ', root_filename
             except Exception, e:
                 print '!!!!!!!!!!!!!!!!!!!! ERROR GEO =========================== ', e
+
+                ###########   log ###############################################################
+                customer_section.write('ERROR GEO: {0}\n'.format(str(e)))
+                ############################################################################
 
                 return HttpResponseRedirect(u'%s?danger_message=%s' % (
                             reverse('customer_section'),
