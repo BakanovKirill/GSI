@@ -51,10 +51,9 @@ from customers.customers_update_create import (category_update_create, shelf_dat
 from core.get_post import get_post
 from core.paginations import paginations
 from core.utils import handle_uploaded_file, get_files_dirs, get_list_lutfiles
-from gsi.settings import (BASE_DIR, RESULTS_DIRECTORY, GOOGLE_MAP_ZOOM,
-                        POLYGONS_DIRECTORY, MEDIA_ROOT, TMP_PATH, DAFAULT_LAT,
-                        DAFAULT_LON, PNG_DIRECTORY, PNG_PATH, PROJECTS_PATH,
-                        KML_DIRECTORY, KML_PATH, ATTRIBUTES_NAME, FTP_PATH,
+from gsi.settings import (BASE_DIR, GOOGLE_MAP_ZOOM, MEDIA_ROOT,
+                        TMP_PATH, DAFAULT_LAT, DAFAULT_LON, PNG_DIRECTORY, PNG_PATH,
+                        PROJECTS_PATH, KML_DIRECTORY, KML_PATH, ATTRIBUTES_NAME, FTP_PATH,
                         LUT_DIRECTORY, SCRIPT_TIFPNG, SCRIPT_GETPOLYINFO, LEGENDS_DIRECTORY,
                         LEGENDS_PATH, SCRIPT_MAXSIZE, ATTRIBUTE_CONFIG, COLOR_HEX_NAME, COLOR_HEX)
 from gsi.gsi_forms import UploadFileForm
@@ -623,7 +622,7 @@ def data_set_add(request):
             if form.is_valid():
                 if form.cleaned_data['results_directory']:
                     try:
-                        results_directory = RESULTS_DIRECTORY + form.cleaned_data['results_directory']
+                        results_directory = PROJECTS_PATH + form.cleaned_data['results_directory']
                         root, dirs, files = os.walk(results_directory).next()
 
                         for sd in shelf_data:
@@ -687,7 +686,7 @@ def data_set_edit(request, data_set_id):
 
     # Get the results_directorys list
     try:
-        results_directory = RESULTS_DIRECTORY + data_set.results_directory
+        results_directory = PROJECTS_PATH + data_set.results_directory
         root, dirs, files = os.walk(results_directory).next()
 
         for sd in shelf_data:
@@ -721,7 +720,7 @@ def data_set_edit(request, data_set_id):
 
             if form.is_valid():
                 if form.cleaned_data['results_directory']:
-                    results_directory = RESULTS_DIRECTORY + form.cleaned_data['results_directory']
+                    results_directory = PROJECTS_PATH + form.cleaned_data['results_directory']
 
                     try:
                         root, dirs, files = os.walk(results_directory).next()
@@ -1773,7 +1772,7 @@ def getCountTs(dataset, shd):
     count_ts = 0
 
     path_cur_proj = dataset.results_directory
-    path_to_proj = os.path.join(RESULTS_DIRECTORY, path_cur_proj)
+    path_to_proj = os.path.join(PROJECTS_PATH, path_cur_proj)
 
     # print '!!!!!!!!!!!!!!!!! path_to_proj ===================== ', path_to_proj
 

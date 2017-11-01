@@ -703,6 +703,12 @@
                 //marker.setMap(map);
                 //map.panTo(marker);
                 markers.push(marker);
+
+                if (markers.length >= 3) {
+                    $('#draw_aoi').removeAttr('disabled');
+                } else {
+                    $('#draw_aoi').attr("disabled", "disabled");
+                }
             }
 
             // applied markers on the map.
@@ -715,10 +721,6 @@
                 // alert('select_image: '+select_image);
 
                 if (select_image) {
-                    $('#draw_aoi').removeAttr('disabled');
-                    $('#remove_aoi').removeAttr('disabled');
-                    $('#hide_aoi').removeAttr('disabled');
-
                     // alert('select_infopanel: NO: '+select_infopanel);
                     overlay.addListener('click', function(e) {
                         placeMarkerAndPanTo(e.latLng.lat(), e.latLng.lng());
@@ -967,6 +969,9 @@
 
                 infowindow = new google.maps.InfoWindow({content: contentString, position: center_pol});
                 infowindow.open(map);
+
+                $('#remove_aoi').removeAttr('disabled');
+                $('#hide_aoi').removeAttr('disabled');
             }
 
             function showCoordinates(event) {

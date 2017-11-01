@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from gsi.settings import RESULTS_DIRECTORY
 from customers.models import (Category, ShelfData, DataSet, CustomerAccess, LutFiles)
 
 
