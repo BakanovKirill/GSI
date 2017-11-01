@@ -1458,13 +1458,9 @@ def createKml(user, filename, info_window, url, data_set, count_color):
     pol.outerboundaryis.coords = coord
     pol.style.linestyle.color = simplekml.Color.hex('#ffffff')
     pol.style.linestyle.width = 2
-    # pol.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.hex('#8bc53f'))
-    # pol.style.polystyle.color = simplekml.Color.changealphaint(50, simplekml.Color.hex(COLOR_HEX[count_color]))
 
     pol.style.polystyle.color = simplekml.Color.changealphaint(100, COLOR_HEX[count_color])
     # pol.style.polystyle.color = simplekml.Color.changealphaint(100, 'ff3c14dc')
-    # pol.style.polystyle.colormode = ColorMode.random
-    # pol.style.polystyle.color = simplekml.Color.hex(COLOR_HEX[count_color])
     # pol.style.polystyle.color = 'ff3c14dc'
 
     pol.style.balloonstyle.text = info_window
@@ -1476,8 +1472,6 @@ def createKml(user, filename, info_window, url, data_set, count_color):
 
     kml_path = os.path.join(KML_PATH, kml_filename)
     kml.save(kml_path)
-
-    # count += 1
 
     polygon = addPolygonToDB(filename, kml_filename, user, kml_path, kml_url, data_set, info_window)
 
@@ -2736,9 +2730,6 @@ def customer_section(request):
                 # print '!!!!!!!!!!!!!!! divider ===================== ', divider
                 # print '!!!!!!!!!!!!!!! count_color ===================== ', count_color
                 # print '!!!!!!!!!!!!!!! HEX NAME ===================== ', COLOR_HEX_NAME[count_color]
-
-                # if count_color > (divider-1):
-                #     count_color = 0
 
                 data_kml = data_post.lists()
                 area_name = ''
