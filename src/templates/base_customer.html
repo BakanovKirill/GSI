@@ -239,7 +239,7 @@
                                                 <div role="tabpanel" {% if tab_active == 'aoi' %}class="tab-pane fade margin-bottom-6 in active aoi-list"{% else %}class="tab-pane fade margin-bottom-6 aoi-list"{% endif %} id="aoi">
                                                     {% for polygon in polygons%}
                                                         <div class="col-md-8 margin-top-8 margin-bottom-4 margin-left-4">
-                                                            <input type="radio" name="polygon" value="{{ polygon.id }}" onchange="setPolygon(this);"><a href="{{ absolute_kml_url }}/{{ polygon.kml_name }}"> {{ polygon.name }}</a>
+                                                            <input type="checkbox" name="polygon" value="{{ polygon.id }}" onchange="setPolygon(this);"><a href="{{ absolute_kml_url }}/{{ polygon.kml_name }}"> {{ polygon.name }}</a>
                                                         </div>
 
                                                         <div class="col-md-1">

@@ -238,6 +238,8 @@
             var listener_markers_overlay;
             var listener_markers_map;
 
+            var kml;
+
 
             var coord = [];
             var coord_area = [];
@@ -1067,6 +1069,7 @@
             }
 
             function togglePlygonOverlays() {
+                // kml.setMap(null);
                 if (polygonVisible) {
                     if (polygons) {
                         for (i in polygons) {
