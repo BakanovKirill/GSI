@@ -305,7 +305,7 @@ DAFAULT_LON = -151.147061
 # RESULTS_DIRECTORY = '/lustre/w23/mattgsi/satdata/RF/Projects/'
 # POLYGONS_DIRECTORY = '/lustre/w23/mattgsi/satdata/RF/Polygons/kml/'
 
-RESULTS_DIRECTORY = '/lustre/home/i214/indy0-lustre/w23/mattgsi/satdata/RF/Projects/'
+# RESULTS_DIRECTORY = '/lustre/home/i214/indy0-lustre/w23/mattgsi/satdata/RF/Projects/'
 # POLYGONS_DIRECTORY = '/lustre/home/i214/indy0-lustre/w23/mattgsi/satdata/RF/Polygons/kml'
 
 # tif and png files path and folders

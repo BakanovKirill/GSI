@@ -235,6 +235,10 @@
             var chartLine;
             var chartBox;
 
+            var listener_markers_overlay;
+            var listener_markers_map;
+
+
             var coord = [];
             var coord_area = [];
             var markers = [];
@@ -716,16 +720,21 @@
                 // var select_infopanel = document.getElementById("show_file_arrea").value;
                 var img = document.getElementById("ap_marker");
 
+                coord = [];
+                markers = [];
+
                 // var select_views = $("input[name='attribute_viewlist']:checked").size();
 
                 // alert('select_image: '+select_image);
+                // var listener_markers_overlay;
+                // var listener_markers_map;
 
                 if (select_image) {
                     // alert('select_infopanel: NO: '+select_infopanel);
-                    overlay.addListener('click', function(e) {
+                    listener_markers_overlay = overlay.addListener('click', function(e) {
                         placeMarkerAndPanTo(e.latLng.lat(), e.latLng.lng());
                     });
-                    map.addListener('click', function(e) {
+                    listener_markers_map = map.addListener('click', function(e) {
                         placeMarkerAndPanTo(e.latLng.lat(), e.latLng.lng());
                     });
                     img.src = "{% static 'img/map-marker-plus-purple.png' %}";
@@ -896,7 +905,7 @@
                 infoWindow = new google.maps.InfoWindow;
 
                 var center_pol = polygonCenter(selectPolygon);
-                coord = [];
+                // coord = [];
                 var list_data_draw = data_polygon.split('_');
                 count_pol = list_data_draw.length;
                 var new_array = []
@@ -972,6 +981,11 @@
 
                 $('#remove_aoi').removeAttr('disabled');
                 $('#hide_aoi').removeAttr('disabled');
+
+                var img = document.getElementById("ap_marker");
+                img.src = "{% static 'img/map-marker-plus.png' %}";
+                google.maps.event.removeListener(listener_markers_overlay);
+                google.maps.event.removeListener(listener_markers_map);
             }
 
             function showCoordinates(event) {
