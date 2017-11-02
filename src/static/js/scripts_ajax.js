@@ -1,6 +1,7 @@
 // var progress = 0;
 // var interval_id;
 // var time_section = 0;
+var is_visible_aoi = false;
 
 function initCheckDeleteItems() {
     $('button.check-delete').click(function(event){
@@ -457,6 +458,8 @@ function setPolygon(obj) {
                 
                 // When the user clicks on div, open the popup
                 
+
+                
                 if (data_list[1] == 'false') {
                     kml = new google.maps.KmlLayer({
                         url: data_list[0],
@@ -551,8 +554,17 @@ function setPolygon(obj) {
                 });
 
                 kml.setMap(map);
+                kml_arr[polygon_name] = kml;
+
+                // console.log('KML ARR: ', kml_arr);
             },
         });
+
+        return false;
+    } else {
+        obj_kml = kml_arr[polygon_name];
+        obj_kml.setMap(null);
+
         return false;
     }
 }
