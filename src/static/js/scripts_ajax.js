@@ -485,11 +485,13 @@ function setPolygon(obj) {
                     // alert("KML DATA: "+data);
                     
                     var msg = data_list[1];
-                    var info_window_id = kmlEvent.featureData.name;
+                    // var info_window_id = kmlEvent.featureData.name;
+                    var info_window_id = polygon_name;
                     close_window_id = data_list[2];
 
                     // console.log("KML DATA: "+data);
                     // console.log("KML MSG: "+msg);
+                    console.log("KML ID: "+info_window_id);
 
                     if (data_list[1] != 'false') {
                         createDiv(info_window_id, msg);
@@ -562,8 +564,13 @@ function setPolygon(obj) {
 
         return false;
     } else {
+        // var info_window_id = kmlEvent.featureData.name;
+
+        // alert('KML ID: '+info_window_id);
+
         obj_kml = kml_arr[polygon_name];
         obj_kml.setMap(null);
+        document.getElementById(polygon_name).remove();
 
         return false;
     }
