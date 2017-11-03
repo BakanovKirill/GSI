@@ -570,7 +570,13 @@ function setPolygon(obj) {
 
         obj_kml = kml_arr[polygon_name];
         obj_kml.setMap(null);
-        document.getElementById(polygon_name).remove();
+
+        var infor_window_aoi = document.getElementById(polygon_name);
+
+        if (infor_window_aoi) {
+            infor_window_aoi.remove();
+        }
+        
 
         return false;
     }
