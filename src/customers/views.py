@@ -1815,6 +1815,11 @@ def getCountTs(dataset, shd):
     return count_ts
 
 
+def get_count_color():
+    divider = len(COLOR_HEX_NAME)
+    return randint(0, divider)
+
+
 # view Customer Section
 @login_required
 @render_to('customers/customer_section.html')
@@ -2379,12 +2384,12 @@ def customer_section(request):
 
             for n in coord_dict:
                 str_coord = '{0},{1}\n'.format(coord_dict[n][0], coord_dict[n][1])
-                # print '!!!!!!!!!!! COORD =================== ', str_coord
+                print '!!!!!!!!!!! COORD =================== ', coord_dict[n]
                 kml_file_coord.write(str_coord)
                 points_coord.append(tuple(coord_dict[n]))
 
             # print '!!!!!!!!!!! file_path_out_coord_kml =================== ', file_path_out_coord_kml
-            # print '!!!!!!!!!!! COORD =================== ', points_coord
+            print '!!!!!!!!!!! COORD =================== ', points_coord
 
             kml_file_coord.close()
 
@@ -2723,8 +2728,7 @@ def customer_section(request):
             # print '!!!!!!!!!!!!! SAVE AREA ========================='
 
             try:
-                divider = len(COLOR_HEX_NAME)
-                count_color = randint(0, divider)
+                count_color = get_count_color()
 
                 # print '!!!!!!!!!!!!!!! divider ===================== ', divider
                 # print '!!!!!!!!!!!!!!! count_color ===================== ', count_color
@@ -4026,6 +4030,58 @@ def customer_delete_file(request):
     return data
 
 
+def get_coord_aoi(doc):
+    outer_coord = []
+    inner_coord = []
+
+    try:
+        outer_boundary_is = doc.Document.Placemark.Polygon.outerBoundaryIs
+
+        for n in xrange(len(outer_boundary_is)):
+            tmp_tuples = []
+            tmp = str(doc.Document.Placemark.Polygon.outerBoundaryIs[n].LinearRing.coordinates).split('\n')
+
+            if not tmp[0]:
+                tmp = tmp[1:]
+
+            if not tmp[-1]:
+                tmp = tmp[:-1]
+
+            for m in tmp:
+                line = m.split(',')
+                tmp_tuples.append(tuple(line))
+
+            # print '!!!!!!!!!!!!!!!! outer_boundary_is ======================== ', len(tmp)
+            # print '!!!!!!!!!!!!!!!! outer_boundary_is ======================== ', tmp_tuples
+            
+            outer_coord.append(tmp_tuples)
+    except Exception:
+        pass
+
+    try:
+        inner_boundary_is = doc.Document.Placemark.Polygon.innerBoundaryIs
+
+        for n in xrange(len(inner_boundary_is)):
+            tmp_tuples = []
+            tmp = str(inner_boundary_is[n].LinearRing.coordinates).split('\n')
+
+            if not tmp[0]:
+                tmp = tmp[1:]
+
+            if not tmp[-1]:
+                tmp = tmp[:-1]
+
+            for m in tmp:
+                line = m.split(',')
+                tmp_tuples.append(tuple(line))
+
+            inner_coord.append(tmp_tuples)
+    except Exception:
+        pass
+
+    return outer_coord, inner_coord
+
+
 def copy_file_kml(old_path, new_path):
     error = ''
     doc = ''
@@ -4036,14 +4092,10 @@ def copy_file_kml(old_path, new_path):
 
         error = validation_kml(doc, old_path)
 
-        print '!!!!!!!!!!!!!!! 1 ERROR copy_file_kml =================== ', error
-
         if error:
             if os.path.exists(old_path):
                 os.remove(old_path)
             return doc, error
-
-        print '!!!!!!!!!!!!!!! 2 ERROR copy_file_kml =================== ', error
 
         command_line = 'cp {0} {1}'.format(old_path, new_path)
         proc = Popen(command_line, shell=True)
@@ -4133,7 +4185,8 @@ def files_lister(request):
         data_post = request.POST
         form = UploadFileForm(request.POST, request.FILES)
 
-        # print '!!!!!!!!!! POST ================== ', data_post
+        print '!!!!!!!!!! POST ================== ', data_post
+        print '!!!!!!!!!!!!! DATA SET ==================== ', request.session['select_data_set']
         
         if 'load_button' in data_post:
             if form.is_valid():
@@ -4164,9 +4217,14 @@ def files_lister(request):
 
                     try:
                         if not error:
-                            info_window = '<h4 align="center">Name: {0}</h4>\n'.format(doc_kml.Document.Placemark.name)
-                            info_window += '<p align="center"><span><b>Description: {0}</b></span></p>'.format(
-                                                doc_kml.Document.Placemark.description)
+                            count_color = get_count_color()
+                            outer_coord, inner_coord = get_coord_aoi(doc_kml)
+                            info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(
+                                                COLOR_HEX_NAME[count_color], doc_kml.Document.Placemark.description)
+
+                            print '!!!!!!!!!!!!!!! outer_coord  ===================== ', outer_coord
+                            print '!!!!!!!!!!!!!!! inner_coord  ===================== ', inner_coord
+
                     except Exception, e:
                         print '!!!!!!!!!!!!!!! ERROR COPY KML ===================== ', e
                         pass
