@@ -1455,7 +1455,8 @@ def createKml(user, filename, info_window, url, data_set, count_color):
     kml = simplekml.Kml()
     pol = kml.newpolygon(name=filename)
     pol.outerboundaryis.coords = coord
-    pol.style.linestyle.color = simplekml.Color.hex('#ffffff')
+    # pol.style.linestyle.color = simplekml.Color.hex('#ffffff') 
+    pol.style.linestyle.color = 'ffffffff'
     pol.style.linestyle.width = 2
 
     pol.style.polystyle.color = simplekml.Color.changealphaint(100, COLOR_HEX[count_color])
@@ -3808,6 +3809,7 @@ def customer_section(request):
 
     # time_series_view = request.session['time_series_view']
     
+    print '!!!!!!!!!!!!!!!! show_report_ap ===================================== ', show_report_ap
     # print '!!!!!!!!!!!!!!!! count_ts ===================================== ', count_ts
     # print '!!!!!!!!!!!!!!!! time_series_list ===================================== ', time_series_list
     # print '!!!!!!!!!!!!!!!! show_aoi_select ===================================== ', show_aoi_select
@@ -4041,20 +4043,42 @@ def get_coord_aoi(doc):
             tmp_tuples = []
             tmp = str(doc.Document.Placemark.Polygon.outerBoundaryIs[n].LinearRing.coordinates).split('\n')
 
-            if not tmp[0]:
-                tmp = tmp[1:]
+            # print '!!!!!!!!!!!!!!!! TMP ======================== ', len(tmp)
 
-            if not tmp[-1]:
-                tmp = tmp[:-1]
+            if len(tmp) == 1:
+                tmp_copy = []
+                tmp_list = tmp[0].split(' ')
 
-            for m in tmp:
-                line = m.split(',')
-                tmp_tuples.append(tuple(line))
+                # print '!!!!!!!!!!!!!!!! TMP LIST ======================== ', tmp_list
 
-            # print '!!!!!!!!!!!!!!!! outer_boundary_is ======================== ', len(tmp)
-            # print '!!!!!!!!!!!!!!!! outer_boundary_is ======================== ', tmp_tuples
-            
-            outer_coord.append(tmp_tuples)
+                for m in tmp_list:
+                    m_split = m.split(',')
+
+                    # print '!!!!!!!!!!!!!!!! M SPLIT ======================== ', m_split
+
+                    if m_split[-1] == '0.0':
+                        tmp_copy.append(tuple(m_split[:-1]))
+
+                # print '!!!!!!!!!!!!!!!! TMP COPY ======================== ', tmp_copy
+
+                outer_coord.append(tmp_copy)
+
+                # print '!!!!!!!!!!!!!!!! outer_coord ======================== ', outer_coord
+            else:
+                if not tmp[0]:
+                    tmp = tmp[1:]
+
+                if not tmp[-1]:
+                    tmp = tmp[:-1]
+
+                for m in tmp:
+                    line = m.split(',')
+                    tmp_tuples.append(tuple(line))
+
+                # print '!!!!!!!!!!!!!!!! outer_boundary_is ======================== ', len(tmp)
+                # print '!!!!!!!!!!!!!!!! outer_boundary_is ======================== ', tmp_tuples
+                
+                outer_coord.append(tmp_tuples)
     except Exception:
         pass
 
@@ -4219,8 +4243,16 @@ def files_lister(request):
                         if not error:
                             count_color = get_count_color()
                             outer_coord, inner_coord = get_coord_aoi(doc_kml)
+
+                            try:
+                                name_kml = doc_kml.Document.Placemark.description
+                            except Exception:
+                                name_kml = doc_kml.Document.Placemark.name
+                            else:
+                                name_kml = ''
+
                             info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(
-                                                COLOR_HEX_NAME[count_color], doc_kml.Document.Placemark.description)
+                                                COLOR_HEX_NAME[count_color], name_kml)
 
                             print '!!!!!!!!!!!!!!! outer_coord  ===================== ', outer_coord
                             print '!!!!!!!!!!!!!!! inner_coord  ===================== ', inner_coord
