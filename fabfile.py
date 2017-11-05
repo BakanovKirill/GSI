@@ -77,6 +77,17 @@ def dev_set_url_kml():
     with cd(REMOTE_CODE_DIR):
         run("bin/django add_kml_url")
 
+@hosts(GSI_APP_SERVER)
+def copy_db():
+    """
+    Get fresh copy of database from prod to local.
+    """
+    with cd("/tmp"), lcd("/tmp"):
+        sudo("pg_dump gsi > /tmp/latest.sql", user="postgres")
+        run("tar zcvf latest.sql.tgz latest.sql")
+        get("/tmp/latest.sql.tgz", "latest.sql.tgz")
+        sudo("rm /tmp/latest.sql.tgz /tmp/latest.sql")
+
 
 @hosts(GSI_APP_SERVER)
 def update_dev_db():

@@ -75,6 +75,9 @@ nginx:
 fill_name:
 	fab fill_name_carditem
 
+copy_db:
+	fab copy_db
+
 update_dev_db:
 	fab update_dev_db
 
