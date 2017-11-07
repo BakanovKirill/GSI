@@ -12,13 +12,13 @@
                     {% csrf_token %}
 
                     <div class="margin-top-20 margin-bottom-30 right col-md-5 col-md-offset-7">
-                        <span class="right">Choose AOI shapefile to upload:</span>
-                        <label for="id_test_data">
-                            <img src="{% static 'img/upload-network.png' %}" />
+                        <span class="right margin-right-10">Choose AOI shapefile to upload:</span>
+                        <label for="id_test_data" class="margin-right-10">
+                            <img src="{% static 'img/icons8-upload-to-ftp.png' %}" />
                         </label>
-                        {{ form.test_data }} <span class="file-selected" id="file-selected">No file selected.</span>
+                        {{ form.test_data }} <span class="file-selected margin-right-10" id="file-selected">No file selected.</span>
 
-                        <button type="submit" id="load" name="load_button" disabled="disabled" class="btn btn-primary btn-xs">Load</button>
+                        <button type="submit" id="load" name="load_button" disabled="disabled" class="btn btn-primary btn-sm">Load</button>
 
                         {% if form.test_data.errors %}
                             <b class="error-form">{{ form.test_data.errors }}</b>
