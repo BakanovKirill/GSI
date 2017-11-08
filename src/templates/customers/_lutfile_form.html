@@ -44,7 +44,7 @@
             <label class="control-label font-normal">{{ form.legend.label }}</label>
         </div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
         {% if not form.legend.errors %}
             {{ form.legend }}
         {% else %}
@@ -58,7 +58,7 @@
             <label class="control-label font-normal">{{ form.units.label }}</label>
         </div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
         {% if not form.units.errors %}
             {{ form.units }}
         {% else %}
@@ -66,13 +66,15 @@
             <b class="error-form">{{ form.units.errors }}</b>
         {% endif %}
     </div>
+</div>
 
+<div class="row margin-top-15">
     <div class="col-md-1 right">
         <div class="form-group {% if form.max_val.errors %}has-error{% endif %}">
             <label class="control-label font-normal">{{ form.max_val.label }}</label>
         </div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
         {% if not form.max_val.errors %}
             {{ form.max_val }}
             <p class="help">{{ form.max_val.help_text }}</p>
@@ -80,6 +82,23 @@
             <p class="help">{{ form.max_val.help_text }}</p>
             <span class="field-error">{{ form.max_val }}</span>
             <b class="error-form">{{ form.max_val.errors }}</b>
+        {% endif %}  
+
+    </div>
+
+    <div class="col-md-1 right">
+        <div class="form-group {% if form.allow_negatives.errors %}has-error{% endif %}">
+            <label class="control-label font-normal">{{ form.allow_negatives.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-1">
+        {% if not form.allow_negatives.errors %}
+            {{ form.allow_negatives }}
+            <p class="help">{{ form.allow_negatives.help_text }}</p>
+        {% else %}
+            <p class="help">{{ form.allow_negatives.help_text }}</p>
+            <span class="field-error">{{ form.allow_negatives }}</span>
+            <b class="error-form">{{ form.allow_negatives.errors }}</b>
         {% endif %}  
 
     </div>

@@ -258,10 +258,16 @@ class LutFilesForm(forms.ModelForm):
         label=u'Value Scale',
         help_text=u'Pixel Scale Factor for units'
     )
+    allow_negatives = forms.BooleanField(
+        widget=forms.CheckboxInput(attrs={'class': 'form-control'}),
+        initial=False,
+        required=False,
+        label=u'Allow negatives',
+    )
 
 
     class Meta:
         model = LutFiles
-        fields = ['name', 'lut_file', 'max_val', 'legend', 'units', 'val_scale']
+        fields = ['name', 'lut_file', 'max_val', 'legend', 'units', 'val_scale', 'allow_negatives']
 
 

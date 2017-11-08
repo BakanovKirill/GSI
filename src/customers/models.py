@@ -33,6 +33,9 @@ class LutFiles(models.Model):
     val_scale = models.FloatField(
                     default=1.0,
                     verbose_name='Pixel Scale Factor for units',)
+    allow_negatives = models.BooleanField(
+                    default=False,
+                    verbose_name='Allow negatives',)
 
     class Meta:
         verbose_name_plural = 'LUTFiles'

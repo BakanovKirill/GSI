@@ -22,7 +22,14 @@
                                     {% endif %}
                                 </a>
                             </th>
-                            <th>LUT Files</th>
+                            <th>
+                                <a href="{% url 'lutfiles' %}?order_by=lut_file{% if order_by == 'lut_file' and reverse != '1' %}&amp;reverse=1{% endif %}">
+                                    LUT Files
+                                    {% if order_by == 'lut_file' and reverse != '1' %}&#9652;
+                                    {% elif order_by == 'lut_file' and reverse == '1' %}&#9662;
+                                    {% endif %}
+                                </a>
+                            </th>
                             <th>
                                 <a href="{% url 'lutfiles' %}?order_by=max_val{% if order_by == 'max_val' and reverse != '1' %}&amp;reverse=1{% endif %}">
                                     Max Value
@@ -31,6 +38,7 @@
                                     {% endif %}
                                 </a>
                             </th>
+                            <th>Allow negatives</th>
                             <th>Legend</th>
                             <th>Units</th>
                             <th>Val Scale</th>
@@ -44,6 +52,7 @@
                             <td>{{ lf.name }}</td>
                             <td>{{ lf.lut_file }}</td>
                             <td>{{ lf.max_val }}</td>
+                            <td>{{ lf.allow_negatives }}</td>
                             <td>{{ lf.legend }}</td>
                             <td>{{ lf.units }}</td>
                             <td>{{ lf.val_scale }}</td>

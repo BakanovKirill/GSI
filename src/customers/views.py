@@ -297,8 +297,14 @@ def shelf_data(request):
     if request.method == "GET":
         order_by = request.GET.get('order_by', '')
 
-        if order_by in ('category', 'attribute_name', 'root_filename', 'units', 'scale'):
+        if order_by in ('category', 'attribute_name', 'root_filename', 'units', 'scale',):
             shelf_data = shelf_data.order_by(order_by)
+
+            if request.GET.get('reverse', '') == '1':
+                shelf_data = shelf_data.reverse()
+
+        if order_by in ('lutfiles',):
+            shelf_data = shelf_data.order_by('lutfiles__name')
 
             if request.GET.get('reverse', '') == '1':
                 shelf_data = shelf_data.reverse()
@@ -978,7 +984,7 @@ def lutfiles(request):
     if request.method == "GET":
         order_by = request.GET.get('order_by', '')
 
-        if order_by in ('name', 'filename', 'max_val', ):
+        if order_by in ('name', 'filename', 'max_val', 'lut_file'):
             lutfiles = lutfiles.order_by(order_by)
 
             if request.GET.get('reverse', '') == '1':
@@ -1076,6 +1082,8 @@ def lutfile_add(request):
     url_name = 'lutfiles'
     but_name = 'info_panel'
     list_lutfiles = get_list_lutfiles()
+
+    print '!!!!!!!!!!! LIST LUT FILES =========================== ', list_lutfiles
 
     # Handling POST request
     if request.method == "POST":
@@ -3066,6 +3074,10 @@ def customer_section(request):
                                     max_val = line[-1]
                                     print '!!!!!!!!!!!!!!!!!!!!!!! OUT MAX ======================= ', line[-1]
 
+                        if shelf_data_attr.lutfiles.allow_negatives < 0:
+                            max_val = max_val * -1
+
+
                         # Command Line
                         # TifPng <InpTiff> <LUTfile> [<MaxVal>] [<Legend>] [<Units>] [<ValScale>]
 
@@ -3139,8 +3151,8 @@ def customer_section(request):
                         # cip_choice.legend_path = new_bw_legend
                         # cip_choice.url_legend = url_legend
                         # cip_choice.save()
-                except AttributeError:
-                    print '!!!!!!!!! ERROR AttributeError ================== '
+                except AttributeError, e:
+                    print '!!!!!!!!! ERROR AttributeError ================== ', e
 
                     # legend_path_old = file_tif.split('/')[:-1]
                     # legend_path_old = '/'.join(legend_path_old)
