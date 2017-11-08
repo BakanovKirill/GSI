@@ -3252,9 +3252,10 @@ def customer_section(request):
                                 p2 = Popen(['convert', '-', file_png], stdin=proc.stdout)
                                 # subprocess.call(command_line_copy_legend, shell=True)
                         else:
-                            warning_message = u'The GEO images does not exist! \
-                                                Please set Shelf Data for "{0}" Dataset'\
-                                                .format(data_set)
+                            warning_message = u'The GEO images "{0}" does not exist! \
+                                                There are no attribute sub-directories defined in the "{1}" Dataset. \
+                                                Please set Shelf Data for this Dataset'\
+                                                .format(file_tif, data_set)
 
 
                         # print '!!!!!!!!   PNG_PATH =============================== ', PNG_PATH
@@ -4170,11 +4171,20 @@ def validation_kml(kml_name, kml_path):
     return error_msg
 
 
+def create_new_calculations_aoi(count, name_kml, outer_coord, inner_coord):
+    info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(
+                                                COLOR_HEX_NAME[count], name_kml)
+
+    return info_window
+
+
 # Lister files
 @login_required
 @render_to('customers/files_lister.html')
 def files_lister(request):
     customer = request.user
+    calculation_aoi = False
+    upload_file = ''
     data_set = DataSet.objects.none()
     path_ftp_user = os.path.join(FTP_PATH, customer.username)
     files_list = os.listdir(path_ftp_user)
@@ -4221,7 +4231,7 @@ def files_lister(request):
                 if os.path.exists(path_test_data):
                     os.remove(path_test_data)
 
-                name = str(file_name).split('.')[:-1]
+                f_name = str(file_name).split('.')[:-1]
                 ext = str(file_name).split('.')[-1]
 
                 handle_uploaded_file(request.FILES['test_data'],
@@ -4246,10 +4256,15 @@ def files_lister(request):
 
                             try:
                                 name_kml = doc_kml.Document.Placemark.description
+                                upload_file = file_name
                             except Exception:
                                 name_kml = doc_kml.Document.Placemark.name
+                                upload_file = file_name
                             else:
                                 name_kml = ''
+
+                            if name_kml:
+                                calculation_aoi = True
 
                             info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(
                                                 COLOR_HEX_NAME[count_color], name_kml)
@@ -4257,13 +4272,15 @@ def files_lister(request):
                             print '!!!!!!!!!!!!!!! outer_coord  ===================== ', outer_coord
                             print '!!!!!!!!!!!!!!! inner_coord  ===================== ', inner_coord
 
+
+
                     except Exception, e:
                         print '!!!!!!!!!!!!!!! ERROR COPY KML ===================== ', e
                         pass
 
                     # print '!!!!!!!!!!!! COORDINATE ======================== ', doc_kml.Document.Polygon.outerBoundaryIs.LinearRing.coordinates
 
-                    addPolygonToDB(name[0], file_name, customer, new_path, kml_url, data_set, text_kml=info_window)
+                    addPolygonToDB(f_name[0], file_name, customer, new_path, kml_url, data_set, text_kml=info_window)
 
         if 'delete_button' in data_post:
             filename_customer = data_post['delete_button']
@@ -4283,11 +4300,18 @@ def files_lister(request):
     else:
         form = UploadFileForm()
 
+    if data_set:
+        dirs_list = getTsResultDirectory(data_set)
+
     dirs, files, info_message = get_files_dirs(url_path, path_ftp_user)
 
     data = {
+        'data_set': data_set,
+        'dirs_list': dirs_list,
         'files': files,
         'form': form,
+        'calculation_aoi': calculation_aoi,
+        'upload_file': upload_file
     }
 
     return data

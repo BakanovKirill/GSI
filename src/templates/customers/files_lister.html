@@ -11,7 +11,7 @@
                       role="form" class="form-horizontal">
                     {% csrf_token %}
 
-                    <div class="margin-top-20 margin-bottom-30 right col-md-5 col-md-offset-7">
+                    <div class="margin-top-20 margin-bottom-20 left col-md-5">
                         <span class="right margin-right-10">Choose AOI shapefile to upload:</span>
                         <label for="id_test_data" class="margin-right-10">
                             <img src="{% static 'img/icons8-upload-to-ftp.png' %}" />
@@ -24,6 +24,49 @@
                             <b class="error-form">{{ form.test_data.errors }}</b>
                         {% endif %}
                     </div>
+
+                    {% if calculation_aoi %}
+                        <div class="col-md-12 center">
+                            {% if data_set %}
+                                <div id="ds_upload">File <b>"{{ upload_file }}</b>" is loaded. If you want to do the data recalculation for this file, select the statistics and attribute, and click the "Calculate data" button</div>
+                            {% else %}
+                                <div class="navbar-brand white margin-left-20"><b class="purple">Dataset: </b>None</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6 center">
+                            <p class="margin-bottom-30 margin-top-30" id="stat_selected"><b>Statistic selected:</b> <span id="span_stat_selected">None</p>
+                        </div>
+
+                        <div class="col-md-6 center">
+                            <p class="margin-bottom-30 margin-top-30" id="attr_selected"><b>Attribute selected:</b> <span id="span_attr_selected">None</span></p>
+                        </div>
+
+                        <div class="col-md-3 margin-bottom-20">
+                            <select class="selectpicker" id="select_statistic" name="select-statistic">
+                                <option value="Median">mean_ConditionalMedian</option>
+
+                                <option value="Max">mean_ConditionalMax</option>
+                                <option value="Mean">mean_ConditionalMean</option>
+                                
+                                <option value="Min">mean_ConditionalMin</option>
+                                <option value="LQ">mean_LowerQuartile</option>
+                                <option value="UQ">mean_Quantile</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3 margin-bottom-20">
+                            <select class="selectpicker" multiple title="Attribute Select" id="select_attr" name="select-attr" onchange="selectedAttribute()">
+                                {% for dl in dirs_list %}
+                                    <option>{{ dl }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-md-3 margin-bottom-20">
+                            <button type="submit" id="calculate_data" name="calculate-data" disabled="disabled" class="btn btn-primary btn-sm">Calculate data</button>
+                        </div>
+                    {% endif %}
 
                     <table class="table table-striped table-hover">
                         <thead>

@@ -468,6 +468,11 @@ function checkIsCheck() {
     }
 }
 
+// $('.selectpicker').selectpicker({
+//     style: 'btn-info',
+//     size: 10
+// });
+
 function selectAoi() {
     // alert('select_aoi: '+select_aoi);
     // console.log('select_aoi: ', select_aoi);

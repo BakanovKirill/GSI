@@ -373,6 +373,10 @@ th {
 }
 
 /* Margins "-" */
+.margin-top-15 {
+    margin-top: 15px !important;
+}
+
 .margin-top-07 {
     margin-top: -7px !important;
 }
