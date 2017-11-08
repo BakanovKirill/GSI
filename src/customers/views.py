@@ -984,7 +984,7 @@ def lutfiles(request):
     if request.method == "GET":
         order_by = request.GET.get('order_by', '')
 
-        if order_by in ('name', 'filename', 'max_val', ):
+        if order_by in ('name', 'filename', 'max_val', 'lut_file'):
             lutfiles = lutfiles.order_by(order_by)
 
             if request.GET.get('reverse', '') == '1':
