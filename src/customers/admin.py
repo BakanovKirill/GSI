@@ -83,7 +83,7 @@ class AttributesReportAdmin(admin.ModelAdmin):
     
     
 class LutFilesAdmin(admin.ModelAdmin):
-    list_display = ('name', 'lut_file', 'max_val', 'legend', 'units', 'val_scale')
+    list_display = ('name', 'lut_file', 'max_val', 'allow_negatives', 'legend', 'units', 'val_scale')
     search_fields = ['name', 'lut_file', 'max_val']
     list_filter = ('name', 'lut_file', 'max_val')
 

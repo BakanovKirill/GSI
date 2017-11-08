@@ -167,6 +167,7 @@ def lutfile_update_create(form, item_id=None):
             legend=form.cleaned_data["legend"],
             units=form.cleaned_data["units"],
             val_scale=form.cleaned_data["val_scale"],
+            allow_negatives=form.cleaned_data["allow_negatives"],
         )
         lut_file = LutFiles.objects.get(id=item_id)
     else:
@@ -177,6 +178,7 @@ def lutfile_update_create(form, item_id=None):
             legend=form.cleaned_data["legend"],
             units=form.cleaned_data["units"],
             val_scale=form.cleaned_data["val_scale"],
+            allow_negatives=form.cleaned_data["allow_negatives"],
         )
 
     return lut_file
