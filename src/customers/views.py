@@ -1341,6 +1341,7 @@ def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute
     # print '!!!!!!!!!!!!! attribute_name ========================= ', attribute_name
 
     if is_ts:
+        timeser_dir = ''
         try:
             files_list = []
             file_area_name = ''
@@ -1361,6 +1362,7 @@ def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute
             for sub_dir_1 in pr_dirs:
                 if str(sub_dir_1) in attribute_name:
                     ts_directory = os.path.join(project_directory, sub_dir_1, sub_dir)
+                    timeser_dir = ts_directory
                     ts_root, ts_dirs, ts_files = os.walk(ts_directory).next()
                     ts_files.sort()
 
@@ -1392,10 +1394,12 @@ def get_parameters_customer_info_panel(data_set, shelf_data, stat_file, absolute
                         png_path = os.path.join(PNG_PATH, png)
                         url_png = '{0}/{1}'.format(absolute_png_url, png)
                     # break
-        except StopIteration:
-            warning_message = u'The path "{0}" does not exist.'.format(ts_directory)
+        except StopIteration, e:
+            warning_message = u'The path "{0}" does not exist.'.format(os.path.join(project_directory, attribute_name))
         except AttributeError:
             warning_message = u'Please set Shelf Data for "{0}" Dataset'.format(data_set)
+        except Exception, e:
+            warning_message = u'The except path "{0}" does not exist.'.format(e)
     else:
         file_area_name = '{0}_{1}.{2}'.format(stat_file, root_filename, project_name)
         tif = '{0}.tif'.format(file_area_name)
@@ -1607,7 +1611,7 @@ def getListTifFiles(customer, dataset):
                     pr_dirs.sort()
 
                     # print '!!!!!!!!!! project_directory ========================= ', project_directory
-                    # print '!!!!!!!!!! attr.attribute ========================= ', attr.attribute
+                    print '!!!!!!!!!! attr.statistic ========================= ', attr.statistic
 
                     for pd in pr_dirs:
                         if pd in attr.attribute:
@@ -2292,6 +2296,7 @@ def customer_section(request):
             is_time_series = cur_ds.is_ts
             statistic = ''
             data = ''
+            error_msg = ''
 
             # print '!!!!!!!!!!!!! 22 COORD data_post_ajax ====================== ', data_post_ajax
 
@@ -2393,12 +2398,12 @@ def customer_section(request):
 
             for n in coord_dict:
                 str_coord = '{0},{1}\n'.format(coord_dict[n][0], coord_dict[n][1])
-                print '!!!!!!!!!!! COORD =================== ', coord_dict[n]
+                # print '!!!!!!!!!!! COORD =================== ', coord_dict[n]
                 kml_file_coord.write(str_coord)
                 points_coord.append(tuple(coord_dict[n]))
 
             # print '!!!!!!!!!!! file_path_out_coord_kml =================== ', file_path_out_coord_kml
-            print '!!!!!!!!!!! COORD =================== ', points_coord
+            # print '!!!!!!!!!!! COORD =================== ', points_coord
 
             kml_file_coord.close()
 
@@ -2422,7 +2427,8 @@ def customer_section(request):
             new_line = ''
             db_file_open = open(tmp_db_file, 'w')
 
-            # print '!!!!!!!!!!!!!!! list_file_tif =========================== ', list_file_tif
+            print '!!!!!!!!!!!!!!! list_file_tif =========================== ', list_file_tif
+            print '!!!!!!!!!!!!!!! list_data_db =========================== ', list_data_db
 
             # if not list_file_tif:
             #     data = 'Please add the GEO data to create the report.'
@@ -2461,43 +2467,48 @@ def customer_section(request):
                 print '!!!!!!!!!!!!!! TIME GETPOLYINFO SCRIPT =================== ', startTime_script_end
                 timer_script.write('ONE TIME GETPOLYINFO SCRIPT: {0}\n'.format(startTime_script_end))
                 #################### START TIME.TIME
+                #
+                #if os.path.exists(file_path_out_coord_tmp):
 
-                file_out_coord_open = open(file_path_out_coord_tmp)
+                if os.path.exists(file_path_out_coord_tmp):
+                    file_out_coord_open = open(file_path_out_coord_tmp)
 
-                for line in file_out_coord_open.readlines():
-                    new_line = line.replace(' ', '')
-                    new_line = new_line.replace('\n', '')
-                    new_line = new_line.replace(',', '$$$')
+                    for line in file_out_coord_open.readlines():
+                        new_line = line.replace(' ', '')
+                        new_line = new_line.replace('\n', '')
+                        new_line = new_line.replace(',', '$$$')
 
-                
-                    # print '!!!!!!! 1 NEW LINE ========================== ', new_line
+                    
+                        # print '!!!!!!! 1 NEW LINE ========================== ', new_line
 
-                    if new_line:
-                        new_line = new_line.split('$$$')[1:]
-                        total_aoi = int(new_line[2])
-                        units_per_hectare_aoi = float(new_line[0])
-                        new_line[0] = '{0:,}'.format(units_per_hectare_aoi).replace(',', ',')
-                        new_line[2] = '{0:,}'.format(total_aoi).replace(',', ',')
-                        # new_line[2] = str(total_aoi)
+                        if new_line:
+                            new_line = new_line.split('$$$')[1:]
+                            total_aoi = int(new_line[2])
+                            units_per_hectare_aoi = float(new_line[0])
+                            new_line[0] = '{0:,}'.format(units_per_hectare_aoi).replace(',', ',')
+                            new_line[2] = '{0:,}'.format(total_aoi).replace(',', ',')
+                            # new_line[2] = str(total_aoi)
 
-                        # print '!!!!!!! TOTAL========================== ', total_aoi
-                        # print '!!!!!!! [0] NEW LINE ========================== ', new_line[0]
-                        # print '!!!!!!! [2] NEW LINE ========================== ', new_line[2]
+                            # print '!!!!!!! TOTAL========================== ', total_aoi
+                            # print '!!!!!!! [0] NEW LINE ========================== ', new_line[0]
+                            # print '!!!!!!! [2] NEW LINE ========================== ', new_line[2]
 
-                        if scale:
-                            new_line[1] = str(float(new_line[1]) / scale)
+                            if scale:
+                                new_line[1] = str(float(new_line[1]) / scale)
 
-                        # print '!!!!!!! 3 NEW LINE ========================== ', new_line
-                        # print '!!!!!!! 2 count_data ========================== ', count_data
-                        # print '!!!!!!! 3 list_data_db[count_data] ========================== ', list_data_db[count_data]
-                        # print '!!!!!!! 2 list_data_db ========================== ', list_data_db
+                            # print '!!!!!!! 3 NEW LINE ========================== ', new_line
+                            # print '!!!!!!! 2 count_data ========================== ', count_data
+                            # print '!!!!!!! 3 list_data_db[count_data] ========================== ', list_data_db[count_data]
+                            # print '!!!!!!! 2 list_data_db ========================== ', list_data_db
 
-                        new_line = '$$$'.join(new_line)
-                        str_db_file = '{0}{1}'.format(list_data_db[count_data], new_line) 
-                        db_file_open.write('{0}\n'.format(str_db_file))
-                        count_data += 1
-                        # print '!!!!!!! 3 NEW LINE ========================== ', new_line
-                        # print '!!!!!!! str_DB_file ========================== ', str_db_file
+                            new_line = '$$$'.join(new_line)
+                            str_db_file = '{0}{1}'.format(list_data_db[count_data], new_line) 
+                            db_file_open.write('{0}\n'.format(str_db_file))
+                            count_data += 1
+                            # print '!!!!!!! 3 NEW LINE ========================== ', new_line
+                            # print '!!!!!!! str_DB_file ========================== ', str_db_file
+                else:
+                    error_msg = 'Exiting due to invalid format geotiff image (expects GDT_Int16)'
             
             db_file_open.close()
             # except Exception, e:
@@ -2520,11 +2531,18 @@ def customer_section(request):
             #################### START TIME.TIME
             
             print '!!!!!!!!!!!!!! TIME =================== ', startTime_end
+            # print '!!!!!!!!!!!!!! error_msg =================== ', error_msg
             
 
-            data = count_ts
+            # data = count_ts
+            # data = {
+            #     'count_ts': count_ts,
+            #     'error_msg': error_msg
+            # }
 
-            return HttpResponse(data)
+            return HttpResponse(json.dumps({'count_ts': count_ts, 'error_msg': error_msg}))
+
+            # return HttpResponse(data, error_msg)
 
         if 'cur_run_id' in data_post_ajax:
             # message = u'Are you sure you want to remove this objects:'
@@ -3217,6 +3235,11 @@ def customer_section(request):
                             if is_lutfile:
                                 command_line_copy_png = 'cp {0} {1}'.format(old_file_png, new_file_png)
                                 command_line_copy_legend = 'cp {0} {1}'.format(old_color_legend, new_color_legend)
+
+                                ####################### write log file
+                                customer_section.write('COMMAND LINE PNG: {0}\n'.format(command_line_copy_png))
+                                customer_section.write('COMMAND LINE LEGEND: {0}\n'.format(command_line_copy_legend))
+                                ####################### write log file
 
                                 # print '!!!!!!!!   COMMAND LINE =============================== 0 ', command_line
                                 # print '!!!!!!!!   COMMAND LINE PNG =============================== 1 ', command_line_copy_png
@@ -4147,6 +4170,20 @@ def copy_file_kml(old_path, new_path):
     return doc, error
 
 
+def get_data_kml(path):
+    doc = ''
+    error = ''
+
+    try:
+        with open(path) as f:
+            doc = parser.parse(f).getroot()
+    except Exception, e:
+        print '!!!!!!!!!!!!!!! ERROR get_data_kml =================== ', e
+        error = e
+
+    return doc, error
+
+
 def validation_kml(kml_name, kml_path):
     error_msg = ''
     file_name = kml_path.split('/')[-1]
@@ -4176,16 +4213,206 @@ def validation_kml(kml_name, kml_path):
         schema_gx = Schema("kml22gx.xsd")
 
         schema_ogc.assertValid(kml_name)
-        schema_ogc.assertValid(kml_name)
+        schema_gx.assertValid(kml_name)
     except Exception, e:
         return str(e)
 
     return error_msg
 
 
-def create_new_calculations_aoi(count, name_kml, outer_coord, inner_coord):
-    info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(
-                                                COLOR_HEX_NAME[count], name_kml)
+def getUploadListTifFiles(customer, dataset, *args):
+    # print '!!!!!!!!!!!!!!!!!!! args ====================== ', args
+    list_files_tif = []
+    list_data_db = []
+    # attributes_tmp = {}
+    # attributes_reports = {}
+    statistic = args[0]['statistic']
+    attributes = args[0]['attr']
+    upload_file = args[0]['upload_file']
+
+    # for at in attributes:
+    #     tmp = at.split('_')
+    #     attributes_tmp[tmp[0]] = tmp[1]
+
+    # for n in sorted(attributes_tmp.keys()):
+    #     attributes_reports[n] = attributes_tmp[n]
+
+    # attributes_reports = AttributesReport.objects.filter(
+    #                         user=customer, data_set=dataset)
+                            
+    # print '!!!!!!!!!!!!!!!!!!! attributes_tmp ====================== ', attributes_tmp
+
+    # print '!!!!!!!!!!!!!!!!!!! statistic ====================== ', statistic
+    # print '!!!!!!!!!!!!!!!!!!! attributes ====================== ', attributes
+    # print '!!!!!!!!!!!!!!!!!!! attributes_reports ====================== ', attributes_reports
+    # print '!!!!!!!!!!!!!!!!!!! upload_file ====================== ', upload_file
+
+    if attributes:
+        if dataset.is_ts:
+            # attributes_reports = attributes_reports.order_by('attribute')
+            # attributes = attributes.sort()
+            # attributes_reports = sorted(attributes_reports.keys())
+
+            # print '!!!!!!!!!!!!!!!!!!! 2 attributes_reports ====================== ', attributes_reports
+
+            for attr in attributes:
+                # sub_dir = attr.shelfdata.root_filename + '/' + SUB_DIRECTORIES[attr.statistic]
+                # sub_dir_path = os.path.join(PROJECTS_PATH, dataset.results_directory, sub_dir)
+                # sub_dir_path = os.path.join(PROJECTS_PATH, dataset.results_directory)
+
+                attr_list = attr.split('_')
+                project_directory = os.path.join(PROJECTS_PATH, dataset.results_directory)
+
+                # print '!!!!!!!!!! sub_dir_path ========================= ', sub_dir_path
+                # print '!!!!!!!!!! project_directory ========================= ', project_directory
+
+                if os.path.exists(project_directory):
+                    pr_root, pr_dirs, pr_files = os.walk(project_directory).next()
+                    pr_dirs.sort()
+
+                    # print '!!!!!!!!!! project_directory ========================= ', project_directory
+                    # print '!!!!!!!!!! attr.attribute ========================= ', attr.attribute
+
+                    for pd in pr_dirs:
+                        if pd in attr_list[0]:
+                            sub_directory = os.path.join(project_directory, pd, statistic)
+                            sub_root, sub_dirs, sub_files = os.walk(sub_directory).next()
+                            sub_files.sort()
+
+                            # print '!!!!!!!!!! sub_directory ========================= ', sub_directory
+
+                            for f in sub_files:
+                                fl, ext = os.path.splitext(f)
+
+                                if ext == '.tif':
+                                    fl_tif = os.path.join(sub_directory, f)
+                                    str_data_db = '{0}$$${1}$$$'.format(attr_list[1], fl_tif)
+
+                                    list_files_tif.append(fl_tif)
+                                    list_data_db.append(str_data_db)
+                                    break
+                            break
+                    # print '!!!!!!!!!! list_data_db ========================= ', list_data_db
+                    # print '!!!!!!!!!! list_files_tif ========================= ', list_files_tif
+        else:
+            # attributes_reports = attributes_reports.order_by('shelfdata__attribute_name')
+            # attributes_reports = sorted(attributes_reports.keys())
+
+            # print '!!!!!!!!!!!!!!!!!!! 2 attributes_reports ====================== ', attributes_reports
+
+            for attr in attributes:
+                attr_list = attr.split('_')
+                select_shd = ShelfData.objects.get(id=attr_list[1])
+                name_1 = select_shd.root_filename
+                name_2 = dataset.results_directory.split('/')[0]
+                tif_path = os.path.join(PROJECTS_PATH, dataset.results_directory, name_1)
+
+                print '!!!!!!!!!!!!!!!!!!! TIF PATH ====================== ', tif_path
+
+                fl_tif = '{0}/{1}_{2}.{3}.tif'.format(tif_path, SUB_DIRECTORIES_REVERCE[statistic], name_1, name_2)
+                str_data_db = '{0}$$${1}$$$'.format(attr_list[1], fl_tif)
+
+                print '!!!!!!!!!!!!!!!!!!! TIF PATH NAME ====================== ', fl_tif
+
+                list_files_tif.append(fl_tif)
+                list_data_db.append(str_data_db)
+
+    # print '!!!!!!!!!! FILE ========================= ', list_files_tif
+    # print '!!!!!!!!!! DATA DB ========================= ', list_data_db
+
+    return list_files_tif, list_data_db
+
+
+def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
+    count_color = get_count_color()
+    outer_coord, inner_coord = get_coord_aoi(doc_kml)
+    kml_name ='{0} {1} AREA COORDINATE'.format(customer, data_set)
+
+    # print '!!!!!!!!!!!!!!! ARGS  ===================== ', args
+    # print '!!!!!!!!!!!!!!! outer_coord  ===================== ', outer_coord
+    # print '!!!!!!!!!!!!!!! inner_coord  ===================== ', inner_coord
+
+    # COORDINATE
+    in_new_calculations_coord = str(customer) + '_in_new_calculations_coord_tmp.kml'
+    out_new_calculations_coord = str(customer) + '_out_new_calculations_coord_tmp.txt'
+    
+    file_path_in_new_calculations_coord = os.path.join(TMP_PATH, in_new_calculations_coord)
+    file_path_out_new_calculations_coord = os.path.join(TMP_PATH, out_new_calculations_coord)
+
+    print '!!!!!!!!!!!!!!! file_path_in_new_calculations_coord  ===================== ', file_path_in_new_calculations_coord
+    print '!!!!!!!!!!!!!!! file_path_out_new_calculations_coord  ===================== ', file_path_out_new_calculations_coord
+
+    if os.path.exists(file_path_in_new_calculations_coord):
+        os.remove(file_path_in_new_calculations_coord)
+
+    if os.path.exists(file_path_out_new_calculations_coord):
+        os.remove(file_path_out_new_calculations_coord)
+
+    if outer_coord:
+        list_file_tif, list_data_db = getUploadListTifFiles(customer, data_set, *args)
+
+        # *****************************************************************************
+        kml = simplekml.Kml()
+        pol = kml.newpolygon(name=kml_name)
+        pol.outerboundaryis = outer_coord[0]
+
+        if inner_coord:
+            pol.innerboundaryis = inner_coord
+
+        kml.save(file_path_in_new_calculations_coord)
+        
+        # *****************************************************************************
+
+        # kml_name ='{0} {1} AREA COORDINATE'.format(customer, data_set)
+        # kml = simplekml.Kml()
+        # kml.newpoint(name=kml_name, coords=points_coord)  # lon, lat, optional height
+        # kml.save(file_path_in_coord_tmp)
+        # list_file_tif, list_data_db = getListTifFiles(customer, data_set)
+        
+        count_data = 0
+        new_line = ''
+
+        for file_tif in list_file_tif:
+            print '!!! FILE TIF =========================== ', file_tif
+
+            shd_id = list_data_db[count_data].split('$$$')[0]
+            scale = ShelfData.objects.get(id=shd_id).scale
+            command_line_ts = ''
+
+            command_line = '{0} {1} {2} {3}'.format(
+                                SCRIPT_GETPOLYINFO,
+                                file_tif,
+                                file_path_in_new_calculations_coord,
+                                file_path_out_new_calculations_coord
+                            )
+
+            # print '!!! COMMAND LINE =========================== ', command_line
+            # print '!!! FILE =========================== ', f_tif
+            proc_script = Popen(command_line, shell=True)
+            proc_script.wait()
+
+
+            if os.path.exists(file_path_out_new_calculations_coord):
+                file_out_coord_open = open(file_path_out_new_calculations_coord)
+
+                for line in file_out_coord_open.readlines():
+                    new_line = line.replace(' ', '')
+                    new_line = new_line.replace('\n', '')
+                    new_line = new_line.replace(',', '$$$')
+
+                    count_data += 1
+
+                    print '!!! NEW LINE =========================== ', new_line
+
+        try:
+            name_kml = doc_kml.Document.Placemark.description
+        except Exception:
+            name_kml = doc_kml.Document.Placemark.name
+        else:
+            name_kml = ''
+
+        info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(
+                                                    COLOR_HEX_NAME[count_color], name_kml)
 
     return info_window
 
@@ -4198,6 +4425,7 @@ def files_lister(request):
     calculation_aoi = False
     upload_file = ''
     data_set = DataSet.objects.none()
+    shelf_data_all = ShelfData.objects.all().order_by('attribute_name')
     path_ftp_user = os.path.join(FTP_PATH, customer.username)
     files_list = os.listdir(path_ftp_user)
     url_path = os.path.join('/media/CUSTOMER_FTP_AREA', customer.username)
@@ -4231,8 +4459,8 @@ def files_lister(request):
         data_post = request.POST
         form = UploadFileForm(request.POST, request.FILES)
 
-        print '!!!!!!!!!! POST ================== ', data_post
-        print '!!!!!!!!!!!!! DATA SET ==================== ', request.session['select_data_set']
+        # print '!!!!!!!!!! POST ================== ', data_post
+        # print '!!!!!!!!!!!!! DATA SET ==================== ', request.session['select_data_set']
         
         if 'load_button' in data_post:
             if form.is_valid():
@@ -4263,28 +4491,33 @@ def files_lister(request):
 
                     try:
                         if not error:
-                            count_color = get_count_color()
-                            outer_coord, inner_coord = get_coord_aoi(doc_kml)
-
                             try:
+                                count_color = get_count_color()
                                 name_kml = doc_kml.Document.Placemark.description
                                 upload_file = file_name
-                            except Exception:
-                                name_kml = doc_kml.Document.Placemark.name
-                                upload_file = file_name
-                            else:
+                                calculation_aoi = True
+                                # print '!!!!!!!!!!!!!!! KML description NAME  ===================== ', name_kml
+                            except Exception, e:
+                                print '!!!!!!!!!!!!!!! ERROR EE  ===================== ', e
+                                # name_kml = ''
+
+                            if not name_kml:
+                                try:
+                                    name_kml = doc_kml.Document.Placemark.name
+                                    upload_file = file_name
+                                    calculation_aoi = True
+                                    # print '!!!!!!!!!!!!!!! KML description NAME  ===================== ', name_kml
+                                except Exception, e:
+                                    print '!!!!!!!!!!!!!!! ERROR EE  ===================== ', e
+                                    # name_kml = ''
+
+                            if not calculation_aoi:
                                 name_kml = ''
 
-                            if name_kml:
-                                calculation_aoi = True
+                            # print '!!!!!!!!!!!!!!! KML NAME  ===================== ', name_kml
 
                             info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(
                                                 COLOR_HEX_NAME[count_color], name_kml)
-
-                            print '!!!!!!!!!!!!!!! outer_coord  ===================== ', outer_coord
-                            print '!!!!!!!!!!!!!!! inner_coord  ===================== ', inner_coord
-
-
 
                     except Exception, e:
                         print '!!!!!!!!!!!!!!! ERROR COPY KML ===================== ', e
@@ -4292,7 +4525,11 @@ def files_lister(request):
 
                     # print '!!!!!!!!!!!! COORDINATE ======================== ', doc_kml.Document.Polygon.outerBoundaryIs.LinearRing.coordinates
 
-                    addPolygonToDB(f_name[0], file_name, customer, new_path, kml_url, data_set, text_kml=info_window)
+                    load_aoi = addPolygonToDB(
+                                    f_name[0], file_name, customer,
+                                    new_path, kml_url,
+                                    data_set, text_kml=info_window
+                                )
 
         if 'delete_button' in data_post:
             filename_customer = data_post['delete_button']
@@ -4308,14 +4545,70 @@ def files_lister(request):
             except Exception, e:
                 print '!!!!! ERROR FTP KML FILE ================ ', e
 
+        if 'calculate-data' in data_post:
+            # print '!!!!!!!!!! POST ================== ', data_post
+            # print '!!!!!!!!!! POST LIST ================== ', data_post.lists()
+
+            try:
+                upload_fl = ''
+                select_stat = ''
+                select_attr = []
+                upload_data = data_post.lists()
+
+                for item in upload_data:
+                    # print '!!!!!!!!!! item 0 ================== ', item[0]
+                    # print '!!!!!!!!!! item 1 ================== ', item[1]
+
+                    if 'upload-file' in item:
+                        upload_fl = item[1][0]
+
+                    if 'select-statistic' in item:
+                        select_stat = item[1][0]
+
+                    if 'select-attr' in item:
+                        # tmp_list = item[1]
+                        select_attr = item[1]
+
+                        # for n in tmp_list:
+                        #     select_attr.append(n.split('_')[1])
+
+                if upload_fl:
+                    path_test_data = os.path.join(path_ftp_user, upload_fl)
+                    new_path = os.path.join(KML_PATH, upload_fl)
+
+
+                    doc_kml, error = get_data_kml(new_path)
+
+                if not error and upload_fl:
+                    data_args = {
+                        'upload_file': upload_fl,
+                        'statistic': select_stat,
+                        'attr': select_attr
+                    }
+                    result_load_kml = create_new_calculations_aoi(
+                                            customer, doc_kml, data_set, data_args
+                                        )
+
+                
+                print '!!!!!!!!!! FILE ================== ', upload_fl
+                print '!!!!!!!!!! FILE PATH ================== ', path_test_data
+                print '!!!!!!!!!! FILE NEW PATH ================== ', new_path
+                print '!!!!!!!!!! STAT ================== ', select_stat
+                print '!!!!!!!!!! ATTR ================== ', select_attr
+            except Exception, e:
+                print '!!!!!!!!!!!!!!!! ERROR UPLOAD FILE NAME ========================== ', e
+
 
     else:
         form = UploadFileForm()
 
     if data_set:
-        dirs_list = getTsResultDirectory(data_set)
+        dirs_list = getResultDirectory(data_set, shelf_data_all)
 
     dirs, files, info_message = get_files_dirs(url_path, path_ftp_user)
+
+    # print '!!!!!!!!!!!!!!!!!!!! DIRS LIST ================================ ', dirs_list
+    # print '!!!!!!!!!!!!!!!!!!!! IS CALCULATIONS ================================ ', calculation_aoi
 
     data = {
         'data_set': data_set,

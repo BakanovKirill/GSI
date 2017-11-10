@@ -666,7 +666,8 @@ function sendDataToServer(coord, reports, stats) {
         url: form_url,
         type: 'POST',
         'async': true,
-        'dataType': 'text',
+        // 'dataType': 'text',
+        'dataType': 'json',
         data: {
             // 'send_data': coord_list,
             'coordinate_list': coord_list,
@@ -684,11 +685,20 @@ function sendDataToServer(coord, reports, stats) {
             // interval_id = setInterval(go_progress, count_reports);
         },
         'success': function(data, status, xhr){
-            // alert(data);
+            // alert('DATA: '+data);
+            // alert('DATA COUNT: '+data['count_ts']);
+            // alert('DATA ERR: '+data['error_msg']);
             // clearInterval(timerId);
-            count_ts = data;
+            count_ts = data['count_ts'];
+            var error_msg = data['error_msg']
+
+            // alert('DATA COUNT: '+count_ts);
+
             // progress = 0;
             // time_section = 0;
+            // 
+            // 'count_ts': count_ts,
+                // 'error_msg': error_msg
 
             // console.log('success progress: ', progress);
 
@@ -703,7 +713,14 @@ function sendDataToServer(coord, reports, stats) {
             //     sendGetToServer();
             // }
 
-            sendGetToServer();
+            if (error_msg) {
+                alert(data['error_msg']);
+                modal.modal('hide');
+                window.location.href = form_url;
+            } else {
+                sendGetToServer();
+            }
+            // sendGetToServer();
             
             // setTimeout(sendGetToServer, 1000);
         },
@@ -769,7 +786,7 @@ function deleteFile(ds) {
         },
         'success': function(data, status, xhr){
             // alert('DATA deleteTMPFile: '+data);
-            // alert('deleteTMPFile status: '+status);
+            // alert('deleteTMPFile data_aoi: '+data['data_aoi']);
             // /media/temp_files/result.csv
             var obj_status = status;
             var data_aoi = data['data_aoi'];
