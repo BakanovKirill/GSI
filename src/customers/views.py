@@ -4275,6 +4275,11 @@ def getUploadListTifFiles(customer, dataset, *args):
 
                     for pd in pr_dirs:
                         if pd in attr_list[0]:
+
+                            print '!!!!!!!!!! attr.attribute ========================= ', pd
+
+
+                            shd_cur = ShelfData.objects.get(attribute_name=pd)
                             sub_directory = os.path.join(project_directory, pd, statistic)
                             sub_root, sub_dirs, sub_files = os.walk(sub_directory).next()
                             sub_files.sort()
@@ -4286,7 +4291,7 @@ def getUploadListTifFiles(customer, dataset, *args):
 
                                 if ext == '.tif':
                                     fl_tif = os.path.join(sub_directory, f)
-                                    str_data_db = '{0}$$${1}$$$'.format(attr_list[1], fl_tif)
+                                    str_data_db = '{0}$$${1}$$$'.format(shd_cur, fl_tif)
 
                                     list_files_tif.append(fl_tif)
                                     list_data_db.append(str_data_db)
@@ -4349,7 +4354,6 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
         os.remove(file_path_out_new_calculations_coord)
 
     if outer_coord:
-        list_file_tif, list_data_db = getUploadListTifFiles(customer, data_set, *args)
 
         # *****************************************************************************
         kml = simplekml.Kml()
@@ -4363,11 +4367,13 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
         
         # *****************************************************************************
 
-        # kml_name ='{0} {1} AREA COORDINATE'.format(customer, data_set)
         # kml = simplekml.Kml()
-        # kml.newpoint(name=kml_name, coords=points_coord)  # lon, lat, optional height
-        # kml.save(file_path_in_coord_tmp)
-        # list_file_tif, list_data_db = getListTifFiles(customer, data_set)
+        # kml.newpoint(name=kml_name, coords=outer_coord[0])  # lon, lat, optional height
+        # kml.save(file_path_in_new_calculations_coord)
+
+        # *****************************************************************************
+
+        list_file_tif, list_data_db = getUploadListTifFiles(customer, data_set, *args)
         
         count_data = 0
         new_line = ''
@@ -4547,7 +4553,7 @@ def files_lister(request):
 
         if 'calculate-data' in data_post:
             # print '!!!!!!!!!! POST ================== ', data_post
-            # print '!!!!!!!!!! POST LIST ================== ', data_post.lists()
+            print '!!!!!!!!!! POST LIST ================== ', data_post.lists()
 
             try:
                 upload_fl = ''
@@ -4585,6 +4591,7 @@ def files_lister(request):
                         'statistic': select_stat,
                         'attr': select_attr
                     }
+                    
                     result_load_kml = create_new_calculations_aoi(
                                             customer, doc_kml, data_set, data_args
                                         )
@@ -4603,7 +4610,11 @@ def files_lister(request):
         form = UploadFileForm()
 
     if data_set:
-        dirs_list = getResultDirectory(data_set, shelf_data_all)
+        if data_set.is_ts:
+            dirs_list = getTsResultDirectory(data_set)
+        else:
+            dirs_list = getResultDirectory(data_set, shelf_data_all)
+    
 
     dirs, files, info_message = get_files_dirs(url_path, path_ftp_user)
 
