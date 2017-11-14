@@ -2039,7 +2039,7 @@ def customer_section(request):
     # The url to are PNG, KML urls
     scheme = '{0}://'.format(request.scheme)
     absolute_png_url = os.path.join(scheme, request.get_host(), PNG_DIRECTORY)
-    absolute_kml_url = os.path.join(scheme, request.get_host(), KML_DIRECTORY)
+    absolute_kml_url = os.path.join(scheme, request.get_host(), KML_DIRECTORY, customer.username)
     absolute_legend_url = os.path.join(scheme, request.get_host(), LEGENDS_DIRECTORY)
 
     # print '!!!!!!!!! START REQ ZOOM ====================== ', request.session['zoom_map']
