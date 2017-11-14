@@ -4433,6 +4433,8 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
     is_ts = data_set.is_ts
     statistic = args[0]['statistic']
     attributes = args[0]['attr']
+    upload_file = args[0]['attr']
+    upload_file = upload_file.split(.kml)[0]
     count_color = get_count_color()
     outer_coord, inner_coord = get_coord_aoi(doc_kml)
     list_file_tif = getUploadListTifFiles(customer, data_set, *args)
@@ -4637,7 +4639,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
         name_kml = ''
 
     info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(
-                                                COLOR_HEX_NAME[count_color], name_kml)
+                                                COLOR_HEX_NAME[count_color], upload_file)
     info_window += '<p align="center"><span><b>Total Area:</b></span> {0} ha</p>'.format(total_area)
     info_window += '<p align="center"><span><b>Values:</b></span> {0}</p>'.format(SUB_DIRECTORIES_REVERCE[statistic])
     info_window += '<div style="overflow:auto;" class="ui-widget-content">'
