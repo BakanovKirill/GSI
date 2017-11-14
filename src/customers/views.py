@@ -4434,7 +4434,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
     statistic = args[0]['statistic']
     attributes = args[0]['attr']
     upload_file = args[0]['attr']
-    upload_file = upload_file.split(.kml)[0]
+    upload_file = upload_file.split('.kml')[0]
     count_color = get_count_color()
     outer_coord, inner_coord = get_coord_aoi(doc_kml)
     list_file_tif = getUploadListTifFiles(customer, data_set, *args)
