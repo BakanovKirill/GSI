@@ -19,6 +19,7 @@ from lxml import html
 import numpy as np
 import requests
 from random import randint
+import re
 
 # import pykml
 # from pykml import parser
@@ -1490,33 +1491,47 @@ def createKml(user, filename, info_window, url, data_set, count_color, *args):
     # for i in range(10):
     #     exec(var+str(i)+' = ' + str(i))
 
-    len_inner_coord = len(inner_coord)
-    pol_dict = {}
+    # len_inner_coord = len(inner_coord)
+    # pol_dict = {}
 
     kml = simplekml.Kml()
     pol = kml.newpolygon(name=filename)
-
-    if len_inner_coord:
-        for n in xrange(1, len_inner_coord):
-            pol_dict['pol_'+str(n)] = kml.newpolygon(name=filename)
-
-    # inner_list = pol.innerboundaryis
-    # pol_2 = kml.newpolygon(name=filename)
-    
-    # print '!!!!!!!!!!!!!!!!!! len_inner_coord =========================== ', len_inner_coord
 
     if not args:
         pol.outerboundaryis.coords = coord
     else:
         pol.outerboundaryis = outer_coord
-        # pol_2.outerboundaryis = outer_coord
-        # pol.innerboundaryis = inner_coord[1]
 
-        if len_inner_coord:
-            pol.innerboundaryis = inner_coord[0]
+        if inner_coord:
+            pol.innerboundaryis = inner_coord
 
-            for n in xrange(1, len_inner_coord):
-                pol_dict['pol_'+str(n)].innerboundaryis = inner_coord[n]
+
+    # **************************************************************************
+    # **************************************************************************
+    # **************************************************************************
+    # if len_inner_coord:
+    #     for n in xrange(1, len_inner_coord):
+    #         pol_dict['pol_'+str(n)] = kml.newpolygon(name=filename)
+    # **************************************************************************
+    
+    # print '!!!!!!!!!!!!!!!!!! len_inner_coord =========================== ', len_inner_coord
+
+    # if not args:
+    #     pol.outerboundaryis.coords = coord
+    # else:
+    #     pol.outerboundaryis = outer_coord
+    #     # pol_2.outerboundaryis = outer_coord
+    #     # pol.innerboundaryis = inner_coord[1]
+
+    #     if len_inner_coord:
+    #         pol.innerboundaryis = inner_coord[0]
+
+    #         for n in xrange(1, len_inner_coord):
+    #             pol_dict['pol_'+str(n)].innerboundaryis = inner_coord[n]
+
+    # **************************************************************************
+    # # **************************************************************************
+    # # **************************************************************************
 
         # inner_list.append(inner_coord[0])
         # inner_list.append(inner_coord[1])
@@ -1556,9 +1571,25 @@ def createKml(user, filename, info_window, url, data_set, count_color, *args):
     kml_path = os.path.join(KML_PATH, user.username, kml_filename)
 
     # print '!!!!!!!!!!!!!!!!!! kml_path =========================== ', kml_path
-
     
     kml.save(kml_path)
+
+    if inner_coord:
+        testkml = ''
+
+        with open(kml_path) as f:
+            testkml = f.readlines()
+
+        testkml = "".join(map(lambda x: x.strip(), testkml))
+        tmp_line = re.sub(r"Ring><Linear", "Ring></innerBoundaryIs><innerBoundaryIs><Linear", testkml)
+        list_lines = tmp_line.split('>')[0:]
+        new_tmp_line = '>\n'.join(list_lines)
+        my_file = open(kml_path, 'w')
+        my_file.write(new_tmp_line)
+        my_file.close()
+
+        print '!!!!!!!!!!!!!!!!! kml_path 33 ============================= ', kml_path
+
 
     polygon = addPolygonToDB(filename, kml_filename, user, kml_path, kml_url, data_set, info_window)
 
@@ -4919,7 +4950,7 @@ def files_lister(request):
                                     total_area=list_total_area[n]+' ha'
                                 )
 
-                    path_kml = os.path.join(KML_PATH, upload_fl)
+                    path_kml = os.path.join(KML_PATH, customer.username, upload_fl)
                     command_line_copy_kml = 'cp {0} {1}'.format(path_kml, path_ftp_user)
                     proc_copy_kml = Popen(command_line_copy_kml, shell=True)
                     proc_copy_kml.wait()
