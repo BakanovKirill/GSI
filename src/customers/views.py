@@ -4630,13 +4630,13 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
         # print '!!! total =========================== ', total
 
 
-    try:
-        try:
-            name_kml = doc_kml.Document.Placemark.description
-        except Exception, e:
-            name_kml = doc_kml.Document.Placemark.name
-    except Exception:
-        name_kml = ''
+    # try:
+    #     try:
+    #         name_kml = doc_kml.Document.Placemark.description
+    #     except Exception, e:
+    #         name_kml = doc_kml.Document.Placemark.name
+    # except Exception:
+    #     name_kml = ''
 
     info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(
                                                 COLOR_HEX_NAME[count_color], upload_file)
