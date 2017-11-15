@@ -9,6 +9,10 @@ from core.utils import get_list_lutfiles
 from customers.models import (Category, ShelfData, DataSet, LutFiles,
                             CustomerAccess, CustomerPolygons, LUTFILES,
                             SCALE)
+from core.utils import get_list_lutfiles
+
+
+LUTFILES_LIST = get_list_lutfiles()
 
 
 class CategoryForm(forms.ModelForm):
@@ -220,7 +224,7 @@ class LutFilesForm(forms.ModelForm):
     lut_file = forms.CharField(
         widget=forms.Select(
                 attrs={'class': 'form-control'},
-                choices=LUTFILES),
+                choices=LUTFILES_LIST),
         # required=False,
         validators=[validate_lutfile],
         label=u'LUT File'
