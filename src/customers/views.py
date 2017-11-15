@@ -1452,6 +1452,8 @@ def createCustomerInfoPanel(customer, data_set, shelf_data, stat_file, absolute_
 def createKml(user, filename, info_window, url, data_set, count_color, *args):
     # Create KML file for the draw polygon
     
+    outer_coord = []
+    inner_coord = []
     kml_filename = str(filename) + '.kml'
     kml_url = url + '/' + kml_filename
 
