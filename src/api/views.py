@@ -3,6 +3,7 @@ from datetime import datetime
 from subprocess import Popen
 import os
 import urllib
+import requests
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
@@ -11,6 +12,8 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.http import Http404
 
+from django.core.files import File
+
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -18,16 +21,16 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
-from rest_framework.parsers import JSONParser
+from rest_framework.parsers import JSONParser, FileUploadParser, FormParser, MultiPartParser
 from rest_framework import exceptions
 from rest_framework.pagination import PageNumberPagination
 
 from django.contrib.auth.models import User
 from rest_framework import generics
 
-from core.utils import (validate_status, write_log, get_path_folder_run, execute_fe_command)
+from core.utils import (validate_status, write_log, get_path_folder_run, execute_fe_command, handle_uploaded_file)
 from gsi.models import Run, RunStep, CardSequence, OrderedCardItem, SubCardItem
-from gsi.settings import EXECUTE_FE_COMMAND, KML_PATH
+from gsi.settings import EXECUTE_FE_COMMAND, KML_PATH, FTP_PATH, KML_DIRECTORY
 from cards.models import CardItem
 from customers.models import (CustomerPolygons, DataTerraserver, DataSet, CustomerAccess,
                                 DataPolygons, CustomerInfoPanel, TimeSeriesResults)
@@ -398,6 +401,12 @@ class ShapeFileDetail(APIView):
 
     def get(self, request, sf_id, format=None):
         if request.auth:
+            # in_path = '/home/grigoriy/test/TMP/1_test.txt'
+            # out_path = '/home/grigoriy/test/TMP/11'
+            # command_line = 'cp {0} {1}'.format(in_path, out_path)
+            # proc = Popen(command_line, shell=True)
+            # proc.wait()
+
             cip = self.get_object(sf_id)
             serializer = CustomerPolygonSerializer(cip)
             data = serializer.data
@@ -428,6 +437,104 @@ class TimeSeriesDetail(APIView):
             data = serializer.data
 
         return Response(data)
+
+
+class UploadFileAoiView(APIView):
+    """
+    Upload AOI file to the USER KML and User FTP directorys.
+    """
+
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    # # authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+    data = {'auth': 'Need YOUR ACCESS TOKEN'}
+    # parser_classes = (FileUploadParser,)
+
+    def get_object(self, ds_id):
+        try:
+            return DataSet.objects.get(pk=ds_id)
+        except DataSet.DoesNotExist:
+            raise Http404
+
+    def post(self, request, ds_id, format=None):
+        if request.auth:
+            file_obj = request.FILES['file']
+            dataset = self.get_object(ds_id)
+            file_name = file_obj.name
+
+            scheme = '{0}://'.format(request.scheme)
+            absolute_kml_url = os.path.join(scheme, request.get_host(), KML_DIRECTORY, request.user.username, file_name)
+
+            kml_path = os.path.join(KML_PATH, request.user.username, file_name)
+            ftp_path = os.path.join(FTP_PATH, request.user.username, file_name)
+            
+            with open(ftp_path, 'wb+') as destination:
+                for chunk in file_obj.chunks():
+                    ch = chunk
+                    destination.write(chunk)
+
+
+            fl, ext = os.path.splitext(ftp_path)
+
+            if ext == '.kml':
+                f_name_1 = file_name.split('.kml')[0]
+                command_line_copy_kml = 'cp {0} {1}'.format(ftp_path, kml_path)
+                proc_copy_kml = Popen(command_line_copy_kml, shell=True)
+                proc_copy_kml.wait()
+
+                if not CustomerPolygons.objects.filter(name=f_name_1, user=request.user,
+                                data_set=dataset, kml_name=file_name).exists():
+                    CustomerPolygons.objects.create(
+                        name=f_name_1,
+                        user=request.user,
+                        data_set=dataset,
+                        kml_name=file_name,
+                        kml_path=kml_path,
+                        kml_url=absolute_kml_url
+                    )
+                elif CustomerPolygons.objects.filter(name=f_name_1, user=request.user,
+                                data_set=dataset, kml_name=file_name).exists():
+                    CustomerPolygons.objects.filter(name=f_name_1, user=request.user,
+                                data_set=dataset, kml_name=file_name).update(
+                                    kml_path=kml_path,
+                                    kml_url=absolute_kml_url
+                                )
+            
+            data = {
+                'file_name': file_obj.name,
+                'status': status.HTTP_201_CREATED,
+            }
+
+            return Response(data)
+
+
+class UploadFileFtpView(APIView):
+    """
+    Upload file to User FTP directory.
+    """
+
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    # authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+    data = {'auth': 'Need YOUR ACCESS TOKEN'}
+
+    def post(self, request, format=None):
+        if request.auth:
+            file_obj = request.FILES['file']
+            file_name = file_obj.name
+            ftp_path = os.path.join(FTP_PATH, request.user.username, file_name)
+            
+            with open(ftp_path, 'wb+') as destination:
+                for chunk in file_obj.chunks():
+                    ch = chunk
+                    destination.write(chunk)
+            
+            data = {
+                'file_name': file_obj.name,
+                'status': status.HTTP_201_CREATED,
+            }
+
+            return Response(data)
         
         
 # class DataSetsList(APIView):

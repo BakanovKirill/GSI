@@ -6,7 +6,9 @@ from rest_framework.authtoken import views
 from django.views.generic import TemplateView
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from api.views import DataSetList, DataSetDetail, ShapeFileDetail, TimeSeriesDetail
+from api.views import (DataSetList, DataSetDetail,
+                        ShapeFileDetail, TimeSeriesDetail,
+                        UploadFileAoiView, UploadFileFtpView)
 
 
 urlpatterns = [
@@ -27,11 +29,17 @@ urlpatterns = [
 	url(r'^datasets/(?P<ds_id>[0-9]+)/$', DataSetDetail.as_view()),
 	# url(r'^dataset/', 'api.views.dataset', name='dataset'),
    
-   url(r'^shapefile/(?P<sf_id>[0-9]+)/$', ShapeFileDetail.as_view()), 
-   url(r'^timeseries/(?P<ts_id>[0-9]+)/$', TimeSeriesDetail.as_view()), 
+    url(r'^shapefile/(?P<sf_id>[0-9]+)/$', ShapeFileDetail.as_view()), 
+    url(r'^timeseries/(?P<ts_id>[0-9]+)/$', TimeSeriesDetail.as_view()),
+   
+    # upload AOI file
+    url(r'^upload/(?P<ds_id>[0-9]+)/$', UploadFileAoiView.as_view()),
+
+    # upload file to FTP
+    url(r'^upload/$', UploadFileFtpView.as_view()),
 	
-	url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-	url(r'^api-token-auth/', views.obtain_auth_token),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api-token-auth/', views.obtain_auth_token),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

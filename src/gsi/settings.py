@@ -70,7 +70,7 @@ INSTALLED_APPS = (
     'log',
     'tags',
     'articles',
-    # 'api',
+    'api',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -83,6 +83,15 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 )
+
+FILE_UPLOAD_HANDLERS = (
+    'django.core.files.uploadhandler.MemoryFileUploadHandler',
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
+)
+
+FILE_UPLOAD_MAX_MEMORY_SIZE = 7864320
+
+# FILE_UPLOAD_TEMP_DIR = os.path.join(BASE_DIR, "tmp")
 
 ROOT_URLCONF = 'gsi.urls'
 

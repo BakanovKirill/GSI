@@ -4785,7 +4785,7 @@ def files_lister(request):
                     os.remove(path_test_data)
 
 
-                print '!!!!!!!!!! path_kml_user ================== ', path_kml_user
+                # print '!!!!!!!!!! path_kml_user ================== ', path_kml_user
 
                 f_name = str(file_name).split('.')[:-1]
                 ext = str(file_name).split('.')[-1]
@@ -4984,7 +4984,7 @@ def files_lister(request):
 
     dirs, files, info_message = get_files_dirs(url_path, path_ftp_user)
 
-    # print '!!!!!!!!!!!!!!!!!!!! DIRS LIST ================================ ', dirs_list
+    # print '!!!!!!!!!!!!!!!!!!!! FILES LIST ================================ ', files
     # print '!!!!!!!!!!!!!!!!!!!! IS CALCULATIONS ================================ ', calculation_aoi
 
     data = {
