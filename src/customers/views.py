@@ -3200,8 +3200,14 @@ def customer_section(request):
 
                             for n in out:
                                 if 'MAX' in n:
+                                    ####################### write log file
+                                    customer_section.write('\n\nCALC MAX SIZE LINE MAX: {0}\n\n'.format(n))
+                                    ####################### write log file
                                     line = n.split(' : ')
                                     max_val = line[-1]
+                                    ####################### write log file
+                                    customer_section.write('\n\nCALC MAX SIZE LINE MAX -1: {0}\n\n'.format(line))
+                                    ####################### write log file
                                     print '!!!!!!!!!!!!!!!!!!!!!!! OUT MAX ======================= ', line[-1]
 
                             ####################### write log file
