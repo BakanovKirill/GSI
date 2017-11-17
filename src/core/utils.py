@@ -14,35 +14,35 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from gsi.settings import (EXECUTE_FE_COMMAND, PROCESS_NUM,
-                            STATIC_DIR, FE_SUBMIT, EXEC_RUNS,
-                            PATH_RUNS_SCRIPTS, LUT_DIRECTORY
-                        )
+							STATIC_DIR, FE_SUBMIT, EXEC_RUNS,
+							PATH_RUNS_SCRIPTS, LUT_DIRECTORY
+						)
 from core.multithreaded import MultiprocessingCards
 
 
 def handle_uploaded_file(f, path):
-    """**Upload file on the server.**
+	"""**Upload file on the server.**
 
-    :Arguments:
-        * *f*: File name
-        * *path*: Path where to save the file
-    """
-    with open(path, 'a') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
+	:Arguments:
+		* *f*: File name
+		* *path*: Path where to save the file
+	"""
+	with open(path, 'a') as destination:
+		for chunk in f.chunks():
+			destination.write(chunk)
 
 
 def generate_RSA(bits=2048):
-    '''
-    Generate an RSA keypair with an exponent of 65537 in PEM format
-    param: bits The key length in bits
-    Return private key and public key
-    '''
-    new_key = RSA.generate(bits, e=65537)
-    public_key = new_key.publickey().exportKey("PEM")
-    private_key = new_key.exportKey("PEM")
+	'''
+	Generate an RSA keypair with an exponent of 65537 in PEM format
+	param: bits The key length in bits
+	Return private key and public key
+	'''
+	new_key = RSA.generate(bits, e=65537)
+	public_key = new_key.publickey().exportKey("PEM")
+	private_key = new_key.exportKey("PEM")
 	
-    return private_key, public_key
+	return private_key, public_key
 
 
 class UnicodeNameMixin(object):
@@ -222,40 +222,40 @@ def get_type_file(mime_type):
 			type_file = 'archive'
 
 	return type_file
-    
-    
+	
+	
 def get_list_lutfiles():
-    ####################### write log file
-    log_file = '/home/gsi/LOGS/LUT_files.log'
-    lut_files = open(log_file, 'w')
-    now = datetime.now()
-    lut_files.write('DATE: '+str(now))
-    lut_files.write('\n')
-    #######################
+	####################### write log file
+	log_file = '/home/gsi/LOGS/LUT_files.log'
+	lut_files = open(log_file, 'w')
+	now = datetime.now()
+	lut_files.write('DATE: '+str(now))
+	lut_files.write('\n')
+	#######################
 
-    lutfiles = []
-    
-    root, dirs, files = os.walk(LUT_DIRECTORY).next()
+	lutfiles = []
+	
+	root, dirs, files = os.walk(LUT_DIRECTORY).next()
 
-    # if 'TifPng' in files:
-    #     files.remove('TifPng')
-        
-    files.insert(0, 'select')
+	# if 'TifPng' in files:
+	#     files.remove('TifPng')
+		
+	files.insert(0, 'select')
 
-    ####################### write log file
-    lut_files.write('FILES: {0}\n'.format(files))
-    lut_files.write('\n')
-    #######################
-    
-    for i in izip(files, files):
-        lutfiles.append(i)
+	####################### write log file
+	lut_files.write('FILES: {0}\n'.format(files))
+	lut_files.write('\n')
+	#######################
+	
+	for i in izip(files, files):
+		lutfiles.append(i)
 
-    ####################### write log file
-    lut_files.write('LUT FILES: {0}\n'.format(lutfiles))
-    lut_files.close()
-    #######################
-        
-    return tuple(lutfiles)
+	####################### write log file
+	lut_files.write('LUT FILES: {0}\n'.format(lutfiles))
+	lut_files.close()
+	#######################
+		
+	return tuple(lutfiles)
 
 
 def get_files_dirs(url_path, full_path):
@@ -269,6 +269,8 @@ def get_files_dirs(url_path, full_path):
 
 	try:
 		root, dirs, files = os.walk(full_path).next()
+		dirs.sort()
+		files.sort()
 
 		for d in dirs:
 			date_modification = datetime.fromtimestamp(os.path.getmtime(full_path))
@@ -724,12 +726,12 @@ def make_run(run_base, user):
 				# 			).communicate()
 					
 				out, err = Popen(
-				    'nohup {0} {1} {2} &'.format(
-				        EXECUTE_FE_COMMAND,
-				        first_script['run'].id,
-				        first_script['card'].id
-				    ),
-				    shell=True, stdout=PIPE, stderr=PIPE
+					'nohup {0} {1} {2} &'.format(
+						EXECUTE_FE_COMMAND,
+						first_script['run'].id,
+						first_script['card'].id
+					),
+					shell=True, stdout=PIPE, stderr=PIPE
 				).communicate()
 
 				# print 'out =========================== ', out

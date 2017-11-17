@@ -2079,14 +2079,16 @@ def customer_section(request):
 
     # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     # Get the User DataSets
+    ds_id_list = []
     if customer_access_ds:
         for n in customer_access_ds:
-            try:
-                ds = DataSet.objects.get(pk=n.dataset_id)
-                data_sets.append(ds)
-            except DataSet.DoesNotExist, e:
-                print 'ERROR Get DataSet ==================== ', e
-                pass
+            ds_id_list.append(n.dataset_id)
+            # try:
+            #     ds = DataSet.objects.get(pk=n.dataset_id)
+            #     data_sets.append(ds)
+            # except DataSet.DoesNotExist, e:
+            #     print 'ERROR Get DataSet ==================== ', e
+            #     pass
     else:
         error_message = 'You have no one DataSet for view. Please contact to the admin.'
         data = {
@@ -2094,6 +2096,9 @@ def customer_section(request):
         }
 
         return data
+
+    if ds_id_list:
+        data_sets = DataSet.objects.filter(id__in=ds_id_list).order_by('name')
     # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     # print '!!!!!!!!!!!!!!!!!!! 1 request.session[time_series_list] ================================== ', request.session['time_series_list']
@@ -3960,6 +3965,11 @@ def customer_section(request):
         dirs_list_ts = getTsResultDirectory(cur_ds)
 
     count_ts = request.session['count_ts']
+
+    
+    # data_sets_1 = data_sets.sort()
+
+    # print '!!!!!!!!!!!!!!!!!! TYPE DS ========================= ', data_sets_1
 
     # if google_map_zoom == 0.001:
     #     google_map_zoom = 1
