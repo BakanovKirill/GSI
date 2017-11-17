@@ -3193,12 +3193,20 @@ def customer_section(request):
                             out = out.split('\n')
 
                             # print '!!!!!!!!!!!!!!!!!!!!!!! OUT ALL: ', out
+                            
+                            ####################### write log file
+                            customer_section.write('\n\nCALC MAX SIZE: {0}\n\n'.format(out))
+                            ####################### write log file
 
                             for n in out:
                                 if 'MAX' in n:
                                     line = n.split(' : ')
                                     max_val = line[-1]
                                     print '!!!!!!!!!!!!!!!!!!!!!!! OUT MAX ======================= ', line[-1]
+
+                            ####################### write log file
+                            customer_section.write('\n\nCALC MAX SIZE RESULT: {0}\n\n'.format(max_val))
+                            ####################### write log file
 
                         if shelf_data_attr.lutfiles.allow_negatives < 0:
                             max_val = max_val * -1
