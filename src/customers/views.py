@@ -3218,7 +3218,11 @@ def customer_section(request):
                         # print '!!!!!!!!!!!!!!!!!!! LUT COMMAND NAME ========================= ', command_line
                         
                         ####################### write log file
-                        customer_section.write('COMMAND LINE: {0}\n'.format(command_line))
+                        customer_section.write('\n\nCOMMAND LINE: {0}\n'.format(command_line))
+                        customer_section.write('\nCOMMAND LINE MAX VAL: {0}\n'.format(str(max_val)))
+                        customer_section.write('\nCOMMAND LINE LEGEND: {0}\n'.format(str(legend)))
+                        customer_section.write('\nCOMMAND LINE UNITS: {0}\n'.format(str(units)))
+                        customer_section.write('\nCOMMAND LINE VAL SCALE: {0}\n\n'.format(str(val_scale)))
                         ####################### write log file
 
                         new_color_file = file_area_name + lut_name + '.png'
