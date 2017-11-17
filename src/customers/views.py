@@ -3208,8 +3208,8 @@ def customer_section(request):
                                     ####################### write log file
                                     customer_section.write('\n\nCALC MAX SIZE LINE MAX: {0}\n\n'.format(n))
                                     ####################### write log file
-                                    line = n.split(' : ')
-                                    max_val = line[-1]
+                                    line = n.split(':')
+                                    max_val = line[-1].replace(' ', '')
                                     ####################### write log file
                                     customer_section.write('\n\nCALC MAX SIZE LINE MAX -1: {0}\n\n'.format(line))
                                     ####################### write log file
