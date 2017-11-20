@@ -4646,15 +4646,15 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
         os.remove(file_path_out_new_calculations_coord)
 
     # print '!!!!!!!!!!!!!!! outer_coord  ===================== ', outer_coord[0]
-    print '!!!!!!!!!!!!!!! LEN outer_coord  ===================== ', len(outer_coord)
+    # print '!!!!!!!!!!!!!!! LEN outer_coord  ===================== ', len(outer_coord)
     
-    print '!!!!!!!!!!!!!!! list_file_tif  ===================== ', list_file_tif
+    # print '!!!!!!!!!!!!!!! list_file_tif  ===================== ', list_file_tif
     
 
     # if all_coord:
     for file_tif in list_file_tif:
         # *****************************************************************************
-        print '!!!!!!!!!!!!!!! outer_coord [0]  ===================== ', outer_coord[0]
+        # print '!!!!!!!!!!!!!!! outer_coord [0]  ===================== ', outer_coord[0]
 
         kml = simplekml.Kml()
         pol = kml.newpolygon(name=kml_name)
