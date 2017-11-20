@@ -4238,14 +4238,16 @@ def get_coord_aoi(doc):
 
                 for m in tmp_list:
                     m = m.replace('\t', '')
-                    m_split = m.split(',')
 
-                    # print '!!!!!!!!!!!!!!!! M SPLIT ======================== ', m_split
+                    if m:
+                        m_split = m.split(',')
 
-                    if m_split[-1] == '0.0' or m_split[-1] == '0':
-                        tmp_copy.append(tuple(m_split[:-1]))
-                    else:
-                        tmp_copy.append(tuple(m_split))
+                        # print '!!!!!!!!!!!!!!!! M SPLIT ======================== ', m_split
+
+                        if m_split[-1] == '0.0' or m_split[-1] == '0':
+                            tmp_copy.append(tuple(m_split[:-1]))
+                        else:
+                            tmp_copy.append(tuple(m_split))
 
                 # print '!!!!!!!!!!!!!!!! TMP COPY ======================== ', tmp_copy
 
@@ -4306,14 +4308,16 @@ def get_coord_aoi(doc):
 
                 for m in tmp_list:
                     m = m.replace('\t', '')
-                    m_split = m.split(',')
 
-                    # print '!!!!!!!!!!!!!!!! M SPLIT ======================== ', m_split
+                    if m:
+                        m_split = m.split(',')
 
-                    if m_split[-1] == '0.0' or m_split[-1] == '0':
-                        tmp_copy.append(tuple(m_split[:-1]))
-                    else:
-                        tmp_copy.append(tuple(m_split))
+                        # print '!!!!!!!!!!!!!!!! M SPLIT ======================== ', m_split
+
+                        if m_split[-1] == '0.0' or m_split[-1] == '0':
+                            tmp_copy.append(tuple(m_split[:-1]))
+                        else:
+                            tmp_copy.append(tuple(m_split))
 
                 # print '!!!!!!!!!!!!!!!! TMP COPY ======================== ', tmp_copy
 
@@ -4616,7 +4620,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
     outer_coord, inner_coord = get_coord_aoi(doc_kml)
     list_file_tif = getUploadListTifFiles(customer, data_set, *args)
 
-    # print '!!!!!!!!!!!!!!! Outer Coord  ===================== ', outer_coord
+    # print '!!!!!!!!!!!!!!! CREATE Outer Coord  ===================== ', outer_coord
 
     # all_coord = outer_coord + inner_coord
     kml_name ='{0} {1} AREA COORDINATE'.format(customer, data_set)
@@ -4642,14 +4646,16 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
         os.remove(file_path_out_new_calculations_coord)
 
     # print '!!!!!!!!!!!!!!! outer_coord  ===================== ', outer_coord[0]
-    # print '!!!!!!!!!!!!!!! outer_coord  ===================== ', len(outer_coord)
+    print '!!!!!!!!!!!!!!! LEN outer_coord  ===================== ', len(outer_coord)
     
-    # print '!!!!!!!!!!!!!!! list_file_tif  ===================== ', list_file_tif
+    print '!!!!!!!!!!!!!!! list_file_tif  ===================== ', list_file_tif
     
 
     # if all_coord:
     for file_tif in list_file_tif:
         # *****************************************************************************
+        print '!!!!!!!!!!!!!!! outer_coord [0]  ===================== ', outer_coord[0]
+
         kml = simplekml.Kml()
         pol = kml.newpolygon(name=kml_name)
         pol.outerboundaryis = outer_coord[0]
@@ -4659,7 +4665,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
 
         kml.save(file_path_in_new_calculations_coord)
 
-        # print '!!!!!!!!!!!!!!! file_tif  ===================== ', file_tif
+        print '!!!!!!!!!!!!!!! file_tif  ===================== ', file_tif
         
         # *****************************************************************************
 
