@@ -2758,7 +2758,7 @@ def customer_section(request):
                 else:
                     dirs_list = getTsResultDirectory(data_set)
 
-                print '!!!!!!!!!!!!!!!!!!!! DIRRR LISTTT ============================ ', dirs_list
+                # print '!!!!!!!!!!!!!!!!!!!! DIRRR LISTTT ============================ ', dirs_list
 
                 if dirs_list:
                     info_panel = createCustomerInfoPanel(
@@ -4255,6 +4255,52 @@ def get_coord_aoi(doc):
         pass
 
     try:
+        outer_boundary_is = doc.Placemark.Polygon.outerBoundaryIs
+
+        for n in xrange(len(outer_boundary_is)):
+            tmp_tuples = []
+            tmp = str(doc.Placemark.Polygon.outerBoundaryIs[n].LinearRing.coordinates).split('\n')
+
+            # print '!!!!!!!!!!!!!!!! TMP ======================== ', len(tmp)
+
+            if len(tmp) == 1:
+                tmp_copy = []
+                tmp_list = tmp[0].split(' ')
+
+                # print '!!!!!!!!!!!!!!!! TMP LIST ======================== ', tmp_list
+
+                for m in tmp_list:
+                    m_split = m.split(',')
+
+                    # print '!!!!!!!!!!!!!!!! M SPLIT ======================== ', m_split
+
+                    if m_split[-1] == '0.0':
+                        tmp_copy.append(tuple(m_split[:-1]))
+
+                # print '!!!!!!!!!!!!!!!! TMP COPY ======================== ', tmp_copy
+
+                outer_coord.append(tmp_copy)
+
+                # print '!!!!!!!!!!!!!!!! outer_coord ======================== ', outer_coord
+            else:
+                if not tmp[0]:
+                    tmp = tmp[1:]
+
+                if not tmp[-1]:
+                    tmp = tmp[:-1]
+
+                for m in tmp:
+                    line = m.split(',')
+                    tmp_tuples.append(tuple(line))
+
+                # print '!!!!!!!!!!!!!!!! outer_boundary_is ======================== ', len(tmp)
+                # print '!!!!!!!!!!!!!!!! outer_boundary_is ======================== ', tmp_tuples
+                
+                outer_coord.append(tmp_tuples)
+    except Exception:
+        pass
+
+    try:
         inner_boundary_is = doc.Document.Placemark.Polygon.innerBoundaryIs
 
         for n in xrange(len(inner_boundary_is)):
@@ -4344,14 +4390,14 @@ def validation_kml(kml_name, kml_path):
                     The file has more than 1000 objects'.format(file_name)
         return error_msg
 
-    try:
-        schema_ogc = Schema("ogckml22.xsd")
-        schema_gx = Schema("kml22gx.xsd")
+    # try:
+    #     schema_ogc = Schema("ogckml22.xsd")
+    #     schema_gx = Schema("kml22gx.xsd")
 
-        schema_ogc.assertValid(kml_name)
-        schema_gx.assertValid(kml_name)
-    except Exception, e:
-        return str(e)
+    #     schema_ogc.assertValid(kml_name)
+    #     schema_gx.assertValid(kml_name)
+    # except Exception, e:
+    #     return str(e)
 
     return error_msg
 
@@ -4836,33 +4882,22 @@ def files_lister(request):
 
                     try:
                         if not error:
+                            count_color = get_count_color()
+
                             try:
-                                count_color = get_count_color()
-                                name_kml = doc_kml.Document.Placemark.description
-                                upload_file = file_name
-                                calculation_aoi = True
-                                # print '!!!!!!!!!!!!!!! KML description NAME  ===================== ', name_kml
-                            except Exception, e:
-                                print '!!!!!!!!!!!!!!! ERROR EE  ===================== ', e
-                                # name_kml = ''
-
-                            if not name_kml:
-                                try:
-                                    name_kml = doc_kml.Document.Placemark.name
-                                    upload_file = file_name
+                                if doc_kml.Document.Placemark.Polygon.outerBoundaryIs:
                                     calculation_aoi = True
-                                    # print '!!!!!!!!!!!!!!! KML description NAME  ===================== ', name_kml
-                                except Exception, e:
-                                    print '!!!!!!!!!!!!!!! ERROR EE  ===================== ', e
-                                    # name_kml = ''
+                            except Exception, e:
+                                print '!!!!!!!!!!!!!!! ERROR KML Document  ===================== ', e
 
-                            if not calculation_aoi:
-                                name_kml = ''
-
-                            # print '!!!!!!!!!!!!!!! KML NAME  ===================== ', name_kml
+                            try:
+                                if doc_kml.Placemark.Polygon.outerBoundaryIs:
+                                    calculation_aoi = True
+                            except Exception, e:
+                                print '!!!!!!!!!!!!!!! ERROR KML Placemark  ===================== ', e
 
                             info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(
-                                                COLOR_HEX_NAME[count_color], name_kml)
+                                                COLOR_HEX_NAME[count_color], f_name)
 
                     except Exception, e:
                         print '!!!!!!!!!!!!!!! ERROR COPY KML ===================== ', e
