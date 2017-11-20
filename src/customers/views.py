@@ -4213,23 +4213,39 @@ def get_coord_aoi(doc):
 
         for n in xrange(len(outer_boundary_is)):
             tmp_tuples = []
+            tmp = []
             tmp = str(doc.Document.Placemark.Polygon.outerBoundaryIs[n].LinearRing.coordinates).split('\n')
+            doc_tmp_list = str(doc.Document.Placemark.Polygon.outerBoundaryIs[n].LinearRing.coordinates).split('\n')
 
-            # print '!!!!!!!!!!!!!!!! TMP ======================== ', len(tmp)
+            # print '!!!!!!!!!!!!!!!! TMP LEN ======================== ', len(tmp)
+            # print '!!!!!!!!!!!!!!!! TMP ======================== ', tmp
+            
+            for n in doc_tmp_list:
+                n = n.replace('\t', '')
+
+                # print '!!!!!!!!!!!!!!!! TMP N ======================== ', n
+
+                if n:
+                    tmp.append(n)
+
+            # print '!!!!!!!!!!!!!!!! TMP ======================== ', tmp
 
             if len(tmp) == 1:
                 tmp_copy = []
                 tmp_list = tmp[0].split(' ')
 
-                # print '!!!!!!!!!!!!!!!! TMP LIST ======================== ', tmp_list
+                # print '!!!!!!!!!!!!!!!! TMP LIST Document ======================== ', tmp_list
 
                 for m in tmp_list:
+                    m = m.replace('\t', '')
                     m_split = m.split(',')
 
                     # print '!!!!!!!!!!!!!!!! M SPLIT ======================== ', m_split
 
-                    if m_split[-1] == '0.0':
+                    if m_split[-1] == '0.0' or m_split[-1] == '0':
                         tmp_copy.append(tuple(m_split[:-1]))
+                    else:
+                        tmp_copy.append(tuple(m_split))
 
                 # print '!!!!!!!!!!!!!!!! TMP COPY ======================== ', tmp_copy
 
@@ -4251,31 +4267,53 @@ def get_coord_aoi(doc):
                 # print '!!!!!!!!!!!!!!!! outer_boundary_is ======================== ', tmp_tuples
                 
                 outer_coord.append(tmp_tuples)
-    except Exception:
+    except Exception, e:
+        print '!!!!!!!!!!!!!!!!! ERROR outer_coord Document ========================== ', e
         pass
 
     try:
         outer_boundary_is = doc.Placemark.Polygon.outerBoundaryIs
 
+        # print '!!!!!!!!!!!!!!!! TMP outer_boundary_is ======================== ', len(outer_boundary_is)
+
         for n in xrange(len(outer_boundary_is)):
             tmp_tuples = []
-            tmp = str(doc.Placemark.Polygon.outerBoundaryIs[n].LinearRing.coordinates).split('\n')
+            tmp = []
+            doc_tmp_list = str(doc.Placemark.Polygon.outerBoundaryIs[n].LinearRing.coordinates).split('\n')
+            # tmp = str(doc.Placemark.Polygon.outerBoundaryIs[n].LinearRing.coordinates).split('\n')
 
-            # print '!!!!!!!!!!!!!!!! TMP ======================== ', len(tmp)
+            for n in doc_tmp_list:
+                n = n.replace('\t', '')
+
+                # print '!!!!!!!!!!!!!!!! TMP N ======================== ', n
+
+                if n:
+                    tmp.append(n)
+
+            # print '!!!!!!!!!!!!!!!! TMP ======================== ', tmp
+            # print '!!!!!!!!!!!!!!!! TMP LEN ======================== ', len(tmp)
+
+            # tmp = tmp.split(' ')
+
+            # print '!!!!!!!!!!!!!!!! TMP LEN ======================== ', len(tmp)
+            # print '!!!!!!!!!!!!!!!! TMP ======================== ', tmp
 
             if len(tmp) == 1:
                 tmp_copy = []
                 tmp_list = tmp[0].split(' ')
 
-                # print '!!!!!!!!!!!!!!!! TMP LIST ======================== ', tmp_list
+                # print '!!!!!!!!!!!!!!!! TMP LIST Placemark ======================== ', tmp_list
 
                 for m in tmp_list:
+                    m = m.replace('\t', '')
                     m_split = m.split(',')
 
                     # print '!!!!!!!!!!!!!!!! M SPLIT ======================== ', m_split
 
-                    if m_split[-1] == '0.0':
+                    if m_split[-1] == '0.0' or m_split[-1] == '0':
                         tmp_copy.append(tuple(m_split[:-1]))
+                    else:
+                        tmp_copy.append(tuple(m_split))
 
                 # print '!!!!!!!!!!!!!!!! TMP COPY ======================== ', tmp_copy
 
@@ -4290,6 +4328,7 @@ def get_coord_aoi(doc):
                     tmp = tmp[:-1]
 
                 for m in tmp:
+                    # print '!!!!!!!!!!!!!!!!! M outer_boundary_is Placemark ========================== ', m
                     line = m.split(',')
                     tmp_tuples.append(tuple(line))
 
@@ -4297,7 +4336,8 @@ def get_coord_aoi(doc):
                 # print '!!!!!!!!!!!!!!!! outer_boundary_is ======================== ', tmp_tuples
                 
                 outer_coord.append(tmp_tuples)
-    except Exception:
+    except Exception, e:
+        print '!!!!!!!!!!!!!!!!! ERROR outer_coord Placemark ========================== ', e
         pass
 
     try:
@@ -4314,12 +4354,40 @@ def get_coord_aoi(doc):
                 tmp = tmp[:-1]
 
             for m in tmp:
+                m = m.replace('\t', '')
                 line = m.split(',')
                 tmp_tuples.append(tuple(line))
 
             inner_coord.append(tmp_tuples)
-    except Exception:
+    except Exception, e:
+        print '!!!!!!!!!!!!!!!!! ERROR inner_coord Document ========================== ', e
         pass
+
+    try:
+        inner_boundary_is = doc.Placemark.Polygon.innerBoundaryIs
+
+        for n in xrange(len(inner_boundary_is)):
+            tmp_tuples = []
+            tmp = str(inner_boundary_is[n].LinearRing.coordinates).split('\n')
+
+            if not tmp[0]:
+                tmp = tmp[1:]
+
+            if not tmp[-1]:
+                tmp = tmp[:-1]
+
+            for m in tmp:
+                m = m.replace('\t', '')
+                line = m.split(',')
+                tmp_tuples.append(tuple(line))
+
+            inner_coord.append(tmp_tuples)
+    except Exception, e:
+        print '!!!!!!!!!!!!!!!!! ERROR inner_coord Placemark ========================== ', e
+        pass
+
+    # print '!!!!!!!!!!!!!!!! TMP outer_coord ======================== ', outer_coord
+    # print '!!!!!!!!!!!!!!!! TMP inner_coord ======================== ', inner_coord
 
     return outer_coord, inner_coord
 
@@ -4537,7 +4605,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
 
     list_data_kml = []
 
-    print '!!!!!!!!!!!!!!! ARGS  ===================== ', args
+    # print '!!!!!!!!!!!!!!! ARGS  ===================== ', args
 
     is_ts = data_set.is_ts
     statistic = args[0]['statistic']
@@ -4547,6 +4615,8 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
     count_color = get_count_color()
     outer_coord, inner_coord = get_coord_aoi(doc_kml)
     list_file_tif = getUploadListTifFiles(customer, data_set, *args)
+
+    # print '!!!!!!!!!!!!!!! Outer Coord  ===================== ', outer_coord
 
     # all_coord = outer_coord + inner_coord
     kml_name ='{0} {1} AREA COORDINATE'.format(customer, data_set)
@@ -4571,9 +4641,14 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
     if os.path.exists(file_path_out_new_calculations_coord):
         os.remove(file_path_out_new_calculations_coord)
 
+    # print '!!!!!!!!!!!!!!! outer_coord  ===================== ', outer_coord[0]
+    # print '!!!!!!!!!!!!!!! outer_coord  ===================== ', len(outer_coord)
+    
+    # print '!!!!!!!!!!!!!!! list_file_tif  ===================== ', list_file_tif
+    
+
     # if all_coord:
     for file_tif in list_file_tif:
-
         # *****************************************************************************
         kml = simplekml.Kml()
         pol = kml.newpolygon(name=kml_name)
@@ -4583,6 +4658,8 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
             pol.innerboundaryis = inner_coord
 
         kml.save(file_path_in_new_calculations_coord)
+
+        # print '!!!!!!!!!!!!!!! file_tif  ===================== ', file_tif
         
         # *****************************************************************************
 
@@ -4611,14 +4688,21 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
         # scale = ShelfData.objects.get(id=shd_id).scale
         # command_line_ts = ''
 
+
+        print '!!!!!!!!!!!!! file_tif  =========================== ', file_tif
+        # print '!!!!!!!!!!!!! line_list  =========================== ', line_list
+
         line_list = file_tif.split('$$$')
         attr_name = line_list[0]
         shd_attr_name = attr_name
+
+        print '!!!!!!!!!!!!! line_list  =========================== ', line_list
 
         if is_ts:
             shd_attr_name = attr_name.split(' ')[:-1]
             shd_attr_name = (' ').join(shd_attr_name)
 
+        
         # print '!!!!!!!!!!!!! attr_name  =========================== ', attr_name
 
         units = ShelfData.objects.get(attribute_name=shd_attr_name).units
@@ -4641,6 +4725,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
         proc_script = Popen(command_line, shell=True)
         proc_script.wait()
 
+        print '!!! COMMAND LINE =========================== ', command_line
 
         if os.path.exists(file_path_out_new_calculations_coord):
             file_out_coord_open = open(file_path_out_new_calculations_coord)
@@ -4660,7 +4745,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
             # count_line = 0
             list_val = []
             # n_val = []
-            # print '!!! 2 NEW LINE LIST =========================== ', new_line_list
+            print '!!! 2 NEW LINE LIST =========================== ', new_line_list
 
             
             for n in new_line_list:
@@ -4737,6 +4822,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
         # print '!!! total_area =========================== ', total_area
         # print '!!! units_per_ha =========================== ', units_per_ha
         # print '!!! total =========================== ', total
+    print '!!!!!!!!!!!!!!!!!!! list_data_kml =========================== ', list_data_kml
 
 
     # try:
@@ -4849,6 +4935,8 @@ def files_lister(request):
                 file_name = str(request.FILES['test_data']).decode('utf-8')
                 path_test_data = os.path.join(path_ftp_user, file_name)
 
+                # print '!!!!!!!!!! FILE NAME ================== ', file_name
+
                 if not os.path.exists(path_ftp_user):
                     os.makedirs(path_ftp_user)
 
@@ -4863,6 +4951,9 @@ def files_lister(request):
 
                 f_name = str(file_name).split('.')[:-1]
                 ext = str(file_name).split('.')[-1]
+
+                # print '!!!!!!!!!! FILE NAME ================== ', f_name
+                # print '!!!!!!!!!! FILE EXT ================== ', ext
 
                 handle_uploaded_file(request.FILES['test_data'],
                                      path_test_data)
@@ -4883,6 +4974,7 @@ def files_lister(request):
                     try:
                         if not error:
                             count_color = get_count_color()
+                            upload_file = file_name
 
                             try:
                                 if doc_kml.Document.Placemark.Polygon.outerBoundaryIs:
@@ -4933,6 +5025,7 @@ def files_lister(request):
             try:
                 upload_fl = ''
                 select_stat = ''
+                error = ''
                 select_attr = []
                 upload_data = data_post.lists()
 
@@ -4961,7 +5054,7 @@ def files_lister(request):
                     doc_kml, error = get_data_kml(new_path)
 
 
-                    # print '!!!!!!!!!!!!!!!! ERROR KML ============================ ', error
+                    print '!!!!!!!!!!!!!!!! ERROR KML ============================ ', error
 
                 if not error and upload_fl:
                     data_args = {
@@ -4969,10 +5062,13 @@ def files_lister(request):
                         'statistic': select_stat,
                         'attr': select_attr
                     }
-                    
+
                     new_info_window, list_attr, list_units, list_value, list_total, list_total_area = create_new_calculations_aoi(
                                             customer, doc_kml, data_set, data_args
                                         )
+
+                    print '!!!!!!!!!! new_info_window ================== ', new_info_window
+
                     area_name = upload_fl.split('.kml')[0]
                     outer_coord, inner_coord = get_coord_aoi(doc_kml)
                     data_coord = {
@@ -4980,8 +5076,8 @@ def files_lister(request):
                         'inner_coord': inner_coord
                     }
 
-                    # print '!!!!!!!!!! COORD outer_coord ================== ', outer_coord
-                    # print '!!!!!!!!!! COORD inner_coord ================== ', inner_coord
+                    print '!!!!!!!!!! COORD outer_coord ================== ', outer_coord
+                    print '!!!!!!!!!! COORD inner_coord ================== ', inner_coord
                     # print '!!!!!!!!!! DATA COORD ================== ', data_coord
 
                     cur_polygon = createKml(customer, area_name, new_info_window,
