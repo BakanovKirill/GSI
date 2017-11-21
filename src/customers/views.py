@@ -4949,6 +4949,12 @@ def files_lister(request):
         data_post = request.POST
         form = UploadFileForm(request.POST, request.FILES)
 
+        ####################### write log file
+        files_lister_log.write('LOAD FILE POST: {0}\n'.format(data_post))
+        files_lister_log.write('LOAD FILE request.FILES: {0}\n'.format(request.FILES))
+        files_lister_log.write('\n')
+        #######################
+
         # print '!!!!!!!!!! POST ================== ', data_post
         # print '!!!!!!!!!!!!! DATA SET ==================== ', request.session['select_data_set']
         
