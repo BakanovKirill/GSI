@@ -4409,6 +4409,8 @@ def copy_file_kml(old_path, new_path):
 
         error = validation_kml(doc, old_path)
 
+        print '!!!!!!!!!!!!!!! COPY DOC ERROR =================== ', error
+
         if error:
             if os.path.exists(old_path):
                 os.remove(old_path)
@@ -4418,6 +4420,7 @@ def copy_file_kml(old_path, new_path):
         proc = Popen(command_line, shell=True)
         proc.wait()
     except Exception, e:
+        error = e
         print '!!!!!!!!!!!!!!! ERROR copy_file_kml =================== ', e
         # command_line = 'cp {0} {1}'.format(old_path, new_path)
         # proc = Popen(command_line, shell=True)
