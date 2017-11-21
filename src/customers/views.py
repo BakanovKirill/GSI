@@ -4228,7 +4228,7 @@ def get_coord_aoi(doc):
                 if n:
                     tmp.append(n)
 
-            # print '!!!!!!!!!!!!!!!! TMP ======================== ', tmp
+            print '!!!!!!!!!!!!!!!! TMP ======================== ', len(tmp)
 
             if len(tmp) == 1:
                 tmp_copy = []
@@ -4262,13 +4262,17 @@ def get_coord_aoi(doc):
                     tmp = tmp[:-1]
 
                 for m in tmp:
-                    line = m.split(',')
-                    tmp_tuples.append(tuple(line))
+                    if m:
+                        line = m.split(',')
+                        tmp_tuples.append(tuple(line))
+
+                        print '!!!!!!!!!!!!!!!! LINE ======================== ', line
 
                 # print '!!!!!!!!!!!!!!!! outer_boundary_is ======================== ', len(tmp)
                 # print '!!!!!!!!!!!!!!!! outer_boundary_is ======================== ', tmp_tuples
                 
                 outer_coord.append(tmp_tuples)
+                # print '!!!!!!!!!!!!!!!! outer_coord ======================== ', outer_coord
     except Exception, e:
         print '!!!!!!!!!!!!!!!!! ERROR outer_coord Document ========================== ', e
         pass
@@ -4294,11 +4298,6 @@ def get_coord_aoi(doc):
 
             # print '!!!!!!!!!!!!!!!! TMP ======================== ', tmp
             # print '!!!!!!!!!!!!!!!! TMP LEN ======================== ', len(tmp)
-
-            # tmp = tmp.split(' ')
-
-            # print '!!!!!!!!!!!!!!!! TMP LEN ======================== ', len(tmp)
-            # print '!!!!!!!!!!!!!!!! TMP ======================== ', tmp
 
             if len(tmp) == 1:
                 tmp_copy = []
@@ -4332,9 +4331,9 @@ def get_coord_aoi(doc):
                     tmp = tmp[:-1]
 
                 for m in tmp:
-                    # print '!!!!!!!!!!!!!!!!! M outer_boundary_is Placemark ========================== ', m
-                    line = m.split(',')
-                    tmp_tuples.append(tuple(line))
+                    if m:
+                        line = m.split(',')
+                        tmp_tuples.append(tuple(line))
 
                 # print '!!!!!!!!!!!!!!!! outer_boundary_is ======================== ', len(tmp)
                 # print '!!!!!!!!!!!!!!!! outer_boundary_is ======================== ', tmp_tuples
@@ -4359,8 +4358,10 @@ def get_coord_aoi(doc):
 
             for m in tmp:
                 m = m.replace('\t', '')
-                line = m.split(',')
-                tmp_tuples.append(tuple(line))
+
+                if m:
+                    line = m.split(',')
+                    tmp_tuples.append(tuple(line))
 
             inner_coord.append(tmp_tuples)
     except Exception, e:
@@ -4382,8 +4383,10 @@ def get_coord_aoi(doc):
 
             for m in tmp:
                 m = m.replace('\t', '')
-                line = m.split(',')
-                tmp_tuples.append(tuple(line))
+
+                if m:
+                    line = m.split(',')
+                    tmp_tuples.append(tuple(line))
 
             inner_coord.append(tmp_tuples)
     except Exception, e:
@@ -4645,7 +4648,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
     if os.path.exists(file_path_out_new_calculations_coord):
         os.remove(file_path_out_new_calculations_coord)
 
-    # print '!!!!!!!!!!!!!!! outer_coord  ===================== ', outer_coord[0]
+    # print '!!!!!!!!!!!!!!! outer_coord  ===================== ', outer_coord
     # print '!!!!!!!!!!!!!!! LEN outer_coord  ===================== ', len(outer_coord)
     
     # print '!!!!!!!!!!!!!!! list_file_tif  ===================== ', list_file_tif
@@ -4660,12 +4663,18 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
         pol = kml.newpolygon(name=kml_name)
         pol.outerboundaryis = outer_coord[0]
 
+        # print '!!!!!!!!!!!!!!! 1 kml_name  ===================== ', kml_name
+        # print '!!!!!!!!!!!!!!! 1 file_tif  ===================== ', file_tif
+        # print '!!!!!!!!!!!!!!! 1 inner_coord  ===================== ', inner_coord
+
         if inner_coord:
             pol.innerboundaryis = inner_coord
 
+        # print '!!!!!!!!!!!!!!! 2 file_tif  ===================== ', file_tif
+
         kml.save(file_path_in_new_calculations_coord)
 
-        print '!!!!!!!!!!!!!!! file_tif  ===================== ', file_tif
+        # print '!!!!!!!!!!!!!!! 3 file_tif  ===================== ', file_tif
         
         # *****************************************************************************
 
