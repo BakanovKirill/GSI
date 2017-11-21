@@ -4704,14 +4704,14 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
         # command_line_ts = ''
 
 
-        print '!!!!!!!!!!!!! file_tif  =========================== ', file_tif
+        # print '!!!!!!!!!!!!! file_tif  =========================== ', file_tif
         # print '!!!!!!!!!!!!! line_list  =========================== ', line_list
 
         line_list = file_tif.split('$$$')
         attr_name = line_list[0]
         shd_attr_name = attr_name
 
-        print '!!!!!!!!!!!!! line_list  =========================== ', line_list
+        # print '!!!!!!!!!!!!! line_list  =========================== ', line_list
 
         if is_ts:
             shd_attr_name = attr_name.split(' ')[:-1]
@@ -4740,7 +4740,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
         proc_script = Popen(command_line, shell=True)
         proc_script.wait()
 
-        print '!!! COMMAND LINE =========================== ', command_line
+        # print '!!! COMMAND LINE =========================== ', command_line
 
         if os.path.exists(file_path_out_new_calculations_coord):
             file_out_coord_open = open(file_path_out_new_calculations_coord)
@@ -4760,7 +4760,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
             # count_line = 0
             list_val = []
             # n_val = []
-            print '!!! 2 NEW LINE LIST =========================== ', new_line_list
+            # print '!!! 2 NEW LINE LIST =========================== ', new_line_list
 
             
             for n in new_line_list:
@@ -4837,7 +4837,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
         # print '!!! total_area =========================== ', total_area
         # print '!!! units_per_ha =========================== ', units_per_ha
         # print '!!! total =========================== ', total
-    print '!!!!!!!!!!!!!!!!!!! list_data_kml =========================== ', list_data_kml
+    # print '!!!!!!!!!!!!!!!!!!! list_data_kml =========================== ', list_data_kml
 
 
     # try:
