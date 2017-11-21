@@ -4898,6 +4898,15 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
 @login_required
 @render_to('customers/files_lister.html')
 def files_lister(request):
+    ####################### write log file
+    log_file = '/home/gsi/LOGS/files_lister.log'
+    files_lister_log = open(log_file, 'w+')
+    now = datetime.now()
+    files_lister_log.write('DATE: {0}\n'.format(str(now)))
+    files_lister_log.write('USER: {0}\n'.format(str(request.user)))
+    files_lister_log.write('\n')
+    #######################
+    
     customer = request.user
     calculation_aoi = False
     upload_file = ''
@@ -4950,6 +4959,11 @@ def files_lister(request):
                 file_name = str(request.FILES['test_data']).decode('utf-8')
                 path_test_data = os.path.join(path_ftp_user, file_name)
 
+                ####################### write log file
+                files_lister_log.write('LOAD FILE: {0}\n'.format(str(file_name)))
+                files_lister_log.write('\n')
+                #######################
+
                 # print '!!!!!!!!!! FILE NAME ================== ', file_name
 
                 if not os.path.exists(path_ftp_user):
@@ -4997,11 +5011,21 @@ def files_lister(request):
                             except Exception, e:
                                 print '!!!!!!!!!!!!!!! ERROR KML Document  ===================== ', e
 
+                                ####################### write log file
+                                files_lister_log.write('ERROR KML Document: {0}\n'.format(str(e)))
+                                files_lister_log.write('\n')
+                                #######################
+
                             try:
                                 if doc_kml.Placemark.Polygon.outerBoundaryIs:
                                     calculation_aoi = True
                             except Exception, e:
                                 print '!!!!!!!!!!!!!!! ERROR KML Placemark  ===================== ', e
+
+                                ####################### write log file
+                                files_lister_log.write('ERROR PKML lacemark: {0}\n'.format(str(e)))
+                                files_lister_log.write('\n')
+                                #######################
 
                             info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(
                                                 COLOR_HEX_NAME[count_color], f_name)
@@ -5017,6 +5041,12 @@ def files_lister(request):
                                     new_path, kml_url,
                                     data_set, text_kml=info_window
                                 )
+
+                    ####################### write log file
+                    files_lister_log.write('UPLOAD FILE: {0}\n'.format(str(upload_file)))
+                    files_lister_log.write('CALCULATION AOI: {0}\n'.format(str(calculation_aoi)))
+                    files_lister_log.write('\n')
+                    #######################
 
         if 'delete_button' in data_post:
             filename_customer = data_post['delete_button']
@@ -5157,6 +5187,10 @@ def files_lister(request):
     
 
     dirs, files, info_message = get_files_dirs(url_path, path_ftp_user)
+
+    ####################### write log file
+    files_lister_log.close()
+    #######################
 
     # print '!!!!!!!!!!!!!!!!!!!! FILES LIST ================================ ', files
     # print '!!!!!!!!!!!!!!!!!!!! IS CALCULATIONS ================================ ', calculation_aoi
