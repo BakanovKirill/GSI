@@ -4404,17 +4404,17 @@ def copy_file_kml(old_path, new_path):
     doc = ''
 
     try:
-        with open(old_path) as f:
-            doc = parser.parse(f).getroot()
-
         error = validation_kml(doc, old_path)
 
-        print '!!!!!!!!!!!!!!! COPY DOC ERROR =================== ', error
+        # print '!!!!!!!!!!!!!!! COPY DOC ERROR =================== ', error
 
         if error:
             if os.path.exists(old_path):
                 os.remove(old_path)
             return doc, error
+
+        with open(old_path) as f:
+            doc = parser.parse(f).getroot()
 
         command_line = 'cp {0} {1}'.format(old_path, new_path)
         proc = Popen(command_line, shell=True)
@@ -4444,38 +4444,68 @@ def get_data_kml(path):
     return doc, error
 
 
+def delete_empty_lines(file_path):
+    # print '!!!!!!!!!!!!!!!!!! delete_empty_lines =========================== ', file_path
+
+    error = ''
+
+    try:
+        string = open(file_path).readlines()
+        os.remove(file_path)
+        new_file_kml = open(file_path, 'w+')
+
+        for i in string:
+            new_line = i
+
+            if not i.isspace():
+                new_file_kml.write(i)
+
+        new_file_kml.close()
+    except Exception, e:
+        error = e
+
+    return error
+
+
 def validation_kml(kml_name, kml_path):
     error_msg = ''
     file_name = kml_path.split('/')[-1]
     file_size = os.path.getsize(kml_path)
-    xml = html.parse(kml_path)
 
-    xml_extendeddata = len(xml.xpath("//extendeddata")) / 2
-    xml_coordinates = len(xml.xpath("//coordinates")) / 2
-    xml_point = len(xml.xpath("//point")) / 2
-    xml_polygon = len(xml.xpath("//polygon")) / 2
-    xml_placemark = len(xml.xpath("//placemark")) / 2
+    updated_file = delete_empty_lines(kml_path)
 
-    if file_size >= 10000000:
-        error_msg = 'Error!! An error occurred while loading the file "{0}". \
-                    The file size is more than 10Mb'.format(file_name)
-        return error_msg
+    try:
+        xml = html.parse(kml_path)
 
-    if xml_extendeddata >= 1000 or xml_coordinates >= 1000 \
-        or xml_point >= 1000 or xml_polygon >= 1000 or xml_placemark >= 1000:
+        xml_extendeddata = len(xml.xpath("//extendeddata")) / 2
+        xml_coordinates = len(xml.xpath("//coordinates")) / 2
+        xml_point = len(xml.xpath("//point")) / 2
+        xml_polygon = len(xml.xpath("//polygon")) / 2
+        xml_placemark = len(xml.xpath("//placemark")) / 2
 
-        error_msg = 'Error!! An error occurred while loading the file "{0}". \
-                    The file has more than 1000 objects'.format(file_name)
-        return error_msg
+        if file_size >= 10000000:
+            error_msg = 'Error!! An error occurred while loading the file "{0}". \
+                        The file size is more than 10Mb'.format(file_name)
+            return error_msg
 
-    # try:
-    #     schema_ogc = Schema("ogckml22.xsd")
-    #     schema_gx = Schema("kml22gx.xsd")
+        if xml_extendeddata >= 1000 or xml_coordinates >= 1000 \
+            or xml_point >= 1000 or xml_polygon >= 1000 or xml_placemark >= 1000:
 
-    #     schema_ogc.assertValid(kml_name)
-    #     schema_gx.assertValid(kml_name)
-    # except Exception, e:
-    #     return str(e)
+            error_msg = 'Error!! An error occurred while loading the file "{0}". \
+                        The file has more than 1000 objects'.format(file_name)
+            return error_msg
+
+        # try:
+        #     schema_ogc = Schema("ogckml22.xsd")
+        #     schema_gx = Schema("kml22gx.xsd")
+
+        #     schema_ogc.assertValid(kml_name)
+        #     schema_gx.assertValid(kml_name)
+        # except Exception, e:
+        #     return str(e)
+    except Exception, e:
+        print '!!!!!!!!!!!!!!!!!! ERROR VALIDATION KML  =========================== ', e
+        return e
 
     return error_msg
 
