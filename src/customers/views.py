@@ -15,7 +15,7 @@ import json
 import csv
 from pykml import parser
 from pykml.parser import Schema
-from lxml import html
+from lxml import html, etree
 import numpy as np
 import requests
 from random import randint
@@ -4476,7 +4476,6 @@ def validation_kml(kml_name, kml_path):
 
     try:
         xml = html.parse(kml_path)
-
         xml_extendeddata = len(xml.xpath("//extendeddata")) / 2
         xml_coordinates = len(xml.xpath("//coordinates")) / 2
         xml_point = len(xml.xpath("//point")) / 2
@@ -4507,7 +4506,63 @@ def validation_kml(kml_name, kml_path):
         print '!!!!!!!!!!!!!!!!!! ERROR VALIDATION KML  =========================== ', e
         return e
 
+    # print '!!!!!!!!!!!!!!!!!!!!!! ERR MESG validation_kml ===================== ', error_msg
+
     return error_msg
+
+
+def is_calculation_aoi(doc_kml):
+    is_calculation = False
+
+    try:
+        if doc_kml.Document.Placemark.Polygon.outerBoundaryIs:
+            is_calculation = True
+    except Exception, e:
+        print '!!!!!!!!!!!!!!! ERROR KML Document  ===================== ', e
+
+    # print '!!!!!!!!!!!!!!! 1 is_calculation_aoi  ===================== ', is_calculation
+
+    try:
+        if doc_kml.Placemark.Polygon.outerBoundaryIs:
+            is_calculation = True
+    except Exception, e:
+        print '!!!!!!!!!!!!!!! ERROR KML Placemark  ===================== ', e
+
+    # print '!!!!!!!!!!!!!!! 2 is_calculation_aoi  ===================== ', is_calculation
+
+    return is_calculation
+
+
+def get_info_window(doc_kml, file_name, path_to_file):
+    text = ''
+    count_color = get_count_color()
+    error = validation_kml(doc_kml, path_to_file)
+    
+
+    info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(
+                        COLOR_HEX_NAME[count_color], file_name)
+
+    if not error:
+        try:
+            text = doc_kml.Document.name
+        except Exception, e:
+            # print '!!!!!!!!!!!!!!! ERROR IW Document  ===================== ', e
+            try:
+                text = doc_kml.Folder.name
+            except Exception, e:
+                # print '!!!!!!!!!!!!!!! ERROR IW Folder  ===================== ', e
+                try:
+                    text = doc_kml.Placemark.name
+                except Exception, e:
+                    # print '!!!!!!!!!!!!!!! ERROR IW Placemark  ===================== ', e
+                    pass
+
+        if text:
+            info_window += '<p align="center">{0}</p>'.format(text);
+
+    print '!!!!!!!!!!!!!!! IW get_info_window  ===================== ', info_window
+
+    return info_window
 
 
 def getUploadListTifFiles(customer, dataset, *args):
@@ -5043,31 +5098,13 @@ def files_lister(request):
                         if not error:
                             count_color = get_count_color()
                             upload_file = file_name
+                            calculation_aoi = is_calculation_aoi(doc_kml)
+                            info_window = get_info_window(doc_kml, f_name[0], path_test_data)
 
-                            try:
-                                if doc_kml.Document.Placemark.Polygon.outerBoundaryIs:
-                                    calculation_aoi = True
-                            except Exception, e:
-                                print '!!!!!!!!!!!!!!! ERROR KML Document  ===================== ', e
+                            print '!!!!!!!!!!!!!!! calculation_aoi ============================ ', calculation_aoi
 
-                                ####################### write log file
-                                files_lister_log.write('ERROR KML Document: {0}\n'.format(str(e)))
-                                files_lister_log.write('\n')
-                                #######################
-
-                            try:
-                                if doc_kml.Placemark.Polygon.outerBoundaryIs:
-                                    calculation_aoi = True
-                            except Exception, e:
-                                print '!!!!!!!!!!!!!!! ERROR KML Placemark  ===================== ', e
-
-                                ####################### write log file
-                                files_lister_log.write('ERROR PKML lacemark: {0}\n'.format(str(e)))
-                                files_lister_log.write('\n')
-                                #######################
-
-                            info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(
-                                                COLOR_HEX_NAME[count_color], f_name)
+                            # info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(
+                            #                     COLOR_HEX_NAME[count_color], f_name)
 
                     except Exception, e:
                         print '!!!!!!!!!!!!!!! ERROR COPY KML ===================== ', e

@@ -207,6 +207,8 @@ def convert_size_file(size):
 def get_type_file(mime_type):
 	"""**The method determines the mime-type of file: image, text, pdf, msword, doc, archive.**"""
 
+	type_file = 'bin'
+
 	if mime_type[0] == 'image':
 		type_file = mime_type[0]
 	elif mime_type[0] == 'text':
