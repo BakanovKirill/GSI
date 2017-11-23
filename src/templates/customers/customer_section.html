@@ -565,11 +565,11 @@
                 var searchBox = new google.maps.places.SearchBox(input);
                 // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
                 
-                console.log('INPUT: ', searchBox);
+                // console.log('INPUT: ', searchBox);
 
                 // Bias the SearchBox results towards current map's viewport.
                 map.addListener('bounds_changed', function() {
-                    alert('INPUT: ');
+                    // alert('INPUT: ');
                     searchBox.setBounds(map.getBounds());
                 });
 
