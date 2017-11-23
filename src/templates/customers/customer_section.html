@@ -570,9 +570,7 @@
                 // Bias the SearchBox results towards current map's viewport.
                 map.addListener('bounds_changed', function() {
                     // alert('INPUT: ');
-                    if (map.getBounds()) {
-                        searchBox.setBounds(map.getBounds());
-                    }
+                    searchBox.setBounds(map.getBounds());
                 });
 
                 var markers = [];
