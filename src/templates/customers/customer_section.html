@@ -185,977 +185,979 @@
 
         {% if tab_active != 'ts' %}
             <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbGl4HfSKF1pj1j1heEdUgn1SwSQaEaNc&callback=initMap" type="text/javascript"></script>
-        {% endif %}
-        <!-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyB4HosogGf9o2-Cnef_SiUR6jZYVszGkGY&sensor=false"></script> -->
-
-        <!-- AIzaSyDqRnPthP9_pygDbSG34MDKiJpXQkHm2ws -->
-        <!-- AIzaSyANOITZIFVq0CxUycWsprMslU0sk9ipK5Y -->
-
-        <!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false"></script> -->
         
-        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=geometry"></script>
+            <!-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyB4HosogGf9o2-Cnef_SiUR6jZYVszGkGY&sensor=false"></script> -->
 
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbGl4HfSKF1pj1j1heEdUgn1SwSQaEaNc&libraries=places"></script>
+            <!-- AIzaSyDqRnPthP9_pygDbSG34MDKiJpXQkHm2ws -->
+            <!-- AIzaSyANOITZIFVq0CxUycWsprMslU0sk9ipK5Y -->
 
-        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-
-        <script type="text/javascript">
-            // Get the modal
-            var modal = document.getElementById('myModal');
-
-            // Get the <span> element that closes the modal
-            // var span = document.getElementsByClassName("close")[0];
-            var span = document.getElementById("close");
-
-            // When the user clicks on <span> (x), close the modal
-            if (span) {
-                // alert('SPAN');
-                span.onclick = function() {
-                    modal.style.display = "none";
-                }
-            }      
+            <!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false"></script> -->
             
+            <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=geometry"></script>
 
-            // When the user clicks anywhere outside of the modal, close it
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                }
-            }
-        </script>
+            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbGl4HfSKF1pj1j1heEdUgn1SwSQaEaNc&libraries=places"></script>
 
-        <script type="text/javascript">
-            var overlay;
-            // var img_opacity = 50;
+            <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
-            // USGSOverlay.prototype = new google.maps.OverlayView();
-            // GOverlay.prototype = new google.maps.GroundOverlay();
-            
-            var map;
-            var center_map = {lat: {{ cLat }}, lng: {{ cLng }}};
+            <script type="text/javascript">
+                // Get the modal
+                var modal = document.getElementById('myModal');
 
-            var chartLine;
-            var chartBox;
+                // Get the <span> element that closes the modal
+                // var span = document.getElementsByClassName("close")[0];
+                var span = document.getElementById("close");
 
-            var listener_markers_overlay;
-            var listener_markers_map;
-
-            var kml_arr = {};
-
-
-            var coord = [];
-            var coord_area = [];
-            var markers = [];
-            var polygons = [];
-            var selectPolygon;
-            var selectArea;
-            var polygonVisible;
-            var mapTypesArr = [];
-            var count_pol;
-            var infowindow = new google.maps.InfoWindow();
-
-            var count_rep = 0;
-
-            var units = '{{ units }}';
-            var attribute = '{{ attribute }}';
-            var data_polygon;
-            var statistic;
-
-            var select_image = '{{ absolute_url_png_file }}';
-            var legend_scale = '{{ legend_scale }}';
-
-            // higcharts
-            var ts_show = false;
-            var title = '{{ ts_title }}';
-            // var subtitle = '{{ ts_subtitle }}';
-            var ts_subtitle = '';
-            var ts_units = '{{ ts_units }}';
-            var ts_data = '{{ ts_data }}';
-            var ts_series = [];
-            var select_aoi = '{{ select_aoi }}';
-            var select_diagram = '{{ select_diagram }}';
-
-            // BOX PLOT DIAGRAM
-            var categories = [];
-            var series_data_box = [];
-            var plotLines_value;
-            var count_ts = {{ count_ts }};
-            var count_reports = {{ count_ts }};
-
-            var progress = 0;
-            var timerId;
-            var time_section = 0;
-
-            console.log('count_ts: ', count_ts);
-
-            {% if time_series_view and not time_series_clear %}
-                ts_show = true;
-            {% endif %}
-
-            // var units = 'Tree';
-            // var attribute = 'UNITS';
-
-            // var kml_layer = new google.maps.KmlLayer();
-
-
-            // alert('eLat_1: '+{{ eLat_1 }});
-            // alert('eLng_1: '+{{ eLng_1 }});
-            // alert('eLat_2: '+{{ eLat_2 }});
-            // alert('eLng_2: '+{{ eLng_2 }});
-
-            var MY_MAPTYPE_ID = 'mystyle';
-
-            var mapobj = {
-                name: "OSM",
-                wms: "osm",
-                minzoom: 18,
-                maxzoom: 0,
-                url: "http://tile.openstreetmap.org/",
-                copy:"<a href=\"http://www.openstreetmap.org\" target=\"_blank\">Open Street Map</a>",
-                visible:true
-            };
-            mapTypesArr.push(mapobj);
-            var mapobj = {
-                name: "OSM Cycle",
-                wms: "osm",
-                minzoom: 18,
-                maxzoom: 0,
-                url: "http://b.tile.opencyclemap.org/cycle/",
-                copy:"<a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">Cycle OSM</a>",
-                visible:true
-            };
-            mapTypesArr.push(mapobj);
-            var mapobj = {
-                name: "Relief",
-                wms: "",
-                minzoom: 18,
-                maxzoom: 0,
-                url: "",
-                copy:"<a href=\"http://www.maps-for-free.com/html/about.html\" target=\"_blank\">maps-for-free</a>",
-                visible:true
-            };
-            mapTypesArr.push(mapobj);
-            var mapobj = {
-                name: "Demis",
-                wms: "wms",
-                minzoom: 13,
-                maxzoom: 1,
-                url: "http://www2.demis.nl/wms/wms.ashx?Service=WMS&WMS=BlueMarble&Version=1.1.0&Request=GetMap&Layers=Earth Image,Borders,Coastlines&Format=image/jpeg",
-                copy:"WMS demo by Demis",
-                visible:true
-            };
-            mapTypesArr.push(mapobj);
-            var mapobj = {
-                name: "ROADMAP",
-                wms: "",
-                minzoom: 13,
-                maxzoom: 10,
-                url: "",
-                copy:"",
-                visible:true
-            };
-            mapTypesArr.push(mapobj);
-            var mapobj = {
-                name: "SATELLITE",
-                wms: "",
-                minzoom: 13,
-                maxzoom: 10,
-                url: "",
-                copy:"",
-                visible:true
-            };
-            mapTypesArr.push(mapobj);
-            var mapobj = {
-                name: "HYBRID",
-                wms: "",
-                minzoom: 13,
-                maxzoom: 10,
-                url: "",
-                copy:"",
-                visible:true
-            };
-            mapTypesArr.push(mapobj);
-            var mapobj = {
-                name: "TERRAIN",
-                wms: "",
-                minzoom: 13,
-                maxzoom: 10,
-                url: "",
-                copy:"",
-                visible:true
-            };
-            mapTypesArr.push(mapobj);
-
-            function MyControl(map) {
-                map = map;
-
-                img = document.createElement('IMG');
-                // img.src = 'http://indy41.epcc.ed.ac.uk/BCmain/BCmainKey.png';
-                img.src = legend_scale;
-             
-                button = document.createElement('DIV');
-                button.style.margin = "5px";
-                button.style.padding = "5px";
-                button.style.backgroundColor = "#fff";
-                button.style.cursor = 'pointer';
-                button.title = 'Information about currently displayed image';
-                button.appendChild(img);
-             
-                div = document.createElement('DIV');
-                div.id = 'scale_id';
-                div.appendChild(button);
-
-                // controlText = document.createElement('div');
-                // controlText.style.color = 'rgb(25,25,25)';
-                // controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
-                // controlText.style.fontSize = '12px';
-                // controlText.style.lineHeight = '24px';
-                // controlText.style.paddingLeft = '5px';
-                // controlText.style.paddingRight = '5px';
-                // controlText.innerHTML = 'Key';
-                // button.appendChild(controlText);
-
+                // When the user clicks on <span> (x), close the modal
+                if (span) {
+                    // alert('SPAN');
+                    span.onclick = function() {
+                        modal.style.display = "none";
+                    }
+                }      
                 
 
-                // controlText.addEventListener('click', function() {
-                //     if (img.style.visibility == "hidden") {
-                //         img.style.visibility = "visible";
-                //     } else {
-                //         img.style.visibility = "hidden";
-                //     }
-
-                //     // if (controlText.innerHTML.length > 2) {
-                //     //     controlTextsav = controlText.innerHTML;
-                //     //     controlText.innerHTML = "Key";
-                //     // } else {
-                //     //     controlText.innerHTML = controlTextsav; 
-                //     // }
-                // });
-             
-                // var marker = new google.maps.Marker({
-                //     position : new google.maps.LatLng(center_map)
-                // });
-             
-                // google.maps.event.addDomListener(this.button, "click", function(e){
-                //     if (marker.getMap()){
-                //         marker.setMap(null);
-                //     } else {
-                //         marker.setMap(map);
-                //     }
-                // });
-            }
- 
-            MyControl.prototype.getDiv = function() {
-                return div;
-            };
-             
-            MyControl.prototype.remove = function() {
-                div.removeChild(button);
-                div.parentNode.removeChild(div);
-            };
-
-            MyControl.prototype.toggle = function() {
-                if (div) {
-                    if (div.style.visibility === 'hidden') {
-                        show();
-                    } else {
-                        hide();
+                // When the user clicks anywhere outside of the modal, close it
+                window.onclick = function(event) {
+                    if (event.target == modal) {
+                        modal.style.display = "none";
                     }
                 }
-            };
+            </script>
 
+            <script type="text/javascript">
+                var overlay;
+                // var img_opacity = 50;
 
-            function initMap() {
-                var my_styles =  [
-                    {
-                        featureType: "road.highway",
-                        elementType: "geometry",
-                        stylers: [
-                                { visibility: "on" },
-                                { hue: "#ff0000" }
-                        ]
-                    },
-                    {
-                        featureType: "water",
-                        elementType: "geometry",
-                        stylers: [
-                            { visibility: "on" },
-                            { hue: "#0800ff" },
-                            { lightness: -41 }
-                        ]
-                    }
-                ];
-
-                var srcImage = select_image;
-                var bounds = new google.maps.LatLngBounds(
-                    new google.maps.LatLng({{ eLat_1 }}, {{ eLng_1 }}),
-                    new google.maps.LatLng({{ eLat_2 }}, {{ eLng_2 }})
-                );
-                overlay = new google.maps.GroundOverlay(srcImage, bounds);
-                overlay.setOpacity(0.5);
-
-                // SET ZOOM
-                var curent_zoom = {{ GOOGLE_MAP_ZOOM }};
-
-                console.log('GOOGLE_MAP_ZOOM before: ', curent_zoom);
-                // alert('GOOGLE_MAP_ZOOM: '+curent_zoom);
+                // USGSOverlay.prototype = new google.maps.OverlayView();
+                // GOverlay.prototype = new google.maps.GroundOverlay();
                 
-                if ({{ GOOGLE_MAP_ZOOM }} == '0.001' || {{ GOOGLE_MAP_ZOOM }} == 0.001) {
-                    var sw = new google.maps.LatLng({{ eLat_1 }}, {{ eLng_1 }});
-                    var ne = new google.maps.LatLng({{ eLat_2 }}, {{ eLng_2 }});
-                    var pixelWidth = document.body.clientHeight;
+                var map;
+                var center_map = {lat: {{ cLat }}, lng: {{ cLng }}};
 
-                    var GLOBE_WIDTH = 256; // a constant in Google's map projection
-                    var west = sw.lng();
-                    var east = ne.lng();
-                    var angle = east - west;
+                var chartLine;
+                var chartBox;
 
-                    if (angle <= 0) {
-                        angle += 360;
-                    }
+                var listener_markers_overlay;
+                var listener_markers_map;
 
-                    console.log('GOOGLE_MAP angle: ', angle);
+                var kml_arr = {};
 
-                    var curent_zoom = Math.round(Math.log(1024 * 360 / angle / GLOBE_WIDTH) / Math.LN2);
-                }
 
-                console.log('GOOGLE_MAP_ZOOM after: ', curent_zoom);
-
-                console.log('GOOGLE_MAP eLat_1: ', {{ eLat_1 }});
-                console.log('GOOGLE_MAP eLng_1: ', {{ eLng_1 }});
-                console.log('GOOGLE_MAP eLat_2: ', {{ eLat_2 }});
-                console.log('GOOGLE_MAP eLng_2: ', {{ eLng_2 }});
-                
-                // END SET ZOOM
-                
-                // zoom: {{ GOOGLE_MAP_ZOOM }},
-                
-                // console.log('ZOOM: ', curent_zoom);
-                // console.log('document.body.clientHeight: ', document.body.clientHeight);
-                // console.log('window.innerWidth: ', window.innerWidth);
-                // console.log('window.screen.availWidth: ', window.screen.availWidth);
-
-                map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: curent_zoom,
-                    center: center_map,
-                    mapTypeControl: true,
-                    mapTypeControlOptions: {
-                        style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-                        mapTypeIds: [
-                            google.maps.MapTypeId.ROADMAP,
-                            google.maps.MapTypeId.TERRAIN,
-                            google.maps.MapTypeId.SATELLITE,
-                            google.maps.MapTypeId.HYBRID,
-                            MY_MAPTYPE_ID
-                        ]
-                    },
-                });
-
-                overlay.setMap(map);
-                overlay.addListener('mousemove', showCoordinates);
-
-                var styledMapOptions = {name: "Road & Water"};
-                var jayzMapType = new google.maps.StyledMapType(my_styles, styledMapOptions);
-
-                map.mapTypes.set(MY_MAPTYPE_ID, jayzMapType);
-                map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
-
-                // Create the search box and link it to the UI element.
-                var input = document.getElementById('pac-input');
-                var searchBox = new google.maps.places.SearchBox(input);
-                // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-                
-                console.log('INPUT: ', map.getBounds());
-
-                // Bias the SearchBox results towards current map's viewport.
-                map.addListener('bounds_changed', function() {
-                    // alert('INPUT: ');
-                    searchBox.setBounds(map.getBounds());
-                });
-
+                var coord = [];
+                var coord_area = [];
                 var markers = [];
-                // Listen for the event fired when the user selects a prediction and retrieve
-                // more details for that place.
-                searchBox.addListener('places_changed', function() {
-                    var places = searchBox.getPlaces();
+                var polygons = [];
+                var selectPolygon;
+                var selectArea;
+                var polygonVisible;
+                var mapTypesArr = [];
+                var count_pol;
+                var infowindow = new google.maps.InfoWindow();
 
-                    if (places.length == 0) {
-                        return;
+                var count_rep = 0;
+
+                var units = '{{ units }}';
+                var attribute = '{{ attribute }}';
+                var data_polygon;
+                var statistic;
+
+                var select_image = '{{ absolute_url_png_file }}';
+                var legend_scale = '{{ legend_scale }}';
+
+                // higcharts
+                var ts_show = false;
+                var title = '{{ ts_title }}';
+                // var subtitle = '{{ ts_subtitle }}';
+                var ts_subtitle = '';
+                var ts_units = '{{ ts_units }}';
+                var ts_data = '{{ ts_data }}';
+                var ts_series = [];
+                var select_aoi = '{{ select_aoi }}';
+                var select_diagram = '{{ select_diagram }}';
+
+                // BOX PLOT DIAGRAM
+                var categories = [];
+                var series_data_box = [];
+                var plotLines_value;
+                var count_ts = {{ count_ts }};
+                var count_reports = {{ count_ts }};
+
+                var progress = 0;
+                var timerId;
+                var time_section = 0;
+
+                console.log('count_ts: ', count_ts);
+
+                {% if time_series_view and not time_series_clear %}
+                    ts_show = true;
+                {% endif %}
+
+                // var units = 'Tree';
+                // var attribute = 'UNITS';
+
+                // var kml_layer = new google.maps.KmlLayer();
+
+
+                // alert('eLat_1: '+{{ eLat_1 }});
+                // alert('eLng_1: '+{{ eLng_1 }});
+                // alert('eLat_2: '+{{ eLat_2 }});
+                // alert('eLng_2: '+{{ eLng_2 }});
+
+                var MY_MAPTYPE_ID = 'mystyle';
+
+                var mapobj = {
+                    name: "OSM",
+                    wms: "osm",
+                    minzoom: 18,
+                    maxzoom: 0,
+                    url: "http://tile.openstreetmap.org/",
+                    copy:"<a href=\"http://www.openstreetmap.org\" target=\"_blank\">Open Street Map</a>",
+                    visible:true
+                };
+                mapTypesArr.push(mapobj);
+                var mapobj = {
+                    name: "OSM Cycle",
+                    wms: "osm",
+                    minzoom: 18,
+                    maxzoom: 0,
+                    url: "http://b.tile.opencyclemap.org/cycle/",
+                    copy:"<a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">Cycle OSM</a>",
+                    visible:true
+                };
+                mapTypesArr.push(mapobj);
+                var mapobj = {
+                    name: "Relief",
+                    wms: "",
+                    minzoom: 18,
+                    maxzoom: 0,
+                    url: "",
+                    copy:"<a href=\"http://www.maps-for-free.com/html/about.html\" target=\"_blank\">maps-for-free</a>",
+                    visible:true
+                };
+                mapTypesArr.push(mapobj);
+                var mapobj = {
+                    name: "Demis",
+                    wms: "wms",
+                    minzoom: 13,
+                    maxzoom: 1,
+                    url: "http://www2.demis.nl/wms/wms.ashx?Service=WMS&WMS=BlueMarble&Version=1.1.0&Request=GetMap&Layers=Earth Image,Borders,Coastlines&Format=image/jpeg",
+                    copy:"WMS demo by Demis",
+                    visible:true
+                };
+                mapTypesArr.push(mapobj);
+                var mapobj = {
+                    name: "ROADMAP",
+                    wms: "",
+                    minzoom: 13,
+                    maxzoom: 10,
+                    url: "",
+                    copy:"",
+                    visible:true
+                };
+                mapTypesArr.push(mapobj);
+                var mapobj = {
+                    name: "SATELLITE",
+                    wms: "",
+                    minzoom: 13,
+                    maxzoom: 10,
+                    url: "",
+                    copy:"",
+                    visible:true
+                };
+                mapTypesArr.push(mapobj);
+                var mapobj = {
+                    name: "HYBRID",
+                    wms: "",
+                    minzoom: 13,
+                    maxzoom: 10,
+                    url: "",
+                    copy:"",
+                    visible:true
+                };
+                mapTypesArr.push(mapobj);
+                var mapobj = {
+                    name: "TERRAIN",
+                    wms: "",
+                    minzoom: 13,
+                    maxzoom: 10,
+                    url: "",
+                    copy:"",
+                    visible:true
+                };
+                mapTypesArr.push(mapobj);
+
+                function MyControl(map) {
+                    map = map;
+
+                    img = document.createElement('IMG');
+                    // img.src = 'http://indy41.epcc.ed.ac.uk/BCmain/BCmainKey.png';
+                    img.src = legend_scale;
+                 
+                    button = document.createElement('DIV');
+                    button.style.margin = "5px";
+                    button.style.padding = "5px";
+                    button.style.backgroundColor = "#fff";
+                    button.style.cursor = 'pointer';
+                    button.title = 'Information about currently displayed image';
+                    button.appendChild(img);
+                 
+                    div = document.createElement('DIV');
+                    div.id = 'scale_id';
+                    div.appendChild(button);
+
+                    // controlText = document.createElement('div');
+                    // controlText.style.color = 'rgb(25,25,25)';
+                    // controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+                    // controlText.style.fontSize = '12px';
+                    // controlText.style.lineHeight = '24px';
+                    // controlText.style.paddingLeft = '5px';
+                    // controlText.style.paddingRight = '5px';
+                    // controlText.innerHTML = 'Key';
+                    // button.appendChild(controlText);
+
+                    
+
+                    // controlText.addEventListener('click', function() {
+                    //     if (img.style.visibility == "hidden") {
+                    //         img.style.visibility = "visible";
+                    //     } else {
+                    //         img.style.visibility = "hidden";
+                    //     }
+
+                    //     // if (controlText.innerHTML.length > 2) {
+                    //     //     controlTextsav = controlText.innerHTML;
+                    //     //     controlText.innerHTML = "Key";
+                    //     // } else {
+                    //     //     controlText.innerHTML = controlTextsav; 
+                    //     // }
+                    // });
+                 
+                    // var marker = new google.maps.Marker({
+                    //     position : new google.maps.LatLng(center_map)
+                    // });
+                 
+                    // google.maps.event.addDomListener(this.button, "click", function(e){
+                    //     if (marker.getMap()){
+                    //         marker.setMap(null);
+                    //     } else {
+                    //         marker.setMap(map);
+                    //     }
+                    // });
+                }
+     
+                MyControl.prototype.getDiv = function() {
+                    return div;
+                };
+                 
+                MyControl.prototype.remove = function() {
+                    div.removeChild(button);
+                    div.parentNode.removeChild(div);
+                };
+
+                MyControl.prototype.toggle = function() {
+                    if (div) {
+                        if (div.style.visibility === 'hidden') {
+                            show();
+                        } else {
+                            hide();
+                        }
+                    }
+                };
+
+
+                function initMap() {
+                    var my_styles =  [
+                        {
+                            featureType: "road.highway",
+                            elementType: "geometry",
+                            stylers: [
+                                    { visibility: "on" },
+                                    { hue: "#ff0000" }
+                            ]
+                        },
+                        {
+                            featureType: "water",
+                            elementType: "geometry",
+                            stylers: [
+                                { visibility: "on" },
+                                { hue: "#0800ff" },
+                                { lightness: -41 }
+                            ]
+                        }
+                    ];
+
+                    var srcImage = select_image;
+                    var bounds = new google.maps.LatLngBounds(
+                        new google.maps.LatLng({{ eLat_1 }}, {{ eLng_1 }}),
+                        new google.maps.LatLng({{ eLat_2 }}, {{ eLng_2 }})
+                    );
+                    overlay = new google.maps.GroundOverlay(srcImage, bounds);
+                    overlay.setOpacity(0.5);
+
+                    // SET ZOOM
+                    var curent_zoom = {{ GOOGLE_MAP_ZOOM }};
+
+                    console.log('GOOGLE_MAP_ZOOM before: ', curent_zoom);
+                    // alert('GOOGLE_MAP_ZOOM: '+curent_zoom);
+                    
+                    if ({{ GOOGLE_MAP_ZOOM }} == '0.001' || {{ GOOGLE_MAP_ZOOM }} == 0.001) {
+                        var sw = new google.maps.LatLng({{ eLat_1 }}, {{ eLng_1 }});
+                        var ne = new google.maps.LatLng({{ eLat_2 }}, {{ eLng_2 }});
+                        var pixelWidth = document.body.clientHeight;
+
+                        var GLOBE_WIDTH = 256; // a constant in Google's map projection
+                        var west = sw.lng();
+                        var east = ne.lng();
+                        var angle = east - west;
+
+                        if (angle <= 0) {
+                            angle += 360;
+                        }
+
+                        console.log('GOOGLE_MAP angle: ', angle);
+
+                        var curent_zoom = Math.round(Math.log(1024 * 360 / angle / GLOBE_WIDTH) / Math.LN2);
                     }
 
-                    // Clear out the old markers.
-                    markers.forEach(function(marker) {
-                        marker.setMap(null);
-                    });
-                    markers = [];
+                    console.log('GOOGLE_MAP_ZOOM after: ', curent_zoom);
 
-                    // For each place, get the icon, name and location.
-                    var bounds = new google.maps.LatLngBounds();
-                    places.forEach(function(place) {
-                        if (!place.geometry) {
-                            console.log("Returned place contains no geometry");
+                    console.log('GOOGLE_MAP eLat_1: ', {{ eLat_1 }});
+                    console.log('GOOGLE_MAP eLng_1: ', {{ eLng_1 }});
+                    console.log('GOOGLE_MAP eLat_2: ', {{ eLat_2 }});
+                    console.log('GOOGLE_MAP eLng_2: ', {{ eLng_2 }});
+                    
+                    // END SET ZOOM
+                    
+                    // zoom: {{ GOOGLE_MAP_ZOOM }},
+                    
+                    // console.log('ZOOM: ', curent_zoom);
+                    // console.log('document.body.clientHeight: ', document.body.clientHeight);
+                    // console.log('window.innerWidth: ', window.innerWidth);
+                    // console.log('window.screen.availWidth: ', window.screen.availWidth);
+
+                    map = new google.maps.Map(document.getElementById('map'), {
+                        zoom: curent_zoom,
+                        center: center_map,
+                        mapTypeControl: true,
+                        mapTypeControlOptions: {
+                            style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+                            mapTypeIds: [
+                                google.maps.MapTypeId.ROADMAP,
+                                google.maps.MapTypeId.TERRAIN,
+                                google.maps.MapTypeId.SATELLITE,
+                                google.maps.MapTypeId.HYBRID,
+                                MY_MAPTYPE_ID
+                            ]
+                        },
+                    });
+
+                    overlay.setMap(map);
+                    overlay.addListener('mousemove', showCoordinates);
+
+                    var styledMapOptions = {name: "Road & Water"};
+                    var jayzMapType = new google.maps.StyledMapType(my_styles, styledMapOptions);
+
+                    map.mapTypes.set(MY_MAPTYPE_ID, jayzMapType);
+                    map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
+
+                    // Create the search box and link it to the UI element.
+                    var input = document.getElementById('pac-input');
+                    var searchBox = new google.maps.places.SearchBox(input);
+                    // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+                    
+                    map.getBounds() = 0;
+                    console.log('INPUT: ', map.getBounds());
+
+                    // Bias the SearchBox results towards current map's viewport.
+                    map.addListener('bounds_changed', function() {
+                        // alert('INPUT: ');
+                        searchBox.setBounds(map.getBounds());
+                    });
+
+                    var markers = [];
+                    // Listen for the event fired when the user selects a prediction and retrieve
+                    // more details for that place.
+                    searchBox.addListener('places_changed', function() {
+                        var places = searchBox.getPlaces();
+
+                        if (places.length == 0) {
                             return;
                         }
-                        var icon = {
-                            url: place.icon,
-                            size: new google.maps.Size(71, 71),
-                            origin: new google.maps.Point(0, 0),
-                            anchor: new google.maps.Point(17, 34),
-                            scaledSize: new google.maps.Size(25, 25)
-                        };
 
-                        // Create a marker for each place.
-                        markers.push(new google.maps.Marker({
-                            map: map,
-                            icon: icon,
-                            title: place.name,
-                            position: place.geometry.location
-                        }));
+                        // Clear out the old markers.
+                        markers.forEach(function(marker) {
+                            marker.setMap(null);
+                        });
+                        markers = [];
 
-                        if (place.geometry.viewport) {
-                            // Only geocodes have viewport.
-                            bounds.union(place.geometry.viewport);
-                        } else {
-                        bounds.extend(place.geometry.location);
-                        }
+                        // For each place, get the icon, name and location.
+                        var bounds = new google.maps.LatLngBounds();
+                        places.forEach(function(place) {
+                            if (!place.geometry) {
+                                console.log("Returned place contains no geometry");
+                                return;
+                            }
+                            var icon = {
+                                url: place.icon,
+                                size: new google.maps.Size(71, 71),
+                                origin: new google.maps.Point(0, 0),
+                                anchor: new google.maps.Point(17, 34),
+                                scaledSize: new google.maps.Size(25, 25)
+                            };
+
+                            // Create a marker for each place.
+                            markers.push(new google.maps.Marker({
+                                map: map,
+                                icon: icon,
+                                title: place.name,
+                                position: place.geometry.location
+                            }));
+
+                            if (place.geometry.viewport) {
+                                // Only geocodes have viewport.
+                                bounds.union(place.geometry.viewport);
+                            } else {
+                            bounds.extend(place.geometry.location);
+                            }
+                        });
+                        map.fitBounds(bounds);
                     });
-                    map.fitBounds(bounds);
-                });
 
 
 
 
 
-                // GET CENTER WHEN CHANGE ZOOM
-                // var c_map = map.getCenter();
-                // var c_map_lat = c_map.lat();
-                // var c_map_lng = c_map.lng();
+                    // GET CENTER WHEN CHANGE ZOOM
+                    // var c_map = map.getCenter();
+                    // var c_map_lat = c_map.lat();
+                    // var c_map_lng = c_map.lng();
 
-                // alert('CENTER LAT 1: '+c_map_lat);
-                // alert('CENTER LNG 1: '+c_map_lng);
-                // {lat: {{ cLat }}, lng: {{ cLng }}};
+                    // alert('CENTER LAT 1: '+c_map_lat);
+                    // alert('CENTER LNG 1: '+c_map_lng);
+                    // {lat: {{ cLat }}, lng: {{ cLng }}};
 
-                // console.log('CENTER LAT 1: ', c_map_lat);
-                // console.log('CENTER LNG 1: ', c_map_lng);
+                    // console.log('CENTER LAT 1: ', c_map_lat);
+                    // console.log('CENTER LNG 1: ', c_map_lng);
 
-                // var center_marker = new google.maps.Marker({
-                //     position: {
-                //         'lat': {{ cLat }},
-                //         'lng': {{ cLng }}
-                //     },
-                //     map: map
-                // });
+                    // var center_marker = new google.maps.Marker({
+                    //     position: {
+                    //         'lat': {{ cLat }},
+                    //         'lng': {{ cLng }}
+                    //     },
+                    //     map: map
+                    // });
 
-                // google.maps.event.addListener(map, 'center_changed', function() {
-                //     // map.panTo(new google.maps.LatLng(c_map_lat, c_map_lng));
-                //     // map.setCenter({lat: c_map_lat, lng: c_map_lng});
-                //     console.log('GOOGLE_MAP_ZOOM 2: ', map.getZoom());
-                //     console.log('CENTER LAT 2: ', c_map_lat);
-                //     console.log('CENTER LNG 2: ', c_map_lng);
-                // });
-
-                
-
-                // alert('CENTER 1: '+map.getCenter());
-
-
-                // var min_marker = new google.maps.Marker({
-                //     position: {
-                //         'lat': {{ eLat_1 }},
-                //         'lng': {{ eLng_1 }}
-                //     },
-                //     map: map
-                // });
-
-
-                // var max_marker = new google.maps.Marker({
-                //     position: {
-                //         'lat': {{ eLat_2 }},
-                //         'lng': {{ eLng_2 }}
-                //     },
-                //     map: map
-                // });
-
-                
-                
-                // var bounds = new google.maps.LatLngBounds(
-                //     new google.maps.LatLng(-89.0, -179.0),
-                //     new google.maps.LatLng(89.0, 179.0)
-                // );
-
-                // The source to image overlay
-                // var srcImage = '{{ absolute_url_png_file }}';
-                
-                
-
-                // alert('OVERLAY SATART: '+srcImage);
-
-                // overlay = new USGSOverlay(bounds, srcImage, map);
-                
-                // overlay = new GOverlay(srcImage, bounds);
-
-                // overlay.preserveViewport = true;
-                
-                
-
-                // alert('OVERLAY END');
-
-                
-
-
-                // setOpacity(srcImage);
-
-
-                // opacity = new CustomTileOverlay(map, initialOpacity);
-                // opacity.show();
-
-
-                // Show the lat and lng under the mouse cursor.
-                // latitude, longitude
-
-                // placeMarkerAndPanTo({{ eLat_1 }}, {{ eLng_1 }});
-                // placeMarkerAndPanTo({{ eLat_2 }}, {{ eLng_2 }});
-
-                // Add a listener for the click event.
-                // map.addListener('click', showInfoWindow);
-                // infoWindow = new google.maps.InfoWindow;
-
-                // Add a listener for the mousemove event.
-                // map.addListener('mousemove', showCoordinates);
-                
-
-                var myControl = new MyControl(map);
-                map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(myControl.getDiv());
-
-                // map.addListener('zoom_changed', function() {
-                //     // infowindow.setContent('Zoom: ' + map.getZoom());
-                //     // alert('Zoom: ' + map.getZoom());
-                    
-                //     alert('CENTER 2: '+map.getCenter());
-                    
-                //     getZoomGoogleMap(map.getZoom());
+                    // google.maps.event.addListener(map, 'center_changed', function() {
+                    //     // map.panTo(new google.maps.LatLng(c_map_lat, c_map_lng));
+                    //     // map.setCenter({lat: c_map_lat, lng: c_map_lng});
+                    //     console.log('GOOGLE_MAP_ZOOM 2: ', map.getZoom());
+                    //     console.log('CENTER LAT 2: ', c_map_lat);
+                    //     console.log('CENTER LNG 2: ', c_map_lng);
+                    // });
 
                     
-                // });
+
+                    // alert('CENTER 1: '+map.getCenter());
 
 
-                // infoWindow = new google.maps.InfoWindow;
+                    // var min_marker = new google.maps.Marker({
+                    //     position: {
+                    //         'lat': {{ eLat_1 }},
+                    //         'lng': {{ eLng_1 }}
+                    //     },
+                    //     map: map
+                    // });
 
-                // var latDiv = document.getElementById('latitude');
-                // var lngDiv = document.getElementById('longitude');
-                //
-                // map.controls[google.maps.ControlPosition.TOP_CENTER].push(latDiv);
-                // map.controls[google.maps.ControlPosition.TOP_CENTER].push(lngDiv);
-                // map.addListener('mousemove', function(event) {
-                //     latDiv.textContent =
-                //         'lat: ' + Math.round(event.latLng.lat());
-                //     }
-                // );
-                // map.addListener('mousemove', function(event) {
-                //     lngDiv.textContent =
-                //         'lng: ' + Math.round(event.latLng.lng());
-                //     }
-                // );
 
-            }
+                    // var max_marker = new google.maps.Marker({
+                    //     position: {
+                    //         'lat': {{ eLat_2 }},
+                    //         'lng': {{ eLng_2 }}
+                    //     },
+                    //     map: map
+                    // });
 
-            function placeMarkerAndPanTo(lat1, lng1) {
-                var image = "{% static 'img/circle-12.png' %}";
+                    
+                    
+                    // var bounds = new google.maps.LatLngBounds(
+                    //     new google.maps.LatLng(-89.0, -179.0),
+                    //     new google.maps.LatLng(89.0, 179.0)
+                    // );
 
-                var dict = {
-                    'lat':   lat1,
-                    'lng': lng1
+                    // The source to image overlay
+                    // var srcImage = '{{ absolute_url_png_file }}';
+                    
+                    
+
+                    // alert('OVERLAY SATART: '+srcImage);
+
+                    // overlay = new USGSOverlay(bounds, srcImage, map);
+                    
+                    // overlay = new GOverlay(srcImage, bounds);
+
+                    // overlay.preserveViewport = true;
+                    
+                    
+
+                    // alert('OVERLAY END');
+
+                    
+
+
+                    // setOpacity(srcImage);
+
+
+                    // opacity = new CustomTileOverlay(map, initialOpacity);
+                    // opacity.show();
+
+
+                    // Show the lat and lng under the mouse cursor.
+                    // latitude, longitude
+
+                    // placeMarkerAndPanTo({{ eLat_1 }}, {{ eLng_1 }});
+                    // placeMarkerAndPanTo({{ eLat_2 }}, {{ eLng_2 }});
+
+                    // Add a listener for the click event.
+                    // map.addListener('click', showInfoWindow);
+                    // infoWindow = new google.maps.InfoWindow;
+
+                    // Add a listener for the mousemove event.
+                    // map.addListener('mousemove', showCoordinates);
+                    
+
+                    var myControl = new MyControl(map);
+                    map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(myControl.getDiv());
+
+                    // map.addListener('zoom_changed', function() {
+                    //     // infowindow.setContent('Zoom: ' + map.getZoom());
+                    //     // alert('Zoom: ' + map.getZoom());
+                        
+                    //     alert('CENTER 2: '+map.getCenter());
+                        
+                    //     getZoomGoogleMap(map.getZoom());
+
+                        
+                    // });
+
+
+                    // infoWindow = new google.maps.InfoWindow;
+
+                    // var latDiv = document.getElementById('latitude');
+                    // var lngDiv = document.getElementById('longitude');
+                    //
+                    // map.controls[google.maps.ControlPosition.TOP_CENTER].push(latDiv);
+                    // map.controls[google.maps.ControlPosition.TOP_CENTER].push(lngDiv);
+                    // map.addListener('mousemove', function(event) {
+                    //     latDiv.textContent =
+                    //         'lat: ' + Math.round(event.latLng.lat());
+                    //     }
+                    // );
+                    // map.addListener('mousemove', function(event) {
+                    //     lngDiv.textContent =
+                    //         'lng: ' + Math.round(event.latLng.lng());
+                    //     }
+                    // );
+
                 }
-                coord.push(dict);
-                // sendDataToServer(dict);
 
-                var marker = new google.maps.Marker({
-                    position: dict,
-                    map: map,
-                    icon: image
-                });
-                //marker.setMap(map);
-                //map.panTo(marker);
-                markers.push(marker);
+                function placeMarkerAndPanTo(lat1, lng1) {
+                    var image = "{% static 'img/circle-12.png' %}";
 
-                if (markers.length >= 3) {
-                    $('#draw_aoi').removeAttr('disabled');
-                } else {
-                    $('#draw_aoi').attr("disabled", "disabled");
-                }
-            }
-
-            // applied markers on the map.
-            function appliedMarkers() {
-                // var select_infopanel = document.getElementById("show_file_arrea").value;
-                var img = document.getElementById("ap_marker");
-
-                coord = [];
-                markers = [];
-
-                // var select_views = $("input[name='attribute_viewlist']:checked").size();
-
-                // alert('select_image: '+select_image);
-                // var listener_markers_overlay;
-                // var listener_markers_map;
-
-                if (select_image) {
-                    // alert('select_infopanel: NO: '+select_infopanel);
-                    listener_markers_overlay = overlay.addListener('click', function(e) {
-                        placeMarkerAndPanTo(e.latLng.lat(), e.latLng.lng());
-                    });
-                    listener_markers_map = map.addListener('click', function(e) {
-                        placeMarkerAndPanTo(e.latLng.lat(), e.latLng.lng());
-                    });
-                    img.src = "{% static 'img/map-marker-plus-purple.png' %}";
-                } else {
-                    // Get the modal
-                    var modal = document.getElementById('myModal');
-
-                    // When the user clicks on the button, open the modal
-                    modal.style.display = "block";
-                }
-
-            }
-
-            // Removes the poligon from the map, but keeps them in the array.
-            function removePoligon() {
-                if (polygons) {
-                    for (i in polygons) {
-                        polygons[i].setMap(null);
+                    var dict = {
+                        'lat':   lat1,
+                        'lng': lng1
                     }
-                }
-                coord = [];
-                polygons = [];
-                polygonVisible = false;
+                    coord.push(dict);
+                    // sendDataToServer(dict);
 
-                // Removes the markers
-                removeMarkers();
-            }
-
-            // Removes the markers from the map, but keeps them in the array.
-            function removeMarkers() {
-                // selectPolygon.fillOpacity = 1.0;
-                for (var i = 0; i < markers.length; i++) {
-                    markers[i].setMap(null);
-                }
-            }
-
-            function polygonCenter(poly) {
-                var lowx,
-                    highx,
-                    lowy,
-                    highy,
-                    lats = [],
-                    lngs = [],
-                    vertices = poly.getPath();
-
-                for(var i=0; i<vertices.length; i++) {
-                    lngs.push(vertices.getAt(i).lng());
-                    lats.push(vertices.getAt(i).lat());
-                }
-
-                lats.sort();
-                lngs.sort();
-                lowx = lats[0];
-                highx = lats[vertices.length - 1];
-                lowy = lngs[0];
-                highy = lngs[vertices.length - 1];
-                center_x = lowx + ((highx-lowx) / 2);
-                center_y = lowy + ((highy - lowy) / 2);
-
-                return (new google.maps.LatLng(center_x, center_y));
-            }
-
-            function drawPoligon() {
-                var report_list = [];
-                var stat_list = [];
-
-                if (polygons) {
-                    for (i in polygons) {
-                        polygons[i].setMap(null);
-                    }
-                }
-                // removePoligon();
-                $('#report_attribute input:checkbox:checked').each(function(){
-                    // alert($(this).val());
-                    report_list.push($(this).val())
-                });
-
-                $('#statictics_list input:radio:checked').each(function(){
-                    // alert($(this).val());
-                    stat_list.push($(this).val())
-                });
-
-                if (report_list == 0) {
-                    // alert('NO report_list');
-                    $('#report_attribute input:checkbox').each(function(){
-                        // alert($(this).val());
-                        report_list.push($(this).val())
+                    var marker = new google.maps.Marker({
+                        position: dict,
+                        map: map,
+                        icon: image
                     });
-                }
+                    //marker.setMap(map);
+                    //map.panTo(marker);
+                    markers.push(marker);
 
-                var show_coord = coord;
-
-                // alert(report_list);
-                
-                sendDataToServer(show_coord, report_list, stat_list);
-                // setTimeout(sendGetToServer, 500);
-            }
-
-            function sendGetToServer() {
-                // var x = new XMLHttpRequest();
-                // x.open("GET", "/customer/php?tif_path={{ file_tif_path }}", true);
-                
-                // x.open("GET", "/customer/php?tif_path={{ file_tif_path }}&ds={{ data_set_id }}", true);
-                // x.send(null);
-
-                deleteFile('{{ data_set_id }}');
-
-                // setTimeout(getTmpCSV, 3000);
-            }
-
-            // function getTmpCSV(data_aoi, stat) {
-            //  // alert('getTmpCSV: '+file_path);
-            //  // httpRequest = new XMLHttpRequest();
-            //  // httpRequest.open("GET", file_path, true);
-            //  // httpRequest.onreadystatechange = OnRequestStateChange;
-            //  // httpRequest.send(null);
-
-   //              data_polygon = data_aoi;
-   //              getPolygon(stat);
-
-            //  // setTimeout(getPolygon, 100, stat);
-            // }
-
-            function getPolygon(data_aoi, stat) {
-                // alert('AOI: '+data_aoi);
-                // alert('STAT: '+stat);
-
-
-                var modal = $('#modalWaiting');
-                modal.modal('hide');
-                statistic = stat;
-                data_polygon = data_aoi;
-
-                // Construct the polygon.
-                selectPolygon = new google.maps.Polygon({
-                    paths: coord,
-                    strokeColor: '#ffffff',
-                    //strokeOpacity: 0.8,
-                    strokeWeight: 5,
-                    fillColor: '#8bc53f',
-                    fillOpacity: 0.5,
-                    //editable: true
-                });
-                selectPolygon.setMap(map);
-                polygons.push(selectPolygon);
-                polygonVisible = true;
-
-                // remove all markers
-                for (var i = 0; i < markers.length; i++) {
-                    markers[i].setMap(null);
-                }
-                infowindow.close();
-
-                // sendDataToServer(show_coord);
-
-                // for (n in show_coord){
-                //  for (k in show_coord[n]){
-                //      // alert('NK: '+show_coord[n][k]);
-                //  }
-                // }
-
-                // Add a listener for the click event.
-                selectPolygon.addListener('click', showInfoWindow);
-                infoWindow = new google.maps.InfoWindow;
-
-                // Add a listener for the mousemove event.
-                selectPolygon.addListener('mousemove', showCoordinates);
-                infoWindow = new google.maps.InfoWindow;
-
-                var center_pol = polygonCenter(selectPolygon);
-                // coord = [];
-                var list_data_draw = data_polygon.split('_');
-                count_pol = list_data_draw.length;
-                var new_array = []
-
-                // alert('list_data_draw: '+list_data_draw);
-                // alert('list_data_draw 0: '+list_data_draw[0]);
-                // alert('list_data_draw 1: '+list_data_draw[1]);
-                // alert('list_data_draw 2: '+list_data_draw[2]);
-                // alert('list_data_draw 3: '+list_data_draw[3]);
-                //
-                // alert('data_polygon: '+data_polygon);
-
-                var contentString = '<h4 align="center"><b>Area Information</b></h4>';
-                contentString += '<p align="center"><span><b>Total Area:</b></span> ' + list_data_draw[0] + ' ha</p>';
-                contentString += '<input type="hidden" name="total_area" value="' + list_data_draw[0] + '">'
-
-                if (statistic) {
-                    contentString += '<p align="center"><span><b>Value:</b></span> ' + statistic + '</p>';
-                    contentString += '<input type="hidden" name="statistic" value=' + statistic + '>'
-                }
-
-                if (count_pol >= 8) {
-                    contentString += '<div style="height:400px;overflow:scroll;">';
-                } else {
-                    contentString += '<div style="overflow:auto;">';
-                }
-
-                contentString += '<table class="table table-bordered">';
-                // contentString += '<caption align="center"><span><b>Total Area:</b></span> ' + list_data_draw[0] + ' ha</caption>'
-
-                contentString += '<thead>';
-                contentString += '<tr bgcolor="#CFCFCF">';
-                contentString += '<th align="left">Attribute</th>';
-                contentString += '<th>Units per Hectare</th>';
-                contentString += '<th>Units</th>';
-                contentString += '<th>Total</th>';
-                contentString += '</tr>';
-                contentString += '</thead>';
-                contentString += '<tbody>';
-
-                for (var i = 1; i < count_pol; i++) {
-                    new_array = list_data_draw[i].split(';');
-
-                    // alert('NEW ARAY: '+new_array);
-
-                    if ( i & 1 ) {
-                        contentString += '<tr bgcolor="#F5F5F5">';
+                    if (markers.length >= 3) {
+                        $('#draw_aoi').removeAttr('disabled');
                     } else {
-                        contentString += '<tr>';
+                        $('#draw_aoi').attr("disabled", "disabled");
                     }
-
-                    contentString += '<td align="left">' + new_array[0] + '</td>';
-                    contentString += '<td>' + new_array[1] + '</td>';
-                    contentString += '<td>' + new_array[2] + '</td>';
-                    contentString += '<td>' + new_array[3] + '</td>';
-                    contentString += '</tr>';
-                    contentString += '<input type="hidden" name="attribute" value="' + new_array[0] + '">'
-                    contentString += '<input type="hidden" name="value" value="' + new_array[1] + '">'
-                    contentString += '<input type="hidden" name="units" value="' + new_array[2] + '">'
-                    contentString += '<input type="hidden" name="total" value="' + new_array[3] + '">'
                 }
 
-                contentString += '</tbody>';
-                contentString += '</table>';
-                contentString += '</div>';
+                // applied markers on the map.
+                function appliedMarkers() {
+                    // var select_infopanel = document.getElementById("show_file_arrea").value;
+                    var img = document.getElementById("ap_marker");
 
-                contentString += '<input type="text" id="input_area_name" class="margin-top-15" placeholder="Enter Area name" name="area_name" size="30" style="width:100%" onkeyup="changeAreaName();" autofocus><br>'
-                contentString += '<button type="submit" name="save_area" class="btn btn-success btn-block margin-top-15" value="save_area" disabled id="save_area" onclick="showWaiting()">Save Area</button>';
-                contentString += '<button type="submit" name="cancel_download_file" class="btn btn-primary btn-block margin-top-15" value="cancel_download_file">Cancel</button>';
+                    coord = [];
+                    markers = [];
 
-                infowindow = new google.maps.InfoWindow({content: contentString, position: center_pol});
-                infowindow.open(map);
+                    // var select_views = $("input[name='attribute_viewlist']:checked").size();
 
-                $('#remove_aoi').removeAttr('disabled');
-                $('#hide_aoi').removeAttr('disabled');
+                    // alert('select_image: '+select_image);
+                    // var listener_markers_overlay;
+                    // var listener_markers_map;
 
-                var img = document.getElementById("ap_marker");
-                img.src = "{% static 'img/map-marker-plus.png' %}";
-                google.maps.event.removeListener(listener_markers_overlay);
-                google.maps.event.removeListener(listener_markers_map);
-            }
-
-            function showCoordinates(event) {
-                var lat = event.latLng.lat();
-                var lon = event.latLng.lng();
-
-                document.getElementById('latitude').value = 'Lat: ' + lat.toFixed(6);
-                document.getElementById('longitude').value = 'Lng: ' + lon.toFixed(6);
-            }
-
-            function showInfoWindow(event) {
-                var lat = event.latLng.lat();
-                var lon = event.latLng.lng();
-                var list_data = data_polygon.split('_');
-                var new_array = []
-
-                var contentString = '<h4 align="center"><b>Area Information</b></h4>';
-                contentString += '<p align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</p>';
-                contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
-
-                if (statistic) {
-                    contentString += '<p align="center"><span><b>Value:</b></span> ' + statistic + '</p>';
-                    contentString += '<input type="hidden" name="statistic" value=' + statistic + '>'
-                }
-
-                if (count_pol >= 8) {
-                    contentString += '<div style="height:400px;overflow:scroll;">';
-                } else {
-                    contentString += '<div style="overflow:auto;">';
-                }
-
-                contentString += '<table class="table table-bordered" style="height:50px;overflow:scroll;">';
-                // contentString += '<caption align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</caption>'
-
-                contentString += '<thead>';
-                contentString += '<tr bgcolor="#CFCFCF">';
-                contentString += '<th align="left">Attribute</th>';
-                contentString += '<th>Units per Hectare</th>';
-                contentString += '<th>Units</th>';
-                contentString += '<th>Total</th>';
-                contentString += '</tr>';
-                contentString += '</thead>';
-                contentString += '<tbody>';
-
-                for (var i = 1; i < list_data.length; i++) {
-                    new_array = list_data[i].split(',')
-
-                    if ( i & 1 ) {
-                        contentString += '<tr bgcolor="#F5F5F5">';
+                    if (select_image) {
+                        // alert('select_infopanel: NO: '+select_infopanel);
+                        listener_markers_overlay = overlay.addListener('click', function(e) {
+                            placeMarkerAndPanTo(e.latLng.lat(), e.latLng.lng());
+                        });
+                        listener_markers_map = map.addListener('click', function(e) {
+                            placeMarkerAndPanTo(e.latLng.lat(), e.latLng.lng());
+                        });
+                        img.src = "{% static 'img/map-marker-plus-purple.png' %}";
                     } else {
-                        contentString += '<tr>';
+                        // Get the modal
+                        var modal = document.getElementById('myModal');
+
+                        // When the user clicks on the button, open the modal
+                        modal.style.display = "block";
                     }
 
-                    contentString += '<tr>';
-                    contentString += '<td align="left">' + new_array[0] + '</td>';
-                    contentString += '<td>' + new_array[1] + '</td>';
-                    contentString += '<td>' + new_array[2] + '</td>';
-                    contentString += '<td>' + new_array[3] + '</td>';
-                    contentString += '</tr>';
-                    contentString += '<input type="hidden" name="attribute" value="' + new_array[0] + '">'
-                    contentString += '<input type="hidden" name="value" value="' + new_array[1] + '">'
-                    contentString += '<input type="hidden" name="units" value="' + new_array[2] + '">'
-                    contentString += '<input type="hidden" name="total" value="' + new_array[3] + '">'
                 }
 
-                contentString += '</tbody>';
-                contentString += '</table>';
-                contentString += '</div>';
-
-                contentString += '<input type="text" id="input_area_name" class="margin-top-15" placeholder="Enter Area name" name="area_name" size="30" style="width:100%" onkeyup="changeAreaName();" autofocus><br>'
-                contentString += '<button type="submit" name="save_area" class="btn btn-success btn-block margin-top-15" value="save_area" disabled id="save_area">Save Area</button>';
-                contentString += '<button type="submit" name="cancel_download_file" class="btn btn-primary btn-block margin-top-15" value="cancel_download_file">Cancel</button>';
-
-                // Replace the info window's content and position.
-                infoWindow.setContent(contentString);
-                infoWindow.setPosition(event.latLng);
-
-                infoWindow.open(map);
-            }
-
-            function togglePlygonOverlays() {
-                // kml.setMap(null);
-                if (polygonVisible) {
+                // Removes the poligon from the map, but keeps them in the array.
+                function removePoligon() {
                     if (polygons) {
                         for (i in polygons) {
                             polygons[i].setMap(null);
-                            polygonVisible = false;
                         }
                     }
-                } else {
+                    coord = [];
+                    polygons = [];
+                    polygonVisible = false;
+
+                    // Removes the markers
+                    removeMarkers();
+                }
+
+                // Removes the markers from the map, but keeps them in the array.
+                function removeMarkers() {
+                    // selectPolygon.fillOpacity = 1.0;
+                    for (var i = 0; i < markers.length; i++) {
+                        markers[i].setMap(null);
+                    }
+                }
+
+                function polygonCenter(poly) {
+                    var lowx,
+                        highx,
+                        lowy,
+                        highy,
+                        lats = [],
+                        lngs = [],
+                        vertices = poly.getPath();
+
+                    for(var i=0; i<vertices.length; i++) {
+                        lngs.push(vertices.getAt(i).lng());
+                        lats.push(vertices.getAt(i).lat());
+                    }
+
+                    lats.sort();
+                    lngs.sort();
+                    lowx = lats[0];
+                    highx = lats[vertices.length - 1];
+                    lowy = lngs[0];
+                    highy = lngs[vertices.length - 1];
+                    center_x = lowx + ((highx-lowx) / 2);
+                    center_y = lowy + ((highy - lowy) / 2);
+
+                    return (new google.maps.LatLng(center_x, center_y));
+                }
+
+                function drawPoligon() {
+                    var report_list = [];
+                    var stat_list = [];
+
                     if (polygons) {
                         for (i in polygons) {
-                            polygons[i].setMap(map);
-                            polygonVisible = true;
+                            polygons[i].setMap(null);
+                        }
+                    }
+                    // removePoligon();
+                    $('#report_attribute input:checkbox:checked').each(function(){
+                        // alert($(this).val());
+                        report_list.push($(this).val())
+                    });
+
+                    $('#statictics_list input:radio:checked').each(function(){
+                        // alert($(this).val());
+                        stat_list.push($(this).val())
+                    });
+
+                    if (report_list == 0) {
+                        // alert('NO report_list');
+                        $('#report_attribute input:checkbox').each(function(){
+                            // alert($(this).val());
+                            report_list.push($(this).val())
+                        });
+                    }
+
+                    var show_coord = coord;
+
+                    // alert(report_list);
+                    
+                    sendDataToServer(show_coord, report_list, stat_list);
+                    // setTimeout(sendGetToServer, 500);
+                }
+
+                function sendGetToServer() {
+                    // var x = new XMLHttpRequest();
+                    // x.open("GET", "/customer/php?tif_path={{ file_tif_path }}", true);
+                    
+                    // x.open("GET", "/customer/php?tif_path={{ file_tif_path }}&ds={{ data_set_id }}", true);
+                    // x.send(null);
+
+                    deleteFile('{{ data_set_id }}');
+
+                    // setTimeout(getTmpCSV, 3000);
+                }
+
+                // function getTmpCSV(data_aoi, stat) {
+                //  // alert('getTmpCSV: '+file_path);
+                //  // httpRequest = new XMLHttpRequest();
+                //  // httpRequest.open("GET", file_path, true);
+                //  // httpRequest.onreadystatechange = OnRequestStateChange;
+                //  // httpRequest.send(null);
+
+       //              data_polygon = data_aoi;
+       //              getPolygon(stat);
+
+                //  // setTimeout(getPolygon, 100, stat);
+                // }
+
+                function getPolygon(data_aoi, stat) {
+                    // alert('AOI: '+data_aoi);
+                    // alert('STAT: '+stat);
+
+
+                    var modal = $('#modalWaiting');
+                    modal.modal('hide');
+                    statistic = stat;
+                    data_polygon = data_aoi;
+
+                    // Construct the polygon.
+                    selectPolygon = new google.maps.Polygon({
+                        paths: coord,
+                        strokeColor: '#ffffff',
+                        //strokeOpacity: 0.8,
+                        strokeWeight: 5,
+                        fillColor: '#8bc53f',
+                        fillOpacity: 0.5,
+                        //editable: true
+                    });
+                    selectPolygon.setMap(map);
+                    polygons.push(selectPolygon);
+                    polygonVisible = true;
+
+                    // remove all markers
+                    for (var i = 0; i < markers.length; i++) {
+                        markers[i].setMap(null);
+                    }
+                    infowindow.close();
+
+                    // sendDataToServer(show_coord);
+
+                    // for (n in show_coord){
+                    //  for (k in show_coord[n]){
+                    //      // alert('NK: '+show_coord[n][k]);
+                    //  }
+                    // }
+
+                    // Add a listener for the click event.
+                    selectPolygon.addListener('click', showInfoWindow);
+                    infoWindow = new google.maps.InfoWindow;
+
+                    // Add a listener for the mousemove event.
+                    selectPolygon.addListener('mousemove', showCoordinates);
+                    infoWindow = new google.maps.InfoWindow;
+
+                    var center_pol = polygonCenter(selectPolygon);
+                    // coord = [];
+                    var list_data_draw = data_polygon.split('_');
+                    count_pol = list_data_draw.length;
+                    var new_array = []
+
+                    // alert('list_data_draw: '+list_data_draw);
+                    // alert('list_data_draw 0: '+list_data_draw[0]);
+                    // alert('list_data_draw 1: '+list_data_draw[1]);
+                    // alert('list_data_draw 2: '+list_data_draw[2]);
+                    // alert('list_data_draw 3: '+list_data_draw[3]);
+                    //
+                    // alert('data_polygon: '+data_polygon);
+
+                    var contentString = '<h4 align="center"><b>Area Information</b></h4>';
+                    contentString += '<p align="center"><span><b>Total Area:</b></span> ' + list_data_draw[0] + ' ha</p>';
+                    contentString += '<input type="hidden" name="total_area" value="' + list_data_draw[0] + '">'
+
+                    if (statistic) {
+                        contentString += '<p align="center"><span><b>Value:</b></span> ' + statistic + '</p>';
+                        contentString += '<input type="hidden" name="statistic" value=' + statistic + '>'
+                    }
+
+                    if (count_pol >= 8) {
+                        contentString += '<div style="height:400px;overflow:scroll;">';
+                    } else {
+                        contentString += '<div style="overflow:auto;">';
+                    }
+
+                    contentString += '<table class="table table-bordered">';
+                    // contentString += '<caption align="center"><span><b>Total Area:</b></span> ' + list_data_draw[0] + ' ha</caption>'
+
+                    contentString += '<thead>';
+                    contentString += '<tr bgcolor="#CFCFCF">';
+                    contentString += '<th align="left">Attribute</th>';
+                    contentString += '<th>Units per Hectare</th>';
+                    contentString += '<th>Units</th>';
+                    contentString += '<th>Total</th>';
+                    contentString += '</tr>';
+                    contentString += '</thead>';
+                    contentString += '<tbody>';
+
+                    for (var i = 1; i < count_pol; i++) {
+                        new_array = list_data_draw[i].split(';');
+
+                        // alert('NEW ARAY: '+new_array);
+
+                        if ( i & 1 ) {
+                            contentString += '<tr bgcolor="#F5F5F5">';
+                        } else {
+                            contentString += '<tr>';
+                        }
+
+                        contentString += '<td align="left">' + new_array[0] + '</td>';
+                        contentString += '<td>' + new_array[1] + '</td>';
+                        contentString += '<td>' + new_array[2] + '</td>';
+                        contentString += '<td>' + new_array[3] + '</td>';
+                        contentString += '</tr>';
+                        contentString += '<input type="hidden" name="attribute" value="' + new_array[0] + '">'
+                        contentString += '<input type="hidden" name="value" value="' + new_array[1] + '">'
+                        contentString += '<input type="hidden" name="units" value="' + new_array[2] + '">'
+                        contentString += '<input type="hidden" name="total" value="' + new_array[3] + '">'
+                    }
+
+                    contentString += '</tbody>';
+                    contentString += '</table>';
+                    contentString += '</div>';
+
+                    contentString += '<input type="text" id="input_area_name" class="margin-top-15" placeholder="Enter Area name" name="area_name" size="30" style="width:100%" onkeyup="changeAreaName();" autofocus><br>'
+                    contentString += '<button type="submit" name="save_area" class="btn btn-success btn-block margin-top-15" value="save_area" disabled id="save_area" onclick="showWaiting()">Save Area</button>';
+                    contentString += '<button type="submit" name="cancel_download_file" class="btn btn-primary btn-block margin-top-15" value="cancel_download_file">Cancel</button>';
+
+                    infowindow = new google.maps.InfoWindow({content: contentString, position: center_pol});
+                    infowindow.open(map);
+
+                    $('#remove_aoi').removeAttr('disabled');
+                    $('#hide_aoi').removeAttr('disabled');
+
+                    var img = document.getElementById("ap_marker");
+                    img.src = "{% static 'img/map-marker-plus.png' %}";
+                    google.maps.event.removeListener(listener_markers_overlay);
+                    google.maps.event.removeListener(listener_markers_map);
+                }
+
+                function showCoordinates(event) {
+                    var lat = event.latLng.lat();
+                    var lon = event.latLng.lng();
+
+                    document.getElementById('latitude').value = 'Lat: ' + lat.toFixed(6);
+                    document.getElementById('longitude').value = 'Lng: ' + lon.toFixed(6);
+                }
+
+                function showInfoWindow(event) {
+                    var lat = event.latLng.lat();
+                    var lon = event.latLng.lng();
+                    var list_data = data_polygon.split('_');
+                    var new_array = []
+
+                    var contentString = '<h4 align="center"><b>Area Information</b></h4>';
+                    contentString += '<p align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</p>';
+                    contentString += '<input type="hidden" name="total_area" value="' + list_data[0] + '">'
+
+                    if (statistic) {
+                        contentString += '<p align="center"><span><b>Value:</b></span> ' + statistic + '</p>';
+                        contentString += '<input type="hidden" name="statistic" value=' + statistic + '>'
+                    }
+
+                    if (count_pol >= 8) {
+                        contentString += '<div style="height:400px;overflow:scroll;">';
+                    } else {
+                        contentString += '<div style="overflow:auto;">';
+                    }
+
+                    contentString += '<table class="table table-bordered" style="height:50px;overflow:scroll;">';
+                    // contentString += '<caption align="center"><span><b>Total Area:</b></span> ' + list_data[0] + ' ha</caption>'
+
+                    contentString += '<thead>';
+                    contentString += '<tr bgcolor="#CFCFCF">';
+                    contentString += '<th align="left">Attribute</th>';
+                    contentString += '<th>Units per Hectare</th>';
+                    contentString += '<th>Units</th>';
+                    contentString += '<th>Total</th>';
+                    contentString += '</tr>';
+                    contentString += '</thead>';
+                    contentString += '<tbody>';
+
+                    for (var i = 1; i < list_data.length; i++) {
+                        new_array = list_data[i].split(',')
+
+                        if ( i & 1 ) {
+                            contentString += '<tr bgcolor="#F5F5F5">';
+                        } else {
+                            contentString += '<tr>';
+                        }
+
+                        contentString += '<tr>';
+                        contentString += '<td align="left">' + new_array[0] + '</td>';
+                        contentString += '<td>' + new_array[1] + '</td>';
+                        contentString += '<td>' + new_array[2] + '</td>';
+                        contentString += '<td>' + new_array[3] + '</td>';
+                        contentString += '</tr>';
+                        contentString += '<input type="hidden" name="attribute" value="' + new_array[0] + '">'
+                        contentString += '<input type="hidden" name="value" value="' + new_array[1] + '">'
+                        contentString += '<input type="hidden" name="units" value="' + new_array[2] + '">'
+                        contentString += '<input type="hidden" name="total" value="' + new_array[3] + '">'
+                    }
+
+                    contentString += '</tbody>';
+                    contentString += '</table>';
+                    contentString += '</div>';
+
+                    contentString += '<input type="text" id="input_area_name" class="margin-top-15" placeholder="Enter Area name" name="area_name" size="30" style="width:100%" onkeyup="changeAreaName();" autofocus><br>'
+                    contentString += '<button type="submit" name="save_area" class="btn btn-success btn-block margin-top-15" value="save_area" disabled id="save_area">Save Area</button>';
+                    contentString += '<button type="submit" name="cancel_download_file" class="btn btn-primary btn-block margin-top-15" value="cancel_download_file">Cancel</button>';
+
+                    // Replace the info window's content and position.
+                    infoWindow.setContent(contentString);
+                    infoWindow.setPosition(event.latLng);
+
+                    infoWindow.open(map);
+                }
+
+                function togglePlygonOverlays() {
+                    // kml.setMap(null);
+                    if (polygonVisible) {
+                        if (polygons) {
+                            for (i in polygons) {
+                                polygons[i].setMap(null);
+                                polygonVisible = false;
+                            }
+                        }
+                    } else {
+                        if (polygons) {
+                            for (i in polygons) {
+                                polygons[i].setMap(map);
+                                polygonVisible = true;
+                            }
                         }
                     }
                 }
-            }
-            google.maps.event.addDomListener(window, 'load', initMap);
-        </script>
+                google.maps.event.addDomListener(window, 'load', initMap);
+            </script>
+        {% endif %}
     {% endif %}
 {% endblock content_customer %}
 
