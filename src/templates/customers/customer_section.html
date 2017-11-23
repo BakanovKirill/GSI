@@ -185,17 +185,10 @@
 
         {% if tab_active != 'ts' %}
             <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbGl4HfSKF1pj1j1heEdUgn1SwSQaEaNc&callback=initMap" type="text/javascript"></script>
-        
-            <!-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyB4HosogGf9o2-Cnef_SiUR6jZYVszGkGY&sensor=false"></script> -->
-
-            <!-- AIzaSyDqRnPthP9_pygDbSG34MDKiJpXQkHm2ws -->
-            <!-- AIzaSyANOITZIFVq0CxUycWsprMslU0sk9ipK5Y -->
-
-            <!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false"></script> -->
-            
-            <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=geometry"></script>
 
             <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbGl4HfSKF1pj1j1heEdUgn1SwSQaEaNc&libraries=places"></script>
+            
+            <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=geometry"></script>
 
             <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
@@ -214,7 +207,6 @@
                         modal.style.display = "none";
                     }
                 }      
-                
 
                 // When the user clicks anywhere outside of the modal, close it
                 window.onclick = function(event) {
@@ -222,9 +214,8 @@
                         modal.style.display = "none";
                     }
                 }
-            </script>
 
-            <script type="text/javascript">
+
                 var overlay;
                 // var img_opacity = 50;
 
@@ -292,99 +283,13 @@
                     ts_show = true;
                 {% endif %}
 
-                // var units = 'Tree';
-                // var attribute = 'UNITS';
-
-                // var kml_layer = new google.maps.KmlLayer();
-
-
                 // alert('eLat_1: '+{{ eLat_1 }});
                 // alert('eLng_1: '+{{ eLng_1 }});
                 // alert('eLat_2: '+{{ eLat_2 }});
                 // alert('eLng_2: '+{{ eLng_2 }});
 
                 var MY_MAPTYPE_ID = 'mystyle';
-
-                var mapobj = {
-                    name: "OSM",
-                    wms: "osm",
-                    minzoom: 18,
-                    maxzoom: 0,
-                    url: "http://tile.openstreetmap.org/",
-                    copy:"<a href=\"http://www.openstreetmap.org\" target=\"_blank\">Open Street Map</a>",
-                    visible:true
-                };
-                mapTypesArr.push(mapobj);
-                var mapobj = {
-                    name: "OSM Cycle",
-                    wms: "osm",
-                    minzoom: 18,
-                    maxzoom: 0,
-                    url: "http://b.tile.opencyclemap.org/cycle/",
-                    copy:"<a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">Cycle OSM</a>",
-                    visible:true
-                };
-                mapTypesArr.push(mapobj);
-                var mapobj = {
-                    name: "Relief",
-                    wms: "",
-                    minzoom: 18,
-                    maxzoom: 0,
-                    url: "",
-                    copy:"<a href=\"http://www.maps-for-free.com/html/about.html\" target=\"_blank\">maps-for-free</a>",
-                    visible:true
-                };
-                mapTypesArr.push(mapobj);
-                var mapobj = {
-                    name: "Demis",
-                    wms: "wms",
-                    minzoom: 13,
-                    maxzoom: 1,
-                    url: "http://www2.demis.nl/wms/wms.ashx?Service=WMS&WMS=BlueMarble&Version=1.1.0&Request=GetMap&Layers=Earth Image,Borders,Coastlines&Format=image/jpeg",
-                    copy:"WMS demo by Demis",
-                    visible:true
-                };
-                mapTypesArr.push(mapobj);
-                var mapobj = {
-                    name: "ROADMAP",
-                    wms: "",
-                    minzoom: 13,
-                    maxzoom: 10,
-                    url: "",
-                    copy:"",
-                    visible:true
-                };
-                mapTypesArr.push(mapobj);
-                var mapobj = {
-                    name: "SATELLITE",
-                    wms: "",
-                    minzoom: 13,
-                    maxzoom: 10,
-                    url: "",
-                    copy:"",
-                    visible:true
-                };
-                mapTypesArr.push(mapobj);
-                var mapobj = {
-                    name: "HYBRID",
-                    wms: "",
-                    minzoom: 13,
-                    maxzoom: 10,
-                    url: "",
-                    copy:"",
-                    visible:true
-                };
-                mapTypesArr.push(mapobj);
-                var mapobj = {
-                    name: "TERRAIN",
-                    wms: "",
-                    minzoom: 13,
-                    maxzoom: 10,
-                    url: "",
-                    copy:"",
-                    visible:true
-                };
-                mapTypesArr.push(mapobj);
+                
 
                 function MyControl(map) {
                     map = map;
@@ -525,9 +430,9 @@
                     console.log('GOOGLE_MAP eLng_1: ', {{ eLng_1 }});
                     console.log('GOOGLE_MAP eLat_2: ', {{ eLat_2 }});
                     console.log('GOOGLE_MAP eLng_2: ', {{ eLng_2 }});
-                    
                     // END SET ZOOM
                     
+
                     // zoom: {{ GOOGLE_MAP_ZOOM }},
                     
                     // console.log('ZOOM: ', curent_zoom);
@@ -560,19 +465,23 @@
                     map.mapTypes.set(MY_MAPTYPE_ID, jayzMapType);
                     map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
 
+                    // Legend
+                    var myControl = new MyControl(map);
+                    map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(myControl.getDiv());
+
                     // Create the search box and link it to the UI element.
-                    var input = document.getElementById('pac-input');
+                    var input = (document.getElementById('pac-input'));
                     var searchBox = new google.maps.places.SearchBox(input);
                     // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
                     
-                    map.getBounds() = 0;
+                    // map.getBounds(0);
                     console.log('INPUT: ', map.getBounds());
 
                     // Bias the SearchBox results towards current map's viewport.
-                    map.addListener('bounds_changed', function() {
-                        // alert('INPUT: ');
-                        searchBox.setBounds(map.getBounds());
-                    });
+                    // map.addListener('bounds_changed', function() {
+                    //     // alert('INPUT: ');
+                    //     searchBox.setBounds(map.getBounds());
+                    // });
 
                     var markers = [];
                     // Listen for the event fired when the user selects a prediction and retrieve
@@ -622,10 +531,6 @@
                         });
                         map.fitBounds(bounds);
                     });
-
-
-
-
 
                     // GET CENTER WHEN CHANGE ZOOM
                     // var c_map = map.getCenter();
@@ -725,8 +630,7 @@
                     // map.addListener('mousemove', showCoordinates);
                     
 
-                    var myControl = new MyControl(map);
-                    map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(myControl.getDiv());
+                    
 
                     // map.addListener('zoom_changed', function() {
                     //     // infowindow.setContent('Zoom: ' + map.getZoom());
