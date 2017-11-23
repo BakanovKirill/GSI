@@ -184,9 +184,9 @@
         <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApoguiUJyNLI5uy0zOqU9fSDfPgkZH3R0&signed_in=true"></script> -->
 
         {% if tab_active != 'ts' %}
-            <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbGl4HfSKF1pj1j1heEdUgn1SwSQaEaNc&callback=initMap" type="text/javascript"></script>
+            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbGl4HfSKF1pj1j1heEdUgn1SwSQaEaNc&callback=initMap" type="text/javascript" async defer></script>
 
-            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbGl4HfSKF1pj1j1heEdUgn1SwSQaEaNc&libraries=places"></script>
+            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbGl4HfSKF1pj1j1heEdUgn1SwSQaEaNc&libraries=places" async defer></script>
             
             <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=geometry"></script>
 
@@ -470,7 +470,7 @@
                     map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(myControl.getDiv());
 
                     // Create the search box and link it to the UI element.
-                    var input = (document.getElementById('pac-input'));
+                    var input = document.getElementById('pac-input');
                     var searchBox = new google.maps.places.SearchBox(input);
                     // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
                     
@@ -478,10 +478,10 @@
                     console.log('INPUT: ', map.getBounds());
 
                     // Bias the SearchBox results towards current map's viewport.
-                    // map.addListener('bounds_changed', function() {
-                    //     // alert('INPUT: ');
-                    //     searchBox.setBounds(map.getBounds());
-                    // });
+                    map.addListener('bounds_changed', function() {
+                        // alert('INPUT: ');
+                        searchBox.setBounds(map.getBounds());
+                    });
 
                     var markers = [];
                     // Listen for the event fired when the user selects a prediction and retrieve
