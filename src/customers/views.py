@@ -4214,13 +4214,16 @@ def get_coord_aoi(doc):
         for n in xrange(len(outer_boundary_is)):
             tmp_tuples = []
             tmp = []
-            tmp = str(doc.Document.Placemark.Polygon.outerBoundaryIs[n].LinearRing.coordinates).split('\n')
+            # tmp = str(doc.Document.Placemark.Polygon.outerBoundaryIs[n].LinearRing.coordinates).split('\n')
             doc_tmp_list = str(doc.Document.Placemark.Polygon.outerBoundaryIs[n].LinearRing.coordinates).split('\n')
 
             # print '!!!!!!!!!!!!!!!! TMP LEN ======================== ', len(tmp)
-            # print '!!!!!!!!!!!!!!!! TMP ======================== ', tmp
+            # print '!!!!!!!!!!!!!!!! DOC TMP LIST ======================== ', doc_tmp_list
             
             for n in doc_tmp_list:
+                # print '!!!!!!!!!!!!!!!! TMP N ======================== ', n
+
+                n = n.replace(',0.0', '')
                 n = n.replace('\t', '')
 
                 # print '!!!!!!!!!!!!!!!! TMP N ======================== ', n
@@ -4228,7 +4231,7 @@ def get_coord_aoi(doc):
                 if n:
                     tmp.append(n)
 
-            print '!!!!!!!!!!!!!!!! TMP ======================== ', len(tmp)
+            # print '!!!!!!!!!!!!!!!! TMP  ======================== ', tmp
 
             if len(tmp) == 1:
                 tmp_copy = []
@@ -4263,6 +4266,7 @@ def get_coord_aoi(doc):
 
                 for m in tmp:
                     if m:
+                        print '!!!!!!!!!!!!!!!! LINE M ======================== ', m
                         line = m.split(',')
                         tmp_tuples.append(tuple(line))
 
@@ -4736,7 +4740,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
     if os.path.exists(file_path_out_new_calculations_coord):
         os.remove(file_path_out_new_calculations_coord)
 
-    # print '!!!!!!!!!!!!!!! outer_coord  ===================== ', outer_coord
+    print '!!!!!!!!!!!!!!! outer_coord  ===================== ', outer_coord
     # print '!!!!!!!!!!!!!!! LEN outer_coord  ===================== ', len(outer_coord)
     
     # print '!!!!!!!!!!!!!!! list_file_tif  ===================== ', list_file_tif
@@ -5188,7 +5192,7 @@ def files_lister(request):
                                             customer, doc_kml, data_set, data_args
                                         )
 
-                    print '!!!!!!!!!! new_info_window ================== ', new_info_window
+                    # print '!!!!!!!!!! new_info_window ================== ', new_info_window
 
                     area_name = upload_fl.split('.kml')[0]
                     outer_coord, inner_coord = get_coord_aoi(doc_kml)
