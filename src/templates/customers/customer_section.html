@@ -186,11 +186,13 @@
         {% if tab_active != 'ts' %}
             <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbGl4HfSKF1pj1j1heEdUgn1SwSQaEaNc&callback=initMap" type="text/javascript" async defer></script>
 
+            <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
             <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbGl4HfSKF1pj1j1heEdUgn1SwSQaEaNc&libraries=places" async defer></script>
             
             <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=geometry"></script>
 
-            <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+            
 
             <script type="text/javascript">
                 // Get the modal
@@ -480,8 +482,12 @@
                     // Bias the SearchBox results towards current map's viewport.
                     map.addListener('bounds_changed', function() {
                         // alert('INPUT: ');
-                        // searchBox.setBounds(map.getBounds());
-                        searchBox.setBounds(map.LatLngBounds())
+                        searchBox.setBounds(map.getBounds());
+                        // var lat_lng_bounds = new google.maps.LatLngBounds(
+                        //                         new google.maps.LatLng({{ eLat_1 }}, {{ eLng_1 }}),
+                        //                         new google.maps.LatLng({{ eLat_2 }}, {{ eLng_2 }})
+                        //                     );
+                        // searchBox.setBounds(lat_lng_bounds)
                     });
 
                     var markers = [];
