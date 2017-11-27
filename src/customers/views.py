@@ -4484,8 +4484,8 @@ def files_lister(request):
                         'inner_coord': inner_coord
                     }
 
-                    print '!!!!!!!!!! COORD outer_coord ================== ', outer_coord
-                    print '!!!!!!!!!! COORD inner_coord ================== ', inner_coord
+                    # print '!!!!!!!!!! COORD outer_coord ================== ', outer_coord
+                    # print '!!!!!!!!!! COORD inner_coord ================== ', inner_coord
                     # print '!!!!!!!!!! DATA COORD ================== ', data_coord
 
                     cur_polygon = createKml(customer, area_name, new_info_window,

@@ -222,7 +222,7 @@ def get_info_window(doc_kml, file_name, path_to_file):
 
 
 def getUploadListTifFiles(customer, dataset, *args):
-    # print '!!!!!!!!!!!!!!!!!!! args ====================== ', args
+    print '!!!!!!!!!!!!!!!!!!! args ====================== ', args
     list_files_tif = []
     # list_data_db = []
     # attributes_tmp = {}
@@ -244,7 +244,7 @@ def getUploadListTifFiles(customer, dataset, *args):
     # print '!!!!!!!!!!!!!!!!!!! attributes_tmp ====================== ', attributes_tmp
 
     # print '!!!!!!!!!!!!!!!!!!! statistic ====================== ', statistic
-    # print '!!!!!!!!!!!!!!!!!!! attributes ====================== ', attributes
+    print '!!!!!!!!!!!!!!!!!!! attributes ====================== ', attributes
     # print '!!!!!!!!!!!!!!!!!!! attributes_reports ====================== ', attributes_reports
     # print '!!!!!!!!!!!!!!!!!!! upload_file ====================== ', upload_file
 
@@ -299,7 +299,7 @@ def getUploadListTifFiles(customer, dataset, *args):
                                     if ext == '.tif':
                                         fl_tif = os.path.join(sub_directory, f)
                                         # str_data_db = '{0}$$${1}$$$'.format(attr_list[0], fl_tif)
-                                        new_fl_tif = '{0}$$${1}$$$'.format(attr_list[0], fl_tif)
+                                        new_fl_tif = '{0}$$${1}$$${2}$$$'.format(attr_list[1], attr_list[0], fl_tif)
                                         # str_data_db = '{0}$$${1}$$$'.format(shd_cur, fl_tif)
 
                                         list_files_tif.append(new_fl_tif)
@@ -326,7 +326,7 @@ def getUploadListTifFiles(customer, dataset, *args):
                 # print '!!!!!!!!!!!!!!!!!!! TIF PATH ====================== ', tif_path
 
                 fl_tif = '{0}/{1}_{2}.{3}.tif'.format(tif_path, SUB_DIRECTORIES_REVERCE[statistic], name_1, name_2)
-                new_fl_tif = '{0}$$${1}$$$'.format(select_shd.attribute_name, fl_tif)
+                new_fl_tif = '{0}$$${1}$$${2}$$$'.format(attr_list[1], select_shd.attribute_name, fl_tif)
                 # str_data_db = '{0}$$${1}$$$'.format(attr_list[1], fl_tif)
 
                 # print '!!!!!!!!!!!!!!!!!!! TIF PATH NAME ====================== ', fl_tif
@@ -334,7 +334,7 @@ def getUploadListTifFiles(customer, dataset, *args):
                 list_files_tif.append(new_fl_tif)
                 # list_data_db.append(str_data_db)
 
-    # print '!!!!!!!!!! FILE ========================= ', list_files_tif
+    print '!!!!!!!!!! FILE ========================= ', list_files_tif
     # print '!!!!!!!!!! DATA DB ========================= ', list_data_db
 
     return list_files_tif
@@ -392,7 +392,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
     if os.path.exists(file_path_out_new_calculations_coord):
         os.remove(file_path_out_new_calculations_coord)
 
-    print '!!!!!!!!!!!!!!! outer_coord  ===================== ', outer_coord
+    # print '!!!!!!!!!!!!!!! outer_coord  ===================== ', outer_coord
     # print '!!!!!!!!!!!!!!! LEN outer_coord  ===================== ', len(outer_coord)
     
     # print '!!!!!!!!!!!!!!! list_file_tif  ===================== ', list_file_tif
@@ -452,10 +452,14 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
         # print '!!!!!!!!!!!!! line_list  =========================== ', line_list
 
         line_list = file_tif.split('$$$')
-        attr_name = line_list[0]
+        select_shd = ShelfData.objects.get(id=line_list[0])
+        attr_name = line_list[1]
         shd_attr_name = attr_name
 
         # print '!!!!!!!!!!!!! line_list  =========================== ', line_list
+        # print '!!!!!!!!!!!!! select_shd  =========================== ', select_shd
+        # print '!!!!!!!!!!!!! attr_name  =========================== ', attr_name
+        # print '!!!!!!!!!!!!! shd_attr_name  =========================== ', shd_attr_name
 
         if is_ts:
             shd_attr_name = attr_name.split(' ')[:-1]
@@ -464,7 +468,9 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
         
         # print '!!!!!!!!!!!!! attr_name  =========================== ', attr_name
 
-        units = ShelfData.objects.get(attribute_name=shd_attr_name).units
+        # units = ShelfData.objects.get(attribute_name=shd_attr_name).units
+        scale = select_shd.scale
+        units = select_shd.units
 
         
         # print '!!! FILE TIF  =========================== ', line_list
@@ -474,7 +480,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
         command_line = '{0} {1} {2} {3}'.format(
                             SCRIPT_GETPOLYINFO,
                             # file_tif,
-                            line_list[1],
+                            line_list[2],
                             file_path_in_new_calculations_coord,
                             file_path_out_new_calculations_coord
                         )
@@ -504,11 +510,18 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
             # count_line = 0
             list_val = []
             # n_val = []
-            # print '!!! 2 NEW LINE LIST =========================== ', new_line_list
+            print '!!! 2 NEW LINE LIST =========================== ', new_line_list
 
             
             for n in new_line_list:
                 nl = n.split(',')
+
+                print '!!! 2 N LIST =========================== ', nl
+
+                per_ha_scale = float(nl[2])
+                
+                if scale:
+                    per_ha_scale = float(nl[2]) / scale
 
                 if len(new_line_list) > 1:
                     # nl = n.split(',')
@@ -523,7 +536,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
                     # print '!!!!!!!!!!!!!!!!! TOTAL TYPE ======================== ', type(nl[1])
 
                     # tot_ar = '{0:,}'.format(float(nl[1])).replace(',', ',')
-                    per_ha = '{0:,}'.format(float(nl[2])).replace(',', ',')
+                    per_ha = '{0:,}'.format(per_ha_scale).replace(',', ',')
                     tot = '{0:,}'.format(float(nl[3])).replace(',', ',')
                     
                     list_val.append(nl[1])
@@ -536,7 +549,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
                     
                     # total_area = '{0:,}'.format(float(nl[1])).replace(',', ',')
                     total_area = nl[1]
-                    units_per_ha = '{0:,}'.format(float(nl[2])).replace(',', ',')
+                    units_per_ha = '{0:,}'.format(per_ha_scale).replace(',', ',')
                     total = '{0:,}'.format(float(nl[3])).replace(',', ',')
 
             if list_val:
