@@ -4308,8 +4308,8 @@ def files_lister(request):
                 f_name = str(file_name).split('.')[:-1]
                 ext = str(file_name).split('.')[-1]
 
-                print '!!!!!!!!!! FILE NAME ================== ', f_name
-                print '!!!!!!!!!! FILE EXT ================== ', ext
+                # print '!!!!!!!!!! FILE NAME ================== ', f_name
+                # print '!!!!!!!!!! FILE EXT ================== ', ext
 
                 handle_uploaded_file(request.FILES['test_data'],
                                      path_test_data)
