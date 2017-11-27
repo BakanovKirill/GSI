@@ -222,7 +222,7 @@ def get_info_window(doc_kml, file_name, path_to_file):
 
 
 def getUploadListTifFiles(customer, dataset, *args):
-    print '!!!!!!!!!!!!!!!!!!! args ====================== ', args
+    # print '!!!!!!!!!!!!!!!!!!! args ====================== ', args
     list_files_tif = []
     # list_data_db = []
     # attributes_tmp = {}
@@ -244,7 +244,7 @@ def getUploadListTifFiles(customer, dataset, *args):
     # print '!!!!!!!!!!!!!!!!!!! attributes_tmp ====================== ', attributes_tmp
 
     # print '!!!!!!!!!!!!!!!!!!! statistic ====================== ', statistic
-    print '!!!!!!!!!!!!!!!!!!! attributes ====================== ', attributes
+    # print '!!!!!!!!!!!!!!!!!!! attributes ====================== ', attributes
     # print '!!!!!!!!!!!!!!!!!!! attributes_reports ====================== ', attributes_reports
     # print '!!!!!!!!!!!!!!!!!!! upload_file ====================== ', upload_file
 
@@ -510,13 +510,13 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
             # count_line = 0
             list_val = []
             # n_val = []
-            print '!!! 2 NEW LINE LIST =========================== ', new_line_list
+            # print '!!! 2 NEW LINE LIST =========================== ', new_line_list
 
             
             for n in new_line_list:
                 nl = n.split(',')
 
-                print '!!! 2 N LIST =========================== ', nl
+                # print '!!! 2 N LIST =========================== ', nl
 
                 per_ha_scale = float(nl[2])
                 
