@@ -482,9 +482,10 @@ function selectAoi() {
         //     alert('selectedAoi: '+select_aoi[i]);
         // }
         
-        // console.log('aoi_list: ', aoi_list);
+        console.log('SELECT AOIs: ', aoi_list);
         
         $('#select_aoi').selectpicker('val', aoi_list);
+        $('#draw_plot').removeAttr('disabled');
     }
 }
 

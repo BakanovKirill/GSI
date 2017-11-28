@@ -6,11 +6,7 @@
 	{% if not error_message %}
 		<form class="form-modal" id="customer_section" action="{% url 'customer_section' %}" method="post" enctype="multipart/form-data" role="form" class="form-horizontal">
 		{% csrf_token %}
-
-
             <div id="container"></div>
-
-			
 
 			<!-- Modal Check Delete Items -->
 			{% include '_modal_check_delete_items.html' %}
@@ -38,8 +34,5 @@
 			<p id="data_polygon" disable></p>
 			<input type="hidden" id="data_polygon" name="data_polygon" value="">
 		</form>
-
-
-		
 	{% endif %}
 {% endblock content_customer %}

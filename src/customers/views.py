@@ -1775,23 +1775,17 @@ def getListTifFiles(customer, dataset):
 def addTsToDB(name, customer, data_set, customer_polygons, result_year,
                 stat_code, result_date, value_of_time_series, attribute):
     if TimeSeriesResults.objects.filter(name=name, user=customer, data_set=data_set).exists():
-        ts_obj = TimeSeriesResults.objects.filter(name=name).update(
-            customer_polygons=customer_polygons,
-            result_year=result_year, stat_code=stat_code,
-            result_date=result_date,
-            value_of_time_series=value_of_time_series,
-            attribute=attribute
-        )
-    else:
-        ts_obj = TimeSeriesResults.objects.create(
-            name=name, user=customer, data_set=data_set,
-            customer_polygons=customer_polygons,
-            result_year=result_year, stat_code=stat_code,
-            result_date=result_date,
-            value_of_time_series=value_of_time_series,
-            attribute=attribute
-        )
-        ts_obj.save()
+        ts_obj = TimeSeriesResults.objects.filter(name=name, user=customer, data_set=data_set).delete()
+
+    ts_obj = TimeSeriesResults.objects.create(
+        name=name, user=customer, data_set=data_set,
+        customer_polygons=customer_polygons,
+        result_year=result_year, stat_code=stat_code,
+        result_date=result_date,
+        value_of_time_series=value_of_time_series,
+        attribute=attribute
+    )
+    ts_obj.save()
 
 
 def createTimeSeriesResults(aoi, file_in, file_out):
@@ -2854,7 +2848,7 @@ def customer_section(request):
     if request.method == "POST":
         data_post = request.POST
 
-        # print '!!!!!!!!!!!! POST ====================== ', data_post
+        print '!!!!!!!!!!!! POST ====================== ', data_post
 
         if 'load_button' in data_post:
             path_ftp_user = os.path.join(FTP_PATH, customer.username)
@@ -2975,33 +2969,24 @@ def customer_section(request):
                 cur_polygon = createKml(request.user, area_name, info_window, absolute_kml_url, ds, count_color)
 
                 # print '!!!!!!!!! STAT ======================== ', statistic
+                
+                if DataPolygons.objects.filter(user=request.user, data_set=data_set,
+                        customer_polygons=cur_polygon).exists():
+                    DataPolygons.objects.filter(user=request.user, data_set=data_set,
+                        customer_polygons=cur_polygon).delete()
 
                 for n in xrange(len_attr):
-                    if not DataPolygons.objects.filter(user=request.user, data_set=data_set,
-                        customer_polygons=cur_polygon, attribute=attribute[n]).exists():
-                            DataPolygons.objects.create(
-                                user=request.user,
-                                customer_polygons=cur_polygon,
-                                data_set=data_set,
-                                attribute=attribute[n],
-                                statistic=statistic,
-                                value=value[n],
-                                units=units[n],
-                                total=total[n],
-                                total_area=total_area+' ha'
-                            )
-                    elif DataPolygons.objects.filter(user=request.user, data_set=data_set,
-                        customer_polygons=cur_polygon, attribute=attribute[n]).exists():
-                            DataPolygons.objects.filter(user=request.user, data_set=data_set,
-                                customer_polygons=cur_polygon, attribute=attribute[n]
-                            ).update(
-                                # attribute=attribute[n],
-                                statistic=statistic,
-                                value=value[n],
-                                units=units[n],
-                                total=total[n],
-                                total_area=total_area+' ha'
-                            )
+                    DataPolygons.objects.create(
+                        user=request.user,
+                        customer_polygons=cur_polygon,
+                        data_set=data_set,
+                        attribute=attribute[n],
+                        statistic=statistic,
+                        value=value[n],
+                        units=units[n],
+                        total=total[n],
+                        total_area=total_area+' ha'
+                    )
 
                 # GET DATA FOR THE TIME SERIES
                 if data_set.is_ts:
@@ -3996,13 +3981,13 @@ def customer_section(request):
     # print '!!!!!!!!!!!!!!!! count_ts ===================================== ', count_ts
     # print '!!!!!!!!!!!!!!!! time_series_list ===================================== ', time_series_list
     # print '!!!!!!!!!!!!!!!! show_aoi_select ===================================== ', show_aoi_select
-    # print '!!!!!!!!!!!!!!!! select_diagram ===================================== ', request.session['select_diagram']
+    print '!!!!!!!!!!!!!!!! select_diagram ===================================== ', request.session['select_diagram']
     # print '!!!!!!!!!!!!!!!! ts_units ===================================== ', ts_units
     # print '!!!!!!!!!!!!!!!! ts_data ===================================== ', ts_data
     # print '!!!!!!!!!!!!!!!! ZOOM MAP ===================================== ', request.session['zoom_map']
     # print '!!!!!!!!!!!!!!!! TS VIEW SESS ===================================== ', request.session['time_series_view']
-    # print '!!!!!!!!!!!!!!!! TS CLEAR ===================================== ', request.session['time_series_clear']
-    # print '!!!!!!!!!!!!!!!! TS aoi_list ===================================== ', aoi_list
+    print '!!!!!!!!!!!!!!!! TS CLEAR ===================================== ', request.session['time_series_clear']
+    print '!!!!!!!!!!!!!!!! TS aoi_list ===================================== ', show_aoi
     # print '!!!!!!!!!!!!!!!! TS time_series_list ===================================== ', time_series_list
     
     
@@ -4113,17 +4098,6 @@ def customer_delete_file(request):
             count = 0
             error = ''
 
-            # db_file = False
-            # while not db_file:
-
-            # try:
-            #     f_db = open(db_file_path)
-            #     db_file = True
-            # except Exception, e:
-            #     # time.sleep(5)
-            #     print '!!!!!!!!!! ERROR OPEN DB FILE ======================= ', e
-            #     pass
-
             try:
                 f_db = open(db_file_path)
 
@@ -4172,7 +4146,6 @@ def customer_delete_file(request):
                 # print ('!!!!!!!!!!! data_ajax ===================== '), data_ajax
                 # print ('!!!!!!!!!!! data_ajax_total ===================== '), data_ajax_total
 
-                # time.sleep(10)
                 f_db.close()
 
                 try:
@@ -4314,6 +4287,11 @@ def files_lister(request):
                 handle_uploaded_file(request.FILES['test_data'],
                                      path_test_data)
 
+                if DataPolygons.objects.filter(user=request.user, data_set=data_set,
+                        customer_polygons__name=f_name[0]).exists():
+                    DataPolygons.objects.filter(user=request.user, data_set=data_set,
+                        customer_polygons__name=f_name[0]).delete()
+
                 if ext == 'kmz':
                     zip_file = f_name[0] + '.zip'
                     # doc_file = 'doc.kml'
@@ -4388,7 +4366,7 @@ def files_lister(request):
                             calculation_aoi = is_calculation_aoi(doc_kml)
                             info_window = get_info_window(doc_kml, f_name[0], path_test_data)
 
-                            print '!!!!!!!!!!!!!!! calculation_aoi ============================ ', calculation_aoi
+                            # print '!!!!!!!!!!!!!!! calculation_aoi ============================ ', calculation_aoi
 
                             # info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(
                             #                     COLOR_HEX_NAME[count_color], f_name)
@@ -4492,32 +4470,23 @@ def files_lister(request):
                                             absolute_kml_url, data_set, count_color, data_coord)
                     len_attr = len(select_attr)
 
+                    if DataPolygons.objects.filter(user=request.user, data_set=data_set,
+                            customer_polygons=cur_polygon).exists():
+                        DataPolygons.objects.filter(user=request.user, data_set=data_set,
+                            customer_polygons=cur_polygon).delete()
+
                     for n in xrange(len_attr):
-                        if not DataPolygons.objects.filter(user=customer, data_set=data_set,
-                            customer_polygons=cur_polygon, attribute=select_attr[n]).exists():
-                                DataPolygons.objects.create(
-                                    user=request.user,
-                                    customer_polygons=cur_polygon,
-                                    data_set=data_set,
-                                    attribute=list_attr[n],
-                                    statistic=select_stat,
-                                    value=list_value[n],
-                                    units=list_units[n],
-                                    total=list_total[n],
-                                    total_area=list_total_area[n]+' ha'
-                                )
-                        elif DataPolygons.objects.filter(user=request.user, data_set=data_set,
-                            customer_polygons=cur_polygon, attribute=select_attr[n]).exists():
-                                DataPolygons.objects.filter(user=request.user, data_set=data_set,
-                                    customer_polygons=cur_polygon, attribute=select_attr[n]
-                                ).update(
-                                    # attribute=attribute[n],
-                                    statistic=select_stat,
-                                    value=list_value[n],
-                                    units=list_units[n],
-                                    total=list_total[n],
-                                    total_area=list_total_area[n]+' ha'
-                                )
+                        DataPolygons.objects.create(
+                            user=request.user,
+                            customer_polygons=cur_polygon,
+                            data_set=data_set,
+                            attribute=list_attr[n],
+                            statistic=select_stat,
+                            value=list_value[n],
+                            units=list_units[n],
+                            total=list_total[n],
+                            total_area=list_total_area[n]+' ha'
+                        )
 
                     path_kml = os.path.join(KML_PATH, customer.username, upload_fl)
                     command_line_copy_kml = 'cp {0} {1}'.format(path_kml, path_ftp_user)

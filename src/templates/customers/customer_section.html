@@ -183,7 +183,35 @@
 
         <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApoguiUJyNLI5uy0zOqU9fSDfPgkZH3R0&signed_in=true"></script> -->
 
-        {% if tab_active != 'ts' %}
+        {% if tab_active == 'ts' %}
+            <script type="text/javascript">
+                // higcharts
+                var ts_show = false;
+                var title = '{{ ts_title }}';
+                // var subtitle = '{{ ts_subtitle }}';
+                var ts_subtitle = '';
+                var ts_units = '{{ ts_units }}';
+                var ts_data = '{{ ts_data }}';
+                var ts_series = [];
+                var select_aoi = '{{ select_aoi }}';
+                var select_diagram = '{{ select_diagram }}';
+
+                // BOX PLOT DIAGRAM
+                var categories = [];
+                var series_data_box = [];
+                var plotLines_value;
+                var count_ts = {{ count_ts }};
+                var count_reports = {{ count_ts }};
+
+                console.log('count_ts: ', count_ts);
+
+                {% if time_series_view and not time_series_clear %}
+                    ts_show = true;
+                {% endif %}
+
+                // alert('TS SHOW: '+ts_show);
+            </script>
+        {% elif tab_active != 'ts' %}
             <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbGl4HfSKF1pj1j1heEdUgn1SwSQaEaNc&callback=initMap" type="text/javascript" async defer></script>
 
             <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -257,34 +285,14 @@
                 var select_image = '{{ absolute_url_png_file }}';
                 var legend_scale = '{{ legend_scale }}';
 
-                // higcharts
-                var ts_show = false;
-                var title = '{{ ts_title }}';
-                // var subtitle = '{{ ts_subtitle }}';
-                var ts_subtitle = '';
-                var ts_units = '{{ ts_units }}';
-                var ts_data = '{{ ts_data }}';
-                var ts_series = [];
-                var select_aoi = '{{ select_aoi }}';
-                var select_diagram = '{{ select_diagram }}';
-
-                // BOX PLOT DIAGRAM
-                var categories = [];
-                var series_data_box = [];
-                var plotLines_value;
-                var count_ts = {{ count_ts }};
-                var count_reports = {{ count_ts }};
-
                 var progress = 0;
                 var timerId;
                 var time_section = 0;
 
-                console.log('count_ts: ', count_ts);
+                var ts_show = false;
+                var select_aoi = '{{ select_aoi }}';
 
-                {% if time_series_view and not time_series_clear %}
-                    ts_show = true;
-                {% endif %}
-
+                
                 // alert('eLat_1: '+{{ eLat_1 }});
                 // alert('eLng_1: '+{{ eLng_1 }});
                 // alert('eLat_2: '+{{ eLat_2 }});
