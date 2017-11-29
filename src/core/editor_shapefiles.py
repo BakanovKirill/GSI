@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 from subprocess import check_call, Popen, PIPE
+from datetime import datetime, date, timedelta
 
 from pykml import parser
 from lxml import html
@@ -10,7 +11,7 @@ from simplekml import Kml
 
 from gsi.settings import COLOR_HEX_NAME, PROJECTS_PATH, TMP_PATH, SCRIPT_GETPOLYINFO
 from core.get_coordinate_aoi import get_coord_aoi
-from customers.models import ShelfData
+from customers.models import ShelfData, TimeSeriesResults
 
 
 # SUB_DIRECTORIES = {
@@ -244,7 +245,7 @@ def getUploadListTifFiles(customer, dataset, *args):
     # print '!!!!!!!!!!!!!!!!!!! attributes_tmp ====================== ', attributes_tmp
 
     # print '!!!!!!!!!!!!!!!!!!! statistic ====================== ', statistic
-    # print '!!!!!!!!!!!!!!!!!!! attributes ====================== ', attributes
+    # print '!!!!!!!!!!!!!!!!!!! Attributes ====================== ', attributes
     # print '!!!!!!!!!!!!!!!!!!! attributes_reports ====================== ', attributes_reports
     # print '!!!!!!!!!!!!!!!!!!! upload_file ====================== ', upload_file
 
@@ -253,6 +254,7 @@ def getUploadListTifFiles(customer, dataset, *args):
             # attributes_reports = attributes_reports.order_by('attribute')
             # attributes = attributes.sort()
             # attributes_reports = sorted(attributes_reports.keys())
+            shelf_data = dataset.shelf_data
 
             # print '!!!!!!!!!!!!!!!!!!! 2 attributes_reports ====================== ', attributes_reports
 
@@ -299,7 +301,7 @@ def getUploadListTifFiles(customer, dataset, *args):
                                     if ext == '.tif':
                                         fl_tif = os.path.join(sub_directory, f)
                                         # str_data_db = '{0}$$${1}$$$'.format(attr_list[0], fl_tif)
-                                        new_fl_tif = '{0}$$${1}$$${2}$$$'.format(attr_list[1], attr_list[0], fl_tif)
+                                        new_fl_tif = '{0}$$${1}$$${2}$$$'.format(shelf_data.id, attr_list[0], fl_tif)
                                         # str_data_db = '{0}$$${1}$$$'.format(shd_cur, fl_tif)
 
                                         list_files_tif.append(new_fl_tif)
@@ -649,3 +651,134 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
     # print '!!!!!!!!!!!! info_window =========================== ', info_window
 
     return info_window, list_attr, list_units, list_value, list_total, list_total_area
+
+
+def createUploadTimeSeriesResults(customer, aoi, attributes, data_set):
+    # list_files_tif = []
+    # list_data_db = []
+
+    print '!!!!!!!!!!!!!!!!!!!! USER =============================== ', customer
+    print '!!!!!!!!!!!!!!!!!!!! AOI =============================== ', aoi
+    print '!!!!!!!!!!!!!!!!!!!! ATTR =============================== ', attributes
+
+    project_directory = os.path.join(PROJECTS_PATH, aoi.data_set.results_directory)
+    # attributes_reports = AttributesReport.objects.filter(
+    #                         user=aoi.user, data_set=aoi.data_set
+    #                     ).order_by('attribute')
+
+    in_new_calculations_coord = str(customer) + '_in_new_calculations_coord_tmp.kml'
+    out_new_calculations_coord = str(customer) + '_out_new_calculations_coord_tmp.txt'
+    
+    file_path_in_new_calculations_coord = os.path.join(TMP_PATH, in_new_calculations_coord)
+    file_path_out_new_calculations_coord = os.path.join(TMP_PATH, out_new_calculations_coord)
+
+    # attributes_reports = AttributesReport.objects.filter(
+    #                         user=aoi.user, data_set=aoi.data_set
+    #                     ).order_by('shelfdata__attribute_name')
+
+    # print '!!!!!!!!!!!!!!!!!! ATTRIBUTES REPORTS ================================ ', attributes_reports
+
+    for attr in attributes:
+        cur_attr = (attr).split('_')[0]
+        result_year = (cur_attr).split(' ')[-1]
+
+        # result_year = attr.shelfdata.root_filename
+        # sub_dir_name = SUB_DIRECTORIES[attr.statistic]
+        # sub_dir = result_year + '/' + sub_dir_name
+        
+        project_directory = os.path.join(PROJECTS_PATH, aoi.data_set.results_directory, result_year)
+
+        # project_directory = os.path.join(PROJECTS_PATH, aoi.data_set.results_directory, result_year)
+        # project_directory = os.path.join(PROJECTS_PATH, aoi.data_set.results_directory, sub_dir)
+
+        # print '!!!!!!! YEAR ========================== ', result_year
+        # print '!!!!!!! DIR YEAR ========================== ', project_directory
+        # print '!!!!!!! YES DIR YEAR ========================== ', os.path.exists(project_directory)
+
+        # project_directory = os.path.join(sub_dir_path)
+
+        if os.path.exists(project_directory):
+            root_year, dirs_year, files_year = os.walk(project_directory).next()
+            dirs_year.sort()
+            # files.sort()
+
+            for d in dirs_year:
+                sub_dir_name = d
+                project_directory_year = os.path.join(project_directory, d)
+                sub_root, sub_dirs, sub_files = os.walk(project_directory_year).next()
+                sub_dirs.sort()
+                sub_files.sort()
+
+                for f in sub_files:
+                    fl, ext = os.path.splitext(f)
+
+                    # print '!!!!!!! FILE ========================== ', f
+
+                    if ext == '.tif':
+                        file_ts_tif = os.path.join(project_directory_year, f)
+                        
+                        try:
+                            ts_day = f.split(result_year+'_')[1]
+                            ts_day = ts_day.split('_')[0]
+                            ts_date = date(int(result_year), 1, 1)
+                            ts_delta = timedelta(days=int(ts_day)-1)
+                            result_date = ts_date + ts_delta
+                            ts_name = '{0}_{1}_{2}_{3}'.format(aoi.name, result_year, sub_dir_name, ts_day)
+                            ts_value = '0'
+
+                            command_line_ts = '{0} {1} {2} {3}'.format(
+                                                    SCRIPT_GETPOLYINFO,
+                                                    file_ts_tif,
+                                                    file_path_in_new_calculations_coord,
+                                                    file_path_out_new_calculations_coord
+                                                )
+
+                            proc_script = Popen(command_line_ts, shell=True)
+                            proc_script.wait()
+
+                            file_out_coord_open = open(file_path_out_new_calculations_coord)
+
+                            for line in file_out_coord_open.readlines():
+                                new_line = line.replace(' ', '')
+                                new_line = new_line.replace('\n', '')
+                            
+                                # print '!!!!!!! 1 NEW LINE ========================== ', new_line
+
+                                if new_line:
+                                    ts_value = new_line.split(',')[2]
+                                    scale = data_set.shelf_data.scale
+
+                                    # print '!!!!!!! 1 NEW LINE ========================== ', new_line
+
+                                    if scale:
+                                        ts_value = str(float(ts_value) / scale)
+
+                                    # print '!!!!!!! 2 NEW LINE ========================== ', new_line
+                                    
+                            addUploadTsToDB(ts_name, aoi.user, aoi.data_set, aoi, result_year,
+                                        sub_dir_name, result_date, ts_value, attr)
+
+                            # list_files_tif.append(fl_tif)
+                            # list_data_db.append(str_data_db)
+
+                            # print '!!!!!!!!!! DAY ========================= ', ts_day
+                            # print '!!!!!!!!!! DATE ========================= ', result_date
+                        except IndexError, e:
+                            print '!!!!!!!!!!!!!!! ERROR INDEX ==================== ', e
+                            pass
+
+
+def addUploadTsToDB(name, customer, data_set, customer_polygons, result_year,
+                stat_code, result_date, value_of_time_series, attribute):
+    if TimeSeriesResults.objects.filter(name=name, user=customer, data_set=data_set).exists():
+        ts_obj = TimeSeriesResults.objects.filter(name=name, user=customer, data_set=data_set).delete()
+
+    ts_obj = TimeSeriesResults.objects.create(
+        name=name, user=customer, data_set=data_set,
+        customer_polygons=customer_polygons,
+        result_year=result_year, stat_code=stat_code,
+        result_date=result_date,
+        value_of_time_series=value_of_time_series,
+        attribute=attribute
+    )
+    ts_obj.save()

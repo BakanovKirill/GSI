@@ -61,7 +61,7 @@ from core.get_coordinate_aoi import (get_coord_aoi, get_coord_document_placemark
                                     get_coord_placemark_polygon_innerboundaryIs)
 from core.editor_shapefiles import (get_count_color, copy_file_kml, get_data_kml, delete_empty_lines,
                                     validation_kml, is_calculation_aoi, get_info_window,
-                                    getUploadListTifFiles, create_new_calculations_aoi)
+                                    create_new_calculations_aoi, createUploadTimeSeriesResults)
 from core.utils import handle_uploaded_file, get_files_dirs, get_list_lutfiles
 from gsi.settings import (BASE_DIR, GOOGLE_MAP_ZOOM, MEDIA_ROOT,
                         TMP_PATH, DAFAULT_LAT, DAFAULT_LON, PNG_DIRECTORY, PNG_PATH,
@@ -4206,6 +4206,7 @@ def files_lister(request):
     upload_file = ''
     count_color = get_count_color()
     data_set = DataSet.objects.none()
+    is_ts = False
     shelf_data_all = ShelfData.objects.all().order_by('attribute_name')
     path_ftp_user = os.path.join(FTP_PATH, customer.username)
     path_kml_user = os.path.join(KML_PATH, customer.username)
@@ -4221,6 +4222,8 @@ def files_lister(request):
 
     if cip_ds:
         data_set = cip_ds[0].data_set
+        is_ts = data_set.is_ts
+
 
     # Ajax when deleting objects
     if request.method == "POST" and request.is_ajax():
@@ -4449,9 +4452,9 @@ def files_lister(request):
                         'attr': select_attr
                     }
 
-                    new_info_window, list_attr, list_units, list_value, list_total, list_total_area = create_new_calculations_aoi(
-                                            customer, doc_kml, data_set, data_args
-                                        )
+                    new_info_window, list_attr, list_units,\
+                    list_value, list_total, list_total_area = create_new_calculations_aoi(
+                                                                customer, doc_kml, data_set, data_args)
 
                     # print '!!!!!!!!!! new_info_window ================== ', new_info_window
 
@@ -4465,6 +4468,7 @@ def files_lister(request):
                     # print '!!!!!!!!!! COORD outer_coord ================== ', outer_coord
                     # print '!!!!!!!!!! COORD inner_coord ================== ', inner_coord
                     # print '!!!!!!!!!! DATA COORD ================== ', data_coord
+                    # print '!!!!!!!!!! ATTR LEN ================== ', len(select_attr)
 
                     cur_polygon = createKml(customer, area_name, new_info_window,
                                             absolute_kml_url, data_set, count_color, data_coord)
@@ -4493,9 +4497,23 @@ def files_lister(request):
                     proc_copy_kml = Popen(command_line_copy_kml, shell=True)
                     proc_copy_kml.wait()
 
-                    # if data_set.is_ts:
-                    #     createTimeSeriesResults(cur_polygon, file_path_in_coord_tmp,
-                    #                             file_path_out_ts_coord_tmp)
+                    try:
+                        if data_set.is_ts:
+                            # select_attr
+                            createUploadTimeSeriesResults(customer, cur_polygon, select_attr, data_set)
+                            # createUploadTimeSeriesResults(cur_polygon, file_path_in_coord_tmp,
+                            #                 file_path_out_ts_coord_tmp)
+                    except Exception, e:
+                        print '!!!!!!!!!!!!!!!!!!!! ERROR UPLOAD GEO =========================== ', e
+
+                        ###########   log ###############################################################
+                        # error_save_kml.write('ERROR GEO: {0}\n'.format(e))
+                        # error_save_kml.close()
+                        ############################################################################
+
+                        return HttpResponseRedirect(u'%s?danger_message=%s' % (
+                                    reverse('files_lister'),
+                                    (u'Please add the GEO data to create Time Series.')))
 
                 
                 # print '!!!!!!!!!! result_load_kml ================== ', result_load_kml
