@@ -2663,13 +2663,14 @@ def customer_section(request):
             # return HttpResponse(data, error_msg)
 
         if 'cur_run_id' in data_post_ajax:
+            # print '!!!!!!!!!!!!!!!! cur_run_id =================================== ', data_post_ajax['cur_run_id']
             # message = u'Are you sure you want to remove this objects:'
             arrea = data_post_ajax['cur_run_id']
             data = u'Are you sure you want to remove this objects: <b>"{0}"</b>?'.format(arrea)
 
             return HttpResponse(data)
-        else:
-            return HttpResponse(data)
+        # else:
+        #     return HttpResponse(data)
 
     # get AJAX GET
     if request.is_ajax() and request.method == "GET":
@@ -2848,7 +2849,7 @@ def customer_section(request):
     if request.method == "POST":
         data_post = request.POST
 
-        print '!!!!!!!!!!!! POST ====================== ', data_post
+        # print '!!!!!!!!!!!! POST ====================== ', data_post
 
         if 'load_button' in data_post:
             path_ftp_user = os.path.join(FTP_PATH, customer.username)
@@ -3981,13 +3982,13 @@ def customer_section(request):
     # print '!!!!!!!!!!!!!!!! count_ts ===================================== ', count_ts
     # print '!!!!!!!!!!!!!!!! time_series_list ===================================== ', time_series_list
     # print '!!!!!!!!!!!!!!!! show_aoi_select ===================================== ', show_aoi_select
-    print '!!!!!!!!!!!!!!!! select_diagram ===================================== ', request.session['select_diagram']
+    # print '!!!!!!!!!!!!!!!! select_diagram ===================================== ', request.session['select_diagram']
     # print '!!!!!!!!!!!!!!!! ts_units ===================================== ', ts_units
     # print '!!!!!!!!!!!!!!!! ts_data ===================================== ', ts_data
     # print '!!!!!!!!!!!!!!!! ZOOM MAP ===================================== ', request.session['zoom_map']
     # print '!!!!!!!!!!!!!!!! TS VIEW SESS ===================================== ', request.session['time_series_view']
-    print '!!!!!!!!!!!!!!!! TS CLEAR ===================================== ', request.session['time_series_clear']
-    print '!!!!!!!!!!!!!!!! TS aoi_list ===================================== ', show_aoi
+    # print '!!!!!!!!!!!!!!!! TS CLEAR ===================================== ', request.session['time_series_clear']
+    # print '!!!!!!!!!!!!!!!! TS aoi_list ===================================== ', show_aoi
     # print '!!!!!!!!!!!!!!!! TS time_series_list ===================================== ', time_series_list
     
     
@@ -4204,6 +4205,7 @@ def files_lister(request):
     customer = request.user
     calculation_aoi = False
     upload_file = ''
+    count_ts = 0
     count_color = get_count_color()
     data_set = DataSet.objects.none()
     is_ts = False
@@ -4220,18 +4222,20 @@ def files_lister(request):
 
     cip_ds = CustomerInfoPanel.objects.filter(user=customer)
 
+    # request.session['count_ts'] = 0
+
     if cip_ds:
         data_set = cip_ds[0].data_set
         is_ts = data_set.is_ts
 
 
     # Ajax when deleting objects
-    if request.method == "POST" and request.is_ajax():
-        data_post_ajax = request.POST
+    if request.method == "GET" and request.is_ajax():
+        data_get_ajax = request.POST
 
-        # print '!!!!!!!!!!! AJAX POST ====================== ', data_post_ajax
+        # print '!!!!!!!!!!! AJAX GET ====================== ', data_get_ajax
 
-        if 'cur_run_id' in data_post_ajax:
+        if 'cur_run_id' in data_get_ajax:
             message = u'Are you sure you want to remove this objects:'
             file_customer = data_post_ajax['cur_run_id']
             data = '<b>"' + file_customer + '"</b>'
@@ -4241,6 +4245,34 @@ def files_lister(request):
         else:
             data = ''
             return HttpResponse(data)
+
+    # Ajax when deleting objects
+    if request.method == "POST" and request.is_ajax():
+        data = ''
+        data_post_ajax = request.POST
+
+        # print '!!!!!!!!!!! AJAX POST ====================== ', data_post_ajax
+
+        if 'attributes[]' in data_post_ajax:
+            # print '!!!!!!!!!!! AJAX POST 2 ====================== ', data_post_ajax.getlist('attributes[]')
+
+            attributes = data_post_ajax.getlist('attributes[]')
+
+            for attr in attributes:
+                count_ts += getCountTs(data_set, attr)
+            
+            request.session['count_ts'] = count_ts
+
+        # if 'cur_run_id' in data_post_ajax:
+        #     message = u'Are you sure you want to remove this objects:'
+        #     file_customer = data_post_ajax['cur_run_id']
+        #     data = '<b>"' + file_customer + '"</b>'
+        #     data = '{0} {1}?'.format(message, data)
+
+        #     return HttpResponse(data)
+        # else:
+        #     data = ''
+        return HttpResponse(json.dumps({'count_ts': count_ts}))
 
     if request.method == "POST":
         data_post = request.POST
@@ -4252,10 +4284,12 @@ def files_lister(request):
         files_lister_log.write('\n')
         #######################
 
-        # print '!!!!!!!!!! POST ================== ', data_post
+        print '!!!!!!!!!! POST ================== ', data_post
         # print '!!!!!!!!!!!!! DATA SET ==================== ', request.session['select_data_set']
         
         if 'load_button' in data_post:
+            request.session['count_ts'] = 0
+
             if form.is_valid():
                 info_window = ''
                 name_kml = ''
@@ -4398,6 +4432,8 @@ def files_lister(request):
             # path_filename_kml = os.path.join(KML_PATH, filename_customer)
             path_filename_kml = os.path.join(KML_PATH, customer.username, filename_customer)
 
+            print '!!!!!!!!!! FILENAME ================== ', path_filename_kml
+
             try:
                 os.remove(path_filename_ftp)
                 
@@ -4407,7 +4443,7 @@ def files_lister(request):
             except Exception, e:
                 print '!!!!! ERROR FTP KML FILE ================ ', e
 
-        if 'calculate-data' in data_post:
+        if 'calculation_button' in data_post:
             # print '!!!!!!!!!! POST ================== ', data_post
             # print '!!!!!!!!!! POST LIST ================== ', data_post.lists()
 
@@ -4429,10 +4465,12 @@ def files_lister(request):
                         select_stat = item[1][0]
 
                     if 'select-attr' in item:
-                        select_attr = item[1]
+                        tmp_list = item[1]
 
-                        # for n in tmp_list:
-                        #     select_attr.append(n.split('_')[1])
+                        for n in tmp_list:
+                            select_attr.append(n.split('_')[0])
+
+                print '!!!!!!!!!!!!!!!! ATTR LIST ============================ ', select_attr
 
                 if upload_fl:
                     path_test_data = os.path.join(path_ftp_user, upload_fl)
@@ -4499,8 +4537,14 @@ def files_lister(request):
 
                     try:
                         if data_set.is_ts:
-                            # select_attr
+                            TimeSeriesResults.objects.filter(user=customer, data_set=data_set,
+                                                            customer_polygons=cur_polygon).delete()
                             createUploadTimeSeriesResults(customer, cur_polygon, select_attr, data_set)
+
+                            # for r in select_attr:
+                            #     count_ts += getCountTs(data_set, r)
+                            
+                            # request.session['count_ts'] = count_ts
                             # createUploadTimeSeriesResults(cur_polygon, file_path_in_coord_tmp,
                             #                 file_path_out_ts_coord_tmp)
                     except Exception, e:
@@ -4515,6 +4559,9 @@ def files_lister(request):
                                     reverse('files_lister'),
                                     (u'Please add the GEO data to create Time Series.')))
 
+                return HttpResponseRedirect(u'%s?status_message=%s' % (
+                    reverse('files_lister'), (u'Calculation for the shapefile "{0}" is over'.format(upload_fl))))
+
                 
                 # print '!!!!!!!!!! result_load_kml ================== ', result_load_kml
                 # print '!!!!!!!!!! FILE ================== ', upload_fl
@@ -4524,8 +4571,6 @@ def files_lister(request):
                 # print '!!!!!!!!!! ATTR ================== ', select_attr
             except Exception, e:
                 print '!!!!!!!!!!!!!!!! ERROR UPLOAD FILE NAME ========================== ', e
-
-
     else:
         form = UploadFileForm()
 
@@ -4537,11 +4582,13 @@ def files_lister(request):
     
 
     dirs, files, info_message = get_files_dirs(url_path, path_ftp_user)
+    count_ts = request.session['count_ts']
 
     ####################### write log file
     files_lister_log.close()
     #######################
 
+    print '!!!!!!!!!!!!!!!!!!!! COUNT TS ================================ ', count_ts
     # print '!!!!!!!!!!!!!!!!!!!! FILES LIST ================================ ', files
     # print '!!!!!!!!!!!!!!!!!!!! IS CALCULATIONS ================================ ', calculation_aoi
 
@@ -4551,7 +4598,8 @@ def files_lister(request):
         'files': files,
         'form': form,
         'calculation_aoi': calculation_aoi,
-        'upload_file': upload_file
+        'upload_file': upload_file,
+        'count_ts': count_ts
     }
 
     return data

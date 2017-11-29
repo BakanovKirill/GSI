@@ -74,6 +74,8 @@ function initCheckCurDeleteItems() {
                 modal.modal('show');
             },
             'success': function(data, status, xhr){
+                // alert('DATA cur_delete: '+data);
+
                 modal.find('.cancel-but').html("No. I don't want delete this item.");
                 modal.find('div.div-cancel').removeClass("col-sm-4 col-sm-offset-4");
                 modal.find('div.div-cancel').addClass("col-sm-6");
@@ -1100,7 +1102,46 @@ function clearTs() {
     });
 }
 
+function makeCalculationAoi(file_name) {
+    var form_url = $('#files_lister').attr('action');
+    var attributes = $('#select_attr').val();
+    var modal = $('#modalCalculationAoi');
+    var title = 'Make a calculation for the loaded shepfile "' + file_name + ' "?'
+    modal.find('.modal-title').html(title);
+    modal.modal('show');
 
+    // alert('ATTR: '+attributes);
+
+    // id_test_data
+
+    $.ajax({
+        url: form_url,
+        type: 'POST',
+        'async': true,
+        'dataType': 'json',
+        data: {
+            'attributes': attributes,
+            'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+        },
+        'error': function(xhr, status, error){
+            alert('error: '+error);
+            var message = 'An unexpected error occurred. Try later.';
+            alert(message);
+        },
+        'success': function(data, status, xhr){
+            count_ts = data['count_ts'];
+            // window.location.href = form_url;
+            // alert('URL DATA: '+data);
+            // var obj_status = status;
+            // sendGetToServer();
+            // window.location.href = form_url;
+        },
+    });
+}
+
+
+// modal.find('.modal-body').html(message);
+// modal.modal('show');
 
 $(document).ready(function(){
     initCheckDeleteItems();

@@ -358,7 +358,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
 
     list_data_kml = []
 
-    # print '!!!!!!!!!!!!!!! ARGS  ===================== ', args
+    print '!!!!!!!!!!!!!!! ARGS  ===================== ', args
 
     is_ts = data_set.is_ts
     statistic = args[0]['statistic']
