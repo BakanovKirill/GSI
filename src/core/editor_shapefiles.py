@@ -336,7 +336,7 @@ def getUploadListTifFiles(customer, dataset, *args):
                 list_files_tif.append(new_fl_tif)
                 # list_data_db.append(str_data_db)
 
-    print '!!!!!!!!!! FILE ========================= ', list_files_tif
+    # print '!!!!!!!!!! FILE ========================= ', list_files_tif
     # print '!!!!!!!!!! DATA DB ========================= ', list_data_db
 
     return list_files_tif
@@ -358,7 +358,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
 
     list_data_kml = []
 
-    print '!!!!!!!!!!!!!!! ARGS  ===================== ', args
+    # print '!!!!!!!!!!!!!!! ARGS  ===================== ', args
 
     is_ts = data_set.is_ts
     statistic = args[0]['statistic']
@@ -555,7 +555,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
                     total = '{0:,}'.format(float(nl[3])).replace(',', ',')
 
             if list_val:
-                # print '!!!!!!!!!!!!!!!!! LIST VAL ======================== ', list_val
+                print '!!!!!!!!!!!!!!!!! LIST VAL ======================== ', list_val
 
                 total_area_tmp = float(list_val[0])
                 units_per_ha = list_val[1]
@@ -563,6 +563,8 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
                 len_list_val = len(list_val)
 
                 for n in xrange(3, len_list_val, 3):
+                    print '!!!!!!!!!!!!!!! list_val[n] =========================== ', list_val[n]
+
                     # if (n+3) < len_list_val:
                     total_area_tmp -= float(list_val[n])
 
@@ -657,9 +659,9 @@ def createUploadTimeSeriesResults(customer, aoi, attributes, data_set):
     # list_files_tif = []
     # list_data_db = []
 
-    print '!!!!!!!!!!!!!!!!!!!! USER =============================== ', customer
-    print '!!!!!!!!!!!!!!!!!!!! AOI =============================== ', aoi
-    print '!!!!!!!!!!!!!!!!!!!! ATTR =============================== ', attributes
+    # print '!!!!!!!!!!!!!!!!!!!! USER =============================== ', customer
+    # print '!!!!!!!!!!!!!!!!!!!! AOI =============================== ', aoi
+    # print '!!!!!!!!!!!!!!!!!!!! ATTR =============================== ', attributes
 
     project_directory = os.path.join(PROJECTS_PATH, aoi.data_set.results_directory)
     # attributes_reports = AttributesReport.objects.filter(

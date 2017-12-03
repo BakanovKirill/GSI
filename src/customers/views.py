@@ -4212,7 +4212,7 @@ def files_lister(request):
     shelf_data_all = ShelfData.objects.all().order_by('attribute_name')
     path_ftp_user = os.path.join(FTP_PATH, customer.username)
     path_kml_user = os.path.join(KML_PATH, customer.username)
-    dir_kml_user = os.path.join(KML_DIRECTORY, customer.username)
+    # dir_kml_user = os.path.join(KML_DIRECTORY, customer.username)
     # files_list = os.listdir(path_ftp_user)
     url_path = os.path.join('/media/CUSTOMER_FTP_AREA', customer.username)
 
@@ -4284,7 +4284,7 @@ def files_lister(request):
         files_lister_log.write('\n')
         #######################
 
-        print '!!!!!!!!!! POST ================== ', data_post
+        # print '!!!!!!!!!! POST ================== ', data_post
         # print '!!!!!!!!!!!!! DATA SET ==================== ', request.session['select_data_set']
         
         if 'load_button' in data_post:
@@ -4369,7 +4369,7 @@ def files_lister(request):
                         calculation_aoi = is_calculation_aoi(doc_kml)
                         info_window = get_info_window(doc_kml, f_name[0], path_new_kml)
 
-                        print '!!!!!!!!!!!!!!! calculation_aoi ============================ ', calculation_aoi
+                        print '!!!!!!!!!!!!!!! KMZ calculation_aoi ============================ ', calculation_aoi
 
                     except Exception, e:
                         print '!!!!!!!!!!!!!!! ERROR COPY KML ===================== ', e
@@ -4403,7 +4403,7 @@ def files_lister(request):
                             calculation_aoi = is_calculation_aoi(doc_kml)
                             info_window = get_info_window(doc_kml, f_name[0], path_test_data)
 
-                            # print '!!!!!!!!!!!!!!! calculation_aoi ============================ ', calculation_aoi
+                            # print '!!!!!!!!!!!!!!! KML calculation_aoi ============================ ', calculation_aoi
 
                             # info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(
                             #                     COLOR_HEX_NAME[count_color], f_name)
@@ -4432,7 +4432,7 @@ def files_lister(request):
             # path_filename_kml = os.path.join(KML_PATH, filename_customer)
             path_filename_kml = os.path.join(KML_PATH, customer.username, filename_customer)
 
-            print '!!!!!!!!!! FILENAME ================== ', path_filename_kml
+            # print '!!!!!!!!!! FILENAME ================== ', path_filename_kml
 
             try:
                 os.remove(path_filename_ftp)
@@ -4470,7 +4470,7 @@ def files_lister(request):
                         for n in tmp_list:
                             select_attr.append(n.split('_')[0])
 
-                print '!!!!!!!!!!!!!!!! ATTR LIST ============================ ', select_attr
+                # print '!!!!!!!!!!!!!!!! ATTR LIST ============================ ', select_attr
 
                 if upload_fl:
                     path_test_data = os.path.join(path_ftp_user, upload_fl)
@@ -4588,7 +4588,7 @@ def files_lister(request):
     files_lister_log.close()
     #######################
 
-    print '!!!!!!!!!!!!!!!!!!!! COUNT TS ================================ ', count_ts
+    # print '!!!!!!!!!!!!!!!!!!!! COUNT TS ================================ ', count_ts
     # print '!!!!!!!!!!!!!!!!!!!! FILES LIST ================================ ', files
     # print '!!!!!!!!!!!!!!!!!!!! IS CALCULATIONS ================================ ', calculation_aoi
 
