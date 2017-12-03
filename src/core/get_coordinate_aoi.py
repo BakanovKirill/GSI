@@ -18,16 +18,6 @@ from gsi.settings import FTP_PATH
 
 # path_kml_user = os.path.join(KML_PATH, customer.username)
 
-# def get_count_outerboundaryis(customer, file_name):
-#     aoi_path_ftp_user = os.path.join(FTP_PATH, customer.username, file_name)
-
-#     print '!!!!!!!!!!!!!!!! TMP aoi_path_ftp_user ======================== ', aoi_path_ftp_user
-
-#     xml = html.parse(aoi_path_ftp_user)
-#     xml_outerboundaryis = xml.xpath("//outerboundaryis")
-
-#     return len(xml_outerboundaryis)
-
 
 def get_coord_aoi(doc):
     outer_coord = []
