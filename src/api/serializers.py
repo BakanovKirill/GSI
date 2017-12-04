@@ -22,6 +22,7 @@ class DataPolygonsSerializer(serializers.ModelSerializer):
         model = DataPolygons
         fields = (
             'attribute',
+            'statistic',
             'value',
             'units',
             'total',
