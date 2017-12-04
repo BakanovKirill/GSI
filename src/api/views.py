@@ -417,6 +417,26 @@ class ShapeFileDetail(APIView):
         return Response(data)
 
 
+class TimeSeriesList(APIView):
+    """
+    List TimeSeries.
+    """
+
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    # authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, format=None):
+        data = {'auth': 'Need YOUR ACCESS TOKEN'}
+
+        if request.auth:
+            queryset = TimeSeriesResults.objects.filter(user=request.user).order_by('id')
+            serializer = TimeSeriesResultSerializer(queryset, many=True)
+            data = serializer.data
+
+        return Response(data)
+
+
 class TimeSeriesDetail(APIView):
     """
     Retrieve a DataSet instance.
