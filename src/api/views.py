@@ -26,7 +26,7 @@ from rest_framework import exceptions
 from rest_framework.pagination import PageNumberPagination
 
 from django.contrib.auth.models import User
-from rest_framework import generics
+from rest_framework import generics, viewsets
 
 from core.utils import (validate_status, write_log, get_path_folder_run, execute_fe_command, handle_uploaded_file)
 from gsi.models import Run, RunStep, CardSequence, OrderedCardItem, SubCardItem
@@ -37,6 +37,7 @@ from customers.models import (CustomerPolygons, DataTerraserver, DataSet, Custom
 from api.serializers import (CustomerPolygonsSerializer, CustomerPolygonSerializer, 
                             DataPolygonsSerializer, DataSetsSerializer, DataSetSerializer,
                             TimeSeriesResultSerializer)
+from api.pagination import CustomPagination
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -344,32 +345,57 @@ def external_auth_api(request):
     return Response(content, status=url_status)
 
 
-class DataSetList(APIView):
-    """
-    List DataSets ...
-    """
 
+class DataSetList(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows StoreItems to be retrieved.
+    """
     authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
     # authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
+    serializer_class = DataSetsSerializer
 
-    # pagination
-    pagination_class = StandardResultsSetPagination
-    # paginate_by_param = 'page_size'
-    # max_paginate_by = 500
-    # paginate_by = 10
-
-    def get(self, request, format=None):
+    def get_queryset(self):
+        queryset = DataSet.objects.none()
         data = {'auth': 'Need YOUR ACCESS TOKEN'}
+        url_status = status.HTTP_400_BAD_REQUEST
+        # queryset = ['Need YOUR ACCESS TOKEN']
 
-        # if request.auth:
-        customer_access = CustomerAccess.objects.get(user=request.user)
-        queryset = DataSet.objects.filter(customer_access=customer_access).order_by('id')
-        pagination_class = PageNumberPagination()
-        serializer = DataSetsSerializer(queryset, many=True)
-        data = serializer.data
+        if self.request.auth:
+            customer_access = CustomerAccess.objects.get(user=self.request.user)
+            queryset = DataSet.objects.filter(customer_access=customer_access).order_by('id')
 
-        return Response(data)
+        return queryset
+
+        # return Response(data, status=url_status)
+
+
+# class DataSetList(APIView):
+#     """
+#     List DataSets ...
+#     """
+
+#     authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+#     # authentication_classes = (SessionAuthentication, BasicAuthentication)
+#     permission_classes = (IsAuthenticated,)
+
+#     # pagination
+#     pagination_class = StandardResultsSetPagination
+#     # paginate_by_param = 'page_size'
+#     # max_paginate_by = 500
+#     # paginate_by = 10
+
+#     def get(self, request, format=None):
+#         data = {'auth': 'Need YOUR ACCESS TOKEN'}
+
+#         # if request.auth:
+#         customer_access = CustomerAccess.objects.get(user=request.user)
+#         queryset = DataSet.objects.filter(customer_access=customer_access).order_by('id')
+#         pagination_class = PageNumberPagination()
+#         serializer = DataSetsSerializer(queryset, many=True)
+#         data = serializer.data
+
+#         return Response(data)
 
 
 class DataSetDetail(APIView):
@@ -468,24 +494,43 @@ class ShapeFileNameDetail(APIView):
         return Response(data)
 
 
-class TimeSeriesList(APIView):
+class TimeSeriesList(viewsets.ReadOnlyModelViewSet):
     """
-    List TimeSeries.
+    List TimeSeries
     """
-
     authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
     # authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
+    serializer_class = TimeSeriesResultSerializer
 
-    def get(self, request, format=None):
-        data = {'auth': 'Need YOUR ACCESS TOKEN'}
+    def get_queryset(self):
+        # queryset = {'auth': 'Need YOUR ACCESS TOKEN'}
+        queryset = TimeSeriesResults.objects.none()
 
-        if request.auth:
-            queryset = TimeSeriesResults.objects.filter(user=request.user).order_by('id')
-            serializer = TimeSeriesResultSerializer(queryset, many=True)
-            data = serializer.data
+        if self.request.auth:
+            queryset = TimeSeriesResults.objects.filter(user=self.request.user).order_by('id')
 
-        return Response(data)
+        return queryset
+
+
+# class TimeSeriesList(APIView):
+#     """
+#     List TimeSeries.
+#     """
+
+#     authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+#     # authentication_classes = (SessionAuthentication, BasicAuthentication)
+#     permission_classes = (IsAuthenticated,)
+
+#     def get(self, request, format=None):
+#         data = {'auth': 'Need YOUR ACCESS TOKEN'}
+
+#         if request.auth:
+#             queryset = TimeSeriesResults.objects.filter(user=request.user).order_by('id')
+#             serializer = TimeSeriesResultSerializer(queryset, many=True)
+#             data = serializer.data
+
+#         return Response(data)
 
 
 class TimeSeriesDetail(APIView):

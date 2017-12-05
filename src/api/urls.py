@@ -26,14 +26,16 @@ urlpatterns = [
 	url(r'^terraserver', 'api.views.terraserver', name='terraserver'),
 	# url(r'^datasets/', 'api.views.datasets_list', name='datasets_list'),
 	# url(r'^polygons/', CustomerPolygonsList.as_view()),
-    url(r'^datasets/', DataSetList.as_view()),
+    url(r'^datasets/', DataSetList.as_view({'get': 'list'})),
+    # url(r'^datasets/', DataSetList.as_view()),
 	url(r'^dataset/(?P<ds_id>[0-9]+)/$', DataSetDetail.as_view()),
 	# url(r'^dataset/', 'api.views.dataset', name='dataset'),
    
     url(r'^shapefile/(?P<sf_id>[0-9]+)/$', ShapeFileDetail.as_view()),
     url(r'^shapefile', ShapeFileNameDetail.as_view()),
 
-    url(r'^timeseries-list/$', TimeSeriesList.as_view()),
+    url(r'^timeseries-list/$', TimeSeriesList.as_view({'get': 'list'})),
+    # url(r'^timeseries-list/$', TimeSeriesList.as_view()),
     url(r'^timeseries/(?P<ts_id>[0-9]+)/$', TimeSeriesDetail.as_view()),
     url(r'^timeseries', TimeSeriesNameDetail.as_view()),
    
