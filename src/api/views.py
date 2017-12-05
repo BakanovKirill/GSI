@@ -39,6 +39,12 @@ from api.serializers import (CustomerPolygonsSerializer, CustomerPolygonSerializ
                             TimeSeriesResultSerializer)
 
 
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 100
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
+
+
 def is_finished(run_id, card_id, cur_counter, last, run_parallel):
     """Function to determine the last card in a running list of cards.
 
@@ -340,21 +346,28 @@ def external_auth_api(request):
 
 class DataSetList(APIView):
     """
-    List DataSets.
+    List DataSets ...
     """
 
     authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
     # authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
 
+    # pagination
+    pagination_class = StandardResultsSetPagination
+    # paginate_by_param = 'page_size'
+    # max_paginate_by = 500
+    # paginate_by = 10
+
     def get(self, request, format=None):
         data = {'auth': 'Need YOUR ACCESS TOKEN'}
 
-        if request.auth:
-            customer_access = CustomerAccess.objects.get(user=request.user)
-            queryset = DataSet.objects.filter(customer_access=customer_access).order_by('id')
-            serializer = DataSetsSerializer(queryset, many=True)
-            data = serializer.data
+        # if request.auth:
+        customer_access = CustomerAccess.objects.get(user=request.user)
+        queryset = DataSet.objects.filter(customer_access=customer_access).order_by('id')
+        pagination_class = PageNumberPagination()
+        serializer = DataSetsSerializer(queryset, many=True)
+        data = serializer.data
 
         return Response(data)
 
@@ -387,7 +400,7 @@ class DataSetDetail(APIView):
 
 class ShapeFileDetail(APIView):
     """
-    Retrieve a DataSet instance.
+    Retrieve a ShapeFile instance.
     """
 
     authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
@@ -413,6 +426,44 @@ class ShapeFileDetail(APIView):
             cip = self.get_object(sf_id)
             serializer = CustomerPolygonSerializer(cip)
             data = serializer.data
+
+        return Response(data)
+
+
+class ShapeFileNameDetail(APIView):
+    """
+    Retrieve a ShapeFile instance.
+    """
+
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    # authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self, user, name):
+        try:
+            return CustomerPolygons.objects.get(user=user, name=name)
+        except CustomerPolygons.DoesNotExist:
+            # raise Http404
+            return {'error': 'Invalid ShapeFile Name'}
+
+    def get(self, request, format=None):
+        data = {'auth': 'Need YOUR ACCESS TOKEN'}
+
+        if request.auth:
+            # in_path = '/home/grigoriy/test/TMP/1_test.txt'
+            # out_path = '/home/grigoriy/test/TMP/11'
+            # command_line = 'cp {0} {1}'.format(in_path, out_path)
+            # proc = Popen(command_line, shell=True)
+            # proc.wait()
+            
+            cip = self.get_object(request.user, request.GET['name'])
+
+            try:
+                serializer = CustomerPolygonSerializer(cip)
+                data = serializer.data
+            # except KeyError:
+            except Exception:
+                return Response({'error': 'Invalid TimeSeries Name'}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(data)
 
@@ -459,6 +510,38 @@ class TimeSeriesDetail(APIView):
             timeseries = self.get_object(ts_id)
             serializer = TimeSeriesResultSerializer(timeseries)
             data = serializer.data
+
+        return Response(data)
+
+
+class TimeSeriesNameDetail(APIView):
+    """
+    Retrieve a DataSet instance.
+    """
+
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    # authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self, user, name):
+        try:
+            return TimeSeriesResults.objects.get(user=user, name=name)
+        except TimeSeriesResults.DoesNotExist:
+            # raise Http404
+            return {'error': 'Invalid TimeSeries Name'}
+
+    def get(self, request, format=None):
+        data = {'auth': 'Need YOUR ACCESS TOKEN'}
+
+        # if request.auth:
+        timeseries = self.get_object(request.user, request.GET['name'])
+
+        try:
+            serializer = TimeSeriesResultSerializer(timeseries)
+            data = serializer.data
+        # except KeyError:
+        except Exception:
+            return Response({'error': 'Invalid TimeSeries Name'}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(data)
 

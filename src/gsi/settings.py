@@ -145,10 +145,10 @@ ENABLE_DEBUG_TOOLBAR = False
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# REST_FRAMEWORK
+# django rest framework
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
-        # 'rest_framework.permissions.IsAdminUser',
+        'rest_framework.permissions.IsAuthenticated',
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
@@ -157,10 +157,39 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_METADATA_CLASS': 'rest_framework.metadata.SimpleMetadata',
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    # 'PAGINATE_BY': 2,
-    'PAGE_SIZE': 2
+    # # 'DEFAULT_PAGINATION_CLASS': 'api.views.StandardResultsSetPagination',
+    # 'PAGE_SIZE': 100,
+    # 'PAGINATE_BY': 10,
+
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 100
+
+    # 'PAGINATE_BY_PARAM': 'page_size',
+    # 'MAX_PAGINATE_BY': 500,
+    # 'DEFAULT_RENDERER_CLASSES': (
+    #     'rest_framework.renderers.UnicodeJSONRenderer',
+    #     'rest_framework.renderers.BrowsableAPIRenderer',
+    #     'rest_framework.renderers.XMLRenderer',
+    #     'rest_framework.renderers.YAMLRenderer',
+    # )
 }
+
+# REST_FRAMEWORK
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         # 'rest_framework.permissions.IsAdminUser',
+#         'rest_framework.authentication.BasicAuthentication',
+#         'rest_framework.authentication.SessionAuthentication',
+#     ),
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework.authentication.TokenAuthentication',
+#     ),
+#     'DEFAULT_METADATA_CLASS': 'rest_framework.metadata.SimpleMetadata',
+#     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+#     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+#     # 'PAGINATE_BY': 2,
+#     # 'PAGE_SIZE': 2
+# }
 
 # settings for django-registration-redux
 REGISTRATION_OPEN = True
