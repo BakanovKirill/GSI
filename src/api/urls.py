@@ -23,7 +23,9 @@ urlpatterns = [
 	# api for the gsi
 	
 	url(r'^external/login/', 'api.views.external_auth_api', name='external_auth_api'),
-	url(r'^terraserver', 'api.views.terraserver', name='terraserver'),
+    
+	# url(r'^terraserver', 'api.views.terraserver', name='terraserver'),
+
 	# url(r'^datasets/', 'api.views.datasets_list', name='datasets_list'),
 	# url(r'^polygons/', CustomerPolygonsList.as_view()),
     url(r'^datasets/', DataSetList.as_view({'get': 'list'})),

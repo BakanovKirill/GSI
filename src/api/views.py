@@ -691,128 +691,128 @@ class UploadFileFtpView(APIView):
             return Response(data)
         
         
-@api_view(['GET',])
-@authentication_classes((SessionAuthentication, BasicAuthentication))
-@permission_classes((IsAuthenticated,))
-def terraserver(request):
-    """API to get data from the terraserver."""
+# @api_view(['GET',])
+# @authentication_classes((SessionAuthentication, BasicAuthentication))
+# @permission_classes((IsAuthenticated,))
+# def terraserver(request):
+#     """API to get data from the terraserver."""
 
-    data = {}
-    shapefile_name = ''
-    customer = request.user
-    data_terraserver = DataTerraserver.objects.none()
+#     data = {}
+#     shapefile_name = ''
+#     customer = request.user
+#     data_terraserver = DataTerraserver.objects.none()
     
     
-    path_to_map_images = '/home/gsi/Web_GeoChart/GSiMaps/png'
-    root_url_gsimap = 'http://indy41.epcc.ed.ac.uk/'
-    url_status = status.HTTP_200_OK
+#     path_to_map_images = '/home/gsi/Web_GeoChart/GSiMaps/png'
+#     root_url_gsimap = 'http://indy41.epcc.ed.ac.uk/'
+#     url_status = status.HTTP_200_OK
     
-    # token = Token.objects.get(user=request.user)
-    # print 'token.key ============================= ', token.key
+#     # token = Token.objects.get(user=request.user)
+#     # print 'token.key ============================= ', token.key
     
-    # print 'customer ============================= ', customer
+#     # print 'customer ============================= ', customer
 
-    if request.GET:
-        data_get = request.GET
-        # data = JSONParser().parse(request)
+#     if request.GET:
+#         data_get = request.GET
+#         # data = JSONParser().parse(request)
         
-        # print 'data =================== ', data
+#         # print 'data =================== ', data
 
-        if data_get.get('shapefile', ''):
-            data['shapefile'] = data_get.get('shapefile', '')
-            shapefile_name = data['shapefile'].split('/')[-1]
-            kml_name = shapefile_name.split('.kml')[0]
-            print 'data[shapefile] ============================= ', data['shapefile']
+#         if data_get.get('shapefile', ''):
+#             data['shapefile'] = data_get.get('shapefile', '')
+#             shapefile_name = data['shapefile'].split('/')[-1]
+#             kml_name = shapefile_name.split('.kml')[0]
+#             print 'data[shapefile] ============================= ', data['shapefile']
             
-            new_shapefile_name = KML_PATH + '/' + shapefile_name
+#             new_shapefile_name = KML_PATH + '/' + shapefile_name
             
-            print 'new_shapefile_name ============================= ', new_shapefile_name
+#             print 'new_shapefile_name ============================= ', new_shapefile_name
             
-            url = data['shapefile']
-            urllib.urlretrieve(url, new_shapefile_name)
+#             url = data['shapefile']
+#             urllib.urlretrieve(url, new_shapefile_name)
             
-            data_terraserver, created = DataTerraserver.objects.update_or_create(
-                user=customer,
-                shapefile_link=data['shapefile'],
-                shapefile=shapefile_name)
+#             data_terraserver, created = DataTerraserver.objects.update_or_create(
+#                 user=customer,
+#                 shapefile_link=data['shapefile'],
+#                 shapefile=shapefile_name)
             
-            obj, created = CustomerPolygons.objects.update_or_create(
-                user=customer,
-                name=kml_name,
-                kml_name=shapefile_name,
-                kml_path=new_shapefile_name
-            )
-        else:
-            data['message error shapefile'] = 'Invalid or missing the shapefile in the request.'
-            url_status = status.HTTP_400_BAD_REQUEST
+#             obj, created = CustomerPolygons.objects.update_or_create(
+#                 user=customer,
+#                 name=kml_name,
+#                 kml_name=shapefile_name,
+#                 kml_path=new_shapefile_name
+#             )
+#         else:
+#             data['message error shapefile'] = 'Invalid or missing the shapefile in the request.'
+#             url_status = status.HTTP_400_BAD_REQUEST
             
-        if data_get.get('param', ''):
-            data['param'] = data_get.get('param', '')
-            print 'param ============================= ', data['param']
-            data_terraserver.parameter = data['param']
-            data_terraserver.save()
-        else:
-            data['message error param'] = 'Invalid or missing the parameter in the request.'
-            url_status = status.HTTP_400_BAD_REQUEST
+#         if data_get.get('param', ''):
+#             data['param'] = data_get.get('param', '')
+#             print 'param ============================= ', data['param']
+#             data_terraserver.parameter = data['param']
+#             data_terraserver.save()
+#         else:
+#             data['message error param'] = 'Invalid or missing the parameter in the request.'
+#             url_status = status.HTTP_400_BAD_REQUEST
             
-        if data_get.get('transaction_id', ''):
-            data['transaction_id'] = data_get.get('transaction_id', '')
-            data_terraserver.transaction_id = data['transaction_id']
-            data_terraserver.save()
-        else:
-            data['message error transaction_id'] = 'Invalid or missing the transaction ID in the request.'
-            url_status = status.HTTP_400_BAD_REQUEST
+#         if data_get.get('transaction_id', ''):
+#             data['transaction_id'] = data_get.get('transaction_id', '')
+#             data_terraserver.transaction_id = data['transaction_id']
+#             data_terraserver.save()
+#         else:
+#             data['message error transaction_id'] = 'Invalid or missing the transaction ID in the request.'
+#             url_status = status.HTTP_400_BAD_REQUEST
 
-        # send mail
-        if url_status == status.HTTP_200_OK:
-            send_mail('Subject here', 'Here is the message.', 'artgrem@gmail.com',
-            ['artgrem@gmail.com'], fail_silently=False)
+#         # send mail
+#         if url_status == status.HTTP_200_OK:
+#             send_mail('Subject here', 'Here is the message.', 'artgrem@gmail.com',
+#             ['artgrem@gmail.com'], fail_silently=False)
         
-        # send_simple_message()
+#         # send_simple_message()
         
-        # '''send email via mailgun'''
-        # subject = "Hello, its me"
-        # text_content = "I was wondering if after all these years"
-        # sender = "artgrem@gmail.com"
-        # receipient = "artgrem@gmail.com"
-        # msg = EmailMultiAlternatives(subject, text_content, sender, [receipient])
-        # respone = msg.send()
+#         # '''send email via mailgun'''
+#         # subject = "Hello, its me"
+#         # text_content = "I was wondering if after all these years"
+#         # sender = "artgrem@gmail.com"
+#         # receipient = "artgrem@gmail.com"
+#         # msg = EmailMultiAlternatives(subject, text_content, sender, [receipient])
+#         # respone = msg.send()
         
-        # artgrem@gmail.com
+#         # artgrem@gmail.com
 
         
 
-        # if url_status == status.HTTP_200_OK:
-        #     try:
-        #         root, dirs, files = os.walk(path_to_map_images).next()
-        #         data['results'] = []
-        #
-        #         for f in files:
-        #             dict_tmp = {}
-        #             file_without_ext = f.split('.png')[0]
-        #             dict_tmp['file'] = f
-        #             dict_tmp['url'] = root_url_gsimap + 'GSiMap.php?q=images/{0}'.format(file_without_ext)
-        #             dict_tmp['description'] = 'a brief description of the map'
-        #             data['results'].append(dict_tmp)
-        #     except Exception, e:
-        #         data['message error'] = 'No such file or directory: {0}'.format(path_to_map_images)
-        #         url_status = status.HTTP_500_INTERNAL_SERVER_ERROR
-    # elif request.POST:
-    #     data_post = request.POST
-    #     data = JSONParser().parse(request)
-    #
-    #     print 'shapefile =================== ', shapefile
-    #
-    #     if data_post.get('shapefile', ''):
-    #
-    #         print 'shapefile =================== ', shapefile
-    #         url_status = status.HTTP_200_OK
-        # return Response("ok")
-    else:
-        data['message error'] = 'Invalid or missing the parameters for request.'
-        url_status = status.HTTP_400_BAD_REQUEST
+#         # if url_status == status.HTTP_200_OK:
+#         #     try:
+#         #         root, dirs, files = os.walk(path_to_map_images).next()
+#         #         data['results'] = []
+#         #
+#         #         for f in files:
+#         #             dict_tmp = {}
+#         #             file_without_ext = f.split('.png')[0]
+#         #             dict_tmp['file'] = f
+#         #             dict_tmp['url'] = root_url_gsimap + 'GSiMap.php?q=images/{0}'.format(file_without_ext)
+#         #             dict_tmp['description'] = 'a brief description of the map'
+#         #             data['results'].append(dict_tmp)
+#         #     except Exception, e:
+#         #         data['message error'] = 'No such file or directory: {0}'.format(path_to_map_images)
+#         #         url_status = status.HTTP_500_INTERNAL_SERVER_ERROR
+#     # elif request.POST:
+#     #     data_post = request.POST
+#     #     data = JSONParser().parse(request)
+#     #
+#     #     print 'shapefile =================== ', shapefile
+#     #
+#     #     if data_post.get('shapefile', ''):
+#     #
+#     #         print 'shapefile =================== ', shapefile
+#     #         url_status = status.HTTP_200_OK
+#         # return Response("ok")
+#     else:
+#         data['message error'] = 'Invalid or missing the parameters for request.'
+#         url_status = status.HTTP_400_BAD_REQUEST
 
-    return Response(data, status=url_status)
+#     return Response(data, status=url_status)
     
         
         
