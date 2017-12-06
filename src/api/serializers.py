@@ -113,6 +113,7 @@ class CustomerPolygonSerializer(CustomerPolygonsSerializer):
 class TimeSeriesResultSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField()
     name = serializers.CharField(max_length=250)
+    customer_polygons = CustomerPolygonsSerializer()
     data_set = DataSetSerializer()
     result_year = serializers.CharField(max_length=250)
     stat_code = serializers.CharField(max_length=250)
@@ -124,6 +125,7 @@ class TimeSeriesResultSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'name',
+            'customer_polygons',
             'data_set',
             'result_year',
             'stat_code',
