@@ -11,7 +11,7 @@ from simplekml import Kml
 
 from gsi.settings import COLOR_HEX_NAME, PROJECTS_PATH, TMP_PATH, SCRIPT_GETPOLYINFO
 from core.get_coordinate_aoi import get_coord_aoi
-from customers.models import ShelfData, TimeSeriesResults
+from customers.models import ShelfData, TimeSeriesResults, CustomerPolygons
 
 
 # SUB_DIRECTORIES = {
@@ -67,6 +67,25 @@ def copy_file_kml(old_path, new_path):
         # error = str(e)
 
     return doc, error
+
+
+def addPolygonToDB(name, kml_name, user, kml_path, kml_url, ds, text_kml=''):
+    customer_pol = CustomerPolygons.objects.none()
+
+    CustomerPolygons.objects.filter(
+        name=name, user=user, data_set=ds).delete()
+
+    customer_pol = CustomerPolygons.objects.create(
+                        name=name,
+                        kml_name=kml_name,
+                        user=user,
+                        data_set=ds,
+                        kml_path=kml_path,
+                        kml_url=kml_url,
+                        text_kml=text_kml
+                    )
+
+    return customer_pol
 
 
 def get_data_kml(path):

@@ -1286,35 +1286,18 @@ def getGeoCoord(filename):
 def addPolygonToDB(name, kml_name, user, kml_path, kml_url, ds, text_kml=''):
     customer_pol = CustomerPolygons.objects.none()
 
-    if CustomerPolygons.objects.filter(name=name).exists():
-        CustomerPolygons.objects.filter(name=name).update(
-            name=name,
-            kml_name=kml_name,
-            user=user,
-            data_set=ds,
-            kml_path=kml_path,
-            kml_url=kml_url,
-            text_kml=text_kml
-        )
-        customer_pol = CustomerPolygons.objects.get(
-                            name=name,
-                            kml_name=kml_name,
-                            user=user,
-                            data_set=ds,
-                            kml_path=kml_path,
-                            kml_url=kml_url,
-                            text_kml=text_kml
-                        )
-    else:
-        customer_pol = CustomerPolygons.objects.create(
-                            name=name,
-                            kml_name=kml_name,
-                            user=user,
-                            data_set=ds,
-                            kml_path=kml_path,
-                            kml_url=kml_url,
-                            text_kml=text_kml
-                        )
+    CustomerPolygons.objects.filter(
+        name=name, user=user, data_set=ds).delete()
+
+    customer_pol = CustomerPolygons.objects.create(
+                        name=name,
+                        kml_name=kml_name,
+                        user=user,
+                        data_set=ds,
+                        kml_path=kml_path,
+                        kml_url=kml_url,
+                        text_kml=text_kml
+                    )
 
     return customer_pol
 
@@ -4223,6 +4206,12 @@ def files_lister(request):
     cip_ds = CustomerInfoPanel.objects.filter(user=customer)
 
     # request.session['count_ts'] = 0
+    
+    # Get Select TS
+    if request.session.get('count_ts', False):
+        count_ts = request.session['count_ts']
+    else:
+        request.session['count_ts'] = 0
 
     if cip_ds:
         data_set = cip_ds[0].data_set
@@ -4324,10 +4313,19 @@ def files_lister(request):
                 handle_uploaded_file(request.FILES['test_data'],
                                      path_test_data)
 
-                if DataPolygons.objects.filter(user=request.user, data_set=data_set,
-                        customer_polygons__name=f_name[0]).exists():
-                    DataPolygons.objects.filter(user=request.user, data_set=data_set,
-                        customer_polygons__name=f_name[0]).delete()
+                # DataPolygons.objects.filter(user=request.user,
+                #         customer_polygons__name=f_name[0]).delete()
+
+                CustomerPolygons.objects.filter(user=request.user,
+                        name=f_name[0]).delete()
+
+                # print '!!!!!!!!!! FILE NAME ================== ', f_name
+                # print '!!!!!!!!!! FILE EXT ================== ', ext
+
+                # if DataPolygons.objects.filter(user=request.user, data_set=data_set,
+                #         customer_polygons__name=f_name[0]).exists():
+                #     DataPolygons.objects.filter(user=request.user, data_set=data_set,
+                #         customer_polygons__name=f_name[0]).delete()
 
                 if ext == 'kmz':
                     zip_file = f_name[0] + '.zip'

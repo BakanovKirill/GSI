@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 
 from customers.models import (CustomerPolygons, DataPolygons,
-                            DataSet, TimeSeriesResults)
+                            DataSet, TimeSeriesResults, ShelfData)
 
 
 # class UserSerializer(serializers.ModelSerializer):
@@ -32,13 +32,15 @@ class DataPolygonsSerializer(serializers.ModelSerializer):
 
 class CustomerPolygonsSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField()
-    kml_name = serializers.CharField(max_length=250)
+    name = serializers.CharField(max_length=250)
+    # kml_name = serializers.CharField(max_length=250)
     
     class Meta:
         model = CustomerPolygons
         fields = (
             'id',
-            'kml_name',
+            'name',
+            # 'kml_name',
         )
 
 
@@ -73,17 +75,24 @@ class DataSetsSerializer(serializers.ModelSerializer):
 class DataSetSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField()
     name = serializers.CharField(max_length=250)
+    description = serializers.CharField(max_length=250)
+    is_ts = serializers.BooleanField()
+    name_ts = serializers.CharField(max_length=250)
 
     class Meta:
         model = DataSet
         fields = (
             'id',
             'name',
+            'description',
+            'is_ts',
+            'name_ts'
         )
         
         
 class CustomerPolygonSerializer(CustomerPolygonsSerializer):
     id = serializers.IntegerField()
+    name = serializers.CharField(max_length=250)
     kml_name = serializers.CharField(max_length=250)
     data_set = DataSetSerializer()
     kml_url = serializers.CharField(max_length=250)
@@ -93,6 +102,7 @@ class CustomerPolygonSerializer(CustomerPolygonsSerializer):
         model = CustomerPolygons
         fields = (
             'id',
+            'name',
             'kml_name',
             'data_set',
             'kml_url',

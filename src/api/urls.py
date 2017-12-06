@@ -7,7 +7,7 @@ from django.views.generic import TemplateView
 from rest_framework.urlpatterns import format_suffix_patterns
 
 from api.views import (DataSetList, DataSetDetail,
-                        ShapeFileDetail, ShapeFileNameDetail,
+                        ShapeFileList, ShapeFileDetail, ShapeFileNameDetail,
                         TimeSeriesDetail, TimeSeriesList, TimeSeriesNameDetail,
                         UploadFileAoiView, UploadFileFtpView)
 
@@ -33,6 +33,7 @@ urlpatterns = [
 	url(r'^dataset/(?P<ds_id>[0-9]+)/$', DataSetDetail.as_view()),
 	# url(r'^dataset/', 'api.views.dataset', name='dataset'),
    
+    url(r'^shapefiles-list/$', ShapeFileList.as_view({'get': 'list'})),
     url(r'^shapefile/(?P<sf_id>[0-9]+)/$', ShapeFileDetail.as_view()),
     url(r'^shapefile', ShapeFileNameDetail.as_view()),
 

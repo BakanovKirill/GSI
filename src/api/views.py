@@ -4,6 +4,7 @@ from subprocess import Popen
 import os
 import urllib
 import requests
+import zipfile
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
@@ -38,6 +39,17 @@ from api.serializers import (CustomerPolygonsSerializer, CustomerPolygonSerializ
                             DataPolygonsSerializer, DataSetsSerializer, DataSetSerializer,
                             TimeSeriesResultSerializer)
 from api.pagination import CustomPagination
+from core.get_coordinate_aoi import (get_coord_aoi, get_coord_document_placemark_polygon_outerboundaryIs,
+                                    get_coord_document_placemark_multigeometry_polygon_outerboundaryIs,
+                                    get_coord_document_folder_placemark_multigeometry_polygon_outerboundaryIs,
+                                    get_coord_placemark_polygon_outerboundaryIs,
+                                    get_coord_placemark_multigeometry_polygon_outerboundaryIs,
+                                    get_coord_document_placemark_polygon_innerboundaryIs,
+                                    get_coord_placemark_polygon_innerboundaryIs)
+from core.editor_shapefiles import (get_count_color, copy_file_kml, get_data_kml, delete_empty_lines,
+                                    validation_kml, is_calculation_aoi, get_info_window,
+                                    create_new_calculations_aoi, createUploadTimeSeriesResults,
+                                    addPolygonToDB)
 
 
 # in_path = '/home/grigoriy/test/TMP/1_test.txt'
@@ -360,7 +372,8 @@ class DataSetList(viewsets.ReadOnlyModelViewSet):
     authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
     # authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
-    serializer_class = DataSetsSerializer
+    # serializer_class = DataSetsSerializer
+    serializer_class = DataSetSerializer
 
     def get_queryset(self):
         queryset = DataSet.objects.none()
@@ -368,12 +381,12 @@ class DataSetList(viewsets.ReadOnlyModelViewSet):
         url_status = status.HTTP_400_BAD_REQUEST
         # queryset = ['Need YOUR ACCESS TOKEN']
 
-        if self.request.auth:
-            try:
-                customer_access = CustomerAccess.objects.get(user=self.request.user)
-                queryset = DataSet.objects.filter(customer_access=customer_access).order_by('id')
-            except Exception:
-                pass
+        # if self.request.auth:
+        try:
+            customer_access = CustomerAccess.objects.get(user=self.request.user)
+            queryset = DataSet.objects.filter(customer_access=customer_access).order_by('id')
+        except Exception:
+            pass
 
         return queryset
 
@@ -429,6 +442,25 @@ class DataSetDetail(APIView):
                 return Response({'error': 'DataSet Does Not Exist'}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(data)
+
+
+class ShapeFileList(viewsets.ReadOnlyModelViewSet):
+    """
+    List ShapeFiles
+    """
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    # authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = CustomerPolygonSerializer
+
+    def get_queryset(self):
+        # queryset = {'auth': 'Need YOUR ACCESS TOKEN'}
+        queryset = CustomerPolygons.objects.none()
+
+        if self.request.auth:
+            queryset = CustomerPolygons.objects.filter(user=self.request.user).order_by('id')
+
+        return queryset
 
 
 class ShapeFileDetail(APIView):
@@ -592,57 +624,151 @@ class UploadFileAoiView(APIView):
             raise Http404
 
     def post(self, request, ds_id, format=None):
+        error = ''
         data = {'auth': 'Need YOUR ACCESS TOKEN'}
 
         if request.auth:
-            file_obj = request.FILES['file']
-            dataset = self.get_object(ds_id)
-            file_name = file_obj.name
+            try:
+                file_obj = request.FILES['file']
+                dataset = self.get_object(ds_id)
+                file_name = file_obj.name
+                fl, ext = os.path.splitext(file_name)
 
-            scheme = '{0}://'.format(request.scheme)
-            absolute_kml_url = os.path.join(scheme, request.get_host(), KML_DIRECTORY, request.user.username, file_name)
+                scheme = '{0}://'.format(request.scheme)
+                absolute_kml_url = os.path.join(scheme, request.get_host(), KML_DIRECTORY, request.user.username)
 
-            kml_path = os.path.join(KML_PATH, request.user.username, file_name)
-            ftp_path = os.path.join(FTP_PATH, request.user.username, file_name)
-            
-            with open(ftp_path, 'wb+') as destination:
-                for chunk in file_obj.chunks():
-                    ch = chunk
-                    destination.write(chunk)
+                kml_path_user = os.path.join(KML_PATH, request.user.username)
+                ftp_path_user = os.path.join(FTP_PATH, request.user.username)
 
+                path_test_data = os.path.join(ftp_path_user, file_name)
 
-            fl, ext = os.path.splitext(ftp_path)
+                if not os.path.exists(ftp_path_user):
+                    os.makedirs(ftp_path_user)
 
-            if ext == '.kml':
-                f_name_1 = file_name.split('.kml')[0]
-                command_line_copy_kml = 'cp {0} {1}'.format(ftp_path, kml_path)
-                proc_copy_kml = Popen(command_line_copy_kml, shell=True)
-                proc_copy_kml.wait()
+                if not os.path.exists(kml_path_user):
+                    os.makedirs(kml_path_user)
 
-                if not CustomerPolygons.objects.filter(name=f_name_1, user=request.user,
-                                data_set=dataset, kml_name=file_name).exists():
-                    CustomerPolygons.objects.create(
-                        name=f_name_1,
-                        user=request.user,
-                        data_set=dataset,
-                        kml_name=file_name,
-                        kml_path=kml_path,
-                        kml_url=absolute_kml_url
-                    )
-                elif CustomerPolygons.objects.filter(name=f_name_1, user=request.user,
-                                data_set=dataset, kml_name=file_name).exists():
-                    CustomerPolygons.objects.filter(name=f_name_1, user=request.user,
-                                data_set=dataset, kml_name=file_name).update(
-                                    kml_path=kml_path,
-                                    kml_url=absolute_kml_url
+                if os.path.exists(path_test_data):
+                    os.remove(path_test_data)
+                
+                handle_uploaded_file(file_obj, path_test_data)
+
+                # DataPolygons.objects.filter(user=request.user, data_set=dataset,
+                #         customer_polygons__name=fl).delete()
+
+                CustomerPolygons.objects.filter(user=request.user,
+                        name=fl).delete()
+
+                # with open(ftp_path, 'wb+') as destination:
+                #     for chunk in file_obj.chunks():
+                #         ch = chunk
+                #         destination.write(chunk)
+
+                # if DataPolygons.objects.filter(user=request.user, data_set=dataset,
+                #         customer_polygons__name=fl).exists():
+                #     DataPolygons.objects.filter(user=request.user, data_set=dataset,
+                #         customer_polygons__name=fl).delete()
+
+                if ext == '.kmz':
+                    zip_file = '{0}.zip'.format(fl)
+                    new_kml_file = '{0}.kml'.format(fl)
+                    path_zip_file = os.path.join(ftp_path_user, zip_file)
+                    path_doc_kml = os.path.join(ftp_path_user, 'doc.kml')
+                    path_new_kml = os.path.join(ftp_path_user, new_kml_file)
+
+                    command_copy_to_zip = 'cp {0} {1}'.format(path_test_data, path_zip_file)
+                    proc_copy_kml = Popen(command_copy_to_zip, shell=True)
+                    proc_copy_kml.wait()
+
+                    zip_create = zipfile.ZipFile(path_zip_file)  
+                    zip_create.extractall(ftp_path_user)
+
+                    os.rename(path_doc_kml, path_new_kml)
+                    os.remove(path_zip_file)
+                    os.remove(path_test_data)
+
+                    # copy new kml file to dataset
+                    kml_url = os.path.join(absolute_kml_url, new_kml_file)
+                    new_path = os.path.join(kml_path_user, new_kml_file)
+                    doc_kml, error = copy_file_kml(path_new_kml, new_path)
+
+                    if error:
+                        data = {
+                            'file_name': new_kml_file,
+                            'status': status.HTTP_400_BAD_REQUEST,
+                            'error KMZ': error
+                        }
+
+                        return Response(data)
+
+                    try:
+                        count_color = get_count_color()
+                        upload_file = new_kml_file
+                        calculation_aoi = is_calculation_aoi(doc_kml)
+                        info_window = get_info_window(doc_kml, fl, path_new_kml)
+                    except Exception, e:
+                        data = {
+                            'file_name': new_kml_file,
+                            'status': status.HTTP_400_BAD_REQUEST,
+                            'error KMZ': e
+                        }
+
+                        return Response(data)
+
+                    load_aoi = addPolygonToDB(
+                                    fl, new_kml_file, request.user,
+                                    new_path, kml_url,
+                                    dataset, text_kml=info_window
                                 )
-            
-            data = {
-                'file_name': file_obj.name,
-                'status': status.HTTP_201_CREATED,
-            }
 
-            return Response(data)
+                if ext == '.kml':
+                    kml_url = os.path.join(absolute_kml_url, file_name)
+                    kml_path_file = os.path.join(kml_path_user, file_name)
+                    doc_kml, error = copy_file_kml(path_test_data, kml_path_file)
+
+                    if error:
+                        data = {
+                            'file_name': file_name,
+                            'status': status.HTTP_400_BAD_REQUEST,
+                            'error KML': error
+                        }
+
+                        return Response(data)
+
+                    if not error:
+                        count_color = get_count_color()
+                        upload_file = file_name
+                        calculation_aoi = is_calculation_aoi(doc_kml)
+                        info_window = get_info_window(doc_kml, fl, path_test_data)
+
+                    load_aoi = addPolygonToDB(fl, file_name, request.user,
+                                    kml_path_file, kml_url,
+                                    dataset, text_kml=info_window
+                                )
+            except Exception, e:
+                data = {
+                    'file_name': file_name,
+                    'status': status.HTTP_400_BAD_REQUEST,
+                    'error': e
+                }
+
+                return Response(data)
+        
+        # data = {
+        #     'file_name': file_obj.name,
+        #     'status': status.HTTP_201_CREATED,
+        #     
+        # }
+        
+        data = {
+            'file_name': file_name,
+            'fl': fl,
+            'EXT': ext,
+            'status': status.HTTP_201_CREATED,
+            'error': error
+        }
+
+        return Response(data)
 
 
 class UploadFileFtpView(APIView):
