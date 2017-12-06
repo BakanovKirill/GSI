@@ -93,8 +93,8 @@ class TimeSeriesResultsAdmin(admin.ModelAdmin):
                     'stat_code', 'result_date', 'value_of_time_series')
     search_fields = ['user', 'name', 'data_set', 'attribute', 'customer_polygons', 'result_year',
                     'stat_code', 'result_date']
-    list_filter = ('user', 'name', 'data_set', 'attribute', 'customer_polygons', 'result_year',
-                    'stat_code', 'result_date', 'value_of_time_series')
+    list_filter = ('user', 'data_set', 'customer_polygons', 'result_year',
+                    'stat_code', 'result_date')
 
 
 admin.site.register(Category, CategoryAdmin)
