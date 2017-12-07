@@ -293,6 +293,8 @@
                 var select_aoi = '{{ select_aoi }}';
 
                 
+                console.log('IMAGE URL: ', select_image);
+                // alert('IMAGE 2: '+select_image);
                 // alert('eLat_1: '+{{ eLat_1 }});
                 // alert('eLng_1: '+{{ eLng_1 }});
                 // alert('eLat_2: '+{{ eLat_2 }});
@@ -435,6 +437,9 @@
                     }
 
                     console.log('GOOGLE_MAP_ZOOM after: ', curent_zoom);
+
+                    console.log('GOOGLE_MAP CENTER: ', center_map);
+
 
                     console.log('GOOGLE_MAP eLat_1: ', {{ eLat_1 }});
                     console.log('GOOGLE_MAP eLng_1: ', {{ eLng_1 }});

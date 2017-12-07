@@ -436,7 +436,8 @@ class DataSetDetail(APIView):
         if request.auth:
             try:
                 queryset = DataSet.objects.get(pk=ds_id)
-                serializer = DataSetsSerializer(queryset)
+                # serializer = DataSetsSerializer(queryset)
+                serializer = DataSetSerializer(queryset)
                 data = serializer.data
             except DataSet.DoesNotExist:
                 return Response({'error': 'DataSet Does Not Exist'}, status=status.HTTP_400_BAD_REQUEST)
@@ -761,6 +762,7 @@ class UploadFileAoiView(APIView):
         # }
         
         data = {
+            'POST': request.GET,
             'file_name': file_name,
             'fl': fl,
             'EXT': ext,
