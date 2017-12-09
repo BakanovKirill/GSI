@@ -65,3 +65,53 @@ def getTsResultDirectory(dataset):
     # print '!!!!!!!!!!!!!!!!!!!! TS ========================= ', is_ts
 
     return dirs_list
+
+
+def getCountTs(dataset, shd):
+    # print '!!!!!!!!!!!!!!!!! SHD ===================== ', shd
+
+    is_ts = dataset.is_ts
+    count_ts = 0
+
+    path_cur_proj = dataset.results_directory
+    path_to_proj = os.path.join(PROJECTS_PATH, path_cur_proj)
+
+    # print '!!!!!!!!!!!!!!!!! path_to_proj ===================== ', path_to_proj
+
+    try:
+        if os.path.exists(path_to_proj):
+            pr_root, pr_dirs, pr_files = os.walk(path_to_proj).next()
+            pr_dirs.sort()
+
+            # print '!!!!!!!!!!!!!!!!! pr_dirs ===================== ', pr_dirs
+
+
+            for d in pr_dirs:
+                # print '!!!!!!!!!!!!!!!!! d ===================== ', d
+                # print '!!!!!!!!!!!!!!!!! IN SHD ===================== ', shd
+                # print '!!!!!!!!!!!!!!!!! d in shd ===================== ', d in shd
+                if d in shd:
+                    path_to_subdir = os.path.join(path_to_proj, d)
+                    sub_root, sub_dirs, sub_files = os.walk(path_to_subdir).next()
+                    sub_dirs.sort()
+
+                    # print '!!!!!!!!!!!!!!!!! path_to_subdir ===================== ', path_to_subdir
+
+                    for sd in sub_dirs:
+                        attr_dir = os.path.join(path_to_subdir, sd)
+                        attr_root, attr_dirs, attr_files = os.walk(attr_dir).next()
+                        attr_files.sort()
+
+                        # print '!!!!!!!!!!!!!!!!! attr_dir ===================== ', attr_dir
+
+                        for f in attr_files:
+                            fl, ext = os.path.splitext(f)
+
+                            if ext == '.tif':
+                                count_ts += 1
+    except Exception:
+        pass
+
+    # print '!!!!!!!!!!!!!!!!! getCountTs ===================== ', count_ts
+
+    return count_ts

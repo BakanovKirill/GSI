@@ -261,7 +261,7 @@ def getUploadListTifFiles(customer, dataset, *args):
     # attributes_reports = AttributesReport.objects.filter(
     #                         user=customer, data_set=dataset)
                             
-    # print '!!!!!!!!!!!!!!!!!!! attributes_tmp ====================== ', attributes_tmp
+    # print '!!!!!!!!!!!!!!!!!!! IS TS ====================== ', dataset.is_ts
 
     # print '!!!!!!!!!!!!!!!!!!! statistic ====================== ', statistic
     # print '!!!!!!!!!!!!!!!!!!! Attributes ====================== ', attributes
@@ -336,24 +336,26 @@ def getUploadListTifFiles(customer, dataset, *args):
             # attributes_reports = sorted(attributes_reports.keys())
 
             # print '!!!!!!!!!!!!!!!!!!! 2 attributes_reports ====================== ', attributes_reports
+            try:
+                for attr in attributes:
+                    attr_list = attr.split('_')
+                    select_shd = ShelfData.objects.get(id=attr_list[1])
+                    name_1 = select_shd.root_filename
+                    name_2 = dataset.results_directory.split('/')[0]
+                    tif_path = os.path.join(PROJECTS_PATH, dataset.results_directory, name_1)
 
-            for attr in attributes:
-                attr_list = attr.split('_')
-                select_shd = ShelfData.objects.get(id=attr_list[1])
-                name_1 = select_shd.root_filename
-                name_2 = dataset.results_directory.split('/')[0]
-                tif_path = os.path.join(PROJECTS_PATH, dataset.results_directory, name_1)
+                    # print '!!!!!!!!!!!!!!!!!!! TIF PATH ====================== ', tif_path
 
-                # print '!!!!!!!!!!!!!!!!!!! TIF PATH ====================== ', tif_path
+                    fl_tif = '{0}/{1}_{2}.{3}.tif'.format(tif_path, SUB_DIRECTORIES_REVERCE[statistic], name_1, name_2)
+                    new_fl_tif = '{0}$$${1}$$${2}$$$'.format(attr_list[1], select_shd.attribute_name, fl_tif)
+                    # str_data_db = '{0}$$${1}$$$'.format(attr_list[1], fl_tif)
 
-                fl_tif = '{0}/{1}_{2}.{3}.tif'.format(tif_path, SUB_DIRECTORIES_REVERCE[statistic], name_1, name_2)
-                new_fl_tif = '{0}$$${1}$$${2}$$$'.format(attr_list[1], select_shd.attribute_name, fl_tif)
-                # str_data_db = '{0}$$${1}$$$'.format(attr_list[1], fl_tif)
+                    # print '!!!!!!!!!!!!!!!!!!! TIF PATH NAME ====================== ', fl_tif
 
-                # print '!!!!!!!!!!!!!!!!!!! TIF PATH NAME ====================== ', fl_tif
-
-                list_files_tif.append(new_fl_tif)
-                # list_data_db.append(str_data_db)
+                    list_files_tif.append(new_fl_tif)
+                    # list_data_db.append(str_data_db)
+            except Exception, e:
+                print '!!!!!!!!!! ERROR ATTR ========================= ', e
 
     # print '!!!!!!!!!! FILE ========================= ', list_files_tif
     # print '!!!!!!!!!! DATA DB ========================= ', list_data_db
@@ -388,7 +390,8 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
     outer_coord, inner_coord = get_coord_aoi(doc_kml)
     list_file_tif = getUploadListTifFiles(customer, data_set, *args)
 
-    # print '!!!!!!!!!!!!!!! CREATE Outer Coord  ===================== ', outer_coord
+    print '!!!!!!!!!!!!!!! CREATE Outer Coord  ===================== ', outer_coord
+    print '!!!!!!!!!!!!!!! LIST TIF FILES  ===================== ', list_file_tif
 
     # all_coord = outer_coord + inner_coord
     kml_name ='{0} {1} AREA COORDINATE'.format(customer, data_set)
@@ -574,7 +577,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
                     total = '{0:,}'.format(float(nl[3])).replace(',', ',')
 
             if list_val:
-                print '!!!!!!!!!!!!!!!!! LIST VAL ======================== ', list_val
+                # print '!!!!!!!!!!!!!!!!! LIST VAL ======================== ', list_val
 
                 total_area_tmp = float(list_val[0])
                 units_per_ha = list_val[1]
@@ -582,7 +585,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
                 len_list_val = len(list_val)
 
                 for n in xrange(3, len_list_val, 3):
-                    print '!!!!!!!!!!!!!!! list_val[n] =========================== ', list_val[n]
+                    # print '!!!!!!!!!!!!!!! list_val[n] =========================== ', list_val[n]
 
                     # if (n+3) < len_list_val:
                     total_area_tmp -= float(list_val[n])

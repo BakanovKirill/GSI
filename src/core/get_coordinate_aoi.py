@@ -45,8 +45,8 @@ def get_coord_aoi(doc):
     if error:
         inner_coord, error = get_coord_placemark_polygon_innerboundaryIs(doc)
 
-    # print '!!!!!!!!!!!!!!!! TMP outer_coord ======================== ', outer_coord
-    # print '!!!!!!!!!!!!!!!! TMP inner_coord ======================== ', inner_coord
+    print '!!!!!!!!!!!!!!!! TMP outer_coord ======================== ', outer_coord
+    print '!!!!!!!!!!!!!!!! TMP inner_coord ======================== ', inner_coord
 
     return outer_coord, inner_coord
 

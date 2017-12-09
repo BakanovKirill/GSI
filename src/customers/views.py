@@ -63,7 +63,7 @@ from core.editor_shapefiles import (get_count_color, copy_file_kml, get_data_kml
                                     validation_kml, is_calculation_aoi, get_info_window,
                                     create_new_calculations_aoi, createUploadTimeSeriesResults)
 from core.utils import handle_uploaded_file, get_files_dirs, get_list_lutfiles
-from core.functions_customer import getResultDirectory, getTsResultDirectory
+from core.functions_customer import getResultDirectory, getTsResultDirectory, getCountTs
 from gsi.settings import (BASE_DIR, GOOGLE_MAP_ZOOM, MEDIA_ROOT,
                         TMP_PATH, DAFAULT_LAT, DAFAULT_LON, PNG_DIRECTORY, PNG_PATH,
                         PROJECTS_PATH, KML_DIRECTORY, KML_PATH, ATTRIBUTES_NAME, FTP_PATH,
@@ -1610,69 +1610,69 @@ def getAttributeUnits(user, show_file):
     return attribute_name, units
 
 
-def getResultDirectory(dataset, shelfdata):
-    dirs_list = []
-    # is_ts = dataset.is_ts
+# def getResultDirectory(dataset, shelfdata):
+#     dirs_list = []
+#     # is_ts = dataset.is_ts
 
-    try:
-        project_directory = os.path.join(PROJECTS_PATH, dataset.results_directory)
-        root, dirs, files = os.walk(project_directory).next()
-        dirs.sort()
+#     try:
+#         project_directory = os.path.join(PROJECTS_PATH, dataset.results_directory)
+#         root, dirs, files = os.walk(project_directory).next()
+#         dirs.sort()
 
-        for sd in shelfdata:
-            if str(sd.root_filename) in dirs:
-                dirs_list.append(sd)
+#         for sd in shelfdata:
+#             if str(sd.root_filename) in dirs:
+#                 dirs_list.append(sd)
 
-        # if 'TS_' in dataset.results_directory:
-        #     for dy in dirs:
-        #         dirs_list.append(dy)
-        #     is_ts = True
-        # else:
-        #     for sd in shelfdata:
-        #         if str(sd.root_filename) in dirs:
-        #             dirs_list.append(sd)
-    except Exception, e:
-        print '----->>>    Exception getResultDirectory ========================= ', e
-        pass
+#         # if 'TS_' in dataset.results_directory:
+#         #     for dy in dirs:
+#         #         dirs_list.append(dy)
+#         #     is_ts = True
+#         # else:
+#         #     for sd in shelfdata:
+#         #         if str(sd.root_filename) in dirs:
+#         #             dirs_list.append(sd)
+#     except Exception, e:
+#         print '----->>>    Exception getResultDirectory ========================= ', e
+#         pass
 
-    # print '!!!!!!!!!!!!!!!!!!!! DIRS LIST ========================= ', dirs_list
-    # print '!!!!!!!!!!!!!!!!!!!! TS ========================= ', is_ts
+#     # print '!!!!!!!!!!!!!!!!!!!! DIRS LIST ========================= ', dirs_list
+#     # print '!!!!!!!!!!!!!!!!!!!! TS ========================= ', is_ts
 
-    return dirs_list
+#     return dirs_list
 
 
-def getTsResultDirectory(dataset):
-    dirs_list = []
-    shelf_data = dataset.shelf_data
+# def getTsResultDirectory(dataset):
+#     dirs_list = []
+#     shelf_data = dataset.shelf_data
 
-    try:
-        project_directory = os.path.join(PROJECTS_PATH, dataset.results_directory)
-        root, dirs, files = os.walk(project_directory).next()
-        dirs.sort()
+#     try:
+#         project_directory = os.path.join(PROJECTS_PATH, dataset.results_directory)
+#         root, dirs, files = os.walk(project_directory).next()
+#         dirs.sort()
 
-        # print '!!!!!!!!!!!! project_directory ======================= ', project_directory
-        # print '!!!!!!!!!!!! DIRS ======================= ', dirs
+#         # print '!!!!!!!!!!!! project_directory ======================= ', project_directory
+#         # print '!!!!!!!!!!!! DIRS ======================= ', dirs
 
-        for d in dirs:
-            name = '{0} {1}'.format(shelf_data, d)
-            dirs_list.append(name)
+#         for d in dirs:
+#             name = '{0} {1}'.format(shelf_data, d)
+#             dirs_list.append(name)
 
-        # if 'TS_' in dataset.results_directory:
-        #     for dy in dirs:
-        #         dirs_list.append(dy)
-        #     is_ts = True
-        # else:
-        #     for sd in shelfdata:
-        #         if str(sd.root_filename) in dirs:
-        #             dirs_list.append(sd)
-    except Exception, e:
-        print '----->>>    Exception getTsResultDirectory ========================= ', e
-        pass
+#         # if 'TS_' in dataset.results_directory:
+#         #     for dy in dirs:
+#         #         dirs_list.append(dy)
+#         #     is_ts = True
+#         # else:
+#         #     for sd in shelfdata:
+#         #         if str(sd.root_filename) in dirs:
+#         #             dirs_list.append(sd)
+#     except Exception, e:
+#         print '----->>>    Exception getTsResultDirectory ========================= ', e
+#         pass
 
-    # print '!!!!!!!!!!!!!!!!!!!! DIRS LIST ========================= ', dirs_list
-    # print '!!!!!!!!!!!!!!!!!!!! TS ========================= ', is_ts
+#     # print '!!!!!!!!!!!!!!!!!!!! DIRS LIST ========================= ', dirs_list
+#     # print '!!!!!!!!!!!!!!!!!!!! TS ========================= ', is_ts
 
-    return dirs_list
+#     return dirs_list
 
 
 def getDataSet(ds_id, data_set):
@@ -1875,54 +1875,54 @@ def createTimeSeriesResults(aoi, file_in, file_out):
                                 pass
 
 
-def getCountTs(dataset, shd):
-    # print '!!!!!!!!!!!!!!!!! SHD ===================== ', shd
+# def getCountTs(dataset, shd):
+#     # print '!!!!!!!!!!!!!!!!! SHD ===================== ', shd
 
-    is_ts = dataset.is_ts
-    count_ts = 0
+#     is_ts = dataset.is_ts
+#     count_ts = 0
 
-    path_cur_proj = dataset.results_directory
-    path_to_proj = os.path.join(PROJECTS_PATH, path_cur_proj)
+#     path_cur_proj = dataset.results_directory
+#     path_to_proj = os.path.join(PROJECTS_PATH, path_cur_proj)
 
-    # print '!!!!!!!!!!!!!!!!! path_to_proj ===================== ', path_to_proj
+#     # print '!!!!!!!!!!!!!!!!! path_to_proj ===================== ', path_to_proj
 
-    try:
-        if os.path.exists(path_to_proj):
-            pr_root, pr_dirs, pr_files = os.walk(path_to_proj).next()
-            pr_dirs.sort()
+#     try:
+#         if os.path.exists(path_to_proj):
+#             pr_root, pr_dirs, pr_files = os.walk(path_to_proj).next()
+#             pr_dirs.sort()
 
-            # print '!!!!!!!!!!!!!!!!! pr_dirs ===================== ', pr_dirs
+#             # print '!!!!!!!!!!!!!!!!! pr_dirs ===================== ', pr_dirs
 
 
-            for d in pr_dirs:
-                # print '!!!!!!!!!!!!!!!!! d ===================== ', d
-                # print '!!!!!!!!!!!!!!!!! IN SHD ===================== ', shd
-                # print '!!!!!!!!!!!!!!!!! d in shd ===================== ', d in shd
-                if d in shd:
-                    path_to_subdir = os.path.join(path_to_proj, d)
-                    sub_root, sub_dirs, sub_files = os.walk(path_to_subdir).next()
-                    sub_dirs.sort()
+#             for d in pr_dirs:
+#                 # print '!!!!!!!!!!!!!!!!! d ===================== ', d
+#                 # print '!!!!!!!!!!!!!!!!! IN SHD ===================== ', shd
+#                 # print '!!!!!!!!!!!!!!!!! d in shd ===================== ', d in shd
+#                 if d in shd:
+#                     path_to_subdir = os.path.join(path_to_proj, d)
+#                     sub_root, sub_dirs, sub_files = os.walk(path_to_subdir).next()
+#                     sub_dirs.sort()
 
-                    # print '!!!!!!!!!!!!!!!!! path_to_subdir ===================== ', path_to_subdir
+#                     # print '!!!!!!!!!!!!!!!!! path_to_subdir ===================== ', path_to_subdir
 
-                    for sd in sub_dirs:
-                        attr_dir = os.path.join(path_to_subdir, sd)
-                        attr_root, attr_dirs, attr_files = os.walk(attr_dir).next()
-                        attr_files.sort()
+#                     for sd in sub_dirs:
+#                         attr_dir = os.path.join(path_to_subdir, sd)
+#                         attr_root, attr_dirs, attr_files = os.walk(attr_dir).next()
+#                         attr_files.sort()
 
-                        # print '!!!!!!!!!!!!!!!!! attr_dir ===================== ', attr_dir
+#                         # print '!!!!!!!!!!!!!!!!! attr_dir ===================== ', attr_dir
 
-                        for f in attr_files:
-                            fl, ext = os.path.splitext(f)
+#                         for f in attr_files:
+#                             fl, ext = os.path.splitext(f)
 
-                            if ext == '.tif':
-                                count_ts += 1
-    except Exception:
-        pass
+#                             if ext == '.tif':
+#                                 count_ts += 1
+#     except Exception:
+#         pass
 
-    # print '!!!!!!!!!!!!!!!!! getCountTs ===================== ', count_ts
+#     # print '!!!!!!!!!!!!!!!!! getCountTs ===================== ', count_ts
 
-    return count_ts
+#     return count_ts
 
 
 # def get_count_color():
@@ -4453,9 +4453,11 @@ def files_lister(request):
                 select_attr = []
                 upload_data = data_post.lists()
 
+                # print '!!!!!!!!!! UPLOAD DATA ================== ', upload_data
+
                 for item in upload_data:
                     # print '!!!!!!!!!! item 0 ================== ', item[0]
-                    # print '!!!!!!!!!! item 1 ================== ', item[1]
+                    # print '!!!!!!!!!! ITEM 1 ================== ', item[1]
 
                     if 'upload-file' in item:
                         upload_fl = item[1][0]
@@ -4464,10 +4466,11 @@ def files_lister(request):
                         select_stat = item[1][0]
 
                     if 'select-attr' in item:
-                        tmp_list = item[1]
+                        select_attr = item[1]
+                        # tmp_list = item[1]
 
-                        for n in tmp_list:
-                            select_attr.append(n.split('_')[0])
+                        # for n in tmp_list:
+                        #     select_attr.append(n.split('_')[0])
 
                 # print '!!!!!!!!!!!!!!!! ATTR LIST ============================ ', select_attr
 
