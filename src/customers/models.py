@@ -297,3 +297,26 @@ class TimeSeriesResults(models.Model):
 
     def __unicode__(self):
         return u"{0}".format(self.name)
+
+
+class Reports(models.Model):
+    name = models.CharField(max_length=250)
+    user = models.ForeignKey(User, verbose_name='User',
+                related_name='report_user',
+                on_delete=models.CASCADE
+            )
+    dataset = models.ForeignKey(
+                    DataSet,
+                    verbose_name='DataSet',
+                    related_name='report_dataset',
+                    on_delete=models.CASCADE
+                )
+    shelfdata = models.ForeignKey(
+                    ShelfData,
+                    verbose_name='ShelfData',
+                    related_name='report_shelfdata',
+                    on_delete=models.CASCADE
+                )
+
+    def __unicode__(self):
+        return u"{0}".format(self.name)

@@ -63,6 +63,7 @@ from core.editor_shapefiles import (get_count_color, copy_file_kml, get_data_kml
                                     validation_kml, is_calculation_aoi, get_info_window,
                                     create_new_calculations_aoi, createUploadTimeSeriesResults)
 from core.utils import handle_uploaded_file, get_files_dirs, get_list_lutfiles
+from core.functions_customer import getResultDirectory, getTsResultDirectory
 from gsi.settings import (BASE_DIR, GOOGLE_MAP_ZOOM, MEDIA_ROOT,
                         TMP_PATH, DAFAULT_LAT, DAFAULT_LON, PNG_DIRECTORY, PNG_PATH,
                         PROJECTS_PATH, KML_DIRECTORY, KML_PATH, ATTRIBUTES_NAME, FTP_PATH,

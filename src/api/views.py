@@ -14,6 +14,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.http import Http404
 
 from django.core.files import File
+from django.contrib.auth.models import User
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -25,8 +26,6 @@ from rest_framework.authtoken.models import Token
 from rest_framework.parsers import JSONParser, FileUploadParser, FormParser, MultiPartParser
 from rest_framework import exceptions
 from rest_framework.pagination import PageNumberPagination
-
-from django.contrib.auth.models import User
 from rest_framework import generics, viewsets
 
 from core.utils import (validate_status, write_log, get_path_folder_run, execute_fe_command, handle_uploaded_file)
@@ -34,10 +33,11 @@ from gsi.models import Run, RunStep, CardSequence, OrderedCardItem, SubCardItem
 from gsi.settings import EXECUTE_FE_COMMAND, KML_PATH, FTP_PATH, KML_DIRECTORY
 from cards.models import CardItem
 from customers.models import (CustomerPolygons, DataTerraserver, DataSet, CustomerAccess,
-                                DataPolygons, CustomerInfoPanel, TimeSeriesResults)
+                                DataPolygons, CustomerInfoPanel, TimeSeriesResults, Reports,
+                                ShelfData)
 from api.serializers import (CustomerPolygonsSerializer, CustomerPolygonSerializer, 
                             DataPolygonsSerializer, DataSetsSerializer, DataSetSerializer,
-                            TimeSeriesResultSerializer)
+                            TimeSeriesResultSerializer, ReportsSerializer)
 from api.pagination import CustomPagination
 from core.get_coordinate_aoi import (get_coord_aoi, get_coord_document_placemark_polygon_outerboundaryIs,
                                     get_coord_document_placemark_multigeometry_polygon_outerboundaryIs,
@@ -50,6 +50,7 @@ from core.editor_shapefiles import (get_count_color, copy_file_kml, get_data_kml
                                     validation_kml, is_calculation_aoi, get_info_window,
                                     create_new_calculations_aoi, createUploadTimeSeriesResults,
                                     addPolygonToDB)
+from core.functions_customer import getResultDirectory, getTsResultDirectory
 
 
 # in_path = '/home/grigoriy/test/TMP/1_test.txt'
@@ -57,6 +58,8 @@ from core.editor_shapefiles import (get_count_color, copy_file_kml, get_data_kml
 # command_line = 'cp {0} {1}'.format(in_path, out_path)
 # proc = Popen(command_line, shell=True)
 # proc.wait()
+# 
+# generics.ListAPIView
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -377,20 +380,18 @@ class DataSetList(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         queryset = DataSet.objects.none()
-        data = {'auth': 'Need YOUR ACCESS TOKEN'}
-        url_status = status.HTTP_400_BAD_REQUEST
+        # data = {'auth': 'Need YOUR ACCESS TOKEN'}
+        # url_status = status.HTTP_400_BAD_REQUEST
         # queryset = ['Need YOUR ACCESS TOKEN']
 
-        # if self.request.auth:
-        try:
-            customer_access = CustomerAccess.objects.get(user=self.request.user)
-            queryset = DataSet.objects.filter(customer_access=customer_access).order_by('id')
-        except Exception:
-            pass
+        if self.request.auth:
+            try:
+                customer_access = CustomerAccess.objects.get(user=self.request.user)
+                queryset = DataSet.objects.filter(customer_access=customer_access).order_by('id')
+            except Exception:
+                pass
 
         return queryset
-
-        # return Response(data, status=url_status)
 
 
 # class DataSetList(APIView):
@@ -415,7 +416,7 @@ class DataSetList(viewsets.ReadOnlyModelViewSet):
 #         customer_access = CustomerAccess.objects.get(user=request.user)
 #         queryset = DataSet.objects.filter(customer_access=customer_access).order_by('id')
 #         pagination_class = PageNumberPagination()
-#         serializer = DataSetsSerializer(queryset, many=True)
+#         serializer = DataSetSerializer(queryset, many=True)
 #         data = serializer.data
 
 #         return Response(data)
@@ -604,6 +605,111 @@ class TimeSeriesNameDetail(APIView):
                 print '!!!!!!!!!!!!! ERROR TimeSeriesResults ================================ ', e
                 return Response({'error': 'Invalid TimeSeries Name'},
                                 status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(data)
+
+
+class ReportsList(viewsets.ReadOnlyModelViewSet):
+    """
+    ReportsList List
+    """
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    # authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ReportsSerializer
+
+    def get_attributes(self, user):
+        list_dirs = []
+        shelfdata = ShelfData.objects.all()
+        customer_access = CustomerAccess.objects.get(
+                            user=self.request.user)
+        datasets = DataSet.objects.filter(
+                    customer_access=customer_access).order_by('id')
+        Reports.objects.filter(user=user).delete()
+
+        for ds in datasets:
+            if ds.is_ts:
+                list_dirs = getTsResultDirectory(ds)
+
+                for ld in list_dirs:
+                    Reports.objects.create(
+                        name=ld,
+                        user=user,
+                        dataset=ds,
+                        shelfdata=ds.shelf_data)
+            else:
+                list_dirs = getResultDirectory(ds, shelfdata)
+
+                for ld in list_dirs:
+                    Reports.objects.create(
+                        name=ld.attribute_name,
+                        user=user,
+                        dataset=ds,
+                        shelfdata=ld)
+
+    def get_queryset(self):
+        # queryset = {'auth': 'Need YOUR ACCESS TOKEN'}
+        queryset = Reports.objects.none()
+        self.get_attributes(self.request.user)
+
+        if self.request.auth:
+            queryset = Reports.objects.filter(user=self.request.user).order_by('id')
+
+        return queryset
+
+
+class ReportsDetail(APIView):
+    """
+    Retrieve a ReportsDetail instance.
+    """
+
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    # authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def get_attributes(self, user):
+        list_dirs = []
+        shelfdata = ShelfData.objects.all()
+        customer_access = CustomerAccess.objects.get(
+                            user=self.request.user)
+        datasets = DataSet.objects.filter(
+                    customer_access=customer_access).order_by('id')
+        Reports.objects.filter(user=user).delete()
+
+        for ds in datasets:
+            if ds.is_ts:
+                list_dirs = getTsResultDirectory(ds)
+
+                for ld in list_dirs:
+                    Reports.objects.create(
+                        name=ld,
+                        user=user,
+                        dataset=ds,
+                        shelfdata=ds.shelf_data)
+            else:
+                list_dirs = getResultDirectory(ds, shelfdata)
+
+                for ld in list_dirs:
+                    Reports.objects.create(
+                        name=ld.attribute_name,
+                        user=user,
+                        dataset=ds,
+                        shelfdata=ld)
+
+    def get(self, request, ds_id, format=None):
+        data = {'auth': 'Need YOUR ACCESS TOKEN'}
+        self.get_attributes(request.user)
+
+        # if request.auth:
+        try:
+            dataset = DataSet.objects.get(pk=ds_id)
+            queryset = Reports.objects.filter(
+                        user=request.user,
+                        dataset=dataset).order_by('id')
+            serializer = ReportsSerializer(queryset, many=True)
+            data = serializer.data
+        except Exception, e:
+            return Response({'error': e}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(data)
 

@@ -2,7 +2,8 @@ from django.contrib import admin
 
 from customers.models import (Category, ShelfData, DataSet, CustomerAccess,
                             CustomerInfoPanel, CustomerPolygons, DataTerraserver,
-                            DataPolygons, AttributesReport, LutFiles, TimeSeriesResults)
+                            DataPolygons, AttributesReport, LutFiles, TimeSeriesResults,
+                            Reports)
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -11,9 +12,9 @@ class CategoryAdmin(admin.ModelAdmin):
 
 class ShelfDataAdmin(admin.ModelAdmin):
     list_display = ('category', 'attribute_name', 'root_filename',
-                    'units', 'scale', 'show_totals',)
-    search_fields = ['category', 'attribute_name', 'root_filename',]
-    list_filter = ('category', 'attribute_name', 'root_filename',)
+                    'lutfiles', 'units', 'scale', 'show_totals',)
+    search_fields = ['category', 'attribute_name', 'root_filename', 'lutfiles']
+    list_filter = ('category', 'attribute_name', 'root_filename', 'lutfiles')
 
 
 class DataSetAdmin(admin.ModelAdmin):
@@ -97,6 +98,12 @@ class TimeSeriesResultsAdmin(admin.ModelAdmin):
                     'stat_code', 'result_date')
 
 
+class ReportsAdmin(admin.ModelAdmin):
+    list_display = ('user', 'name', 'dataset', 'shelfdata')
+    search_fields = ['user', 'dataset', 'shelfdata', 'name']
+    list_filter = ('user', 'dataset', 'shelfdata', 'name')
+
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(ShelfData, ShelfDataAdmin)
 admin.site.register(DataSet, DataSetAdmin)
@@ -108,3 +115,6 @@ admin.site.register(DataPolygons, DataPolygonsAdmin)
 admin.site.register(AttributesReport, AttributesReportAdmin)
 admin.site.register(LutFiles, LutFilesAdmin)
 admin.site.register(TimeSeriesResults, TimeSeriesResultsAdmin)
+admin.site.register(Reports, ReportsAdmin)
+
+

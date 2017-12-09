@@ -2,13 +2,33 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 
 from customers.models import (CustomerPolygons, DataPolygons,
-                            DataSet, TimeSeriesResults, ShelfData)
+                            DataSet, TimeSeriesResults, ShelfData,
+                            Reports, ShelfData)
+# from api.models import Report
 
 
 # class UserSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = User
 #         fields = ('id', 'username', 'email')
+        
+
+class ShelfDataSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+    category = serializers.CharField(max_length=250)
+    attribute_name = serializers.CharField(max_length=250)
+    units = serializers.CharField(max_length=250)
+    scale = serializers.FloatField()
+    
+    class Meta:
+        model = CustomerPolygons
+        fields = (
+            'id',
+            'name',
+            'attribute_name',
+            'units',
+            'scale'
+        )
 
 
 class DataPolygonsSerializer(serializers.ModelSerializer):
@@ -132,5 +152,19 @@ class TimeSeriesResultSerializer(serializers.ModelSerializer):
             'result_date',
             'value_of_time_series'
         )
-        
-        
+    
+
+class ReportsSerializer(CustomerPolygonsSerializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField(max_length=250)
+    dataset = DataSetSerializer()
+    # shelfdata = serializers.CharField(max_length=250)
+    
+    class Meta:
+        model = Reports
+        fields = (
+            'id',
+            'name',
+            'dataset',
+            # 'shelfdata'
+        )
