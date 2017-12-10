@@ -30,7 +30,7 @@ from rest_framework import generics, viewsets
 
 from core.utils import (validate_status, write_log, get_path_folder_run, execute_fe_command, handle_uploaded_file)
 from gsi.models import Run, RunStep, CardSequence, OrderedCardItem, SubCardItem
-from gsi.settings import EXECUTE_FE_COMMAND, KML_PATH, FTP_PATH, KML_DIRECTORY
+from gsi.settings import EXECUTE_FE_COMMAND, KML_PATH, FTP_PATH, KML_DIRECTORY, REMAP_DIRECTORY, REMAP_PATH
 from cards.models import CardItem
 from customers.models import (CustomerPolygons, DataTerraserver, DataSet, CustomerAccess,
                                 DataPolygons, CustomerInfoPanel, TimeSeriesResults, Reports,
@@ -50,7 +50,8 @@ from core.editor_shapefiles import (get_count_color, copy_file_kml, get_data_kml
                                     validation_kml, is_calculation_aoi, get_info_window,
                                     create_new_calculations_aoi, createUploadTimeSeriesResults,
                                     addPolygonToDB)
-from core.functions_customer import getResultDirectory, getTsResultDirectory
+from core.functions_customer import (getResultDirectory, getTsResultDirectory,
+                                    getCountTs, createKml, addPolygonToDB)
 
 
 # in_path = '/home/grigoriy/test/TMP/1_test.txt'
@@ -728,21 +729,37 @@ class UploadFileAoiView(APIView):
         try:
             return DataSet.objects.get(pk=ds_id)
         except DataSet.DoesNotExist:
-            raise Http404
+            return 'Invalid Dataset ID'
 
     def post(self, request, ds_id, format=None):
         error = ''
+        file_name = None
+        reports = []
+        reports_names = []
+        statistic = 'Mean'
+        doc_kml = None
+        urls = []
         data = {'auth': 'Need YOUR ACCESS TOKEN'}
 
         if request.auth:
             try:
+                dataset = DataSet.objects.get(pk=ds_id)
+            except DataSet.DoesNotExist:
+                data = {
+                    'error': 'Invalid Dataset ID',
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data)
+
+            try:
                 file_obj = request.FILES['file']
-                dataset = self.get_object(ds_id)
+                
                 file_name = file_obj.name
                 fl, ext = os.path.splitext(file_name)
 
                 scheme = '{0}://'.format(request.scheme)
                 absolute_kml_url = os.path.join(scheme, request.get_host(), KML_DIRECTORY, request.user.username)
+                absolute_remap_url = os.path.join(scheme, request.get_host(), REMAP_DIRECTORY, request.user.username)
 
                 kml_path_user = os.path.join(KML_PATH, request.user.username)
                 ftp_path_user = os.path.join(FTP_PATH, request.user.username)
@@ -766,15 +783,42 @@ class UploadFileAoiView(APIView):
                 CustomerPolygons.objects.filter(user=request.user,
                         name=fl).delete()
 
-                # with open(ftp_path, 'wb+') as destination:
-                #     for chunk in file_obj.chunks():
-                #         ch = chunk
-                #         destination.write(chunk)
+                if 'reports' in request.GET:
+                    reports_list = request.GET['reports'].replace('%', ' ')
+                    reports_list = reports_list.split(',')
+                    reports_names = reports_list
+                    new_rep = ''
 
-                # if DataPolygons.objects.filter(user=request.user, data_set=dataset,
-                #         customer_polygons__name=fl).exists():
-                #     DataPolygons.objects.filter(user=request.user, data_set=dataset,
-                #         customer_polygons__name=fl).delete()
+                    for report in reports_list:
+                        if dataset.is_ts:
+                            rep_ts = report.split(' ')[:-1]
+                            rep_ts = (' ').join(rep_ts)
+
+                            if ShelfData.objects.filter(attribute_name=rep_ts).exists():
+                                new_rep = '{0}_'.format(report)
+                            else:
+                                data = {
+                                    'error': 'Attribute does not match selected ShelfData',
+                                    'status': status.HTTP_400_BAD_REQUEST,
+                                }
+
+                                return Response(data)
+                        else:
+                            if ShelfData.objects.filter(attribute_name=report).exists():
+                                shd_id = ShelfData.objects.filter(attribute_name=report)[0].id
+                                new_rep = '{0}_{1}'.format(report, shd_id)
+                            else:
+                                data = {
+                                    'error': 'Attribute does not match selected ShelfData',
+                                    'status': status.HTTP_400_BAD_REQUEST,
+                                }
+
+                                return Response(data)
+
+                        reports.append(new_rep)
+
+                if 'statistic' in request.GET:
+                    statistic = request.GET['statistic'].split(',')
 
                 if ext == '.kmz':
                     zip_file = '{0}.zip'.format(fl)
@@ -801,7 +845,7 @@ class UploadFileAoiView(APIView):
 
                     if error:
                         data = {
-                            'file_name': new_kml_file,
+                            'filename': new_kml_file,
                             'status': status.HTTP_400_BAD_REQUEST,
                             'error KMZ': error
                         }
@@ -815,7 +859,7 @@ class UploadFileAoiView(APIView):
                         info_window = get_info_window(doc_kml, fl, path_new_kml)
                     except Exception, e:
                         data = {
-                            'file_name': new_kml_file,
+                            'filename': new_kml_file,
                             'status': status.HTTP_400_BAD_REQUEST,
                             'error KMZ': e
                         }
@@ -835,7 +879,7 @@ class UploadFileAoiView(APIView):
 
                     if error:
                         data = {
-                            'file_name': file_name,
+                            'filename': file_name,
                             'status': status.HTTP_400_BAD_REQUEST,
                             'error KML': error
                         }
@@ -850,11 +894,86 @@ class UploadFileAoiView(APIView):
 
                     load_aoi = addPolygonToDB(fl, file_name, request.user,
                                     kml_path_file, kml_url,
-                                    dataset, text_kml=info_window
-                                )
+                                    dataset, text_kml=info_window)
+
+                # Calculations
+                if not error and file_name and reports:
+                    count_color = get_count_color()
+                    data_args = {
+                            'upload_file': file_name,
+                            'statistic': statistic,
+                            'attr': reports
+                        }
+                    new_info_window, list_attr, list_units,\
+                    list_value, list_total, list_total_area = create_new_calculations_aoi(
+                                                                request.user, doc_kml, dataset, data_args)
+                    area_name = fl
+                    outer_coord, inner_coord = get_coord_aoi(doc_kml)
+                    data_coord = {
+                        'outer_coord': outer_coord,
+                        'inner_coord': inner_coord
+                    }
+                    cur_polygon = createKml(request.user, area_name, new_info_window,
+                                            absolute_kml_url, dataset, count_color, data_coord)
+                    len_attr = len(reports)
+
+                    DataPolygons.objects.filter(user=request.user, data_set=dataset,
+                            customer_polygons=cur_polygon).delete()
+
+                    for n in xrange(len_attr):
+                        DataPolygons.objects.create(
+                            user=request.user,
+                            customer_polygons=cur_polygon,
+                            data_set=dataset,
+                            attribute=list_attr[n],
+                            statistic=statistic,
+                            value=list_value[n],
+                            units=list_units[n],
+                            total=list_total[n],
+                            total_area=list_total_area[n]+' ha'
+                        )
+
+                    path_kml = os.path.join(KML_PATH, request.user.username, file_name)
+                    command_line_copy_kml = 'cp {0} {1}'.format(path_kml, ftp_path_user)
+                    proc_copy_kml = Popen(command_line_copy_kml, shell=True)
+                    proc_copy_kml.wait()
+
+                    try:
+                        if dataset.is_ts:
+                            TimeSeriesResults.objects.filter(user=request.user, data_set=dataset,
+                                                            customer_polygons=cur_polygon).delete()
+                            createUploadTimeSeriesResults(request.user, cur_polygon, reports, dataset)
+                    except Exception, e:
+                        ###########   log ###############################################################
+                        # error_save_kml.write('ERROR GEO: {0}\n'.format(e))
+                        # error_save_kml.close()
+                        ############################################################################
+
+                        data = {
+                            'error': e,
+                            'status': status.HTTP_400_BAD_REQUEST,
+                            'message': 'Please add the GEO data to create Time Series.'
+                        }
+
+                        return Response(data)
+                        # return HttpResponseRedirect(u'%s?danger_message=%s' % (
+                        #             reverse('files_lister'),
+                        #             (u'Please add the GEO data to create Time Series.')))
+                
+
+                for n in reports_names:
+                    ds_name = dataset.name.replace(' ', '-')
+                    report_name = n.replace(' ', '-')
+                    file_name = '{0}_{1}_{2}.tif'.format(request.user, ds_name, report_name)
+                    absolute_tif_url = os.path.join(absolute_remap_url, file_name)
+                    user_remap_path = os.path.join(REMAP_PATH, request.user.username, file_name)
+
+                    if os.path.exists(user_remap_path):
+                        urls.append(absolute_tif_url)
+                    
             except Exception, e:
                 data = {
-                    'file_name': file_name,
+                    'filename': file_name,
                     'status': status.HTTP_400_BAD_REQUEST,
                     'error': e
                 }
@@ -866,14 +985,14 @@ class UploadFileAoiView(APIView):
         #     'status': status.HTTP_201_CREATED,
         #     
         # }
+
         
         data = {
-            'POST': request.GET,
-            'file_name': file_name,
-            'fl': fl,
-            'EXT': ext,
+            # 'POST': request.GET,
+            # 'REPORTS': reports,
+            'URLS': urls,
             'status': status.HTTP_201_CREATED,
-            'error': error
+            # 'error': error
         }
 
         return Response(data)

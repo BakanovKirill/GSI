@@ -364,8 +364,11 @@ SCRIPT_TIFPNG = os.path.join(BASE_DIR, "static/scripts_c/TifPng")
 # Script GetPolyInfo
 SCRIPT_GETPOLYINFO = os.path.join(BASE_DIR, "static/scripts_c/GetPolyInfo")
 
-# Script GetPolyInfo
+# Script MSize
 SCRIPT_MAXSIZE = os.path.join(BASE_DIR, "static/scripts_c/msize.sh")
+
+# Script Remap
+SCRIPT_REMAP = os.path.join(BASE_DIR, "static/scripts_c/Remap")
 
 # ATTRIBUTE_CONFIG
 ATTRIBUTE_CONFIG = ['ATTRIBUTE_CONFIG.txt']
@@ -381,6 +384,10 @@ TMP_PATH = os.path.join(BASE_DIR, TMP_DIRECTORY)
 # Legends dir
 LEGENDS_DIRECTORY = 'media/legends'
 LEGENDS_PATH = os.path.join(BASE_DIR, LEGENDS_DIRECTORY)
+
+# Remap TIF dir
+REMAP_DIRECTORY = 'media/remap_tif'
+REMAP_PATH = os.path.join(BASE_DIR, REMAP_DIRECTORY)
 
 # Attributes
 ATTRIBUTES_NAME = ['Total Area', 'Area total']

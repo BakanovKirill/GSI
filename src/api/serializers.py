@@ -24,7 +24,7 @@ class ShelfDataSerializer(serializers.ModelSerializer):
         model = CustomerPolygons
         fields = (
             'id',
-            'name',
+            'category',
             'attribute_name',
             'units',
             'scale'
@@ -158,7 +158,7 @@ class ReportsSerializer(CustomerPolygonsSerializer):
     id = serializers.IntegerField()
     name = serializers.CharField(max_length=250)
     dataset = DataSetSerializer()
-    # shelfdata = serializers.CharField(max_length=250)
+    shelfdata = ShelfDataSerializer()
     
     class Meta:
         model = Reports
@@ -166,5 +166,5 @@ class ReportsSerializer(CustomerPolygonsSerializer):
             'id',
             'name',
             'dataset',
-            # 'shelfdata'
+            'shelfdata'
         )

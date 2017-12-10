@@ -9,7 +9,8 @@ from random import randint
 import simplekml
 from simplekml import Kml
 
-from gsi.settings import COLOR_HEX_NAME, PROJECTS_PATH, TMP_PATH, SCRIPT_GETPOLYINFO
+from gsi.settings import (COLOR_HEX_NAME, PROJECTS_PATH, TMP_PATH,
+                        SCRIPT_GETPOLYINFO, SCRIPT_REMAP, REMAP_PATH)
 from core.get_coordinate_aoi import get_coord_aoi
 from customers.models import ShelfData, TimeSeriesResults, CustomerPolygons
 
@@ -242,7 +243,8 @@ def get_info_window(doc_kml, file_name, path_to_file):
 
 
 def getUploadListTifFiles(customer, dataset, *args):
-    # print '!!!!!!!!!!!!!!!!!!! args ====================== ', args
+    print '!!!!!!!!!!!!!!!!!!! ARGS ====================== ', args
+    print '!!!!!!!!!!!!!!!!!!! DATASET ====================== ', dataset
     list_files_tif = []
     # list_data_db = []
     # attributes_tmp = {}
@@ -261,10 +263,10 @@ def getUploadListTifFiles(customer, dataset, *args):
     # attributes_reports = AttributesReport.objects.filter(
     #                         user=customer, data_set=dataset)
                             
-    # print '!!!!!!!!!!!!!!!!!!! IS TS ====================== ', dataset.is_ts
+    print '!!!!!!!!!!!!!!!!!!! IS TS ====================== ', dataset.is_ts
 
     # print '!!!!!!!!!!!!!!!!!!! statistic ====================== ', statistic
-    # print '!!!!!!!!!!!!!!!!!!! Attributes ====================== ', attributes
+    print '!!!!!!!!!!!!!!!!!!! Attributes ====================== ', attributes
     # print '!!!!!!!!!!!!!!!!!!! attributes_reports ====================== ', attributes_reports
     # print '!!!!!!!!!!!!!!!!!!! upload_file ====================== ', upload_file
 
@@ -274,6 +276,8 @@ def getUploadListTifFiles(customer, dataset, *args):
             # attributes = attributes.sort()
             # attributes_reports = sorted(attributes_reports.keys())
             shelf_data = dataset.shelf_data
+
+            print '!!!!!!!!!!!!!!!!!!! SHD ====================== ', shelf_data
 
             # print '!!!!!!!!!!!!!!!!!!! 2 attributes_reports ====================== ', attributes_reports
 
@@ -285,7 +289,7 @@ def getUploadListTifFiles(customer, dataset, *args):
                 attr_list = attr.split('_')
                 project_directory = os.path.join(PROJECTS_PATH, dataset.results_directory)
 
-                # print '!!!!!!!!!! attr_list ========================= ', attr_list
+                print '!!!!!!!!!! ATTR LIST ========================= ', attr_list
                 # print '!!!!!!!!!! sub_dir_path ========================= ', sub_dir_path
                 # print '!!!!!!!!!! project_directory ========================= ', project_directory
 
@@ -294,6 +298,7 @@ def getUploadListTifFiles(customer, dataset, *args):
                         pr_root, pr_dirs, pr_files = os.walk(project_directory).next()
                         pr_dirs.sort()
 
+                        print '!!!!!!!!!! DIRS ========================= ', pr_dirs
                         # print '!!!!!!!!!! project_directory ========================= ', project_directory
                         # print '!!!!!!!!!! attr.attribute ========================= ', attr.attribute
 
@@ -302,7 +307,7 @@ def getUploadListTifFiles(customer, dataset, *args):
                                 # attribute_name = attr_list[0].split(' ')[:-1]
                                 # attribute_name = str((' ').join(attribute_name))
 
-                                # print '!!!!!!!!!! attr.attribute ========================= ', attribute_name
+                                print '!!!!!!!!!! PD ========================= ', pd
                                 # print '!!!!!!!!!! attr.attribute TYPE ========================= ', type(attribute_name)
 
 
@@ -364,13 +369,14 @@ def getUploadListTifFiles(customer, dataset, *args):
 
 
 def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
-    # print '!!!!!!!!!! create_new_calculations_aoi ========================= '
+    # print '!!!!!!!!!! create_new_calculations_aoi =================== ', customer
 
     info_window = ''
     attr_name = ''
     total_area = ''
     units_per_ha = ''
     total = ''
+    # count_tif = 0
     list_value = []
     list_attr = []
     list_units = []
@@ -379,7 +385,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
 
     list_data_kml = []
 
-    # print '!!!!!!!!!!!!!!! ARGS  ===================== ', args
+    # print '!!!!!!!!!!!!!!! ARGS create_new_calculations_aoi  ===================== ', args
 
     is_ts = data_set.is_ts
     statistic = args[0]['statistic']
@@ -390,8 +396,8 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
     outer_coord, inner_coord = get_coord_aoi(doc_kml)
     list_file_tif = getUploadListTifFiles(customer, data_set, *args)
 
-    print '!!!!!!!!!!!!!!! CREATE Outer Coord  ===================== ', outer_coord
-    print '!!!!!!!!!!!!!!! LIST TIF FILES  ===================== ', list_file_tif
+    # print '!!!!!!!!!!!!!!! CREATE Outer Coord  ===================== ', outer_coord
+    # print '!!!!!!!!!!!!!!! LIST TIF FILES  ===================== ', list_file_tif
 
     # all_coord = outer_coord + inner_coord
     kml_name ='{0} {1} AREA COORDINATE'.format(customer, data_set)
@@ -404,8 +410,11 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
     in_new_calculations_coord = str(customer) + '_in_new_calculations_coord_tmp.kml'
     out_new_calculations_coord = str(customer) + '_out_new_calculations_coord_tmp.txt'
     
+    
     file_path_in_new_calculations_coord = os.path.join(TMP_PATH, in_new_calculations_coord)
     file_path_out_new_calculations_coord = os.path.join(TMP_PATH, out_new_calculations_coord)
+
+    
 
     # print '!!!!!!!!!!!!!!! file_path_in_new_calculations_coord  ===================== ', file_path_in_new_calculations_coord
     # print '!!!!!!!!!!!!!!! file_path_out_new_calculations_coord  ===================== ', file_path_out_new_calculations_coord
@@ -480,7 +489,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
         attr_name = line_list[1]
         shd_attr_name = attr_name
 
-        # print '!!!!!!!!!!!!! line_list  =========================== ', line_list
+        print '!!!!!!!!!!!!! line_list  =========================== ', line_list[2]
         # print '!!!!!!!!!!!!! select_shd  =========================== ', select_shd
         # print '!!!!!!!!!!!!! attr_name  =========================== ', attr_name
         # print '!!!!!!!!!!!!! shd_attr_name  =========================== ', shd_attr_name
@@ -501,6 +510,23 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
         # print '!!! FILE TIF 0  =========================== ', line_list[0]
         # print '!!! FILE TIF 1 =========================== ', line_list[1]
 
+        # out_new_calculations_tif = str(customer) + '_out_new_calculations_tif_tmp'
+        new_attr_name = attr_name.replace(' ', '-')
+        ds_name = str(data_set.name)
+        ds_name = ds_name.replace(' ', '-')
+        out_new_calculations_tif = '{0}_{1}_{2}'.format(customer, ds_name, new_attr_name)
+
+        # print '!!! REMAP FILE  =========================== ', out_new_calculations_tif
+
+        file_path_out_new_calculations_tif = os.path.join(REMAP_PATH, str(customer), out_new_calculations_tif)
+
+        # print '!!! REMAP PATH  =========================== ', file_path_out_new_calculations_tif
+
+        path_remap_tif = os.path.join(REMAP_PATH, str(customer))
+
+        if not os.path.exists(path_remap_tif):
+            os.makedirs(path_remap_tif)
+
         command_line = '{0} {1} {2} {3}'.format(
                             SCRIPT_GETPOLYINFO,
                             # file_tif,
@@ -509,10 +535,25 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
                             file_path_out_new_calculations_coord
                         )
 
+        command_line_remap = '{0} {1} {2} {3}'.format(
+                            SCRIPT_REMAP,
+                            # SCRIPT_GETPOLYINFO,
+                            # file_tif,
+                            line_list[2],
+                            file_path_in_new_calculations_coord,
+                            file_path_out_new_calculations_tif,
+                            10
+                        )
+
         # print '!!! COMMAND LINE =========================== ', command_line
         # print '!!! FILE =========================== ', f_tif
         proc_script = Popen(command_line, shell=True)
         proc_script.wait()
+
+        proc_script_remap = Popen(command_line_remap, shell=True)
+        proc_script_remap.wait()
+
+        # count_tif += 1
 
         # print '!!! COMMAND LINE =========================== ', command_line
 
@@ -743,7 +784,13 @@ def createUploadTimeSeriesResults(customer, aoi, attributes, data_set):
                         
                         try:
                             ts_day = f.split(result_year+'_')[1]
+
+                            # print '!!!!!!! 1 DAY  ========================== ', ts_day
+
                             ts_day = ts_day.split('_')[0]
+
+                            # print '!!!!!!! 2 DAY  ========================== ', ts_day
+
                             ts_date = date(int(result_year), 1, 1)
                             ts_delta = timedelta(days=int(ts_day)-1)
                             result_date = ts_date + ts_delta
@@ -787,7 +834,7 @@ def createUploadTimeSeriesResults(customer, aoi, attributes, data_set):
 
                             # print '!!!!!!!!!! DAY ========================= ', ts_day
                             # print '!!!!!!!!!! DATE ========================= ', result_date
-                        except IndexError, e:
+                        except Exception, e:
                             print '!!!!!!!!!!!!!!! ERROR INDEX ==================== ', e
                             pass
 
