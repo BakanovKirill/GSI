@@ -385,6 +385,7 @@ TMP_PATH = os.path.join(BASE_DIR, TMP_DIRECTORY)
 LEGENDS_DIRECTORY = 'media/legends'
 LEGENDS_PATH = os.path.join(BASE_DIR, LEGENDS_DIRECTORY)
 
+
 # Remap TIF dir
 REMAP_DIRECTORY = 'media/remap_tif'
 REMAP_PATH = os.path.join(BASE_DIR, REMAP_DIRECTORY)

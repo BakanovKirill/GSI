@@ -30,7 +30,7 @@ from rest_framework import generics, viewsets
 
 from core.utils import (validate_status, write_log, get_path_folder_run, execute_fe_command, handle_uploaded_file)
 from gsi.models import Run, RunStep, CardSequence, OrderedCardItem, SubCardItem
-from gsi.settings import EXECUTE_FE_COMMAND, KML_PATH, FTP_PATH, KML_DIRECTORY, REMAP_DIRECTORY, REMAP_PATH
+from gsi.settings import (EXECUTE_FE_COMMAND, KML_PATH, FTP_PATH, KML_DIRECTORY, REMAP_DIRECTORY, REMAP_PATH)
 from cards.models import CardItem
 from customers.models import (CustomerPolygons, DataTerraserver, DataSet, CustomerAccess,
                                 DataPolygons, CustomerInfoPanel, TimeSeriesResults, Reports,
