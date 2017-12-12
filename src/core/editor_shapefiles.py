@@ -561,6 +561,8 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
         now = datetime.now()
         remap_script.write('DATE: {0}\n'.format(str(now)))
         remap_script.write('USER: {0}\n'.format(customer))
+        remap_script.write('=== COMMAND LINE ====================\n'
+        remap_script.write('COMMAND LINE: {0}\n'.format(command_line_remap))
         remap_script.write('=== ERR ====================\n'
         remap_script.write('ERR: {0}\n'.format(err))
         remap_script.write('=== OUT ====================\n'
