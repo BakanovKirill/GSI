@@ -550,8 +550,24 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
         proc_script = Popen(command_line, shell=True)
         proc_script.wait()
 
-        proc_script_remap = Popen(command_line_remap, shell=True)
+        proc_script_remap = Popen(command_line_remap, shell=True, stdout=PIPE, stderr=PIPE)
         proc_script_remap.wait()
+
+        output, err = proc_script_remap.communicate()
+
+        ####################### write log file
+        log_file = '/home/gsi/LOGS/REMAP.log'
+        remap_script = open(log_file, 'w+')
+        now = datetime.now()
+        remap_script.write('DATE: {0}\n'.format(str(now)))
+        remap_script.write('USER: {0}\n'.format(customer))
+        remap_script.write('=== ERR ====================\n'
+        remap_script.write('ERR: {0}\n'.format(err))
+        remap_script.write('=== OUT ====================\n'
+        remap_script.write('OUT: {0}\n'.format(output))
+        remap_script.write('=============================\n'
+        remap_script.close()
+        #######################
 
         # count_tif += 1
 
