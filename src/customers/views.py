@@ -1272,17 +1272,17 @@ def getIndex(stroke):
     return index
 
 
-def getGeoCoord(filename):
-    coord = []
-    f = open(filename)
+# def getGeoCoord(filename):
+#     coord = []
+#     f = open(filename)
 
-    for line in f.readlines():
-        line = line.rstrip('\n')
-        line = line.split(',')
-        tmp = [float(line[0]), float(line[1])]
-        coord.append(tmp)
+#     for line in f.readlines():
+#         line = line.rstrip('\n')
+#         line = line.split(',')
+#         tmp = [float(line[0]), float(line[1])]
+#         coord.append(tmp)
 
-    return coord
+#     return coord
 
 
 # def addPolygonToDB(name, kml_name, user, kml_path, kml_url, ds, text_kml=''):
@@ -3412,7 +3412,7 @@ def customer_section(request):
 
                     # get the lat/lon values for a GeoTIFF files
                     try:
-                        print '!!!!!!!!!! FILE TIF  =============================== ', file_tif
+                        # print '!!!!!!!!!! FILE TIF  =============================== ', file_tif
 
                         ds = gdal.Open(file_tif)
                         width = ds.RasterXSize
@@ -3555,13 +3555,13 @@ def customer_section(request):
                                 cLat = 0
                                 cLng = 0
 
-                        print '!!!!!!!!!! E centerY =============================== ', cLat
-                        print '!!!!!!!!!! E centerX =============================== ', cLng
+                        # print '!!!!!!!!!! E centerY =============================== ', cLat
+                        # print '!!!!!!!!!! E centerX =============================== ', cLng
 
-                        print '!!!!!!!!!! MIN Y LAT 1 =============================== ', eLat_1
-                        print '!!!!!!!!!! MIN X LNG 1 =============================== ', eLng_1
-                        print '!!!!!!!!!! MAX Y LAT 2 =============================== ', eLat_2
-                        print '!!!!!!!!!! MAX X LNG 2 =============================== ', eLng_2
+                        # print '!!!!!!!!!! MIN Y LAT 1 =============================== ', eLat_1
+                        # print '!!!!!!!!!! MIN X LNG 1 =============================== ', eLng_1
+                        # print '!!!!!!!!!! MAX Y LAT 2 =============================== ', eLat_2
+                        # print '!!!!!!!!!! MAX X LNG 2 =============================== ', eLng_2
 
                         # print '!!!!!!!!!!!!!!!!! data_set =============================== ', cip_choice.data_set.name
                         # print '!!!!!!!!!!!!!!!!! google_map_zoom =============================== ', google_map_zoom
@@ -4473,8 +4473,8 @@ def files_lister(request):
                         # for n in tmp_list:
                         #     select_attr.append(n.split('_')[0])
 
-                print '!!!!!!!!!!!!!!!! ATTR LIST ============================ ', select_attr
-                print '!!!!!!!!!!!!!!!! STAT LIST ============================ ', select_stat
+                # print '!!!!!!!!!!!!!!!! ATTR LIST ============================ ', select_attr
+                # print '!!!!!!!!!!!!!!!! STAT LIST ============================ ', select_stat
 
                 if upload_fl:
                     path_test_data = os.path.join(path_ftp_user, upload_fl)

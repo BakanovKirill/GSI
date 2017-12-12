@@ -243,8 +243,8 @@ def get_info_window(doc_kml, file_name, path_to_file):
 
 
 def getUploadListTifFiles(customer, dataset, *args):
-    print '!!!!!!!!!!!!!!!!!!! ARGS ====================== ', args
-    print '!!!!!!!!!!!!!!!!!!! DATASET ====================== ', dataset
+    # print '!!!!!!!!!!!!!!!!!!! ARGS ====================== ', args
+    # print '!!!!!!!!!!!!!!!!!!! DATASET ====================== ', dataset
     list_files_tif = []
     # list_data_db = []
     # attributes_tmp = {}
@@ -263,10 +263,10 @@ def getUploadListTifFiles(customer, dataset, *args):
     # attributes_reports = AttributesReport.objects.filter(
     #                         user=customer, data_set=dataset)
                             
-    print '!!!!!!!!!!!!!!!!!!! IS TS ====================== ', dataset.is_ts
+    # print '!!!!!!!!!!!!!!!!!!! IS TS ====================== ', dataset.is_ts
 
     # print '!!!!!!!!!!!!!!!!!!! statistic ====================== ', statistic
-    print '!!!!!!!!!!!!!!!!!!! Attributes ====================== ', attributes
+    # print '!!!!!!!!!!!!!!!!!!! Attributes ====================== ', attributes
     # print '!!!!!!!!!!!!!!!!!!! attributes_reports ====================== ', attributes_reports
     # print '!!!!!!!!!!!!!!!!!!! upload_file ====================== ', upload_file
 
@@ -277,7 +277,7 @@ def getUploadListTifFiles(customer, dataset, *args):
             # attributes_reports = sorted(attributes_reports.keys())
             shelf_data = dataset.shelf_data
 
-            print '!!!!!!!!!!!!!!!!!!! SHD ====================== ', shelf_data
+            # print '!!!!!!!!!!!!!!!!!!! SHD ====================== ', shelf_data
 
             # print '!!!!!!!!!!!!!!!!!!! 2 attributes_reports ====================== ', attributes_reports
 
@@ -289,7 +289,7 @@ def getUploadListTifFiles(customer, dataset, *args):
                 attr_list = attr.split('_')
                 project_directory = os.path.join(PROJECTS_PATH, dataset.results_directory)
 
-                print '!!!!!!!!!! ATTR LIST ========================= ', attr_list
+                # print '!!!!!!!!!! ATTR LIST ========================= ', attr_list
                 # print '!!!!!!!!!! sub_dir_path ========================= ', sub_dir_path
                 # print '!!!!!!!!!! project_directory ========================= ', project_directory
 
@@ -298,7 +298,7 @@ def getUploadListTifFiles(customer, dataset, *args):
                         pr_root, pr_dirs, pr_files = os.walk(project_directory).next()
                         pr_dirs.sort()
 
-                        print '!!!!!!!!!! DIRS ========================= ', pr_dirs
+                        # print '!!!!!!!!!! DIRS ========================= ', pr_dirs
                         # print '!!!!!!!!!! project_directory ========================= ', project_directory
                         # print '!!!!!!!!!! attr.attribute ========================= ', attr.attribute
 
@@ -307,7 +307,7 @@ def getUploadListTifFiles(customer, dataset, *args):
                                 # attribute_name = attr_list[0].split(' ')[:-1]
                                 # attribute_name = str((' ').join(attribute_name))
 
-                                print '!!!!!!!!!! PD ========================= ', pd
+                                # print '!!!!!!!!!! PD ========================= ', pd
                                 # print '!!!!!!!!!! attr.attribute TYPE ========================= ', type(attribute_name)
 
 
@@ -489,7 +489,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
         attr_name = line_list[1]
         shd_attr_name = attr_name
 
-        print '!!!!!!!!!!!!! line_list  =========================== ', line_list[2]
+        # print '!!!!!!!!!!!!! line_list  =========================== ', line_list[2]
         # print '!!!!!!!!!!!!! select_shd  =========================== ', select_shd
         # print '!!!!!!!!!!!!! attr_name  =========================== ', attr_name
         # print '!!!!!!!!!!!!! shd_attr_name  =========================== ', shd_attr_name
@@ -827,7 +827,7 @@ def createUploadTimeSeriesResults(customer, aoi, attributes, data_set):
                                     # print '!!!!!!! 2 NEW LINE ========================== ', new_line
                                     
                             addUploadTsToDB(ts_name, aoi.user, aoi.data_set, aoi, result_year,
-                                        sub_dir_name, result_date, ts_value, attr)
+                                        sub_dir_name, result_date, ts_value, cur_attr)
 
                             # list_files_tif.append(fl_tif)
                             # list_data_db.append(str_data_db)

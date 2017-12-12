@@ -121,6 +121,19 @@ def getCountTs(dataset, shd):
     return count_ts
 
 
+def getGeoCoord(filename):
+    coord = []
+    f = open(filename)
+
+    for line in f.readlines():
+        line = line.rstrip('\n')
+        line = line.split(',')
+        tmp = [float(line[0]), float(line[1])]
+        coord.append(tmp)
+
+    return coord
+
+
 def createKml(user, filename, info_window, url, data_set, count_color, *args):
     # Create KML file for the draw polygon
     

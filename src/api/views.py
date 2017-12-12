@@ -568,13 +568,16 @@ class TimeSeriesDetail(APIView):
     # authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request, ts_id, format=None):
+    def get(self, request, shapefile_id, format=None):
         data = {'auth': 'Need YOUR ACCESS TOKEN'}
 
         if request.auth:
             try:
-                queryset = TimeSeriesResults.objects.get(pk=ts_id)
-                serializer = TimeSeriesResultSerializer(queryset)
+                # dataset = DataSet.objects.get(pk=ds_id)
+                queryset = TimeSeriesResults.objects.filter(
+                                user=request.user,
+                                customer_polygons__id=shapefile_id).order_by('id')
+                serializer = TimeSeriesResultSerializer(queryset, many=True)
                 data = serializer.data
             except TimeSeriesResults.DoesNotExist:
                 return Response({'error': 'TimeSeries Does Not Exist'}, status=status.HTTP_400_BAD_REQUEST)
@@ -598,13 +601,12 @@ class TimeSeriesNameDetail(APIView):
             try:
                 queryset = TimeSeriesResults.objects.filter(
                                 user=request.user,
-                                customer_polygons__name=request.GET['name']).order_by('id')
+                                customer_polygons__name=request.GET['shapefile_name']).order_by('id')
                 serializer = TimeSeriesResultSerializer(queryset, many=True)
                 data = serializer.data
             # except KeyError:
             except Exception, e:
-                print '!!!!!!!!!!!!! ERROR TimeSeriesResults ================================ ', e
-                return Response({'error': 'Invalid TimeSeries Name'},
+                return Response({'error': 'Invalid ShapeFile Name'},
                                 status=status.HTTP_400_BAD_REQUEST)
 
         return Response(data)
@@ -710,7 +712,7 @@ class ReportsDetail(APIView):
             serializer = ReportsSerializer(queryset, many=True)
             data = serializer.data
         except Exception, e:
-            return Response({'error': e}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'DataSet Does Not Exist'}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(data)
 
@@ -725,11 +727,11 @@ class UploadFileAoiView(APIView):
     permission_classes = (IsAuthenticated,)
     # parser_classes = (FileUploadParser,)
 
-    def get_object(self, ds_id):
-        try:
-            return DataSet.objects.get(pk=ds_id)
-        except DataSet.DoesNotExist:
-            return 'Invalid Dataset ID'
+    # def get_object(self, ds_id):
+    #     try:
+    #         return DataSet.objects.get(pk=ds_id)
+    #     except DataSet.DoesNotExist:
+    #         return 'Invalid Dataset ID'
 
     def post(self, request, ds_id, format=None):
         error = ''
@@ -739,14 +741,14 @@ class UploadFileAoiView(APIView):
         statistic = 'Mean'
         doc_kml = None
         urls = []
-        data = {'auth': 'Need YOUR ACCESS TOKEN'}
+        data = {'auth error': 'Need YOUR ACCESS TOKEN'}
 
         if request.auth:
             try:
                 dataset = DataSet.objects.get(pk=ds_id)
             except DataSet.DoesNotExist:
                 data = {
-                    'error': 'Invalid Dataset ID',
+                    'error': 'DataSet Does Not Exist',
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data)
@@ -784,10 +786,20 @@ class UploadFileAoiView(APIView):
                         name=fl).delete()
 
                 if 'reports' in request.GET:
-                    reports_list = request.GET['reports'].replace('%', ' ')
+                    # reports_list = request.GET['reports'].replace(' ', '')
+                    reports_list = request.GET['reports'].replace('+', ' ')
                     reports_list = reports_list.split(',')
                     reports_names = reports_list
                     new_rep = ''
+
+                    # data = {
+                    #     'REP GET': request.GET['reports'],
+                    #     'REP LIST': reports_list,
+                    #     'REP NAME': reports_names,
+                    #     'status': status.HTTP_400_BAD_REQUEST,
+                    # }
+
+                    # return Response(data)
 
                     for report in reports_list:
                         if dataset.is_ts:
@@ -816,9 +828,23 @@ class UploadFileAoiView(APIView):
                                 return Response(data)
 
                         reports.append(new_rep)
+                else:
+                    data = {
+                        'error': 'For calculations in the body of the request, you must specify a list of reports',
+                        'status': status.HTTP_400_BAD_REQUEST,
+                    }
+
+                    return Response(data)
 
                 if 'statistic' in request.GET:
-                    statistic = request.GET['statistic'].split(',')
+                    statistic = request.GET['statistic']
+
+                    # data = {
+                    #     'statistic': statistic,
+                    #     'status': status.HTTP_400_BAD_REQUEST,
+                    # }
+
+                    # return Response(data)
 
                 if ext == '.kmz':
                     zip_file = '{0}.zip'.format(fl)
@@ -845,9 +871,9 @@ class UploadFileAoiView(APIView):
 
                     if error:
                         data = {
-                            'filename': new_kml_file,
+                            'filename': file_name,
+                            'error': 'Error in the shapefile structure',
                             'status': status.HTTP_400_BAD_REQUEST,
-                            'error KMZ': error
                         }
 
                         return Response(data)
@@ -859,9 +885,9 @@ class UploadFileAoiView(APIView):
                         info_window = get_info_window(doc_kml, fl, path_new_kml)
                     except Exception, e:
                         data = {
-                            'filename': new_kml_file,
+                            'filename': file_name,
+                            'error': 'Error in the shapefile structure',
                             'status': status.HTTP_400_BAD_REQUEST,
-                            'error KMZ': e
                         }
 
                         return Response(data)
@@ -880,8 +906,8 @@ class UploadFileAoiView(APIView):
                     if error:
                         data = {
                             'filename': file_name,
+                            'error': 'Error in the shapefile structure',
                             'status': status.HTTP_400_BAD_REQUEST,
-                            'error KML': error
                         }
 
                         return Response(data)
@@ -950,9 +976,8 @@ class UploadFileAoiView(APIView):
                         ############################################################################
 
                         data = {
-                            'error': e,
-                            'status': status.HTTP_400_BAD_REQUEST,
-                            'message': 'Please add the GEO data to create Time Series.'
+                            'error': 'Please add the GEO data to create Time Series.',
+                            'status': status.HTTP_400_BAD_REQUEST
                         }
 
                         return Response(data)
@@ -974,8 +999,8 @@ class UploadFileAoiView(APIView):
             except Exception, e:
                 data = {
                     'filename': file_name,
+                    'error': 'Error in the shapefile structure',
                     'status': status.HTTP_400_BAD_REQUEST,
-                    'error': e
                 }
 
                 return Response(data)
