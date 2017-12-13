@@ -535,7 +535,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
                             file_path_out_new_calculations_coord
                         )
 
-        command_line_remap = '{0} {1} {2} {3}'.format(
+        command_line_remap = '{0} {1} {2} {3} {4}'.format(
                             SCRIPT_REMAP,
                             # SCRIPT_GETPOLYINFO,
                             # file_tif,
