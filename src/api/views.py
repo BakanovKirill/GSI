@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
+from datetime import datetime, date
 from subprocess import Popen
 import os
 import urllib
@@ -598,16 +598,68 @@ class TimeSeriesNameDetail(APIView):
         data = {'auth': 'Need YOUR ACCESS TOKEN'}
 
         if request.auth:
-            try:
-                queryset = TimeSeriesResults.objects.filter(
-                                user=request.user,
-                                customer_polygons__name=request.GET['shapefile_name']).order_by('id')
-                serializer = TimeSeriesResultSerializer(queryset, many=True)
-                data = serializer.data
-            # except KeyError:
-            except Exception, e:
-                return Response({'error': 'Invalid ShapeFile Name'},
-                                status=status.HTTP_400_BAD_REQUEST)
+            if 'shapefile_name' in request.GET:
+                try:
+                    queryset = TimeSeriesResults.objects.filter(
+                                    user=request.user,
+                                    customer_polygons__name=request.GET['shapefile_name']).order_by('id')
+                    serializer = TimeSeriesResultSerializer(queryset, many=True)
+                    data = serializer.data
+                # except KeyError:
+                except Exception, e:
+                    return Response({'error': 'Invalid ShapeFile Name'},
+                                    status=status.HTTP_400_BAD_REQUEST)
+            elif 'start_date' in request.GET and 'end_date' in request.GET:
+                try:
+                    start = request.GET['start_date'].split('-')
+                    end = request.GET['end_date'].split('-')
+
+                    start_date = date(int(start[0]), int(start[1]), int(start[2]))
+                    end_date = date(int(end[0]), int(end[1]), int(end[2]))
+
+                    # return Response({'start_date': start_date, 'end_date': end_date},
+                    #                     status=status.HTTP_400_BAD_REQUEST)
+
+                    queryset = TimeSeriesResults.objects.filter(
+                                    result_date__gte=start_date,
+                                    result_date__lte=end_date).order_by('result_date')
+
+                    if queryset:
+                        # pass
+                        serializer = TimeSeriesResultSerializer(queryset, many=True)
+                        data = serializer.data
+                    else:
+                        data = {'status_message': 'Nothing found in this interval'}
+
+                    # start_date = datetime.strptime(start, "%Y-%m-%d")
+                    # end_date = datetime.strptime(end, "%Y-%m-%d")
+
+                    # start_date = date(int(start[0]), int(start[1]), int(start[2]))
+                    # end_date = date(int(end[0]), int(end[1]), int(end[2]))
+
+                    # return Response({'queryset': queryset},
+                    #                     status=status.HTTP_400_BAD_REQUEST)
+
+                    # queryset = TimeSeriesResults.objects.filter(
+                    #                 result_date____range=(
+                    #                     start_date, end_date)).order_by('result_date')
+
+                    # return Response({'start_date': start_date, 'end_date': end_date},
+                    #                     status=status.HTTP_400_BAD_REQUEST)
+                    
+                    
+                except Exception, e:
+                    return Response({'error': e},
+                                    status=status.HTTP_400_BAD_REQUEST)
+            elif 'start_date' in request.GET:
+                return Response({'error': 'The argument "end_date" is not specified'},
+                                    status=status.HTTP_400_BAD_REQUEST)
+            elif 'end_date' in request.GET:
+                return Response({'error': 'The argument "start_date" is not specified'},
+                                    status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({'error': 'Invalid attributes in the query'},
+                                    status=status.HTTP_400_BAD_REQUEST)
 
         return Response(data)
 
@@ -740,6 +792,7 @@ class UploadFileAoiView(APIView):
         reports_names = []
         statistic = 'Mean'
         doc_kml = None
+        data_queryset = None
         urls = []
         data = {'auth error': 'Need YOUR ACCESS TOKEN'}
 
@@ -1004,20 +1057,39 @@ class UploadFileAoiView(APIView):
                 }
 
                 return Response(data)
-        
-        # data = {
-        #     'file_name': file_obj.name,
-        #     'status': status.HTTP_201_CREATED,
-        #     
-        # }
 
+            try:
+                shapefile_name = '{0}.kml'.format(fl)
+                queryset_cp = CustomerPolygons.objects.get(
+                                user=request.user,
+                                name=fl,
+                                data_set=dataset,
+                                kml_name=shapefile_name
+                            )
+                if dataset.is_ts:
+                    try:
+                        queryset_tsr = TimeSeriesResults.objects.filter(
+                                        user=request.user,
+                                        customer_polygons=queryset_cp).order_by('id')
+                        serializer = TimeSeriesResultSerializer(queryset_tsr, many=True)
+                        data_queryset = serializer.data
+                    except TimeSeriesResults.DoesNotExist:
+                        pass
+                else:
+                    try:
+                        serializer = CustomerPolygonSerializer(queryset_cp)
+                        data_queryset = serializer.data
+                    except Exception:
+                        pass
+            except CustomerPolygons.DoesNotExist:
+                pass
+
+            
         
         data = {
-            # 'POST': request.GET,
-            # 'REPORTS': reports,
-            'URLS': urls,
+            'download links': urls,
             'status': status.HTTP_201_CREATED,
-            # 'error': error
+            'result': data_queryset
         }
 
         return Response(data)
