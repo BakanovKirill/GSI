@@ -1,10 +1,13 @@
 import os
 from subprocess import check_call, Popen, PIPE
+from datetime import datetime
 
 import simplekml
 from simplekml import Kml
 
 from gsi.settings import PROJECTS_PATH, TMP_PATH, KML_PATH, COLOR_HEX
+from core.editor_shapefiles import is_calculation_aoi, copy_file_kml, get_count_color, get_info_window
+from core.utils import handle_uploaded_file
 from customers.models import CustomerPolygons
 
 
@@ -303,42 +306,45 @@ def addPolygonToDB(name, kml_name, user, kml_path, kml_url, ds, text_kml=''):
     return customer_pol
 
 
-def uploadFile(file_name, path_ftp_user):
+def uploadFile(request, data_set, file_name, path_ftp_user, path_kml_user, absolute_kml_url):
+    ####################### write log file
+    log_file = '/home/gsi/LOGS/uploadFile.log'
+    upload_file_log = open(log_file, 'w+')
+    now = datetime.now()
+    upload_file_log.write('DATE: {0}\n'.format(str(now)))
+    upload_file_log.write('USER: {0}\n'.format(str(request.user)))
+    upload_file_log.write('\n')
+    #######################
+    
+    request.session['count_ts'] = 0
     info_window = ''
     name_kml = ''
-    # file_name = str(request.FILES['test_data']).decode('utf-8')
+    error = ''
+    calculation_aoi = False
+    upload_file = None
     path_test_data = os.path.join(path_ftp_user, file_name)
 
     ####################### write log file
-    files_lister_log.write('LOAD FILE: {0}\n'.format(str(file_name)))
-    files_lister_log.write('\n')
+    upload_file_log.write('LOAD FILE: {0}\n'.format(str(file_name)))
+    upload_file_log.write('\n')
     #######################
 
     # print '!!!!!!!!!! FILE NAME ================== ', file_name
 
-    if not os.path.exists(path_ftp_user):
-        os.makedirs(path_ftp_user)
+    # if not os.path.exists(path_ftp_user):
+    #     os.makedirs(path_ftp_user)
 
-    if not os.path.exists(path_kml_user):
-        os.makedirs(path_kml_user)
+    # if not os.path.exists(path_kml_user):
+    #     os.makedirs(path_kml_user)
 
-    if os.path.exists(path_test_data):
-        os.remove(path_test_data)
+    # if os.path.exists(path_test_data):
+    #     os.remove(path_test_data)
 
 
     # print '!!!!!!!!!! path_kml_user ================== ', path_kml_user
 
     f_name = str(file_name).split('.')[:-1]
     ext = str(file_name).split('.')[-1]
-
-    # print '!!!!!!!!!! FILE NAME ================== ', f_name
-    # print '!!!!!!!!!! FILE EXT ================== ', ext
-
-    handle_uploaded_file(request.FILES['test_data'],
-                         path_test_data)
-
-    # DataPolygons.objects.filter(user=request.user,
-    #         customer_polygons__name=f_name[0]).delete()
 
     CustomerPolygons.objects.filter(user=request.user,
             name=f_name[0]).delete()
@@ -378,12 +384,13 @@ def uploadFile(file_name, path_ftp_user):
         doc_kml, error = copy_file_kml(path_new_kml, new_path)
 
         if error:
-            # print '!!!!!!!!!!!!!!! ERROR  ===================== ', error
-            # os.mkdir()
+            return calculation_aoi, upload_file, error
+        #     # print '!!!!!!!!!!!!!!! ERROR  ===================== ', error
+        #     # os.mkdir()
 
-            return HttpResponseRedirect(u'%s?warning_message=%s' % (
-                    reverse('files_lister'),
-                    (u'{0}'.format(error))))
+        #     return HttpResponseRedirect(u'%s?warning_message=%s' % (
+        #             reverse('files_lister'),
+        #             (u'{0}'.format(error))))
 
         try:
             count_color = get_count_color()
@@ -400,7 +407,7 @@ def uploadFile(file_name, path_ftp_user):
         # print '!!!!!!!!!!!! COORDINATE ======================== ', doc_kml.Document.Polygon.outerBoundaryIs.LinearRing.coordinates
 
         load_aoi = addPolygonToDB(
-                        f_name[0], new_kml_file, customer,
+                        f_name[0], new_kml_file, request.user,
                         new_path, kml_url,
                         data_set, text_kml=info_window
                     )
@@ -411,12 +418,13 @@ def uploadFile(file_name, path_ftp_user):
         doc_kml, error = copy_file_kml(path_test_data, new_path)
 
         if error:
+            return calculation_aoi, upload_file, error
             # print '!!!!!!!!!!!!!!! ERROR  ===================== ', error
             # os.mkdir()
 
-            return HttpResponseRedirect(u'%s?warning_message=%s' % (
-                    reverse('files_lister'),
-                    (u'{0}'.format(error))))
+            # return HttpResponseRedirect(u'%s?warning_message=%s' % (
+            #         reverse('files_lister'),
+            #         (u'{0}'.format(error))))
 
         try:
             if not error:
@@ -437,13 +445,16 @@ def uploadFile(file_name, path_ftp_user):
         # print '!!!!!!!!!!!! COORDINATE ======================== ', doc_kml.Document.Polygon.outerBoundaryIs.LinearRing.coordinates
 
         load_aoi = addPolygonToDB(
-                        f_name[0], file_name, customer,
+                        f_name[0], file_name, request.user,
                         new_path, kml_url,
                         data_set, text_kml=info_window
                     )
 
         ####################### write log file
-        files_lister_log.write('UPLOAD FILE: {0}\n'.format(str(upload_file)))
-        files_lister_log.write('CALCULATION AOI: {0}\n'.format(str(calculation_aoi)))
-        files_lister_log.write('\n')
+        upload_file_log.write('UPLOAD FILE: {0}\n'.format(str(upload_file)))
+        upload_file_log.write('CALCULATION AOI: {0}\n'.format(str(calculation_aoi)))
+        upload_file_log.write('\n')
+        upload_file_log.close()
         #######################
+        
+    return calculation_aoi, upload_file, error

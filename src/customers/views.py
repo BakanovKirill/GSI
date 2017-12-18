@@ -4281,8 +4281,18 @@ def files_lister(request):
         
         if 'recalculation_btn' in data_post:
             file_name = data_post['recalculation_btn']
+            calculation_aoi, upload_file, error = uploadFile(request, data_set, file_name,
+                                                    path_ftp_user, path_kml_user, absolute_kml_url)
 
-            recalculationData()
+            print '!!!!!!!!!!!!!!! calculation_aoi  ===================== ', calculation_aoi
+            print '!!!!!!!!!!!!!!! upload_file  ===================== ', upload_file
+
+            if error:
+                print '!!!!!!!!!!!!!!! ERROR  ===================== ', error
+
+                return HttpResponseRedirect(u'%s?warning_message=%s' % (
+                        reverse('files_lister'),
+                        (u'{0}'.format(error))))
 
             # print '!!!!!!!!!! recalculation_btn ================== ', file_name
         
@@ -4313,126 +4323,135 @@ def files_lister(request):
 
 
                 # print '!!!!!!!!!! path_kml_user ================== ', path_kml_user
-
-                f_name = str(file_name).split('.')[:-1]
-                ext = str(file_name).split('.')[-1]
-
                 # print '!!!!!!!!!! FILE NAME ================== ', f_name
                 # print '!!!!!!!!!! FILE EXT ================== ', ext
 
                 handle_uploaded_file(request.FILES['test_data'],
                                      path_test_data)
 
-                # DataPolygons.objects.filter(user=request.user,
-                #         customer_polygons__name=f_name[0]).delete()
+                calculation_aoi, upload_file, error = uploadFile(request, data_set, file_name,\
+                                                    path_ftp_user, path_kml_user, absolute_kml_url)
 
-                CustomerPolygons.objects.filter(user=request.user,
-                        name=f_name[0]).delete()
+                print '!!!!!!!!!!!!!!! calculation_aoi  ===================== ', calculation_aoi
+                print '!!!!!!!!!!!!!!! upload_file  ===================== ', upload_file
 
-                # print '!!!!!!!!!! FILE NAME ================== ', f_name
-                # print '!!!!!!!!!! FILE EXT ================== ', ext
+                if error:
+                    print '!!!!!!!!!!!!!!! ERROR  ===================== ', error
 
-                # if DataPolygons.objects.filter(user=request.user, data_set=data_set,
-                #         customer_polygons__name=f_name[0]).exists():
-                #     DataPolygons.objects.filter(user=request.user, data_set=data_set,
-                #         customer_polygons__name=f_name[0]).delete()
+                    return HttpResponseRedirect(u'%s?warning_message=%s' % (
+                            reverse('files_lister'),
+                            (u'{0}'.format(error))))
 
-                if ext == 'kmz':
-                    zip_file = f_name[0] + '.zip'
-                    # doc_file = 'doc.kml'
-                    new_kml_file = '{0}.kml'.format(f_name[0])
-                    path_zip_file = os.path.join(path_ftp_user, zip_file)
-                    path_doc_kml = os.path.join(path_ftp_user, 'doc.kml')
-                    path_new_kml = os.path.join(path_ftp_user, new_kml_file)
+                # f_name = str(file_name).split('.')[:-1]
+                # ext = str(file_name).split('.')[-1]
 
-                    command_copy_to_zip = 'cp {0} {1}'.format(path_test_data, path_zip_file)
-                    # command_unzip = 'unzip {0}'.format(path_zip_file)
+                # CustomerPolygons.objects.filter(user=request.user,
+                #         name=f_name[0]).delete()
 
-                    proc_copy_kml = Popen(command_copy_to_zip, shell=True)
-                    proc_copy_kml.wait()
+                # # print '!!!!!!!!!! FILE NAME ================== ', f_name
+                # # print '!!!!!!!!!! FILE EXT ================== ', ext
 
-                    zip_create = zipfile.ZipFile(path_zip_file)  
-                    zip_create.extractall(path_ftp_user) 
+                # # if DataPolygons.objects.filter(user=request.user, data_set=data_set,
+                # #         customer_polygons__name=f_name[0]).exists():
+                # #     DataPolygons.objects.filter(user=request.user, data_set=data_set,
+                # #         customer_polygons__name=f_name[0]).delete()
 
-                    os.rename(path_doc_kml, path_new_kml)
-                    os.remove(path_zip_file)
-                    os.remove(path_test_data)
+                # if ext == 'kmz':
+                #     zip_file = f_name[0] + '.zip'
+                #     # doc_file = 'doc.kml'
+                #     new_kml_file = '{0}.kml'.format(f_name[0])
+                #     path_zip_file = os.path.join(path_ftp_user, zip_file)
+                #     path_doc_kml = os.path.join(path_ftp_user, 'doc.kml')
+                #     path_new_kml = os.path.join(path_ftp_user, new_kml_file)
 
-                    # copy new kml file to dataset
-                    kml_url = os.path.join(absolute_kml_url, new_kml_file)
-                    new_path = os.path.join(path_kml_user, new_kml_file)
-                    doc_kml, error = copy_file_kml(path_new_kml, new_path)
+                #     command_copy_to_zip = 'cp {0} {1}'.format(path_test_data, path_zip_file)
+                #     # command_unzip = 'unzip {0}'.format(path_zip_file)
 
-                    if error:
-                        # print '!!!!!!!!!!!!!!! ERROR  ===================== ', error
-                        # os.mkdir()
+                #     proc_copy_kml = Popen(command_copy_to_zip, shell=True)
+                #     proc_copy_kml.wait()
 
-                        return HttpResponseRedirect(u'%s?warning_message=%s' % (
-                                reverse('files_lister'),
-                                (u'{0}'.format(error))))
+                #     zip_create = zipfile.ZipFile(path_zip_file)  
+                #     zip_create.extractall(path_ftp_user) 
 
-                    try:
-                        count_color = get_count_color()
-                        upload_file = new_kml_file
-                        calculation_aoi = is_calculation_aoi(doc_kml)
-                        info_window = get_info_window(doc_kml, f_name[0], path_new_kml)
+                #     os.rename(path_doc_kml, path_new_kml)
+                #     os.remove(path_zip_file)
+                #     os.remove(path_test_data)
 
-                        print '!!!!!!!!!!!!!!! KMZ calculation_aoi ============================ ', calculation_aoi
+                #     # copy new kml file to dataset
+                #     kml_url = os.path.join(absolute_kml_url, new_kml_file)
+                #     new_path = os.path.join(path_kml_user, new_kml_file)
+                #     doc_kml, error = copy_file_kml(path_new_kml, new_path)
 
-                    except Exception, e:
-                        print '!!!!!!!!!!!!!!! ERROR COPY KML ===================== ', e
-                        pass
+                #     if error:
+                #         # print '!!!!!!!!!!!!!!! ERROR  ===================== ', error
+                #         # os.mkdir()
 
-                    # print '!!!!!!!!!!!! COORDINATE ======================== ', doc_kml.Document.Polygon.outerBoundaryIs.LinearRing.coordinates
+                #         return HttpResponseRedirect(u'%s?warning_message=%s' % (
+                #                 reverse('files_lister'),
+                #                 (u'{0}'.format(error))))
 
-                    load_aoi = addPolygonToDB(
-                                    f_name[0], new_kml_file, customer,
-                                    new_path, kml_url,
-                                    data_set, text_kml=info_window
-                                )
+                #     try:
+                #         count_color = get_count_color()
+                #         upload_file = new_kml_file
+                #         calculation_aoi = is_calculation_aoi(doc_kml)
+                #         info_window = get_info_window(doc_kml, f_name[0], path_new_kml)
 
-                if ext == 'kml':
-                    kml_url = os.path.join(absolute_kml_url, file_name)
-                    new_path = os.path.join(path_kml_user, file_name)
-                    doc_kml, error = copy_file_kml(path_test_data, new_path)
+                #         print '!!!!!!!!!!!!!!! KMZ calculation_aoi ============================ ', calculation_aoi
 
-                    if error:
-                        # print '!!!!!!!!!!!!!!! ERROR  ===================== ', error
-                        # os.mkdir()
+                #     except Exception, e:
+                #         print '!!!!!!!!!!!!!!! ERROR COPY KML ===================== ', e
+                #         pass
 
-                        return HttpResponseRedirect(u'%s?warning_message=%s' % (
-                                reverse('files_lister'),
-                                (u'{0}'.format(error))))
+                #     # print '!!!!!!!!!!!! COORDINATE ======================== ', doc_kml.Document.Polygon.outerBoundaryIs.LinearRing.coordinates
 
-                    try:
-                        if not error:
-                            count_color = get_count_color()
-                            upload_file = file_name
-                            calculation_aoi = is_calculation_aoi(doc_kml)
-                            info_window = get_info_window(doc_kml, f_name[0], path_test_data)
+                #     load_aoi = addPolygonToDB(
+                #                     f_name[0], new_kml_file, customer,
+                #                     new_path, kml_url,
+                #                     data_set, text_kml=info_window
+                #                 )
 
-                            # print '!!!!!!!!!!!!!!! KML calculation_aoi ============================ ', calculation_aoi
+                # if ext == 'kml':
+                #     kml_url = os.path.join(absolute_kml_url, file_name)
+                #     new_path = os.path.join(path_kml_user, file_name)
+                #     doc_kml, error = copy_file_kml(path_test_data, new_path)
 
-                            # info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(
-                            #                     COLOR_HEX_NAME[count_color], f_name)
+                #     if error:
+                #         # print '!!!!!!!!!!!!!!! ERROR  ===================== ', error
+                #         # os.mkdir()
 
-                    except Exception, e:
-                        print '!!!!!!!!!!!!!!! ERROR COPY KML ===================== ', e
-                        pass
+                #         return HttpResponseRedirect(u'%s?warning_message=%s' % (
+                #                 reverse('files_lister'),
+                #                 (u'{0}'.format(error))))
 
-                    # print '!!!!!!!!!!!! COORDINATE ======================== ', doc_kml.Document.Polygon.outerBoundaryIs.LinearRing.coordinates
+                #     try:
+                #         if not error:
+                #             count_color = get_count_color()
+                #             upload_file = file_name
+                #             calculation_aoi = is_calculation_aoi(doc_kml)
+                #             info_window = get_info_window(doc_kml, f_name[0], path_test_data)
 
-                    load_aoi = addPolygonToDB(
-                                    f_name[0], file_name, customer,
-                                    new_path, kml_url,
-                                    data_set, text_kml=info_window
-                                )
+                #             # print '!!!!!!!!!!!!!!! KML calculation_aoi ============================ ', calculation_aoi
 
-                    ####################### write log file
-                    files_lister_log.write('UPLOAD FILE: {0}\n'.format(str(upload_file)))
-                    files_lister_log.write('CALCULATION AOI: {0}\n'.format(str(calculation_aoi)))
-                    files_lister_log.write('\n')
-                    #######################
+                #             # info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(
+                #             #                     COLOR_HEX_NAME[count_color], f_name)
+
+                #     except Exception, e:
+                #         print '!!!!!!!!!!!!!!! ERROR COPY KML ===================== ', e
+                #         pass
+
+                #     # print '!!!!!!!!!!!! COORDINATE ======================== ', doc_kml.Document.Polygon.outerBoundaryIs.LinearRing.coordinates
+
+                #     load_aoi = addPolygonToDB(
+                #                     f_name[0], file_name, customer,
+                #                     new_path, kml_url,
+                #                     data_set, text_kml=info_window
+                #                 )
+
+                #     ####################### write log file
+                #     files_lister_log.write('UPLOAD FILE: {0}\n'.format(str(upload_file)))
+                #     files_lister_log.write('CALCULATION AOI: {0}\n'.format(str(calculation_aoi)))
+                #     files_lister_log.write('\n')
+                #     #######################
 
         if 'delete_button' in data_post:
             filename_customer = data_post['delete_button']
@@ -4615,3 +4634,4 @@ def files_lister(request):
     }
 
     return data
+
