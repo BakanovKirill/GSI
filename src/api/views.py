@@ -30,7 +30,8 @@ from rest_framework import generics, viewsets
 
 from core.utils import (validate_status, write_log, get_path_folder_run, execute_fe_command, handle_uploaded_file)
 from gsi.models import Run, RunStep, CardSequence, OrderedCardItem, SubCardItem
-from gsi.settings import (EXECUTE_FE_COMMAND, KML_PATH, FTP_PATH, KML_DIRECTORY, REMAP_DIRECTORY, REMAP_PATH)
+from gsi.settings import (EXECUTE_FE_COMMAND, KML_PATH, FTP_PATH, KML_DIRECTORY,
+                            REMAP_DIRECTORY, REMAP_PATH, STATISTICS)
 from cards.models import CardItem
 from customers.models import (CustomerPolygons, DataTerraserver, DataSet, CustomerAccess,
                                 DataPolygons, CustomerInfoPanel, TimeSeriesResults, Reports,
@@ -532,9 +533,16 @@ class TimeSeriesList(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         # queryset = {'auth': 'Need YOUR ACCESS TOKEN'}
         queryset = TimeSeriesResults.objects.none()
+        statistics = STATISTICS
 
         if self.request.auth:
-            queryset = TimeSeriesResults.objects.filter(user=self.request.user).order_by('id')
+            if 'statistics' in self.request.GET:
+                statistics = self.request.GET['statistics'].split(',')
+
+            queryset = TimeSeriesResults.objects.filter(
+                            user=self.request.user,
+                            stat_code__in=statistics,
+                            ).order_by('id')
 
         return queryset
 
@@ -570,12 +578,17 @@ class TimeSeriesDetail(APIView):
 
     def get(self, request, shapefile_id, format=None):
         data = {'auth': 'Need YOUR ACCESS TOKEN'}
+        statistics = STATISTICS
 
         if request.auth:
+            if 'statistics' in request.GET:
+                statistics = request.GET['statistics'].split(',')
+
             try:
                 # dataset = DataSet.objects.get(pk=ds_id)
                 queryset = TimeSeriesResults.objects.filter(
                                 user=request.user,
+                                stat_code__in=statistics,
                                 customer_polygons__id=shapefile_id).order_by('id')
                 serializer = TimeSeriesResultSerializer(queryset, many=True)
                 data = serializer.data
@@ -596,12 +609,17 @@ class TimeSeriesNameDetail(APIView):
 
     def get(self, request, format=None):
         data = {'auth': 'Need YOUR ACCESS TOKEN'}
+        statistics = STATISTICS
 
         if request.auth:
+            if 'statistics' in request.GET:
+                statistics = request.GET['statistics'].split(',')
+            
             if 'shapefile_name' in request.GET:
                 try:
                     queryset = TimeSeriesResults.objects.filter(
                                     user=request.user,
+                                    stat_code__in=statistics,
                                     customer_polygons__name=request.GET['shapefile_name']).order_by('id')
                     serializer = TimeSeriesResultSerializer(queryset, many=True)
                     data = serializer.data
@@ -622,6 +640,7 @@ class TimeSeriesNameDetail(APIView):
 
                     queryset = TimeSeriesResults.objects.filter(
                                     result_date__gte=start_date,
+                                    stat_code__in=statistics,
                                     result_date__lte=end_date).order_by('result_date')
 
                     if queryset:
@@ -630,23 +649,6 @@ class TimeSeriesNameDetail(APIView):
                         data = serializer.data
                     else:
                         data = {'status_message': 'Nothing found in this interval'}
-
-                    # start_date = datetime.strptime(start, "%Y-%m-%d")
-                    # end_date = datetime.strptime(end, "%Y-%m-%d")
-
-                    # start_date = date(int(start[0]), int(start[1]), int(start[2]))
-                    # end_date = date(int(end[0]), int(end[1]), int(end[2]))
-
-                    # return Response({'queryset': queryset},
-                    #                     status=status.HTTP_400_BAD_REQUEST)
-
-                    # queryset = TimeSeriesResults.objects.filter(
-                    #                 result_date____range=(
-                    #                     start_date, end_date)).order_by('result_date')
-
-                    # return Response({'start_date': start_date, 'end_date': end_date},
-                    #                     status=status.HTTP_400_BAD_REQUEST)
-                    
                     
                 except Exception, e:
                     return Response({'error': e},

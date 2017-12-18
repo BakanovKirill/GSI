@@ -53,7 +53,7 @@ urlpatterns = [
     url(r'^reports/(?P<ds_id>[0-9]+)/$', ReportsDetail.as_view()),
    
     # upload AOI file
-    url(r'^upload-aoi/(?P<ds_id>[0-9]+)/', UploadFileAoiView.as_view()),
+    url(r'^upload-aoi/(?P<ds_id>[0-9]+)/$', UploadFileAoiView.as_view()),
 
     # upload file to FTP
     url(r'^upload/$', UploadFileFtpView.as_view()),

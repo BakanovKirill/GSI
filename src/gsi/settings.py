@@ -393,6 +393,9 @@ REMAP_PATH = os.path.join(BASE_DIR, REMAP_DIRECTORY)
 # Attributes
 ATTRIBUTES_NAME = ['Total Area', 'Area total']
 
+# Statistic
+STATISTICS = ['Max', 'Mean', 'Median', 'Min', 'LQ', 'UQ']
+
 # Card Type
 CARD_TYPE = {
     'rftrain': 'RFTrain',
