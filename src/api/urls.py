@@ -29,11 +29,11 @@ urlpatterns = [
 	# url(r'^terraserver', 'api.views.terraserver', name='terraserver'),
 
     # DataSet
+    url(r'^datasets-list/', DataSetList.as_view({'get': 'list'})),
+    url(r'^dataset/(?P<ds_id>[0-9]+)/$', DataSetDetail.as_view()),
 	# url(r'^datasets/', 'api.views.datasets_list', name='datasets_list'),
 	# url(r'^polygons/', CustomerPolygonsList.as_view()),
-    url(r'^datasets-list/', DataSetList.as_view({'get': 'list'})),
-    # url(r'^datasets/', DataSetList.as_view()),
-	url(r'^dataset/(?P<ds_id>[0-9]+)/$', DataSetDetail.as_view()),
+    # url(r'^datasets/', DataSetList.as_view()), 
 
     # ShapeFiles
     url(r'^shapefiles-list/$', ShapeFileList.as_view({'get': 'list'})),
@@ -42,14 +42,14 @@ urlpatterns = [
 
     # TimeSeries
     url(r'^timeseries-list/$', TimeSeriesList.as_view({'get': 'list'})),
-    # url(r'^timeseries-list/$', TimeSeriesList.as_view()),
     url(r'^timeseries/(?P<shapefile_id>[0-9]+)/$', TimeSeriesDetail.as_view()),
-    # url(r'^timeseries/', TimeSeriesDetail.as_view({'get': 'list'})),
     url(r'^timeseries', TimeSeriesNameDetail.as_view()),
+    # url(r'^timeseries-list/$', TimeSeriesList.as_view()),
+    # url(r'^timeseries/', TimeSeriesDetail.as_view({'get': 'list'})),
 
     # Reports Attribute
-    url(r'^reports-list/$', ReportsList.as_view({'get': 'list'})),
     # url(r'^reports-list/$', ReportsList.as_view()),
+    url(r'^reports-list/$', ReportsList.as_view({'get': 'list'})),
     url(r'^reports/(?P<ds_id>[0-9]+)/$', ReportsDetail.as_view()),
    
     # upload AOI file
@@ -57,8 +57,6 @@ urlpatterns = [
 
     # upload file to FTP
     url(r'^upload/$', UploadFileFtpView.as_view()),
-
-    
 	
     # Auth Token
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),

@@ -64,7 +64,7 @@ from core.editor_shapefiles import (get_count_color, copy_file_kml, get_data_kml
                                     create_new_calculations_aoi, createUploadTimeSeriesResults)
 from core.utils import handle_uploaded_file, get_files_dirs, get_list_lutfiles
 from core.functions_customer import (getResultDirectory, getTsResultDirectory, getCountTs,
-                                    addPolygonToDB, createKml)
+                                    addPolygonToDB, createKml, uploadFile)
 from gsi.settings import (BASE_DIR, GOOGLE_MAP_ZOOM, MEDIA_ROOT,
                         TMP_PATH, DAFAULT_LAT, DAFAULT_LON, PNG_DIRECTORY, PNG_PATH,
                         PROJECTS_PATH, KML_DIRECTORY, KML_PATH, ATTRIBUTES_NAME, FTP_PATH,
@@ -4221,21 +4221,19 @@ def files_lister(request):
 
 
     # Ajax when deleting objects
-    if request.method == "GET" and request.is_ajax():
-        data_get_ajax = request.POST
+    # if request.method == "POST" and request.is_ajax():
+    #     data_post_ajax = request.POST
 
-        # print '!!!!!!!!!!! AJAX GET ====================== ', data_get_ajax
+    #     if 'cur_run_id' in data_post_ajax:
+    #         message = u'Are you sure you want to remove this objects:'
+    #         file_customer = data_post_ajax['cur_run_id']
+    #         data = '<b>"' + file_customer + '"</b>'
+    #         data = '{0} {1}?'.format(message, data)
 
-        if 'cur_run_id' in data_get_ajax:
-            message = u'Are you sure you want to remove this objects:'
-            file_customer = data_post_ajax['cur_run_id']
-            data = '<b>"' + file_customer + '"</b>'
-            data = '{0} {1}?'.format(message, data)
-
-            return HttpResponse(data)
-        else:
-            data = ''
-            return HttpResponse(data)
+    #         return HttpResponse(data)
+    #     else:
+    #         data = ''
+    #         return HttpResponse(data)
 
     # Ajax when deleting objects
     if request.method == "POST" and request.is_ajax():
@@ -4254,15 +4252,17 @@ def files_lister(request):
             
             request.session['count_ts'] = count_ts
 
-        # if 'cur_run_id' in data_post_ajax:
-        #     message = u'Are you sure you want to remove this objects:'
-        #     file_customer = data_post_ajax['cur_run_id']
-        #     data = '<b>"' + file_customer + '"</b>'
-        #     data = '{0} {1}?'.format(message, data)
+        if 'cur_run_id' in data_post_ajax:
+            message = u'Are you sure you want to remove this objects:'
+            file_customer = data_post_ajax['cur_run_id']
+            data = '<b>"' + file_customer + '"</b>'
+            data = '{0} {1}?'.format(message, data)
 
-        #     return HttpResponse(data)
+            return HttpResponse(data)
         # else:
         #     data = ''
+        #     return HttpResponse(data)
+
         return HttpResponse(json.dumps({'count_ts': count_ts}))
 
     if request.method == "POST":
@@ -4277,6 +4277,14 @@ def files_lister(request):
 
         # print '!!!!!!!!!! POST ================== ', data_post
         # print '!!!!!!!!!!!!! DATA SET ==================== ', request.session['select_data_set']
+        # recalculation_btn
+        
+        if 'recalculation_btn' in data_post:
+            file_name = data_post['recalculation_btn']
+
+            recalculationData()
+
+            # print '!!!!!!!!!! recalculation_btn ================== ', file_name
         
         if 'load_button' in data_post:
             request.session['count_ts'] = 0

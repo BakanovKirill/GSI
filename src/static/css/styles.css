@@ -809,7 +809,7 @@ li.active-main-menu, li.active-main-menu a:hover, li.li-menu > a:hover, .title:h
     background-color: #D3D3D3;
 }
 
-.del-btn, .btn-img, .del-btn:hover {
+.del-btn, .none-btn, .btn-img, .del-btn:hover {
     background-color: transparent;
 }
 

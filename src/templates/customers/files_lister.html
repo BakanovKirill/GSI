@@ -76,9 +76,9 @@
                         <thead>
                             <tr>
                                 <th class="left">File</th>
-                                <th class="right">Size</th>
-                                <th class="right">Last Modified</th>
-                                <th class="right">Action</th>
+                                <th class="left">Size</th>
+                                <th class="center">Last Modified</th>
+                                <th class="center">Action</th>
                             </tr>
                         </thead>
 
@@ -93,9 +93,19 @@
                                         {% endif %}/>
                                     <span class="margin-left-10">{{ file.name }}</span>
                                 </td>
-                                <td class="right">{{ file.size }}</td>
-                                <td class="right">{{ file.date }}</td>
+                                <td class="left">{{ file.size }}</td>
+                                <td class="center">{{ file.date }}</td>
                                 <td class="right">
+                                    {% if 'kml' in file.name or 'kmz' in file.name %}
+                                        <button class="btn none-btn" type="submit" name="recalculation_btn" value="{{ file.name }}"  data-toggle="tooltip" data-placement="top" title="Re-calculation">
+                                            <img src="{% static 'img/reload-18.png' %}"/>
+                                        </button>
+                                    {% else %}
+                                        <button class="btn none-btn" type="button" name="none_btn" data-toggle="tooltip" data-placement="top" title="None">
+                                            &#8212;
+                                        </button>
+                                    {% endif %}
+
                                     <a href="{{ file.path }}" class="btn del-btn check-cur-delete" role="button" data-toggle="tooltip" data-placement="top" title="Download">
                                         <img src="{% static 'img/download-18.png' %}"/>
                                     </a>
