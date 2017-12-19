@@ -4308,6 +4308,7 @@ def files_lister(request):
 
                 ####################### write log file
                 files_lister_log.write('LOAD FILE: {0}\n'.format(str(file_name)))
+                files_lister_log.write('NEW FILE NAME: {0}\n'.format(str(new_file_name)))
                 files_lister_log.write('\n')
                 #######################
 
@@ -4331,7 +4332,7 @@ def files_lister(request):
                 handle_uploaded_file(request.FILES['test_data'],
                                      path_test_data)
 
-                calculation_aoi, upload_file, error = uploadFile(request, data_set, file_name,\
+                calculation_aoi, upload_file, error = uploadFile(request, data_set, new_file_name,\
                                                     path_ftp_user, path_kml_user, absolute_kml_url)
 
                 # print '!!!!!!!!!!!!!!! calculation_aoi  ===================== ', calculation_aoi
