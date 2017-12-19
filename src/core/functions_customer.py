@@ -389,6 +389,10 @@ def uploadFile(request, data_set, file_name, path_ftp_user, path_kml_user, absol
         doc_kml, error = copy_file_kml(path_new_kml, new_path)
 
         if error:
+            ####################### write log file
+            upload_file_log.write('ERROR DOC KMZ: {0}\n'.format(str(error)))
+            upload_file_log.write('\n')
+            #######################
             return calculation_aoi, upload_file, error
         #     # print '!!!!!!!!!!!!!!! ERROR  ===================== ', error
         #     # os.mkdir()
@@ -406,8 +410,11 @@ def uploadFile(request, data_set, file_name, path_ftp_user, path_kml_user, absol
             print '!!!!!!!!!!!!!!! KMZ calculation_aoi ============================ ', calculation_aoi
 
         except Exception, e:
-            print '!!!!!!!!!!!!!!! ERROR COPY KML ===================== ', e
-            pass
+            print '!!!!!!!!!!!!!!! ERROR COPY KMZ ===================== ', e
+            ####################### write log file
+            upload_file_log.write('ERROR COPY KMZ: {0}\n'.format(str(e)))
+            upload_file_log.write('\n')
+            #######################
 
         # print '!!!!!!!!!!!! COORDINATE ======================== ', doc_kml.Document.Polygon.outerBoundaryIs.LinearRing.coordinates
 
@@ -423,6 +430,11 @@ def uploadFile(request, data_set, file_name, path_ftp_user, path_kml_user, absol
         doc_kml, error = copy_file_kml(path_test_data, new_path)
 
         if error:
+            ####################### write log file
+            upload_file_log.write('ERROR DOC KML: {0}\n'.format(str(error)))
+            upload_file_log.write('\n')
+            #######################
+            
             return calculation_aoi, upload_file, error
             # print '!!!!!!!!!!!!!!! ERROR  ===================== ', error
             # os.mkdir()
@@ -445,7 +457,10 @@ def uploadFile(request, data_set, file_name, path_ftp_user, path_kml_user, absol
 
         except Exception, e:
             print '!!!!!!!!!!!!!!! ERROR COPY KML ===================== ', e
-            pass
+            ####################### write log file
+            upload_file_log.write('ERROR COPY KML: {0}\n'.format(str(e)))
+            upload_file_log.write('\n')
+            #######################
 
         # print '!!!!!!!!!!!! COORDINATE ======================== ', doc_kml.Document.Polygon.outerBoundaryIs.LinearRing.coordinates
 
@@ -456,8 +471,9 @@ def uploadFile(request, data_set, file_name, path_ftp_user, path_kml_user, absol
                     )
 
         ####################### write log file
-        upload_file_log.write('UPLOAD FILE: {0}\n'.format(str(upload_file)))
-        upload_file_log.write('CALCULATION AOI: {0}\n'.format(str(calculation_aoi)))
+        upload_file_log.write('END UPLOAD FILE: {0}\n'.format(str(upload_file)))
+        upload_file_log.write('END CALCULATION AOI: {0}\n'.format(str(calculation_aoi)))
+        upload_file_log.write('END ERROR: {0}\n'.format(str(error)))
         upload_file_log.write('\n')
         upload_file_log.close()
         #######################
