@@ -4277,18 +4277,17 @@ def files_lister(request):
 
         # print '!!!!!!!!!! POST ================== ', data_post
         # print '!!!!!!!!!!!!! DATA SET ==================== ', request.session['select_data_set']
-        # recalculation_btn
         
         if 'recalculation_btn' in data_post:
             file_name = data_post['recalculation_btn']
             calculation_aoi, upload_file, error = uploadFile(request, data_set, file_name,
                                                     path_ftp_user, path_kml_user, absolute_kml_url)
 
-            print '!!!!!!!!!!!!!!! calculation_aoi  ===================== ', calculation_aoi
-            print '!!!!!!!!!!!!!!! upload_file  ===================== ', upload_file
+            # print '!!!!!!!!!!!!!!! calculation_aoi  ===================== ', calculation_aoi
+            # print '!!!!!!!!!!!!!!! upload_file  ===================== ', upload_file
 
             if error:
-                print '!!!!!!!!!!!!!!! ERROR  ===================== ', error
+                print '!!!!!!!!!!!!!!! ERROR RE-CALCULATION  ===================== ', error
 
                 return HttpResponseRedirect(u'%s?warning_message=%s' % (
                         reverse('files_lister'),
@@ -4303,7 +4302,9 @@ def files_lister(request):
                 info_window = ''
                 name_kml = ''
                 file_name = str(request.FILES['test_data']).decode('utf-8')
-                path_test_data = os.path.join(path_ftp_user, file_name)
+                fl, ext = os.path.splitext(file_name)
+                new_file_name = '{0}_{1}{2}'.format(data_set, fl, ext)
+                path_test_data = os.path.join(path_ftp_user, new_file_name)
 
                 ####################### write log file
                 files_lister_log.write('LOAD FILE: {0}\n'.format(str(file_name)))
@@ -4311,6 +4312,7 @@ def files_lister(request):
                 #######################
 
                 # print '!!!!!!!!!! FILE NAME ================== ', file_name
+                # print '!!!!!!!!!! NEW FILE NAME ================== ', new_file_name
 
                 if not os.path.exists(path_ftp_user):
                     os.makedirs(path_ftp_user)
@@ -4332,8 +4334,8 @@ def files_lister(request):
                 calculation_aoi, upload_file, error = uploadFile(request, data_set, file_name,\
                                                     path_ftp_user, path_kml_user, absolute_kml_url)
 
-                print '!!!!!!!!!!!!!!! calculation_aoi  ===================== ', calculation_aoi
-                print '!!!!!!!!!!!!!!! upload_file  ===================== ', upload_file
+                # print '!!!!!!!!!!!!!!! calculation_aoi  ===================== ', calculation_aoi
+                # print '!!!!!!!!!!!!!!! upload_file  ===================== ', upload_file
 
                 if error:
                     print '!!!!!!!!!!!!!!! ERROR  ===================== ', error

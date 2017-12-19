@@ -13,7 +13,6 @@ from customers.models import CustomerPolygons
 
 def getResultDirectory(dataset, shelfdata):
     dirs_list = []
-    # is_ts = dataset.is_ts
 
     try:
         project_directory = os.path.join(PROJECTS_PATH, dataset.results_directory)
@@ -343,24 +342,29 @@ def uploadFile(request, data_set, file_name, path_ftp_user, path_kml_user, absol
 
     # print '!!!!!!!!!! path_kml_user ================== ', path_kml_user
 
-    f_name = str(file_name).split('.')[:-1]
-    ext = str(file_name).split('.')[-1]
+    # f_name = str(file_name).split('.')[:-1]
+    # ext = str(file_name).split('.')[-1]
+
+    f_name, ext = os.path.splitext(file_name)
+
+    # print '!!!!!!!!!! F NAME ================== ', f_name
+    # print '!!!!!!!!!! F EXT ================== ', ext
 
     CustomerPolygons.objects.filter(user=request.user,
-            name=f_name[0]).delete()
+            name=f_name).delete()
 
     # print '!!!!!!!!!! FILE NAME ================== ', f_name
     # print '!!!!!!!!!! FILE EXT ================== ', ext
 
     # if DataPolygons.objects.filter(user=request.user, data_set=data_set,
-    #         customer_polygons__name=f_name[0]).exists():
+    #         customer_polygons__name=f_name).exists():
     #     DataPolygons.objects.filter(user=request.user, data_set=data_set,
-    #         customer_polygons__name=f_name[0]).delete()
+    #         customer_polygons__name=f_name).delete()
 
-    if ext == 'kmz':
-        zip_file = f_name[0] + '.zip'
+    if ext == '.kmz':
+        zip_file = f_name + '.zip'
         # doc_file = 'doc.kml'
-        new_kml_file = '{0}.kml'.format(f_name[0])
+        new_kml_file = '{0}.kml'.format(f_name)
         path_zip_file = os.path.join(path_ftp_user, zip_file)
         path_doc_kml = os.path.join(path_ftp_user, 'doc.kml')
         path_new_kml = os.path.join(path_ftp_user, new_kml_file)
@@ -396,7 +400,7 @@ def uploadFile(request, data_set, file_name, path_ftp_user, path_kml_user, absol
             count_color = get_count_color()
             upload_file = new_kml_file
             calculation_aoi = is_calculation_aoi(doc_kml)
-            info_window = get_info_window(doc_kml, f_name[0], path_new_kml)
+            info_window = get_info_window(doc_kml, f_name, path_new_kml)
 
             print '!!!!!!!!!!!!!!! KMZ calculation_aoi ============================ ', calculation_aoi
 
@@ -407,12 +411,12 @@ def uploadFile(request, data_set, file_name, path_ftp_user, path_kml_user, absol
         # print '!!!!!!!!!!!! COORDINATE ======================== ', doc_kml.Document.Polygon.outerBoundaryIs.LinearRing.coordinates
 
         load_aoi = addPolygonToDB(
-                        f_name[0], new_kml_file, request.user,
+                        f_name, new_kml_file, request.user,
                         new_path, kml_url,
                         data_set, text_kml=info_window
                     )
 
-    if ext == 'kml':
+    if ext == '.kml':
         kml_url = os.path.join(absolute_kml_url, file_name)
         new_path = os.path.join(path_kml_user, file_name)
         doc_kml, error = copy_file_kml(path_test_data, new_path)
@@ -431,7 +435,7 @@ def uploadFile(request, data_set, file_name, path_ftp_user, path_kml_user, absol
                 count_color = get_count_color()
                 upload_file = file_name
                 calculation_aoi = is_calculation_aoi(doc_kml)
-                info_window = get_info_window(doc_kml, f_name[0], path_test_data)
+                info_window = get_info_window(doc_kml, f_name, path_test_data)
 
                 # print '!!!!!!!!!!!!!!! KML calculation_aoi ============================ ', calculation_aoi
 
@@ -445,7 +449,7 @@ def uploadFile(request, data_set, file_name, path_ftp_user, path_kml_user, absol
         # print '!!!!!!!!!!!! COORDINATE ======================== ', doc_kml.Document.Polygon.outerBoundaryIs.LinearRing.coordinates
 
         load_aoi = addPolygonToDB(
-                        f_name[0], file_name, request.user,
+                        f_name, file_name, request.user,
                         new_path, kml_url,
                         data_set, text_kml=info_window
                     )
