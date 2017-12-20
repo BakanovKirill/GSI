@@ -370,6 +370,12 @@ class GetAuthToken(views.ObtainAuthToken):
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
 
+        try:
+            cip = CustomerInfoPanel.objects.get(user=user, is_show=True)
+            dataset = cip.data_set
+        except CustomerInfoPanel.DoesNotExist:
+            dataset = None
+
         ip = request.META.get('REMOTE_ADDR')
         http_referer = request.META.get('HTTP_REFERER')
         http_user_agent = request.META.get('HTTP_USER_AGENT')
@@ -377,7 +383,7 @@ class GetAuthToken(views.ObtainAuthToken):
         message = 'REMOTE_ADDR: {0}; HTTP_REFERER: {1}; HTTP_USER_AGENT: {2}'.format(
                         ip, http_referer, http_user_agent)
 
-        Log.objects.create(user=user, mode='api', action='auth_token', message=message)
+        Log.objects.create(user=user, mode='api', dataset=dataset, action='auth_token', message=message)
 
         return Response({'token': token.key})
 
