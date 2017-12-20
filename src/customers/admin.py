@@ -3,7 +3,7 @@ from django.contrib import admin
 from customers.models import (Category, ShelfData, DataSet, CustomerAccess,
                             CustomerInfoPanel, CustomerPolygons, DataTerraserver,
                             DataPolygons, AttributesReport, LutFiles, TimeSeriesResults,
-                            Reports)
+                            Reports, Log)
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -104,6 +104,12 @@ class ReportsAdmin(admin.ModelAdmin):
     list_filter = ('user', 'dataset', 'shelfdata', 'name')
 
 
+class LogAdmin(admin.ModelAdmin):
+    list_display = ('user', 'at', 'mode', 'dataset', 'action', 'customer_polygons')
+    search_fields = ['user', 'at', 'mode', 'dataset', 'action', 'customer_polygons']
+    list_filter = ('user', 'mode', 'dataset', 'action', 'customer_polygons')
+
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(ShelfData, ShelfDataAdmin)
 admin.site.register(DataSet, DataSetAdmin)
@@ -116,5 +122,4 @@ admin.site.register(AttributesReport, AttributesReportAdmin)
 admin.site.register(LutFiles, LutFilesAdmin)
 admin.site.register(TimeSeriesResults, TimeSeriesResultsAdmin)
 admin.site.register(Reports, ReportsAdmin)
-
-
+admin.site.register(Log, LogAdmin)

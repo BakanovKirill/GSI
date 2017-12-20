@@ -12,6 +12,38 @@ SCALE = (
 )
 
 
+def get_user_results(user, dataset, aoi, statistic=None):
+    if statistic:
+        data_polygon = DataPolygons.objects.filter(
+                    user=user,
+                    data_set=dataset,
+                    customer_polygons=aoi,
+                    statistic=statistic).order_by('id')
+    else:
+        data_polygon = DataPolygons.objects.filter(
+                    user=user,
+                    data_set=dataset,
+                    customer_polygons=aoi).order_by('id')
+
+    return data_polygon
+
+
+def get_user_ts_results(user, dataset, aoi, statistic=None):
+    if statistic:
+        time_series = TimeSeriesResults.objects.filter(
+                    user=user,
+                    data_set=dataset,
+                    customer_polygons=aoi,
+                    statistic=statistic).order_by('id')
+    else:
+        time_series = TimeSeriesResults.objects.filter(
+                    user=user,
+                    data_set=dataset,
+                    customer_polygons=aoi).order_by('id')
+
+    return time_series
+
+
 class LutFiles(models.Model):
     # TifPng <InpTiff> <LUTfile> [<MaxVal>] [<Legend>] [<Units>] [<ValScale>]
     
@@ -320,3 +352,49 @@ class Reports(models.Model):
 
     def __unicode__(self):
         return u"{0}".format(self.name)
+
+
+class Log(models.Model):
+    """ log system """
+
+    user = models.ForeignKey(
+        User,
+        verbose_name='User',
+        related_name='log_user',
+        on_delete=models.CASCADE
+    )
+    mode = models.CharField(
+        max_length=250,
+        blank=True, null=True,
+        verbose_name='Mode'
+    )
+    dataset = models.ForeignKey(
+        DataSet,
+        verbose_name='DataSet',
+        related_name='log_dataset',
+        blank=True, null=True,
+        on_delete=models.CASCADE
+    )
+    action = models.CharField(
+        max_length=250,
+        blank=True, null=True,
+        verbose_name='Action'
+    )
+    customer_polygons = models.ForeignKey(
+        CustomerPolygons,
+        verbose_name='Customer Polygon',
+        related_name='results',
+        blank=True, null=True,
+        on_delete=models.CASCADE
+    )
+    at = models.DateTimeField(auto_now_add=True)
+
+    def get_results(self):
+        return get_user_results(self.user, self.dataset, self.customer_polygons)
+
+    def get_ts_results(self):
+        return get_user_ts_results(self.user, self.dataset, self.customer_polygons)
+
+    def __unicode__(self):
+        return u"log {0}: {1} | {2}".format(self.at, self.user, self.mode)
+

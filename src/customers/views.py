@@ -43,7 +43,7 @@ from django.shortcuts import redirect
 
 from customers.models import (Category, ShelfData, DataSet, CustomerAccess,
                                 CustomerInfoPanel, CustomerPolygons, DataPolygons,
-                                AttributesReport, LutFiles, TimeSeriesResults)
+                                AttributesReport, LutFiles, TimeSeriesResults, Log)
 from customers.customers_forms import (CategoryForm, ShelfDataForm, DataSetForm,
                                         CustomerAccessForm, CustomerPolygonsForm,
                                         LutFilesForm)
@@ -4208,6 +4208,21 @@ def files_lister(request):
     cip_ds = CustomerInfoPanel.objects.filter(user=customer)
 
     # request.session['count_ts'] = 0
+    
+    # ***** TEST GET LOGs *********************************************************
+    user_log = Log.objects.filter(user=request.user)
+
+    print '!!!!!!!!!!!!!!!!!!!!! USER LOG ============================== ', user_log
+
+    if user_log:
+        res = None
+
+        for log in user_log:
+            res = log.get_user_results(statistic=Mean)
+
+        print '!!!!!!!!!!!!!!!!!!!!! RESULTS ============================== ', res
+
+    # ******************************************************************************
     
     # Get Select TS
     if request.session.get('count_ts', False):
