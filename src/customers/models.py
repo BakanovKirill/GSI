@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 from django.dispatch import receiver
+# from geoip import geolite2
 
 from django.conf import settings
 from django.db.models.signals import post_save
@@ -407,6 +408,9 @@ class Log(models.Model):
 
 def _getDataRequest(request):
     ip = request.META.get('REMOTE_ADDR')
+    # match = geolite2.lookup(ip)
+    # country = match.country
+    # timezone = match.timezone
     http_referer = request.META.get('HTTP_REFERER')
     http_user_agent = request.META.get('HTTP_USER_AGENT')
 
@@ -463,9 +467,3 @@ def user_logged_out_callback(sender, request, user, **kwargs):
 # def create_auth_token(sender, instance=None, created=False, **kwargs):
 #     Log.objects.create(user=sender, mode='api', action='login', message=sender)
 
-
-
-# CustomerInfoPanel
-#         user
-#         data_set
-#         is_show

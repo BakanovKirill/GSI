@@ -12,6 +12,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.http import Http404
+# from geoip import geolite2
 
 from django.core.files import File
 from django.contrib.auth.models import User
@@ -377,6 +378,9 @@ class GetAuthToken(views.ObtainAuthToken):
             dataset = None
 
         ip = request.META.get('REMOTE_ADDR')
+        # match = geolite2.lookup(ip)
+        # country = match.country
+        # timezone = match.timezone
         http_referer = request.META.get('HTTP_REFERER')
         http_user_agent = request.META.get('HTTP_USER_AGENT')
 
