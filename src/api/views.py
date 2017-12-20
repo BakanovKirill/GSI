@@ -356,6 +356,7 @@ def update_run(request, run_id):
     return Response(data, status=status.HTTP_200_OK)
     
 
+# *********** Ethos API *********************************************************************
 # Example
 # class UserListAPIView(generics.ListAPIView):
 #     queryset = User.objects.all()
@@ -371,16 +372,10 @@ class GetAuthToken(views.ObtainAuthToken):
 
         ip = request.META.get('REMOTE_ADDR')
         http_referer = request.META.get('HTTP_REFERER')
-        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-        username = request.META.get('USERNAME')
-        logname = request.META.get('LOGNAME')
-        customer = request.META.get('USER')
         http_user_agent = request.META.get('HTTP_USER_AGENT')
 
-        message = 'USER: {0}; REMOTE_ADDR: {1}; HTTP_USER_AGENT: {2}; \
-                    LOGNAME: {3}, USERNAME: {4}; \
-                    HTTP_X_FORWARDED_FOR: {4}; HTTP_REFERER: {6}'.format(
-                        customer, ip, http_user_agent, logname, username, x_forwarded_for, http_referer)
+        message = 'REMOTE_ADDR: {0}; HTTP_REFERER: {1}; HTTP_USER_AGENT: {2}'.format(
+                        ip, http_referer, http_user_agent)
 
         Log.objects.create(user=user, mode='api', action='auth_token', message=message)
 
