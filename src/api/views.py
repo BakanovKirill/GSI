@@ -24,9 +24,19 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 from rest_framework.parsers import JSONParser, FileUploadParser, FormParser, MultiPartParser
+from rest_framework.renderers import JSONRenderer
 from rest_framework import exceptions
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import generics, viewsets
+
+from rest_framework.authtoken import views
+
+
+# from rest_framework import parsers, renderers
+# from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+# from rest_framework.response import Response
+# from rest_framework.views import APIView
 
 from core.utils import (validate_status, write_log, get_path_folder_run, execute_fe_command, handle_uploaded_file)
 from gsi.models import Run, RunStep, CardSequence, OrderedCardItem, SubCardItem
@@ -35,7 +45,7 @@ from gsi.settings import (EXECUTE_FE_COMMAND, KML_PATH, FTP_PATH, KML_DIRECTORY,
 from cards.models import CardItem
 from customers.models import (CustomerPolygons, DataTerraserver, DataSet, CustomerAccess,
                                 DataPolygons, CustomerInfoPanel, TimeSeriesResults, Reports,
-                                ShelfData)
+                                ShelfData, Log)
 from api.serializers import (CustomerPolygonsSerializer, CustomerPolygonSerializer, 
                             DataPolygonsSerializer, DataSetsSerializer, DataSetSerializer,
                             TimeSeriesResultSerializer, ReportsSerializer)
@@ -350,7 +360,34 @@ def update_run(request, run_id):
 # class UserListAPIView(generics.ListAPIView):
 #     queryset = User.objects.all()
 #     serializer_class = UserSerializer
-        
+
+
+class GetAuthToken(views.ObtainAuthToken):
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+
+        ip = request.META.get('REMOTE_ADDR')
+        http_referer = request.META.get('HTTP_REFERER')
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        username = request.META.get('USERNAME')
+        logname = request.META.get('LOGNAME')
+        customer = request.META.get('USER')
+        http_user_agent = request.META.get('HTTP_USER_AGENT')
+
+        message = 'REMOTE_ADDR: {0}; HTTP_REFERER: {1}; \
+                    HTTP_X_FORWARDED_FOR: {2}, USERNAME: {3}; \
+                    LOGNAME: {4}; USER: {5}; HTTP_USER_AGENT: {6}'.format(
+                        ip, http_referer, x_forwarded_for, username, logname, customer, http_user_agent)
+
+        Log.objects.create(user=user, mode='api', action='auth_token', message=message)
+
+        return Response({'token': token.key})
+
+obtain_auth_token = GetAuthToken.as_view()
+
 
 @api_view(['POST'])
 @authentication_classes((SessionAuthentication, BasicAuthentication, TokenAuthentication))

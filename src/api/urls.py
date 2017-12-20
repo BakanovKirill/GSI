@@ -10,7 +10,7 @@ from api.views import (DataSetList, DataSetDetail,
                         ShapeFileList, ShapeFileDetail, ShapeFileNameDetail,
                         TimeSeriesDetail, TimeSeriesList, TimeSeriesNameDetail,
                         UploadFileAoiView, UploadFileFtpView,
-                        ReportsList, ReportsDetail)
+                        ReportsList, ReportsDetail, obtain_auth_token)
 
 
 urlpatterns = [
@@ -60,7 +60,8 @@ urlpatterns = [
 	
     # Auth Token
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^api-token-auth/', views.obtain_auth_token),
+    # url(r'^api-token-auth/', views.obtain_auth_token),
+    url(r'^api-token-auth/', obtain_auth_token),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

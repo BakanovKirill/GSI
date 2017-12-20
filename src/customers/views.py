@@ -4218,7 +4218,7 @@ def files_lister(request):
         res = None
 
         for log in user_log:
-            res = log.get_user_results(statistic=Mean)
+            res = log.get_results(statistic='Mean')
 
         print '!!!!!!!!!!!!!!!!!!!!! RESULTS ============================== ', res
 

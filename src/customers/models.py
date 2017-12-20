@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
+from django.dispatch import receiver
+
+from django.conf import settings
+from django.db.models.signals import post_save
 
 from core.utils import get_list_lutfiles
 
@@ -12,7 +17,7 @@ SCALE = (
 )
 
 
-def get_user_results(user, dataset, aoi, statistic=None):
+def get_user_results(user, dataset, aoi, statistic):
     if statistic:
         data_polygon = DataPolygons.objects.filter(
                     user=user,
@@ -28,7 +33,7 @@ def get_user_results(user, dataset, aoi, statistic=None):
     return data_polygon
 
 
-def get_user_ts_results(user, dataset, aoi, statistic=None):
+def get_user_ts_results(user, dataset, aoi, statistic):
     if statistic:
         time_series = TimeSeriesResults.objects.filter(
                     user=user,
@@ -387,14 +392,69 @@ class Log(models.Model):
         blank=True, null=True,
         on_delete=models.CASCADE
     )
+    message = models.TextField(null=False, default='')
     at = models.DateTimeField(auto_now_add=True)
 
-    def get_results(self):
-        return get_user_results(self.user, self.dataset, self.customer_polygons)
+    def get_results(self, statistic=None):
+        return get_user_results(self.user, self.dataset, self.customer_polygons, statistic)
 
-    def get_ts_results(self):
-        return get_user_ts_results(self.user, self.dataset, self.customer_polygons)
+    def get_ts_results(self, statistic=None):
+        return get_user_ts_results(self.user, self.dataset, self.customer_polygons, statistic)
 
     def __unicode__(self):
         return u"log {0}: {1} | {2}".format(self.at, self.user, self.mode)
 
+
+def _getDataRequest(request):
+    ip = request.META.get('REMOTE_ADDR')
+    http_referer = request.META.get('HTTP_REFERER')
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    username = request.META.get('USERNAME')
+    logname = request.META.get('LOGNAME')
+    customer = request.META.get('USER')
+    http_user_agent = request.META.get('HTTP_USER_AGENT')
+
+    message = 'REMOTE_ADDR: {0}; HTTP_REFERER: {1}; \
+                HTTP_X_FORWARDED_FOR: {2}, USERNAME: {3}; \
+                LOGNAME: {4}; USER: {5}; HTTP_USER_AGENT: {6}'.format(
+                    ip, http_referer, x_forwarded_for, username, logname, customer, http_user_agent)
+
+    return message
+
+
+@receiver(user_logged_in)
+def user_logged_in_callback(sender, request, user, **kwargs):
+    try:
+        cip = CustomerInfoPanel.objects.get(user=user, is_show=True)
+    except CustomerInfoPanel.DoesNotExist:
+        cip = None
+    message = _getDataRequest(request)
+    Log.objects.create(user=user, mode='ui', dataset=cip, action='login', message=message)
+
+
+@receiver(user_logged_out)
+def user_logged_out_callback(sender, request, user, **kwargs):
+    try:
+        cip = CustomerInfoPanel.objects.get(user=user, is_show=True)
+    except CustomerInfoPanel.DoesNotExist:
+        cip = None
+    message = _getDataRequest(request)
+    Log.objects.create(user=user, mode='ui', dataset=cip, action='logout', message=message)
+
+
+@receiver(user_login_failed)
+def user_login_failed_callback(sender, credentials, **kwargs):
+    # message = _getDataRequest(request)
+    Log.objects.create(mode='ui', action='login failed', user=credentials.get('username', None))
+
+
+# @receiver(post_save, sender=settings.AUTH_USER_MODEL)
+# def create_auth_token(sender, instance=None, created=False, **kwargs):
+#     Log.objects.create(user=sender, mode='api', action='login', message=sender)
+
+
+
+# CustomerInfoPanel
+#         user
+#         data_set
+#         is_show
