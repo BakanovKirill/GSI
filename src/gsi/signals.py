@@ -23,8 +23,11 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_ftp_user_folder(sender, instance=None, created=False, **kwargs):
     if created:
-        path_ftp_user = os.path.join(settings.FTP_PATH, instance.username)
-        os.makedirs(path_ftp_user, 0755);
+        try:
+            path_ftp_user = os.path.join(settings.FTP_PATH, instance.username)
+            os.makedirs(path_ftp_user, 0755)
+        except OSError:
+            pass
 
 
 @receiver(post_save, sender=Tile)

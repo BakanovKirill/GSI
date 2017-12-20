@@ -414,38 +414,55 @@ def _getDataRequest(request):
     customer = request.META.get('USER')
     http_user_agent = request.META.get('HTTP_USER_AGENT')
 
-    message = 'REMOTE_ADDR: {0}; HTTP_REFERER: {1}; \
-                HTTP_X_FORWARDED_FOR: {2}, USERNAME: {3}; \
-                LOGNAME: {4}; USER: {5}; HTTP_USER_AGENT: {6}'.format(
-                    ip, http_referer, x_forwarded_for, username, logname, customer, http_user_agent)
+    message = 'USER: {0}; REMOTE_ADDR: {1}; HTTP_USER_AGENT: {2}; \
+                LOGNAME: {3}, USERNAME: {4}; \
+                HTTP_X_FORWARDED_FOR: {4}; HTTP_REFERER: {6}'.format(
+                    customer, ip, http_user_agent, logname, username, x_forwarded_for, http_referer)
 
     return message
 
 
 @receiver(user_logged_in)
 def user_logged_in_callback(sender, request, user, **kwargs):
+    if 'admin' in request.META.get('HTTP_REFERER'):
+        return
+        
+    action='login'
+
+    if 'register' in request.META.get('HTTP_REFERER'):
+        action = 'register'
+
     try:
         cip = CustomerInfoPanel.objects.get(user=user, is_show=True)
+        dataset = cip.data_set
     except CustomerInfoPanel.DoesNotExist:
-        cip = None
+        dataset = None
+
     message = _getDataRequest(request)
-    Log.objects.create(user=user, mode='ui', dataset=cip, action='login', message=message)
+    Log.objects.create(user=user, mode='ui', dataset=dataset, action=action, message=message)
 
 
 @receiver(user_logged_out)
 def user_logged_out_callback(sender, request, user, **kwargs):
     try:
         cip = CustomerInfoPanel.objects.get(user=user, is_show=True)
+        dataset = cip.data_set
     except CustomerInfoPanel.DoesNotExist:
-        cip = None
+        dataset = None
+
     message = _getDataRequest(request)
-    Log.objects.create(user=user, mode='ui', dataset=cip, action='logout', message=message)
+    Log.objects.create(user=user, mode='ui', dataset=dataset, action='logout', message=message)
 
 
-@receiver(user_login_failed)
-def user_login_failed_callback(sender, credentials, **kwargs):
-    # message = _getDataRequest(request)
-    Log.objects.create(mode='ui', action='login failed', user=credentials.get('username', None))
+# @receiver(post_save, sender=User)
+# def save_profile(sender, instance, **kwargs):
+#     Log.objects.create(user=instance, mode='ui', action='register')
+
+
+# @receiver(user_login_failed)
+# def user_login_failed_callback(sender, credentials, **kwargs):
+#     # message = _getDataRequest(request)
+#     Log.objects.create(mode='ui', action='login failed', message=credentials.get('username', None))
 
 
 # @receiver(post_save, sender=settings.AUTH_USER_MODEL)

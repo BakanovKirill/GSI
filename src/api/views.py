@@ -377,10 +377,10 @@ class GetAuthToken(views.ObtainAuthToken):
         customer = request.META.get('USER')
         http_user_agent = request.META.get('HTTP_USER_AGENT')
 
-        message = 'REMOTE_ADDR: {0}; HTTP_REFERER: {1}; \
-                    HTTP_X_FORWARDED_FOR: {2}, USERNAME: {3}; \
-                    LOGNAME: {4}; USER: {5}; HTTP_USER_AGENT: {6}'.format(
-                        ip, http_referer, x_forwarded_for, username, logname, customer, http_user_agent)
+        message = 'USER: {0}; REMOTE_ADDR: {1}; HTTP_USER_AGENT: {2}; \
+                    LOGNAME: {3}, USERNAME: {4}; \
+                    HTTP_X_FORWARDED_FOR: {4}; HTTP_REFERER: {6}'.format(
+                        customer, ip, http_user_agent, logname, username, x_forwarded_for, http_referer)
 
         Log.objects.create(user=user, mode='api', action='auth_token', message=message)
 
