@@ -383,7 +383,7 @@ class GetAuthToken(views.ObtainAuthToken):
         message = 'REMOTE_ADDR: {0}; HTTP_REFERER: {1}; HTTP_USER_AGENT: {2}'.format(
                         ip, http_referer, http_user_agent)
 
-        Log.objects.create(user=user, mode='api', dataset=dataset, action='auth_token', message=message)
+        Log.objects.create(user=user, mode='api', dataset=dataset, action='auth_token', message=request)
 
         return Response({'token': token.key})
 
