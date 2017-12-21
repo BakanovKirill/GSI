@@ -3,12 +3,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 from django.dispatch import receiver
-# from geoip import geolite2
-
 from django.conf import settings
 from django.db.models.signals import post_save
 
-from core.utils import get_list_lutfiles
+from core.utils import get_list_lutfiles, getLogDataRequest
 
 
 LUTFILES = get_list_lutfiles()
@@ -406,20 +404,6 @@ class Log(models.Model):
         return u"log {0}: {1} | {2} | {3}".format(self.at, self.user, self.mode, self.action)
 
 
-def _getDataRequest(request):
-    ip = request.META.get('REMOTE_ADDR')
-    # match = geolite2.lookup(ip)
-    # country = match.country
-    # timezone = match.timezone
-    http_referer = request.META.get('HTTP_REFERER')
-    http_user_agent = request.META.get('HTTP_USER_AGENT')
-
-    message = 'REMOTE_ADDR: {0}; HTTP_REFERER: {1}; HTTP_USER_AGENT: {2}'.format(
-                    ip, http_referer, http_user_agent)
-
-    return message
-
-
 @receiver(user_logged_in)
 def user_logged_in_callback(sender, request, user, **kwargs):
     if 'admin' in request.META.get('HTTP_REFERER'):
@@ -436,7 +420,7 @@ def user_logged_in_callback(sender, request, user, **kwargs):
     except CustomerInfoPanel.DoesNotExist:
         dataset = None
 
-    message = _getDataRequest(request)
+    message = getLogDataRequest(request)
     Log.objects.create(user=user, mode='ui', dataset=dataset, action=action, message=message)
 
 
@@ -448,7 +432,7 @@ def user_logged_out_callback(sender, request, user, **kwargs):
     except CustomerInfoPanel.DoesNotExist:
         dataset = None
 
-    message = _getDataRequest(request)
+    message = getLogDataRequest(request)
     Log.objects.create(user=user, mode='ui', dataset=dataset, action='logout', message=message)
 
 
@@ -459,7 +443,7 @@ def user_logged_out_callback(sender, request, user, **kwargs):
 
 # @receiver(user_login_failed)
 # def user_login_failed_callback(sender, credentials, **kwargs):
-#     # message = _getDataRequest(request)
+#     # message = getLogDataRequest(request)
 #     Log.objects.create(mode='ui', action='login failed', message=credentials.get('username', None))
 
 

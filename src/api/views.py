@@ -39,7 +39,8 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 # from rest_framework.response import Response
 # from rest_framework.views import APIView
 
-from core.utils import (validate_status, write_log, get_path_folder_run, execute_fe_command, handle_uploaded_file)
+from core.utils import (validate_status, write_log, get_path_folder_run, execute_fe_command,
+                        handle_uploaded_file, getLogDataRequest)
 from gsi.models import Run, RunStep, CardSequence, OrderedCardItem, SubCardItem
 from gsi.settings import (EXECUTE_FE_COMMAND, KML_PATH, FTP_PATH, KML_DIRECTORY,
                             REMAP_DIRECTORY, REMAP_PATH, STATISTICS)
@@ -377,17 +378,19 @@ class GetAuthToken(views.ObtainAuthToken):
         except CustomerInfoPanel.DoesNotExist:
             dataset = None
 
-        ip = request.META.get('REMOTE_ADDR')
-        # match = geolite2.lookup(ip)
-        # country = match.country
-        # timezone = match.timezone
-        http_referer = request.META.get('HTTP_REFERER')
-        http_user_agent = request.META.get('HTTP_USER_AGENT')
+        message = getLogDataRequest(request)
 
-        message = 'REMOTE_ADDR: {0}; HTTP_REFERER: {1}; HTTP_USER_AGENT: {2}'.format(
-                        ip, http_referer, http_user_agent)
+        # ip = request.META.get('REMOTE_ADDR')
+        # # match = geolite2.lookup(ip)
+        # # country = match.country
+        # # timezone = match.timezone
+        # http_referer = request.META.get('HTTP_REFERER')
+        # http_user_agent = request.META.get('HTTP_USER_AGENT')
 
-        Log.objects.create(user=user, mode='api', dataset=dataset, action='auth_token', message=request)
+        # message = 'REMOTE_ADDR: {0}; HTTP_REFERER: {1}; HTTP_USER_AGENT: {2}'.format(
+        #                 ip, http_referer, http_user_agent)
+
+        Log.objects.create(user=user, mode='api', dataset=dataset, action='auth_token', message=message)
 
         return Response({'token': token.key})
 
@@ -1160,6 +1163,15 @@ class UploadFileFtpView(APIView):
                 for chunk in file_obj.chunks():
                     ch = chunk
                     destination.write(chunk)
+
+            try:
+                cip = CustomerInfoPanel.objects.get(user=request.user, is_show=True)
+                dataset = cip.data_set
+            except CustomerInfoPanel.DoesNotExist:
+                dataset = None
+
+            message = getLogDataRequest(request)
+            Log.objects.create(user=request.user, mode='api', dataset=dataset, action='file uploaded', message=message)
             
             data = {
                 'file_name': file_obj.name,

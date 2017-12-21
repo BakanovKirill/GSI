@@ -11,6 +11,7 @@ from Crypto.PublicKey import RSA
 from itertools import chain, islice, izip
 
 from django.conf import settings
+# from geoip import geolite2
 from django.utils.translation import ugettext_lazy as _
 
 from gsi.settings import (EXECUTE_FE_COMMAND, PROCESS_NUM,
@@ -18,6 +19,20 @@ from gsi.settings import (EXECUTE_FE_COMMAND, PROCESS_NUM,
 							PATH_RUNS_SCRIPTS, LUT_DIRECTORY
 						)
 from core.multithreaded import MultiprocessingCards
+
+
+def getLogDataRequest(request):
+    ip = request.META.get('REMOTE_ADDR')
+    # match = geolite2.lookup(ip)
+    # country = match.country
+    # timezone = match.timezone
+    http_referer = request.META.get('HTTP_REFERER')
+    http_user_agent = request.META.get('HTTP_USER_AGENT')
+
+    message = 'REMOTE_ADDR: {0}; HTTP_REFERER: {1}; HTTP_USER_AGENT: {2}'.format(
+                    ip, http_referer, http_user_agent)
+
+    return message
 
 
 def handle_uploaded_file(f, path):
