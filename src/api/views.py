@@ -76,6 +76,16 @@ from core.functions_customer import (getResultDirectory, getTsResultDirectory,
 # generics.ListAPIView
 
 
+def get_curent_dataset(user):
+    try:
+        cip = CustomerInfoPanel.objects.get(user=user, is_show=True)
+        dataset = cip.data_set
+    except CustomerInfoPanel.DoesNotExist:
+        dataset = None
+
+    return dataset
+
+
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 100
     page_size_query_param = 'page_size'
@@ -372,24 +382,8 @@ class GetAuthToken(views.ObtainAuthToken):
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
 
-        try:
-            cip = CustomerInfoPanel.objects.get(user=user, is_show=True)
-            dataset = cip.data_set
-        except CustomerInfoPanel.DoesNotExist:
-            dataset = None
-
+        dataset = get_curent_dataset(user)
         message = getLogDataRequest(request)
-
-        # ip = request.META.get('REMOTE_ADDR')
-        # # match = geolite2.lookup(ip)
-        # # country = match.country
-        # # timezone = match.timezone
-        # http_referer = request.META.get('HTTP_REFERER')
-        # http_user_agent = request.META.get('HTTP_USER_AGENT')
-
-        # message = 'REMOTE_ADDR: {0}; HTTP_REFERER: {1}; HTTP_USER_AGENT: {2}'.format(
-        #                 ip, http_referer, http_user_agent)
-
         Log.objects.create(user=user, mode='api', dataset=dataset, action='auth_token', message=message)
 
         return Response({'token': token.key})
@@ -1164,12 +1158,7 @@ class UploadFileFtpView(APIView):
                     ch = chunk
                     destination.write(chunk)
 
-            try:
-                cip = CustomerInfoPanel.objects.get(user=request.user, is_show=True)
-                dataset = cip.data_set
-            except CustomerInfoPanel.DoesNotExist:
-                dataset = None
-
+            dataset = get_curent_dataset(request.user)
             message = getLogDataRequest(request)
             Log.objects.create(user=request.user, mode='api', dataset=dataset, action='file uploaded', message=message)
             
@@ -1179,6 +1168,8 @@ class UploadFileFtpView(APIView):
             }
 
             return Response(data)
+
+
         
         
 # @api_view(['GET',])
