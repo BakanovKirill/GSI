@@ -607,7 +607,9 @@ class TimeSeriesList(viewsets.ReadOnlyModelViewSet):
                             ).order_by('id')
 
             dataset = get_curent_dataset(self.request.user)
-            message = getLogDataRequest(self.request)
+
+            message = 'TIMESERIES STATISTIC: {}; '.format(statistics)
+            message += getLogDataRequest(self.request)
             Log.objects.create(user=self.request.user, mode='api', dataset=dataset, action='timeseries list', message=message)
 
         return queryset
@@ -658,6 +660,12 @@ class TimeSeriesDetail(APIView):
                                 customer_polygons__id=shapefile_id).order_by('id')
                 serializer = TimeSeriesResultSerializer(queryset, many=True)
                 data = serializer.data
+
+                dataset = get_curent_dataset(request.user)
+                message = 'TIMESERIES DETAIL: {} elements; '.format(queryset.count())
+                message += 'TIMESERIES STATISTIC: {}; '.format(statistics)
+                message += getLogDataRequest(request)
+                Log.objects.create(user=request.user, mode='api', dataset=dataset, action='timeseries detail', message=message)
             except TimeSeriesResults.DoesNotExist:
                 return Response({'error': 'TimeSeries Does Not Exist'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -676,58 +684,76 @@ class TimeSeriesNameDetail(APIView):
     def get(self, request, format=None):
         data = {'auth': 'Need YOUR ACCESS TOKEN'}
         statistics = STATISTICS
+        queryset = None
+        shapefile_name = None
+        start_date = None
+        end_date = None
+        start_date_log = None
+        end_date_log = None
 
         if request.auth:
             if 'statistics' in request.GET:
                 statistics = request.GET['statistics'].split(',')
             
             if 'shapefile_name' in request.GET:
+                shapefile_name = request.GET['shapefile_name']
                 try:
                     queryset = TimeSeriesResults.objects.filter(
                                     user=request.user,
                                     stat_code__in=statistics,
-                                    customer_polygons__name=request.GET['shapefile_name']).order_by('id')
-                    serializer = TimeSeriesResultSerializer(queryset, many=True)
-                    data = serializer.data
+                                    customer_polygons__name=shapefile_name).order_by('id')
+                    # serializer = TimeSeriesResultSerializer(queryset, many=True)
+                    # data = serializer.data
                 # except KeyError:
                 except Exception, e:
                     return Response({'error': 'Invalid ShapeFile Name'},
                                     status=status.HTTP_400_BAD_REQUEST)
-            elif 'start_date' in request.GET and 'end_date' in request.GET:
+
+            if 'start_date' in request.GET:
+                start = request.GET['start_date'].split('-')
+                start_date_log = request.GET['start_date']
+                start_date = date(int(start[0]), int(start[1]), int(start[2]))
+
+            if 'end_date' in request.GET:
+                end = request.GET['end_date'].split('-')
+                end_date_log = request.GET['end_date']
+                end_date = date(int(end[0]), int(end[1]), int(end[2]))
+
+            
+            if start_date and end_date:
                 try:
-                    start = request.GET['start_date'].split('-')
-                    end = request.GET['end_date'].split('-')
-
-                    start_date = date(int(start[0]), int(start[1]), int(start[2]))
-                    end_date = date(int(end[0]), int(end[1]), int(end[2]))
-
-                    # return Response({'start_date': start_date, 'end_date': end_date},
-                    #                     status=status.HTTP_400_BAD_REQUEST)
-
-                    queryset = TimeSeriesResults.objects.filter(
-                                    result_date__gte=start_date,
-                                    stat_code__in=statistics,
-                                    result_date__lte=end_date).order_by('result_date')
+                    queryset = queryset.filter(
+                                result_date__gte=start_date,
+                                result_date__lte=end_date).order_by('result_date')
 
                     if queryset:
-                        # pass
                         serializer = TimeSeriesResultSerializer(queryset, many=True)
                         data = serializer.data
                     else:
                         data = {'status_message': 'Nothing found in this interval'}
-                    
                 except Exception, e:
                     return Response({'error': e},
                                     status=status.HTTP_400_BAD_REQUEST)
-            elif 'start_date' in request.GET:
+            elif start_date and not end_date:
                 return Response({'error': 'The argument "end_date" is not specified'},
                                     status=status.HTTP_400_BAD_REQUEST)
-            elif 'end_date' in request.GET:
+            elif not start_date and end_date:
                 return Response({'error': 'The argument "start_date" is not specified'},
                                     status=status.HTTP_400_BAD_REQUEST)
-            else:
-                return Response({'error': 'Invalid attributes in the query'},
-                                    status=status.HTTP_400_BAD_REQUEST)
+            # else:
+            #     return Response({'error': 'Invalid attributes in the query'},
+            #                         status=status.HTTP_400_BAD_REQUEST)
+
+            dataset = get_curent_dataset(request.user)
+
+            message = 'TIMESERIES NAME DETAIL: {}; '.format(shapefile_name)
+            message += 'TIMESERIES STATISTIC: {}; '.format(statistics)
+
+            if start_date_log and end_date_log:
+                message += 'TIMESERIES TIME INTERVAL: [from: {} to: {}]; '.format(start_date_log, end_date_log)
+
+            message += getLogDataRequest(request)
+            Log.objects.create(user=request.user, mode='api', dataset=dataset, action='timeseries name detail', message=message)
 
         return Response(data)
 
@@ -771,12 +797,15 @@ class ReportsList(viewsets.ReadOnlyModelViewSet):
                         shelfdata=ld)
 
     def get_queryset(self):
-        # queryset = {'auth': 'Need YOUR ACCESS TOKEN'}
         queryset = Reports.objects.none()
         self.get_attributes(self.request.user)
 
         if self.request.auth:
             queryset = Reports.objects.filter(user=self.request.user).order_by('id')
+
+            dataset = get_curent_dataset(self.request.user)
+            message = getLogDataRequest(self.request)
+            Log.objects.create(user=self.request.user, mode='api', dataset=dataset, action='report list', message=message)
 
         return queryset
 
@@ -831,8 +860,13 @@ class ReportsDetail(APIView):
                         dataset=dataset).order_by('id')
             serializer = ReportsSerializer(queryset, many=True)
             data = serializer.data
+
+            dataset = get_curent_dataset(request.user)
+            message = 'DATASET REPORTS DETAIL: {}; '.format(dataset)
+            message += getLogDataRequest(request)
+            Log.objects.create(user=request.user, mode='api', dataset=dataset, action='reports detail', message=message)
         except Exception, e:
-            return Response({'error': 'DataSet Does Not Exist'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Reports DataSet Does Not Exist'}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(data)
 
@@ -1157,7 +1191,8 @@ class UploadFileAoiView(APIView):
                 pass
 
         dataset = get_curent_dataset(request.user)
-        message = getLogDataRequest(request)
+        message = 'UPLOAD SHAPEFILE: {}'.format(file_name)
+        message += getLogDataRequest(request)
         Log.objects.create(user=request.user, mode='api',
             dataset=dataset, action='shapefile created', customer_polygons=customer_polygon, message=message)
             
@@ -1194,7 +1229,8 @@ class UploadFileFtpView(APIView):
                     destination.write(chunk)
 
             dataset = get_curent_dataset(request.user)
-            message = getLogDataRequest(request)
+            message = 'UPLOAD FILE: {}'.format(file_name)
+            message += getLogDataRequest(request)
             Log.objects.create(user=request.user, mode='api', dataset=dataset, action='file uploaded', message=message)
             
             data = {
