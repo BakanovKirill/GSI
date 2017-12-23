@@ -4220,7 +4220,7 @@ def files_lister(request):
         for log in user_log:
             res = log.get_results(statistic='Mean')
 
-        print '!!!!!!!!!!!!!!!!!!!!! RESULTS ============================== ', res
+        print '!!!!!!!!!!!!!!!!!!!!! TEST GET LOGs: RESULTS ============================== ', res
 
     # ******************************************************************************
     
@@ -4317,8 +4317,7 @@ def files_lister(request):
                 info_window = ''
                 name_kml = ''
                 file_name = str(request.FILES['test_data']).decode('utf-8')
-                fl, ext = os.path.splitext(file_name)
-                new_file_name = '{0}_{1}{2}'.format(data_set, fl, ext)
+                new_file_name = '{}_{}'.format(data_set, file_name)
                 new_file_name = new_file_name.replace(' ', '-')
                 path_test_data = os.path.join(path_ftp_user, new_file_name)
 

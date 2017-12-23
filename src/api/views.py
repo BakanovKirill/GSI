@@ -429,6 +429,10 @@ class DataSetList(viewsets.ReadOnlyModelViewSet):
             try:
                 customer_access = CustomerAccess.objects.get(user=self.request.user)
                 queryset = DataSet.objects.filter(customer_access=customer_access).order_by('id')
+
+                dataset = get_curent_dataset(self.request.user)
+                message = getLogDataRequest(self.request)
+                Log.objects.create(user=self.request.user, mode='api', dataset=dataset, action='dataset list', message=message)
             except Exception:
                 pass
 
@@ -481,6 +485,11 @@ class DataSetDetail(APIView):
                 # serializer = DataSetsSerializer(queryset)
                 serializer = DataSetSerializer(queryset)
                 data = serializer.data
+
+                dataset = get_curent_dataset(request.user)
+                message = 'DATASET DETAIL: {}; '.format(queryset)
+                message += getLogDataRequest(request)
+                Log.objects.create(user=request.user, mode='api', dataset=dataset, action='dataset detail', message=message)
             except DataSet.DoesNotExist:
                 return Response({'error': 'DataSet Does Not Exist'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -503,6 +512,10 @@ class ShapeFileList(viewsets.ReadOnlyModelViewSet):
         if self.request.auth:
             queryset = CustomerPolygons.objects.filter(user=self.request.user).order_by('id')
 
+            dataset = get_curent_dataset(self.request.user)
+            message = getLogDataRequest(self.request)
+            Log.objects.create(user=self.request.user, mode='api', dataset=dataset, action='shapefiles list', message=message)
+
         return queryset
 
 
@@ -523,6 +536,11 @@ class ShapeFileDetail(APIView):
                 queryset = CustomerPolygons.objects.get(pk=sf_id)
                 serializer = CustomerPolygonSerializer(queryset)
                 data = serializer.data
+
+                dataset = get_curent_dataset(request.user)
+                message = 'SHAPEFILE DETAIL: {}; '.format(queryset)
+                message += getLogDataRequest(request)
+                Log.objects.create(user=request.user, mode='api', dataset=dataset, action='shapefile detail', message=message)
             except CustomerPolygons.DoesNotExist:
                 return Response({'error': 'ShapeFile Does Not Exist'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -554,6 +572,11 @@ class ShapeFileNameDetail(APIView):
                                 user=request.user, name=request.GET['name'])
                 serializer = CustomerPolygonSerializer(queryset)
                 data = serializer.data
+
+                dataset = get_curent_dataset(request.user)
+                message = 'SHAPEFILE NAME DETAIL: {}; '.format(queryset)
+                message += getLogDataRequest(request)
+                Log.objects.create(user=request.user, mode='api', dataset=dataset, action='shapefile name detail', message=message)
             except Exception:
                 return Response({'error': 'Invalid ShapeFile Name'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -582,6 +605,10 @@ class TimeSeriesList(viewsets.ReadOnlyModelViewSet):
                             user=self.request.user,
                             stat_code__in=statistics,
                             ).order_by('id')
+
+            dataset = get_curent_dataset(self.request.user)
+            message = getLogDataRequest(self.request)
+            Log.objects.create(user=self.request.user, mode='api', dataset=dataset, action='timeseries list', message=message)
 
         return queryset
 
@@ -834,6 +861,7 @@ class UploadFileAoiView(APIView):
         statistic = 'Mean'
         doc_kml = None
         data_queryset = None
+        customer_polygon = CustomerPolygons.objects.none()
         urls = []
         data = {'auth error': 'Need YOUR ACCESS TOKEN'}
 
@@ -850,8 +878,10 @@ class UploadFileAoiView(APIView):
             try:
                 file_obj = request.FILES['file']
                 
-                file_name = file_obj.name
+                dataset_name = dataset.name.replace(' ', '-')
+                file_name = '{}_{}'.format(dataset.name, file_obj.name)
                 fl, ext = os.path.splitext(file_name)
+                # ds_file_name = '{}_{}'.format(dataset.name, fl)
 
                 scheme = '{0}://'.format(request.scheme)
                 absolute_kml_url = os.path.join(scheme, request.get_host(), KML_DIRECTORY, request.user.username)
@@ -1107,6 +1137,7 @@ class UploadFileAoiView(APIView):
                                 data_set=dataset,
                                 kml_name=shapefile_name
                             )
+                customer_polygon = queryset_cp
                 if dataset.is_ts:
                     try:
                         queryset_tsr = TimeSeriesResults.objects.filter(
@@ -1125,6 +1156,10 @@ class UploadFileAoiView(APIView):
             except CustomerPolygons.DoesNotExist:
                 pass
 
+        dataset = get_curent_dataset(request.user)
+        message = getLogDataRequest(request)
+        Log.objects.create(user=request.user, mode='api',
+            dataset=dataset, action='shapefile created', customer_polygons=customer_polygon, message=message)
             
         
         data = {
