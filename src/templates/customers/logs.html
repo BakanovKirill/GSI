@@ -1,0 +1,106 @@
+{% extends "base_log.html" %}
+{% load static from staticfiles %}
+
+{% block content %}
+    <form action="{% url 'logs' %}" enctype="multipart/form-data" role="form"
+          class="form-horizontal" method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="margin-top-30 left col-md-12">
+                    <span class="right margin-right-10">User: <b>{{ user }}</b></span>
+                </div>
+
+                <div class="col-md-3 margin-bottom-30 margin-top-10 left">
+                    <span class="right margin-right-10">Select DataSet: </span></br>
+                    <select class="selectpicker" id="select_dataset" name="select-dataset">
+                        {% for ds in log_datasets %}
+                            <option value="{{ ds.dataset.id }}">
+                                {{ ds.dataset.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-3 margin-bottom-30 margin-top-10 left">
+                    <span class="right margin-right-10">Select Mode: </span></br>
+                    <select class="selectpicker" id="select_dataset" name="select-dataset">
+                        {% for mode in log_mode %}
+                            <option value="{{ mode.mode }}">
+                                {{ mode.mode|upper }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-3 margin-bottom-30 margin-top-10 left">
+                    <span class="right margin-right-10">Select Action: </span></br>
+                    <select class="selectpicker" id="select_dataset" name="select-dataset">
+                        {% for action in log_action %}
+                            <option value="{{ action.action }}">
+                                {{ action.action|upper }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-3 margin-bottom-20">
+                    <button type="submit" id="filter_logs" name="filter-logs" class="btn btn-primary btn-sm">Filter</button>
+                </div>
+
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th class="left">User</th>
+                            <th class="left">Date</th>
+                            <th class="left">Mode</th>
+                            <th class="left">Action</th>
+                            <th class="center">DataSet</th>
+                            <th class="center">Shapefile</th>
+                            <th class="center">Total Area</th>
+                        </tr>
+                    </thead>
+
+                    {% for log in logs %}
+                        <tbody>
+                            <td class="left">{{ log.user }}</td>
+                            <td class="left">{{ log.at }}</td>
+                            <td class="left">{{ log.mode|upper }}</td>
+                            <td class="left">{{ log.action|upper }}</td>
+                            <td class="center">{{ log.dataset }}</td>
+                            <td class="center">{% if log.customer_polygons %}{{ log.customer_polygons }}{% else %}&#8212;{% endif %}</td>
+                            {% if log.customer_polygons %}
+                                <td class="center">{{ log.customer_polygons.attributes_shapefile.first.total_area }}</td>
+                            {% else %}
+                                <td class="center">&#8212;</td>
+                            {% endif %}
+                        </tbody>
+                    {% endfor %}
+                </table>
+
+                <div class="row margin-top-15">
+                    <div class="col-md-2 col-md-offset-10">
+                        <a class="btn btn-success cancel-but btn-block no-hover" href="{% url 'customer_section' %}" role="button">
+                            Back
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Modal Check Delete Items -->
+                {% include '_modal_check_delete_items.html' %}
+                <!-- End Modal Check Delete Items -->
+
+                <!-- Modal Waiting -->
+                {% include '_modal_calculation_aoi.html' %}
+                {% include '_modal_waiting.html' %}
+                <!-- End Modal Waiting -->
+            </div>
+        </div>
+    </form>
+{% endblock content %}
+
+<!--
+{% for n in log.customer_polygons.attributes_shapefile.all %}
+    <td class="center">{{ n.total_area }}</td>
+{% endfor %}
+-->

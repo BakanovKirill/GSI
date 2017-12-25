@@ -48,6 +48,9 @@ urlpatterns = [
 	
 	# Files Lister url
 	url(r'^files-lister/$', 'customers.views.files_lister', name='files_lister'),
+
+    # Logs list
+    url(r'^logs/$', 'customers.views.logs', name='logs'),
 	
 	# Delete url
 	url(r'^delete', 'customers.views.customer_delete_file', name='customer_delete_file'),

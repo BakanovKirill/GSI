@@ -4561,3 +4561,28 @@ def files_lister(request):
 
     return data
 
+
+# Logs list
+@login_required
+@render_to('customers/logs.html')
+def logs(request):
+    if request.user.is_superuser:
+        logs = Log.objects.all()
+        log_datasets = Log.objects.order_by('dataset').distinct('dataset')
+        log_mode = Log.objects.order_by('mode').distinct('mode')
+        log_action = Log.objects.order_by('action').distinct('action')
+    else:
+        logs = Log.objects.filter(user=request.user)
+        log_datasets = Log.objects.filter(user=request.user).order_by('dataset').distinct('dataset')
+        log_mode = Log.objects.filter(user=request.user).order_by('mode').distinct('mode')
+        log_action = Log.objects.filter(user=request.user).order_by('action').distinct('action')
+
+    data = {
+        'logs': logs,
+        'log_datasets': log_datasets,
+        'log_mode': log_mode,
+        'log_action': log_action
+    }
+
+    return data
+
