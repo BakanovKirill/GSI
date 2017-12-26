@@ -40,6 +40,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.utils.datastructures import MultiValueDictKeyError
 from django.shortcuts import redirect
+from django.db.models import Q
 
 from customers.models import (Category, ShelfData, DataSet, CustomerAccess,
                                 CustomerInfoPanel, CustomerPolygons, DataPolygons,
@@ -4566,22 +4567,126 @@ def files_lister(request):
 @login_required
 @render_to('customers/logs.html')
 def logs(request):
-    if request.user.is_superuser:
-        logs = Log.objects.all()
-        log_datasets = Log.objects.order_by('dataset').distinct('dataset')
-        log_mode = Log.objects.order_by('mode').distinct('mode')
-        log_action = Log.objects.order_by('action').distinct('action')
+    # select_user = 'All'
+    # select_ds = 'All'
+    # select_mode = 'All'
+    # select_action = 'All'
+    log_users = ''
+    select_user = ''
+    select_ds = ''
+
+    # GET SESSIONS
+    # Get select log user sessions
+    # request.session['select_user'] = ''
+    # request.session['select_ds'] = ''
+
+    if not 'select_user' in request.session:
+        request.session['select_user'] = ''
+
+    # Get select log dataset sessions
+    if not 'select_ds' in request.session:
+        request.session['select_ds'] = ''
+
+    # Get select log mode sessions
+    if not 'select_mode' in request.session:
+        request.session['select_mode'] = ''
+
+    # Get select log action sessions
+    if not 'select_action' in request.session:
+        request.session['select_action'] = ''
+
+    if request.method == "POST":
+        data_post = request.POST
+
+        # print '!!!!!!!!!!!!!! POST LOG ============================= ', data_post
+
+        if 'reset-logs' in data_post:
+            request.session['select_user'] = ''
+            request.session['select_ds'] = ''
+            request.session['select_mode'] = ''
+            request.session['select_action'] = ''
+
+        if 'filter-logs' in data_post and 'select-user' in data_post:
+            request.session['select_user'] = data_post['select-user']
+
+        if 'filter-logs' in data_post:
+            request.session['select_ds'] = data_post['select-dataset']
+            request.session['select_mode'] = data_post['select-mode']
+            request.session['select_action'] = data_post['select-action']
+
+        if request.user.is_superuser:
+            if request.session['select_user']:
+                logs = Log.objects.filter(user__id=request.session['select_user']).order_by('-at')
+            else:
+                logs = Log.objects.all().order_by('-at')
+
+            log_datasets = Log.objects.order_by('dataset').distinct('dataset')
+            log_mode = Log.objects.order_by('mode').distinct('mode')
+            log_action = Log.objects.order_by('action').distinct('action')
+            log_users = Log.objects.order_by('user').distinct('user')
+        else:
+            logs = Log.objects.filter(user=request.user).order_by('-at')
+            log_datasets = Log.objects.filter(user=request.user).order_by('dataset').distinct('dataset')
+            log_mode = Log.objects.filter(user=request.user).order_by('mode').distinct('mode')
+            log_action = Log.objects.filter(user=request.user).order_by('action').distinct('action')
+
+        if request.session['select_ds']:
+            logs = logs.filter(Q(dataset__id=request.session['select_ds']))
+
+        if request.session['select_mode']:
+            logs = logs.filter(Q(mode=request.session['select_mode']))
+
+        if request.session['select_action']:
+            logs = logs.filter(Q(action=request.session['select_action']))
+
+        # logs = Log.objects.filter(
+        #         user=request.user,
+        #         dataset__id=request.session['select_ds'],
+        #         mode=request.session['select_mode'],
+        #         action=request.session['select_action']).order_by('-at')
     else:
-        logs = Log.objects.filter(user=request.user)
-        log_datasets = Log.objects.filter(user=request.user).order_by('dataset').distinct('dataset')
-        log_mode = Log.objects.filter(user=request.user).order_by('mode').distinct('mode')
-        log_action = Log.objects.filter(user=request.user).order_by('action').distinct('action')
+        if request.user.is_superuser:
+            if request.session['select_user']:
+                logs = Log.objects.filter(user__id=request.session['select_user']).order_by('-at')
+            else:
+                logs = Log.objects.all().order_by('-at')
+
+            log_datasets = Log.objects.order_by('dataset').distinct('dataset')
+            log_mode = Log.objects.order_by('mode').distinct('mode')
+            log_action = Log.objects.order_by('action').distinct('action')
+            log_users = Log.objects.order_by('user').distinct('user')
+        else:
+            logs = Log.objects.filter(user=request.user).order_by('-at')
+            log_datasets = Log.objects.filter(user=request.user).order_by('dataset').distinct('dataset')
+            log_mode = Log.objects.filter(user=request.user).order_by('mode').distinct('mode')
+            log_action = Log.objects.filter(user=request.user).order_by('action').distinct('action')
+
+        if request.session['select_ds']:
+            logs = logs.filter(Q(dataset__id=request.session['select_ds']))
+
+        if request.session['select_mode']:
+            logs = logs.filter(Q(mode=request.session['select_mode']))
+
+        if request.session['select_action']:
+            logs = logs.filter(Q(action=request.session['select_action']))
+
+    if request.session['select_user']:
+        select_user = int(request.session['select_user'])
+
+    if request.session['select_ds']:
+        select_ds = int(request.session['select_ds'])
 
     data = {
         'logs': logs,
         'log_datasets': log_datasets,
         'log_mode': log_mode,
-        'log_action': log_action
+        'log_action': log_action,
+        'log_users': log_users,
+
+        'select_user': select_user,
+        'select_ds': select_ds,
+        'select_mode': request.session['select_mode'],
+        'select_action': request.session['select_action'],
     }
 
     return data
