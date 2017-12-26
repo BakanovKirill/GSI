@@ -50,7 +50,7 @@ from customers.models import (CustomerPolygons, DataTerraserver, DataSet, Custom
                                 ShelfData, Log)
 from api.serializers import (CustomerPolygonsSerializer, CustomerPolygonSerializer, 
                             DataPolygonsSerializer, DataSetsSerializer, DataSetSerializer,
-                            TimeSeriesResultSerializer, ReportsSerializer)
+                            TimeSeriesResultSerializer, ReportsSerializer, LogSerializer)
 from api.pagination import CustomPagination
 from core.get_coordinate_aoi import (get_coord_aoi, get_coord_document_placemark_polygon_outerboundaryIs,
                                     get_coord_document_placemark_multigeometry_polygon_outerboundaryIs,
@@ -1239,6 +1239,72 @@ class UploadFileFtpView(APIView):
             }
 
             return Response(data)
+
+
+class LogsList(viewsets.ReadOnlyModelViewSet):
+    """
+    Get Logs list
+    """
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    # authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = LogSerializer
+
+    def get_queryset(self):
+        message = ''
+        queryset = Log.objects.none()
+
+        if self.request.auth:
+            queryset = Log.objects.filter(user=self.request.user).order_by('at')
+
+            if 'mode' in self.request.GET:
+                queryset = queryset.filter(mode=self.request.GET['mode'])
+                message += 'MODE: {}; '.format(self.request.GET['mode'])
+
+            if 'action' in self.request.GET:
+                queryset = queryset.filter(action=self.request.GET['action'])
+                message += 'ACTION: {}; '.format(self.request.GET['action'])
+
+            if 'dataset' in self.request.GET:
+                queryset = queryset.filter(dataset__name=self.request.GET['dataset'])
+                message += 'DATASET: {}; '.format(self.request.GET['dataset'])
+
+            dataset = get_curent_dataset(self.request.user)
+            message += getLogDataRequest(self.request)
+            Log.objects.create(user=self.request.user, mode='api', dataset=dataset, action='logs list', message=message)
+
+        return queryset
+
+
+class LogDetail(APIView):
+    """
+    Retrieve a ShapeFile instance.
+    mode
+    dataset
+    action
+    """
+
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    # authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, log_id, format=None):
+        data = {'auth': 'Need YOUR ACCESS TOKEN'}
+
+        if request.auth:
+            try:
+                queryset = Log.objects.get(pk=log_id)
+                serializer = LogSerializer(queryset)
+                data = serializer.data
+
+                dataset = get_curent_dataset(request.user)
+                message = 'LOG DETAIL: {}; '.format(queryset)
+                message += getLogDataRequest(request)
+                Log.objects.create(user=request.user, mode='api', dataset=dataset, action='log detail', message=message)
+            except CustomerPolygons.DoesNotExist:
+                return Response({'error': 'Log Does Not Exist'}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(data)
 
 
         

@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 from customers.models import (CustomerPolygons, DataPolygons,
                             DataSet, TimeSeriesResults, ShelfData,
-                            Reports, ShelfData)
+                            Reports, ShelfData, Log)
 # from api.models import Report
 
 
@@ -167,4 +167,42 @@ class ReportsSerializer(CustomerPolygonsSerializer):
             'name',
             'dataset',
             'shelfdata'
+        )
+
+
+class CustomerPolygonLogsSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField(max_length=250)
+    kml_name = serializers.CharField(max_length=250)
+    kml_url = serializers.CharField(max_length=250)
+    attributes_shapefile = DataPolygonsSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = CustomerPolygons
+        fields = (
+            'id',
+            'name',
+            'kml_name',
+            'kml_url',
+            'attributes_shapefile',
+        )
+
+
+class LogSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+    mode = serializers.CharField(max_length=250)
+    dataset = DataSetSerializer()
+    action = serializers.CharField(max_length=250)
+    customer_polygons = CustomerPolygonLogsSerializer()
+    at = serializers.DateTimeField()
+    
+    class Meta:
+        model = Reports
+        fields = (
+            'id',
+            'at',
+            'mode',
+            'action',
+            'dataset',
+            'customer_polygons'
         )

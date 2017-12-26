@@ -10,7 +10,9 @@ from api.views import (DataSetList, DataSetDetail,
                         ShapeFileList, ShapeFileDetail, ShapeFileNameDetail,
                         TimeSeriesDetail, TimeSeriesList, TimeSeriesNameDetail,
                         UploadFileAoiView, UploadFileFtpView,
-                        ReportsList, ReportsDetail, obtain_auth_token)
+                        ReportsList, ReportsDetail,
+                        obtain_auth_token,
+                        LogsList, LogDetail)
 
 
 urlpatterns = [
@@ -57,6 +59,11 @@ urlpatterns = [
 
     # upload file to FTP
     url(r'^upload/$', UploadFileFtpView.as_view()),
+
+    # get Logs
+    url(r'^logs-list/$', LogsList.as_view({'get': 'list'})),
+    url(r'^log/(?P<log_id>[0-9]+)/$', LogDetail.as_view()),
+    # url(r'^shapefile', ShapeFileNameDetail.as_view()),
 	
     # Auth Token
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
