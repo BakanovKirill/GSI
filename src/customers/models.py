@@ -386,7 +386,7 @@ class Log(models.Model):
     )
     shapefile = models.ForeignKey(
         CustomerPolygons,
-        verbose_name='Customer Polygon',
+        verbose_name='Shapefile',
         related_name='results',
         blank=True, null=True,
         on_delete=models.CASCADE
