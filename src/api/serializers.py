@@ -195,6 +195,7 @@ class LogSerializer(serializers.ModelSerializer):
     action = serializers.CharField(max_length=250)
     customer_polygons = CustomerPolygonLogsSerializer()
     at = serializers.DateTimeField()
+    status_message = serializers.CharField(max_length=250)
     
     class Meta:
         model = Reports
@@ -203,6 +204,7 @@ class LogSerializer(serializers.ModelSerializer):
             'at',
             'mode',
             'action',
+            'status_message',
             'dataset',
             'customer_polygons'
         )
