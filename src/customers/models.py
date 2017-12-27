@@ -392,6 +392,7 @@ class Log(models.Model):
         on_delete=models.CASCADE
     )
     message = models.TextField(null=False, default='')
+    status_message = models.TextField(null=False, default='')
     at = models.DateTimeField(auto_now_add=True)
 
     def get_results(self, statistic=None):

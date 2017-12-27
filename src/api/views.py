@@ -439,20 +439,30 @@ class DataSetList(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         queryset = DataSet.objects.none()
-        # data = {'auth': 'Need YOUR ACCESS TOKEN'}
-        # url_status = status.HTTP_400_BAD_REQUEST
-        # queryset = ['Need YOUR ACCESS TOKEN']
+        dataset = get_curent_dataset(self.request.user)
+        message = getLogDataRequest(self.request)
 
         if self.request.auth:
             try:
                 customer_access = CustomerAccess.objects.get(user=self.request.user)
                 queryset = DataSet.objects.filter(customer_access=customer_access).order_by('id')
-
-                dataset = get_curent_dataset(self.request.user)
-                message = getLogDataRequest(self.request)
-                Log.objects.create(user=self.request.user, mode='api', dataset=dataset, action='dataset list', message=message)
-            except Exception:
-                pass
+                
+                status_message = 'STATUS MESSAGE: {}'.format('success')
+                Log.objects.create(user=self.request.user, mode='api',
+                                    dataset=dataset, action='dataset list',
+                                    message=message, status_message=status_message)
+            except Exception, e:
+                status_message = 'STATUS MESSAGE: {}'.format(e)
+                Log.objects.create(user=self.request.user, mode='api',
+                                    dataset=dataset, action='dataset list',
+                                    message=message, status_message=status_message)
+                raise APIException(e)
+        else:
+            status_message = 'STATUS MESSAGE: {}'.format('Need YOUR ACCESS TOKEN')
+            Log.objects.create(user=self.request.user, mode='api',
+                                dataset=dataset, action='dataset list',
+                                message=message, status_message=status_message)
+            raise APIException('Need YOUR ACCESS TOKEN')
 
         return queryset
 
@@ -468,6 +478,7 @@ class DataSetDetail(APIView):
 
     def get(self, request, ds_id, format=None):
         data = {'auth': 'Need YOUR ACCESS TOKEN'}
+        dataset = get_curent_dataset(request.user)
 
         if request.auth:
             try:
@@ -475,13 +486,26 @@ class DataSetDetail(APIView):
                 # serializer = DataSetsSerializer(queryset)
                 serializer = DataSetSerializer(queryset)
                 data = serializer.data
-
-                dataset = get_curent_dataset(request.user)
+                
                 message = 'DATASET DETAIL: {}; '.format(queryset)
                 message += getLogDataRequest(request)
-                Log.objects.create(user=request.user, mode='api', dataset=dataset, action='dataset detail', message=message)
+                status_message = 'STATUS MESSAGE: {}'.format('success')
+                Log.objects.create(user=request.user, mode='api',
+                                    dataset=dataset, action='dataset detail',
+                                    message=message, status_message=status_message)
             except DataSet.DoesNotExist:
+                message += getLogDataRequest(request)
+                status_message = 'STATUS MESSAGE: {}'.format('DataSet Does Not Exist')
+                Log.objects.create(user=request.user, mode='api',
+                                    dataset=dataset, action='dataset detail',
+                                    message=message, status_message=status_message)
                 return Response({'error': 'DataSet Does Not Exist'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            message += getLogDataRequest(request)
+            status_message = 'STATUS MESSAGE: {}'.format('Need YOUR ACCESS TOKEN')
+            Log.objects.create(user=self.request.user, mode='api',
+                                dataset=dataset, action='dataset detail',
+                                message=message, status_message=status_message)
 
         return Response(data)
 
@@ -496,7 +520,6 @@ class ShapeFileList(viewsets.ReadOnlyModelViewSet):
     serializer_class = CustomerPolygonSerializer
 
     def get_queryset(self):
-        # queryset = {'auth': 'Need YOUR ACCESS TOKEN'}
         queryset = CustomerPolygons.objects.none()
 
         if self.request.auth:
@@ -504,7 +527,16 @@ class ShapeFileList(viewsets.ReadOnlyModelViewSet):
 
             dataset = get_curent_dataset(self.request.user)
             message = getLogDataRequest(self.request)
-            Log.objects.create(user=self.request.user, mode='api', dataset=dataset, action='shapefiles list', message=message)
+            status_message = 'STATUS MESSAGE: {}'.format('success')
+            Log.objects.create(user=self.request.user, mode='api',
+                                dataset=dataset, action='shapefiles list',
+                                message=message, status_message=status_message)
+        else:
+            status_message = 'STATUS MESSAGE: {}'.format('Need YOUR ACCESS TOKEN')
+            Log.objects.create(user=self.request.user, mode='api',
+                                dataset=dataset, action='shapefiles list',
+                                message=message, status_message=status_message)
+            raise APIException('Need YOUR ACCESS TOKEN')
 
         return queryset
 
@@ -520,19 +552,31 @@ class ShapeFileDetail(APIView):
 
     def get(self, request, sf_id, format=None):
         data = {'auth': 'Need YOUR ACCESS TOKEN'}
-
+        dataset = get_curent_dataset(request.user)
+        
         if request.auth:
             try:
                 queryset = CustomerPolygons.objects.get(pk=sf_id)
                 serializer = CustomerPolygonSerializer(queryset)
                 data = serializer.data
-
-                dataset = get_curent_dataset(request.user)
+                
                 message = 'SHAPEFILE DETAIL: {}; '.format(queryset)
                 message += getLogDataRequest(request)
-                Log.objects.create(user=request.user, mode='api', dataset=dataset, action='shapefile detail', message=message)
+                status_message = 'STATUS MESSAGE: {}'.format('success')
             except CustomerPolygons.DoesNotExist:
+                message = getLogDataRequest(request)
+                status_message = 'STATUS MESSAGE: {}'.format('ShapeFile Does Not Exist')
+                Log.objects.create(user=request.user, mode='api', dataset=dataset,
+                                    action='shapefile detail', message=message,
+                                    status_message=status_message)
                 return Response({'error': 'ShapeFile Does Not Exist'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            message = getLogDataRequest(request)
+            status_message = 'STATUS MESSAGE: {}'.format('Need YOUR ACCESS TOKEN')
+
+        Log.objects.create(user=request.user, mode='api', dataset=dataset,
+                                    action='shapefile detail', message=message,
+                                    status_message=status_message)
 
         return Response(data)
 
@@ -546,15 +590,9 @@ class ShapeFileNameDetail(APIView):
     # authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
 
-    def get_object(self, user, name):
-        try:
-            return CustomerPolygons.objects.get(user=user, name=name)
-        except CustomerPolygons.DoesNotExist:
-            # raise Http404
-            return {'error': 'Invalid ShapeFile Name'}
-
     def get(self, request, format=None):
         data = {'auth': 'Need YOUR ACCESS TOKEN'}
+        dataset = get_curent_dataset(request.user)
 
         if request.auth:
             try:
@@ -563,12 +601,23 @@ class ShapeFileNameDetail(APIView):
                 serializer = CustomerPolygonSerializer(queryset)
                 data = serializer.data
 
-                dataset = get_curent_dataset(request.user)
                 message = 'SHAPEFILE NAME DETAIL: {}; '.format(queryset)
                 message += getLogDataRequest(request)
-                Log.objects.create(user=request.user, mode='api', dataset=dataset, action='shapefile name detail', message=message)
+                status_message = 'STATUS MESSAGE: {}'.format('success')
             except Exception:
+                message = getLogDataRequest(request)
+                status_message = 'STATUS MESSAGE: {}'.format('Invalid ShapeFile Name')
+                Log.objects.create(user=request.user, mode='api', dataset=dataset,
+                                    action='shapefile name detail', message=message,
+                                    status_message=status_message)
                 return Response({'error': 'Invalid ShapeFile Name'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            message = getLogDataRequest(request)
+            status_message = 'STATUS MESSAGE: {}'.format('Need YOUR ACCESS TOKEN')
+
+        Log.objects.create(user=request.user, mode='api', dataset=dataset,
+                            action='shapefile name detail', message=message,
+                            status_message=status_message)
 
         return Response(data)
 
@@ -586,6 +635,8 @@ class TimeSeriesList(viewsets.ReadOnlyModelViewSet):
         # queryset = {'auth': 'Need YOUR ACCESS TOKEN'}
         queryset = TimeSeriesResults.objects.none()
         statistics = STATISTICS
+        dataset = get_curent_dataset(self.request.user)
+        start_date, end_date = get_time_interval(self.request)
 
         if self.request.auth:
             if 'statistics' in self.request.GET:
@@ -597,9 +648,8 @@ class TimeSeriesList(viewsets.ReadOnlyModelViewSet):
                             user=self.request.user,
                             stat_code__in=statistics,
                             ).order_by('id')
-            start_date, end_date = get_time_interval(self.request)
-
-            dataset = get_curent_dataset(self.request.user)
+            # start_date, end_date = get_time_interval(self.request)
+            # dataset = get_curent_dataset(self.request.user)
 
             if start_date and end_date:
                 try:
@@ -611,50 +661,44 @@ class TimeSeriesList(viewsets.ReadOnlyModelViewSet):
                     message += getLogDataRequest(self.request)
 
                     if queryset:
+                        status_message = 'STATUS MESSAGE: {}'.format('success')
+                        Log.objects.create(user=self.request.user, mode='api', dataset=dataset,
+                                            action='timeseries list', message=message, status_message=status_message)
                         return queryset
                     else:
-                        # data = {'status_message': 'Nothing found in this interval'}
-                        # return Response(data)
-                        message += 'STATUS MESSAGE: {}; '.format('Nothing found in this interval')
-                        Log.objects.create(user=self.request.user, mode='api', dataset=dataset, action='timeseries list', message=message)
+                        status_message = 'STATUS MESSAGE: {}'.format('Nothing found in this interval')
+                        Log.objects.create(user=self.request.user, mode='api', dataset=dataset,
+                                            action='timeseries list', message=message, status_message=status_message)
                         raise APIException('Nothing found in this interval')
                 except Exception, e:
-                    message += 'STATUS MESSAGE: {}; '.format(e)
-                    Log.objects.create(user=self.request.user, mode='api', dataset=dataset, action='timeseries list', message=message)
+                    status_message = 'STATUS MESSAGE: {}'.format(e)
+                    Log.objects.create(user=self.request.user, mode='api', dataset=dataset,
+                                        action='timeseries list', message=message, status_message=status_message)
                     raise APIException(e)
             elif start_date and not end_date:
-                message += 'STATUS MESSAGE: {}; '.format('The argument "end_date" is not specified')
-                Log.objects.create(user=self.request.user, mode='api', dataset=dataset, action='timeseries list', message=message)
+                status_message = 'STATUS MESSAGE: {}'.format('The argument "end_date" is not specified')
+                Log.objects.create(user=self.request.user, mode='api', dataset=dataset,
+                                    action='timeseries list', message=message, status_message=status_message)
                 raise APIException('The argument "end_date" is not specified')
             elif not start_date and end_date:
-                message += 'STATUS MESSAGE: {}; '.format('The argument "start_date" is not specified')
-                Log.objects.create(user=self.request.user, mode='api', dataset=dataset, action='timeseries list', message=message)
+                status_message = 'STATUS MESSAGE: {}'.format('The argument "start_date" is not specified')
+                Log.objects.create(user=self.request.user, mode='api', dataset=dataset,
+                                    action='timeseries list', message=message, status_message=status_message)
                 raise APIException('The argument "start_date" is not specified')
             
             message += getLogDataRequest(self.request)
-            Log.objects.create(user=self.request.user, mode='api', dataset=dataset, action='timeseries list', message=message)
+            status_message = 'STATUS MESSAGE: {}'.format('success')
+            Log.objects.create(user=self.request.user, mode='api', dataset=dataset,
+                            action='timeseries list', message=message, status_message=status_message)
+        else:
+            message = getLogDataRequest(self.request)
+            status_message = 'STATUS MESSAGE: {}'.format('Need YOUR ACCESS TOKEN')
+            Log.objects.create(user=self.request.user, mode='api', dataset=dataset,
+                            action='timeseries list', message=message, status_message=status_message)
+            
+            raise APIException('Need YOUR ACCESS TOKEN')
 
         return queryset
-
-
-# class TimeSeriesList(APIView):
-#     """
-#     List TimeSeries.
-#     """
-
-#     authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
-#     # authentication_classes = (SessionAuthentication, BasicAuthentication)
-#     permission_classes = (IsAuthenticated,)
-
-#     def get(self, request, format=None):
-#         data = {'auth': 'Need YOUR ACCESS TOKEN'}
-
-#         if request.auth:
-#             queryset = TimeSeriesResults.objects.filter(user=request.user).order_by('id')
-#             serializer = TimeSeriesResultSerializer(queryset, many=True)
-#             data = serializer.data
-
-#         return Response(data)
 
 
 class TimeSeriesDetail(APIView):
@@ -939,12 +983,6 @@ class UploadFileAoiView(APIView):
     # # authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
     # parser_classes = (FileUploadParser,)
-
-    # def get_object(self, ds_id):
-    #     try:
-    #         return DataSet.objects.get(pk=ds_id)
-    #     except DataSet.DoesNotExist:
-    #         return 'Invalid Dataset ID'
 
     def post(self, request, ds_id, format=None):
         error = ''
