@@ -608,24 +608,27 @@ class TimeSeriesList(viewsets.ReadOnlyModelViewSet):
                                 result_date__lte=end_date).order_by('result_date')
 
                     message += 'DATE INTERVAL: from {} to {}; '.format(start_date, end_date)
+                    message += getLogDataRequest(self.request)
 
                     if queryset:
                         return queryset
                     else:
                         # data = {'status_message': 'Nothing found in this interval'}
                         # return Response(data)
+                        message += 'STATUS MESSAGE: {}; '.format('Nothing found in this interval')
+                        Log.objects.create(user=self.request.user, mode='api', dataset=dataset, action='timeseries list', message=message)
                         raise APIException('Nothing found in this interval')
                 except Exception, e:
-                    # return Response({'error': e},
-                    #                 status=status.HTTP_400_BAD_REQUEST)
+                    message += 'STATUS MESSAGE: {}; '.format(e)
+                    Log.objects.create(user=self.request.user, mode='api', dataset=dataset, action='timeseries list', message=message)
                     raise APIException(e)
             elif start_date and not end_date:
-                # return Response({'error': 'The argument "end_date" is not specified'},
-                #                     status=status.HTTP_400_BAD_REQUEST)
+                message += 'STATUS MESSAGE: {}; '.format('The argument "end_date" is not specified')
+                Log.objects.create(user=self.request.user, mode='api', dataset=dataset, action='timeseries list', message=message)
                 raise APIException('The argument "end_date" is not specified')
             elif not start_date and end_date:
-                # return Response({'error': 'The argument "start_date" is not specified'},
-                #                     status=status.HTTP_400_BAD_REQUEST)
+                message += 'STATUS MESSAGE: {}; '.format('The argument "start_date" is not specified')
+                Log.objects.create(user=self.request.user, mode='api', dataset=dataset, action='timeseries list', message=message)
                 raise APIException('The argument "start_date" is not specified')
             
             message += getLogDataRequest(self.request)
@@ -666,7 +669,7 @@ class TimeSeriesDetail(APIView):
     def get(self, request, shapefile_id, format=None):
         data = {'auth': 'Need YOUR ACCESS TOKEN'}
         statistics = STATISTICS
-        message = ''
+        dataset = get_curent_dataset(request.user)
 
         if request.auth:
             if 'statistics' in request.GET:
@@ -680,37 +683,55 @@ class TimeSeriesDetail(APIView):
                                 customer_polygons__id=shapefile_id).order_by('id')
 
                 start_date, end_date = get_time_interval(request)
+                message = 'TIMESERIES DETAIL: {} elements; '.format(queryset.count())
+
+                if start_date or end_date:
+                    message += 'DATE INTERVAL: from {} to {}; '.format(start_date, end_date)
+
+                message += 'TIMESERIES STATISTIC: {}; '.format(statistics)
 
                 if start_date and end_date:
                     try:
                         queryset = queryset.filter(
                                     result_date__gte=start_date,
                                     result_date__lte=end_date).order_by('result_date')
+
+                        message = 'TIMESERIES DETAIL: {} elements; '.format(queryset.count())
                         message += 'DATE INTERVAL: from {} to {}; '.format(start_date, end_date)
+                        message += 'TIMESERIES STATISTIC: {}; '.format(statistics)
+                        message += getLogDataRequest(request)
 
                         if queryset:
                             serializer = TimeSeriesResultSerializer(queryset, many=True)
                             data = serializer.data
+                            Log.objects.create(user=request.user, mode='api', dataset=dataset, action='timeseries detail', message=message)
+
                             return Response(data)
                         else:
                             data = {'status_message': 'Nothing found in this interval'}
+                            message += 'STATUS MESSAGE: {}'.format('Nothing found in this interval')
+                            Log.objects.create(user=request.user, mode='api', dataset=dataset, action='timeseries detail', message=message)
+
                             return Response(data)
                     except Exception, e:
+                        message += 'STATUS MESSAGE: {}'.format(e)
+                        Log.objects.create(user=request.user, mode='api', dataset=dataset, action='timeseries detail', message=message)
                         return Response({'error': e},
                                         status=status.HTTP_400_BAD_REQUEST)
                 elif start_date and not end_date:
+                    message += 'STATUS MESSAGE: {}'.format('The argument "end_date" is not specified')
+                    Log.objects.create(user=request.user, mode='api', dataset=dataset, action='timeseries detail', message=message)
                     return Response({'error': 'The argument "end_date" is not specified'},
                                         status=status.HTTP_400_BAD_REQUEST)
                 elif not start_date and end_date:
+                    message += 'STATUS MESSAGE: {}'.format('The argument "start_date" is not specified.0')
+                    Log.objects.create(user=request.user, mode='api', dataset=dataset, action='timeseries detail', message=message)
                     return Response({'error': 'The argument "start_date" is not specified'},
                                         status=status.HTTP_400_BAD_REQUEST)
 
                 serializer = TimeSeriesResultSerializer(queryset, many=True)
                 data = serializer.data
-
-                dataset = get_curent_dataset(request.user)
-                message += 'TIMESERIES DETAIL: {} elements; '.format(queryset.count())
-                message += 'TIMESERIES STATISTIC: {}; '.format(statistics)
+                
                 message += getLogDataRequest(request)
                 Log.objects.create(user=request.user, mode='api', dataset=dataset, action='timeseries detail', message=message)
             except TimeSeriesResults.DoesNotExist:
