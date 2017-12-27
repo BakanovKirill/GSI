@@ -591,6 +591,8 @@ class TimeSeriesList(viewsets.ReadOnlyModelViewSet):
             if 'statistics' in self.request.GET:
                 statistics = self.request.GET['statistics'].split(',')
 
+            message = 'STATISTIC: {}; '.format(statistics)
+
             queryset = TimeSeriesResults.objects.filter(
                             user=self.request.user,
                             stat_code__in=statistics,
@@ -604,6 +606,8 @@ class TimeSeriesList(viewsets.ReadOnlyModelViewSet):
                     queryset = queryset.filter(
                                 result_date__gte=start_date,
                                 result_date__lte=end_date).order_by('result_date')
+
+                    message += 'DATE INTERVAL: from {} to {}; '.format(start_date, end_date)
 
                     if queryset:
                         return queryset
@@ -623,8 +627,7 @@ class TimeSeriesList(viewsets.ReadOnlyModelViewSet):
                 # return Response({'error': 'The argument "start_date" is not specified'},
                 #                     status=status.HTTP_400_BAD_REQUEST)
                 raise APIException('The argument "start_date" is not specified')
-
-            message = 'TIMESERIES STATISTIC: {}; '.format(statistics)
+            
             message += getLogDataRequest(self.request)
             Log.objects.create(user=self.request.user, mode='api', dataset=dataset, action='timeseries list', message=message)
 
@@ -663,6 +666,7 @@ class TimeSeriesDetail(APIView):
     def get(self, request, shapefile_id, format=None):
         data = {'auth': 'Need YOUR ACCESS TOKEN'}
         statistics = STATISTICS
+        message = ''
 
         if request.auth:
             if 'statistics' in request.GET:
@@ -682,6 +686,7 @@ class TimeSeriesDetail(APIView):
                         queryset = queryset.filter(
                                     result_date__gte=start_date,
                                     result_date__lte=end_date).order_by('result_date')
+                        message += 'DATE INTERVAL: from {} to {}; '.format(start_date, end_date)
 
                         if queryset:
                             serializer = TimeSeriesResultSerializer(queryset, many=True)
@@ -704,7 +709,7 @@ class TimeSeriesDetail(APIView):
                 data = serializer.data
 
                 dataset = get_curent_dataset(request.user)
-                message = 'TIMESERIES DETAIL: {} elements; '.format(queryset.count())
+                message += 'TIMESERIES DETAIL: {} elements; '.format(queryset.count())
                 message += 'TIMESERIES STATISTIC: {}; '.format(statistics)
                 message += getLogDataRequest(request)
                 Log.objects.create(user=request.user, mode='api', dataset=dataset, action='timeseries detail', message=message)
@@ -779,11 +784,11 @@ class TimeSeriesNameDetail(APIView):
 
             dataset = get_curent_dataset(request.user)
 
-            message = 'TIMESERIES NAME DETAIL: {}; '.format(shapefile_name)
-            message += 'TIMESERIES STATISTIC: {}; '.format(statistics)
+            message = 'NAME DETAIL: {}; '.format(shapefile_name)
+            message += 'STATISTIC: {}; '.format(statistics)
 
             if start_date_log and end_date_log:
-                message += 'TIMESERIES TIME INTERVAL: [from: {} to: {}]; '.format(start_date_log, end_date_log)
+                message += 'DATE INTERVAL: [from: {} to: {}]; '.format(start_date_log, end_date_log)
 
             message += getLogDataRequest(request)
             Log.objects.create(user=request.user, mode='api', dataset=dataset, action='timeseries name detail', message=message)
