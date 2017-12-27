@@ -31,6 +31,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework import generics, viewsets
 
 from rest_framework.authtoken import views
+from rest_framework.exceptions import APIException
 
 
 # from rest_framework import parsers, renderers
@@ -74,6 +75,23 @@ from core.functions_customer import (getResultDirectory, getTsResultDirectory,
 # proc.wait()
 # 
 # generics.ListAPIView
+
+
+def get_time_interval(request):
+    start_date = None
+    end_date = None
+
+    if 'start_date' in request.GET:
+        start = request.GET['start_date'].split('-')
+        start_date_log = request.GET['start_date']
+        start_date = date(int(start[0]), int(start[1]), int(start[2]))
+
+    if 'end_date' in request.GET:
+        end = request.GET['end_date'].split('-')
+        end_date_log = request.GET['end_date']
+        end_date = date(int(end[0]), int(end[1]), int(end[2]))
+
+    return start_date, end_date
 
 
 def get_curent_dataset(user):
@@ -439,34 +457,6 @@ class DataSetList(viewsets.ReadOnlyModelViewSet):
         return queryset
 
 
-# class DataSetList(APIView):
-#     """
-#     List DataSets ...
-#     """
-
-#     authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
-#     # authentication_classes = (SessionAuthentication, BasicAuthentication)
-#     permission_classes = (IsAuthenticated,)
-
-#     # pagination
-#     pagination_class = StandardResultsSetPagination
-#     # paginate_by_param = 'page_size'
-#     # max_paginate_by = 500
-#     # paginate_by = 10
-
-#     def get(self, request, format=None):
-#         data = {'auth': 'Need YOUR ACCESS TOKEN'}
-
-#         # if request.auth:
-#         customer_access = CustomerAccess.objects.get(user=request.user)
-#         queryset = DataSet.objects.filter(customer_access=customer_access).order_by('id')
-#         pagination_class = PageNumberPagination()
-#         serializer = DataSetSerializer(queryset, many=True)
-#         data = serializer.data
-
-#         return Response(data)
-
-
 class DataSetDetail(APIView):
     """
     Retrieve a DataSet instance.
@@ -605,8 +595,34 @@ class TimeSeriesList(viewsets.ReadOnlyModelViewSet):
                             user=self.request.user,
                             stat_code__in=statistics,
                             ).order_by('id')
+            start_date, end_date = get_time_interval(self.request)
 
             dataset = get_curent_dataset(self.request.user)
+
+            if start_date and end_date:
+                try:
+                    queryset = queryset.filter(
+                                result_date__gte=start_date,
+                                result_date__lte=end_date).order_by('result_date')
+
+                    if queryset:
+                        return queryset
+                    else:
+                        # data = {'status_message': 'Nothing found in this interval'}
+                        # return Response(data)
+                        raise APIException('Nothing found in this interval')
+                except Exception, e:
+                    # return Response({'error': e},
+                    #                 status=status.HTTP_400_BAD_REQUEST)
+                    raise APIException(e)
+            elif start_date and not end_date:
+                # return Response({'error': 'The argument "end_date" is not specified'},
+                #                     status=status.HTTP_400_BAD_REQUEST)
+                raise APIException('The argument "end_date" is not specified')
+            elif not start_date and end_date:
+                # return Response({'error': 'The argument "start_date" is not specified'},
+                #                     status=status.HTTP_400_BAD_REQUEST)
+                raise APIException('The argument "start_date" is not specified')
 
             message = 'TIMESERIES STATISTIC: {}; '.format(statistics)
             message += getLogDataRequest(self.request)
@@ -658,6 +674,32 @@ class TimeSeriesDetail(APIView):
                                 user=request.user,
                                 stat_code__in=statistics,
                                 customer_polygons__id=shapefile_id).order_by('id')
+
+                start_date, end_date = get_time_interval(request)
+
+                if start_date and end_date:
+                    try:
+                        queryset = queryset.filter(
+                                    result_date__gte=start_date,
+                                    result_date__lte=end_date).order_by('result_date')
+
+                        if queryset:
+                            serializer = TimeSeriesResultSerializer(queryset, many=True)
+                            data = serializer.data
+                            return Response(data)
+                        else:
+                            data = {'status_message': 'Nothing found in this interval'}
+                            return Response(data)
+                    except Exception, e:
+                        return Response({'error': e},
+                                        status=status.HTTP_400_BAD_REQUEST)
+                elif start_date and not end_date:
+                    return Response({'error': 'The argument "end_date" is not specified'},
+                                        status=status.HTTP_400_BAD_REQUEST)
+                elif not start_date and end_date:
+                    return Response({'error': 'The argument "start_date" is not specified'},
+                                        status=status.HTTP_400_BAD_REQUEST)
+
                 serializer = TimeSeriesResultSerializer(queryset, many=True)
                 data = serializer.data
 
@@ -709,16 +751,7 @@ class TimeSeriesNameDetail(APIView):
                     return Response({'error': 'Invalid ShapeFile Name'},
                                     status=status.HTTP_400_BAD_REQUEST)
 
-            if 'start_date' in request.GET:
-                start = request.GET['start_date'].split('-')
-                start_date_log = request.GET['start_date']
-                start_date = date(int(start[0]), int(start[1]), int(start[2]))
-
-            if 'end_date' in request.GET:
-                end = request.GET['end_date'].split('-')
-                end_date_log = request.GET['end_date']
-                end_date = date(int(end[0]), int(end[1]), int(end[2]))
-
+            start_date, end_date = get_time_interval(request)
             
             if start_date and end_date:
                 try:
