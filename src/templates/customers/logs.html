@@ -86,6 +86,7 @@
                         <th class="center">DataSet</th>
                         <th class="center">Shapefile</th>
                         <th class="center">Total Area</th>
+                        <th class="center">Status</th>
                     </tr>
                 </thead>
 
@@ -102,6 +103,7 @@
                         {% else %}
                             <td class="center">&#8212;</td>
                         {% endif %}
+                        <td class="center">{{ log.status_message }}</td>
                     </tbody>
                 {% endfor %}
             </table>
