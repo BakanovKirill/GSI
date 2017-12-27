@@ -193,7 +193,7 @@ class LogSerializer(serializers.ModelSerializer):
     mode = serializers.CharField(max_length=250)
     dataset = DataSetSerializer()
     action = serializers.CharField(max_length=250)
-    customer_polygons = CustomerPolygonLogsSerializer()
+    shapefile = CustomerPolygonLogsSerializer()
     at = serializers.DateTimeField()
     status_message = serializers.CharField(max_length=250)
     
@@ -206,5 +206,5 @@ class LogSerializer(serializers.ModelSerializer):
             'action',
             'status_message',
             'dataset',
-            'customer_polygons'
+            'shapefile'
         )

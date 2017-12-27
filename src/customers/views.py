@@ -4493,13 +4493,6 @@ def files_lister(request):
                             TimeSeriesResults.objects.filter(user=customer, data_set=data_set,
                                                             customer_polygons=cur_polygon).delete()
                             createUploadTimeSeriesResults(customer, cur_polygon, select_attr, data_set)
-
-                            # for r in select_attr:
-                            #     count_ts += getCountTs(data_set, r)
-                            
-                            # request.session['count_ts'] = count_ts
-                            # createUploadTimeSeriesResults(cur_polygon, file_path_in_coord_tmp,
-                            #                 file_path_out_ts_coord_tmp)
                     except Exception, e:
                         print '!!!!!!!!!!!!!!!!!!!! ERROR UPLOAD GEO =========================== ', e
 
@@ -4515,7 +4508,7 @@ def files_lister(request):
                 message = 'SHAPEFILE CREATED: {}; '.format(upload_fl)
                 message += getLogDataRequest(request)
                 Log.objects.create(user=request.user, mode='ui', dataset=data_set, action='shapefile created',
-                                    customer_polygons=cur_polygon, message=message)
+                                    shapefile=cur_polygon, message=message)
 
                 return HttpResponseRedirect(u'%s?status_message=%s' % (
                     reverse('files_lister'), (u'Calculation for the shapefile "{0}" is over'.format(upload_fl))))

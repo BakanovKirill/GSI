@@ -384,7 +384,7 @@ class Log(models.Model):
         blank=True, null=True,
         verbose_name='Action'
     )
-    customer_polygons = models.ForeignKey(
+    shapefile = models.ForeignKey(
         CustomerPolygons,
         verbose_name='Customer Polygon',
         related_name='results',
@@ -396,10 +396,10 @@ class Log(models.Model):
     at = models.DateTimeField(auto_now_add=True)
 
     def get_results(self, statistic=None):
-        return get_user_results(self.user, self.dataset, self.customer_polygons, statistic)
+        return get_user_results(self.user, self.dataset, self.shapefile, statistic)
 
     def get_ts_results(self, statistic=None):
-        return get_user_ts_results(self.user, self.dataset, self.customer_polygons, statistic)
+        return get_user_ts_results(self.user, self.dataset, self.shapefile, statistic)
 
     def __unicode__(self):
         return u"log {0}: {1} | {2} | {3}".format(self.at, self.user, self.mode, self.action)

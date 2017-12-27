@@ -12,7 +12,7 @@ from api.views import (DataSetList, DataSetDetail,
                         UploadFileAoiView, UploadFileFtpView,
                         ReportsList, ReportsDetail,
                         obtain_auth_token,
-                        LogsList, LogDetail)
+                        LogsList, LogDetail, AdditionalArguments)
 
 
 urlpatterns = [
@@ -64,6 +64,9 @@ urlpatterns = [
     url(r'^logs-list/$', LogsList.as_view({'get': 'list'})),
     url(r'^log/(?P<log_id>[0-9]+)/$', LogDetail.as_view()),
     # url(r'^shapefile', ShapeFileNameDetail.as_view()),
+    
+    # get Additional Arguments
+    url(r'^arguments/$', AdditionalArguments.as_view()),
 	
     # Auth Token
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),

@@ -1468,7 +1468,7 @@ class UploadFileAoiView(APIView):
         status_message = '{}'.format('success')
         Log.objects.create(user=request.user, mode='api',
             dataset=dataset, action='shapefile created',
-            customer_polygons=customer_polygon, message=message,
+            shapefile=customer_polygon, message=message,
             status_message=status_message)
         
         data = {
@@ -1598,9 +1598,33 @@ class LogDetail(APIView):
                     action='log detail', message=message, status_message=status_message)
 
                 return Response({'error': 'Log Does Not Exist'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            message = getLogDataRequest(request)
+            status_message = '{}'.format('Need YOUR ACCESS TOKEN')
+            Log.objects.create(user=self.request.user, mode='api', dataset=dataset,
+                action='log detail', message=message, status_message=status_message)
 
         return Response(data)
 
+
+class AdditionalArguments(APIView):
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    # authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, format=None):
+        data = {'auth': 'Need YOUR ACCESS TOKEN'}
+        # dataset = get_curent_dataset(request.user)
+
+        if request.auth:
+            log = Log.objects.filter(user=request.user)
+            mode = log.values_list('mode', flat=True).order_by('mode').distinct('mode')
+            action = log.values_list('action', flat=True).order_by('action').distinct('action')
+            dataset = log.values_list('dataset__name', flat=True).order_by('dataset__name').distinct('dataset__name')
+
+            data = {'mode': mode, 'action': action, 'dataset': dataset}
+
+        return Response(data)
 
         
         
