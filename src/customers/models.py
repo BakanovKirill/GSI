@@ -410,8 +410,6 @@ def user_logged_in_callback(sender, request, user, **kwargs):
     if 'admin' in request.META.get('HTTP_REFERER'):
         return
 
-    action='login'
-
     if 'register' in request.META.get('HTTP_REFERER'):
         action = 'register'
 
@@ -421,8 +419,10 @@ def user_logged_in_callback(sender, request, user, **kwargs):
     except CustomerInfoPanel.DoesNotExist:
         dataset = None
 
+    status_message = '{}'.format('success')
     message = getLogDataRequest(request)
-    Log.objects.create(user=user, mode='ui', dataset=dataset, action=action, message=message)
+    Log.objects.create(user=user, mode='ui', dataset=dataset,
+        action='login', message=message, status_message=status_message)
 
 
 @receiver(user_logged_out)
@@ -433,8 +433,10 @@ def user_logged_out_callback(sender, request, user, **kwargs):
     except CustomerInfoPanel.DoesNotExist:
         dataset = None
 
+    status_message = '{}'.format('success')
     message = getLogDataRequest(request)
-    Log.objects.create(user=user, mode='ui', dataset=dataset, action='logout', message=message)
+    Log.objects.create(user=user, mode='ui', dataset=dataset,
+        action='logout', message=message, status_message=status_message)
 
 
 # @receiver(post_save, sender=User)
