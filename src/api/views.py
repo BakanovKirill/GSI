@@ -582,12 +582,12 @@ class ShapeFileDetail(APIView):
                 serializer = CustomerPolygonSerializer(queryset)
                 data = serializer.data
                 
-                message = 'SHAPEFILE DETAIL: {}; '.format(queryset)
+                message = 'VIEWED SHAPEFILE: {}; '.format(queryset)
                 message += getLogDataRequest(request)
-                status_message = '{}'.format('success')
+                status_message = 'Viewed the ShapeFile "{}"'.format(queryset.name)
             except CustomerPolygons.DoesNotExist:
                 message = getLogDataRequest(request)
-                status_message = '{}'.format('ShapeFile Does Not Exist')
+                status_message = 'ShapeFile Does Not Exist'
                 Log.objects.create(user=request.user, mode='api', dataset=dataset,
                                     action='shapefile detail', message=message,
                                     status_message=status_message)
@@ -623,22 +623,22 @@ class ShapeFileNameDetail(APIView):
                 serializer = CustomerPolygonSerializer(queryset)
                 data = serializer.data
 
-                message = 'SHAPEFILE NAME DETAIL: {}; '.format(queryset)
+                message = 'VIEWED SHAPEFILE: {}; '.format(queryset)
                 message += getLogDataRequest(request)
-                status_message = '{}'.format('success')
+                status_message = 'Viewed the ShapeFile "{}"'.format(queryset.name)
             except Exception:
                 message = getLogDataRequest(request)
-                status_message = '{}'.format('Invalid ShapeFile Name')
+                status_message = 'ShapeFile Does Not Exist'
                 Log.objects.create(user=request.user, mode='api', dataset=dataset,
-                                    action='shapefile name detail', message=message,
+                                    action='shapefile detail', message=message,
                                     status_message=status_message)
-                return Response({'error': 'Invalid ShapeFile Name'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'error': 'ShapeFile Does Not Exist'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             message = getLogDataRequest(request)
             status_message = '{}'.format('Need YOUR ACCESS TOKEN')
 
         Log.objects.create(user=request.user, mode='api', dataset=dataset,
-                            action='shapefile name detail', message=message,
+                            action='shapefile detail', message=message,
                             status_message=status_message)
 
         return Response(data)
