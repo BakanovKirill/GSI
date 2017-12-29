@@ -4,7 +4,7 @@ import stat
 import time
 import shutil
 from subprocess import call, Popen, PIPE
-from datetime import datetime
+from datetime import datetime, date
 import magic
 import multiprocessing
 from Crypto.PublicKey import RSA
@@ -33,6 +33,43 @@ def getLogDataRequest(request):
                     ip, http_referer, http_user_agent)
 
     return message
+
+
+def get_time_interval(request, dataset, action):
+    error = ''
+    start_date = None
+    end_date = None
+    # message = getLogDataRequest(request)
+    
+    if 'start_date' in request.GET:
+        message = 'INVALID START DATE: {}; '.format(request.GET['start_date'])
+
+        try:
+            start = request.GET['start_date'].split('-')
+            start_date_log = request.GET['start_date']
+            start_date = date(int(start[0]), int(start[1]), int(start[2]))
+        except Exception, e:
+            error = 'Incorrect "start_date" value'
+            message += getLogDataRequest(request)
+            status_message = '{}'.format(error)
+            Log.objects.create(user=request.user, mode='api', dataset=dataset,
+                action='timeseries list', message=message, status_message=status_message)
+
+    if 'end_date' in request.GET:
+        message = 'INVALID END DATE: {}; '.format(request.GET['end_date'])
+
+        try:
+            end = request.GET['end_date'].split('-')
+            end_date_log = request.GET['end_date']
+            end_date = date(int(end[0]), int(end[1]), int(end[2]))
+        except Exception, e:
+            error = 'Incorrect "end_date" value'
+            message += getLogDataRequest(request)
+            status_message = '{}'.format(error)
+            Log.objects.create(user=request.user, mode='api', dataset=dataset,
+                action='timeseries list', message=message, status_message=status_message)
+
+    return start_date, end_date, error
 
 
 def handle_uploaded_file(f, path):

@@ -5,6 +5,7 @@
     <form action="{% url 'logs' %}" enctype="multipart/form-data" role="form"
           class="form-horizontal" method="post">
         {% csrf_token %}
+
         <div class="row">
             <div class="margin-top-30 left col-md-12">
                 <span class="right margin-right-10">User: <b>{{ user }}</b></span>
@@ -48,17 +49,27 @@
                 </select>
             </div>
 
+            <div class="col-md-3 margin-bottom-30 margin-top-10 left">
+                <span class="right margin-right-10">Select Action: </span></br>
+                <select class="selectpicker" id="select_action" name="select-action">
+                    <option value="">All</option>
+                    {% for log_action in log_action %}
+                        <option value="{{ log_action.action }}" {% if select_action == log_action.action %}selected{% endif %}>
+                            {{ log_action.action|upper }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
             <div class="row">
-                <div class="col-md-3 margin-bottom-30 margin-top-10 left">
-                    <span class="right margin-right-10">Select Action: </span></br>
-                    <select class="selectpicker" id="select_action" name="select-action">
-                        <option value="">All</option>
-                        {% for log_action in log_action %}
-                            <option value="{{ log_action.action }}" {% if select_action == log_action.action %}selected{% endif %}>
-                                {{ log_action.action|upper }}
-                            </option>
-                        {% endfor %}
-                    </select>
+                <div class="col-md-2 margin-bottom-30 margin-left-15">
+                    <span class="right margin-right-10">Select Start Date: </span></br>
+                    <input type="date" name="start-date" value="{{ from_date }}">
+                </div>
+
+                <div class="col-md-2 margin-bottom-30 left">
+                    <span class="right margin-right-10">Select End Date: </span></br>
+                    <input type="date" name="end-date" value="{{ to_date }}">
                 </div>
             </div>
 

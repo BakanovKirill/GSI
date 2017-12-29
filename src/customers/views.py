@@ -4614,6 +4614,10 @@ def logs(request):
     log_users = ''
     select_user = ''
     select_ds = ''
+    now = datetime.now()
+    date_now = '{}-{}-{}'.format(now.year, now.month, now.day)
+    # from_date = date_now
+    # to_date = date_now
 
     # GET SESSIONS
     # Get select log user sessions
@@ -4635,6 +4639,14 @@ def logs(request):
     if not 'select_action' in request.session:
         request.session['select_action'] = ''
 
+    # Get select log start_date sessions
+    if not 'start_date' in request.session:
+        request.session['start_date'] = ''
+
+    # Get select log end_date sessions
+    if not 'end_date' in request.session:
+        request.session['end_date'] = ''
+
     if request.method == "POST":
         data_post = request.POST
 
@@ -4645,6 +4657,8 @@ def logs(request):
             request.session['select_ds'] = ''
             request.session['select_mode'] = ''
             request.session['select_action'] = ''
+            request.session['start_date'] = ''
+            request.session['end_date'] = ''
 
         if 'filter-logs' in data_post and 'select-user' in data_post:
             request.session['select_user'] = data_post['select-user']
@@ -4653,6 +4667,8 @@ def logs(request):
             request.session['select_ds'] = data_post['select-dataset']
             request.session['select_mode'] = data_post['select-mode']
             request.session['select_action'] = data_post['select-action']
+            request.session['start_date'] = data_post['start-date']
+            request.session['end_date'] = data_post['end-date']
 
         if request.user.is_superuser:
             if request.session['select_user']:
@@ -4678,6 +4694,19 @@ def logs(request):
 
         if request.session['select_action']:
             logs = logs.filter(Q(action=request.session['select_action']))
+
+        if request.session['start_date'] and request.session['end_date']:
+            if request.session['start_date'] <= request.session['end_date']:
+                start = request.session['start_date'].split('-')
+                end = request.session['end_date'].split('-')
+                time_delta = timedelta(days=1)
+                start_date = date(int(start[0]), int(start[1]), int(start[2]))
+                end_date = date(int(end[0]), int(end[1]), int(end[2]))
+                end_date += time_delta
+                logs = logs.filter(
+                    at__gte=start_date,
+                    at__lte=end_date)
+
 
         # logs = Log.objects.filter(
         #         user=request.user,
@@ -4727,6 +4756,8 @@ def logs(request):
         'select_ds': select_ds,
         'select_mode': request.session['select_mode'],
         'select_action': request.session['select_action'],
+        'from_date': request.session['start_date'],
+        'to_date': request.session['end_date']
     }
 
     return data

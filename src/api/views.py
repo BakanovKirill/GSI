@@ -41,7 +41,7 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 # from rest_framework.views import APIView
 
 from core.utils import (validate_status, write_log, get_path_folder_run, execute_fe_command,
-                        handle_uploaded_file, getLogDataRequest)
+                        handle_uploaded_file, getLogDataRequest, get_time_interval)
 from gsi.models import Run, RunStep, CardSequence, OrderedCardItem, SubCardItem
 from gsi.settings import (EXECUTE_FE_COMMAND, KML_PATH, FTP_PATH, KML_DIRECTORY,
                             REMAP_DIRECTORY, REMAP_PATH, STATISTICS)
@@ -75,43 +75,6 @@ from core.functions_customer import (getResultDirectory, getTsResultDirectory,
 # proc.wait()
 # 
 # generics.ListAPIView
-
-
-def get_time_interval(request, dataset, action):
-    error = ''
-    start_date = None
-    end_date = None
-    # message = getLogDataRequest(request)
-    
-    if 'start_date' in request.GET:
-        message = 'INVALID START DATE: {}; '.format(request.GET['start_date'])
-
-        try:
-            start = request.GET['start_date'].split('-')
-            start_date_log = request.GET['start_date']
-            start_date = date(int(start[0]), int(start[1]), int(start[2]))
-        except Exception, e:
-            error = 'Incorrect "start_date" value'
-            message += getLogDataRequest(request)
-            status_message = '{}'.format(error)
-            Log.objects.create(user=request.user, mode='api', dataset=dataset,
-                action='timeseries list', message=message, status_message=status_message)
-
-    if 'end_date' in request.GET:
-        message = 'INVALID END DATE: {}; '.format(request.GET['end_date'])
-
-        try:
-            end = request.GET['end_date'].split('-')
-            end_date_log = request.GET['end_date']
-            end_date = date(int(end[0]), int(end[1]), int(end[2]))
-        except Exception, e:
-            error = 'Incorrect "end_date" value'
-            message += getLogDataRequest(request)
-            status_message = '{}'.format(error)
-            Log.objects.create(user=request.user, mode='api', dataset=dataset,
-                action='timeseries list', message=message, status_message=status_message)
-
-    return start_date, end_date, error
 
 
 def get_curent_dataset(user):
