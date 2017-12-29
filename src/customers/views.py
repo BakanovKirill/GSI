@@ -3250,7 +3250,7 @@ def customer_section(request):
                         if shelf_data_attr.lutfiles.allow_negatives < 0:
                             max_val = max_val * -1
 
-                        if max_val == 0:
+                        if max_val == '0':
                             max_val = 1
 
                         # Command Line
