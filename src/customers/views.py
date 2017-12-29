@@ -2789,8 +2789,7 @@ def customer_section(request):
             message += getLogDataRequest(request)
 
             if data_set:
-                status_message = '{}'.format(
-                    'The dateset was changed from the "{}" to the "{}"').format(
+                status_message = 'The dateset was changed from the "{}" to the "{}"'.format(
                         dataset, data_set)
                 dataset = data_set
             else:
@@ -2813,6 +2812,8 @@ def customer_section(request):
             return HttpResponse(data)
 
         if 'polygon' in data_get_ajax:
+            dataset = get_curent_dataset(request.user)
+
             try:
                 # polygon = data_get_ajax.get('polygon', '')
                 select_polygon = CustomerPolygons.objects.none()
@@ -2848,13 +2849,23 @@ def customer_section(request):
                 # print '!!!!!!!!!!!!!!! DATA URL =================== ', data
 
                 data += '$$$' + polygon_text + '$$$' + str(polygon_id)
+                message = 'VIEWED SHAPEFILE: "{}"; '.format(select_polygon.name)
+                message += getLogDataRequest(request)
+                status_message = 'Viewed the ShapeFile "{}"'.format(
+                        select_polygon.name)
                 # data += polygon_text
             except Exception, e:
                 print '!!!!!!!!!!!!!!!!!!!!!!!!!!! AOI ERROR ============================ ', e
+                message = getLogDataRequest(request)
+                status_message = '{}'.format(e)
                 # ############ WRITE LOG ##############################
                 customer_section.write('AOI ERROR: '+str(e))
                 customer_section.write('\n')
                 # ############ WRITE LOG ##############################
+            
+            Log.objects.create(user=request.user, mode='ui', dataset=dataset,
+                action='viewed shapefile', message=message, status_message=status_message)
+
             return HttpResponse(data)
 
         if 'tab_active' in data_get_ajax:
