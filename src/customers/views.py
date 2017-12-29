@@ -92,6 +92,16 @@ SUB_DIRECTORIES_REVERCE = {
     'UQ': 'mean_Quantile',
 }
 
+
+def get_curent_dataset(user):
+    try:
+        cip = CustomerInfoPanel.objects.get(user=user, is_show=True)
+        dataset = cip.data_set
+    except CustomerInfoPanel.DoesNotExist:
+        dataset = None
+
+    return dataset
+
 # categorys list
 @user_passes_test(lambda u: u.is_superuser)
 @render_to('customers/categorys_list.html')
@@ -1213,13 +1223,17 @@ def check_current_dataset(request, data_post):
     is_delete = False
     data_set_id = data_post.get('datasets_id', '')
     request.session['select_data_set'] = data_set_id
-    data_set = DataSet.objects.get(pk=data_set_id)
 
-    # print 'data_set_id ==================================', request.session['select_data_set']
+    try:
+        data_set = DataSet.objects.get(pk=data_set_id)
 
-    if not CustomerInfoPanel.objects.filter(user=request.user, data_set=data_set).exists():
-        info_panel = CustomerInfoPanel.objects.filter(user=request.user).delete()
-        is_delete = True
+        # print 'data_set_id ==================================', request.session['select_data_set']
+
+        if not CustomerInfoPanel.objects.filter(user=request.user, data_set=data_set).exists():
+            info_panel = CustomerInfoPanel.objects.filter(user=request.user).delete()
+            is_delete = True
+    except Exception:
+        pass
 
     return is_delete
 
@@ -2690,6 +2704,9 @@ def customer_section(request):
 
         # When user celect a new DataSet, the previous celected DataSet to remove
         if 'datasets_id' in data_get_ajax:
+            dataset = get_curent_dataset(request.user)
+            data_set = DataSet.objects.none()
+            error_message = ''
             request.session['select_data_set'] = data_get_ajax['datasets_id']
             data_set_id = request.session['select_data_set']
             request.session['zoom_map'] = 0.001
@@ -2707,63 +2724,80 @@ def customer_section(request):
             # time_series_view = request.session['time_series_view']
             
             # print '!!!!!!!!! CIP ====================== ', cip
-            
-            for ip in cip:
-                # print '!!!!!!!!! png_path ====================== ', ip.png_path
-                # print '!!!!!!!!! legend_path ====================== ', ip.legend_path
-                # remove_files(ip.png_path)
-                # remove_files(ip.legend_path)
+                
+            try:
+                for ip in cip:
+                    # print '!!!!!!!!! png_path ====================== ', ip.png_path
+                    # print '!!!!!!!!! legend_path ====================== ', ip.legend_path
+                    # remove_files(ip.png_path)
+                    # remove_files(ip.legend_path)
 
-                try:
-                    os.remove(ip.png_path)
-                except Exception, e:
-                    print '!!!!!!! ERROR remove file png ===================== ', e
-                    pass
+                    try:
+                        os.remove(ip.png_path)
+                    except Exception, e:
+                        print '!!!!!!! ERROR remove file png ===================== ', e
+                        error_message = e
 
-                try:
-                    os.remove(ip.legend_path)
-                except Exception, e:
-                    print '!!!!!!! ERROR remove file legend ===================== ', e
-                    pass
+                    try:
+                        os.remove(ip.legend_path)
+                    except Exception, e:
+                        print '!!!!!!! ERROR remove file legend ===================== ', e
+                        error_message = e
 
-            status = check_current_dataset(request, data_get_ajax)
+                status = check_current_dataset(request, data_get_ajax)
 
-            # if request.session.get('select_data_set', False):
-            #     data_set_id = int(request.session['select_data_set'])
-            # else:
-            #     request.session['select_data_set'] = data_sets[0].id
-            #     data_set_id = request.session['select_data_set']
+                # if request.session.get('select_data_set', False):
+                #     data_set_id = int(request.session['select_data_set'])
+                # else:
+                #     request.session['select_data_set'] = data_sets[0].id
+                #     data_set_id = request.session['select_data_set']
 
-            # print 'data_set_id REQ ========================== ', request.session['select_data_set']
-            # print '!!!!!!!!!! data_set_id ========================== ', data_set_id
-            # print '!!!!!!!!!! data_sets ========================== ', data_sets[0]
+                # print 'data_set_id REQ ========================== ', request.session['select_data_set']
+                # print '!!!!!!!!!! data_set_id ========================== ', data_set_id
+                # print '!!!!!!!!!! data_sets ========================== ', data_sets[0]
 
-            if status:
-                data_set, data_set_id = getDataSet(data_set_id, data_sets[0])
-                # dirs_list = getResultDirectory(data_set, shelf_data_all)
-                statistic = 'mean_ConditionalMean'
-                is_show = True
-                is_time_series = data_set.is_ts
+                if status:
+                    data_set, data_set_id = getDataSet(data_set_id, data_sets[0])
+                    # dirs_list = getResultDirectory(data_set, shelf_data_all)
+                    statistic = 'mean_ConditionalMean'
+                    is_show = True
+                    is_time_series = data_set.is_ts
 
-                if not is_time_series:
-                    dirs_list = getResultDirectory(data_set, shelf_data_all)
-                else:
-                    dirs_list = getTsResultDirectory(data_set)
+                    if not is_time_series:
+                        dirs_list = getResultDirectory(data_set, shelf_data_all)
+                    else:
+                        dirs_list = getTsResultDirectory(data_set)
 
-                # print '!!!!!!!!!!!!!!!!!!!! DIRRR LISTTT ============================ ', dirs_list
+                    # print '!!!!!!!!!!!!!!!!!!!! DIRRR LISTTT ============================ ', dirs_list
 
-                if dirs_list:
-                    info_panel = createCustomerInfoPanel(
-                                    customer, data_set, dirs_list[0], statistic,
-                                    absolute_png_url, is_show, is_ts=is_time_series
-                                )
-                else:
-                    data = 'error'
-                    # print 'ERRRRRRRRRRRRRRRRRRRRRRRROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+                    if dirs_list:
+                        info_panel = createCustomerInfoPanel(
+                                        customer, data_set, dirs_list[0], statistic,
+                                        absolute_png_url, is_show, is_ts=is_time_series
+                                    )
+                    else:
+                        data = 'error'
+            except Exception, e:
+                error_message += e
                     
             # data = request.session['zoom_map']
 
             # print '!!!!!!!!! REQ ZOOM ====================== ', request.session['zoom_map']
+            
+            
+            message = 'CHANGES DATASET: {}" to "{}"; '.format(dataset, data_set)
+            message += getLogDataRequest(request)
+
+            if data_set:
+                status_message = '{}'.format(
+                    'The dateset was changed from the "{}" to the "{}"').format(
+                        dataset, data_set)
+                dataset = data_set
+            else:
+                status_message = '{}'.format(error_message)
+
+            Log.objects.create(user=request.user, mode='ui', dataset=dataset,
+                action='view dataset', message=message, status_message=status_message)
 
             return HttpResponse(data)
 
