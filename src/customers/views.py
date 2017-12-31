@@ -3294,6 +3294,7 @@ def customer_section(request):
                         # print '!!!!!!!!!! LEGEND ====================== ', legend
                         # root_filename
 
+                        prefix_legend = attribute_name.replace(' ', '-')
                         if legend == '2':
                             legend_name_proj = 'FullLegend_{0}.png'.format(lut_name)
                             legend_name_map = '{0}_FullLegend_{1}.png'.format(root_filename, lut_name)
@@ -3304,6 +3305,10 @@ def customer_section(request):
                         old_color_legend = os.path.join(legend_path_old, legend_name_proj)
                         new_color_legend = os.path.join(LEGENDS_PATH, legend_name_map)
                         url_legend = '{0}/{1}'.format(absolute_legend_url, legend_name_map)
+
+                        ####################### write log file
+                        customer_section.write('\nNEW LEGEND NAME: {0}\n\n'.format(legend_name_map))
+                        ####################### write log file
 
                         # print '!!!!!!!!! legend_name_map ================== ', legend_name_map
                         # print '!!!!!!!!! old_color_legend ================== ', old_color_legend
