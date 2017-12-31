@@ -3228,6 +3228,7 @@ def customer_section(request):
                             # print '!!!!!!!!!!!!!!!!!!!!!!! OUT ALL: ', out
                             
                             ####################### write log file
+                            customer_section.write('\n\nCALC ATTRIBUTE: {0}\n\n'.format(attribute_name))
                             customer_section.write('\n\nCALC MAX SIZE: {0}\n\n'.format(out))
                             ####################### write log file
 
