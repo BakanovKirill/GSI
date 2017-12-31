@@ -3297,10 +3297,10 @@ def customer_section(request):
                         prefix_legend = attribute_name.replace(' ', '-')
                         if legend == '2':
                             legend_name_proj = 'FullLegend_{0}.png'.format(lut_name)
-                            legend_name_map = '{0}_FullLegend_{1}.png'.format(root_filename, lut_name)
+                            legend_name_map = '{0}_FullLegend_{1}.png'.format(prefix_legend, lut_name)
                         else:
                             legend_name_proj = 'Legend_{0}.png'.format(lut_name)
-                            legend_name_map = '{0}_Legend_{1}.png'.format(root_filename, lut_name)
+                            legend_name_map = '{0}_Legend_{1}.png'.format(prefix_legend, lut_name)
                             
                         old_color_legend = os.path.join(legend_path_old, legend_name_proj)
                         new_color_legend = os.path.join(LEGENDS_PATH, legend_name_map)
