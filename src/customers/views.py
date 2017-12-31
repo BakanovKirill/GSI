@@ -3248,7 +3248,7 @@ def customer_section(request):
                             customer_section.write('\n\nCALC MAX SIZE RESULT: {0}\n\n'.format(max_val))
                             ####################### write log file
 
-                        if shelf_data_attr.lutfiles.allow_negatives < 0:
+                        if shelf_data_attr.lutfiles.allow_negatives:
                             try:
                                 max_val = int(max_val) * -1
                             except Exception:
