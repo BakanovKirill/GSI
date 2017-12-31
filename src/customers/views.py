@@ -3254,7 +3254,7 @@ def customer_section(request):
                             except Exception:
                                 max_val = '-{}'.format(max_val)
 
-                        if max_val == '0':
+                        if max_val == '0' or max_val == 0:
                             max_val = 1
 
                         # Command Line
