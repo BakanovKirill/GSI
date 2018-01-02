@@ -1088,10 +1088,14 @@ class UploadFileAoiView(APIView):
             try:
                 file_obj = request.FILES['file']
                 
+                print '!!!!!!!!!!!!!!! DS NAME before ======================== ', dataset.name
                 dataset_name = dataset.name.replace(' ', '-')
-                file_name = '{}_{}'.format(dataset.name, file_obj.name)
+                file_obj_name = file_obj.name.replace(' ', '-')
+                file_name = '{}_{}'.format(dataset_name, file_obj_name)
                 fl, ext = os.path.splitext(file_name)
                 # ds_file_name = '{}_{}'.format(dataset.name, fl)
+                
+                print '!!!!!!!!!!!!!!! DS NAME after ======================== ', dataset_name
 
                 scheme = '{0}://'.format(request.scheme)
                 absolute_kml_url = os.path.join(scheme, request.get_host(), KML_DIRECTORY, request.user.username)
