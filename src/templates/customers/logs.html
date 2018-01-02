@@ -109,8 +109,8 @@
                         <td class="left">{{ log.action|upper }}</td>
                         <td class="center">{{ log.dataset }}</td>
                         <td class="center">{% if log.customer_polygons %}{{ log.customer_polygons }}{% else %}&#8212;{% endif %}</td>
-                        {% if log.customer_polygons %}
-                            <td class="center">{{ log.customer_polygons.attributes_shapefile.first.total_area }}</td>
+                        {% if log.shapefile %}
+                            <td class="center">{{ log.shapefile.attributes_shapefile.first.total_area }}</td>
                         {% else %}
                             <td class="center">&#8212;</td>
                         {% endif %}
