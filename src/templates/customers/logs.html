@@ -112,7 +112,7 @@
                     <tbody>
                         <td class="left">{{ log.user }}</td>
                         <td class="left">{{ log.at }}</td>
-                        <td class="left">{{ log.ip }}</td>
+                        <td class="left">{% if log.ip %}{{ log.ip }}{% else %}&#8212;{% endif %}</td>
                         <td class="left">{% if log.os_user %}{{ log.os_user }}{% else %}&#8212;{% endif %}</td>
                         <td class="left">{% if log.request_user %}{{ log.request_user }}{% else %}&#8212;{% endif %}</td>
                         <td class="left">{{ log.mode|upper }}</td>
