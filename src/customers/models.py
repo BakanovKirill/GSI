@@ -391,6 +391,11 @@ class Log(models.Model):
         blank=True, null=True,
         on_delete=models.CASCADE
     )
+    ip = models.CharField(
+        max_length=250,
+        blank=True, null=True,
+        verbose_name='IP'
+    )
     message = models.TextField(null=False, default='')
     status_message = models.TextField(null=False, default='')
     at = models.DateTimeField(auto_now_add=True)
@@ -422,7 +427,8 @@ def user_logged_in_callback(sender, request, user, **kwargs):
     status_message = '{}'.format('success')
     message = getLogDataRequest(request)
     Log.objects.create(user=user, mode='ui', dataset=dataset,
-        action='login', message=message, status_message=status_message)
+        action='login', message=message, status_message=status_message,
+        ip=request.META.get('REMOTE_ADDR'))
 
 
 @receiver(user_logged_out)
@@ -436,7 +442,8 @@ def user_logged_out_callback(sender, request, user, **kwargs):
     status_message = '{}'.format('success')
     message = getLogDataRequest(request)
     Log.objects.create(user=user, mode='ui', dataset=dataset,
-        action='logout', message=message, status_message=status_message)
+        action='logout', message=message, status_message=status_message,
+        ip=request.META.get('REMOTE_ADDR'))
 
 
 # @receiver(post_save, sender=User)

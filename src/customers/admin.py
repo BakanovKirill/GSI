@@ -105,8 +105,8 @@ class ReportsAdmin(admin.ModelAdmin):
 
 
 class LogAdmin(admin.ModelAdmin):
-    list_display = ('user', 'at', 'mode', 'dataset', 'action', 'shapefile', 'message', 'status_message')
-    search_fields = ['user', 'at', 'mode', 'dataset', 'action', 'shapefile', 'status_message']
+    list_display = ('user', 'at', 'mode', 'dataset', 'action', 'shapefile', 'ip', 'message', 'status_message')
+    search_fields = ['user', 'at', 'mode', 'dataset', 'action', 'shapefile', 'ip', 'status_message']
     list_filter = ('user', 'mode', 'dataset', 'action')
 
 

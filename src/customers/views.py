@@ -2796,7 +2796,8 @@ def customer_section(request):
                 status_message = '{}'.format(error_message)
 
             Log.objects.create(user=request.user, mode='ui', dataset=dataset,
-                action='view dataset', message=message, status_message=status_message)
+                action='view dataset', message=request.META, status_message=status_message,
+                ip=request.META.get('REMOTE_ADDR'))
 
             return HttpResponse(data)
 
@@ -2864,7 +2865,8 @@ def customer_section(request):
                 # ############ WRITE LOG ##############################
             
             Log.objects.create(user=request.user, mode='ui', dataset=dataset,
-                action='viewed shapefile', message=message, status_message=status_message)
+                action='viewed shapefile', message=message, status_message=status_message,
+                ip=request.META.get('REMOTE_ADDR'))
 
             return HttpResponse(data)
 
@@ -4411,7 +4413,8 @@ def files_lister(request):
                 if not calculation_aoi:
                     message = 'UPLOAD FILE: {}; '.format(new_file_name)
                     message += getLogDataRequest(request)
-                    Log.objects.create(user=request.user, mode='ui', dataset=data_set, action='file uploaded', message=message)
+                    Log.objects.create(user=request.user, mode='ui', dataset=data_set,
+                        action='file uploaded', message=message, ip=request.META.get('REMOTE_ADDR'))
                 # else:
                 #     message = 'UPLOAD FILE: {}'.format(new_file_name)
                 #     message += getLogDataRequest(request)
@@ -4445,7 +4448,8 @@ def files_lister(request):
 
                     message = 'DELETE FILE: {}; '.format(filename_customer)
                     message += getLogDataRequest(request)
-                    Log.objects.create(user=request.user, mode='ui', dataset=data_set, action='file deleted', message=message)
+                    Log.objects.create(user=request.user, mode='ui', dataset=data_set,
+                        action='file deleted', message=message, ip=request.META.get('REMOTE_ADDR'))
             except Exception, e:
                 print '!!!!! ERROR FTP KML FILE ================ ', e
 
@@ -4565,7 +4569,7 @@ def files_lister(request):
                 message = 'SHAPEFILE CREATED: {}; '.format(upload_fl)
                 message += getLogDataRequest(request)
                 Log.objects.create(user=request.user, mode='ui', dataset=data_set, action='shapefile created',
-                                    shapefile=cur_polygon, message=message)
+                                    shapefile=cur_polygon, message=message, ip=request.META.get('REMOTE_ADDR'))
 
                 return HttpResponseRedirect(u'%s?status_message=%s' % (
                     reverse('files_lister'), (u'Calculation for the shapefile "{0}" is over'.format(upload_fl))))
