@@ -388,7 +388,8 @@ class GetAuthToken(views.ObtainAuthToken):
         status_message = '{}'.format('success')
         Log.objects.create(user=user, mode='api', dataset=dataset,
             action='auth_token', message=message,
-            status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+            status_message=status_message, ip=request.META.get('REMOTE_ADDR'),
+            command=request.META.get('HTTP_USER_AGENT'))
 
         return Response({'token': token.key})
 
@@ -437,20 +438,23 @@ class DataSetList(viewsets.ReadOnlyModelViewSet):
                 Log.objects.create(user=self.request.user, mode='api',
                                     dataset=dataset, action='dataset list',
                                     message=message,status_message=status_message,
-                                    ip=self.request.META.get('REMOTE_ADDR'))
+                                    ip=self.request.META.get('REMOTE_ADDR'),
+                                    command=self.request.META.get('HTTP_USER_AGENT'))
             except Exception, e:
                 status_message = '{}'.format(e)
                 Log.objects.create(user=self.request.user, mode='api',
                                     dataset=dataset, action='dataset list',
                                     message=message, status_message=status_message,
-                                    ip=self.request.META.get('REMOTE_ADDR'))
+                                    ip=self.request.META.get('REMOTE_ADDR'),
+                                    command=self.request.META.get('HTTP_USER_AGENT'))
                 raise APIException(e)
         else:
             status_message = '{}'.format('Need YOUR ACCESS TOKEN')
             Log.objects.create(user=self.request.user, mode='api',
                                 dataset=dataset, action='dataset list',
                                 message=message, status_message=status_message,
-                                ip=self.request.META.get('REMOTE_ADDR'))
+                                ip=self.request.META.get('REMOTE_ADDR'),
+                                command=self.request.META.get('HTTP_USER_AGENT'))
             raise APIException('Need YOUR ACCESS TOKEN')
 
         return queryset
@@ -482,14 +486,16 @@ class DataSetDetail(APIView):
                 Log.objects.create(user=request.user, mode='api',
                                     dataset=dataset, action='dataset detail',
                                     message=message, status_message=status_message,
-                                    ip=request.META.get('REMOTE_ADDR'))
+                                    ip=request.META.get('REMOTE_ADDR'),
+                                    command=request.META.get('HTTP_USER_AGENT'))
             except DataSet.DoesNotExist:
                 message += getLogDataRequest(request)
                 status_message = '{}'.format('DataSet Does Not Exist')
                 Log.objects.create(user=request.user, mode='api',
                                     dataset=dataset, action='dataset detail',
                                     message=message, status_message=status_message,
-                                    ip=request.META.get('REMOTE_ADDR'))
+                                    ip=request.META.get('REMOTE_ADDR'),
+                                    command=request.META.get('HTTP_USER_AGENT'))
                 return Response({'error': 'DataSet Does Not Exist'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             message += getLogDataRequest(request)
@@ -497,7 +503,8 @@ class DataSetDetail(APIView):
             Log.objects.create(user=request.user, mode='api',
                                 dataset=dataset, action='dataset detail',
                                 message=message, status_message=status_message,
-                                ip=request.META.get('REMOTE_ADDR'))
+                                ip=request.META.get('REMOTE_ADDR'),
+                                command=request.META.get('HTTP_USER_AGENT'))
 
         return Response(data)
 
@@ -523,13 +530,15 @@ class ShapeFileList(viewsets.ReadOnlyModelViewSet):
             Log.objects.create(user=self.request.user, mode='api',
                                 dataset=dataset, action='shapefiles list',
                                 message=message, status_message=status_message,
-                                ip=self.request.META.get('REMOTE_ADDR'))
+                                ip=self.request.META.get('REMOTE_ADDR'),
+                                command=self.request.META.get('HTTP_USER_AGENT'))
         else:
             status_message = '{}'.format('Need YOUR ACCESS TOKEN')
             Log.objects.create(user=self.request.user, mode='api',
                                 dataset=dataset, action='shapefiles list',
                                 message=message, status_message=status_message,
-                                ip=self.request.META.get('REMOTE_ADDR'))
+                                ip=self.request.META.get('REMOTE_ADDR'),
+                                command=self.request.META.get('HTTP_USER_AGENT'))
             raise APIException('Need YOUR ACCESS TOKEN')
 
         return queryset
@@ -563,7 +572,8 @@ class ShapeFileDetail(APIView):
                 Log.objects.create(user=request.user, mode='api', dataset=dataset,
                                     action='shapefile detail', message=message,
                                     status_message=status_message,
-                                    ip=request.META.get('REMOTE_ADDR'))
+                                    ip=request.META.get('REMOTE_ADDR'),
+                                    command=request.META.get('HTTP_USER_AGENT'))
                 return Response({'error': 'ShapeFile Does Not Exist'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             message = getLogDataRequest(request)
@@ -572,7 +582,8 @@ class ShapeFileDetail(APIView):
         Log.objects.create(user=request.user, mode='api', dataset=dataset,
                             action='shapefile detail', message=message,
                             status_message=status_message,
-                            ip=request.META.get('REMOTE_ADDR'))
+                            ip=request.META.get('REMOTE_ADDR'),
+                            command=request.META.get('HTTP_USER_AGENT'))
 
         return Response(data)
 
@@ -605,7 +616,8 @@ class ShapeFileNameDetail(APIView):
                 status_message = 'ShapeFile Does Not Exist'
                 Log.objects.create(user=request.user, mode='api', dataset=dataset,
                                     action='shapefile detail', message=message,
-                                    status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                    status_message=status_message, ip=request.META.get('REMOTE_ADDR'),
+                                    command=request.META.get('HTTP_USER_AGENT'))
                 return Response({'error': 'ShapeFile Does Not Exist'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             message = getLogDataRequest(request)
@@ -613,7 +625,8 @@ class ShapeFileNameDetail(APIView):
 
         Log.objects.create(user=request.user, mode='api', dataset=dataset,
                             action='shapefile detail', message=message,
-                            status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                            status_message=status_message, ip=request.META.get('REMOTE_ADDR'),
+                            command=request.META.get('HTTP_USER_AGENT'))
 
         return Response(data)
 
@@ -663,44 +676,58 @@ class TimeSeriesList(viewsets.ReadOnlyModelViewSet):
                         status_message = '{}'.format('success')
                         Log.objects.create(user=self.request.user, mode='api', dataset=dataset,
                                             action='timeseries list', message=message,
-                                            status_message=status_message, ip=self.request.META.get('REMOTE_ADDR'))
+                                            status_message=status_message,
+                                            ip=self.request.META.get('REMOTE_ADDR'),
+                                            command=self.request.META.get('HTTP_USER_AGENT'))
                         return queryset
                     else:
                         status_message = '{}'.format('Nothing found in this interval')
                         Log.objects.create(user=self.request.user, mode='api', dataset=dataset,
                                             action='timeseries list', message=message,
-                                            status_message=status_message, ip=self.request.META.get('REMOTE_ADDR'))
+                                            status_message=status_message,
+                                            ip=self.request.META.get('REMOTE_ADDR'),
+                                            command=self.request.META.get('HTTP_USER_AGENT'))
                         raise APIException('Nothing found in this interval')
                 except Exception, e:
                     status_message = '{}'.format(e)
                     Log.objects.create(user=self.request.user, mode='api', dataset=dataset,
                                         action='timeseries list', message=message,
-                                        status_message=status_message, ip=self.request.META.get('REMOTE_ADDR'))
+                                        status_message=status_message,
+                                        ip=self.request.META.get('REMOTE_ADDR'),
+                                        command=self.request.META.get('HTTP_USER_AGENT'))
                     raise APIException(e)
             elif start_date and not end_date:
                 status_message = '{}'.format('The argument "end_date" is not specified')
                 Log.objects.create(user=self.request.user, mode='api', dataset=dataset,
                                     action='timeseries list', message=message,
-                                    status_message=status_message, ip=self.request.META.get('REMOTE_ADDR'))
+                                    status_message=status_message,
+                                    ip=self.request.META.get('REMOTE_ADDR'),
+                                    command=self.request.META.get('HTTP_USER_AGENT'))
                 raise APIException('The argument "end_date" is not specified')
             elif not start_date and end_date:
                 status_message = '{}'.format('The argument "start_date" is not specified')
                 Log.objects.create(user=self.request.user, mode='api', dataset=dataset,
                                     action='timeseries list', message=message,
-                                    status_message=status_message, ip=self.request.META.get('REMOTE_ADDR'))
+                                    status_message=status_message,
+                                    ip=self.request.META.get('REMOTE_ADDR'),
+                                    command=self.request.META.get('HTTP_USER_AGENT'))
                 raise APIException('The argument "start_date" is not specified')
             
             message += getLogDataRequest(self.request)
             status_message = '{}'.format('success')
             Log.objects.create(user=self.request.user, mode='api', dataset=dataset,
                             action='timeseries list', message=message,
-                            status_message=status_message, ip=self.request.META.get('REMOTE_ADDR'))
+                            status_message=status_message,
+                            ip=self.request.META.get('REMOTE_ADDR'),
+                            command=self.request.META.get('HTTP_USER_AGENT'))
         else:
             message = getLogDataRequest(self.request)
             status_message = '{}'.format('Need YOUR ACCESS TOKEN')
             Log.objects.create(user=self.request.user, mode='api', dataset=dataset,
                             action='timeseries list', message=message,
-                            status_message=status_message, ip=self.request.META.get('REMOTE_ADDR'))
+                            status_message=status_message,
+                            ip=self.request.META.get('REMOTE_ADDR'),
+                            command=self.request.META.get('HTTP_USER_AGENT'))
 
             raise APIException('Need YOUR ACCESS TOKEN')
 
@@ -756,7 +783,9 @@ class TimeSeriesDetail(APIView):
                             status_message = '{}'.format('success')
                             Log.objects.create(user=request.user, mode='api', dataset=dataset,
                                                 action='timeseries detail', message=message,
-                                                status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                                status_message=status_message,
+                                                ip=request.META.get('REMOTE_ADDR'),
+                                                command=request.META.get('HTTP_USER_AGENT'))
 
                             return Response(data)
                         else:
@@ -764,28 +793,36 @@ class TimeSeriesDetail(APIView):
                             status_message = '{}'.format('Nothing found in this interval')
                             Log.objects.create(user=request.user, mode='api', dataset=dataset,
                                                 action='timeseries detail', message=message,
-                                                status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                                status_message=status_message,
+                                                ip=request.META.get('REMOTE_ADDR'),
+                                                command=request.META.get('HTTP_USER_AGENT'))
 
                             return Response(data)
                     except Exception, e:
                         status_message = '{}'.format(e)
                         Log.objects.create(user=request.user, mode='api', dataset=dataset,
                                             action='timeseries detail', message=message,
-                                            status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                            status_message=status_message,
+                                            ip=request.META.get('REMOTE_ADDR'),
+                                            command=request.META.get('HTTP_USER_AGENT'))
 
                         return Response({'error': e}, status=status.HTTP_400_BAD_REQUEST)
                 elif start_date and not end_date:
                     status_message = '{}'.format('The argument "end_date" is not specified')
                     Log.objects.create(user=self.request.user, mode='api', dataset=dataset,
                                         action='timeseries detail', message=message,
-                                        status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                        status_message=status_message,
+                                        ip=request.META.get('REMOTE_ADDR'),
+                                        command=request.META.get('HTTP_USER_AGENT'))
                     return Response({'error': 'The argument "end_date" is not specified'},
                                         status=status.HTTP_400_BAD_REQUEST)
                 elif not start_date and end_date:
                     status_message = '{}'.format('The argument "start_date" is not specified')
                     Log.objects.create(user=self.request.user, mode='api', dataset=dataset,
                                         action='timeseries detail', message=message,
-                                        status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                        status_message=status_message,
+                                        ip=request.META.get('REMOTE_ADDR'),
+                                        command=request.META.get('HTTP_USER_AGENT'))
                     return Response({'error': 'The argument "start_date" is not specified'},
                                         status=status.HTTP_400_BAD_REQUEST)
 
@@ -796,7 +833,9 @@ class TimeSeriesDetail(APIView):
                 status_message = '{}'.format('success')
                 Log.objects.create(user=request.user, mode='api', dataset=dataset,
                                     action='timeseries detail', message=message,
-                                    status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                    status_message=status_message,
+                                    ip=request.META.get('REMOTE_ADDR'),
+                                    command=request.META.get('HTTP_USER_AGENT'))
             except Exception, e:
                 message = ''
 
@@ -807,14 +846,18 @@ class TimeSeriesDetail(APIView):
                 status_message = '{}'.format(e)
                 Log.objects.create(user=request.user, mode='api', dataset=dataset,
                                     action='timeseries detail', message=message,
-                                    status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                    status_message=status_message,
+                                    ip=request.META.get('REMOTE_ADDR'),
+                                    command=request.META.get('HTTP_USER_AGENT'))
                 return Response({'error': 'TimeSeries Does Not Exist'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             message = getLogDataRequest(self.request)
             status_message = '{}'.format('Need YOUR ACCESS TOKEN')
             Log.objects.create(user=request.user, mode='api', dataset=dataset,
                                 action='timeseries detail', message=message,
-                                status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                status_message=status_message,
+                                ip=request.META.get('REMOTE_ADDR'),
+                                command=request.META.get('HTTP_USER_AGENT'))
 
         return Response(data)
 
@@ -856,7 +899,9 @@ class TimeSeriesNameDetail(APIView):
                 status_message = '{}'.format('Invalid argument for the ShapeFile Name')
                 Log.objects.create(user=request.user, mode='api', dataset=dataset,
                                     action='timeseries name detail', message=message,
-                                    status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                    status_message=status_message,
+                                    ip=request.META.get('REMOTE_ADDR'),
+                                    command=request.META.get('HTTP_USER_AGENT'))
                 return Response({'error': 'Invalid argument for the ShapeFile Name'},
                                 status=status.HTTP_400_BAD_REQUEST)
 
@@ -879,7 +924,9 @@ class TimeSeriesNameDetail(APIView):
                         status_message = '{}'.format('success')
                         Log.objects.create(user=request.user, mode='api', dataset=dataset,
                                             action='timeseries name detail', message=message,
-                                            status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                            status_message=status_message,
+                                            ip=request.META.get('REMOTE_ADDR'),
+                                            command=request.META.get('HTTP_USER_AGENT'))
 
                         return Response(data)
                     else:
@@ -887,28 +934,36 @@ class TimeSeriesNameDetail(APIView):
                         status_message = '{}'.format('Nothing found in this interval')
                         Log.objects.create(user=request.user, mode='api', dataset=dataset,
                                             action='timeseries name detail', message=message,
-                                            status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                            status_message=status_message,
+                                            ip=request.META.get('REMOTE_ADDR'),
+                                            command=request.META.get('HTTP_USER_AGENT'))
 
                         return Response(data)
                 except Exception, e:
                     status_message = '{}'.format(e)
                     Log.objects.create(user=request.user, mode='api', dataset=dataset,
                                         action='timeseries name detail', message=message,
-                                        status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                        status_message=status_message,
+                                        ip=request.META.get('REMOTE_ADDR'),
+                                        command=request.META.get('HTTP_USER_AGENT'))
 
                     return Response({'error': e}, status=status.HTTP_400_BAD_REQUEST)
             elif start_date and not end_date:
                 status_message = '{}'.format('The argument "end_date" is not specified')
                 Log.objects.create(user=request.user, mode='api', dataset=dataset,
                                     action='timeseries name detail', message=message,
-                                    status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                    status_message=status_message,
+                                    ip=request.META.get('REMOTE_ADDR'),
+                                    command=request.META.get('HTTP_USER_AGENT'))
                 return Response({'error': 'The argument "end_date" is not specified'},
                                     status=status.HTTP_400_BAD_REQUEST)
             elif not start_date and end_date:
                 status_message = '{}'.format('The argument "start_date" is not specified')
                 Log.objects.create(user=request.user, mode='api', dataset=dataset,
                                     action='timeseries name detail', message=message,
-                                    status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                    status_message=status_message,
+                                    ip=request.META.get('REMOTE_ADDR'),
+                                    command=request.META.get('HTTP_USER_AGENT'))
                 return Response({'error': 'The argument "start_date" is not specified'},
                                     status=status.HTTP_400_BAD_REQUEST)
 
@@ -918,13 +973,17 @@ class TimeSeriesNameDetail(APIView):
             status_message = '{}'.format('success')
             Log.objects.create(user=request.user, mode='api', dataset=dataset,
                                 action='timeseries name detail', message=message,
-                                status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                status_message=status_message,
+                                ip=request.META.get('REMOTE_ADDR'),
+                                command=request.META.get('HTTP_USER_AGENT'))
         else:
             message = getLogDataRequest(self.request)
             status_message = '{}'.format('Need YOUR ACCESS TOKEN')
             Log.objects.create(user=request.user, mode='api', dataset=dataset,
                                 action='timeseries name detail', message=message,
-                                status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                status_message=status_message,
+                                ip=request.META.get('REMOTE_ADDR'),
+                                command=request.META.get('HTTP_USER_AGENT'))
 
         return Response(data)
 
@@ -980,13 +1039,15 @@ class ReportsList(viewsets.ReadOnlyModelViewSet):
             Log.objects.create(user=self.request.user, mode='api',
                                 dataset=dataset, action='reports list',
                                 message=message, status_message=status_message,
-                                ip=self.request.META.get('REMOTE_ADDR'))
+                                ip=self.request.META.get('REMOTE_ADDR'),
+                                command=self.request.META.get('HTTP_USER_AGENT'))
         else:
             status_message = '{}'.format('Need YOUR ACCESS TOKEN')
             Log.objects.create(user=self.request.user, mode='api',
                                 dataset=dataset, action='reports list',
                                 message=message, status_message=status_message,
-                                ip=self.request.META.get('REMOTE_ADDR'))
+                                ip=self.request.META.get('REMOTE_ADDR'),
+                                command=self.request.META.get('HTTP_USER_AGENT'))
             
             raise APIException('Need YOUR ACCESS TOKEN')
 
@@ -1051,13 +1112,17 @@ class ReportsDetail(APIView):
                 status_message = '{}'.format('success')
                 Log.objects.create(user=request.user, mode='api', dataset=dataset,
                                     action='reports detail', message=message,
-                                    status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                    status_message=status_message,
+                                    ip=request.META.get('REMOTE_ADDR'),
+                                    command=request.META.get('HTTP_USER_AGENT'))
             except Exception, e:
                 message = getLogDataRequest(request)
                 status_message = '{}'.format(e)
                 Log.objects.create(user=request.user, mode='api', dataset=dataset,
                                     action='reports detail', message=message,
-                                    status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                    status_message=status_message,
+                                    ip=request.META.get('REMOTE_ADDR'),
+                                    command=request.META.get('HTTP_USER_AGENT'))
 
                 return Response({'error': 'Reports DataSet Does Not Exist'}, status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -1066,7 +1131,8 @@ class ReportsDetail(APIView):
             Log.objects.create(user=request.user, mode='api',
                                 dataset=dataset, action='reports detail',
                                 message=message, status_message=status_message,
-                                ip=request.META.get('REMOTE_ADDR'))
+                                ip=request.META.get('REMOTE_ADDR'),
+                                command=request.META.get('HTTP_USER_AGENT'))
 
         return Response(data)
 
@@ -1102,7 +1168,9 @@ class UploadFileAoiView(APIView):
                 status_message = '{}'.format('DataSet Does Not Exist')
                 Log.objects.create(user=request.user, mode='api', dataset=dataset_log,
                                     action='shapefile created', message=message,
-                                    status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                    status_message=status_message,
+                                    ip=request.META.get('REMOTE_ADDR'),
+                                    command=request.META.get('HTTP_USER_AGENT'))
                 data = {
                     'error': 'DataSet Does Not Exist',
                     'status': status.HTTP_400_BAD_REQUEST
@@ -1182,7 +1250,8 @@ class UploadFileAoiView(APIView):
                                 Log.objects.create(user=request.user, mode='api', dataset=dataset_log,
                                                     action='shapefile created', message=message,
                                                     status_message=status_message,
-                                                    ip=request.META.get('REMOTE_ADDR'))
+                                                    ip=request.META.get('REMOTE_ADDR'),
+                                                    command=request.META.get('HTTP_USER_AGENT'))
                                 data = {
                                     'error': 'Attribute does not match selected ShelfData',
                                     'status': status.HTTP_400_BAD_REQUEST,
@@ -1200,7 +1269,8 @@ class UploadFileAoiView(APIView):
                                 Log.objects.create(user=request.user, mode='api', dataset=dataset_log,
                                                     action='shapefile created', message=message,
                                                     status_message=status_message,
-                                                    ip=request.META.get('REMOTE_ADDR'))
+                                                    ip=request.META.get('REMOTE_ADDR'),
+                                                    command=request.META.get('HTTP_USER_AGENT'))
                                 data = {
                                     'error': 'Attribute does not match selected ShelfData',
                                     'status': status.HTTP_400_BAD_REQUEST,
@@ -1215,7 +1285,9 @@ class UploadFileAoiView(APIView):
                         'For calculations in the body of the request, you must specify a list of reports')
                     Log.objects.create(user=request.user, mode='api', dataset=dataset_log,
                                         action='shapefile created', message=message,
-                                        status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                        status_message=status_message,
+                                        ip=request.META.get('REMOTE_ADDR'),
+                                        command=request.META.get('HTTP_USER_AGENT'))
                     data = {
                         'error': 'For calculations in the body of the request, you must specify a list of reports',
                         'status': status.HTTP_400_BAD_REQUEST,
@@ -1263,7 +1335,9 @@ class UploadFileAoiView(APIView):
                             'Error in the shapefile structure')
                         Log.objects.create(user=request.user, mode='api', dataset=dataset_log,
                                             action='shapefile created', message=message,
-                                            status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                            status_message=status_message,
+                                            ip=request.META.get('REMOTE_ADDR'),
+                                            command=request.META.get('HTTP_USER_AGENT'))
                         data = {
                             'filename': file_name,
                             'error': 'Error in the shapefile structure',
@@ -1282,7 +1356,9 @@ class UploadFileAoiView(APIView):
                         status_message = 'Error in the shapefile structure - {}'.format(e)
                         Log.objects.create(user=request.user, mode='api', dataset=dataset_log,
                                             action='shapefile created', message=message,
-                                            status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                            status_message=status_message,
+                                            ip=request.META.get('REMOTE_ADDR'),
+                                            command=request.META.get('HTTP_USER_AGENT'))
                         data = {
                             'filename': file_name,
                             'error': 'Error in the shapefile structure',
@@ -1307,7 +1383,9 @@ class UploadFileAoiView(APIView):
                         status_message = '{}'.format('Error in the shapefile structure')
                         Log.objects.create(user=request.user, mode='api', dataset=dataset_log,
                                             action='shapefile created', message=message,
-                                            status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                            status_message=status_message,
+                                            ip=request.META.get('REMOTE_ADDR'),
+                                            command=request.META.get('HTTP_USER_AGENT'))
                         data = {
                             'filename': file_name,
                             'error': 'Error in the shapefile structure',
@@ -1383,7 +1461,9 @@ class UploadFileAoiView(APIView):
                             e)
                         Log.objects.create(user=request.user, mode='api', dataset=dataset_log,
                                             action='shapefile created', message=message,
-                                            status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                            status_message=status_message,
+                                            ip=request.META.get('REMOTE_ADDR'),
+                                            command=request.META.get('HTTP_USER_AGENT'))
                         data = {
                             'error': 'Please add the GEO data to create Time Series.',
                             'status': status.HTTP_400_BAD_REQUEST
@@ -1410,7 +1490,9 @@ class UploadFileAoiView(APIView):
                 status_message = 'Error in the shapefile structure - {}'.format(e)
                 Log.objects.create(user=request.user, mode='api', dataset=dataset_log,
                                     action='shapefile created', message=message,
-                                    status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                    status_message=status_message,
+                                    ip=request.META.get('REMOTE_ADDR'),
+                                    command=request.META.get('HTTP_USER_AGENT'))
                 data = {
                     'filename': file_name,
                     'error': 'Error in the shapefile structure',
@@ -1440,7 +1522,9 @@ class UploadFileAoiView(APIView):
                         status_message = 'TimeSeriesResults DoesNotExist - {}'.format(e)
                         Log.objects.create(user=request.user, mode='api', dataset=dataset_log,
                                             action='shapefile created', message=message,
-                                            status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                            status_message=status_message,
+                                            ip=request.META.get('REMOTE_ADDR'),
+                                            command=request.META.get('HTTP_USER_AGENT'))
                 else:
                     try:
                         serializer = CustomerPolygonSerializer(queryset_cp)
@@ -1450,13 +1534,17 @@ class UploadFileAoiView(APIView):
                         status_message = 'CustomerPolygonSerializer DoesNotExist - {}'.format(e)
                         Log.objects.create(user=request.user, mode='api', dataset=dataset_log,
                                             action='shapefile created', message=message,
-                                            status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                            status_message=status_message,
+                                            ip=request.META.get('REMOTE_ADDR'),
+                                            command=request.META.get('HTTP_USER_AGENT'))
             except Exception, e:
                 message = getLogDataRequest(request)
                 status_message = 'CustomerPolygons DoesNotExist - {}'.format(e)
                 Log.objects.create(user=request.user, mode='api', dataset=dataset_log,
                                     action='shapefile created', message=message,
-                                    status_message=status_message, ip=request.META.get('REMOTE_ADDR'))
+                                    status_message=status_message,
+                                    ip=request.META.get('REMOTE_ADDR'),
+                                    command=request.META.get('HTTP_USER_AGENT'))
 
         message += getLogDataRequest(request)
         status_message = '{}'.format('success')
@@ -1464,7 +1552,8 @@ class UploadFileAoiView(APIView):
             dataset=dataset, action='shapefile created',
             shapefile=customer_polygon, message=message,
             status_message=status_message,
-            ip=request.META.get('REMOTE_ADDR'))
+            ip=request.META.get('REMOTE_ADDR'),
+            command=request.META.get('HTTP_USER_AGENT'))
         
         data = {
             'download links': urls,
@@ -1503,7 +1592,7 @@ class UploadFileFtpView(APIView):
             status_message = '{}'.format('success')
             Log.objects.create(user=request.user, mode='api', dataset=dataset,
                 action='file uploaded', message=message, status_message=status_message,
-                ip=request.META.get('REMOTE_ADDR'))
+                ip=request.META.get('REMOTE_ADDR'), command=request.META.get('HTTP_USER_AGENT'))
             
             data = {
                 'file_name': file_obj.name,
@@ -1514,7 +1603,7 @@ class UploadFileFtpView(APIView):
             status_message = '{}'.format('Need YOUR ACCESS TOKEN')
             Log.objects.create(user=request.user, mode='api', dataset=dataset,
                 action='file uploaded', message=message, status_message=status_message,
-                ip=request.META.get('REMOTE_ADDR'))
+                ip=request.META.get('REMOTE_ADDR'), command=request.META.get('HTTP_USER_AGENT'))
 
         return Response(data)
 
@@ -1552,13 +1641,15 @@ class LogsList(viewsets.ReadOnlyModelViewSet):
             message += getLogDataRequest(self.request)
             Log.objects.create(user=self.request.user, mode='api', dataset=dataset_log,
                 action='logs list', message=message, status_message=status_message,
-                ip=self.request.META.get('REMOTE_ADDR'))
+                ip=self.request.META.get('REMOTE_ADDR'),
+                command=self.request.META.get('HTTP_USER_AGENT'))
         else:
             message = getLogDataRequest(self.request)
             status_message = '{}'.format('Need YOUR ACCESS TOKEN')
             Log.objects.create(user=self.request.user, mode='api', dataset=dataset,
                 action='logs list', message=message, status_message=status_message,
-                ip=self.request.META.get('REMOTE_ADDR'))
+                ip=self.request.META.get('REMOTE_ADDR'),
+                command=self.request.META.get('HTTP_USER_AGENT'))
 
         return queryset
 
@@ -1590,13 +1681,13 @@ class LogDetail(APIView):
                 status_message = '{}'.format('success')
                 Log.objects.create(user=request.user, mode='api', dataset=dataset,
                     action='log detail', message=message, status_message=status_message,
-                    ip=request.META.get('REMOTE_ADDR'))
+                    ip=request.META.get('REMOTE_ADDR'), command=request.META.get('HTTP_USER_AGENT'))
             except Log.DoesNotExist:
                 message = getLogDataRequest(request)
                 status_message = '{}'.format('Log Does Not Exist')
                 Log.objects.create(user=request.user, mode='api', dataset=dataset,
                     action='log detail', message=message, status_message=status_message,
-                    ip=request.META.get('REMOTE_ADDR'))
+                    ip=request.META.get('REMOTE_ADDR'), command=request.META.get('HTTP_USER_AGENT'))
 
                 return Response({'error': 'Log Does Not Exist'}, status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -1604,7 +1695,7 @@ class LogDetail(APIView):
             status_message = '{}'.format('Need YOUR ACCESS TOKEN')
             Log.objects.create(user=request.user, mode='api', dataset=dataset,
                 action='log detail', message=message, status_message=status_message,
-                ip=request.META.get('REMOTE_ADDR'))
+                ip=request.META.get('REMOTE_ADDR'), command=request.META.get('HTTP_USER_AGENT'))
 
         return Response(data)
 

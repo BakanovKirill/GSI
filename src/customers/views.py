@@ -63,7 +63,8 @@ from core.get_coordinate_aoi import (get_coord_aoi, get_coord_document_placemark
 from core.editor_shapefiles import (get_count_color, copy_file_kml, get_data_kml, delete_empty_lines,
                                     validation_kml, is_calculation_aoi, get_info_window,
                                     create_new_calculations_aoi, createUploadTimeSeriesResults)
-from core.utils import handle_uploaded_file, get_files_dirs, get_list_lutfiles, getLogDataRequest
+from core.utils import (handle_uploaded_file, get_files_dirs,
+                        get_list_lutfiles, getLogDataRequest, get_ui_HTTP_USER_AGENT)
 from core.functions_customer import (getResultDirectory, getTsResultDirectory, getCountTs,
                                     addPolygonToDB, createKml, uploadFile)
 from gsi.settings import (BASE_DIR, GOOGLE_MAP_ZOOM, MEDIA_ROOT,
@@ -2795,9 +2796,10 @@ def customer_section(request):
             else:
                 status_message = '{}'.format(error_message)
 
+            os_user, browser = get_ui_HTTP_USER_AGENT(request)
             Log.objects.create(user=request.user, mode='ui', dataset=dataset,
-                action='view dataset', message=request.META, status_message=status_message,
-                ip=request.META.get('REMOTE_ADDR'))
+                action='view dataset', message=message, status_message=status_message,
+                ip=request.META.get('REMOTE_ADDR'), os_user=os_user, browser=browser)
 
             return HttpResponse(data)
 
@@ -2864,9 +2866,10 @@ def customer_section(request):
                 customer_section.write('\n')
                 # ############ WRITE LOG ##############################
             
+            os_user, browser = get_ui_HTTP_USER_AGENT(request)
             Log.objects.create(user=request.user, mode='ui', dataset=dataset,
                 action='viewed shapefile', message=message, status_message=status_message,
-                ip=request.META.get('REMOTE_ADDR'))
+                ip=request.META.get('REMOTE_ADDR'), os_user=os_user, browser=browser)
 
             return HttpResponse(data)
 
@@ -4413,8 +4416,10 @@ def files_lister(request):
                 if not calculation_aoi:
                     message = 'UPLOAD FILE: {}; '.format(new_file_name)
                     message += getLogDataRequest(request)
+                    os_user, browser = get_ui_HTTP_USER_AGENT(request)
                     Log.objects.create(user=request.user, mode='ui', dataset=data_set,
-                        action='file uploaded', message=message, ip=request.META.get('REMOTE_ADDR'))
+                        action='file uploaded', message=message, ip=request.META.get('REMOTE_ADDR'),
+                        os_user=os_user, browser=browser)
                 # else:
                 #     message = 'UPLOAD FILE: {}'.format(new_file_name)
                 #     message += getLogDataRequest(request)
@@ -4448,8 +4453,10 @@ def files_lister(request):
 
                     message = 'DELETE FILE: {}; '.format(filename_customer)
                     message += getLogDataRequest(request)
+                    os_user, browser = get_ui_HTTP_USER_AGENT(request)
                     Log.objects.create(user=request.user, mode='ui', dataset=data_set,
-                        action='file deleted', message=message, ip=request.META.get('REMOTE_ADDR'))
+                        action='file deleted', message=message, ip=request.META.get('REMOTE_ADDR'),
+                        os_user=os_user, browser=browser)
             except Exception, e:
                 print '!!!!! ERROR FTP KML FILE ================ ', e
 
@@ -4568,8 +4575,10 @@ def files_lister(request):
 
                 message = 'SHAPEFILE CREATED: {}; '.format(upload_fl)
                 message += getLogDataRequest(request)
+                os_user, browser = get_ui_HTTP_USER_AGENT(request)
                 Log.objects.create(user=request.user, mode='ui', dataset=data_set, action='shapefile created',
-                                    shapefile=cur_polygon, message=message, ip=request.META.get('REMOTE_ADDR'))
+                                    shapefile=cur_polygon, message=message, ip=request.META.get('REMOTE_ADDR'),
+                                    os_user=os_user, browser=browser)
 
                 return HttpResponseRedirect(u'%s?status_message=%s' % (
                     reverse('files_lister'), (u'Calculation for the shapefile "{0}" is over'.format(upload_fl))))

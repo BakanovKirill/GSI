@@ -21,6 +21,25 @@ from gsi.settings import (EXECUTE_FE_COMMAND, PROCESS_NUM,
 from core.multithreaded import MultiprocessingCards
 
 
+def get_ui_HTTP_USER_AGENT(request):
+    user_os = None
+    user_browser = None
+    http_user_agent = request.META.get('HTTP_USER_AGENT')
+
+    try:
+        user_os = http_user_agent.split('(')[1].split(')')[0]
+    except Exception:
+        pass
+
+    try:
+        user_browser = http_user_agent.split(' ')[-2:]
+        user_browser = (', ').join(user_browser)
+    except Exception:
+        pass
+
+    return user_os, user_browser
+
+
 def getLogDataRequest(request):
     ip = request.META.get('REMOTE_ADDR')
     # match = geolite2.lookup(ip)

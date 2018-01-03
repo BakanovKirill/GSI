@@ -396,6 +396,21 @@ class Log(models.Model):
         blank=True, null=True,
         verbose_name='IP'
     )
+    os_user = models.CharField(
+        max_length=250,
+        blank=True, null=True,
+        verbose_name='OS'
+    )
+    browser = models.CharField(
+        max_length=250,
+        blank=True, null=True,
+        verbose_name='Browser'
+    )
+    command = models.CharField(
+        max_length=250,
+        blank=True, null=True,
+        verbose_name='Command'
+    )
     message = models.TextField(null=False, default='')
     status_message = models.TextField(null=False, default='')
     at = models.DateTimeField(auto_now_add=True)
