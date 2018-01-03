@@ -23,7 +23,7 @@ from core.multithreaded import MultiprocessingCards
 
 def get_ui_HTTP_USER_AGENT(request):
     user_os = None
-    user_browser = None
+    request_user = None
     http_user_agent = request.META.get('HTTP_USER_AGENT')
 
     try:
@@ -32,12 +32,12 @@ def get_ui_HTTP_USER_AGENT(request):
         pass
 
     try:
-        user_browser = http_user_agent.split(' ')[-2:]
-        user_browser = (', ').join(user_browser)
+        request_user = http_user_agent.split(' ')[-2:]
+        request_user = (', ').join(request_user)
     except Exception:
         pass
 
-    return user_os, user_browser
+    return user_os, request_user
 
 
 def getLogDataRequest(request):
