@@ -14,17 +14,17 @@ function setFocus() {
 //   }
 // }
 //
-// function visiblePasswordTopInput() {
-//   $('.pass').css('display', 'none');
-//   var pass = document.getElementById("id_new_password1");
-//
-//   if (pass.value === '') {
-//     $('.pass').css('display', 'none');
-//   }
-//   else {
-//      $('.pass').css('display', 'block');
-//   }
-// }
+function visiblePasswordTopInput() {
+  $('.pass').css('display', 'none');
+  var pass = document.getElementById("id_new_password1");
+
+  if (pass.value === '') {
+    $('.pass').css('display', 'none');
+  }
+  else {
+     $('.pass').css('display', 'block');
+  }
+}
 //
 // function visibleRePasswordTopInput() {
 //   $('.re-pass').css('display', 'none');
