@@ -24,6 +24,20 @@
 
                         <button type="submit" id="load" name="load_button" disabled="disabled" class="btn btn-primary btn-sm">Load</button>
 
+                        <div class="row margin-top-15">
+                            <div class="col-md-2">
+                                <a class="btn btn-primary cancel-but btn-block no-hover" href="{% url 'logs' %}" role="button">
+                                    Logs
+                                </a>
+                            </div>
+
+                            <div class="col-md-2">
+                                <a class="btn btn-success cancel-but btn-block no-hover" href="{% url 'customer_section' %}" role="button">
+                                    Back
+                                </a>
+                            </div>
+                        </div>
+
                         {% if form.test_data.errors %}
                             <b class="error-form">{{ form.test_data.errors }}</b>
                         {% endif %}
