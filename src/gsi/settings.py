@@ -45,6 +45,11 @@ CKEDITOR_JQUERY_URL = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.j
 
 PHP_CGI = '/usr/bin/php-cgi'
 
+ADMINS = (
+    (u'Grigoriy Tsarik', 'artgrem@gmail.com'), )
+MANAGERS = ADMINS
+ADMIN_EMAILS = [email for (_, email) in ADMINS]
+
 # Application definition
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -236,6 +241,11 @@ EMAIL_BACKEND = 'smtp.backend'
 MAIN_FILE = os.path.join(BASE_DIR, "/home/gsi/logs/main.log")
 MAIN_DEBUG_FILE = os.path.join(BASE_DIR, "/home/gsi/logs/main_debug.log")
 
+MAIN_FILE = '/home/gsi/logs/main_gsi.log'
+MAIN_DEBUG_FILE = '/home/gsi/logs/main_gsi_debug.log'
+
+LOG_FILE = os.path.join(BASE_DIR, 'gsi.log')
+
 # # Time Format
 # TIME_FORMAT = (
 #     '%H:%M:%S.%f',  # '14:30:59.000200'
@@ -264,7 +274,8 @@ LOGGING = {
         'mail_admins': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
+            'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': True,
         },
         'console': {
             'level': 'ERROR',
