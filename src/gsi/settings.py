@@ -46,9 +46,8 @@ CKEDITOR_JQUERY_URL = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.j
 PHP_CGI = '/usr/bin/php-cgi'
 
 ADMINS = (
-    (u'Grigoriy Tsarik', 'artgrem@gmail.com'), )
-MANAGERS = ADMINS
-ADMIN_EMAILS = [email for (_, email) in ADMINS]
+    ('Grigoriy Tsarik', 'artgrem@gmail.com')
+)
 
 # Application definition
 INSTALLED_APPS = (
