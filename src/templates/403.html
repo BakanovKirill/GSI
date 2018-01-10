@@ -50,13 +50,16 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12 center">
-                    <img src="{% static 'img/500.png' %}" alt="500 Unexpected Error">
+                    <img src="{% static 'img/403.png' %}" alt="403 Access Denided">
                 </div>
 
                 <div class="col-md-12 center">
-                    <h2>Something has gone seriously wrong</h2>
-                    <p>We're experiencing an internal server problem.</p>
-                    <p>Please try back later.</p>
+                    <h1>403</h1>
+                    <h2>Access Denided/Forbidden</h2>
+                    <p>LThe page or resource you were trying to reach is absolutely forbidden for some reason..</p>
+                    <a class="btn btn-success cancel-but btn-block no-hover" href="{% url 'index' %}" role="button">
+                        Take Me Home
+                    </a>
                 </div>
             </div>
         </div>

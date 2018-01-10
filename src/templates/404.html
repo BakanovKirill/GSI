@@ -50,13 +50,18 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12 center">
-                    <img src="{% static 'img/500.png' %}" alt="500 Unexpected Error">
+                    <img src="{% static 'img/404.png' %}" alt="404 Component Not Found">
                 </div>
 
                 <div class="col-md-12 center">
-                    <h2>Something has gone seriously wrong</h2>
-                    <p>We're experiencing an internal server problem.</p>
-                    <p>Please try back later.</p>
+                    <h1>404</h1>
+                    <h3>COMPONENT NOT FOUND</h3>
+                    <h2>OH MY GOSH! YOU FOUND IT!!!</h2>
+                    <p>Looks loke the page you're trying to visit doesn't exist.</p>
+                    <p>Please check the URL and try your luck again.</p>
+                    <a class="btn btn-success cancel-but btn-block no-hover" href="{% url 'index' %}" role="button">
+                        Take Me Home
+                    </a>
                 </div>
             </div>
         </div>
