@@ -1,0 +1,66 @@
+{% load static from staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <!--<meta name="viewport" content="initial-scale=1.0, user-scalable=no"> -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+
+        <title>GSI</title>
+
+        <!-- 
+        header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1.
+        header('Pragma: no-cache'); // HTTP 1.0.
+        header('Expires: 0'); // Proxies.
+         
+
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+        -->
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet"
+              href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+              integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+              crossorigin="anonymous">
+
+        <!-- Bootstrap theme -->
+        <link rel="stylesheet"
+              href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+              integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
+              crossorigin="anonymous">
+
+        <!-- BOOTSTRAP SELECT -->
+        <link rel="stylesheet" href="{% static 'bootstrap/bootstrap-select.min.css' %}" type="text/css" >
+
+        <!-- jQUERY FS SELECT -->
+        <link rel="stylesheet" href="{% static 'css/jquery.fs.selecter.css' %}" type="text/css" >
+
+        <!-- Font Awesomee -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+        <!-- custom styles -->
+        <link rel="stylesheet" href="{% static 'css/styles.css' %}" type="text/css" />
+    </head>
+
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12 center">
+                    <img src="{% static 'img/500.png' %}" alt="500 Unexpected Error">
+                </div>
+
+                <div class="col-md-12 center">
+                    <div class="col-md-2">
+                        <a class="btn btn-success cancel-but btn-block no-hover" href="{% url 'index' %}" role="button">
+                            come back
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
