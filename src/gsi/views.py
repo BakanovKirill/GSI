@@ -265,7 +265,7 @@ def index(request):
         * *request:* The request is sent to the server when processing the page
     """
 
-    title1 = 'Main Menu'
+    title = 'Main Menu'
     url_name = 'home'
     is_homevar = False
 
