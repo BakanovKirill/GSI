@@ -3191,11 +3191,26 @@ def customer_section(request):
                                     fl = open(f_path)
                                     
                                     for line in fl.readlines():
-                                        # print (line)
-                                        line_tmp = line.split()
-                                        attr_dict[line_tmp[0]] = line_tmp[1]
+                                        if len(line) > 2:
+                                            # print '!!!!!!!!!!!!!!!!!! LINE ======================= ', len(line)
+
+                                            line_tmp = line.split()
+
+                                            # print '!!!!!!!!!!!!!!!!!! LINE SPLIT ======================= ', line_tmp
+
+                                            attr_dict[line_tmp[0]] = line_tmp[1]
+
+                                            ####################### write log file
+                                            customer_section.write('\n\nATTRIBUTE_CONFIG: {0}\n\n'.format(line))
+                                            ####################### write log file
 
                         # print '!!!!!!!!!!!!!!!!!! attr_dict ======================= ', attr_dict
+
+                        ####################### write log file
+                        customer_section.write('\n\nATTRIBUTE_CONFIG LIST: {0}\n\n'.format(attr_dict))
+                        ####################### write log file
+
+
 
                         if attr_dict:
                             val_scale = attr_dict[shelf_data_attr.root_filename]
@@ -3205,6 +3220,10 @@ def customer_section(request):
                         # val_scale = shelf_data_attr.lutfiles.val_scale
 
                         # print '!!!!!!!!!!!!!!!!!! val_scale ======================= ', val_scale
+
+                        ####################### write log file
+                        customer_section.write('\n\nSCALE VALUE: {0}\n\n'.format(val_scale))
+                        ####################### write log file
 
                         root_filename = shelf_data_attr.root_filename
 
@@ -3218,6 +3237,8 @@ def customer_section(request):
                         lut_1 = '.' + lut_file.split('.')[-1]
                         lut_name = lut_file.replace(lut_1, '')
 
+                        # print '!!!!!!!!!!!!!!!!!!! LUT 1 ========================= ', lut_1
+                        # print '!!!!!!!!!!!!!!!!!!! LUT NAME ========================= ', lut_name
                         # print 'LUT SD ========================= ', shelf_data_attr
                         # print 'LUT UNITS ========================= ', units
 

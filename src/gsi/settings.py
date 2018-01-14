@@ -383,7 +383,7 @@ SCRIPT_MAXSIZE = os.path.join(BASE_DIR, "static/scripts_c/msize.sh")
 SCRIPT_REMAP = os.path.join(BASE_DIR, "static/scripts_c/Remap")
 
 # ATTRIBUTE_CONFIG
-ATTRIBUTE_CONFIG = ['ATTRIBUTE_CONFIG.txt']
+ATTRIBUTE_CONFIG = ['ATTRIBUTE_CONFIG.txt', 'ATTRIBUTE_CONFIG']
 
 # KML files
 KML_DIRECTORY = 'media/kml'
