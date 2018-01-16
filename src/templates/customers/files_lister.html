@@ -15,10 +15,10 @@
                         <span class="right margin-right-10">Current dataset: <b>{{ data_set }}</b></span>
                     </div>
 
-                    <div class="margin-top-20 margin-bottom-20 left col-md-12">
+                    <div class="margin-bottom-20 left col-md-12">
                         <span class="right margin-right-10">Choose file to load:</span>
-                        <label for="id_test_data" class="margin-right-10">
-                            <img src="{% static 'img/icons8-upload-to-ftp.png' %}" />
+                        <label for="id_test_data" class="margin-right-10 margin-top-20" data-toggle="tooltip" data-placement="top" title="Upload file">
+                           <a class="btn upload-img"></a>
                         </label>
                         {{ form.test_data }} <span class="file-selected margin-right-10" id="file-selected"> No file selected </span>
 

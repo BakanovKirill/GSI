@@ -1522,3 +1522,13 @@ hr {
     width: 345px;
 }
 
+/* Background Upload Files */
+.upload-img {
+    background: url(../img/icons8-upload-to-ftp.png) no-repeat 30% 30%;
+    width: 32px;
+    height: 32px;
+}
+
+.upload-img:hover {
+    background: url(../img/icons8-upload-to-ftp-green.png) no-repeat 30% 30%;
+}
