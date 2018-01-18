@@ -4274,6 +4274,7 @@ def files_lister(request):
     customer = request.user
     calculation_aoi = False
     upload_file = ''
+    file_name = ''
     count_ts = 0
     count_color = get_count_color()
     data_set = DataSet.objects.none()
@@ -4296,7 +4297,7 @@ def files_lister(request):
     # ***** TEST GET LOGs *********************************************************
     user_log = Log.objects.filter(user=request.user)
 
-    print '!!!!!!!!!!!!!!!!!!!!! USER LOG ============================== ', user_log
+    # print '!!!!!!!!!!!!!!!!!!!!! USER LOG ============================== ', user_log
 
     if user_log:
         res = None
@@ -4304,7 +4305,7 @@ def files_lister(request):
         for log in user_log:
             res = log.get_results(statistic='Mean')
 
-        print '!!!!!!!!!!!!!!!!!!!!! TEST GET LOGs: RESULTS ============================== ', res
+        # print '!!!!!!!!!!!!!!!!!!!!! TEST GET LOGs: RESULTS ============================== ', res
 
     # ******************************************************************************
     
@@ -4386,7 +4387,7 @@ def files_lister(request):
             # print '!!!!!!!!!!!!!!! upload_file  ===================== ', upload_file
 
             if error:
-                print '!!!!!!!!!!!!!!! ERROR RE-CALCULATION  ===================== ', error
+                # print '!!!!!!!!!!!!!!! ERROR RE-CALCULATION  ===================== ', error
 
                 return HttpResponseRedirect(u'%s?warning_message=%s' % (
                         reverse('files_lister'),
@@ -4641,6 +4642,7 @@ def files_lister(request):
         'form': form,
         'calculation_aoi': calculation_aoi,
         'upload_file': upload_file,
+        'file_name': file_name,
         'count_ts': count_ts
     }
 

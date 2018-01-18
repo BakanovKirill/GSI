@@ -15,6 +15,10 @@
                         <span class="right margin-right-10">Current dataset: <b>{{ data_set }}</b></span>
                     </div>
 
+                    <div class="margin-top-30 left col-md-12 small background-yeloww-light">
+                        <b>NOTE!</b> On this page you can upload files in the format "KML" and "KMZ" with polygons to make a new calculation for the created areas. If your files are created correctly, you will receive a message stating that the file is loaded and you can choose the parameters for the new calculation. If your files are not created correctly, you will receive an error message in the file structure.
+                    </div>
+
                     <div class="margin-bottom-20 left col-md-12">
                         <span class="right margin-right-10">Choose file to load:</span>
                         <label for="id_test_data" class="margin-right-10 margin-top-20" data-toggle="tooltip" data-placement="top" title="Upload file">
@@ -42,22 +46,25 @@
                             <b class="error-form">{{ form.test_data.errors }}</b>
                         {% endif %}
                     </div>
-
-                    {% if calculation_aoi %}
-                        <div class="col-md-12 center">
+                    {% if file_name and not upload_file and not calculation_aoi %}
+                        <div class="col-md-12 left">
+                            <p class="background-green-light">File <b>"{{ file_name }}</b>" is loaded.</p>
+                        </div>
+                    {% elif calculation_aoi %}
+                        <div class="col-md-12 left">
                             {% if data_set %}
-                                <div id="ds_upload">File <b>"{{ upload_file }}</b>" is loaded. If you want to do the data recalculation for this file, select the statistics and attribute, and click the "Calculate data" button</div>
+                                <div id="ds_upload"  class="background-green-light">File <b>"{{ upload_file }}</b>" is loaded.</br>If you want to do the data recalculation for this file, select the statistics and attribute, and click the "Calculate data" button</div>
                                 <input name="upload-file" value="{{ upload_file }}" type="hidden">
                             {% else %}
                                 <div class="navbar-brand white margin-left-20"><b class="purple">Dataset: </b>None</div>
                             {% endif %}
                         </div>
 
-                        <div class="col-md-2 left">
+                        <div class="col-md-3 left">
                             <p class="margin-bottom-30 margin-top-30" id="stat_selected"><b>Statistic selected:</b> <span id="span_stat_selected">None</p>
                         </div>
 
-                        <div class="col-md-10 left">
+                        <div class="col-md-9 left">
                             <p class="margin-bottom-30 margin-top-30" id="attr_selected"><b>Attribute selected:</b> <span id="span_attr_selected">None</span></p>
                         </div>
 

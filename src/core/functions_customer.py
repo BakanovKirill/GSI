@@ -307,13 +307,22 @@ def addPolygonToDB(name, kml_name, user, kml_path, kml_url, ds, text_kml=''):
 
 
 def uploadFile(request, data_set, file_name, path_ftp_user, path_kml_user, absolute_kml_url):
+    now = datetime.now()
+
     ####################### write log file
     log_file = '/home/gsi/LOGS/uploadFile.log'
     upload_file_log = open(log_file, 'w+')
-    now = datetime.now()
     upload_file_log.write('DATE: {0}\n'.format(str(now)))
     upload_file_log.write('USER: {0}\n'.format(str(request.user)))
     upload_file_log.write('\n')
+    #######################
+    
+    ######################## write ERROR KML FILE
+    log_file_kml = '/home/gsi/LOGS/kml_error.log'
+    kml_file_error_log = open(log_file_kml, 'w+')
+    kml_file_error_log.write('DATE: {0}\n'.format(str(now)))
+    kml_file_error_log.write('USER: {0}\n'.format(str(request.user)))
+    kml_file_error_log.write('***********************************\n')
     #######################
     
     request.session['count_ts'] = 0
@@ -392,7 +401,10 @@ def uploadFile(request, data_set, file_name, path_ftp_user, path_kml_user, absol
             ####################### write log file
             upload_file_log.write('ERROR DOC KMZ: {0}\n'.format(str(error)))
             upload_file_log.write('\n')
+
+            kml_file_error_log.write('ERROR COPY KMZ: {0}\n\n'.format(str(error)))
             #######################
+            
             return calculation_aoi, upload_file, error
         #     # print '!!!!!!!!!!!!!!! ERROR  ===================== ', error
         #     # os.mkdir()
@@ -404,8 +416,23 @@ def uploadFile(request, data_set, file_name, path_ftp_user, path_kml_user, absol
         try:
             count_color = get_count_color()
             upload_file = new_kml_file
-            calculation_aoi = is_calculation_aoi(doc_kml)
-            info_window = get_info_window(doc_kml, f_name, path_new_kml)
+            calculation_aoi, error_calculation_aoi = is_calculation_aoi(doc_kml)
+            info_window, error_validation, error_tag = get_info_window(doc_kml, f_name, path_new_kml)
+
+            if error_calculation_aoi:
+                ####################### write log file
+                kml_file_error_log.write('ERROR CALCULATION AOI KMZ: {0}\n\n'.format(str(error_calculation_aoi)))
+                #######################
+            
+            if error_validation:
+                ####################### write log file
+                kml_file_error_log.write('ERROR VALODATION AOI KMZ: {0}\n\n'.format(str(error_validation)))
+                #######################
+            
+            if error_tag:
+                ####################### write log file
+                kml_file_error_log.write('ERROR GET TAG AOI KMZ: {0}\n\n'.format(str(error_tag)))
+                #######################
 
             print '!!!!!!!!!!!!!!! KMZ calculation_aoi ============================ ', calculation_aoi
 
@@ -414,6 +441,8 @@ def uploadFile(request, data_set, file_name, path_ftp_user, path_kml_user, absol
             ####################### write log file
             upload_file_log.write('ERROR COPY KMZ: {0}\n'.format(str(e)))
             upload_file_log.write('\n')
+
+            kml_file_error_log.write('ERROR GET CALCULATION AOI KMZ: {0}\n\n'.format(str(e)))
             #######################
 
         # print '!!!!!!!!!!!! COORDINATE ======================== ', doc_kml.Document.Polygon.outerBoundaryIs.LinearRing.coordinates
@@ -429,10 +458,15 @@ def uploadFile(request, data_set, file_name, path_ftp_user, path_kml_user, absol
         new_path = os.path.join(path_kml_user, file_name)
         doc_kml, error = copy_file_kml(path_test_data, new_path)
 
+        # print '!!!!!!!!!!!!!!! DOC KML  ===================== ', doc_kml
+        # print '!!!!!!!!!!!!!!! DOC KML ERROR  ===================== ', error
+
         if error:
             ####################### write log file
             upload_file_log.write('ERROR DOC KML: {0}\n'.format(str(error)))
             upload_file_log.write('\n')
+
+            kml_file_error_log.write('ERROR COPY KML: {0}\n\n'.format(str(error)))
             #######################
             
             return calculation_aoi, upload_file, error
@@ -447,8 +481,24 @@ def uploadFile(request, data_set, file_name, path_ftp_user, path_kml_user, absol
             if not error:
                 count_color = get_count_color()
                 upload_file = file_name
-                calculation_aoi = is_calculation_aoi(doc_kml)
-                info_window = get_info_window(doc_kml, f_name, path_test_data)
+                calculation_aoi, error_calculation_aoi = is_calculation_aoi(doc_kml)
+                info_window, error_validation, error_tag = get_info_window(doc_kml, f_name, path_test_data)
+
+
+                if error_calculation_aoi:
+                    ####################### write log file
+                    kml_file_error_log.write('ERROR CALCULATION AOI KML: {0}\n\n'.format(str(error_calculation_aoi)))
+                    #######################
+                
+                if error_validation:
+                    ####################### write log file
+                    kml_file_error_log.write('ERROR VALODATION AOI KML: {0}\n\n'.format(str(error_validation)))
+                    #######################
+                
+                if error_tag:
+                    ####################### write log file
+                    kml_file_error_log.write('ERROR GET TAG AOI KML: {0}\n\n'.format(str(error_tag)))
+                    #######################
 
                 # print '!!!!!!!!!!!!!!! KML calculation_aoi ============================ ', calculation_aoi
 
@@ -460,6 +510,8 @@ def uploadFile(request, data_set, file_name, path_ftp_user, path_kml_user, absol
             ####################### write log file
             upload_file_log.write('ERROR COPY KML: {0}\n'.format(str(e)))
             upload_file_log.write('\n')
+
+            kml_file_error_log.write('ERROR GET CALCULATION AOI KML: {0}\n\n'.format(str(e)))
             #######################
 
         # print '!!!!!!!!!!!! COORDINATE ======================== ', doc_kml.Document.Polygon.outerBoundaryIs.LinearRing.coordinates
@@ -470,12 +522,22 @@ def uploadFile(request, data_set, file_name, path_ftp_user, path_kml_user, absol
                         data_set, text_kml=info_window
                     )
 
-        ####################### write log file
+        ####################### CLOSE write log file
         upload_file_log.write('END UPLOAD FILE: {0}\n'.format(str(upload_file)))
         upload_file_log.write('END CALCULATION AOI: {0}\n'.format(str(calculation_aoi)))
         upload_file_log.write('END ERROR: {0}\n'.format(str(error)))
         upload_file_log.write('\n')
         upload_file_log.close()
         #######################
+        
+        ####################### CLOSE write log file
+        kml_file_error_log.write('END UPLOAD FILE: {0}\n'.format(str(upload_file)))
+        kml_file_error_log.write('END CALCULATION AOI: {0}\n'.format(str(calculation_aoi)))
+        kml_file_error_log.write('END ERROR: {0}\n'.format(str(error)))
+        kml_file_error_log.write('\n')
+        kml_file_error_log.close()
+        #######################
+
+        upload_file_log
         
     return calculation_aoi, upload_file, error

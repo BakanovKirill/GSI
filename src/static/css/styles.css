@@ -1532,3 +1532,14 @@ hr {
 .upload-img:hover {
     background: url(../img/icons8-upload-to-ftp-green.png) no-repeat 30% 30%;
 }
+
+.background-green-light {
+    background: #9fff80;
+    padding: 4px;
+}
+
+.background-yeloww-light {
+    background: #ffff99;
+    padding: 4px;
+}
+

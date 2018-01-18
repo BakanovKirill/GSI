@@ -45,24 +45,31 @@ def copy_file_kml(old_path, new_path):
     doc = ''
 
     try:
-        error = validation_kml(doc, old_path)
+        error = validation_kml(old_path)
 
-        # print '!!!!!!!!!!!!!!! COPY DOC ERROR =================== ', error
+        # print '!!!!!!!!!!!!!!! COPY DOC old_path =================== ', old_path
+        # print '!!!!!!!!!!!!!!! COPY DOC new_path =================== ', new_path
+        # print '!!!!!!!!!!!!!!! COPY DOC ERROR 1 =================== ', error
 
         if error:
+            # print '!!!!!!!!!!!!!!! COPY DOC ERROR 2 =================== ', error
             if os.path.exists(old_path):
                 os.remove(old_path)
+
             return doc, error
 
         with open(old_path) as f:
-            doc = parser.parse(f).getroot()
+            doc = parser.parse(f)
+
+        doc = doc.getroot()
+        # print '!!!!!!!!!!!!!!! copy_file_kml DOC =================== ', doc
 
         command_line = 'cp {0} {1}'.format(old_path, new_path)
         proc = Popen(command_line, shell=True)
         proc.wait()
     except Exception, e:
         error = e
-        print '!!!!!!!!!!!!!!! ERROR copy_file_kml =================== ', e
+        # print '!!!!!!!!!!!!!!! ERROR copy_file_kml =================== ', e
         # command_line = 'cp {0} {1}'.format(old_path, new_path)
         # proc = Popen(command_line, shell=True)
         # proc.wait()
@@ -130,7 +137,7 @@ def delete_empty_lines(file_path):
     return error
 
 
-def validation_kml(kml_name, kml_path):
+def validation_kml(kml_path):
     error_msg = ''
     file_name = kml_path.split('/')[-1]
     file_size = os.path.getsize(kml_path)
@@ -165,7 +172,7 @@ def validation_kml(kml_name, kml_path):
         # except Exception, e:
         #     return str(e)
     except Exception, e:
-        print '!!!!!!!!!!!!!!!!!! ERROR VALIDATION KML  =========================== ', e
+        # print '!!!!!!!!!!!!!!!!!! ERROR VALIDATION KML  =========================== ', e
         return e
 
     # print '!!!!!!!!!!!!!!!!!!!!!! ERR MESG validation_kml ===================== ', error_msg
@@ -175,46 +182,58 @@ def validation_kml(kml_name, kml_path):
 
 def is_calculation_aoi(doc_kml):
     is_calculation = False
+    error = ''
 
     try:
         if doc_kml.Document.Placemark.Polygon.outerBoundaryIs:
-            return True
+            error = ''
+            return True, error
     except Exception, e:
-        print '!!!!!!!!!!!!!!! ERROR KML Document  ===================== ', e
+        print '!!!!!!!!!!!!!!! ERROR KML Document.Placemark.Polygon.outerBoundaryIs  ===================== ', e
+        error += 'FALSE CALCULATION AOI: {}\n'.format(e)
 
     try:
         if doc_kml.Document.Placemark.MultiGeometry.Polygon.outerBoundaryIs:
-            return True
+            error = ''
+            return True, error
     except Exception, e:
         print '!!!!!!!!!!!!!!! ERROR KML Document.MultiGeometry  ===================== ', e
+        error += 'FALSE CALCULATION AOI: {}\n'.format(e)
 
     try:
         if doc_kml.Document.Folder.Placemark.MultiGeometry.Polygon.outerBoundaryIs:
-            return True
+            error = ''
+            return True, error
     except Exception, e:
         print '!!!!!!!!!!!!!!! ERROR KML Document.MultiGeometry  ===================== ', e
+        error += 'FALSE CALCULATION AOI: {}\n'.format(e)
 
     try:
         if doc_kml.Placemark.Polygon.outerBoundaryIs:
-            return True
+            error = ''
+            return True, error
     except Exception, e:
         print '!!!!!!!!!!!!!!! ERROR KML Placemark  ===================== ', e
+        error += 'FALSE CALCULATION AOI: {}\n'.format(e)
 
     try:
         if doc_kml.Placemark.MultiGeometry.Polygon.outerBoundaryIs:
-            return True
+            error = ''
+            return True, error
     except Exception, e:
         print '!!!!!!!!!!!!!!! ERROR KML Placemark.MultiGeometry  ===================== ', e
+        error += 'FALSE CALCULATION AOI: {}\n'.format(e)
 
-    # print '!!!!!!!!!!!!!!! 2 is_calculation_aoi  ===================== ', is_calculation
+    print '!!!!!!!!!!!!!!! 2 is_calculation_aoi  ===================== ', is_calculation
 
-    return is_calculation
+    return is_calculation, error
 
 
 def get_info_window(doc_kml, file_name, path_to_file):
     text = ''
+    error_tag_name = ''
     count_color = get_count_color()
-    error = validation_kml(doc_kml, path_to_file)
+    error = validation_kml(path_to_file)
     
 
     info_window = '<h4 align="center" style="color:{0};"><b>Attribute report: {1}</b></h4>\n'.format(
@@ -225,14 +244,19 @@ def get_info_window(doc_kml, file_name, path_to_file):
             text = doc_kml.Document.name
         except Exception, e:
             # print '!!!!!!!!!!!!!!! ERROR IW Document  ===================== ', e
+            error_tag_name += 'ERROR TAG "Document.name": {}\n\n'.format(e)
+
             try:
                 text = doc_kml.Folder.name
             except Exception, e:
                 # print '!!!!!!!!!!!!!!! ERROR IW Folder  ===================== ', e
+                error_tag_name += 'ERROR TAG "Folder.name": {}\n\n'.format(e)
+
                 try:
                     text = doc_kml.Placemark.name
                 except Exception, e:
                     # print '!!!!!!!!!!!!!!! ERROR IW Placemark  ===================== ', e
+                    error_tag_name += 'ERROR TAG "Placemark.name": {}\n\n'.format(e)
                     pass
 
         if text:
@@ -240,7 +264,7 @@ def get_info_window(doc_kml, file_name, path_to_file):
 
     print '!!!!!!!!!!!!!!! IW get_info_window  ===================== ', info_window
 
-    return info_window
+    return info_window, error, error_tag_name
 
 
 def getUploadListTifFiles(customer, dataset, *args):
