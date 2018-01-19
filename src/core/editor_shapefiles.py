@@ -182,56 +182,95 @@ def validation_kml(kml_path):
 
 def is_calculation_aoi(doc_kml):
     is_calculation = False
-    error = ''
+    error_list = []
+    error_message = 'EXCEPTION: No such shild: '
+    error_log = ''
 
     try:
         if doc_kml.Document.Placemark.Polygon.outerBoundaryIs:
-            error = ''
-            return True, error
+            error_log = ''
+            error_list = []
+            return True, error_log, error_message
     except Exception, e:
         print '!!!!!!!!!!!!!!! ERROR KML Document.Placemark.Polygon.outerBoundaryIs  ===================== ', e
-        error += 'FALSE CALCULATION AOI: {}\n'.format(e)
+        tmp_err_list = str(e).split('}')
+
+        if tmp_err_list:
+            error_list.append(tmp_err_list[1])
+
+        error_log += 'FALSE CALCULATION AOI: {}\n'.format(e)
 
     try:
         if doc_kml.Document.Placemark.MultiGeometry.Polygon.outerBoundaryIs:
-            error = ''
-            return True, error
+            error_log = ''
+            error_list = []
+            return True, error_log, error_message
     except Exception, e:
         print '!!!!!!!!!!!!!!! ERROR KML Document.MultiGeometry  ===================== ', e
-        error += 'FALSE CALCULATION AOI: {}\n'.format(e)
+        tmp_err_list = str(e).split('}')
+
+        if tmp_err_list:
+            error_list.append(tmp_err_list[1])
+
+        error_log += 'FALSE CALCULATION AOI: {}\n'.format(e)
 
     try:
         if doc_kml.Document.Folder.Placemark.MultiGeometry.Polygon.outerBoundaryIs:
-            error = ''
-            return True, error
+            error_log = ''
+            error_list = []
+            return True, error_log, error_message
     except Exception, e:
         print '!!!!!!!!!!!!!!! ERROR KML Document.MultiGeometry  ===================== ', e
-        error += 'FALSE CALCULATION AOI: {}\n'.format(e)
+        tmp_err_list = str(e).split('}')
+
+        if tmp_err_list:
+            error_list.append(tmp_err_list[1])
+
+        error_log += 'FALSE CALCULATION AOI: {}\n'.format(e)
 
     try:
         if doc_kml.Placemark.Polygon.outerBoundaryIs:
-            error = ''
-            return True, error
+            error_log = ''
+            error_list = []
+            return True, error_log, error_message
     except Exception, e:
         print '!!!!!!!!!!!!!!! ERROR KML Placemark  ===================== ', e
-        error += 'FALSE CALCULATION AOI: {}\n'.format(e)
+        tmp_err_list = str(e).split('}')
+
+        if tmp_err_list:
+            error_list.append(tmp_err_list[1])
+
+        error_log += 'FALSE CALCULATION AOI: {}\n'.format(e)
 
     try:
         if doc_kml.Placemark.MultiGeometry.Polygon.outerBoundaryIs:
-            error = ''
-            return True, error
+            error_log = ''
+            error_list = []
+            return True, error_log, error_message
     except Exception, e:
         print '!!!!!!!!!!!!!!! ERROR KML Placemark.MultiGeometry  ===================== ', e
-        error += 'FALSE CALCULATION AOI: {}\n'.format(e)
+        tmp_err_list = str(e).split('}')
 
-    print '!!!!!!!!!!!!!!! 2 is_calculation_aoi  ===================== ', is_calculation
+        if tmp_err_list:
+            error_list.append(tmp_err_list[1])
 
-    return is_calculation, error
+        error_log += 'FALSE CALCULATION AOI: {}\n'.format(e)
+
+    # print '!!!!!!!!!!!!!!! 2 is_calculation_aoi  ===================== ', is_calculation
+    
+    if error_list:
+        error_list = list(set(error_list))
+        err_str = ', '.join(error_list)
+        error_message += err_str
+
+    return is_calculation, error_log, error_message
 
 
 def get_info_window(doc_kml, file_name, path_to_file):
     text = ''
+    error_tag_list = []
     error_tag_name = ''
+    error_tag_log = ''
     count_color = get_count_color()
     error = validation_kml(path_to_file)
     
@@ -244,27 +283,48 @@ def get_info_window(doc_kml, file_name, path_to_file):
             text = doc_kml.Document.name
         except Exception, e:
             # print '!!!!!!!!!!!!!!! ERROR IW Document  ===================== ', e
-            error_tag_name += 'ERROR TAG "Document.name": {}\n\n'.format(e)
+            tmp_err_list = str(e).split('}')
+
+            if tmp_err_list:
+                error_tag_list.append(tmp_err_list[1])
+
+            error_tag_log += 'ERROR TAG "Document.name": {}\n\n'.format(e)
 
             try:
                 text = doc_kml.Folder.name
             except Exception, e:
                 # print '!!!!!!!!!!!!!!! ERROR IW Folder  ===================== ', e
-                error_tag_name += 'ERROR TAG "Folder.name": {}\n\n'.format(e)
+                tmp_err_list = str(e).split('}')
+
+                if tmp_err_list:
+                    error_tag_list.append(tmp_err_list[1])
+
+                error_tag_log += 'ERROR TAG "Folder.name": {}\n\n'.format(e)
 
                 try:
                     text = doc_kml.Placemark.name
                 except Exception, e:
                     # print '!!!!!!!!!!!!!!! ERROR IW Placemark  ===================== ', e
-                    error_tag_name += 'ERROR TAG "Placemark.name": {}\n\n'.format(e)
+                    tmp_err_list = str(e).split('}')
+
+                    if tmp_err_list:
+                        error_tag_list.append(tmp_err_list[1])
+
+                    error_tag_log += 'ERROR TAG "Placemark.name": {}\n\n'.format(e)
                     pass
 
         if text:
-            info_window += '<p align="center">{0}</p>'.format(text);
+            info_window += '<p align="center">{0}</p>'.format(text)
 
-    print '!!!!!!!!!!!!!!! IW get_info_window  ===================== ', info_window
+        if error_tag_list:
+            error_tag_list = list(set(error_tag_list))
+            err_str = ', '.join(error_tag_list)
+            error_tag_name += err_str
 
-    return info_window, error, error_tag_name
+
+    # print '!!!!!!!!!!!!!!! IW get_info_window  ===================== ', info_window
+
+    return info_window, error, error_tag_log, error_tag_name
 
 
 def getUploadListTifFiles(customer, dataset, *args):
@@ -520,7 +580,7 @@ def create_new_calculations_aoi(customer, doc_kml, data_set, *args):
         # print '!!!!!!!!!!!!! shd_attr_name  =========================== ', shd_attr_name
 
         if is_ts:
-            shd_attr_name = attr_name.split(' ')[:-1]
+            shd_attr_name = attr_namstr(e).split(' ')[:-1]
             shd_attr_name = (' ').join(shd_attr_name)
 
         
@@ -859,7 +919,7 @@ def createUploadTimeSeriesResults(customer, aoi, attributes, data_set):
                                 # print '!!!!!!! 1 NEW LINE ========================== ', new_line
 
                                 if new_line:
-                                    ts_value = new_line.split(',')[2]
+                                    ts_value = new_linstr(e).split(',')[2]
                                     scale = data_set.shelf_data.scale
 
                                     # print '!!!!!!! 1 NEW LINE ========================== ', new_line

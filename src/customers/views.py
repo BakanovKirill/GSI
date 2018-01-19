@@ -4389,7 +4389,7 @@ def files_lister(request):
             if error:
                 # print '!!!!!!!!!!!!!!! ERROR RE-CALCULATION  ===================== ', error
 
-                return HttpResponseRedirect(u'%s?warning_message=%s' % (
+                return HttpResponseRedirect(u'%s?danger_message=%s' % (
                         reverse('files_lister'),
                         (u'{0}'.format(error))))
 
@@ -4454,9 +4454,9 @@ def files_lister(request):
                 if error:
                     print '!!!!!!!!!!!!!!! ERROR  ===================== ', error
 
-                    return HttpResponseRedirect(u'%s?warning_message=%s' % (
+                    return HttpResponseRedirect(u'%s?danger_message=%s' % (
                             reverse('files_lister'),
-                            (u'{0}'.format(error))))
+                            (u'The file was not uploaded! {0}'.format(error))))
 
         if 'delete_button' in data_post:
             filename_customer = data_post['delete_button']
@@ -4614,6 +4614,10 @@ def files_lister(request):
                 # print '!!!!!!!!!! ATTR ================== ', select_attr
             except Exception, e:
                 print '!!!!!!!!!!!!!!!! ERROR UPLOAD FILE NAME ========================== ', e
+
+                return HttpResponseRedirect(u'%s?danger_message=%s' % (
+                            reverse('files_lister'),
+                            (u'The file was not uploaded!! {0}'.format(e))))
     else:
         form = UploadFileForm()
 
@@ -4626,6 +4630,7 @@ def files_lister(request):
 
     dirs, files, info_message = get_files_dirs(url_path, path_ftp_user)
     count_ts = request.session['count_ts']
+
 
     ####################### write log file
     files_lister_log.close()

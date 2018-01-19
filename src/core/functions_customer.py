@@ -416,13 +416,13 @@ def uploadFile(request, data_set, file_name, path_ftp_user, path_kml_user, absol
         try:
             count_color = get_count_color()
             upload_file = new_kml_file
-            calculation_aoi, error_calculation_aoi = is_calculation_aoi(doc_kml)
-            info_window, error_validation, error_tag = get_info_window(doc_kml, f_name, path_new_kml)
+            calculation_aoi, error_log, error_message = is_calculation_aoi(doc_kml)
+            info_window, error_validation, error_tag_log, error_tag = get_info_window(doc_kml, f_name, path_new_kml)
 
-            if error_calculation_aoi:
-                error += '{}\n'.format(error_calculation_aoi)
+            if error_log:
+                error += '{}\n'.format(error_message)
                 ####################### write log file
-                kml_file_error_log.write('ERROR CALCULATION AOI KMZ: {0}\n\n'.format(str(error_calculation_aoi)))
+                kml_file_error_log.write('ERROR CALCULATION AOI KMZ: {0}\n\n'.format(str(error_log)))
                 #######################
             
             if error_validation:
@@ -431,13 +431,13 @@ def uploadFile(request, data_set, file_name, path_ftp_user, path_kml_user, absol
                 kml_file_error_log.write('ERROR VALODATION AOI KMZ: {0}\n\n'.format(str(error_validation)))
                 #######################
             
-            if error_tag:
+            if error_tag_log:
                 error += '{}\n'.format(error_tag)
                 ####################### write log file
-                kml_file_error_log.write('ERROR GET TAG AOI KMZ: {0}\n\n'.format(str(error_tag)))
+                kml_file_error_log.write('ERROR GET TAG AOI KMZ: {0}\n\n'.format(str(error_tag_log)))
                 #######################
 
-            print '!!!!!!!!!!!!!!! KMZ calculation_aoi ============================ ', calculation_aoi
+            # print '!!!!!!!!!!!!!!! KMZ calculation_aoi ============================ ', calculation_aoi
 
         except Exception, e:
             error += '{}\n'.format(e)
@@ -485,26 +485,44 @@ def uploadFile(request, data_set, file_name, path_ftp_user, path_kml_user, absol
             if not error:
                 count_color = get_count_color()
                 upload_file = file_name
-                calculation_aoi, error_calculation_aoi = is_calculation_aoi(doc_kml)
-                info_window, error_validation, error_tag = get_info_window(doc_kml, f_name, path_test_data)
+                calculation_aoi, error_log, error_message = is_calculation_aoi(doc_kml)
 
+                print '!!!!!!!!!!!!!!! ERROR KML NOW ===================== '
+                
+                info_window, error_validation, error_tag_log, error_tag = get_info_window(doc_kml, f_name, path_test_data)
 
-                if error_calculation_aoi:
-                    error += '{}\n'.format(error_calculation_aoi)
+                if error_log:
+                    print '!!!!!!!!!!!!!!! ERROR LOG AOI ===================== ', error_message
+
+                    error += '{}\n'.format(error_message)
                     ####################### write log file
-                    kml_file_error_log.write('ERROR CALCULATION AOI KML: {0}\n\n'.format(str(error_calculation_aoi)))
+                    kml_file_error_log.write('ERROR CALCULATION AOI KML: {0}\n\n'.format(str(error_log)))
                     #######################
                 
                 if error_validation:
-                    error += '{}\n'.format(error_validation)
+                    print '!!!!!!!!!!!!!!! ERROR VALID AOI ===================== ', error_validation
+
+                    if not error_validation in error:
+                        if error:
+                            error += ', {}\n'.format(error_validation)
+                        else:
+                            error += '{}\n'.format(error_validation)
+
                     ####################### write log file
                     kml_file_error_log.write('ERROR VALODATION AOI KML: {0}\n\n'.format(str(error_validation)))
                     #######################
                 
-                if error_tag:
-                    error += '{}\n'.format(error_tag)
+                if error_tag_log:
+                    print '!!!!!!!!!!!!!!! ERROR TAG AOI ===================== ', error_tag
+
+                    if not error_tag in error:
+                        if error:
+                            error += ', {}\n'.format(error_tag)
+                        else:
+                            error += '{}\n'.format(error_tag)
+
                     ####################### write log file
-                    kml_file_error_log.write('ERROR GET TAG AOI KML: {0}\n\n'.format(str(error_tag)))
+                    kml_file_error_log.write('ERROR GET TAG AOI KML: {0}\n\n'.format(str(error_tag_log)))
                     #######################
 
                 # print '!!!!!!!!!!!!!!! KML calculation_aoi ============================ ', calculation_aoi
@@ -546,6 +564,5 @@ def uploadFile(request, data_set, file_name, path_ftp_user, path_kml_user, absol
         kml_file_error_log.close()
         #######################
 
-        upload_file_log
         
     return calculation_aoi, upload_file, error
