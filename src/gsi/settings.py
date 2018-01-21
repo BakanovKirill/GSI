@@ -326,6 +326,10 @@ LOGGING = {
 # FTP Path
 FTP_PATH = '/lustre/w23/CUSTOMER_FTP_AREA'
 
+# Symlink FTP Path
+SYMLINK_FTP_DIRECTORY = 'media/CUSTOMER_FTP_AREA'
+SYMLINK_FTP_PATH = os.path.join(BASE_DIR, SYMLINK_FTP_DIRECTORY)
+
 # home folder for new cripts
 # /lustre/home/i214/indy0-home/mattgsi/bin
 # /lustre/home/i214/indy0-lustre/mattgsi/scripts/runs/R_1321/
@@ -421,6 +425,25 @@ CARD_TYPE = {
     'randomforest': 'RandomForest',
     'calcstats': 'CalcStats'
 }
+
+if not os.path.exists(SYMLINK_FTP_PATH) and os.path.exists(FTP_PATH):
+    os.symlink(FTP_PATH, MEDIA_ROOT)
+
+if not os.path.exists(KML_PATH):
+    os.makedirs(KML_PATH)
+
+if not os.path.exists(LEGENDS_PATH):
+    os.makedirs(LEGENDS_PATH)
+
+if not os.path.exists(PNG_PATH):
+    os.makedirs(PNG_PATH)
+
+if not os.path.exists(REMAP_PATH):
+    os.makedirs(REMAP_PATH)
+
+if not os.path.exists(TMP_PATH):
+    os.makedirs(TMP_PATH)
+
 
 # COLOR_HEX_NAME = [
 #     'Aqua', 'Blue', 'BlueViolet', 'Brown', 'BurlyWood',

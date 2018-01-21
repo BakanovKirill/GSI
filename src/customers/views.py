@@ -4456,7 +4456,7 @@ def files_lister(request):
 
                     return HttpResponseRedirect(u'%s?danger_message=%s' % (
                             reverse('files_lister'),
-                            (u'The file was not uploaded! {0}'.format(error))))
+                            (u'The file "{}" was not uploaded! {}'.format(file_name, error))))
 
         if 'delete_button' in data_post:
             filename_customer = data_post['delete_button']
@@ -4617,7 +4617,7 @@ def files_lister(request):
 
                 return HttpResponseRedirect(u'%s?danger_message=%s' % (
                             reverse('files_lister'),
-                            (u'The file was not uploaded!! {0}'.format(e))))
+                            (u'The file "{}" was not uploaded!! {}'.format(upload_fl, e))))
     else:
         form = UploadFileForm()
 
