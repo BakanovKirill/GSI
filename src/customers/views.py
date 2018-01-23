@@ -68,7 +68,7 @@ from core.utils import (handle_uploaded_file, get_files_dirs,
 from core.functions_customer import (getResultDirectory, getTsResultDirectory, getCountTs,
                                     addPolygonToDB, createKml, uploadFile)
 from gsi.settings import (BASE_DIR, GOOGLE_MAP_ZOOM, MEDIA_ROOT,
-                        TMP_PATH, DAFAULT_LAT, DAFAULT_LON, PNG_DIRECTORY, PNG_PATH,
+                        TMP_PATH, DAFAULT_LAT, DAFAULT_LON, PNG_DIRECTORY, PNG_PATH, REMAP_PATH,
                         PROJECTS_PATH, KML_DIRECTORY, KML_PATH, ATTRIBUTES_NAME, FTP_PATH,
                         LUT_DIRECTORY, SCRIPT_TIFPNG, SCRIPT_GETPOLYINFO, LEGENDS_DIRECTORY,
                         LEGENDS_PATH, SCRIPT_MAXSIZE, ATTRIBUTE_CONFIG, COLOR_HEX_NAME, COLOR_HEX)
@@ -2074,6 +2074,10 @@ def customer_section(request):
     select_year = None
 
     # count_ts = 0
+    
+    # The abs path to user's directory: REMAP, KML
+    user_kml_dir = os.path.join(KML_PATH, request.user.username)
+    user_remap_dir = os.path.join(REMAP_PATH, request.user.username)
 
     # The url to are PNG, KML urls
     scheme = '{0}://'.format(request.scheme)
@@ -2082,6 +2086,12 @@ def customer_section(request):
     absolute_legend_url = os.path.join(scheme, request.get_host(), LEGENDS_DIRECTORY)
 
     # print '!!!!!!!!! START REQ ZOOM ====================== ', request.session['zoom_map']
+    
+    if not os.path.exists(user_kml_dir):
+        os.makedirs(user_kml_dir)
+
+    if not os.path.exists(user_remap_dir):
+        os.makedirs(user_remap_dir)
 
     # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     # Get the User DataSets
