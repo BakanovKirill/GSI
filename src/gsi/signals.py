@@ -6,6 +6,7 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 from gsi.models import Tile, Area, RunBase, Run, CardSequence, InputDataDirectory
+from customers.models import DataSet, CustomerAccess
 from log.logger import log_it
 from core.utils import update_list_files
 
@@ -21,13 +22,44 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         
         
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_ftp_user_folder(sender, instance=None, created=False, **kwargs):
+def create_users_folders(sender, instance=None, created=False, **kwargs):
     if created:
+        path_ftp_user = os.path.join(settings.FTP_PATH, instance.username)
+        user_kml_dir = os.path.join(settings.KML_PATH, instance.username)
+        user_remap_dir = os.path.join(settings.REMAP_PATH, instance.username)
+
         try:
-            path_ftp_user = os.path.join(settings.FTP_PATH, instance.username)
             os.makedirs(path_ftp_user, 0755)
         except OSError:
             pass
+
+        try:
+            os.makedirs(user_kml_dir, 0755)
+        except OSError:
+            pass
+        
+        try:
+            os.makedirs(user_remap_dir, 0755)
+        except OSError:
+            pass
+
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def set_default_datasets(sender, instance=None, created=False, **kwargs):
+    if created:
+        default_datasets = DataSet.objects.filter(is_default=True)
+
+        if default_datasets:
+            access = CustomerAccess.objects.create(
+                    user=instance
+                )
+            for n in default_datasets:
+                # print '!!!!!!!!!!!!!! N DS ========================== ', n
+                # print '!!!!!!!!!!!!!! N ID DS ========================== ', n.id
+                CustomerAccess.data_set.through.objects.create(
+                    customeraccess_id=access.id,
+                    dataset_id=n.id
+                )
 
 
 @receiver(post_save, sender=Tile)

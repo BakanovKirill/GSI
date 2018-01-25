@@ -2087,11 +2087,11 @@ def customer_section(request):
 
     # print '!!!!!!!!! START REQ ZOOM ====================== ', request.session['zoom_map']
     
-    if not os.path.exists(user_kml_dir):
-        os.makedirs(user_kml_dir)
+    # if not os.path.exists(user_kml_dir):
+    #     os.makedirs(user_kml_dir)
 
-    if not os.path.exists(user_remap_dir):
-        os.makedirs(user_remap_dir)
+    # if not os.path.exists(user_remap_dir):
+    #     os.makedirs(user_remap_dir)
 
     # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     # Get the User DataSets
@@ -2128,6 +2128,7 @@ def customer_section(request):
     else:
         CustomerInfoPanel.objects.filter(user=customer).delete()
         request.session['select_data_set'] = data_sets[0].id
+        data_set_id = data_sets[0].id
         # request.session.set_expiry(172800)
 
     # Get select active tab sessions

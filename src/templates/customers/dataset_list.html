@@ -72,6 +72,7 @@
                                 </a>
                             </th>
                             <th>Time Series</th>
+                            <th>Default</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -87,7 +88,16 @@
                             <td>{{ ds.get_attribute_name }}</td>
                             <td>{{ ds.get_root_filename }}</td>
                             <td>{{ ds.name_ts }}</td>
-                            <td>{{ ds.is_ts }}</td>
+                            <td>
+                                {% if ds.is_ts %}<i class="fa fa-check" aria-hidden="true"></i>
+                                {% else %}<i class="fa fa-minus" aria-hidden="true"></i>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if ds.is_default %}<i class="fa fa-check" aria-hidden="true"></i>
+                                {% else %}<i class="fa fa-minus" aria-hidden="true"></i>
+                                {% endif %}
+                            </td>
                             <td>
                                 <a href="{% url 'data_set_edit' ds.id %}" role="button" data-toggle="tooltip" data-placement="top" title="Edit">
                                     <img class="" src="{% static 'img/edit-18.png' %}"/>

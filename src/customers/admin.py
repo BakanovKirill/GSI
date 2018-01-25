@@ -19,7 +19,7 @@ class ShelfDataAdmin(admin.ModelAdmin):
 
 class DataSetAdmin(admin.ModelAdmin):
     list_display = ('name', 'description', 'results_directory', 'shelf_data',
-                    'get_attribute_name', 'get_root_filename', 'name_ts', 'is_ts')
+                    'get_attribute_name', 'get_root_filename', 'name_ts', 'is_ts', 'is_default')
     search_fields = ['name', 'shelf_data', 'description', 'get_attribute_name', 'name_ts']
     list_filter = ('name', 'shelf_data', 'description', 'shelf_data__attribute_name',
                     'shelf_data__root_filename', 'name_ts',)

@@ -131,6 +131,12 @@ class DataSetForm(forms.ModelForm):
         required=False,
         label=u'Time Series',
     )
+    is_default = forms.BooleanField(
+        widget=forms.CheckboxInput(attrs={'class': 'form-control', 'onclick': 'toogleHidenTsName(this);'}),
+        initial=False,
+        required=False,
+        label=u'Default',
+    )
     name_ts = forms.CharField(
         widget=forms.TextInput(attrs={
                                 'class': 'form-control',
@@ -162,7 +168,8 @@ class DataSetForm(forms.ModelForm):
 
     class Meta:
         model = DataSet
-        fields = ['name', 'description', 'results_directory', 'is_ts', 'name_ts', 'shelf_data']
+        fields = ['name', 'description', 'results_directory',
+                'is_ts', 'name_ts', 'shelf_data', 'is_default']
 
 
 class CustomerAccessForm(forms.ModelForm):
